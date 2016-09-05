@@ -1,11 +1,11 @@
 #!/bin/bash
 ###############################################################################
-#  Copyright (c) 2014-2015 libbitcoin developers (see COPYING).
+#  Copyright (c) 2016 bitprim developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
 ###############################################################################
-# Script to build and install libbitcoin.
+# Script to build and install bitprim.
 #
 # Script options:
 # --build-icu              Builds ICU libraries.
@@ -32,7 +32,7 @@
 #==============================================================================
 # The default build directory.
 #------------------------------------------------------------------------------
-BUILD_DIR="build-libbitcoin"
+BUILD_DIR="build-bitprim"
 
 # ICU archive.
 #------------------------------------------------------------------------------
@@ -694,8 +694,8 @@ build_all()
     build_from_tarball $PNG_URL $PNG_ARCHIVE xz . $PARALLEL "$BUILD_PNG" "${PNG_OPTIONS[@]}" "$@"
     build_from_tarball $QRENCODE_URL $QRENCODE_ARCHIVE bzip2 . $PARALLEL "$BUILD_QRENCODE" "${QRENCODE_OPTIONS[@]}" "$@"
     build_from_tarball_boost $BOOST_URL $BOOST_ARCHIVE bzip2 . $PARALLEL "$BUILD_BOOST" "${BOOST_OPTIONS[@]}"
-    build_from_github libbitcoin secp256k1 version4 $PARALLEL ${SECP256K1_OPTIONS[@]} "$@"
-    build_from_travis libbitcoin libbitcoin master $PARALLEL ${BITCOIN_OPTIONS[@]} "$@"
+    build_from_github bitprim secp256k1 version4 $PARALLEL ${SECP256K1_OPTIONS[@]} "$@"
+    build_from_travis bitprim bitprim-core master $PARALLEL ${BITCOIN_OPTIONS[@]} "$@"
 }
 
 

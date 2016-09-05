@@ -2,7 +2,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/libbitcoin/libbitcoin/badge.svg)](https://coveralls.io/r/libbitcoin/libbitcoin)
 
-# Libbitcoin
+# Bitprim
 
 *The Bitcoin Development Library*
 
@@ -10,13 +10,13 @@
 
 All files in this repository fall under the license specified in [COPYING](COPYING). The project is licensed as [AGPL with a lesser clause](https://wiki.unsystem.net/en/index.php/Libbitcoin/License). It may be used within a proprietary project, but the core library and any changes to it must be published online. Source code for this library must always remain free for everybody to access.
 
-**About Libbitcoin**
+**About Bitprim**
 
-The libbitcoin toolkit is a set of cross platform C++ libraries for building bitcoin applications. The toolkit consists of several libraries, most of which depend on the foundational [libbitcoin](https://github.com/libbitcoin/libbitcoin) library. Each library's repository can be cloned and built using common [automake](http://www.gnu.org/software/automake) 1.14+ instructions. There are no packages yet in distribution however each library includes an installation script (described below) which is regularly verified in the automated build.
+The Bitprim toolkit is a set of cross platform C++ libraries for building bitcoin applications. The toolkit consists of several libraries, most of which depend on the foundational [bitprim-core](https://github.com/bitprim/bitprim-core) library. Each library's repository can be cloned and built using common [automake](http://www.gnu.org/software/automake) 1.14+ instructions. There are no packages yet in distribution however each library includes an installation script (described below) which is regularly verified in the automated build.
 
 ## Installation
 
-On Linux and Macintosh libbitcoin is built using Autotools as follows.
+On Linux and Macintosh bitprim is built using Autotools as follows.
 ```sh
 $ ./autogen.sh
 $ ./configure
@@ -24,7 +24,7 @@ $ make
 $ sudo make install
 $ sudo ldconfig
 ```
-A minimal libbitcoin build requires boost and libsecp256k1. The [libbitcoin/secp256k1](https://github.com/libbitcoin/secp256k1) repository is forked from [bitcoin-core/secp256k1](https://github.com/bitcoin-core/secp256k1) in order to control for changes and to incorporate the necessary Visual Studio build. The original repository can be used directly but recent changes to the public interface may cause build breaks. The `--enable-module-recovery` switch is required.
+A minimal bitprim build requires boost and libsecp256k1. The [bitprim/secp256k1](https://github.com/bitprim/secp256k1) repository is forked from [bitcoin-core/secp256k1](https://github.com/bitcoin-core/secp256k1) in order to control for changes and to incorporate the necessary Visual Studio build. The original repository can be used directly but recent changes to the public interface may cause build breaks. The `--enable-module-recovery` switch is required.
 
 Detailed instructions are provided below.
 
@@ -34,7 +34,7 @@ Detailed instructions are provided below.
 
 ### Debian/Ubuntu
 
-Libbitcoin requires a C++11 compiler, currently minimum [GCC 4.8.0](https://gcc.gnu.org/projects/cxx0x.html) or Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html).
+Bitprim requires a C++11 compiler, currently minimum [GCC 4.8.0](https://gcc.gnu.org/projects/cxx0x.html) or Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html).
 
 To see your GCC version:
 ```sh
@@ -61,22 +61,22 @@ Next install the [Boost](http://www.boost.org) (minimum 1.56.0) development pack
 ```sh
 $ sudo apt-get install libboost-all-dev
 ```
-Next download the [install script](https://github.com/libbitcoin/libbitcoin/blob/version2/install.sh) and enable execution:
+Next download the [install script](https://github.com/bitprim/bitprim-core/blob/version2/install.sh) and enable execution:
 ```sh
-$ wget https://raw.githubusercontent.com/libbitcoin/libbitcoin/version2/install.sh
+$ wget https://raw.githubusercontent.com/bitprim/bitprim-core/version2/install.sh
 $ chmod +x install.sh
 ```
-Finally, install libbitcoin:
+Finally, install bitprim:
 ```sh
 $ sudo ./install.sh
 ```
-Libbitcoin is now installed in `/usr/local/`.
+Bitprim is now installed in `/usr/local/`.
 
 ### Macintosh
 
-The OSX installation differs from Linux in the installation of the compiler and packaged dependencies. Libbitcoin supports both [Homebrew](http://brew.sh) and [MacPorts](https://www.macports.org) package managers. Both require Apple's [Xcode](https://developer.apple.com/xcode) command line tools. Neither requires Xcode as the tools may be installed independently.
+The OSX installation differs from Linux in the installation of the compiler and packaged dependencies. Bitprim supports both [Homebrew](http://brew.sh) and [MacPorts](https://www.macports.org) package managers. Both require Apple's [Xcode](https://developer.apple.com/xcode) command line tools. Neither requires Xcode as the tools may be installed independently.
 
-Libbitcoin compiles with Clang on OSX and requires C++11 support. Installation has been verified using Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html). This version or newer should be installed as part of the Xcode command line tools.
+Bitprim compiles with Clang on OSX and requires C++11 support. Installation has been verified using Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html). This version or newer should be installed as part of the Xcode command line tools.
 
 To see your Clang/LLVM  version:
 ```sh
@@ -108,16 +108,16 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ brew install boost
 ```
-Next download the [install script](https://github.com/libbitcoin/libbitcoin/blob/version2/install.sh) and enable execution:
+Next download the [install script](https://github.com/bitprim/bitprim-core/blob/version2/install.sh) and enable execution:
 ```sh
-$ wget https://raw.githubusercontent.com/libbitcoin/libbitcoin/version2/install.sh
+$ wget https://raw.githubusercontent.com/bitprim/bitprim-core/version2/install.sh
 $ chmod +x install.sh
 ```
-Finally install libbitcoin:
+Finally install bitprim:
 ```sh
 $ ./install.sh
 ```
-Libbitcoin is now installed in `/usr/local/`.
+Bitprim is now installed in `/usr/local/`.
 
 #### Using MacPorts
 
@@ -131,27 +131,27 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ sudo port install boost -no_single -no_static -python27
 ```
-Next download the [install script](https://github.com/libbitcoin/libbitcoin/blob/version2/install.sh) and enable execution:
+Next download the [install script](https://github.com/bitprim/bitprim-core/blob/version2/install.sh) and enable execution:
 ```sh
-$ wget https://raw.githubusercontent.com/libbitcoin/libbitcoin/version2/install.sh
+$ wget https://raw.githubusercontent.com/bitprim/bitprim-core/version2/install.sh
 $ chmod +x install.sh
 ```
-Finally install libbitcoin:
+Finally install bitprim:
 ```sh
 $ ./install.sh
 ```
-Libbitcoin is now installed in `/usr/local/`.
+Bitprim is now installed in `/usr/local/`.
 
 #### Notes
 
 The install script itself is commented so that the manual build steps for each dependency can be inferred by a developer.
 
-You can run the install script from any directory on your system. By default this will build libbitcoin in a subdirectory named `build-libbitcoin` and install it to `/usr/local/`. The install script requires `sudo` only if you do not have access to the installation location, which you can change using the `--prefix` option on the installer command line.
+You can run the install script from any directory on your system. By default this will build bitprim in a subdirectory named `build-bitprim` and install it to `/usr/local/`. The install script requires `sudo` only if you do not have access to the installation location, which you can change using the `--prefix` option on the installer command line.
 
 The build script clones, builds and installs two unpackaged repositories, namely:
 
-- [libbitcoin/secp256k1](https://github.com/libbitcoin/secp256k1)
-- [libbitcoin/libbitcoin](https://github.com/libbitcoin/libbitcoin)
+- [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
+- [bitprim/bitprim-core](https://github.com/bitprim/bitprim-core)
 
 The script builds from the head of their `version4` and `version2` branches respectively. The `master` branch is a staging area for changes. The version branches are considered release quality.
 
@@ -164,19 +164,19 @@ $ ./install.sh CFLAGS="-Og -g" --prefix=/home/me/myprefix
 
 #### Compiling with ICU (International Components for Unicode)
 
-Since the addition of [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) and later [BIP-38](https://github.com/bitcoin/bips/blob/master/bip-0038.mediawiki) support, libbitcoin conditionally incorporates [ICU](http://site.icu-project.org). To use the BIP-38 and BIP-39 passphrase normalization features libbitcoin must be compiled with the `--with-icu` option. Currently [libbitcoin-explorer](https://github.com/libbitcoin/libbitcoin-explorer) is the only other library that accesses this feature, so if you do not intend to use passphrase normalization this dependency can be avoided.
+Since the addition of [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) and later [BIP-38](https://github.com/bitcoin/bips/blob/master/bip-0038.mediawiki) support, bitprim conditionally incorporates [ICU](http://site.icu-project.org). To use the BIP-38 and BIP-39 passphrase normalization features bitprim must be compiled with the `--with-icu` option. Currently [bitprim-explorer](https://github.com/bitprim/bitprim-explorer) is the only other library that accesses this feature, so if you do not intend to use passphrase normalization this dependency can be avoided.
 ```sh
 $ ./install.sh --with-icu
 ```
 
 #### Compiling with QR Code Support
 
-Since the addition of [qrcode](https://github.com/evoskuil/libbitcoin/blob/master/src/wallet/qrcode.cpp) support, libbitcoin conditionally incorporates `qrencode`. This requires compiling with the `--with-qrencode` option. Currently [libbitcoin-explorer](https://github.com/libbitcoin/libbitcoin-explorer) is the only other library that accesses this feature, so if you do not intend to use qrcode this dependency can be avoided.
+Since the addition of [qrcode](https://github.com/evoskuil/libbitcoin/blob/master/src/wallet/qrcode.cpp) support, bitprim conditionally incorporates `qrencode`. This requires compiling with the `--with-qrencode` option. Currently [bitprim-explorer](https://github.com/bitprim/bitprim-explorer) is the only other library that accesses this feature, so if you do not intend to use qrcode this dependency can be avoided.
 ```sh
 $ ./install.sh --with-qrencode
 ```
 
-Since the addition of [png](https://github.com/evoskuil/libbitcoin/blob/master/src/utility/png.cpp) support, libbitcoin conditionally incorporates `libpng` (which in turn requires `zlib`). This requires compiling with the `--with-png` option. Currently [libbitcoin-explorer](https://github.com/libbitcoin/libbitcoin-explorer) is the only other library that accesses this feature, so if you do not intend to use png this dependency can be avoided.
+Since the addition of [png](https://github.com/evoskuil/libbitcoin/blob/master/src/utility/png.cpp) support, libbitcoin conditionally incorporates `libpng` (which in turn requires `zlib`). This requires compiling with the `--with-png` option. Currently [bitprim-explorer](https://github.com/bitprim/bitprim-explorer) is the only other library that accesses this feature, so if you do not intend to use png this dependency can be avoided.
 ```sh
 $ ./install.sh --with-png
 ```
@@ -190,22 +190,22 @@ $ ./install.sh --with-icu --with-png --with-qrencode --build-icu --build-zlib --
 
 ### Windows
 
-Visual Studio solutions are maintained for all libbitcoin libraries. NuGet packages exist for dependencies with the exceptions of the optional ZLib, PNG, and QREncode (required for QR code functionality). ICU is integrated into Windows and therefore not required as an additional dependency when using ICU features.
+Visual Studio solutions are maintained for all bitprim libraries. NuGet packages exist for dependencies with the exceptions of the optional ZLib, PNG, and QREncode (required for QR code functionality). ICU is integrated into Windows and therefore not required as an additional dependency when using ICU features.
 
-> The libbitcoin execution environment supports `Windows XP Service Pack 2` and newer.
+> The bitprim execution environment supports `Windows XP Service Pack 2` and newer.
 
 #### Upgrade Compiler
 
-Libbitcoin requires a C++11 compiler, which means **Visual Studio 2013** minimum. Additionally a pre-release compiler must be installed as an update to Visual Studio. Download and install the following tools as necessary. Both are available free of charge:
+Bitprim requires a C++11 compiler, which means **Visual Studio 2013** minimum. Additionally a pre-release compiler must be installed as an update to Visual Studio. Download and install the following tools as necessary. Both are available free of charge:
 
 * [Visual Studio 2013 Express](http://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx)
 * [November 2013 CTP Compiler](http://www.microsoft.com/en-us/download/details.aspx?id=41151)
 
 #### Create Local NuGet Repository
 
-Dependencies apart from the libbitcoin libraries are available as [NuGet packages](https://www.nuget.org/packages?q=evoskuil). The libbitcoin solution files are configured with references to these packages. To avoid redundancies these references expect a [NuGet.config](http://docs.nuget.org/docs/release-notes/nuget-2.1) in a central location.
+Dependencies apart from the bitprim libraries are available as [NuGet packages](https://www.nuget.org/packages?q=evoskuil). The bitprim solution files are configured with references to these packages. To avoid redundancies these references expect a [NuGet.config](http://docs.nuget.org/docs/release-notes/nuget-2.1) in a central location.
 
-The required set of NuGet packages can be viewed using the [NuGet package manager](http://docs.nuget.org/docs/start-here/managing-nuget-packages-using-the-dialog) from the libbitcoin solution. The NuGet package manager will automatically download missing packages, either from the build scripts or after prompting you in the Visual Studio environment. For your reference these are the required packages:
+The required set of NuGet packages can be viewed using the [NuGet package manager](http://docs.nuget.org/docs/start-here/managing-nuget-packages-using-the-dialog) from the bitprim solution. The NuGet package manager will automatically download missing packages, either from the build scripts or after prompting you in the Visual Studio environment. For your reference these are the required packages:
 
 * Packages maintained by [sergey.shandar](http://www.nuget.org/profiles/sergey.shandar)
  * [boost](http://www.nuget.org/packages/boost)
@@ -222,18 +222,18 @@ The required set of NuGet packages can be viewed using the [NuGet package manage
 * Packages maintained by [evoskuil](http://www.nuget.org/profiles/evoskuil)
  * [secp256k1\_vc120](http://www.nuget.org/packages/secp256k1_vc120)
 
-#### Build Libbitcoin Projects
+#### Build Bitprim Projects
 
-After cloning the the repository the libbitcoin build can be performed manually (from within Visual Studio) or using the `buildall.bat` script provided in the `builds\msvc\build\` subdirectory. The scripts automatically download the required NuGet packages.
+After cloning the the repository the bitprim build can be performed manually (from within Visual Studio) or using the `buildall.bat` script provided in the `builds\msvc\build\` subdirectory. The scripts automatically download the required NuGet packages.
 
 > Tip: The `buildall.bat` script builds *all* valid configurations. The build time can be significantly reduced by disabling all but the desired configuration in `buildbase.bat`.
 
-> The libbitcoin dynamic (DLL) build configurations do not compile, as the exports have not yet been fully implemented. These are currently disabled in the build scripts but you will encounter numerous errors if you build then manually.
+> The bitprim dynamic (DLL) build configurations do not compile, as the exports have not yet been fully implemented. These are currently disabled in the build scripts but you will encounter numerous errors if you build then manually.
 
 #### Optional: Building secp256k1
 
-The secp256k1 package above is maintained using the same [Visual Studio template](https://github.com/evoskuil/visual-studio-template) as all libbitcoin libraries. If so desired it can be built locally, in the same manner as libbitcoin.
+The secp256k1 package above is maintained using the same [Visual Studio template](https://github.com/evoskuil/visual-studio-template) as all bitprim libraries. If so desired it can be built locally, in the same manner as bitprim.
 
-* [libbitcoin/secp256k1/version4](https://github.com/libbitcoin/secp256k1/tree/version4)
+* [bitprim/secp256k1/version4](https://github.com/bitprim/secp256k1/tree/version4)
 
 This change is properly accomplished by disabling the "NuGet Dependencies" in the Visual Studio properties user interface and then importing `secp256k1.import.props`, which references `secp256k1.import.xml`.
