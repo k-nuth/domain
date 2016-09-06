@@ -1,8 +1,8 @@
 cmake_policy(VERSION 3.4)
 
-# bitprim
+# bitprim-core
 #==============================================================================
-project(bitprim
+project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
 cmake_minimum_required(VERSION 3.4)
@@ -169,14 +169,14 @@ _add_cxx_compile_flag(-fvisibility-inlines-hidden _has_visibility_inlines_hidden
 
 # Build
 #==============================================================================
-# src/bitprim.la => ${libdir}
+# src/bitprim-core.la => ${libdir}
 #------------------------------------------------------------------------------
 set(MODE STATIC)
 if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-add_library(bitprim ${MODE}
+add_library(bitprim-core ${MODE}
   src/constants.cpp
   src/error.cpp
   src/chain/block.cpp
@@ -331,13 +331,13 @@ add_library(bitprim ${MODE}
   src/wallet/parse_encrypted_keys/parse_encrypted_public.hpp
   src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
   src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp)
-target_include_directories(bitprim PUBLIC
+target_include_directories(bitprim-core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_definitions(bitprim PUBLIC -DBC_STATIC)
+target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC)
 
-target_include_directories(bitprim SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
-target_link_libraries(bitprim PUBLIC
+target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+target_link_libraries(bitprim-core PUBLIC
   ${Boost_CHRONO_LIBRARY}
   ${Boost_DATE_TIME_LIBRARY}
   ${Boost_FILESYSTEM_LIBRARY}
@@ -347,19 +347,19 @@ target_link_libraries(bitprim PUBLIC
   ${Boost_REGEX_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_THREAD_LIBRARY})
-target_link_libraries(bitprim PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 if (WITH_PNG)
-  target_link_libraries(bitprim PUBLIC png)
+  target_link_libraries(bitprim-core PUBLIC png)
 endif()
-target_link_libraries(bitprim PUBLIC secp256k1)
+target_link_libraries(bitprim-core PUBLIC secp256k1)
 
 # Group sources
 file(GLOB_RECURSE headers
   RELATIVE ${CMAKE_CURRENT_LIST_DIR}
   include/*.h include/*.hpp)
-target_sources(bitprim PRIVATE "${headers}")
+target_sources(bitprim-core PRIVATE "${headers}")
 
-get_target_property(sources bitprim SOURCES)
+get_target_property(sources bitprim-core SOURCES)
 foreach (source ${sources})
   get_filename_component(group ${source} DIRECTORY)
   if (MSVC)
@@ -368,18 +368,18 @@ foreach (source ${sources})
   source_group("${group}" FILES ${source})
 endforeach()
 
-# local: examples/bitprim_examples
+# local: examples/bitprim-core_examples
 #------------------------------------------------------------------------------
 if (WITH_EXAMPLES)
-  add_executable(bitprim_examples
+  add_executable(bitprim-core_examples
     examples/main.cpp)
-  target_link_libraries(bitprim_examples PUBLIC bitprim)
+  target_link_libraries(bitprim-core_examples PUBLIC bitprim-core)
 endif()
 
-# local: test/bitprim_test
+# local: test/bitprim-core_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
-  add_executable(bitprim_test
+  add_executable(bitprim-core_test
     test/main.cpp
     test/chain/block.cpp
     test/chain/header.cpp
@@ -473,26 +473,26 @@ if (WITH_TESTS)
     test/wallet/uri.cpp
     test/wallet/uri_reader.cpp)
   if (ENABLE_SHARED)
-    target_compile_definitions(bitprim_test PRIVATE -DBOOST_TEST_DYN_LINK)
+    target_compile_definitions(bitprim-core_test PRIVATE -DBOOST_TEST_DYN_LINK)
   endif()
-  target_link_libraries(bitprim_test PUBLIC bitprim)
+  target_link_libraries(bitprim-core_test PUBLIC bitprim-core)
 
-  target_include_directories(bitprim_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
-  target_link_libraries(bitprim_test PUBLIC
+  target_include_directories(bitprim-core_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+  target_link_libraries(bitprim-core_test PUBLIC
     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
   enable_testing()
-  set(_bitprim_tests address_tests alert_payload_tests alert_tests authority_tests base_10_tests base_16_tests base_58_tests base_64_tests base_85_tests base58_tests binary_tests bitcoin_uri_tests block_tests block_message_tests block_transactions_tests btc256_tests checkpoint_tests checksum_tests collection_tests compact_block_tests data_tests ec_private_tests ec_public_tests elliptic_curve_tests encrypted_tests endian_tests endpoint_tests fee_filter_tests filter_add_tests filter_clear_tests filter_load_tests get_address_tests get_block_transactions_tests get_blocks_tests get_data_tests get_headers_tests hash_number_tests hash_tests hd_private_tests hd_public_tests header_tests headers_tests heading_tests input_tests inventory_tests inventory_type_id_tests inventory_vector_tests memory_pool_tests merkle_block_tests message_tests mnemonic_tests network_address_tests not_found_tests output_tests parameter_tests payment_address_tests ping_tests point_tests pong_tests prefilled_transaction_tests printer_tests random_tests reject_tests script_number_tests script_tests send_compact_blocks_tests send_headers_tests serializer_tests stealth_address_tests stealth_tests stream_tests thread_tests transaction_tests transaction_message_tests unicode_istream_tests unicode_ostream_tests unicode_tests uri_reader_tests uri_tests verack_tests version_tests)
+  set(_bitprim-core_tests address_tests alert_payload_tests alert_tests authority_tests base_10_tests base_16_tests base_58_tests base_64_tests base_85_tests base58_tests binary_tests bitcoin_uri_tests block_tests block_message_tests block_transactions_tests btc256_tests checkpoint_tests checksum_tests collection_tests compact_block_tests data_tests ec_private_tests ec_public_tests elliptic_curve_tests encrypted_tests endian_tests endpoint_tests fee_filter_tests filter_add_tests filter_clear_tests filter_load_tests get_address_tests get_block_transactions_tests get_blocks_tests get_data_tests get_headers_tests hash_number_tests hash_tests hd_private_tests hd_public_tests header_tests headers_tests heading_tests input_tests inventory_tests inventory_type_id_tests inventory_vector_tests memory_pool_tests merkle_block_tests message_tests mnemonic_tests network_address_tests not_found_tests output_tests parameter_tests payment_address_tests ping_tests point_tests pong_tests prefilled_transaction_tests printer_tests random_tests reject_tests script_number_tests script_tests send_compact_blocks_tests send_headers_tests serializer_tests stealth_address_tests stealth_tests stream_tests thread_tests transaction_tests transaction_message_tests unicode_istream_tests unicode_ostream_tests unicode_tests uri_reader_tests uri_tests verack_tests version_tests)
   if (WITH_PNG)
-    set(_bitprim_tests ${_bitprim_tests} png_tests)
+    set(_bitprim-core_tests ${_bitprim-core_tests} png_tests)
   endif()
   if (WITH_QRENCODE)
-    set(_bitprim_tests ${_bitprim_tests} qrcode_tests)
+    set(_bitprim-core_tests ${_bitprim-core_tests} qrcode_tests)
   endif()
-  foreach (_test_name ${_bitprim_tests})
+  foreach (_test_name ${_bitprim-core_tests})
     add_test(
       NAME test.${_test_name}
-      COMMAND bitprim_test
+      COMMAND bitprim-core_test
         --run_test=${_test_name}
         --show_progress=no
         --detect_memory_leak=0
@@ -503,11 +503,11 @@ endif()
 
 # Install
 #==============================================================================
-install(TARGETS bitprim
-  EXPORT bitprim
+install(TARGETS bitprim-core
+  EXPORT bitprim-core
   ARCHIVE DESTINATION lib)
 
-set(_bitprim_headers
+set(_bitprim-core_headers
   # include_bitcoin_HEADERS =
   bitcoin/bitcoin.hpp
   # include_bitcoin_bitcoin_HEADERS =
@@ -688,7 +688,7 @@ set(_bitprim_headers
   bitcoin/bitcoin/wallet/stealth_address.hpp
   bitcoin/bitcoin/wallet/uri.hpp
   bitcoin/bitcoin/wallet/uri_reader.hpp)
-foreach (_header ${_bitprim_headers})
+foreach (_header ${_bitprim-core_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")
 endforeach()
@@ -697,9 +697,9 @@ endforeach()
 #==============================================================================
 include(CMakePackageConfigHelpers)
 
-export(EXPORT bitprim
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/bitprimTargets.cmake")
-export(PACKAGE bitprim)
+export(EXPORT bitprim-core
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreTargets.cmake")
+export(PACKAGE bitprim-core)
 
 if (UNIX)
   set(_config_package_location "lib/cmake")
@@ -707,21 +707,21 @@ elseif (WIN32)
   set(_config_package_location "cmake")
 endif()
 
-install(EXPORT bitprim
-  FILE bitprimTargets.cmake
+install(EXPORT bitprim-core
+  FILE bitprim-coreTargets.cmake
   DESTINATION ${_config_package_location})
 
-configure_file(bitprimConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprimConfig.cmake"
+configure_file(bitprim-coreConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfig.cmake"
   @ONLY)
 
 write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprimConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(
   FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprimConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprimConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfigVersion.cmake"
   DESTINATION ${_config_package_location})
