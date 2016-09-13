@@ -64,10 +64,10 @@ find_package(
 #------------------------------------------------------------------------------
 find_package(Threads REQUIRED)
 
-# Require png of at least version 1.6.23 and output ${png_CPPFLAGS/LIBS/PKG}.
+# Require png of at least version 1.6.25 and output ${png_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (WITH_PNG)
-  find_package(PNG 1.6.23 REQUIRED)
+  find_package(PNG 1.6.25 REQUIRED)
 
   add_library(png INTERFACE IMPORTED)
   set_target_properties(png PROPERTIES
@@ -177,7 +177,6 @@ if (ENABLE_SHARED)
 endif()
 
 add_library(bitprim-core ${MODE}
-  src/constants.cpp
   src/error.cpp
   src/chain/block.cpp
   src/chain/header.cpp
