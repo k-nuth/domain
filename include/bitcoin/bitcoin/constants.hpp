@@ -26,6 +26,7 @@
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/message/network_address.hpp>
 #include <bitcoin/bitcoin/math/hash_number.hpp>
+#include <bitcoin/bitcoin/version.hpp>
 
 namespace libbitcoin {
 
@@ -47,9 +48,12 @@ BC_CONSTEXPR uint64_t max_size_t = BC_MAX_SIZE;
 BC_CONSTEXPR uint8_t byte_bits = 8;
 
 // Consensus constants.
+BC_CONSTEXPR size_t min_coinbase_size = 2;
+BC_CONSTEXPR size_t max_coinbase_size = 100;
 BC_CONSTEXPR uint32_t reward_interval = 210000;
 BC_CONSTEXPR uint32_t coinbase_maturity = 100;
 BC_CONSTEXPR uint32_t initial_block_reward = 50;
+BC_CONSTEXPR uint32_t time_stamp_future_hours = 2;
 BC_CONSTEXPR uint32_t max_work_bits = 0x1d00ffff;
 BC_CONSTEXPR uint32_t max_input_sequence = max_uint32;
 
@@ -62,7 +66,7 @@ BC_CONSTFUNC uint64_t max_money_recursive(uint64_t current)
     return (current > 0) ? current + max_money_recursive(current >> 1) : 0;
 }
 
-BC_CONSTFUNC uint64_t coin_price(uint64_t value=1)
+BC_CONSTFUNC uint64_t bitcoin_to_satoshi(uint64_t value=1)
 {
     return value * 100000000;
 }
@@ -70,7 +74,7 @@ BC_CONSTFUNC uint64_t coin_price(uint64_t value=1)
 BC_CONSTFUNC uint64_t max_money()
 {
     return reward_interval *
-        max_money_recursive(coin_price(initial_block_reward));
+        max_money_recursive(bitcoin_to_satoshi(initial_block_reward));
 }
 
 // For configuration settings initialization.
@@ -80,40 +84,6 @@ enum class settings
     mainnet,
     testnet
 };
-
-enum services: uint64_t
-{
-    // The node is capable of serving the block chain.
-    node_network = (1 << 0),
-
-    // Requires version >= 70004 (bip64)
-    // The node is capable of responding to the getutxo protocol request.
-    node_utxo = (1 << 1),
-
-    // Requires version >= 70011 (proposed)
-    // The node is capable and willing to handle bloom-filtered connections.
-    bloom_filters = (1 << 2)
-};
-
-BC_CONSTEXPR uint32_t no_timestamp = 0;
-BC_CONSTEXPR uint16_t unspecified_ip_port = 0;
-BC_CONSTEXPR message::ip_address unspecified_ip_address
-{
-    {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00
-    }
-};
-BC_CONSTEXPR message::network_address unspecified_network_address
-{
-    no_timestamp,
-    services::node_network,
-    unspecified_ip_address,
-    unspecified_ip_port
-};
-
-// TODO: make static.
-BC_API hash_number max_target();
 
 } // namespace libbitcoin
 

@@ -33,42 +33,32 @@ namespace message {
 
 typedef byte_array<16> ip_address;
 
-BC_CONSTEXPR ip_address localhost_ip_address =
-{
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x01
-};
-
 class BC_API network_address
 {
 public:
     typedef std::vector<network_address> list;
 
     static network_address factory_from_data(uint32_t version,
-        const data_chunk& data, bool with_timestamp /*= true*/);
+        const data_chunk& data, bool with_timestamp);
     static network_address factory_from_data(uint32_t version,
-        std::istream& stream, bool with_timestamp /*= true*/);
+        std::istream& stream, bool with_timestamp);
     static network_address factory_from_data(uint32_t version,
-        reader& source, bool with_timestamp /*=true*/);
+        reader& source, bool with_timestamp);
     static uint64_t satoshi_fixed_size(uint32_t version,
-        bool with_timestamp /*= false*/);
+        bool with_timestamp);
 
     bool from_data(uint32_t version, const data_chunk& data,
-        bool with_timestamp /*= true*/);
+        bool with_timestamp);
     bool from_data(uint32_t version, std::istream& stream,
-        bool with_timestamp /*= true*/);
-    bool from_data(uint32_t version, reader& source,
-        bool with_timestamp /*= true*/);
-    data_chunk to_data(uint32_t version,
-        bool with_timestamp /*= true*/) const;
+        bool with_timestamp);
+    bool from_data(uint32_t version, reader& source, bool with_timestamp);
+    data_chunk to_data(uint32_t version, bool with_timestamp) const;
     void to_data(uint32_t version, std::ostream& stream,
-        bool with_timestamp /*= true*/) const;
-    void to_data(uint32_t version, writer& sink,
-        bool with_timestamp /*= true*/) const;
+        bool with_timestamp) const;
+    void to_data(uint32_t version, writer& sink, bool with_timestamp) const;
     bool is_valid() const;
     void reset();
-    uint64_t serialized_size(uint32_t version,
-        bool with_timestamp /*= false*/) const;
+    uint64_t serialized_size(uint32_t version, bool with_timestamp) const;
 
     // Starting version 31402, addresses are prefixed with a timestamp.
     uint32_t timestamp;
@@ -77,7 +67,28 @@ public:
     uint16_t port;
 };
 
-} // namspace message
-} // namspace libbitcoin
+// version::services::none
+BC_CONSTEXPR uint32_t no_services = 0;
+BC_CONSTEXPR uint32_t no_timestamp = 0;
+BC_CONSTEXPR uint16_t unspecified_ip_port = 0;
+BC_CONSTEXPR ip_address unspecified_ip_address
+{
+    {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00
+    }
+};
+
+// Defaults to full node services.
+BC_CONSTEXPR network_address unspecified_network_address
+{
+    no_timestamp,
+    no_services,
+    unspecified_ip_address,
+    unspecified_ip_port
+};
+
+} // namespace message
+} // namespace libbitcoin
 
 #endif

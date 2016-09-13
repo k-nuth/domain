@@ -19,11 +19,14 @@
  */
 #include <bitcoin/bitcoin/chain/script/script.hpp>
 
+#include <cstddef>
+#include <cstdint>
 #include <numeric>
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/chain/script/opcode.hpp>
 #include <bitcoin/bitcoin/chain/script/operation.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/formats/base_16.hpp>
@@ -45,7 +48,10 @@ namespace chain {
 // False is an empty stack.
 static const data_chunk stack_false_value;
 static const data_chunk stack_true_value{ 1 };
-static constexpr uint64_t op_counter_limit = 201;
+static constexpr size_t op_counter_limit = 201;
+static constexpr size_t max_number_size = 4;
+static constexpr size_t cltv_max_number_size = 5;
+static constexpr size_t multisig_default_signature_ops = 20;
 
 enum class signature_parse_result
 {
@@ -224,7 +230,9 @@ uint64_t script::satoshi_content_size() const
     
     const auto value = [](uint64_t total, const operation& op)
     {
-        return total + op.serialized_size();
+        const auto op_size = op.serialized_size();
+        BITCOIN_ASSERT(total + op.serialized_size() <= max_uint64 - op_size);
+        return total + op_size;
     };
 
     return std::accumulate(operations.begin(), operations.end(), uint64_t(0),
@@ -305,6 +313,44 @@ std::string script::to_string(uint32_t flags) const
     }
 
     return value.str();
+}
+
+size_t script::signature_operations(bool strict) const
+{
+    size_t total = 0;
+    opcode last_opcode = opcode::bad_operation;
+
+    for (const auto& op: operations)
+    {
+        if (op.code == opcode::checksig ||
+            op.code == opcode::checksigverify)
+        {
+            total++;
+        }
+        else if (
+            op.code == opcode::checkmultisig ||
+            op.code == opcode::checkmultisigverify)
+        {
+            total += strict && within_op_n(last_opcode) ?
+                decode_op_n(last_opcode) : multisig_default_signature_ops;
+        }
+
+        last_opcode = op.code;
+    }
+
+    return total;
+}
+
+size_t script::pay_to_script_hash_signature_operations(const script& pay) const
+{
+    if (pay.operations.empty() || pattern() != script_pattern::pay_script_hash)
+        return 0;
+
+    script evaluate;
+    const auto& data = pay.operations.back().data;
+
+    return evaluate.from_data(data, false, script::parse_mode::strict) ?
+        evaluate.signature_operations(true) : max_size_t;
 }
 
 bool script::deserialize(const data_chunk& raw_script, parse_mode mode)
@@ -464,6 +510,11 @@ inline bool cast_to_bool(const data_chunk& values)
     return false;
 }
 
+inline uint8_t cast_to_number(bool value)
+{
+    return value ? 1 : 0;
+}
+
 template <typename DataStack>
 void stack_swap(DataStack& stack, size_t index_a, size_t index_b)
 {
@@ -485,11 +536,11 @@ bool read_value(DataStack& stack, int32_t& value)
     if (stack.empty())
         return false;
 
-    script_number mid;
-    if (!mid.set_data(pop_item(stack)))
+    script_number middle;
+    if (!middle.set_data(pop_item(stack), max_number_size))
         return false;
 
-    value = mid.int32();
+    value = middle.int32();
     return true;
 }
 
@@ -523,18 +574,18 @@ bool pick_roll_impl(DataStack& stack, bool is_roll)
 // numequal, numequalverify, numnotequal, lessthan, greaterthan,
 // lessthanorequal, greaterthanorequal, min, max
 template <typename DataStack>
-bool arithmetic_start_new(DataStack& stack, script_number& number_a,
-    script_number& number_b)
+bool arithmetic_start_new(DataStack& stack, script_number& left,
+    script_number& right)
 {
     if (stack.size() < 2)
         return false;
 
     // The second number is at the top of the stack.
-    if (!number_b.set_data(pop_item(stack)))
+    if (!right.set_data(pop_item(stack), max_number_size))
         return false;
 
     // The first is at the second position.
-    if (!number_a.set_data(pop_item(stack)))
+    if (!left.set_data(pop_item(stack), max_number_size))
         return false;
 
     return true;
@@ -562,8 +613,8 @@ bool greater_op_16(opcode code)
 
 bool op_negative_1(evaluation_context& context)
 {
-    script_number neg1(-1);
-    context.stack.push_back(neg1.data());
+    static const script_number negative_1(-1);
+    context.stack.push_back(negative_1.data());
     return true;
 }
 
@@ -572,7 +623,7 @@ bool op_x(evaluation_context& context, opcode code)
     const auto difference = static_cast<uint8_t>(code) -
         static_cast<uint8_t>(opcode::op_1) + 1;
 
-    script_number value(difference);
+    const script_number value(difference);
     context.stack.push_back(value.data());
     return true;
 }
@@ -582,7 +633,7 @@ bool op_if(evaluation_context& context)
     auto value = false;
     if (context.conditional.succeeded())
     {
-        if (context.stack.size() < 1)
+        if (context.stack.empty())
             return false;
 
         value = cast_to_bool(context.pop_stack());
@@ -623,7 +674,7 @@ bool op_endif(evaluation_context& context)
 
 bool op_verify(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     if (!cast_to_bool(context.stack.back()))
@@ -635,7 +686,7 @@ bool op_verify(evaluation_context& context)
 
 bool op_toaltstack(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     const auto move_data = context.pop_stack();
@@ -645,7 +696,7 @@ bool op_toaltstack(evaluation_context& context)
 
 bool op_fromaltstack(evaluation_context& context)
 {
-    if (context.alternate.size() < 1)
+    if (context.alternate.empty())
         return false;
 
     context.stack.push_back(context.alternate.back());
@@ -741,7 +792,7 @@ bool op_2swap(evaluation_context& context)
 
 bool op_ifdup(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     if (cast_to_bool(context.stack.back()))
@@ -752,14 +803,19 @@ bool op_ifdup(evaluation_context& context)
 
 bool op_depth(evaluation_context& context)
 {
-    script_number stack_size(context.stack.size());
+    // Condition added by EKV on 2016.09.06.
+    const auto size = context.stack.size();
+    if (size > max_int32)
+        return false;
+
+    const script_number stack_size(size);
     context.stack.push_back(stack_size.data());
     return true;
 }
 
 bool op_drop(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     context.stack.pop_back();
@@ -768,7 +824,7 @@ bool op_drop(evaluation_context& context)
 
 bool op_dup(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     context.stack.push_back(context.stack.back());
@@ -837,10 +893,15 @@ bool op_tuck(evaluation_context& context)
 
 bool op_size(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
-    const script_number top_item_size(context.stack.back().size());
+    // Condition added by EKV on 2016.09.06.
+    const auto size = context.stack.back().size();
+    if (size > max_int32)
+        return false;
+
+    const script_number top_item_size(size);
     context.stack.push_back(top_item_size.data());
     return true;
 }
@@ -868,41 +929,39 @@ bool op_equalverify(evaluation_context& context)
 
 bool op_1add(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     script_number number;
-    if (!number.set_data(context.pop_stack()))
+    if (!number.set_data(context.pop_stack(), max_number_size))
         return false;
 
-    const script_number one(1);
-    number += one;
+    number += 1;
     context.stack.push_back(number.data());
     return true;
 }
 
 bool op_1sub(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     script_number number;
-    if (!number.set_data(context.pop_stack()))
+    if (!number.set_data(context.pop_stack(), max_number_size))
         return false;
 
-    const script_number one(1);
-    number -= one;
+    number -= 1;
     context.stack.push_back(number.data());
     return true;
 }
 
 bool op_negate(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     script_number number;
-    if (!number.set_data(context.pop_stack()))
+    if (!number.set_data(context.pop_stack(), max_number_size))
         return false;
 
     number = -number;
@@ -912,15 +971,14 @@ bool op_negate(evaluation_context& context)
 
 bool op_abs(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     script_number number;
-    if (!number.set_data(context.pop_stack()))
+    if (!number.set_data(context.pop_stack(), max_number_size))
         return false;
 
-    const script_number zero(0);
-    if (number < zero)
+    if (number < 0)
         number = -number;
 
     context.stack.push_back(number.data());
@@ -929,139 +987,136 @@ bool op_abs(evaluation_context& context)
 
 bool op_not(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     script_number number;
-    if (!number.set_data(context.pop_stack()))
+    if (!number.set_data(context.pop_stack(), max_number_size))
         return false;
 
-    const script_number zero(0);
-    context.stack.push_back(script_number(number == zero).data());
+    context.stack.push_back(script_number(cast_to_number(number == 0)).data());
     return true;
 }
 
 bool op_0notequal(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     script_number number;
-    if (!number.set_data(context.pop_stack()))
+    if (!number.set_data(context.pop_stack(), max_number_size))
         return false;
 
-    const script_number zero(0);
-    context.stack.push_back(script_number(number != zero).data());
+    context.stack.push_back(script_number(cast_to_number(number != 0)).data());
     return true;
 }
 
 bool op_add(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result = number_a + number_b;
+    const auto result = left + right;
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_sub(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result = number_a - number_b;
+    const auto result = left - right;
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_booland(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number zero(0);
-    const script_number result(number_a != zero && number_b != zero);
+    const script_number result(cast_to_number(left != 0 && right != 0));
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_boolor(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number zero(0);
-    const script_number result(number_a != zero || number_b != zero);
+    const script_number result(cast_to_number(left != 0 || right != 0));
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_numequal(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result(number_a == number_b);
+    const auto value = left == right;
+    const script_number result(cast_to_number(value));
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_numequalverify(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    return number_a == number_b;
+    return left == right;
 }
 
 bool op_numnotequal(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result(number_a != number_b);
+    const script_number result(cast_to_number(left != right));
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_lessthan(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result(number_a < number_b);
+    const script_number result(cast_to_number(left < right));
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_greaterthan(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result(number_a > number_b);
+    const script_number result(cast_to_number(left > right));
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_lessthanorequal(evaluation_context& context)
 {
-    script_number number_a, number_b;
+    script_number left, right;
 
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result(number_a <= number_b);
+    const script_number result(cast_to_number(left <= right));
     context.stack.push_back(result.data());
 
     return true;
@@ -1069,39 +1124,39 @@ bool op_lessthanorequal(evaluation_context& context)
 
 bool op_greaterthanorequal(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    const script_number result(number_a >= number_b);
+    const script_number result(cast_to_number(left >= right));
     context.stack.push_back(result.data());
     return true;
 }
 
 bool op_min(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    if (number_a < number_b)
-        context.stack.push_back(number_a.data());
+    if (left < right)
+        context.stack.push_back(left.data());
     else
-        context.stack.push_back(number_b.data());
+        context.stack.push_back(right.data());
 
     return true;
 }
 
 bool op_max(evaluation_context& context)
 {
-    script_number number_a, number_b;
-    if (!arithmetic_start_new(context.stack, number_a, number_b))
+    script_number left, right;
+    if (!arithmetic_start_new(context.stack, left, right))
         return false;
 
-    if (number_a < number_b)
-        context.stack.push_back(number_b.data());
+    if (left < right)
+        context.stack.push_back(right.data());
     else
-        context.stack.push_back(number_a.data());
+        context.stack.push_back(left.data());
 
     return true;
 }
@@ -1112,15 +1167,15 @@ bool op_within(evaluation_context& context)
         return false;
 
     script_number upper;
-    if (!upper.set_data(context.pop_stack()))
+    if (!upper.set_data(context.pop_stack(), max_number_size))
         return false;
 
     script_number lower;
-    if (!lower.set_data(context.pop_stack()))
+    if (!lower.set_data(context.pop_stack(), max_number_size))
         return false;
 
     script_number value;
-    if (!value.set_data(context.pop_stack()))
+    if (!value.set_data(context.pop_stack(), max_number_size))
         return false;
 
     if ((lower <= value) && (value < upper))
@@ -1133,7 +1188,7 @@ bool op_within(evaluation_context& context)
 
 bool op_ripemd160(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     const auto hash = ripemd160_hash(context.pop_stack());
@@ -1143,7 +1198,7 @@ bool op_ripemd160(evaluation_context& context)
 
 bool op_sha1(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     const auto hash = sha1_hash(context.pop_stack());
@@ -1153,7 +1208,7 @@ bool op_sha1(evaluation_context& context)
 
 bool op_sha256(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     const auto hash = sha256_hash(context.pop_stack());
@@ -1163,7 +1218,7 @@ bool op_sha256(evaluation_context& context)
 
 bool op_hash160(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     const auto hash = bitcoin_short_hash(context.pop_stack());
@@ -1173,7 +1228,7 @@ bool op_hash160(evaluation_context& context)
 
 bool op_hash256(evaluation_context& context)
 {
-    if (context.stack.size() < 1)
+    if (context.stack.empty())
         return false;
 
     const auto hash = bitcoin_hash(context.pop_stack());
@@ -1409,7 +1464,7 @@ bool op_checklocktimeverify(evaluation_context& context, const script& script,
     // BIP65: We extend the (signed) CLTV script number range to 5 bytes in
     // order to reach the domain of the (unsigned) tx.locktime field.
     script_number number;
-    if (!number.set_data(context.pop_stack(), cltv_max_script_number_size))
+    if (!number.set_data(context.pop_stack(), cltv_max_number_size))
         return false;
 
     // BIP65: the top item on the stack is less than 0.
@@ -1916,5 +1971,5 @@ bool script::verify(const script& input_script, const script& output_script,
     return true;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

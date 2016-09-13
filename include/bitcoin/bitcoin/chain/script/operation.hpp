@@ -73,7 +73,7 @@ enum class script_pattern
     /// Sign Script Hash [P2SH/BIP16]
     sign_script_hash,
 
-    /// The script is valid but does not conform to the standard tempaltes.
+    /// The script is valid but does not conform to the standard templates.
     /// Such scripts are always accepted if they are mined into blocks, but
     /// transactions with non-standard scripts may not be forwarded by peers.
     non_standard
@@ -110,9 +110,9 @@ public:
     /// stack factories
     static stack to_null_data_pattern(data_slice data);
     static stack to_pay_multisig_pattern(uint8_t signatures,
-        const std::vector<ec_compressed>& points);
+        const point_list& points);
     static stack to_pay_multisig_pattern(uint8_t signatures,
-        const std::vector<data_chunk>& points);
+        const data_stack& points);
     static stack to_pay_public_key_pattern(data_slice point);
     static stack to_pay_key_hash_pattern(const short_hash& hash);
     static stack to_pay_script_hash_pattern(const short_hash& hash);

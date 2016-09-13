@@ -32,7 +32,7 @@
 
 namespace libbitcoin {
 namespace message {
-    
+
 // The checksum is ignored by the version command.
 class BC_API version
 {
@@ -50,10 +50,16 @@ public:
         // send_headers
         bip130 = 70012,
 
-        // reject (AND version.relay)
+        // bloom_filters service bit
+        bip111 = 70011,
+
+        // node_utxo service bit
+        bip64 = 70004,
+
+        // reject (satoshi node writes version.relay starting here)
         bip61 = 70002,
 
-        // filters, merkle_block, not_found (NOT version.relay)
+        // filters, merkle_block, not_found, version.relay
         bip37 = 70001,
 
         // memory_pool
@@ -62,14 +68,40 @@ public:
         // ping.nonce, pong
         bip31 = 60001,
 
+        // Don't request blocks from nodes of versions 32000-32400.
+        no_blocks_end = 32400,
+
+        // Don't request blocks from nodes of versions 32000-32400.
+        no_blocks_start = 32000,
+
         // This preceded the BIP system.
         headers = 31800,
 
-        // We require at least this of peers.
+        // We require at least this of peers, address.time fields.
         minimum = 31402,
 
         // We support at most this internally (bound to settings default).
-        maximum = bip130
+        maximum = bip130,
+
+        // Used to generate canonical size required by consensus checks.
+        canonical = 0
+    };
+
+    enum service: uint64_t
+    {
+        // The network exposes no services.
+        none = 0,
+
+        // The network is capable of serving the block chain (full node).
+        node_network = (1 << 0),
+
+        // Requires version.value >= level::bip64
+        // The network is capable of responding to the getutxo protocol request.
+        node_utxo = (1 << 1),
+
+        // Requires version.value >= level::bip111
+        // The network is capable and willing to handle bloom-filtered connections.
+        bloom_filters = (1 << 2)
     };
 
     static version factory_from_data(uint32_t version, const data_chunk& data);
@@ -99,11 +131,11 @@ public:
     std::string user_agent;
     uint32_t start_height;
 
-    // version >= 70001
+    // version >= level::bip61
     bool relay;
 };
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin
 
 #endif

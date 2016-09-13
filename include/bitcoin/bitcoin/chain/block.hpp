@@ -20,6 +20,7 @@
 #ifndef LIBBITCOIN_CHAIN_BLOCK_HPP
 #define LIBBITCOIN_CHAIN_BLOCK_HPP
 
+#include <cstddef>
 #include <cstdint>
 #include <istream>
 #include <memory>
@@ -28,6 +29,7 @@
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
 #include <bitcoin/bitcoin/utility/writer.hpp>
@@ -44,44 +46,47 @@ public:
     typedef std::vector<size_t> indexes;
 
     static block factory_from_data(const data_chunk& data,
-        bool with_transaction_count = true);
+        bool with_transaction_count=true);
     static block factory_from_data(std::istream& stream,
-        bool with_transaction_count = true);
+        bool with_transaction_count=true);
     static block factory_from_data(reader& source,
-        bool with_transaction_count = true);
-    static hash_digest generate_merkle_root(
-        const transaction::list& transactions);
+        bool with_transaction_count=true);
     static block genesis_mainnet();
     static block genesis_testnet();
 
     block();
     block(const block& other);
-    block(const chain::header& header,
-        const chain::transaction::list& transactions);
+    block(const chain::header& header, const transaction::list& transactions);
 
     block(block&& other);
-    block(chain::header&& header,
-        chain::transaction::list&& transactions);
+    block(chain::header&& header, transaction::list&& transactions);
 
     /// This class is move assignable but not copy assignable.
     block& operator=(block&& other);
     void operator=(const block&) = delete;
 
-    bool from_data(const data_chunk& data, bool with_transaction_count = true);
-    bool from_data(std::istream& stream, bool with_transaction_count = true);
-    bool from_data(reader& source, bool with_transaction_count = true);
-    data_chunk to_data(bool with_transaction_count = true) const;
-    void to_data(std::ostream& stream, bool with_transaction_count = true) const;
-    void to_data(writer& sink, bool with_transaction_count = true) const;
+    bool from_data(const data_chunk& data, bool with_transaction_count=true);
+    bool from_data(std::istream& stream, bool with_transaction_count=true);
+    bool from_data(reader& source, bool with_transaction_count=true);
+    data_chunk to_data(bool with_transaction_count=true) const;
+    void to_data(std::ostream& stream, bool with_transaction_count=true) const;
+    void to_data(writer& sink, bool with_transaction_count=true) const;
     bool is_valid() const;
+    bool is_distinct_transaction_set() const;
+    bool is_valid_coinbase_height(size_t height) const;
     void reset();
-    uint64_t serialized_size(bool with_transaction_count = true) const;
+    hash_digest generate_merkle_root() const;
+    size_t signature_operations(bool strict) const;
+    uint64_t serialized_size(bool with_transaction_count=true) const;
 
     chain::header header;
     transaction::list transactions;
+
+private:
+    static hash_digest build_merkle_tree(hash_list& merkle);
 };
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
 
 #endif
