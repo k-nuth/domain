@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.4)
 project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check for baseline language coverage in the compiler for the C++11 standard.
 #------------------------------------------------------------------------------
@@ -351,6 +352,8 @@ if (WITH_PNG)
 endif()
 target_link_libraries(bitprim-core PUBLIC secp256k1)
 
+set_target_properties(bitprim-core PROPERTIES FOLDER "core")
+
 # Group sources
 file(GLOB_RECURSE headers
   RELATIVE ${CMAKE_CURRENT_LIST_DIR}
@@ -366,18 +369,12 @@ foreach (source ${sources})
   source_group("${group}" FILES ${source})
 endforeach()
 
-# local: examples/bitprim-core_examples
-#------------------------------------------------------------------------------
-if (WITH_EXAMPLES)
-  add_executable(bitprim-core_examples
-    examples/main.cpp)
-  target_link_libraries(bitprim-core_examples PUBLIC bitprim-core)
-endif()
-
-# local: test/bitprim-core_test
+# Tests
+#==============================================================================
+# local: test/bitprim_core_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
-  add_executable(bitprim-core_test
+  add_executable(bitprim_core_test
     test/main.cpp
     test/chain/block.cpp
     test/chain/header.cpp
@@ -471,26 +468,28 @@ if (WITH_TESTS)
     test/wallet/uri.cpp
     test/wallet/uri_reader.cpp)
   if (ENABLE_SHARED)
-    target_compile_definitions(bitprim-core_test PRIVATE -DBOOST_TEST_DYN_LINK)
+    target_compile_definitions(bitprim_core_test PRIVATE -DBOOST_TEST_DYN_LINK)
   endif()
-  target_link_libraries(bitprim-core_test PUBLIC bitprim-core)
+  target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
 
-  target_include_directories(bitprim-core_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
-  target_link_libraries(bitprim-core_test PUBLIC
+  target_include_directories(bitprim_core_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+  target_link_libraries(bitprim_core_test PUBLIC
     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
+  set_target_properties(bitprim_core_test PROPERTIES FOLDER "core")
+
   enable_testing()
-  set(_bitprim-core_tests address_tests alert_payload_tests alert_tests authority_tests base_10_tests base_16_tests base_58_tests base_64_tests base_85_tests base58_tests binary_tests bitcoin_uri_tests block_tests block_message_tests block_transactions_tests btc256_tests checkpoint_tests checksum_tests collection_tests compact_block_tests data_tests ec_private_tests ec_public_tests elliptic_curve_tests encrypted_tests endian_tests endpoint_tests fee_filter_tests filter_add_tests filter_clear_tests filter_load_tests get_address_tests get_block_transactions_tests get_blocks_tests get_data_tests get_headers_tests hash_number_tests hash_tests hd_private_tests hd_public_tests header_tests headers_tests heading_tests input_tests inventory_tests inventory_type_id_tests inventory_vector_tests memory_pool_tests merkle_block_tests message_tests mnemonic_tests network_address_tests not_found_tests output_tests parameter_tests payment_address_tests ping_tests point_tests pong_tests prefilled_transaction_tests printer_tests random_tests reject_tests script_number_tests script_tests send_compact_blocks_tests send_headers_tests serializer_tests stealth_address_tests stealth_tests stream_tests thread_tests transaction_tests transaction_message_tests unicode_istream_tests unicode_ostream_tests unicode_tests uri_reader_tests uri_tests verack_tests version_tests)
+  set(_bitprim_core_tests address_tests alert_payload_tests alert_tests authority_tests base_10_tests base_16_tests base_58_tests base_64_tests base_85_tests base58_tests binary_tests bitcoin_uri_tests block_tests block_message_tests block_transactions_tests btc256_tests checkpoint_tests checksum_tests collection_tests compact_block_tests data_tests ec_private_tests ec_public_tests elliptic_curve_tests encrypted_tests endian_tests endpoint_tests fee_filter_tests filter_add_tests filter_clear_tests filter_load_tests get_address_tests get_block_transactions_tests get_blocks_tests get_data_tests get_headers_tests hash_number_tests hash_tests hd_private_tests hd_public_tests header_tests headers_tests heading_tests input_tests inventory_tests inventory_type_id_tests inventory_vector_tests memory_pool_tests merkle_block_tests message_tests mnemonic_tests network_address_tests not_found_tests output_tests parameter_tests payment_address_tests ping_tests point_tests pong_tests prefilled_transaction_tests printer_tests random_tests reject_tests script_number_tests script_tests send_compact_blocks_tests send_headers_tests serializer_tests stealth_address_tests stealth_tests stream_tests thread_tests transaction_tests transaction_message_tests unicode_istream_tests unicode_ostream_tests unicode_tests uri_reader_tests uri_tests verack_tests version_tests)
   if (WITH_PNG)
-    set(_bitprim-core_tests ${_bitprim-core_tests} png_tests)
+    set(_bitprim_core_tests ${_bitprim_core_tests} png_tests)
   endif()
   if (WITH_QRENCODE)
-    set(_bitprim-core_tests ${_bitprim-core_tests} qrcode_tests)
+    set(_bitprim_core_tests ${_bitprim_core_tests} qrcode_tests)
   endif()
-  foreach (_test_name ${_bitprim-core_tests})
+  foreach (_test_name ${_bitprim_core_tests})
     add_test(
       NAME test.${_test_name}
-      COMMAND bitprim-core_test
+      COMMAND bitprim_core_test
         --run_test=${_test_name}
         --show_progress=no
         --detect_memory_leak=0
@@ -499,13 +498,24 @@ if (WITH_TESTS)
   endforeach()
 endif()
 
+# Examples
+#==============================================================================
+# local: examples/bitprim_core_examples
+#------------------------------------------------------------------------------
+if (WITH_EXAMPLES)
+  add_executable(bitprim_core_examples
+    examples/main.cpp)
+  target_link_libraries(bitprim_core_examples PUBLIC bitprim-core)
+  set_target_properties(bitprim_core_examples PROPERTIES FOLDER "core")
+endif()
+
 # Install
 #==============================================================================
 install(TARGETS bitprim-core
   EXPORT bitprim-core
   ARCHIVE DESTINATION lib)
 
-set(_bitprim-core_headers
+set(_bitprim_core_headers
   # include_bitcoin_HEADERS =
   bitcoin/bitcoin.hpp
   # include_bitcoin_bitcoin_HEADERS =
@@ -686,7 +696,7 @@ set(_bitprim-core_headers
   bitcoin/bitcoin/wallet/stealth_address.hpp
   bitcoin/bitcoin/wallet/uri.hpp
   bitcoin/bitcoin/wallet/uri_reader.hpp)
-foreach (_header ${_bitprim-core_headers})
+foreach (_header ${_bitprim_core_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")
 endforeach()
