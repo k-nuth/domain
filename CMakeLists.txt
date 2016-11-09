@@ -57,7 +57,7 @@ if (NOT ENABLE_SHARED)
   set(Boost_USE_STATIC_LIBS ON)
 endif()
 find_package(
-  Boost 1.56.0 REQUIRED
+  Boost 1.54.0 REQUIRED
   COMPONENTS chrono date_time filesystem iostreams locale program_options regex system thread unit_test_framework)
 
 # Require pthread and output ${pthread_CPPFLAGS/LIBS}.
