@@ -19,7 +19,7 @@
  */
 #include <bitcoin/bitcoin/message/alert.hpp>
 
-#include <boost/iostreams/stream.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
@@ -55,22 +55,47 @@ alert alert::factory_from_data(uint32_t version, reader& source)
     return instance;
 }
 
+alert::alert()
+  : payload_(), signature_()
+{
+}
+
+alert::alert(const data_chunk& payload, const data_chunk& signature)
+  : payload_(payload), signature_(signature)
+{
+}
+
+alert::alert(data_chunk&& payload, data_chunk&& signature)
+  : payload_(std::move(payload)), signature_(std::move(signature))
+{
+}
+
+alert::alert(const alert& other)
+  : alert(other.payload_, other.signature_)
+{
+}
+
+alert::alert(alert&& other)
+  : alert(std::move(other.payload_), std::move(other.signature_))
+{
+}
+
 bool alert::is_valid() const
 {
-    return !payload.empty() || !signature.empty();
+    return !payload_.empty() || !signature_.empty();
 }
 
 void alert::reset()
 {
-    payload.clear();
-    payload.shrink_to_fit();
-    signature.clear();
-    signature.shrink_to_fit();
+    payload_.clear();
+    payload_.shrink_to_fit();
+    signature_.clear();
+    signature_.shrink_to_fit();
 }
 
 bool alert::from_data(uint32_t version, const data_chunk& data)
 {
-    boost::iostreams::stream<byte_source<data_chunk>> istream(data);
+    data_source istream(data);
     return from_data(version, istream);
 }
 
@@ -84,42 +109,20 @@ bool alert::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    auto size = source.read_variable_uint_little_endian();
-    BITCOIN_ASSERT(size <= bc::max_size_t);
-    const auto payload_size = static_cast<size_t>(size);
-    size_t signature_size = 0;
-    auto result = static_cast<bool>(source);
+    payload_ = source.read_bytes(source.read_size_little_endian());
+    signature_ = source.read_bytes(source.read_size_little_endian());
 
-    if (result)
-    {
-        payload = source.read_data(payload_size);
-        result = source && (payload.size() == payload_size);
-    }
-
-    if (result)
-    {
-        size = source.read_variable_uint_little_endian();
-        BITCOIN_ASSERT(size <= bc::max_size_t);
-        signature_size = static_cast<size_t>(size);
-        result = source;
-    }
-
-    if (result)
-    {
-        signature = source.read_data(signature_size);
-        result = source && (signature.size() == signature_size);
-    }
-
-    if (!result)
+    if (!source)
         reset();
 
-    return result;
+    return source;
 }
 
 data_chunk alert::to_data(uint32_t version) const
 {
     data_chunk data;
-    boost::iostreams::stream<byte_sink<data_chunk>> ostream(data);
+    data.reserve(serialized_size(version));
+    data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
     BITCOIN_ASSERT(data.size() == serialized_size(version));
@@ -134,35 +137,74 @@ void alert::to_data(uint32_t version, std::ostream& stream) const
 
 void alert::to_data(uint32_t version, writer& sink) const
 {
-    sink.write_variable_uint_little_endian(payload.size());
-    sink.write_data(payload);
-    sink.write_variable_uint_little_endian(signature.size());
-    sink.write_data(signature);
+    sink.write_variable_little_endian(payload_.size());
+    sink.write_bytes(payload_);
+    sink.write_variable_little_endian(signature_.size());
+    sink.write_bytes(signature_);
 }
 
 uint64_t alert::serialized_size(uint32_t version) const
 {
-    return variable_uint_size(payload.size()) + payload.size() +
-        variable_uint_size(signature.size()) + signature.size();
+    return variable_uint_size(payload_.size()) + payload_.size() +
+        variable_uint_size(signature_.size()) + signature_.size();
 }
 
-bool operator==(const alert& left, const alert& right)
+data_chunk& alert::payload()
 {
-    bool result = (left.payload.size() == right.payload.size()) &&
-        (left.signature.size() == right.signature.size());
-
-    for (size_t i = 0; i < left.payload.size() && result; i++)
-        result = (left.payload[i] == right.payload[i]);
-
-    for (size_t i = 0; i < left.signature.size() && result; i++)
-        result = (left.signature[i] == right.signature[i]);
-
-    return result;
+    return payload_;
 }
 
-bool operator!=(const alert& left, const alert& right)
+const data_chunk& alert::payload() const
 {
-    return !(left == right);
+    return payload_;
+}
+
+void alert::set_payload(const data_chunk& value)
+{
+    payload_ = value;
+}
+
+void alert::set_payload(data_chunk&& value)
+{
+    payload_ = std::move(value);
+}
+
+data_chunk& alert::signature()
+{
+    return signature_;
+}
+
+const data_chunk& alert::signature() const
+{
+    return signature_;
+}
+
+void alert::set_signature(const data_chunk& value)
+{
+    signature_ = value;
+}
+
+void alert::set_signature(data_chunk&& value)
+{
+    signature_ = std::move(value);
+}
+
+alert& alert::operator=(alert&& other)
+{
+    payload_ = std::move(other.payload_);
+    signature_ = std::move(other.signature_);
+    return *this;
+}
+
+bool alert::operator==(const alert& other) const
+{
+    return (payload_ == other.payload_)
+        && (signature_ == other.signature_);
+}
+
+bool alert::operator!=(const alert& other) const
+{
+    return !(*this == other);
 }
 
 } // end message

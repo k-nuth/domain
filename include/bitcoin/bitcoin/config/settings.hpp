@@ -17,42 +17,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include "conditional_stack.hpp"
-
-#include <algorithm>
+#ifndef LIBBITCOIN_CONFIG_SETTINGS_HPP
+#define LIBBITCOIN_CONFIG_SETTINGS_HPP
 
 namespace libbitcoin {
-namespace chain {
+namespace config {
 
-bool conditional_stack::closed() const
+// For configuration settings initialization in other libraries.
+enum class settings
 {
-    return stack_.empty();
-}
+    none,
+    mainnet,
+    testnet
+};
 
-bool conditional_stack::succeeded() const
-{
-    return std::count(stack_.begin(), stack_.end(), false) == 0;
-}
-
-void conditional_stack::clear()
-{
-    stack_.clear();
-}
-
-void conditional_stack::open(bool value)
-{
-    stack_.push_back(value);
-}
-
-void conditional_stack::else_()
-{
-    stack_.back() = !stack_.back();
-}
-
-void conditional_stack::close()
-{
-    stack_.pop_back();
-}
-
-} // namespace chain
+} // namespace config
 } // namespace libbitcoin
+
+#endif

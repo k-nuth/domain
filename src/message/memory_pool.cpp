@@ -19,7 +19,6 @@
  */
 #include <bitcoin/bitcoin/message/memory_pool.hpp>
 
-#include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -57,9 +56,27 @@ memory_pool memory_pool::factory_from_data(uint32_t version,
     return instance;
 }
 
+// This is a default instance so is invalid.
+// The only way to make this valid is to deserialize it :/.
 memory_pool::memory_pool()
+  : insufficient_version_(true)
 {
-    reset();
+}
+
+// protected
+memory_pool::memory_pool(bool insufficient_version)
+  : insufficient_version_(insufficient_version)
+{
+}
+
+memory_pool::memory_pool(const memory_pool& other)
+  : memory_pool(other.insufficient_version_)
+{
+}
+
+memory_pool::memory_pool(memory_pool&& other)
+  : memory_pool(other.insufficient_version_)
+{
 }
 
 bool memory_pool::is_valid() const
@@ -67,14 +84,15 @@ bool memory_pool::is_valid() const
     return !insufficient_version_;
 }
 
+// This is again a default instance so is invalid.
 void memory_pool::reset()
 {
-    insufficient_version_ = false;
+    insufficient_version_ = true;
 }
 
 bool memory_pool::from_data(uint32_t version, const data_chunk& data)
 {
-    boost::iostreams::stream<byte_source<data_chunk>> istream(data);
+    data_source istream(data);
     return from_data(version, istream);
 }
 
@@ -87,14 +105,24 @@ bool memory_pool::from_data(uint32_t version, std::istream& stream)
 bool memory_pool::from_data(uint32_t version, reader& source)
 {
     reset();
-    insufficient_version_ = (version < memory_pool::version_minimum);
-    return !insufficient_version_;
+
+    // Initialize as valid from deserialization.
+    insufficient_version_ = false;
+
+    if (version < memory_pool::version_minimum)
+        source.invalidate();
+
+    if (!source)
+        reset();
+
+    return source;
 }
 
 data_chunk memory_pool::to_data(uint32_t version) const
 {
     data_chunk data;
-    boost::iostreams::stream<byte_sink<data_chunk>> ostream(data);
+    data.reserve(serialized_size(version));
+    data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
     BITCOIN_ASSERT(data.size() == serialized_size(version));

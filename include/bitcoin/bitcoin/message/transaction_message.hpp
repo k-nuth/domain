@@ -39,10 +39,10 @@ class BC_API transaction_message
   : public chain::transaction
 {
 public:
-    typedef std::vector<transaction_message> list;
     typedef std::shared_ptr<transaction_message> ptr;
+    typedef std::shared_ptr<const transaction_message> const_ptr;
     typedef std::vector<ptr> ptr_list;
-    typedef std::vector<size_t> indexes;
+    typedef std::vector<const_ptr> const_ptr_list;
 
     static transaction_message factory_from_data(uint32_t version,
         const data_chunk& data);
@@ -62,9 +62,10 @@ public:
     transaction_message(uint32_t version, uint32_t locktime,
         chain::input::list&& inputs, chain::output::list&& outputs);
 
-    /// This class is move assignable but not copy assignable.
-    transaction_message& operator=(transaction_message&& other);
-    void operator=(const transaction_message&) = delete;
+    uint64_t originator() const;
+
+    // HACK: The fact that this is const makes it unsafe.
+    void set_originator(uint64_t value) const;
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -72,16 +73,26 @@ public:
     data_chunk to_data(uint32_t version=version::level::canonical) const;
     void to_data(uint32_t version, std::ostream& stream) const;
     void to_data(uint32_t version, writer& sink) const;
-    uint64_t serialized_size(uint32_t version=version::level::canonical) const;
-    uint64_t originator() const;
-    void set_originator(uint64_t value);
+    uint64_t serialized_size(uint32_t version) const;
+
+    transaction_message& operator=(chain::transaction&& other);
+
+    /// This class is move assignable but not copy assignable.
+    transaction_message& operator=(transaction_message&& other);
+    void operator=(const transaction_message&) = delete;
+
+    bool operator==(const chain::transaction& other) const;
+    bool operator!=(const chain::transaction& other) const;
+
+    bool operator==(const transaction_message& other) const;
+    bool operator!=(const transaction_message& other) const;
 
     static const std::string command;
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
 private:
-    uint64_t originator_;
+    mutable uint64_t originator_;
 };
 
 } // namespace message

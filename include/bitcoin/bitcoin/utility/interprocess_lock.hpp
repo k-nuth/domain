@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2016 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
@@ -17,33 +17,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_EVALUATION_CONTEXT_HPP
-#define LIBBITCOIN_CHAIN_EVALUATION_CONTEXT_HPP
+#ifndef LIBBITCOIN_INTERPROCESS_LOCK_HPP
+#define LIBBITCOIN_INTERPROCESS_LOCK_HPP
 
-#include <algorithm>
-#include <cstdint>
-#include <bitcoin/bitcoin/chain/script/operation.hpp>
+#include <memory>
+#include <string>
+#include <boost/filesystem.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/utility/data.hpp>
-#include "conditional_stack.hpp"
+#include <bitcoin/bitcoin/unicode/file_lock.hpp>
 
 namespace libbitcoin {
-namespace chain {
 
-class evaluation_context
+/// This class is not thread safe.
+/// Guard a resource againt concurrent use by another instance of this app.
+class BC_API interprocess_lock
 {
 public:
-    data_chunk pop_stack();
+    typedef boost::filesystem::path path;
 
-    operation::stack::const_iterator code_begin;
-    uint64_t operation_counter;
-    data_stack stack;
-    data_stack alternate;
-    conditional_stack conditional;
-    uint32_t flags;
+    interprocess_lock(const path& file);
+    ~interprocess_lock();
+
+    bool lock();
+    bool unlock();
+
+private:
+    typedef interprocess::file_lock lock_file;
+    typedef std::shared_ptr<lock_file> lock_ptr;
+
+    static bool create(const std::string& file);
+    static bool destroy(const std::string& file);
+
+    lock_ptr lock_;
+    const std::string file_;
 };
 
-} // namespace chain
 } // namespace libbitcoin
 
 #endif

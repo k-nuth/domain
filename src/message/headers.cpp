@@ -21,8 +21,10 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <initializer_list>
+#include <istream>
 #include <utility>
-#include <boost/iostreams/stream.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -63,28 +65,45 @@ headers headers::factory_from_data(uint32_t version,
 }
 
 headers::headers()
+  : elements_()
 {
 }
 
-headers::headers(const chain::header::list& values)
+// Uses headers copy assignment.
+headers::headers(const header_message::list& values)
+  : elements_(values)
 {
-    elements.insert(elements.end(), values.begin(), values.end());
 }
 
-headers::headers(const std::initializer_list<chain::header>& values)
+headers::headers(header_message::list&& values)
+  : elements_(std::move(values))
 {
-    elements.insert(elements.end(), values.begin(), values.end());
+}
+
+headers::headers(const std::initializer_list<header_message>& values)
+  : elements_(values)
+{
+}
+
+headers::headers(const headers& other)
+  : headers(other.elements_)
+{
+}
+
+headers::headers(headers&& other)
+  : headers(std::move(other.elements_))
+{
 }
 
 bool headers::is_valid() const
 {
-    return !elements.empty();
+    return !elements_.empty();
 }
 
 void headers::reset()
 {
-    elements.clear();
-    elements.shrink_to_fit();
+    elements_.clear();
+    elements_.shrink_to_fit();
 }
 
 bool headers::from_data(uint32_t version, const data_chunk& data)
@@ -103,32 +122,25 @@ bool headers::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    auto result = !(version < version_minimum);
-    const auto count = source.read_variable_uint_little_endian();
-    result &= static_cast<bool>(source);
+    elements_.resize(source.read_size_little_endian());
 
-    if (result)
-    {
-        elements.resize(count);
+    for (auto& element: elements_)
+        if (!element.from_data(version, source))
+            break;
 
-        for (auto& element: elements)
-        {
-            result = element.from_data(source, true);
+    if (version < headers::version_minimum)
+        source.invalidate();
 
-            if (!result)
-                break;
-        }
-    }
-
-    if (!result)
+    if (!source)
         reset();
 
-    return result;
+    return source;
 }
 
 data_chunk headers::to_data(uint32_t version) const
 {
     data_chunk data;
+    data.reserve(serialized_size(version));
     data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
@@ -144,53 +156,74 @@ void headers::to_data(uint32_t version, std::ostream& stream) const
 
 void headers::to_data(uint32_t version, writer& sink) const
 {
-    sink.write_variable_uint_little_endian(elements.size());
+    sink.write_variable_little_endian(elements_.size());
 
-    for (const auto& element: elements)
-        element.to_data(sink, true);
+    for (const auto& element: elements_)
+        element.to_data(version, sink);
 }
 
 void headers::to_hashes(hash_list& out) const
 {
-    const auto map = [](const chain::header& header)
+    const auto map = [](const header_message& header)
     {
         return header.hash();
     };
 
-    out.resize(elements.size());
-    std::transform(elements.begin(), elements.end(), out.begin(), map);
+    out.resize(elements_.size());
+    std::transform(elements_.begin(), elements_.end(), out.begin(), map);
 }
 
 void headers::to_inventory(inventory_vector::list& out,
     inventory::type_id type) const
 {
-    const auto map = [type](const chain::header& header)
+    const auto map = [type](const header_message& header)
     {
         return inventory_vector{ type, header.hash() };
     };
 
-    out.resize(elements.size());
-    std::transform(elements.begin(), elements.end(), out.begin(), map);
+    std::transform(elements_.begin(), elements_.end(), std::back_inserter(out), map);
 }
 
 uint64_t headers::serialized_size(uint32_t version) const
 {
-    uint64_t size = variable_uint_size(elements.size());
-
-    for (const auto& element: elements)
-        size += element.serialized_size(true);
-
-    return size;
+    return variable_uint_size(elements_.size()) +
+        (elements_.size() * header_message::satoshi_fixed_size(version));
 }
 
-bool operator==(const headers& left, const headers& right)
+header_message::list& headers::elements()
 {
-    return left.elements == right.elements;
+    return elements_;
 }
 
-bool operator!=(const headers& left, const headers& right)
+const header_message::list& headers::elements() const
 {
-    return !(left == right);
+    return elements_;
+}
+
+void headers::set_elements(const header_message::list& values)
+{
+    elements_ = values;
+}
+
+void headers::set_elements(header_message::list&& values)
+{
+    elements_ = std::move(values);
+}
+
+headers& headers::operator=(headers&& other)
+{
+    elements_ = std::move(other.elements_);
+    return *this;
+}
+
+bool headers::operator==(const headers& other) const
+{
+    return (elements_ == other.elements_);
+}
+
+bool headers::operator!=(const headers& other) const
+{
+    return !(*this == other);
 }
 
 } // namespace message

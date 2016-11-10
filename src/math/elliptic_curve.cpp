@@ -20,9 +20,11 @@
 #include <bitcoin/bitcoin/math/elliptic_curve.hpp>
 
 #include <algorithm>
+#include <utility>
 #include <secp256k1.h>
 #include <secp256k1_recovery.h>
 #include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include "../math/external/lax_der_parsing.h"
@@ -95,7 +97,7 @@ bool recover_public(const secp256k1_context* context, byte_array<Size>& out,
 {
     secp256k1_pubkey pubkey;
     secp256k1_ecdsa_recoverable_signature sign;
-    const auto recovery_id = static_cast<int>(recoverable.recovery_id);
+    const auto recovery_id = safe_to_signed<int>(recoverable.recovery_id);
     return
         secp256k1_ecdsa_recoverable_signature_parse_compact(context,
             &sign, recoverable.signature.data(), recovery_id) == 1 &&
@@ -109,7 +111,7 @@ bool verify_signature(const secp256k1_context* context,
 {
     // Copy to avoid exposing external types.
     secp256k1_ecdsa_signature parsed;
-    std::copy(signature.begin(), signature.end(), std::begin(parsed.data));
+    std::copy_n(signature.begin(), ec_signature_size, std::begin(parsed.data));
 
     // secp256k1_ecdsa_verify rejects non-normalized (low-s) signatures, but
     // bitcoin does not have such a limitation, so we always normalize.
@@ -242,6 +244,18 @@ bool is_public_key(data_slice point)
 // DER parse/encode
 // ----------------------------------------------------------------------------
 
+bool parse_endorsement(uint8_t& sighash_type, der_signature& der_signature,
+    endorsement&& endorsement)
+{
+    if (endorsement.empty())
+        return false;
+
+    sighash_type = endorsement.back();
+    endorsement.pop_back();
+    der_signature = std::move(endorsement);
+    return true;
+}
+
 bool parse_signature(ec_signature& out, const der_signature& der_signature,
     bool strict)
 {
@@ -260,7 +274,7 @@ bool parse_signature(ec_signature& out, const der_signature& der_signature,
             der_signature.data(), der_signature.size()) == 1;
 
     if (valid)
-        std::copy(std::begin(parsed.data), std::end(parsed.data), out.begin());
+        std::copy_n(std::begin(parsed.data), ec_signature_size, out.begin());
 
     return valid;
 }
@@ -269,7 +283,7 @@ bool encode_signature(der_signature& out, const ec_signature& signature)
 {
     // Copy to avoid exposing external types.
     secp256k1_ecdsa_signature sign;
-    std::copy(signature.begin(), signature.end(), std::begin(sign.data));
+    std::copy_n(signature.begin(), ec_signature_size, std::begin(sign.data));
 
     const auto context = signing.context();
     auto size = max_der_signature_size;
@@ -322,7 +336,7 @@ bool verify_signature(data_slice point, const hash_digest& hash,
 {
     // Copy to avoid exposing external types.
     secp256k1_ecdsa_signature parsed;
-    std::copy(signature.begin(), signature.end(), std::begin(parsed.data));
+    std::copy_n(signature.begin(), ec_signature_size, std::begin(parsed.data));
 
     // secp256k1_ecdsa_verify rejects non-normalized (low-s) signatures, but
     // bitcoin does not have such a limitation, so we always normalize.
@@ -356,7 +370,7 @@ bool sign_recoverable(recoverable_signature& out, const ec_secret& secret,
             out.signature.data(), &recovery_id, &signature) == 1;
 
     BITCOIN_ASSERT(recovery_id >= 0 && recovery_id <= 3);
-    out.recovery_id = static_cast<uint8_t>(recovery_id);
+    out.recovery_id = safe_to_unsigned<uint8_t>(recovery_id);
     return result;
 }
 

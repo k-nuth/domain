@@ -156,27 +156,6 @@ BOOST_AUTO_TEST_CASE(data__extend_data__twice__expected)
     BOOST_REQUIRE_EQUAL(buffer1[hash_size + 1], expected);
 }
 
-BOOST_AUTO_TEST_CASE(data__range_constrain__over__max)
-{
-    const size_t expected = 10;
-    const auto result = range_constrain(size_t(42), size_t(1), expected);
-    BOOST_REQUIRE_EQUAL(result, expected);
-}
-
-BOOST_AUTO_TEST_CASE(data__range_constrain__under__min)
-{
-    const size_t expected = 50;
-    const auto result = range_constrain(size_t(42), expected, size_t(100));
-    BOOST_REQUIRE_EQUAL(result, expected);
-}
-
-BOOST_AUTO_TEST_CASE(data__range_constrain__internal__unchanged)
-{
-    const size_t expected = 42;
-    const auto result = range_constrain(expected, size_t(10), size_t(100));
-    BOOST_REQUIRE_EQUAL(result, expected);
-}
-
 BOOST_AUTO_TEST_CASE(data__slice__empty_selection__compiles)
 {
     const byte_array<3> source
@@ -338,13 +317,37 @@ BOOST_AUTO_TEST_CASE(data__to_chunk__long_hash__expected)
     BOOST_REQUIRE_EQUAL(result[32], u);
 }
 
+BOOST_AUTO_TEST_CASE(data__starts_with__empty_empty__true)
+{
+    static const data_chunk buffer{};
+    static const data_chunk sequence{};
+    BOOST_REQUIRE(starts_with(buffer.begin(), buffer.end(), sequence));
+}
+
+BOOST_AUTO_TEST_CASE(data__starts_with__not_empty_empty__false)
+{
+    static const data_chunk buffer{};
+    static const data_chunk sequence{ 42 };
+    BOOST_REQUIRE(!starts_with(buffer.begin(), buffer.end(), sequence));
+}
+
+BOOST_AUTO_TEST_CASE(data__starts_with__same_same__true)
+{
+    static const data_chunk buffer{ 42 };
+    static const data_chunk sequence{ 42 };
+    BOOST_REQUIRE(starts_with(buffer.begin(), buffer.end(), sequence));
+}
+
+BOOST_AUTO_TEST_CASE(data__starts_with__too_short__false)
+{
+    static const data_chunk buffer{ 42 };
+    static const data_chunk sequence{ 42, 24 };
+    BOOST_REQUIRE(!starts_with(buffer.begin(), buffer.end(), sequence));
+}
+
 BOOST_AUTO_TEST_CASE(data__xor_data0__same__zeros)
 {
-    const data_chunk source
-    {
-        0, 1
-    };
-
+    static const data_chunk source{ 0, 1 };
     const auto result = xor_data<2>(source, source);
     BOOST_REQUIRE_EQUAL(result.size(), 2u);
     BOOST_REQUIRE_EQUAL(result[0], 0);
@@ -353,21 +356,14 @@ BOOST_AUTO_TEST_CASE(data__xor_data0__same__zeros)
 
 BOOST_AUTO_TEST_CASE(data__xor_data1__empty__empty)
 {
-    const data_chunk source
-    {
-    };
-
+    static const data_chunk source{};
     const auto result = xor_data<0>(source, source, 0);
     BOOST_REQUIRE_EQUAL(result.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(data__xor_data1__same__zeros)
 {
-    const data_chunk source
-    {
-        0, 1
-    };
-
+    static const data_chunk source{ 0, 1 };
     const auto result = xor_data<2>(source, source, 0);
     BOOST_REQUIRE_EQUAL(result.size(), 2u);
     BOOST_REQUIRE_EQUAL(result[0], 0);
@@ -376,11 +372,7 @@ BOOST_AUTO_TEST_CASE(data__xor_data1__same__zeros)
 
 BOOST_AUTO_TEST_CASE(data__xor_data1__same_offset__zeros)
 {
-    const data_chunk source
-    {
-        0, 1, 0
-    };
-
+    static const data_chunk source{ 0, 1, 0 };
     const auto result = xor_data<2>(source, source, 1);
     BOOST_REQUIRE_EQUAL(result.size(), 2u);
     BOOST_REQUIRE_EQUAL(result[0], 0);
@@ -389,16 +381,8 @@ BOOST_AUTO_TEST_CASE(data__xor_data1__same_offset__zeros)
 
 BOOST_AUTO_TEST_CASE(data__xor_data1__distinct__ones)
 {
-    const data_chunk source
-    {
-        0, 1, 0
-    };
-
-    const data_chunk opposite
-    {
-        1, 0, 1
-    };
-
+    static const data_chunk source{ 0, 1, 0 };
+    static const data_chunk opposite{ 1, 0, 1 };
     const auto result = xor_data<3>(source, opposite, 0);
     BOOST_REQUIRE_EQUAL(result.size(), 3u);
     BOOST_REQUIRE_EQUAL(result[0], 1);
@@ -408,16 +392,8 @@ BOOST_AUTO_TEST_CASE(data__xor_data1__distinct__ones)
 
 BOOST_AUTO_TEST_CASE(data__xor_data1__distinct_bites__bits)
 {
-    const data_chunk source1
-    {
-        42, 13
-    };
-
-    const data_chunk source2
-    {
-        24, 13
-    };
-
+    static const data_chunk source1{ 42, 13 };
+    static const data_chunk source2{ 24, 13 };
     const auto result = xor_data<2>(source1, source2, 0);
     BOOST_REQUIRE_EQUAL(result.size(), 2u);
     BOOST_REQUIRE_EQUAL(result[0], 50u);
@@ -426,16 +402,8 @@ BOOST_AUTO_TEST_CASE(data__xor_data1__distinct_bites__bits)
 
 BOOST_AUTO_TEST_CASE(data__xor_data2__distinct_bites__bits)
 {
-    const data_chunk source1
-    {
-        0, 42, 13
-    };
-
-    const data_chunk source2
-    {
-        0, 0, 24, 13
-    };
-
+    static const data_chunk source1{ 0, 42, 13 };
+    static const data_chunk source2{ 0, 0, 24, 13 };
     const auto result = xor_data<2>(source1, source2, 1, 2);
     BOOST_REQUIRE_EQUAL(result.size(), 2u);
     BOOST_REQUIRE_EQUAL(result[0], 50u);

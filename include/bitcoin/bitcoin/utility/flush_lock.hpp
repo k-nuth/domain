@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2016 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
@@ -17,29 +17,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_CONDITIONAL_STACK_HPP
-#define LIBBITCOIN_CHAIN_CONDITIONAL_STACK_HPP
+#ifndef LIBBITCOIN_CRASH_LOCK_HPP
+#define LIBBITCOIN_CRASH_LOCK_HPP
 
-#include <vector>
+#include <memory>
+#include <boost/filesystem.hpp>
+#include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/unicode/file_lock.hpp>
 
 namespace libbitcoin {
-namespace chain {
-
-class conditional_stack
+    
+/// This class is not thread safe.
+/// Guard a resource that may be corrupted due to an interrupted write.
+class BC_API flush_lock
 {
 public:
-    bool closed() const;
-    bool succeeded() const;
-    void clear();
-    void open(bool value);
-    void else_();
-    void close();
+    typedef boost::filesystem::path path;
+
+    flush_lock(const path& file);
+
+    bool try_lock();
+    bool lock_shared();
+    bool unlock_shared();
 
 private:
-    std::vector<bool> stack_;
+    static bool create(const std::string& file);
+    static bool exists(const std::string& file);
+    static bool destroy(const std::string& file);
+
+    bool locked_;
+    const std::string file_;
 };
 
-} // namespace chain
 } // namespace libbitcoin
 
 #endif

@@ -23,17 +23,37 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 
 namespace libbitcoin {
+    
+const uint8_t script_number::negative_1 = negative_mask | positive_1;
+const uint8_t script_number::negative_0 = negative_mask | positive_0;
+const uint8_t script_number::positive_0 = 0;
+const uint8_t script_number::positive_1 = 1;
+const uint8_t script_number::positive_2 = 2;
+const uint8_t script_number::positive_3 = 3;
+const uint8_t script_number::positive_4 = 4;
+const uint8_t script_number::positive_5 = 5;
+const uint8_t script_number::positive_6 = 6;
+const uint8_t script_number::positive_7 = 7;
+const uint8_t script_number::positive_8 = 8;
+const uint8_t script_number::positive_9 = 9;
+const uint8_t script_number::positive_10 = 10;
+const uint8_t script_number::positive_11 = 11;
+const uint8_t script_number::positive_12 = 12;
+const uint8_t script_number::positive_13 = 13;
+const uint8_t script_number::positive_14 = 14;
+const uint8_t script_number::positive_15 = 15;
+const uint8_t script_number::positive_16 = 16;
+const uint8_t script_number::negative_mask = 0x80;
 
-static constexpr uint64_t byte_mask = 0xff;
-static constexpr uint8_t negative_mask = 0x80;
 static constexpr auto unsigned_max_int64 = static_cast<uint64_t>(max_int64);
 static constexpr auto absolute_min_int64 = static_cast<uint64_t>(min_int64);
 
 // The result is always LSB first.
-data_chunk script_number_serialize(int64_t value)
+static data_chunk script_number_serialize(int64_t value)
 {
     if (value == 0)
         return{};
@@ -47,51 +67,55 @@ data_chunk script_number_serialize(int64_t value)
 
     while (absolute_value != 0)
     {
+        static constexpr uint64_t byte_mask = 0xff;
         result.push_back(absolute_value & byte_mask);
         absolute_value >>= byte_bits;
     }
 
-    // If the most significant byte is >= 0x80 and the value is positive,
-    // push a new zero-byte to make the significant byte < 0x80 again.
+    auto negative_masked = (result.back() & script_number::negative_mask) != 0;
 
     // If the most significant byte is >= 0x80 and the value is negative,
     // push a new 0x80 byte that will be popped off when converting to
     // an integral.
+    if (negative_masked && negative)
+        result.push_back(script_number::negative_mask);
+
+    // If the most significant byte is >= 0x80 and the value is positive,
+    // push a new zero-byte to make the significant byte < 0x80 again.
+    else if (negative_masked)
+        result.push_back(0);
 
     // If the most significant byte is < 0x80 and the value is negative,
     // add 0x80 to it, since it will be subtracted and interpreted as
     // a negative when converting to an integral.
-
-    if ((result.back() & negative_mask) != 0)
-        result.push_back(negative ? negative_mask : 0);
     else if (negative)
-        result.back() |= negative_mask;
+        result.back() |= script_number::negative_mask;
 
     return result;
 }
 
 // The parameter is assumed to be LSB first.
-int64_t script_number_deserialize(const data_chunk& data)
+static int64_t script_number_deserialize(const data_chunk& data)
 {
     if (data.empty())
         return 0;
 
-    const auto consume_last_byte = data.back() != negative_mask;
-    const auto bounds = consume_last_byte ? data.size() : data.size() - 1;
+    const auto consume_last_byte = data.back() != script_number::negative_mask;
+    const auto value_size = consume_last_byte ? data.size() : data.size() - 1;
 
     // This is guarded by set_data().
-    BITCOIN_ASSERT(bounds <= sizeof(uint64_t));
+    BITCOIN_ASSERT(value_size <= sizeof(uint64_t));
 
-    const auto negative = data.back() & negative_mask;
+    const auto negative = data.back() & script_number::negative_mask;
     const auto mask_last_byte = negative && consume_last_byte;
     uint64_t absolute_value = 0;
 
-    for (size_t byte = 0; byte < bounds; ++byte)
+    for (size_t byte = 0; byte < value_size; ++byte)
     {
         const auto shift = byte_bits * byte;
-        const auto last_byte = byte + 1 == bounds;
+        const auto last_byte = byte + 1 == value_size;
         const auto value = mask_last_byte && last_byte ?
-            data[byte] & ~negative_mask : data[byte];
+            data[byte] & ~script_number::negative_mask : data[byte];
 
         absolute_value |= static_cast<uint64_t>(value) << shift;
     }
@@ -127,10 +151,10 @@ bool script_number::set_data(const data_chunk& data, size_t max_size)
     if (size > max_size)
         return false;
 
-    const auto bounds = !data.empty() && data.back() == negative_mask ?
-        size - 1 : size;
+    const auto negative_byte = !data.empty() && data.back() == negative_mask;
+    const auto value_size = negative_byte ? size - 1 : size;
 
-    if (bounds > sizeof(uint64_t))
+    if (value_size > sizeof(uint64_t))
         return false;
 
     value_ = script_number_deserialize(data);
@@ -144,12 +168,7 @@ data_chunk script_number::data() const
 
 int32_t script_number::int32() const
 {
-    if (value_ > max_int32)
-        return max_int32;
-    else if (value_ < min_int32)
-        return min_int32;
-
-    return static_cast<int32_t>(value_);
+    return domain_constrain<int32_t>(value_);
 }
 
 int64_t script_number::int64() const
@@ -157,32 +176,42 @@ int64_t script_number::int64() const
     return value_;
 }
 
-bool script_number::operator==(const int64_t value) const
+bool script_number::is_true() const
+{
+    return value_ != 0;
+}
+
+bool script_number::is_false() const
+{
+    return value_ == 0;
+}
+
+bool script_number::operator==(int64_t value) const
 {
     return value_ == value;
 }
 
-bool script_number::operator!=(const int64_t value) const
+bool script_number::operator!=(int64_t value) const
 {
     return value_ != value;
 }
 
-bool script_number::operator<=(const int64_t value) const
+bool script_number::operator<=(int64_t value) const
 {
     return value_ <= value;
 }
 
-bool script_number::operator<(const int64_t value) const
+bool script_number::operator<(int64_t value) const
 {
     return value_ < value;
 }
 
-bool script_number::operator>=(const int64_t value) const
+bool script_number::operator>=(int64_t value) const
 {
     return value_ >= value;
 }
 
-bool script_number::operator>(const int64_t value) const
+bool script_number::operator>(int64_t value) const
 {
     return value_ > value;
 }
@@ -217,7 +246,7 @@ bool script_number::operator>(const script_number& other) const
     return operator>(other.value_);
 }
 
-script_number script_number::operator+(const int64_t value) const
+script_number script_number::operator+(int64_t value) const
 {
     if ((value > 0 && (value_ >= max_int64 - value)) ||
         (value < 0 && (value_ <= min_int64 - value)))
@@ -228,7 +257,7 @@ script_number script_number::operator+(const int64_t value) const
     return script_number(value_ + value);
 }
 
-script_number script_number::operator-(const int64_t value) const
+script_number script_number::operator-(int64_t value) const
 {
     if ((value > 0 && (value_ <= min_int64 + value)) ||
         (value < 0 && (value_ >= max_int64 + value)))
@@ -262,7 +291,7 @@ script_number script_number::operator-() const
     return script_number(-value_);
 }
 
-script_number& script_number::operator+=(const int64_t value)
+script_number& script_number::operator+=(int64_t value)
 {
     if ((value > 0 && (value_ >= max_int64 - value)) ||
         (value < 0 && (value_ <= min_int64 - value)))
@@ -274,7 +303,7 @@ script_number& script_number::operator+=(const int64_t value)
     return *this;
 }
 
-script_number& script_number::operator-=(const int64_t value)
+script_number& script_number::operator-=(int64_t value)
 {
     if ((value > 0 && (value_ <= min_int64 + value)) ||
         (value < 0 && (value_ >= max_int64 + value)))

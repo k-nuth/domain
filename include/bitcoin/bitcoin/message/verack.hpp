@@ -36,11 +36,14 @@ class BC_API verack
 {
 public:
     typedef std::shared_ptr<verack> ptr;
+    typedef std::shared_ptr<const verack> const_ptr;
 
     static verack factory_from_data(uint32_t version, const data_chunk& data);
     static verack factory_from_data(uint32_t version, std::istream& stream);
     static verack factory_from_data(uint32_t version, reader& source);
     static uint64_t satoshi_fixed_size(uint32_t version);
+
+    verack();
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);

@@ -20,10 +20,10 @@
 #ifndef LIBBITCOIN_CHAIN_OUTPUT_HPP
 #define LIBBITCOIN_CHAIN_OUTPUT_HPP
 
+#include <cstddef>
 #include <cstdint>
 #include <istream>
-#include <vector>
-#include <bitcoin/bitcoin/chain/point.hpp>
+#include <string>
 #include <bitcoin/bitcoin/chain/script/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
@@ -37,31 +37,97 @@ class BC_API output
 public:
     typedef std::vector<output> list;
 
-    static output factory_from_data(const data_chunk& data);
-    static output factory_from_data(std::istream& stream);
-    static output factory_from_data(reader& source);
+    /// This is a sentinel used in .value to indicate not found in store.
+    /// This is a sentinel used in cache.value to indicate not populated.
+    /// This is a consensus value used in script::generate_signature_hash.
+    static const uint64_t not_found;
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
-    data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
-    std::string to_string(uint32_t flags) const;
+    // These properties facilitate block and transaction validation.
+    // This validation data IS copied on output copy/move.
+    struct validation
+    {
+        // This is a non-consensus sentinel used to indicate an output is unspent.
+        static const uint32_t not_spent;
+
+        // These are used by database only.
+        size_t spender_height = validation::not_spent;
+    };
+
+    // Constructors.
+    //-----------------------------------------------------------------------------
+
+    output();
+
+    output(output&& other);
+    output(const output& other);
+
+    output(uint64_t value, chain::script&& script);
+    output(uint64_t value, const chain::script& script);
+
+    // Operators.
+    //-----------------------------------------------------------------------------
+
+    /// This class is move assignable and copy assignable.
+    output& operator=(output&& other);
+    output& operator=(const output& other);
+
+    bool operator==(const output& other) const;
+    bool operator!=(const output& other) const;
+
+    // Deserialization.
+    //-----------------------------------------------------------------------------
+
+    static output factory_from_data(const data_chunk& data, bool wire=true);
+    static output factory_from_data(std::istream& stream, bool wire=true);
+    static output factory_from_data(reader& source, bool wire=true);
+
+    bool from_data(const data_chunk& data, bool wire=true);
+    bool from_data(std::istream& stream, bool wire=true);
+    bool from_data(reader& source, bool wire=true);
+
     bool is_valid() const;
+
+    // Serialization.
+    //-----------------------------------------------------------------------------
+
+    data_chunk to_data(bool wire=true) const;
+    void to_data(std::ostream& stream, bool wire=true) const;
+    void to_data(writer& sink, bool wire=true) const;
+
+    std::string to_string(uint32_t flags) const;
+
+    // Properties (size, accessors, cache).
+    //-----------------------------------------------------------------------------
+
+    uint64_t serialized_size(bool wire=true) const;
+
+    uint64_t value() const;
+    void set_value(uint64_t value);
+
+    // Deprecated (unsafe).
+    chain::script& script();
+
+    const chain::script& script() const;
+    void set_script(const chain::script& value);
+    void set_script(chain::script&& value);
+
+    // Validation.
+    //-----------------------------------------------------------------------------
+
+    size_t signature_operations() const;
+
+    // These fields do not participate in wire serialization or comparison.
+    mutable validation validation;
+
+protected:
+    output(uint64_t value, chain::script&& script, size_t spender_height);
+    output(uint64_t value, const chain::script& script, size_t spender_height);
+
     void reset();
-    uint64_t serialized_size() const;
 
-    uint64_t value;
-    chain::script script;
-};
-
-struct BC_API output_info
-{
-    typedef std::vector<output_info> list;
-
-    output_point point;
-    uint64_t value;
+private:
+    uint64_t value_;
+    chain::script script_;
 };
 
 } // namespace chain

@@ -19,7 +19,6 @@
  */
 #include <bitcoin/bitcoin/message/send_headers.hpp>
 
-#include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -62,19 +61,38 @@ uint64_t send_headers::satoshi_fixed_size(uint32_t version)
     return 0;
 }
 
+// This is a default instance so is invalid.
+// The only way to make this valid is to deserialize it :/.
 send_headers::send_headers()
+  : insufficient_version_(true)
 {
-    reset();
+}
+
+// protected
+send_headers::send_headers(bool insufficient_version)
+  : insufficient_version_(insufficient_version)
+{
+}
+
+send_headers::send_headers(const send_headers& other)
+  : send_headers(other.insufficient_version_)
+{
+}
+
+send_headers::send_headers(send_headers&& other)
+  : send_headers(other.insufficient_version_)
+{
 }
 
 bool send_headers::is_valid() const
 {
-    return !version_unsupported_;
+    return !insufficient_version_;
 }
 
+// This is again a default instance so is invalid.
 void send_headers::reset()
 {
-    version_unsupported_ = false;
+    insufficient_version_ = true;
 }
 
 bool send_headers::from_data(uint32_t version, const data_chunk& data)
@@ -93,15 +111,25 @@ bool send_headers::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    if (version < send_headers::version_minimum)
-        version_unsupported_ = true;
+    // Initialize as valid from deserialization.
+    insufficient_version_ = false;
 
-    return !version_unsupported_;
+    if (version < send_headers::version_minimum)
+    {
+        insufficient_version_ = true;
+        source.invalidate();
+    }
+
+    if (!source)
+        reset();
+
+    return source;
 }
 
 data_chunk send_headers::to_data(uint32_t version) const
 {
     data_chunk data;
+    data.reserve(serialized_size(version));
     data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();

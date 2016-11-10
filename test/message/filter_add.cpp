@@ -18,14 +18,55 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
-#include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin.hpp>
 
 using namespace bc;
 
 BOOST_AUTO_TEST_SUITE(filter_add_tests)
 
-BOOST_AUTO_TEST_CASE(from_data_insufficient_bytes_failure)
+BOOST_AUTO_TEST_CASE(filter_add__constructor_1__always__invalid)
+{
+    message::filter_add instance;
+    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__constructor_2__always__equals_params)
+{
+    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    message::filter_add instance(data);
+    BOOST_REQUIRE(instance.is_valid());
+    BOOST_REQUIRE(data == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__constructor_3__always__equals_params)
+{
+    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    auto dup = data;
+    message::filter_add instance(std::move(dup));
+    BOOST_REQUIRE(instance.is_valid());
+    BOOST_REQUIRE(data == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__constructor_4__always__equals_params)
+{
+    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    const message::filter_add value(data);
+    message::filter_add instance(value);
+    BOOST_REQUIRE(instance.is_valid());
+    BOOST_REQUIRE(value == instance);
+    BOOST_REQUIRE(data == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__constructor_5__always__equals_params)
+{
+    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    message::filter_add value(data);
+    message::filter_add instance(std::move(value));
+    BOOST_REQUIRE(instance.is_valid());
+    BOOST_REQUIRE(data == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__from_data__insufficient_bytes__failure)
 {
     data_chunk raw = { 0xab, 0x11 };
     message::filter_add instance;
@@ -33,7 +74,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_bytes_failure)
     BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(from_data_insufficient_version_failure)
+BOOST_AUTO_TEST_CASE(filter_add__from_data__insufficient_version__failure)
 {
     const message::filter_add expected
         {
@@ -52,7 +93,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_version_failure)
         message::filter_add::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk)
+BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_1__valid_input__success)
 {
     const message::filter_add expected
     {
@@ -76,7 +117,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk)
         result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream)
+BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_2__valid_input__success)
 {
     const message::filter_add expected
     {
@@ -89,7 +130,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream)
     };
 
     const auto data = expected.to_data(message::version::level::maximum);
-    boost::iostreams::stream<byte_source<data_chunk>> istream(data);
+    data_source istream(data);
     const auto result = message::filter_add::factory_from_data(
         message::version::level::maximum, istream);
 
@@ -101,7 +142,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream)
         result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader)
+BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_3__valid_input__success)
 {
     const message::filter_add expected
     {
@@ -114,7 +155,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader)
     };
 
     const auto data = expected.to_data(message::version::level::maximum);
-    boost::iostreams::stream<byte_source<data_chunk>> istream(data);
+    data_source istream(data);
     istream_reader source(istream);
     const auto result = message::filter_add::factory_from_data(
         message::version::level::maximum, source);
@@ -125,6 +166,79 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader)
         result.serialized_size(message::version::level::maximum));
     BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::maximum),
         result.serialized_size(message::version::level::maximum));
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__data_accessor_1__always__returns_initialized_value)
+{
+    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    message::filter_add instance(value);
+    BOOST_REQUIRE(value == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__data_accessor_2__always__returns_initialized_value)
+{
+    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    const message::filter_add instance(value);
+    BOOST_REQUIRE(value == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__data_setter_1__roundtrip__success)
+{
+    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    message::filter_add instance;
+    BOOST_REQUIRE(value != instance.data());
+    instance.set_data(value);
+    BOOST_REQUIRE(value == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__data_setter_2__roundtrip__success)
+{
+    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk dup = value;
+    message::filter_add instance;
+    BOOST_REQUIRE(value != instance.data());
+    instance.set_data(std::move(dup));
+    BOOST_REQUIRE(value == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__operator_assign_equals__always__matches_equivalent)
+{
+    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    message::filter_add value(data);
+    BOOST_REQUIRE(value.is_valid());
+    message::filter_add instance;
+    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    instance = std::move(value);
+    BOOST_REQUIRE(instance.is_valid());
+    BOOST_REQUIRE(data == instance.data());
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__operator_boolean_equals__duplicates__returns_true)
+{
+    const message::filter_add expected({ 0x0f, 0xf0, 0x55, 0xaa });
+    message::filter_add instance(expected);
+    BOOST_REQUIRE(instance == expected);
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__operator_boolean_equals__differs__returns_false)
+{
+    const message::filter_add expected({ 0x0f, 0xf0, 0x55, 0xaa });
+    message::filter_add instance;
+    BOOST_REQUIRE_EQUAL(false, instance == expected);
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__operator_boolean_not_equals__duplicates__returns_false)
+{
+    const message::filter_add expected({ 0x0f, 0xf0, 0x55, 0xaa });
+    message::filter_add instance(expected);
+    BOOST_REQUIRE_EQUAL(false, instance != expected);
+}
+
+BOOST_AUTO_TEST_CASE(filter_add__operator_boolean_not_equals__differs__returns_true)
+{
+    const message::filter_add expected({ 0x0f, 0xf0, 0x55, 0xaa });
+    message::filter_add instance;
+    BOOST_REQUIRE(instance != expected);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

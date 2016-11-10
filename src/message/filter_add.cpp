@@ -19,7 +19,7 @@
  */
 #include <bitcoin/bitcoin/message/filter_add.hpp>
 
-#include <boost/iostreams/stream.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
@@ -58,20 +58,45 @@ filter_add filter_add::factory_from_data(uint32_t version,
     return instance;
 }
 
+filter_add::filter_add()
+  : data_()
+{
+}
+
+filter_add::filter_add(const data_chunk& data)
+  : data_(data)
+{
+}
+
+filter_add::filter_add(data_chunk&& data)
+  : data_(std::move(data))
+{
+}
+
+filter_add::filter_add(const filter_add& other)
+  : filter_add(other.data_)
+{
+}
+
+filter_add::filter_add(filter_add&& other)
+  : filter_add(std::move(other.data_))
+{
+}
+
 bool filter_add::is_valid() const
 {
-    return !data.empty();
+    return !data_.empty();
 }
 
 void filter_add::reset()
 {
-    data.clear();
-    data.shrink_to_fit();
+    data_.clear();
+    data_.shrink_to_fit();
 }
 
 bool filter_add::from_data(uint32_t version, const data_chunk& data)
 {
-    boost::iostreams::stream<byte_source<data_chunk>> istream(data);
+    data_source istream(data);
     return from_data(version, istream);
 }
 
@@ -85,28 +110,22 @@ bool filter_add::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    const auto insufficient_version = (version < filter_add::version_minimum);
-    const auto size = source.read_variable_uint_little_endian();
-    BITCOIN_ASSERT(size <= bc::max_size_t);
-    const auto data_size = static_cast<size_t>(size);
-    bool result = static_cast<bool>(source);
+    data_ = source.read_bytes(source.read_size_little_endian());
 
-    if (result)
-    {
-        data = source.read_data(data_size);
-        result = source && (data.size() == data_size);
-    }
+    if (version < filter_add::version_minimum)
+        source.invalidate();
 
-    if (!result || insufficient_version)
+    if (!source)
         reset();
 
-    return result && !insufficient_version;
+    return source;
 }
 
 data_chunk filter_add::to_data(uint32_t version) const
 {
     data_chunk data;
-    boost::iostreams::stream<byte_sink<data_chunk>> ostream(data);
+    data.reserve(serialized_size(version));
+    data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
     BITCOIN_ASSERT(data.size() == serialized_size(version));
@@ -121,30 +140,49 @@ void filter_add::to_data(uint32_t version, std::ostream& stream) const
 
 void filter_add::to_data(uint32_t version, writer& sink) const
 {
-    sink.write_variable_uint_little_endian(data.size());
-    sink.write_data(data);
+    sink.write_variable_little_endian(data_.size());
+    sink.write_bytes(data_);
 }
 
 uint64_t filter_add::serialized_size(uint32_t version) const
 {
-    return variable_uint_size(data.size()) + data.size();
+    return variable_uint_size(data_.size()) + data_.size();
 }
 
-bool operator==(const filter_add& left,
-    const filter_add& right)
+data_chunk& filter_add::data()
 {
-    bool result = (left.data.size() == right.data.size());
-
-    for (data_chunk::size_type i = 0; i < left.data.size() && result; i++)
-        result = (left.data[i] == right.data[i]);
-
-    return result;
+    return data_;
 }
 
-bool operator!=(const filter_add& left,
-    const filter_add& right)
+const data_chunk& filter_add::data() const
 {
-    return !(left == right);
+    return data_;
+}
+
+void filter_add::set_data(const data_chunk& value)
+{
+    data_ = value;
+}
+
+void filter_add::set_data(data_chunk&& value)
+{
+    data_ = std::move(value);
+}
+
+filter_add& filter_add::operator=(filter_add&& other)
+{
+    data_ = std::move(other.data_);
+    return *this;
+}
+
+bool filter_add::operator==(const filter_add& other) const
+{
+    return (data_ == other.data_);
+}
+
+bool filter_add::operator!=(const filter_add& other) const
+{
+    return !(*this == other);
 }
 
 } // end message

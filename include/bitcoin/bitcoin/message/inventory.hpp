@@ -40,6 +40,7 @@ class BC_API inventory
 {
 public:
     typedef std::shared_ptr<inventory> ptr;
+    typedef std::shared_ptr<const inventory> const_ptr;
     typedef inventory_vector::type_id type_id;
 
     static inventory factory_from_data(uint32_t version,
@@ -49,8 +50,16 @@ public:
 
     inventory();
     inventory(const inventory_vector::list& values);
+    inventory(inventory_vector::list&& values);
     inventory(const hash_list& hashes, type_id type);
     inventory(const std::initializer_list<inventory_vector>& values);
+    inventory(const inventory& other);
+    inventory(inventory&& other);
+
+    inventory_vector::list& inventories();
+    const inventory_vector::list& inventories() const;
+    void set_inventories(const inventory_vector::list& value);
+    void set_inventories(inventory_vector::list&& value);
 
     virtual bool from_data(uint32_t version, const data_chunk& data);
     virtual bool from_data(uint32_t version, std::istream& stream);
@@ -65,15 +74,20 @@ public:
     uint64_t serialized_size(uint32_t version) const;
     size_t count(type_id type) const;
 
+    // This class is move assignable but not copy assignable.
+    inventory& operator=(inventory&& other);
+    void operator=(const inventory&) = delete;
+
+    bool operator==(const inventory& other) const;
+    bool operator!=(const inventory& other) const;
+
     static const std::string command;
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-    inventory_vector::list inventories;
+private:
+    inventory_vector::list inventories_;
 };
-
-BC_API bool operator==(const inventory& left, const inventory& right);
-BC_API bool operator!=(const inventory& left, const inventory& right);
 
 } // namespace message
 } // namespace libbitcoin

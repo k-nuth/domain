@@ -144,22 +144,22 @@ AC_ARG_ENABLE([ndebug],
 AC_MSG_RESULT([$enable_ndebug])
 AS_CASE([${enable_ndebug}], [yes], AC_DEFINE([NDEBUG]))
 
-# Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
+# Inherit --enable-shared and define BOOST_ALL_DYN_LINK.
 #------------------------------------------------------------------------------
-AS_CASE([${enable_shared}], [yes], AC_DEFINE([BOOST_TEST_DYN_LINK]))
+AS_CASE([${enable_shared}], [yes], AC_DEFINE([BOOST_ALL_DYN_LINK]))
 
 
 # Check dependencies.
 #==============================================================================
-# Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
+# Require Boost of at least version 1.57.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
-    [AX_BOOST_BASE([1.56.0],
+    [AX_BOOST_BASE([1.57.0],
         [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
          AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
          AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
-        [AC_MSG_ERROR([Boost 1.56.0 or later is required but was not found.])])])
+        [AC_MSG_ERROR([Boost 1.57.0 or later is required but was not found.])])])
 
 AX_BOOST_CHRONO
 AC_SUBST([boost_chrono_LIBS], [${BOOST_CHRONO_LIB}])
@@ -180,6 +180,10 @@ AC_MSG_NOTICE([boost_iostreams_LIBS : ${boost_iostreams_LIBS}])
 AX_BOOST_LOCALE
 AC_SUBST([boost_locale_LIBS], [${BOOST_LOCALE_LIB}])
 AC_MSG_NOTICE([boost_locale_LIBS : ${boost_locale_LIBS}])
+
+AX_BOOST_LOG
+AC_SUBST([boost_log_LIBS], [${BOOST_LOG_LIB}])
+AC_MSG_NOTICE([boost_log_LIBS : ${boost_log_LIBS}])
 
 AX_BOOST_PROGRAM_OPTIONS
 AC_SUBST([boost_program_options_LIBS], [${BOOST_PROGRAM_OPTIONS_LIB}])

@@ -68,6 +68,16 @@ get_headers::get_headers(hash_list&& start, hash_digest&& stop)
 {
 }
 
+get_headers::get_headers(const get_headers& other)
+  : get_blocks(other)
+{
+}
+
+get_headers::get_headers(get_headers&& other)
+  : get_blocks(other)
+{
+}
+
 bool get_headers::from_data(uint32_t version, const data_chunk& data)
 {
     return get_blocks::from_data(version, data);
@@ -80,14 +90,33 @@ bool get_headers::from_data(uint32_t version, std::istream& stream)
 
 bool get_headers::from_data(uint32_t version, reader& source)
 {
-    bool result = !(version < version_minimum);
+    if (!get_blocks::from_data(version, source))
+        return false;
 
-    if (result)
-        result = get_blocks::from_data(version, source);
-    else
+    if (version < get_headers::version_minimum)
+        source.invalidate();
+
+    if (!source)
         reset();
 
-    return result;
+    return source;
+}
+
+get_headers& get_headers::operator=(get_headers&& other)
+{
+    set_start_hashes(other.start_hashes());
+    set_stop_hash(other.stop_hash());
+    return *this;
+}
+
+bool get_headers::operator==(const get_headers& other) const
+{
+    return (static_cast<get_blocks>(*this) == static_cast<get_blocks>(other));
+}
+
+bool get_headers::operator!=(const get_headers& other) const
+{
+    return (static_cast<get_blocks>(*this) != static_cast<get_blocks>(other));
 }
 
 } // end message

@@ -26,10 +26,13 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/bitcoin/math/hash_number.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
 #include <bitcoin/bitcoin/utility/writer.hpp>
@@ -41,49 +44,132 @@ class BC_API block
 {
 public:
     typedef std::vector<block> list;
-    typedef std::shared_ptr<block> ptr;
-    typedef std::vector<ptr> ptr_list;
     typedef std::vector<size_t> indexes;
 
-    static block factory_from_data(const data_chunk& data,
-        bool with_transaction_count=true);
-    static block factory_from_data(std::istream& stream,
-        bool with_transaction_count=true);
-    static block factory_from_data(reader& source,
-        bool with_transaction_count=true);
-    static block genesis_mainnet();
-    static block genesis_testnet();
+    // validation-related
+    typedef transaction::sets_const_ptr input_sets;
+
+    // These properties facilitate block validation.
+    // This validation data is not copied on block copy.
+    struct validation
+    {
+        code result = error::not_found;
+        chain_state::ptr state = nullptr;
+        transaction::sets_const_ptr sets = nullptr;
+    };
+
+    // Constructors.
+    //-------------------------------------------------------------------------
 
     block();
-    block(const block& other);
-    block(const chain::header& header, const transaction::list& transactions);
 
     block(block&& other);
+    block(const block& other);
+
     block(chain::header&& header, transaction::list&& transactions);
+    block(const chain::header& header, const transaction::list& transactions);
 
-    /// This class is move assignable but not copy assignable.
+    // Operators.
+    //-------------------------------------------------------------------------
+
+    /// This class is move assignable but NOT copy assignable.
     block& operator=(block&& other);
-    void operator=(const block&) = delete;
+    block& operator=(const block& other) = delete;
 
-    bool from_data(const data_chunk& data, bool with_transaction_count=true);
-    bool from_data(std::istream& stream, bool with_transaction_count=true);
-    bool from_data(reader& source, bool with_transaction_count=true);
-    data_chunk to_data(bool with_transaction_count=true) const;
-    void to_data(std::ostream& stream, bool with_transaction_count=true) const;
-    void to_data(writer& sink, bool with_transaction_count=true) const;
+    bool operator==(const block& other) const;
+    bool operator!=(const block& other) const;
+
+    // Deserialization.
+    //-------------------------------------------------------------------------
+
+    static block factory_from_data(const data_chunk& data);
+    static block factory_from_data(std::istream& stream);
+    static block factory_from_data(reader& source);
+
+    bool from_data(const data_chunk& data);
+    bool from_data(std::istream& stream);
+    bool from_data(reader& source);
+
     bool is_valid() const;
-    bool is_distinct_transaction_set() const;
-    bool is_valid_coinbase_height(size_t height) const;
-    void reset();
-    hash_digest generate_merkle_root() const;
-    size_t signature_operations(bool strict) const;
-    uint64_t serialized_size(bool with_transaction_count=true) const;
 
-    chain::header header;
-    transaction::list transactions;
+    // Serialization.
+    //-------------------------------------------------------------------------
+
+    data_chunk to_data() const;
+    void to_data(std::ostream& stream) const;
+    void to_data(writer& sink) const;
+
+    input_sets to_input_sets(size_t fanout, bool with_coinbase=true) const;
+
+    // Properties (size, accessors, cache).
+    //-------------------------------------------------------------------------
+
+    uint64_t serialized_size() const;
+
+    // deprecated (unsafe)
+    chain::header& header();
+
+    const chain::header& header() const;
+    void set_header(const chain::header& value);
+    void set_header(chain::header&& value);
+
+    // deprecated (unsafe)
+    transaction::list& transactions();
+
+    const transaction::list& transactions() const;
+    void set_transactions(const transaction::list& value);
+    void set_transactions(transaction::list&& value);
+
+    hash_digest hash() const;
+
+    // Utilities.
+    //-------------------------------------------------------------------------
+
+    static block genesis_mainnet();
+    static block genesis_testnet();
+    static size_t locator_size(size_t top);
+    static indexes locator_heights(size_t top);
+
+    // Validation.
+    //-------------------------------------------------------------------------
+
+    static uint64_t subsidy(size_t height);
+    static hash_number difficulty(uint32_t bits);
+
+    uint64_t fees() const;
+    uint64_t claim() const;
+    uint64_t reward(size_t height) const;
+    hash_number difficulty() const;
+    hash_digest generate_merkle_root() const;
+    size_t signature_operations() const;
+    size_t signature_operations(bool bip16_active) const;
+    size_t total_inputs(bool with_coinbase=true) const;
+
+    bool is_extra_coinbases() const;
+    bool is_final(size_t height) const;
+    bool is_distinct_transaction_set() const;
+    bool is_valid_coinbase_claim(size_t height) const;
+    bool is_valid_coinbase_script(size_t height) const;
+    bool is_valid_merkle_root() const;
+
+    code check() const;
+    code check_transactions() const;
+    code accept() const;
+    code accept(const chain_state& state) const;
+    code accept_transactions(const chain_state& state) const;
+    code connect() const;
+    code connect(const chain_state& state) const;
+    code connect_transactions(const chain_state& state) const;
+
+    // These fields do not participate in serialization or comparison.
+    mutable validation validation;
+
+protected:
+    void reset();
 
 private:
-    static hash_digest build_merkle_tree(hash_list& merkle);
+    chain::header header_;
+    transaction::list transactions_;
 };
 
 } // namespace chain

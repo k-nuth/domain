@@ -28,14 +28,14 @@
     <Filter Include="src\utility">
       <UniqueIdentifier>{63815092-ade6-4e7d-8078-cf178f62dadc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\chain\script">
+      <UniqueIdentifier>{f7fb33e4-97ed-4b09-97f5-ad007380988e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\test\chain\script.hpp">
-      <Filter>src\chain</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\test\math\hash.hpp">
       <Filter>src\math</Filter>
     </ClInclude>
@@ -47,6 +47,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\wallet\mnemonic.hpp">
       <Filter>src\wallet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\test\chain\script\script.hpp">
+      <Filter>src\chain\script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,9 +126,6 @@
       <Filter>src\chain</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\chain\satoshi_words.cpp">
-      <Filter>src\chain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\test\chain\script.cpp">
       <Filter>src\chain</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\chain\transaction.cpp">
@@ -302,6 +302,27 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\message\fee_filter.cpp">
       <Filter>src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\math\limits.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\chain\script\operation.cpp">
+      <Filter>src\chain\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\chain\output_point.cpp">
+      <Filter>src\chain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\chain\point_iterator.cpp">
+      <Filter>src\chain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\message\header_message.cpp">
+      <Filter>src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\chain\script\opcode.cpp">
+      <Filter>src\chain\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\chain\script\script.cpp">
+      <Filter>src\chain\script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

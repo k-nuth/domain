@@ -19,10 +19,12 @@
  */
 #include <bitcoin/bitcoin/chain/header.hpp>
 
+#include <cstddef>
 #include <chrono>
 #include <utility>
-#include <boost/iostreams/stream.hpp>
+#include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/math/hash_number.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -32,202 +34,348 @@
 namespace libbitcoin {
 namespace chain {
 
-header header::factory_from_data(const data_chunk& data,
-    bool with_transaction_count)
-{
-    header instance;
-    instance.from_data(data, with_transaction_count);
-    return instance;
-}
+const size_t header::validation::orphan_height = 0;
 
-header header::factory_from_data(std::istream& stream,
-    bool with_transaction_count)
-{
-    header instance;
-    instance.from_data(stream, with_transaction_count);
-    return instance;
-}
-
-header header::factory_from_data(reader& source,
-    bool with_transaction_count)
-{
-    header instance;
-    instance.from_data(source, with_transaction_count);
-    return instance;
-}
-
-uint64_t header::satoshi_fixed_size_without_transaction_count()
-{
-    return 80;
-}
+// Constructors.
+//-----------------------------------------------------------------------------
 
 header::header()
+  : header(0, null_hash, null_hash, 0, 0, 0)
 {
+}
+
+header::header(header&& other)
+  : header(other.version_, std::move(other.previous_block_hash_),
+      std::move(other.merkle_), other.timestamp_, other.bits_, other.nonce_)
+{
+    // TODO: implement safe private accessor for conditional cache transfer.
 }
 
 header::header(const header& other)
-  : header(other.version, other.previous_block_hash, other.merkle,
-        other.timestamp, other.bits, other.nonce, other.transaction_count)
+  : header(other.version_, other.previous_block_hash_, other.merkle_,
+        other.timestamp_, other.bits_, other.nonce_)
+{
+    // TODO: implement safe private accessor for conditional cache transfer.
+}
+
+header::header(header&& other, hash_digest&& hash)
+  : header(other.version_, std::move(other.previous_block_hash_),
+      std::move(other.merkle_), other.timestamp_, other.bits_, other.nonce_)
+{
+    hash_ = std::make_shared<hash_digest>(std::move(hash));
+}
+
+header::header(const header& other, const hash_digest& hash)
+  : header(other.version_, other.previous_block_hash_, other.merkle_,
+        other.timestamp_, other.bits_, other.nonce_)
+{
+    hash_ = std::make_shared<hash_digest>(hash);
+}
+
+header::header(uint32_t version, hash_digest&& previous_block_hash,
+    hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
+  : version_(version),
+    previous_block_hash_(std::move(previous_block_hash)),
+    merkle_(std::move(merkle)),
+    timestamp_(timestamp),
+    bits_(bits),
+    nonce_(nonce)
 {
 }
 
 header::header(uint32_t version, const hash_digest& previous_block_hash,
     const hash_digest& merkle, uint32_t timestamp, uint32_t bits,
-    uint32_t nonce, uint64_t transaction_count)
-  : version(version),
-    previous_block_hash(previous_block_hash),
-    merkle(merkle),
-    timestamp(timestamp),
-    bits(bits),
-    nonce(nonce),
-    transaction_count(transaction_count),
-    hash_(nullptr)
+    uint32_t nonce)
+  : version_(version),
+    previous_block_hash_(previous_block_hash),
+    merkle_(merkle),
+    timestamp_(timestamp),
+    bits_(bits),
+    nonce_(nonce)
 {
 }
 
-header::header(header&& other)
-  : header(other.version, std::forward<hash_digest>(other.previous_block_hash),
-        std::forward<hash_digest>(other.merkle), other.timestamp, other.bits,
-        other.nonce, other.transaction_count)
-{
-}
-
-header::header(uint32_t version, hash_digest&& previous_block_hash,
-    hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce,
-    uint64_t transaction_count)
-  : version(version),
-    previous_block_hash(std::forward<hash_digest>(previous_block_hash)),
-    merkle(std::forward<hash_digest>(merkle)),
-    timestamp(timestamp),
-    bits(bits),
-    nonce(nonce),
-    transaction_count(transaction_count),
-    hash_(nullptr)
-{
-}
+// Operators.
+//-----------------------------------------------------------------------------
 
 header& header::operator=(header&& other)
 {
-    version = other.version;
-    previous_block_hash = std::move(other.previous_block_hash);
-    merkle = std::move(other.merkle);
-    timestamp = other.timestamp;
-    bits = other.bits;
-    nonce = other.nonce;
-    transaction_count = other.transaction_count;
+    // TODO: implement safe private accessor for conditional cache transfer.
+    version_ = other.version_;
+    previous_block_hash_ = std::move(other.previous_block_hash_);
+    merkle_ = std::move(other.merkle_);
+    timestamp_ = other.timestamp_;
+    bits_ = other.bits_;
+    nonce_ = other.nonce_;
     return *this;
 }
 
-// TODO: eliminate header copies and then delete this.
 header& header::operator=(const header& other)
 {
-    version = other.version;
-    previous_block_hash = other.previous_block_hash;
-    merkle = other.merkle;
-    timestamp = other.timestamp;
-    bits = other.bits;
-    nonce = other.nonce;
-    transaction_count = other.transaction_count;
+    // TODO: implement safe private accessor for conditional cache transfer.
+    version_ = other.version_;
+    previous_block_hash_ = other.previous_block_hash_;
+    merkle_ = other.merkle_;
+    timestamp_ = other.timestamp_;
+    bits_ = other.bits_;
+    nonce_ = other.nonce_;
     return *this;
+}
+
+bool header::operator==(const header& other) const
+{
+    return (version_ == other.version_)
+        && (previous_block_hash_ == other.previous_block_hash_)
+        && (merkle_ == other.merkle_)
+        && (timestamp_ == other.timestamp_)
+        && (bits_ == other.bits_)
+        && (nonce_ == other.nonce_);
+}
+
+bool header::operator!=(const header& other) const
+{
+    return !(*this == other);
+}
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+header header::factory_from_data(const data_chunk& data)
+{
+    header instance;
+    instance.from_data(data);
+    return instance;
+}
+
+// static
+header header::factory_from_data(std::istream& stream)
+{
+    header instance;
+    instance.from_data(stream);
+    return instance;
+}
+
+// static
+header header::factory_from_data(reader& source)
+{
+    header instance;
+    instance.from_data(source);
+    return instance;
+}
+
+bool header::from_data(const data_chunk& data)
+{
+    data_source istream(data);
+    return from_data(istream);
+}
+
+bool header::from_data(std::istream& stream)
+{
+    istream_reader source(stream);
+    return from_data(source);
+}
+
+bool header::from_data(reader& source)
+{
+    ////reset();
+
+    version_ = source.read_4_bytes_little_endian();
+    previous_block_hash_ = source.read_hash();
+    merkle_ = source.read_hash();
+    timestamp_ = source.read_4_bytes_little_endian();
+    bits_ = source.read_4_bytes_little_endian();
+    nonce_ = source.read_4_bytes_little_endian();
+
+    if (!source)
+        reset();
+
+    return source;
+}
+
+// protected
+void header::reset()
+{
+    version_ = 0;
+    previous_block_hash_.fill(0);
+    merkle_.fill(0);
+    timestamp_ = 0;
+    bits_ = 0;
+    nonce_ = 0;
+    invalidate_cache();
 }
 
 bool header::is_valid() const
 {
-    return (version != 0) ||
-        (previous_block_hash != null_hash) ||
-        (merkle != null_hash) ||
-        (timestamp != 0) ||
-        (bits != 0) ||
-        (nonce != 0);
+    return (version_ != 0) ||
+        (previous_block_hash_ != null_hash) ||
+        (merkle_ != null_hash) ||
+        (timestamp_ != 0) ||
+        (bits_ != 0) ||
+        (nonce_ != 0);
 }
 
-void header::reset()
-{
-    version = 0;
-    previous_block_hash.fill(0);
-    merkle.fill(0);
-    timestamp = 0;
-    bits = 0;
-    nonce = 0;
+// Serialization.
+//-----------------------------------------------------------------------------
 
-    mutex_.lock();
-    hash_.reset();
-    mutex_.unlock();
-}
-
-bool header::from_data(const data_chunk& data,
-    bool with_transaction_count)
-{
-    data_source istream(data);
-    return from_data(istream, with_transaction_count);
-}
-
-bool header::from_data(std::istream& stream, bool with_transaction_count)
-{
-    istream_reader source(stream);
-    return from_data(source, with_transaction_count);
-}
-
-bool header::from_data(reader& source, bool with_transaction_count)
-{
-    reset();
-
-    version = source.read_4_bytes_little_endian();
-    previous_block_hash = source.read_hash();
-    merkle = source.read_hash();
-    timestamp = source.read_4_bytes_little_endian();
-    bits = source.read_4_bytes_little_endian();
-    nonce = source.read_4_bytes_little_endian();
-    transaction_count = 0;
-    if (with_transaction_count)
-        transaction_count = source.read_variable_uint_little_endian();
-
-    const auto result = static_cast<bool>(source);
-
-    if (!result)
-        reset();
-
-    return result;
-}
-
-data_chunk header::to_data(bool with_transaction_count) const
+data_chunk header::to_data() const
 {
     data_chunk data;
+    data.reserve(serialized_size());
     data_sink ostream(data);
-    to_data(ostream, with_transaction_count);
+    to_data(ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == serialized_size(with_transaction_count));
+    BITCOIN_ASSERT(data.size() == serialized_size());
     return data;
 }
 
-void header::to_data(std::ostream& stream,
-    bool with_transaction_count) const
+void header::to_data(std::ostream& stream) const
 {
     ostream_writer sink(stream);
-    to_data(sink, with_transaction_count);
+    to_data(sink);
 }
 
-void header::to_data(writer& sink, bool with_transaction_count) const
+void header::to_data(writer& sink) const
 {
-    sink.write_4_bytes_little_endian(version);
-    sink.write_hash(previous_block_hash);
-    sink.write_hash(merkle);
-    sink.write_4_bytes_little_endian(timestamp);
-    sink.write_4_bytes_little_endian(bits);
-    sink.write_4_bytes_little_endian(nonce);
-
-    if (with_transaction_count)
-        sink.write_variable_uint_little_endian(transaction_count);
+    sink.write_4_bytes_little_endian(version_);
+    sink.write_hash(previous_block_hash_);
+    sink.write_hash(merkle_);
+    sink.write_4_bytes_little_endian(timestamp_);
+    sink.write_4_bytes_little_endian(bits_);
+    sink.write_4_bytes_little_endian(nonce_);
 }
 
-uint64_t header::serialized_size(bool with_transaction_count) const
+// Size.
+//-----------------------------------------------------------------------------
+
+// static
+uint64_t header::satoshi_fixed_size()
 {
-    auto size = satoshi_fixed_size_without_transaction_count();
+    return sizeof(version_)
+        + hash_size
+        + hash_size
+        + sizeof(timestamp_)
+        + sizeof(bits_)
+        + sizeof(nonce_);
+}
 
-    if (with_transaction_count)
-        size += variable_uint_size(transaction_count);
+uint64_t header::serialized_size() const
+{
+    return satoshi_fixed_size();
+}
 
-    return size;
+// Accessors.
+//-----------------------------------------------------------------------------
+
+uint32_t header::version() const
+{
+    return version_;
+}
+
+void header::set_version(uint32_t value)
+{
+    version_ = value;
+    invalidate_cache();
+}
+
+hash_digest& header::previous_block_hash()
+{
+    return previous_block_hash_;
+}
+
+const hash_digest& header::previous_block_hash() const
+{
+    return previous_block_hash_;
+}
+
+void header::set_previous_block_hash(const hash_digest& value)
+{
+    previous_block_hash_ = value;
+    invalidate_cache();
+}
+
+void header::set_previous_block_hash(hash_digest&& value)
+{
+    previous_block_hash_ = std::move(value);
+    invalidate_cache();
+}
+
+hash_digest& header::merkle()
+{
+    return merkle_;
+}
+
+const hash_digest& header::merkle() const
+{
+    return merkle_;
+}
+
+void header::set_merkle(const hash_digest& value)
+{
+    merkle_ = value;
+    invalidate_cache();
+}
+
+void header::set_merkle(hash_digest&& value)
+{
+    merkle_ = std::move(value);
+    invalidate_cache();
+}
+
+uint32_t header::timestamp() const
+{
+    return timestamp_;
+}
+
+void header::set_timestamp(uint32_t value)
+{
+    timestamp_ = value;
+    invalidate_cache();
+}
+
+uint32_t header::bits() const
+{
+    return bits_;
+}
+
+void header::set_bits(uint32_t value)
+{
+    bits_ = value;
+    invalidate_cache();
+}
+
+uint32_t header::nonce() const
+{
+    return nonce_;
+}
+
+void header::set_nonce(uint32_t value)
+{
+    nonce_ = value;
+    invalidate_cache();
+}
+
+// Cache.
+//-----------------------------------------------------------------------------
+
+// protected
+void header::invalidate_cache() const
+{
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    mutex_.lock_upgrade();
+
+    if (hash_)
+    {
+        mutex_.unlock_upgrade_and_lock();
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        hash_.reset();
+        //---------------------------------------------------------------------
+        mutex_.unlock_and_lock_upgrade();
+    }
+
+    mutex_.unlock_upgrade();
+    ///////////////////////////////////////////////////////////////////////////
 }
 
 hash_digest header::hash() const
@@ -240,59 +388,77 @@ hash_digest header::hash() const
     {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
-        hash_.reset(new hash_digest(bitcoin_hash(to_data(false))));
+        hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data()));
         mutex_.unlock_and_lock_upgrade();
         //---------------------------------------------------------------------
     }
 
-    hash_digest hash = *hash_;
+    const auto hash = *hash_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 
     return hash;
 }
 
+// Validation helpers.
+//-----------------------------------------------------------------------------
+
 bool header::is_valid_time_stamp() const
 {
     // Use system clock because we require accurate time of day.
     typedef std::chrono::system_clock wall_clock;
     static const auto two_hours = std::chrono::hours(time_stamp_future_hours);
-    const auto time = wall_clock::from_time_t(timestamp);
+    const auto time = wall_clock::from_time_t(timestamp_);
     const auto future = wall_clock::now() + two_hours;
     return time <= future;
 }
 
 bool header::is_valid_proof_of_work() const
 {
-    // TODO: This should be statically-initialized.
+    // TODO: This should be statically-initialized (optimization).
     hash_number maximum;
-    maximum.set_compact(max_work_bits);
-    if (!maximum.set_compact(bits))
+    if (!maximum.set_compact(max_work_bits))
         return false;
 
     hash_number target;
-    if (!target.set_compact(bits) || target > maximum)
+    if (!target.set_compact(bits_) || target > maximum)
         return false;
 
-    hash_number value;
-    value.set_hash(hash());
+    hash_number value(hash());
     return value <= target;
 }
 
-bool operator==(const header& left, const header& right)
+// Validation.
+//-----------------------------------------------------------------------------
+
+code header::check() const
 {
-    return (left.version == right.version)
-        && (left.previous_block_hash == right.previous_block_hash)
-        && (left.merkle == right.merkle)
-        && (left.timestamp == right.timestamp)
-        && (left.bits == right.bits)
-        && (left.nonce == right.nonce)
-        && (left.transaction_count == right.transaction_count);
+    if (!is_valid_proof_of_work())
+        return error::invalid_proof_of_work;
+
+    else if (!is_valid_time_stamp())
+        return error::futuristic_timestamp;
+
+    else
+        return error::success;
 }
 
-bool operator!=(const header& left, const header& right)
+code header::accept(const chain_state& state) const
 {
-    return !(left == right);
+    if (state.is_checkpoint_failure(hash()))
+        return error::checkpoints_failed;
+
+    else if (version_ < state.minimum_version())
+        return error::old_version_block;
+
+    else if (bits_ != state.work_required())
+        return error::incorrect_proof_of_work;
+
+    else if (timestamp_ <= state.median_time_past())
+        return error::timestamp_too_early;
+
+    else
+        return error::success;
 }
 
 } // namespace chain

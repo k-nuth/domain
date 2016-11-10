@@ -20,130 +20,198 @@
 #ifndef LIBBITCOIN_CHAIN_SCRIPT_HPP
 #define LIBBITCOIN_CHAIN_SCRIPT_HPP
 
+#include <cstddef>
 #include <cstdint>
 #include <istream>
+#include <memory>
 #include <string>
-#include <vector>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/chain/script/operation.hpp>
+#include <bitcoin/bitcoin/chain/script/program.hpp>
+#include <bitcoin/bitcoin/chain/script/rule_fork.hpp>
+#include <bitcoin/bitcoin/chain/script/script_pattern.hpp>
 #include <bitcoin/bitcoin/math/elliptic_curve.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
+#include <bitcoin/bitcoin/utility/thread.hpp>
 #include <bitcoin/bitcoin/utility/writer.hpp>
 
 namespace libbitcoin {
 namespace chain {
 
-class BC_API transaction;
-
-/// Signature hash types.
-/// Comments from: bitcoin.org/en/developer-guide#standard-transactions
-enum signature_hash_algorithm : uint32_t
-{
-    /// The default, signs all the inputs and outputs, protecting everything
-    /// except the signature scripts against modification.
-    all = 0x01,
-
-    /// Signs all of the inputs but none of the outputs, allowing anyone to
-    /// change where the satoshis are going unless other signatures using 
-    /// other signature hash flags protect the outputs.
-    none = 0x02,
-
-    /// The only output signed is the one corresponding to this input (the
-    /// output with the same output index number as this input), ensuring
-    /// nobody can change your part of the transaction but allowing other 
-    /// signers to change their part of the transaction. The corresponding 
-    /// output must exist or the value '1' will be signed, breaking the
-    /// security scheme. This input, as well as other inputs, are included
-    /// in the signature. The sequence numbers of other inputs are not
-    /// included in the signature, and can be updated.
-    single = 0x03,
-
-    /// The above types can be modified with this flag, creating three new
-    /// combined types.
-    anyone_can_pay = 0x80,
-
-    /// Signs all of the outputs but only this one input, and it also allows
-    /// anyone to add or remove other inputs, so anyone can contribute
-    /// additional satoshis but they cannot change how many satoshis are
-    /// sent nor where they go.
-    all_anyone_can_pay = all | anyone_can_pay,
-
-    /// Signs only this one input and allows anyone to add or remove other
-    /// inputs or outputs, so anyone who gets a copy of this input can spend
-    /// it however they'd like.
-    none_anyone_can_pay = none | anyone_can_pay,
-
-    /// Signs this one input and its corresponding output. Allows anyone to
-    /// add or remove other inputs.
-    single_anyone_can_pay = single | anyone_can_pay,
-
-    /// Used to mask off the anyone_can_pay flag to access the enumeration.
-    mask = ~anyone_can_pay
-};
-
-// All prefix = true
-// All parse_mode = script::parse_mode::strict
+class transaction;
 
 class BC_API script
 {
 public:
-    enum class parse_mode
-    {
-        strict,
-        raw_data,
-        raw_data_fallback
-    };
+    // Constructors.
+    //-------------------------------------------------------------------------
 
-    static script factory_from_data(const data_chunk& data, bool prefix,
-        parse_mode mode);
-    static script factory_from_data(std::istream& stream, bool prefix,
-        parse_mode mode);
-    static script factory_from_data(reader& source, bool prefix,
-        parse_mode mode);
+    script();
 
-    static bool verify(const script& input_script,
-        const script& output_script, const transaction& parent_tx,
-        uint32_t input_index, uint32_t flags);
+    script(script&& other);
+    script(const script& other);
 
-    static hash_digest generate_signature_hash(const transaction& parent_tx,
-        uint32_t input_index, const script& script_code, uint8_t sighash_type);
+    script(operation::list&& ops);
+    script(const operation::list& ops);
 
-    static bool create_endorsement(endorsement& out, const ec_secret& secret,
-        const script& prevout_script, const transaction& new_tx,
-        uint32_t input_index, uint8_t sighash_type);
+    script(data_chunk&& encoded, bool prefix);
+    script(const data_chunk& encoded, bool prefix);
 
-    static bool is_active(uint32_t flags, script_context flag);
+    // Operators.
+    //-------------------------------------------------------------------------
 
-    static bool check_signature(const ec_signature& signature,
-        uint8_t sighash_type, const data_chunk& public_key,
-        const script& script_code, const transaction& parent_tx,
-        uint32_t input_index);
+    /// This class is move assignable and copy assignable.
+    script& operator=(script&& other);
+    script& operator=(const script& other);
 
-    script_pattern pattern() const;
-    bool is_raw_data() const;
-    bool from_data(const data_chunk& data, bool prefix, parse_mode mode);
-    bool from_data(std::istream& stream, bool prefix, parse_mode mode);
-    bool from_data(reader& source, bool prefix, parse_mode mode);
+    bool operator==(const script& other) const;
+    bool operator!=(const script& other) const;
+
+    // Deserialization.
+    //-------------------------------------------------------------------------
+
+    static script factory_from_data(const data_chunk& encoded, bool prefix);
+    static script factory_from_data(std::istream& stream, bool prefix);
+    static script factory_from_data(reader& source, bool prefix);
+
+    /// Deserialization invalidates the iterator.
+    bool from_data(const data_chunk& encoded, bool prefix);
+    bool from_data(std::istream& stream, bool prefix);
+    bool from_data(reader& source, bool prefix);
+
+    /// Deserialization invalidates the iterator.
+    void from_operations(const operation::list& ops);
+    bool from_string(const std::string& mnemonic);
+
+    /// A script object is valid if the byte count matches the prefix.
+    bool is_valid() const;
+
+    /// Script operations is valid if all push ops have the predicated size.
+    bool is_valid_operations() const;
+
+    // Serialization.
+    //-------------------------------------------------------------------------
+
     data_chunk to_data(bool prefix) const;
     void to_data(std::ostream& stream, bool prefix) const;
     void to_data(writer& sink, bool prefix) const;
 
-    bool from_string(const std::string& human_readable);
-    std::string to_string(uint32_t flags) const;
-    bool is_valid() const;
-    void reset();
-    size_t signature_operations(bool strict) const;
-    size_t pay_to_script_hash_signature_operations(const script& pay) const;
+    std::string to_string(uint32_t active_forks) const;
+
+    // Iteration.
+    //-------------------------------------------------------------------------
+
+    bool empty() const;
+    size_t size() const;
+    const operation& front() const;
+    const operation& back() const;
+    operation::iterator begin() const;
+    operation::iterator end() const;
+    const operation& operator[](std::size_t index) const;
+
+    // Properties (size, accessors, cache).
+    //-------------------------------------------------------------------------
+
     uint64_t satoshi_content_size() const;
     uint64_t serialized_size(bool prefix) const;
+    const operation::list& operations() const;
 
-    operation::stack operations;
+    // Signing.
+    //-------------------------------------------------------------------------
+
+    static hash_digest generate_signature_hash(const transaction& tx,
+        uint32_t input_index, const script& script_code, uint8_t sighash_type);
+
+    static bool check_signature(const ec_signature& signature,
+        uint8_t sighash_type, const data_chunk& public_key,
+        const script& script_code, const transaction& tx,
+        uint32_t input_index);
+
+    static bool create_endorsement(endorsement& out, const ec_secret& secret,
+        const script& prevout_script, const transaction& tx,
+        uint32_t input_index, uint8_t sighash_type);
+
+    // Utilities (static).
+    //-------------------------------------------------------------------------
+
+    /// Determine if the fork is enabled in the active forks set.
+    static inline bool is_enabled(uint32_t active_forks, rule_fork fork);
+
+    /// No-code patterns.
+    static bool is_push_only(const operation::list& ops);
+    static bool is_relaxed_push_only(const operation::list& ops);
+
+    /// Unspendable pattern (standard).
+    static bool is_null_data_pattern(const operation::list& ops);
+
+    /// Payment script patterns (standard).
+    static bool is_pay_multisig_pattern(const operation::list& ops);
+    static bool is_pay_public_key_pattern(const operation::list& ops);
+    static bool is_pay_key_hash_pattern(const operation::list& ops);
+    static bool is_pay_script_hash_pattern(const operation::list& ops);
+
+    /// Signature script patterns (standard).
+    static bool is_sign_multisig_pattern(const operation::list& ops);
+    static bool is_sign_public_key_pattern(const operation::list& ops);
+    static bool is_sign_key_hash_pattern(const operation::list& ops);
+    static bool is_sign_script_hash_pattern(const operation::list& ops);
+
+    /// Stack factories (standard).
+    static operation::list to_null_data_pattern(data_slice data);
+    static operation::list to_pay_public_key_pattern(data_slice point);
+    static operation::list to_pay_key_hash_pattern(const short_hash& hash);
+    static operation::list to_pay_script_hash_pattern(const short_hash& hash);
+    static operation::list to_pay_multisig_pattern(uint8_t signatures,
+        const point_list& points);
+    static operation::list to_pay_multisig_pattern(uint8_t signatures,
+        const data_stack& points);
+
+    // Utilities (non-static).
+    //-------------------------------------------------------------------------
+
+    script_pattern pattern() const;
+    size_t sigops(bool embedded) const;
+    size_t embedded_sigops(const script& prevout_script) const;
+    void find_and_delete(const data_stack& endorsements);
+
+    // Validation.
+    //-------------------------------------------------------------------------
+
+    static code verify(const transaction& tx, uint32_t input, uint32_t forks);
+
+protected:
+    // So that input and output may call reset from their own.
+    friend class input;
+    friend class output;
+
+    void reset();
+    bool is_relaxed_push() const;
+    bool is_pay_to_script_hash(uint32_t forks) const;
+    void find_and_delete_(const data_chunk& endorsement);
 
 private:
-    bool deserialize(const data_chunk& raw_script, parse_mode mode);
-    bool parse(const data_chunk& raw_script);
+    static size_t serialized_size(const operation::list& ops);
+    static data_chunk operations_to_data(const operation::list& ops);
+    static code verify(const transaction& tx, uint32_t input_index,
+        uint32_t forks, const script& input_script,
+        const script& prevout_script);
+
+    data_chunk bytes_;
+    bool valid_;
+
+    // These are protected by mutex.
+    mutable bool cached_;
+    mutable operation::list operations_;
+    mutable upgrade_mutex mutex_;
 };
+
+// inline
+bool script::is_enabled(uint32_t active_forks, rule_fork fork)
+{
+    return (fork & active_forks) != 0;
+}
 
 } // namespace chain
 } // namespace libbitcoin

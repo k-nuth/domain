@@ -19,7 +19,6 @@
  */
 #include <bitcoin/bitcoin/message/ping.hpp>
 
-#include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -56,7 +55,7 @@ ping ping::factory_from_data(uint32_t version, reader& source)
 
 uint64_t ping::satoshi_fixed_size(uint32_t version)
 {
-    return version < version::level::bip31 ? 0 : sizeof(nonce);
+    return version < version::level::bip31 ? 0 : sizeof(nonce_);
 }
 
 ping::ping()
@@ -65,7 +64,18 @@ ping::ping()
 }
 
 ping::ping(uint64_t nonce)
-  : nonce(nonce), valid_(nonce != 0)
+  : nonce_(nonce), nonceless_(false), valid_(true)
+{
+}
+
+// protected
+ping::ping(uint64_t nonce, bool valid)
+  : nonce_(nonce), nonceless_(false), valid_(valid)
+{
+}
+
+ping::ping(const ping& other)
+  : ping(other.nonce_, other.valid_)
 {
 }
 
@@ -85,22 +95,26 @@ bool ping::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    if (version >= version::level::bip31)
-        nonce = source.read_8_bytes_little_endian();
+    // All nonce values are valid so we cannot use a sentinel value.
+    nonceless_ = (version < version::level::bip31);
+
+    if (!nonceless_)
+        nonce_ = source.read_8_bytes_little_endian();
 
     // Must track valid because is_valid doesn't include version parameter.
     // Otherwise when below bip31 then the object would always be invalid.
     valid_ = source;
 
-    if (!valid_)
+    if (!source)
         reset();
 
-    return valid_;
+    return source;
 }
 
 data_chunk ping::to_data(uint32_t version) const
 {
     data_chunk data;
+    data.reserve(serialized_size(version));
     data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
@@ -117,17 +131,19 @@ void ping::to_data(uint32_t version, std::ostream& stream) const
 void ping::to_data(uint32_t version, writer& sink) const
 {
     if (version >= version::level::bip31)
-        sink.write_8_bytes_little_endian(nonce);
+        sink.write_8_bytes_little_endian(nonce_);
 }
 
 bool ping::is_valid() const
 {
-    return valid_;
+    return valid_ && (nonceless_ || nonce_ != 0);
 }
 
 void ping::reset()
 {
-    nonce = 0;
+    nonce_ = 0;
+    nonceless_ = false;
+    valid_ = true;
 }
 
 uint64_t ping::serialized_size(uint32_t version) const
@@ -135,16 +151,32 @@ uint64_t ping::serialized_size(uint32_t version) const
     return satoshi_fixed_size(version);
 }
 
-bool operator==(const ping& left, const ping& right)
+uint64_t ping::nonce() const
 {
-    // Nonce should be zero if not used.
-    return (left.nonce == right.nonce);
+    return nonce_;
 }
 
-bool operator!=(const ping& left, const ping& right)
+void ping::set_nonce(uint64_t value)
+{
+    nonce_ = value;
+}
+
+ping& ping::operator=(ping&& other)
+{
+    nonce_ = other.nonce_;
+    return *this;
+}
+
+bool ping::operator==(const ping& other) const
 {
     // Nonce should be zero if not used.
-    return !(left == right);
+    return (nonce_ == other.nonce_);
+}
+
+bool ping::operator!=(const ping& other) const
+{
+    // Nonce should be zero if not used.
+    return !(*this == other);
 }
 
 } // namespace message

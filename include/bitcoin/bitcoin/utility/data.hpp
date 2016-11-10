@@ -24,6 +24,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <initializer_list>
+#include <iterator>
 #include <queue>
 #include <vector>
 #include <bitcoin/bitcoin/define.hpp>
@@ -81,12 +82,6 @@ template <class Target, class Extension>
 void extend_data(Target& target, const Extension& extension);
 
 /**
- * Constrain a numeric value within a given range.
- */
-template <typename Value>
-Value range_constrain(Value value, Value minimum, Value maximum);
-
-/**
  * Extracty a subarray from start position with length end minus start.
  */
 template <size_t Start, size_t End, size_t Size>
@@ -124,6 +119,13 @@ byte_array<Size> to_array(data_slice bytes);
  */
 template <typename Source>
 data_chunk to_chunk(const Source& bytes);
+
+/**
+ * Safely determine if a buffer starts with a byte sequence.
+ */
+template <typename Source>
+bool starts_with(const typename Source::const_iterator& begin,
+    const typename Source::const_iterator& end, const Source& value);
 
 /**
  * Perform an exclusive or (xor) across two buffers to the length specified.

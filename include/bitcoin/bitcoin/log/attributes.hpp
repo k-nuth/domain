@@ -17,27 +17,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
+#ifndef LIBBITCOIN_LOG_ATTRIBUTES_HPP
+#define LIBBITCOIN_LOG_ATTRIBUTES_HPP
 
-#include <bitcoin/bitcoin.hpp>
+#include <string>
+#include <boost/log/attributes/clock.hpp>
+#include <boost/log/expressions/keyword.hpp>
+#include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/log/severity.hpp>
 
-using namespace bc;
+namespace libbitcoin {
+namespace log {
+namespace attributes {
 
-BOOST_AUTO_TEST_SUITE(resource_lock_tests)
+BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp, "Timestamp", boost::posix_time::ptime)
+BOOST_LOG_ATTRIBUTE_KEYWORD(severity, "Severity", libbitcoin::log::severity)
+BOOST_LOG_ATTRIBUTE_KEYWORD(channel, "Channel", std::string)
 
-BOOST_AUTO_TEST_CASE(resource_lock__lock__duplicate_locks_fail)
-{
-    resource_lock main("foo");
-    BOOST_REQUIRE(main.lock());
-    std::thread thread(
-        []()
-        {
-            resource_lock duplicate("foo");
-            BOOST_REQUIRE(!duplicate.lock());
-        });
-    thread.join();
-    BOOST_REQUIRE(main.unlock());
-}
+} // namespace attributes
+} // namespace log
+} // namespace libbitcoin
 
-BOOST_AUTO_TEST_SUITE_END()
-
+#endif

@@ -36,6 +36,7 @@ class BC_API ping
 {
 public:
     typedef std::shared_ptr<ping> ptr;
+    typedef std::shared_ptr<const ping> const_ptr;
 
     static ping factory_from_data(uint32_t version, const data_chunk& data);
     static ping factory_from_data(uint32_t version, std::istream& stream);
@@ -44,6 +45,10 @@ public:
 
     ping();
     ping(uint64_t nonce);
+    ping(const ping& other);
+
+    uint64_t nonce() const;
+    void set_nonce(uint64_t value);
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -56,18 +61,25 @@ public:
     void reset();
     uint64_t serialized_size(uint32_t version) const;
 
+    // This class is move assignable but not copy assignable.
+    ping& operator=(ping&& other);
+    void operator=(const ping&) = delete;
+
+    bool operator==(const ping& other) const;
+    bool operator!=(const ping& other) const;
+
     static const std::string command;
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-    uint64_t nonce;
+protected:
+    ping(uint64_t nonce, bool valid);
 
 private:
+    uint64_t nonce_;
+    bool nonceless_;
     bool valid_;
 };
-
-BC_API bool operator==(const ping& left, const ping& right);
-BC_API bool operator!=(const ping& left, const ping& right);
 
 } // namespace message
 } // namespace libbitcoin

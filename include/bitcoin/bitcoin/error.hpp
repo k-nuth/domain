@@ -46,81 +46,171 @@ namespace error {
 // The numeric values of these codes may change without notice.
 enum error_code_t
 {
+    // general codes
     success = 0,
+    deprecated = 6,
+    unknown = 43,
+    not_found = 3,
+    file_system = 42,
+    non_standard = 17,
 
-    // network errors
-    service_stopped,
-    operation_failed,
+    // network
+    service_stopped = 1,
+    operation_failed = 2,
+    resolve_failed = 7,
+    network_unreachable = 8,
+    address_in_use = 9,
+    listen_failed = 10,
+    accept_failed = 11,
+    bad_stream = 12,
+    channel_timeout = 13,
+    address_blocked = 44,
+    channel_stopped = 45,
 
-    // blockchain errors
-    not_found,
-    duplicate,
-    reserved,
-    unsupported_script_pattern,
-
-    // network errors (more)
-    resolve_failed,
-    network_unreachable,
-    address_in_use,
-    listen_failed,
-    accept_failed,
-    bad_stream,
-    channel_timeout,
+    // block pool
+    duplicate_block = 51,
+    orphan_block = 5,
+    invalid_previous_block = 24,
+    //// TODO: block_pool_filled,
 
     // transaction pool
-    blockchain_reorganized,
-    pool_filled,
+    blockchain_reorganized = 14,
+    transaction_pool_filled = 15,
+    duplicate_pool_transaction = 4,
 
-    // validate tx
-    coinbase_transaction,
-    is_not_standard,
-    double_spend,
-    input_not_found,
+    // check header
+    invalid_proof_of_work = 26,
+    futuristic_timestamp = 27,
 
-    // check_transaction()
-    empty_transaction,
-    output_value_overflow,
-    invalid_coinbase_script_size,
-    previous_output_null,
+    // accept header
+    checkpoints_failed = 35,
+    old_version_block = 36,
+    incorrect_proof_of_work = 32,
+    timestamp_too_early = 33,
 
-    // validate block
-    previous_block_invalid,
+    // check block
+    block_size_limit = 50,
+    empty_block = 47,
+    first_not_coinbase = 28,
+    extra_coinbases = 29,
+    internal_duplicate = 49,
+    merkle_mismatch = 31,
+    insufficient_work = 48,
+    block_legacy_sigop_limit = 30,
 
-    // check_block()
-    size_limits,
-    proof_of_work,
-    futuristic_timestamp,
-    first_not_coinbase,
-    extra_coinbases,
-    too_many_sigs,
-    merkle_mismatch,
+    // accept block
+    non_final_transaction = 34,
+    coinbase_height_mismatch = 37,
+    coinbase_value_limit = 41,
+    block_embedded_sigop_limit = 52,
 
-    // accept_block()
-    incorrect_proof_of_work,
-    timestamp_too_early,
-    non_final_transaction,
-    checkpoints_failed,
-    old_version_block,
-    coinbase_height_mismatch,
+    // check transaction
+    empty_transaction = 20,
+    previous_output_null = 23,
+    spend_overflow = 21,
+    invalid_coinbase_script_size = 22,
+    coinbase_transaction = 16,
+    transction_size_limit = 53,
+    transaction_legacy_sigop_limit = 54,
 
-    // connect_block()
-    unspent_duplicate,
-    validate_inputs_failed,
-    spend_exceeds_value,
-    coinbase_too_large,
+    // accept transaction
+    unspent_duplicate = 38,
+    missing_input = 19,
+    double_spend = 18,
+    coinbase_maturity = 46,
+    spend_exceeds_value = 40,
+    transaction_embedded_sigop_limit = 55,
 
-    // file system errors
-    file_system,
+    // script verify / interpreter run
+    invalid_script = 39,
+    invalid_script_size = 56,
+    invalid_push_data_size = 57,
+    invalid_operation_count = 58,
+    invalid_stack_size = 59,
+    invalid_stack_scope = 60,
+    invalid_script_embed = 61,
+    invalid_signature_encoding = 62,
+    invalid_signature_lax_encoding = 63,
+    incorrect_signature = 64,
+    stack_false = 65,
 
-    // unknown errors
-    unknown,
-
-    // network errors (more)
-    address_blocked,
-    channel_stopped,
-
-    // check_transaction() (more)
-    coinbase_maturity
+    // op eval
+    op_disabled = 100,
+    op_reserved,
+    op_push_size,
+    op_push_data,
+    op_if,
+    op_notif,
+    op_else,
+    op_endif,
+    op_verify1,
+    op_verify2,
+    op_return,
+    op_to_alt_stack,
+    op_from_alt_stack,
+    op_drop2,
+    op_dup2,
+    op_dup3,
+    op_over2,
+    op_rot2,
+    op_swap2,
+    op_if_dup,
+    op_drop,
+    op_dup,
+    op_nip,
+    op_over,
+    op_pick,
+    op_roll,
+    op_rot,
+    op_swap,
+    op_tuck,
+    op_size,
+    op_equal,
+    op_equal_verify1,
+    op_equal_verify2,
+    op_add1,
+    op_sub1,
+    op_negate,
+    op_abs,
+    op_not,
+    op_nonzero,
+    op_add,
+    op_sub,
+    op_bool_and,
+    op_bool_or,
+    op_num_equal,
+    op_num_equal_verify1,
+    op_num_equal_verify2,
+    op_num_not_equal,
+    op_less_than,
+    op_greater_than,
+    op_less_than_or_equal,
+    op_greater_than_or_equal,
+    op_min,
+    op_max,
+    op_within,
+    op_ripemd160,
+    op_sha1,
+    op_sha256,
+    op_hash160,
+    op_hash256,
+    op_code_seperator,
+    op_check_sig_verify1,
+    op_check_sig,
+    op_check_multisig_verify1,
+    op_check_multisig_verify2,
+    op_check_multisig_verify3,
+    op_check_multisig_verify4,
+    op_check_multisig_verify5,
+    op_check_multisig_verify6,
+    op_check_multisig_verify7,
+    op_check_multisig,
+    op_check_locktime_verify1,
+    op_check_locktime_verify2,
+    op_check_locktime_verify3,
+    op_check_locktime_verify4,
+    op_check_locktime_verify5,
+    op_check_locktime_verify6,
 };
 
 enum error_condition_t

@@ -26,6 +26,19 @@
 
 namespace libbitcoin {
 
+// Adapted from: stackoverflow.com/a/18298965/1172329
+#ifndef thread_local
+    #if (__STDC_VERSION__ >= 201112) && (!defined __STDC_NO_THREADS__)
+        #define thread_local _Thread_local
+    #elif (defined _MSC_VER)
+        #define thread_local __declspec(thread) 
+    #elif (defined __GNUC__)
+        #define thread_local __thread
+    #else
+        #error "Cannot define thread_local"
+    #endif
+#endif
+
 enum class thread_priority
 {
     high,
@@ -34,7 +47,6 @@ enum class thread_priority
     lowest
 };
 
-typedef boost::mutex unique_mutex;
 typedef boost::shared_mutex shared_mutex;
 typedef boost::upgrade_mutex upgrade_mutex;
 

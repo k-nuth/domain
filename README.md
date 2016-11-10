@@ -57,7 +57,7 @@ Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Aut
 ```sh
 $ sudo apt-get install build-essential autoconf automake libtool pkg-config git
 ```
-Next install the [Boost](http://www.boost.org) (minimum 1.56.0) development package:
+Next install the [Boost](http://www.boost.org) (minimum 1.57.0) development package:
 ```sh
 $ sudo apt-get install libboost-all-dev
 ```
@@ -104,7 +104,7 @@ Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Aut
 ```sh
 $ brew install autoconf automake libtool pkgconfig wget
 ```
-Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development package:
+Next install the [Boost](http://www.boost.org) (1.57.0 or newer) development package:
 ```sh
 $ brew install boost
 ```
@@ -127,7 +127,7 @@ Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Aut
 ```sh
 $ sudo port install autoconf automake libtool pkgconfig wget
 ```
-Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development package. The `-` options remove MacPort defaults that are not Boost defaults:
+Next install the [Boost](http://www.boost.org) (1.57.0 or newer) development package. The `-` options remove MacPort defaults that are not Boost defaults:
 ```sh
 $ sudo port install boost -no_single -no_static -python27
 ```
@@ -214,6 +214,7 @@ The required set of NuGet packages can be viewed using the [NuGet package manage
  * [boost\_filesystem-vc120](http://www.nuget.org/packages/boost_filesystem-vc120)
  * [boost\_iostreams-vc120](http://www.nuget.org/packages/boost_iostreams-vc120)
  * [boost\_locale-vc120](http://www.nuget.org/packages/boost_locale-vc120)
+ * [boost\_log-vc120](http://www.nuget.org/packages/boost_log-vc120)
  * [boost\_program\_options-vc120](http://www.nuget.org/packages/boost_program_options-vc120)
  * [boost\_regex-vc120](http://www.nuget.org/packages/boost_regex-vc120)
  * [boost\_system-vc120](http://www.nuget.org/packages/boost_system-vc120)

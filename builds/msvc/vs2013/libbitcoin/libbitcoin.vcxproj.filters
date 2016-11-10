@@ -32,6 +32,24 @@
     <Filter Include="resource">
       <UniqueIdentifier>{cfaa1015-d7a4-4d44-bd05-0178121b816c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\bitcoin\config">
+      <UniqueIdentifier>{2cbd227b-0248-43d2-a8be-b1890114b27a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\bitcoin\unicode">
+      <UniqueIdentifier>{0d660b13-1283-47a3-b7b0-a6bcc7378dd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\bitcoin\message">
+      <UniqueIdentifier>{9b152846-494a-48d4-8291-d440253514f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\bitcoin\chain">
+      <UniqueIdentifier>{404c973e-47e8-497f-88b6-fe0612067218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\bitcoin\impl\math">
+      <UniqueIdentifier>{874c696b-294c-4208-ae68-32d49a136b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\bitcoin\chain\script">
+      <UniqueIdentifier>{79ec2ad3-b61a-4014-9226-6bb821a06afc}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -51,8 +69,8 @@
     <Filter Include="src\wallet">
       <UniqueIdentifier>{b2e7788e-4e44-4bbd-b5ba-5de47b5a1022}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\bitcoin\config">
-      <UniqueIdentifier>{2cbd227b-0248-43d2-a8be-b1890114b27a}</UniqueIdentifier>
+    <Filter Include="src\wallet\parse_encrypted_keys">
+      <UniqueIdentifier>{e4e09666-0a4e-480d-8592-4d3727575613}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\config">
       <UniqueIdentifier>{5aca2e32-6005-4543-bee5-6de0cd35f51c}</UniqueIdentifier>
@@ -60,35 +78,26 @@
     <Filter Include="src\external">
       <UniqueIdentifier>{cdbd60d2-a825-43a2-88b6-70fe206f0a50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\bitcoin\unicode">
-      <UniqueIdentifier>{0d660b13-1283-47a3-b7b0-a6bcc7378dd1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\unicode">
       <UniqueIdentifier>{c863e8b4-d2e2-4f76-9482-1bf25cd830f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\message">
-      <UniqueIdentifier>{9b152846-494a-48d4-8291-d440253514f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\chain">
-      <UniqueIdentifier>{404c973e-47e8-497f-88b6-fe0612067218}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\chain">
       <UniqueIdentifier>{6c79d9d7-2d5c-4c10-b5a8-59bd979494cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\message">
-      <UniqueIdentifier>{919f9823-945e-4ab1-82ab-2c7ba85502ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\impl\math">
-      <UniqueIdentifier>{874c696b-294c-4208-ae68-32d49a136b55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\wallet\parse_encrypted_keys">
-      <UniqueIdentifier>{e4e09666-0a4e-480d-8592-4d3727575613}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\chain\script">
       <UniqueIdentifier>{6e622159-d2ed-4297-b7db-e111f5500299}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\bitcoin\chain\script">
-      <UniqueIdentifier>{79ec2ad3-b61a-4014-9226-6bb821a06afc}</UniqueIdentifier>
+    <Filter Include="src\message">
+      <UniqueIdentifier>{919f9823-945e-4ab1-82ab-2c7ba85502ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\bitcoin\log">
+      <UniqueIdentifier>{db2cabaf-f23d-4994-925f-2b2405b1d68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\log">
+      <UniqueIdentifier>{f048519d-2af9-4dd9-a4a3-a78e380720ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\bitcoin\impl\script">
+      <UniqueIdentifier>{f6bee0f3-f8ee-40d8-8fbe-cd4a2687018f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +155,9 @@
     </None>
     <None Include="..\..\..\..\include\bitcoin\bitcoin\impl\utility\notifier.ipp">
       <Filter>include\bitcoin\impl\utility</Filter>
+    </None>
+    <None Include="..\..\..\..\include\bitcoin\bitcoin\impl\script\interpreter.ipp">
+      <Filter>include\bitcoin\impl\script</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -425,9 +437,6 @@
     <ClCompile Include="..\..\..\..\src\wallet\ek_private.cpp">
       <Filter>src\wallet</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\utility\log.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\message\headers.cpp">
       <Filter>src\message</Filter>
     </ClCompile>
@@ -453,12 +462,6 @@
       <Filter>src\chain\script</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\chain\script\script.cpp">
-      <Filter>src\chain\script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\chain\script\conditional_stack.cpp">
-      <Filter>src\chain\script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\chain\script\evaluation_context.cpp">
       <Filter>src\chain\script</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\chain\script\opcode.cpp">
@@ -541,6 +544,39 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\message\fee_filter.cpp">
       <Filter>src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\chain\output_point.cpp">
+      <Filter>src\chain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\chain\chain_state.cpp">
+      <Filter>src\chain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\utility\sequential_lock.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\utility\interprocess_lock.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\utility\flush_lock.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\log\sinks.cpp">
+      <Filter>src\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\chain\script\interpreter.cpp">
+      <Filter>src\chain\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\chain\script\program.cpp">
+      <Filter>src\chain\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\log\file_collector_repository.cpp">
+      <Filter>src\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\log\file_counter_formatter.cpp">
+      <Filter>src\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\log\file_collector.cpp">
+      <Filter>src\log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -901,12 +937,6 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\handlers.hpp">
       <Filter>include\bitcoin\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\utility\log.hpp">
-      <Filter>include\bitcoin\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\wallet\settings.hpp">
-      <Filter>include\bitcoin\wallet</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\message\headers.hpp">
       <Filter>include\bitcoin\message</Filter>
     </ClInclude>
@@ -943,9 +973,6 @@
     <ClInclude Include="..\..\..\..\src\math\secp256k1_initializer.hpp">
       <Filter>src\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\spend.hpp">
-      <Filter>include\bitcoin\chain</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\utility\color.hpp">
       <Filter>include\bitcoin\utility</Filter>
     </ClInclude>
@@ -963,12 +990,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\script\opcode.hpp">
       <Filter>include\bitcoin\chain\script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\chain\script\evaluation_context.hpp">
-      <Filter>src\chain\script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\chain\script\conditional_stack.hpp">
-      <Filter>src\chain\script</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\utility\conditional_lock.hpp">
       <Filter>include\bitcoin\utility</Filter>
@@ -1053,6 +1074,72 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\message\fee_filter.hpp">
       <Filter>include\bitcoin\message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\output_point.hpp">
+      <Filter>include\bitcoin\chain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\input_point.hpp">
+      <Filter>include\bitcoin\chain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\chain_state.hpp">
+      <Filter>include\bitcoin\chain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\math\limits.hpp">
+      <Filter>include\bitcoin\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\config\settings.hpp">
+      <Filter>include\bitcoin\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\utility\sequential_lock.hpp">
+      <Filter>include\bitcoin\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\unicode\file_lock.hpp">
+      <Filter>include\bitcoin\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\utility\interprocess_lock.hpp">
+      <Filter>include\bitcoin\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\utility\flush_lock.hpp">
+      <Filter>include\bitcoin\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\severity.hpp">
+      <Filter>include\bitcoin\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\sinks.hpp">
+      <Filter>include\bitcoin\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\sources.hpp">
+      <Filter>include\bitcoin\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\attributes.hpp">
+      <Filter>include\bitcoin\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\script\interpreter.hpp">
+      <Filter>include\bitcoin\chain\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\script\sighash_algorithm.hpp">
+      <Filter>include\bitcoin\chain\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\script\rule_fork.hpp">
+      <Filter>include\bitcoin\chain\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\script\script_pattern.hpp">
+      <Filter>include\bitcoin\chain\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\chain\script\program.hpp">
+      <Filter>include\bitcoin\chain\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\file_collector.hpp">
+      <Filter>include\bitcoin\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\file_collector_repository.hpp">
+      <Filter>include\bitcoin\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\file_counter_formatter.hpp">
+      <Filter>include\bitcoin\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\bitcoin\log\file_char_traits.hpp">
+      <Filter>include\bitcoin\log</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

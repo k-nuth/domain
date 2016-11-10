@@ -26,8 +26,10 @@
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/bitcoin/utility/data.hpp>
-#include <bitcoin/bitcoin/utility/reader.hpp>
+#include <bitcoin/bitcoin/utility/container_sink.hpp>
+#include <bitcoin/bitcoin/utility/container_source.hpp>
+#include <bitcoin/bitcoin/utility/istream_reader.hpp>
+#include <bitcoin/bitcoin/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -36,131 +38,185 @@ const std::string header_message::command = "headers";
 const uint32_t header_message::version_minimum = version::level::minimum;
 const uint32_t header_message::version_maximum = version::level::maximum;
 
-header_message header_message::factory_from_data(uint32_t version,
-    const data_chunk& data, bool with_transaction_count)
+header_message header_message::factory_from_data(const uint32_t version,
+    const data_chunk& data)
 {
     header_message instance;
-    instance.from_data(version, data, with_transaction_count);
+    instance.from_data(version, data);
     return instance;
 }
 
-header_message header_message::factory_from_data(uint32_t version,
-    std::istream& stream, bool with_transaction_count)
+header_message header_message::factory_from_data(const uint32_t version,
+    std::istream& stream)
 {
     header_message instance;
-    instance.from_data(version, stream, with_transaction_count);
+    instance.from_data(version, stream);
     return instance;
 }
 
-header_message header_message::factory_from_data(uint32_t version,
-    reader& source, bool with_transaction_count)
+header_message header_message::factory_from_data(const uint32_t version,
+    reader& source)
 {
     header_message instance;
-    instance.from_data(version, source, with_transaction_count);
+    instance.from_data(version, source);
     return instance;
+}
+
+uint64_t header_message::satoshi_fixed_size(const uint32_t version)
+{
+    return chain::header::satoshi_fixed_size() + variable_uint_size(0);
 }
 
 header_message::header_message()
-  : header()
-{
-}
-
-header_message::header_message(const header& other)
-  : header(other)
-{
-}
-
-header_message::header_message(const header_message& other)
-: header_message(other.version, other.previous_block_hash, other.merkle,
-      other.timestamp, other.bits, other.nonce, other.transaction_count)
+  : header(), originator_(0u)
 {
 }
 
 header_message::header_message(uint32_t version,
     const hash_digest& previous_block_hash, const hash_digest& merkle,
-    uint32_t timestamp, uint32_t bits, uint32_t nonce,
-    uint64_t transaction_count)
-  : header(version, previous_block_hash, merkle, timestamp, bits, nonce,
-        transaction_count)
-{
-}
-
-header_message::header_message(header&& other)
-  : header(std::forward<header>(other))
-{
-}
-
-header_message::header_message(header_message&& other)
-  : header_message(other.version,
-        std::forward<hash_digest>(other.previous_block_hash),
-        std::forward<hash_digest>(other.merkle), other.timestamp, other.bits,
-        other.nonce, other.transaction_count)
+    uint32_t timestamp, uint32_t bits, uint32_t nonce, uint64_t originator)
+  : header(version, previous_block_hash, merkle, timestamp, bits, nonce),
+    originator_(originator)
 {
 }
 
 header_message::header_message(uint32_t version,
     hash_digest&& previous_block_hash, hash_digest&& merkle,
-    uint32_t timestamp, uint32_t bits, uint32_t nonce,
-    uint64_t transaction_count)
-  : header(version, std::forward<hash_digest>(previous_block_hash),
-        std::forward<hash_digest>(merkle), timestamp, bits, nonce,
-        transaction_count)
+    uint32_t timestamp, uint32_t bits, uint32_t nonce, uint64_t originator)
+  : header(version, std::move(previous_block_hash), std::move(merkle),
+      timestamp, bits, nonce), originator_(originator)
 {
+}
+
+header_message::header_message(const chain::header& other)
+  : header(other), originator_(0u)
+{
+}
+
+header_message::header_message(chain::header&& other)
+  : header(std::move(other)), originator_(0u)
+{
+}
+
+header_message::header_message(const header_message& other)
+: header(other), originator_(other.originator_)
+{
+}
+
+header_message::header_message(header_message&& other)
+  : header(other), originator_(other.originator_)
+{
+}
+
+bool header_message::from_data(const uint32_t version, const data_chunk& data)
+{
+    data_source istream(data);
+    return from_data(version, istream);
+}
+
+bool header_message::from_data(const uint32_t version, std::istream& stream)
+{
+    istream_reader source(stream);
+    return from_data(version, source);
+}
+
+bool header_message::from_data(const uint32_t version, reader& source)
+{
+    if (!header::from_data(source))
+        return false;
+
+    // The header message must trail a zero byte (yes, it's stoopid).
+    // bitcoin.org/en/developer-reference#headers
+    if (source.read_byte() != 0x00)
+        source.invalidate();
+
+    if (!source)
+        reset();
+
+    return source;
+}
+
+data_chunk header_message::to_data(const uint32_t version) const
+{
+    data_chunk data;
+    data_sink ostream(data);
+    to_data(version, ostream);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == serialized_size(version));
+    return data;
+}
+
+void header_message::to_data(const uint32_t version, std::ostream& stream) const
+{
+    ostream_writer sink(stream);
+    to_data(version, sink);
+}
+
+void header_message::to_data(const uint32_t version, writer& sink) const
+{
+    header::to_data(sink);
+    sink.write_variable_little_endian(0);
+}
+
+void header_message::reset()
+{
+    header::reset();
+    originator_ = 0u;
+}
+
+uint64_t header_message::serialized_size(const uint32_t version) const
+{
+    return satoshi_fixed_size(version);
+}
+
+uint64_t header_message::originator() const
+{
+    return originator_;
+}
+
+void header_message::set_originator(uint64_t value) const
+{
+    originator_ = value;
+}
+
+header_message& header_message::operator=(chain::header&& other)
+{
+    chain::header::operator=(std::move(other));
+    return *this;
 }
 
 header_message& header_message::operator=(header_message&& other)
 {
-    version = other.version;
-    previous_block_hash = std::move(other.previous_block_hash);
-    merkle = std::move(other.merkle);
-    timestamp = other.timestamp;
-    bits = other.bits;
-    nonce = other.nonce;
-    transaction_count = other.transaction_count;
     originator_ = other.originator_;
+    chain::header::operator=(std::move(other));
     return *this;
 }
 
-bool header_message::from_data(uint32_t, const data_chunk& data,
-    bool with_transaction_count)
+header_message& header_message::operator=(const header_message& other)
 {
-    return header::from_data(data, with_transaction_count);
+    originator_ = other.originator_;
+    chain::header::operator=(other);
+    return *this;
 }
 
-bool header_message::from_data(uint32_t, std::istream& stream,
-    bool with_transaction_count)
+bool header_message::operator==(const chain::header& other) const
 {
-    return header::from_data(stream, with_transaction_count);
+    return chain::header::operator==(other);
 }
 
-bool header_message::from_data(uint32_t, reader& source,
-    bool with_transaction_count)
+bool header_message::operator!=(const chain::header& other) const
 {
-    return header::from_data(source, with_transaction_count);
+    return chain::header::operator!=(other);
 }
 
-data_chunk header_message::to_data(uint32_t,
-    bool with_transaction_count) const
+bool header_message::operator==(const header_message& other) const
 {
-    return header::to_data(with_transaction_count);
+    return chain::header::operator==(other);
 }
 
-void header_message::to_data(uint32_t, std::ostream& stream,
-    bool with_transaction_count) const
+bool header_message::operator!=(const header_message& other) const
 {
-    header::to_data(stream, with_transaction_count);
-}
-
-void header_message::to_data(uint32_t, writer& sink,
-    bool with_transaction_count) const
-{
-    header::to_data(sink, with_transaction_count);
-}
-
-uint64_t header_message::serialized_size(uint32_t,
-    bool with_transaction_count) const
-{
-    return header::serialized_size(with_transaction_count);
+    return chain::header::operator!=(other);
 }
 
 } // namespace message

@@ -19,7 +19,7 @@
  */
 #include <bitcoin/bitcoin/message/filter_load.hpp>
 
-#include <boost/iostreams/stream.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
@@ -58,26 +58,57 @@ filter_load filter_load::factory_from_data(uint32_t version,
     return instance;
 }
 
+filter_load::filter_load()
+  : filter_(), hash_functions_(0), tweak_(0), flags_(0x00)
+{
+}
+
+filter_load::filter_load(const data_chunk& filter, uint32_t hash_functions,
+    uint32_t tweak, uint8_t flags)
+  : filter_(filter), hash_functions_(hash_functions), tweak_(tweak),
+    flags_(flags)
+{
+}
+
+filter_load::filter_load(data_chunk&& filter, uint32_t hash_functions,
+    uint32_t tweak, uint8_t flags)
+  : filter_(std::move(filter)), hash_functions_(hash_functions), tweak_(tweak),
+    flags_(flags)
+{
+}
+
+filter_load::filter_load(const filter_load& other)
+  : filter_load(other.filter_, other.hash_functions_,
+      other.tweak_, other.flags_)
+{
+}
+
+filter_load::filter_load(filter_load&& other)
+  : filter_load(std::move(other.filter_), other.hash_functions_, other.tweak_,
+      other.flags_)
+{
+}
+
 bool filter_load::is_valid() const
 {
-    return !filter.empty()
-        || (hash_functions != 0)
-        || (tweak != 0)
-        || (flags != 0x00);
+    return !filter_.empty()
+        || (hash_functions_ != 0)
+        || (tweak_ != 0)
+        || (flags_ != 0x00);
 }
 
 void filter_load::reset()
 {
-    filter.clear();
-    filter.shrink_to_fit();
-    hash_functions = 0;
-    tweak = 0;
-    flags = 0x00;
+    filter_.clear();
+    filter_.shrink_to_fit();
+    hash_functions_ = 0;
+    tweak_ = 0;
+    flags_ = 0x00;
 }
 
 bool filter_load::from_data(uint32_t version, const data_chunk& data)
 {
-    boost::iostreams::stream<byte_source<data_chunk>> istream(data);
+    data_source istream(data);
     return from_data(version, istream);
 }
 
@@ -91,31 +122,25 @@ bool filter_load::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    const auto  insufficent_version = (version < filter_load::version_minimum);
-    const auto size = source.read_variable_uint_little_endian();
-    BITCOIN_ASSERT(size <= bc::max_size_t);
-    const auto filter_size = static_cast<size_t>(size);
-    bool result = static_cast<bool>(source);
+    filter_ = source.read_bytes(source.read_size_little_endian());
+    hash_functions_ = source.read_4_bytes_little_endian();
+    tweak_ = source.read_4_bytes_little_endian();
+    flags_ = source.read_byte();
 
-    if (result)
-    {
-        filter = source.read_data(filter_size);
-        hash_functions = source.read_4_bytes_little_endian();
-        tweak = source.read_4_bytes_little_endian();
-        flags = source.read_byte();
-        result = source && (filter.size() == filter_size);
-    }
+    if (version < filter_load::version_minimum)
+        source.invalidate();
 
-    if (!result || insufficent_version)
+    if (!source)
         reset();
 
-    return result && !insufficent_version;
+    return source;
 }
 
 data_chunk filter_load::to_data(uint32_t version) const
 {
     data_chunk data;
-    boost::iostreams::stream<byte_sink<data_chunk>> ostream(data);
+    data.reserve(serialized_size(version));
+    data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
     BITCOIN_ASSERT(data.size() == serialized_size(version));
@@ -130,36 +155,88 @@ void filter_load::to_data(uint32_t version, std::ostream& stream) const
 
 void filter_load::to_data(uint32_t version, writer& sink) const
 {
-    sink.write_variable_uint_little_endian(filter.size());
-    sink.write_data(filter);
-    sink.write_4_bytes_little_endian(hash_functions);
-    sink.write_4_bytes_little_endian(tweak);
-    sink.write_byte(flags);
+    sink.write_variable_little_endian(filter_.size());
+    sink.write_bytes(filter_);
+    sink.write_4_bytes_little_endian(hash_functions_);
+    sink.write_4_bytes_little_endian(tweak_);
+    sink.write_byte(flags_);
 }
 
 uint64_t filter_load::serialized_size(uint32_t version) const
 {
-    return 1 + 4 + 4 + variable_uint_size(filter.size()) + filter.size();
+    return 1 + 4 + 4 + variable_uint_size(filter_.size()) + filter_.size();
 }
 
-bool operator==(const filter_load& left,
-    const filter_load& right)
+data_chunk& filter_load::filter()
 {
-    bool result = (left.filter.size() == right.filter.size()) &&
-        (left.hash_functions == right.hash_functions) &&
-        (left.tweak == right.tweak) &&
-        (left.flags == right.flags);
-
-    for (data_chunk::size_type i = 0; i < left.filter.size() && result; i++)
-        result = (left.filter[i] == right.filter[i]);
-
-    return result;
+    return filter_;
 }
 
-bool operator!=(const filter_load& left,
-    const filter_load& right)
+const data_chunk& filter_load::filter() const
 {
-    return !(left == right);
+    return filter_;
+}
+
+void filter_load::set_filter(const data_chunk& value)
+{
+    filter_ = value;
+}
+
+void filter_load::set_filter(data_chunk&& value)
+{
+    filter_ = std::move(value);
+}
+
+uint32_t filter_load::hash_functions() const
+{
+    return hash_functions_;
+}
+
+void filter_load::set_hash_functions(uint32_t value)
+{
+    hash_functions_ = value;
+}
+
+uint32_t filter_load::tweak() const
+{
+    return tweak_;
+}
+
+void filter_load::set_tweak(uint32_t value)
+{
+    tweak_ = value;
+}
+
+uint8_t filter_load::flags() const
+{
+    return flags_;
+}
+
+void filter_load::set_flags(uint8_t value)
+{
+    flags_ = value;
+}
+
+filter_load& filter_load::operator=(filter_load&& other)
+{
+    filter_ = std::move(other.filter_);
+    hash_functions_ = other.hash_functions_;
+    tweak_ = other.tweak_;
+    flags_ = other.flags_;
+    return *this;
+}
+
+bool filter_load::operator==(const filter_load& other) const
+{
+    return (filter_ == other.filter_)
+        && (hash_functions_ == other.hash_functions_)
+        && (tweak_ == other.tweak_)
+        && (flags_ == other.flags_);
+}
+
+bool filter_load::operator!=(const filter_load& other) const
+{
+    return !(*this == other);
 }
 
 } // end message

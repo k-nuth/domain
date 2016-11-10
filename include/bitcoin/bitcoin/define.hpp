@@ -20,6 +20,7 @@
 #ifndef LIBBITCOIN_DEFINE_HPP
 #define LIBBITCOIN_DEFINE_HPP
 
+#include <bitcoin/bitcoin/compat.hpp>
 // Create bc namespace alias.
 namespace libbitcoin {
 } // namespace libbitcoin
@@ -72,9 +73,6 @@ namespace bc = libbitcoin;
         #define BC_DEPRECATED
     #endif
 #endif
-
-// Log name.
-#define LOG_SYSTEM "system"
 
 // Avoid namespace conflict between boost::placeholders and std::placeholders. 
 #define BOOST_BIND_NO_PLACEHOLDERS

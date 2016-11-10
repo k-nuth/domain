@@ -36,11 +36,19 @@ class BC_API pong
 {
 public:
     typedef std::shared_ptr<pong> ptr;
+    typedef std::shared_ptr<const pong> const_ptr;
 
     static pong factory_from_data(uint32_t version, const data_chunk& data);
     static pong factory_from_data(uint32_t version, std::istream& stream);
     static pong factory_from_data(uint32_t version, reader& source);
     static uint64_t satoshi_fixed_size(uint32_t version);
+
+    pong();
+    pong(uint64_t nonce);
+    pong(const pong& other);
+
+    uint64_t nonce() const;
+    void set_nonce(uint64_t value);
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -53,15 +61,20 @@ public:
     void reset();
     uint64_t serialized_size(uint32_t version) const;
 
+    // This class is move assignable but not copy assignable.
+    pong& operator=(pong&& other);
+    void operator=(const pong&) = delete;
+
+    bool operator==(const pong& other) const;
+    bool operator!=(const pong& other) const;
+
     static const std::string command;
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-    uint64_t nonce;
+private:
+    uint64_t nonce_;
 };
-
-BC_API bool operator==(const pong& left, const pong& right);
-BC_API bool operator!=(const pong& left, const pong& right);
 
 } // namespace message
 } // namespace libbitcoin

@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <bitcoin/bitcoin/chain/script/operation.hpp>
 #include <bitcoin/bitcoin/chain/script/script.hpp>
+#include <bitcoin/bitcoin/chain/script/script_pattern.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/utility/binary.hpp>
@@ -37,8 +38,8 @@ bool is_stealth_script(const script& script)
     if (script.pattern() != chain::script_pattern::null_data)
         return false;
 
-    BITCOIN_ASSERT(script.operations.size() == 2);
-    const auto& data = script.operations[1].data;
+    BITCOIN_ASSERT(script.size() == 2);
+    const auto& data = script[1].data();
     return (data.size() >= hash_size);
 }
 
@@ -63,6 +64,7 @@ static bool create_ephemeral_keys(ec_secret& out_secret,
     static const data_chunk magic(to_chunk("Stealth seed"));
     auto nonced_seed = build_chunk({ to_array(0), seed });
 
+    // TODO: this can be implemented using libsecp256k1 without iteration.
     // Iterate up to 256 times before giving up on finding a valid key pair.
     // This gives extremely high success probability given even distribution.
     for (uint8_t nonce = 0; nonce <= max_uint8; ++nonce)
@@ -101,10 +103,10 @@ bool create_stealth_data(data_chunk& out_stealth_data, ec_secret& out_secret,
         return false;
 
     // [ephemeral-public-key-hash:32][pad:0-44][nonce:4]
-    static const size_t max_pad_size = operation::max_null_data_size -
+    static const size_t max_pad_size = max_null_data_size -
         hash_size - sizeof(uint32_t);
 
-    // Derive our initial nonce data from the provided seed.
+    // Derive our initial nonce and pad from the provided seed.
     const auto bytes = sha512_hash(seed);
 
     // Create a pad size of 0-44 using the last of bytes (avoiding pad/nonce).
@@ -114,13 +116,13 @@ bool create_stealth_data(data_chunk& out_stealth_data, ec_secret& out_secret,
     data_chunk data(hash_size + pad_size + sizeof(uint32_t));
 
     // Copy the unsigned portion of the ephemeral public key into data.
-    std::copy(point.begin() + 1, point.end(), data.begin());
+    std::copy_n(point.begin() + 1, ec_compressed_size - 1, data.begin());
 
     // Copy arbitrary pad bytes into data.
     const auto pad_begin = data.begin() + hash_size;
-    std::copy(bytes.begin(), bytes.begin() + pad_size, pad_begin);
+    std::copy_n(bytes.begin(), pad_size, pad_begin);
 
-    // Create an initial 32 bit nonce value from last byte (avoiding pad).
+    // Create an initial 32 bit nonce value from last word (avoiding pad).
     const auto start = from_little_endian_unsafe<uint32_t>(bytes.begin() +
         max_pad_size);
 
@@ -128,9 +130,13 @@ bool create_stealth_data(data_chunk& out_stealth_data, ec_secret& out_secret,
     // This will iterate up to 2^32 times before giving up.
     for (uint32_t nonce = start + 1; nonce != start; ++nonce)
     {
+        // Fill the nonce into the data buffer.
+        const auto fill = to_little_endian(nonce);
+        std::copy_n(fill.begin(), sizeof(nonce), data.end() - sizeof(nonce));
+
         // Create the stealth script with the current data.
-        const auto ops = operation::to_null_data_pattern(data);
-        const auto stealth_script = script{ ops };
+        const auto ops = script::to_null_data_pattern(data);
+        const auto stealth_script = script(std::move(ops));
 
         // Test for match of filter to stealth script hash prefix.
         uint32_t field;
@@ -157,9 +163,8 @@ bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
     // That requires iteration with probability of 1 in 2 chance of success.
     out_ephemeral_public_key[0] = ephemeral_public_key_sign;
 
-    const auto& data = script.operations[1].data;
-    std::copy(data.begin(), data.begin() + hash_size,
-        out_ephemeral_public_key.begin() + 1);
+    const auto& data = script[1].data();
+    std::copy_n(data.begin(), hash_size, out_ephemeral_public_key.begin() + 1);
 
     return true;
 }
@@ -170,9 +175,8 @@ bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
     if (!is_stealth_script(script))
         return false;
 
-    const auto& data = script.operations[1].data;
-    std::copy(data.begin(), data.begin() + hash_size,
-        out_unsigned_ephemeral_key.begin());
+    const auto& data = script[1].data();
+    std::copy_n(data.begin(), hash_size, out_unsigned_ephemeral_key.begin());
 
     return true;
 }

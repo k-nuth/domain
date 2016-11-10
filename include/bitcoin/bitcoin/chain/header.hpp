@@ -20,12 +20,15 @@
 #ifndef LIBBITCOIN_CHAIN_HEADER_HPP
 #define LIBBITCOIN_CHAIN_HEADER_HPP
 
+#include <cstddef>
 #include <cstdint>
 #include <istream>
 #include <string>
 #include <memory>
 #include <vector>
+#include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
@@ -40,64 +43,130 @@ class BC_API header
 public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
-    typedef std::vector<ptr> ptr_list;
+    typedef std::shared_ptr<const header> const_ptr;
+    typedef std::vector<header> ptr_list;
+    typedef std::vector<const_ptr> const_ptr_list;
 
-    static header factory_from_data(const data_chunk& data,
-        bool with_transaction_count=true);
-    static header factory_from_data(std::istream& stream,
-        bool with_transaction_count=true);
-    static header factory_from_data(reader& source,
-        bool with_transaction_count=true);
-    static uint64_t satoshi_fixed_size_without_transaction_count();
+    // These properties facilitate block validation.
+    // This validation data is not copied on block/header copy.
+    struct validation
+    {
+        static const size_t orphan_height;
+
+        size_t height = validation::orphan_height;
+    };
+
+    // Constructors.
+    //-----------------------------------------------------------------------------
 
     header();
-    header(const header& other);
-    header(uint32_t version, const hash_digest& previous_block_hash,
-        const hash_digest& merkle, uint32_t timestamp, uint32_t bits,
-        uint32_t nonce, uint64_t transaction_count=0);
 
     header(header&& other);
+    header(const header& other);
+
+    header(header&& other, hash_digest&& hash);
+    header(const header& other, const hash_digest& hash);
+
+    header(uint32_t version, const hash_digest& previous_block_hash,
+        const hash_digest& merkle, uint32_t timestamp, uint32_t bits,
+        uint32_t nonce);
     header(uint32_t version, hash_digest&& previous_block_hash,
-        hash_digest&& merkle, uint32_t timestamp, uint32_t bits,
-        uint32_t nonce, uint64_t transaction_count=0);
+        hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
-    /// This class is move assignable but not copy assignable.
+    // Operators.
+    //-----------------------------------------------------------------------------
+
+    /// This class is move and copy assignable.
     header& operator=(header&& other);
+    header& operator=(const header& other);
 
-    // TODO: eliminate blockchain transaction copies and then delete this.
-    header& operator=(const header& other) /*= delete*/;
+    bool operator==(const header& other) const;
+    bool operator!=(const header& other) const;
 
-    bool from_data(const data_chunk& data, bool with_transaction_count=true);
-    bool from_data(std::istream& stream, bool with_transaction_count=true);
-    bool from_data(reader& source, bool with_transaction_count=true);
-    data_chunk to_data(bool with_transaction_count=true) const;
-    void to_data(std::ostream& stream, bool with_transaction_count=true) const;
-    void to_data(writer& sink, bool with_transaction_count=true) const;
-    hash_digest hash() const;
+    // Deserialization.
+    //-----------------------------------------------------------------------------
+
+    static header factory_from_data(const data_chunk& data);
+    static header factory_from_data(std::istream& stream);
+    static header factory_from_data(reader& source);
+
+    bool from_data(const data_chunk& data);
+    bool from_data(std::istream& stream);
+    bool from_data(reader& source);
+
     bool is_valid() const;
+
+    // Serialization.
+    //-----------------------------------------------------------------------------
+
+    data_chunk to_data() const;
+    void to_data(std::ostream& stream) const;
+    void to_data(writer& sink) const;
+
+    // Properties (size, accessors, cache).
+    //-----------------------------------------------------------------------------
+
+    static uint64_t satoshi_fixed_size();
+    uint64_t serialized_size() const;
+
+    uint32_t version() const;
+    void set_version(uint32_t value);
+
+    // Deprecated (unsafe).
+    hash_digest& previous_block_hash();
+
+    const hash_digest& previous_block_hash() const;
+    void set_previous_block_hash(const hash_digest& value);
+    void set_previous_block_hash(hash_digest&& value);
+
+    // Deprecated (unsafe).
+    hash_digest& merkle();
+
+    const hash_digest& merkle() const;
+    void set_merkle(const hash_digest& value);
+    void set_merkle(hash_digest&& value);
+
+    uint32_t timestamp() const;
+    void set_timestamp(uint32_t value);
+
+    uint32_t bits() const;
+    void set_bits(uint32_t value);
+
+    uint32_t nonce() const;
+    void set_nonce(uint32_t value);
+
+    hash_digest hash() const;
+
+    // Validation.
+    //-----------------------------------------------------------------------------
+
     bool is_valid_time_stamp() const;
     bool is_valid_proof_of_work() const;
+
+    code check() const;
+    code accept(const chain_state& state) const;
+
+    // These fields do not participate in serialization or comparison.
+    mutable validation validation;
+
+protected:
+    // So that block may call reset from its own.
+    friend class block;
+
     void reset();
-    uint64_t serialized_size(bool with_transaction_count=true) const;
-
-    uint32_t version;
-    hash_digest previous_block_hash;
-    hash_digest merkle;
-    uint32_t timestamp;
-    uint32_t bits;
-    uint32_t nonce;
-
-    // The longest size (64) of a protocol variable int is deserialized here.
-    // WHen writing a block the size of the transaction collection is used.
-    uint64_t transaction_count;
+    void invalidate_cache() const;
 
 private:
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
-};
 
-BC_API bool operator==(const header& left, const header& right);
-BC_API bool operator!=(const header& left, const header& right);
+    uint32_t version_;
+    hash_digest previous_block_hash_;
+    hash_digest merkle_;
+    uint32_t timestamp_;
+    uint32_t bits_;
+    uint32_t nonce_;
+};
 
 } // namespace chain
 } // namespace libbitcoin

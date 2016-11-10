@@ -17,32 +17,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_SPEND_HPP
-#define LIBBITCOIN_CHAIN_SPEND_HPP
+#ifndef LIBBITCOIN_SEQUENTIAL_LOCK_HPP
+#define LIBBITCOIN_SEQUENTIAL_LOCK_HPP
 
-#include <vector>
-#include <bitcoin/bitcoin/chain/point.hpp>
+#include <atomic>
+#include <cstddef>
 #include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
-namespace chain {
 
-struct BC_API spend
+/// This class is thread safe.
+/// Encapsulation of sequential locking conditions.
+class BC_API sequential_lock
 {
-    bool valid;
-    uint32_t index;
-    hash_digest hash;
+public:
+    typedef size_t handle;
+
+    /// Determine if the given handle is a write-locked handle.
+    static inline bool is_write_locked(handle value)
+    {
+        return (value % 2) == 1;
+    }
+
+    sequential_lock();
+
+    handle begin_read() const;
+    bool is_read_valid(handle value) const;
+
+    bool begin_write();
+    bool end_write();
+
+private:
+    std::atomic<size_t> sequence_;
 };
 
-struct BC_API spend_info
-{
-    typedef std::vector<spend_info> list;
-
-    input_point point;
-    output_point previous_output;
-};
-
-} // namespace chain
 } // namespace libbitcoin
 
 #endif

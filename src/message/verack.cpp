@@ -19,7 +19,6 @@
  */
 #include <bitcoin/bitcoin/message/verack.hpp>
 
-#include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -57,6 +56,10 @@ verack verack::factory_from_data(uint32_t version,
     return instance;
 }
 
+verack::verack()
+{
+}
+
 bool verack::is_valid() const
 {
     return true;
@@ -87,6 +90,7 @@ bool verack::from_data(uint32_t version, reader& source)
 data_chunk verack::to_data(uint32_t version) const
 {
     data_chunk data;
+    data.reserve(serialized_size(version));
     data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();

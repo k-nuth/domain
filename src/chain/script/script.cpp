@@ -19,183 +19,273 @@
  */
 #include <bitcoin/bitcoin/chain/script/script.hpp>
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
+#include <memory>
 #include <numeric>
 #include <sstream>
-#include <boost/algorithm/string.hpp>
-#include <boost/iostreams/stream.hpp>
+#include <utility>
 #include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/chain/script/interpreter.hpp>
 #include <bitcoin/bitcoin/chain/script/opcode.hpp>
 #include <bitcoin/bitcoin/chain/script/operation.hpp>
+#include <bitcoin/bitcoin/chain/script/rule_fork.hpp>
+#include <bitcoin/bitcoin/chain/script/script_pattern.hpp>
+#include <bitcoin/bitcoin/chain/script/sighash_algorithm.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
+#include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/formats/base_16.hpp>
 #include <bitcoin/bitcoin/math/elliptic_curve.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/math/script_number.hpp>
+#include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
 #include <bitcoin/bitcoin/utility/ostream_writer.hpp>
 #include <bitcoin/bitcoin/utility/string.hpp>
 #include <bitcoin/bitcoin/utility/variable_uint_size.hpp>
-#include "conditional_stack.hpp"
-#include "evaluation_context.hpp"
 
 namespace libbitcoin {
 namespace chain {
 
-// False is an empty stack.
-static const data_chunk stack_false_value;
-static const data_chunk stack_true_value{ 1 };
-static constexpr size_t op_counter_limit = 201;
-static constexpr size_t max_number_size = 4;
-static constexpr size_t cltv_max_number_size = 5;
-static constexpr size_t multisig_default_signature_ops = 20;
+static const auto sighash_all = sighash_algorithm::all;
+static const auto sighash_none = sighash_algorithm::none;
+static const auto sighash_single = sighash_algorithm::single;
+static const auto anyone_flag = sighash_algorithm::anyone_can_pay;
 
-enum class signature_parse_result
+// bit.ly/2cPazSa
+static const auto one_hash = hash_literal(
+    "0000000000000000000000000000000000000000000000000000000000000001");
+
+// Constructors.
+//-----------------------------------------------------------------------------
+
+// A default instance is invalid (until modified).
+script::script()
+  : valid_(false), cached_(false)
 {
-    valid,
-    invalid,
-    lax_encoding
-};
+}
 
-script script::factory_from_data(const data_chunk& data, bool prefix,
-    parse_mode mode)
+script::script(script&& other)
+  : bytes_(std::move(other.bytes_)), valid_(other.valid_), cached_(false)
+{
+    // TODO: implement safe private accessor for conditional cache transfer.
+}
+
+script::script(const script& other)
+  : bytes_(other.bytes_), valid_(other.valid_), cached_(false)
+{
+    // TODO: implement safe private accessor for conditional cache transfer.
+}
+
+script::script(const operation::list& ops)
+{
+    from_operations(ops);
+}
+
+script::script(operation::list&& ops)
+{
+    from_operations(ops);
+}
+
+script::script(data_chunk&& encoded, bool prefix)
+{
+    if (prefix)
+    {
+        valid_ = from_data(encoded, prefix);
+        return;
+    }
+
+    // This is an optimization that avoids streaming the encode bytes.
+    bytes_ = std::move(encoded);
+    cached_ = false;
+    valid_ = true;
+}
+
+script::script(const data_chunk& encoded, bool prefix)
+{
+    valid_ = from_data(encoded, prefix);
+}
+
+// Operators.
+//-----------------------------------------------------------------------------
+
+// Concurrent read/write is not supported, so no critical section.
+script& script::operator=(script&& other)
+{
+    // TODO: implement safe private accessor for conditional cache transfer.
+    reset();
+    bytes_ = std::move(other.bytes_);
+    valid_ = other.valid_;
+    return *this;
+}
+
+// Concurrent read/write is not supported, so no critical section.
+script& script::operator=(const script& other)
+{
+    // TODO: implement safe private accessor for conditional cache transfer.
+    reset();
+    bytes_ = other.bytes_;
+    valid_ = other.valid_;
+    return *this;
+}
+
+bool script::operator==(const script& other) const
+{
+    return bytes_ == other.bytes_;
+}
+
+bool script::operator!=(const script& other) const
+{
+    return !(*this == other);
+}
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+script script::factory_from_data(const data_chunk& encoded, bool prefix)
 {
     script instance;
-    instance.from_data(data, prefix, mode);
+    instance.from_data(encoded, prefix);
     return instance;
 }
 
-script script::factory_from_data(std::istream& stream, bool prefix,
-    parse_mode mode)
+// static
+script script::factory_from_data(std::istream& stream, bool prefix)
 {
     script instance;
-    instance.from_data(stream, prefix, mode);
+    instance.from_data(stream, prefix);
     return instance;
 }
 
-script script::factory_from_data(reader& source, bool prefix, parse_mode mode)
+// static
+script script::factory_from_data(reader& source, bool prefix)
 {
     script instance;
-    instance.from_data(source, prefix, mode);
+    instance.from_data(source, prefix);
     return instance;
 }
 
-script_pattern script::pattern() const
+bool script::from_data(const data_chunk& encoded, bool prefix)
 {
-    if (operation::is_null_data_pattern(operations))
-        return script_pattern::null_data;
-
-    if (operation::is_pay_multisig_pattern(operations))
-        return script_pattern::pay_multisig;
-
-    if (operation::is_pay_public_key_pattern(operations))
-        return script_pattern::pay_public_key;
-
-    if (operation::is_pay_key_hash_pattern(operations))
-        return script_pattern::pay_key_hash;
-
-    if (operation::is_pay_script_hash_pattern(operations))
-        return script_pattern::pay_script_hash;
-
-    if (operation::is_sign_multisig_pattern(operations))
-        return script_pattern::sign_multisig;
-
-    if (operation::is_sign_public_key_pattern(operations))
-        return script_pattern::sign_public_key;
-
-    if (operation::is_sign_key_hash_pattern(operations))
-        return script_pattern::sign_key_hash;
-
-    if (operation::is_sign_script_hash_pattern(operations))
-        return script_pattern::sign_script_hash;
-
-    return script_pattern::non_standard;
+    data_source istream(encoded);
+    return from_data(istream, prefix);
 }
 
-bool script::is_raw_data() const
+bool script::from_data(std::istream& stream, bool prefix)
 {
-    return (operations.size() == 1) &&
-        (operations[0].code == opcode::raw_data);
+    istream_reader source(stream);
+    return from_data(source, prefix);
+}
+
+// Concurrent read/write is not supported, so no critical section.
+bool script::from_data(reader& source, bool prefix)
+{
+    reset();
+    valid_ = true;
+
+    bytes_ = prefix ?
+        source.read_bytes(source.read_size_little_endian()) :
+        source.read_bytes();
+
+    if (!source)
+        reset();
+
+    return source;
+}
+
+// Concurrent read/write is not supported, so no critical section.
+bool script::from_string(const std::string& mnemonic)
+{
+    reset();
+
+    // There is strictly one operation per string token.
+    const auto tokens = split(mnemonic);
+    operation::list ops;
+    ops.resize(tokens.size());
+
+    // Create an op list from the split tokens, one operation per token.
+    for (size_t index = 0; index < ops.size(); ++index)
+        if (!ops[index].from_string(tokens[index]))
+            return false;
+
+    from_operations(ops);
+    return true;
+}
+
+// Concurrent read/write is not supported, so no critical section.
+void script::from_operations(const operation::list& ops)
+{
+    reset();
+    valid_ = true;
+    bytes_ = operations_to_data(ops);
+    operations_ = ops;
+    cached_ = true;
+}
+
+// private/static
+data_chunk script::operations_to_data(const operation::list& ops)
+{
+    data_chunk out;
+    out.reserve(serialized_size(ops));
+    const auto concatenate = [&out](const operation& op)
+    {
+        auto bytes = op.to_data();
+        std::move(bytes.begin(), bytes.end(), std::back_inserter(out));
+    };
+
+    std::for_each(ops.begin(), ops.end(), concatenate);
+    BITCOIN_ASSERT(out.size() == serialized_size(ops));
+    return out;
+}
+
+// private/static
+size_t script::serialized_size(const operation::list& ops)
+{
+    const auto op_size = [](size_t total, const operation& op)
+    {
+        return total + op.serialized_size();
+    };
+
+    return std::accumulate(ops.begin(), ops.end(), size_t{0}, op_size);
+}
+
+// protected
+// Concurrent read/write is not supported, so no critical section.
+void script::reset()
+{
+    bytes_.clear();
+    bytes_.shrink_to_fit();
+    valid_ = false;
+    cached_ = false;
+    operations_.clear();
+    operations_.shrink_to_fit();
 }
 
 bool script::is_valid() const
 {
-    return !operations.empty();
+    // All script bytes are valid under some circumstance (e.g. coinbase).
+    // This returns false if a prefix and byte count does not match.
+    return valid_;
 }
 
-void script::reset()
+bool script::is_valid_operations() const
 {
-    operations.clear();
+    // Script validity is independent of individual operation validity.
+    // There is a trailing invalid/default op if a push op had a size mismatch.
+    return operations().empty() || operations_.back().is_valid();
 }
 
-bool script::from_data(const data_chunk& data, bool prefix, parse_mode mode)
-{
-    auto result = true;
-
-    if (prefix)
-    {
-        data_source istream(data);
-        result = from_data(istream, true, mode);
-    }
-    else
-    {
-        reset();
-        result = deserialize(data, mode);
-
-        if (!result)
-            reset();
-    }
-
-    return result;
-}
-
-bool script::from_data(std::istream& stream, bool prefix, parse_mode mode)
-{
-    istream_reader source(stream);
-    return from_data(source, prefix, mode);
-}
-
-bool script::from_data(reader& source, bool prefix, parse_mode mode)
-{
-    reset();
-
-    auto result = true;
-    data_chunk raw_script;
-
-    if (prefix)
-    {
-        const auto script_length = source.read_variable_uint_little_endian();
-        result = source;
-        BITCOIN_ASSERT(script_length <= max_uint32);
-
-        if (result)
-        {
-            auto script_length32 = static_cast<uint32_t>(script_length);
-            raw_script = source.read_data(script_length32);
-            result = source && (raw_script.size() == script_length32);
-        }
-    }
-    else
-    {
-        raw_script = source.read_data_to_eof();
-        result = source;
-    }
-
-    if (result)
-        result = deserialize(raw_script, mode);
-
-    if (!result)
-        reset();
-
-    return result;
-}
+// Serialization.
+//-----------------------------------------------------------------------------
 
 data_chunk script::to_data(bool prefix) const
 {
     data_chunk data;
+    data.reserve(serialized_size(prefix));
     data_sink ostream(data);
     to_data(ostream, prefix);
     ostream.flush();
@@ -211,32 +301,77 @@ void script::to_data(std::ostream& stream, bool prefix) const
 
 void script::to_data(writer& sink, bool prefix) const
 {
+    // TODO: optimize by always storing the prefixed serialization.
     if (prefix)
-        sink.write_variable_uint_little_endian(satoshi_content_size());
+        sink.write_variable_little_endian(satoshi_content_size());
 
-    if ((operations.size() > 0) && (operations[0].code == opcode::raw_data))
-        operations[0].to_data(sink);
-    else
-        for (const auto& op: operations)
-            op.to_data(sink);
+    sink.write_bytes(bytes_);
 }
+
+std::string script::to_string(uint32_t active_forks) const
+{
+    auto first = true;
+    std::ostringstream text;
+
+    for (const auto& op: operations())
+    {
+        text << (first ? "" : " ") << op.to_string(active_forks);
+        first = false;
+    }
+
+    // An invalid operation has a specialized serialization.
+    return text.str();
+}
+
+// Iteration.
+//-----------------------------------------------------------------------------
+// These are syntactic sugar that allow the caller to iterate ops directly.
+// The first operations access must be method-based to guarantee the cache.
+
+bool script::empty() const
+{
+    return operations().empty();
+}
+
+size_t script::size() const
+{
+    return operations().size();
+}
+
+const operation& script::front() const
+{
+    BITCOIN_ASSERT(!operations().empty());
+    return operations().front();
+}
+
+const operation& script::back() const
+{
+    BITCOIN_ASSERT(!operations().empty());
+    return operations().back();
+}
+
+const operation& script::operator[](std::size_t index) const
+{
+    BITCOIN_ASSERT(index < operations().size());
+    return operations()[index];
+}
+
+operation::iterator script::begin() const
+{
+    return operations().begin();
+}
+
+operation::iterator script::end() const
+{
+    return operations().end();
+}
+
+// Properties (size, accessors, cache).
+//-----------------------------------------------------------------------------
 
 uint64_t script::satoshi_content_size() const
 {
-    if (operations.size() > 0 && (operations[0].code == opcode::raw_data))
-    {
-        return operations[0].serialized_size();
-    }
-    
-    const auto value = [](uint64_t total, const operation& op)
-    {
-        const auto op_size = op.serialized_size();
-        BITCOIN_ASSERT(total + op.serialized_size() <= max_uint64 - op_size);
-        return total + op_size;
-    };
-
-    return std::accumulate(operations.begin(), operations.end(), uint64_t(0),
-        value);
+    return bytes_.size();
 }
 
 uint64_t script::serialized_size(bool prefix) const
@@ -249,999 +384,238 @@ uint64_t script::serialized_size(bool prefix) const
     return size;
 }
 
-bool script::from_string(const std::string& human_readable)
+// protected
+const operation::list& script::operations() const
 {
-    // clear current contents
-    operations.clear();
-    const auto tokens = split(human_readable);
-    auto clear = false;
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    mutex_.lock_upgrade();
 
-    for (auto token = tokens.begin(); token != tokens.end(); ++token)
+    if (cached_)
     {
-        opcode code;
-        data_chunk data;
-
-        if (*token == "[")
-        {
-            data_chunk raw_data;
-            if (!decode_base16(raw_data, *++token))
-            {
-                clear = true;
-                break;
-            }
-
-            if (raw_data.empty() || *++token != "]")
-            {
-                clear = true;
-                break;
-            }
-
-            code = data_to_opcode(raw_data);
-            data = raw_data;
-        }
-        else
-        {
-            code = string_to_opcode(*token);
-        }
-
-        if (code == opcode::bad_operation)
-        {
-            clear = true;
-            break;
-        }
-
-        operations.push_back({ code, data });
+        mutex_.unlock_upgrade();
+        //---------------------------------------------------------------------
+        return operations_;
     }
 
-    // empty invalid/failed parse content
-    if (clear)
-        operations.clear();
+    operation op;
+    data_source istream(bytes_);
+    istream_reader source(istream);
+    const auto size = bytes_.size();
 
-    return !clear;
-}
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    mutex_.unlock_upgrade_and_lock();
 
-std::string script::to_string(uint32_t flags) const
-{
-    std::ostringstream value;
+    // One operation per byte is the upper limit of operations.
+    operations_.reserve(size);
 
-    for (auto it = operations.begin(); it != operations.end(); ++it)
+    // If an op fails it is pushed to operations and the loop terminates.
+    // To validate the ops the caller must test the last op.is_valid().
+    // This is not necessary during script validation as it is autmoatic.
+    while (!source.is_exhausted())
     {
-        if (it != operations.begin())
-            value << " ";
-
-        value << it->to_string(flags);
+        op.from_data(source);
+        operations_.push_back(std::move(op));
     }
 
-    return value.str();
+    operations_.shrink_to_fit();
+    cached_ = true;
+
+    mutex_.unlock();
+    ///////////////////////////////////////////////////////////////////////////
+
+    return operations_;
 }
 
-size_t script::signature_operations(bool strict) const
+// Signing.
+//-----------------------------------------------------------------------------
+
+inline sighash_algorithm to_sighash_enum(uint8_t sighash_type)
 {
-    size_t total = 0;
-    opcode last_opcode = opcode::bad_operation;
-
-    for (const auto& op: operations)
-    {
-        if (op.code == opcode::checksig ||
-            op.code == opcode::checksigverify)
-        {
-            total++;
-        }
-        else if (
-            op.code == opcode::checkmultisig ||
-            op.code == opcode::checkmultisigverify)
-        {
-            total += strict && within_op_n(last_opcode) ?
-                decode_op_n(last_opcode) : multisig_default_signature_ops;
-        }
-
-        last_opcode = op.code;
-    }
-
-    return total;
+    return static_cast<sighash_algorithm>(
+        sighash_type & sighash_algorithm::mask);
 }
 
-size_t script::pay_to_script_hash_signature_operations(const script& pay) const
+inline uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value)
 {
-    if (pay.operations.empty() || pattern() != script_pattern::pay_script_hash)
-        return 0;
-
-    script evaluate;
-    const auto& data = pay.operations.back().data;
-
-    return evaluate.from_data(data, false, script::parse_mode::strict) ?
-        evaluate.signature_operations(true) : max_size_t;
+    return to_sighash_enum(sighash_type) == value;
 }
 
-bool script::deserialize(const data_chunk& raw_script, parse_mode mode)
-{
-    auto result = false;
-
-    if (mode != parse_mode::raw_data)
-        result = parse(raw_script);
-
-    if (!result && (mode != parse_mode::strict))
-    {
-        result = true;
-
-        // recognize as raw data
-        const auto op = operation
-        {
-            opcode::raw_data,
-            to_chunk(raw_script)
-        };
-
-        operations.clear();
-        operations.push_back(op);
-    }
-
-    return result;
-}
-
-bool script::parse(const data_chunk& raw_script)
-{
-    auto result = true;
-
-    if (raw_script.begin() != raw_script.end())
-    {
-        data_source istream(raw_script);
-
-        while (result && istream &&
-            (istream.peek() != std::istream::traits_type::eof()))
-        {
-            operations.emplace_back();
-            result = operations.back().from_data(istream);
-        }
-    }
-
-    return result;
-}
-
-inline hash_digest one_hash()
-{
-    return hash_digest
-    {
-        {
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        }
-    };
-}
-
-inline void nullify_input_sequences(input::list& inputs,
-    uint32_t except_input)
-{
-    for (size_t index = 0; index < inputs.size(); ++index)
-        if (index != except_input)
-            inputs[index].sequence = 0;
-}
-
-inline uint8_t is_sighash_enum(uint8_t sighash_type,
-    signature_hash_algorithm value)
-{
-    return (sighash_type & signature_hash_algorithm::mask) == value;
-}
-
-inline uint8_t is_sighash_flag(uint8_t sighash_type,
-    signature_hash_algorithm value)
+inline bool is_sighash_flag(uint8_t sighash_type, sighash_algorithm value)
 {
     return (sighash_type & value) != 0;
 }
 
-hash_digest script::generate_signature_hash(const transaction& parent_tx,
+static hash_digest sign_none(const transaction& tx, uint32_t input_index,
+    const script& script_code, uint8_t sighash_type, bool anyone)
+{
+    input::list ins;
+    const auto& inputs = tx.inputs();
+    ins.reserve(anyone ? 1 : inputs.size());
+
+    BITCOIN_ASSERT(input_index < inputs.size());
+    const auto& self = inputs[input_index];
+
+    if (anyone)
+    {
+        // Retain only self.
+        ins.emplace_back(self.previous_output(), script_code, self.sequence());
+    }
+    else
+    {
+        // Erase all input scripts and sequences.
+        for (const auto& input: inputs)
+            ins.emplace_back(input.previous_output(), script{}, 0);
+
+        // Replace self that is lost in the loop.
+        ins[input_index].set_script(script_code);
+        ins[input_index].set_sequence(self.sequence());
+    }
+
+    // Move new inputs to new transaction and drop outputs.
+    return transaction(tx.version(), tx.locktime(), std::move(ins),
+        output::list{}).hash(sighash_type);
+}
+
+static hash_digest sign_single(const transaction& tx, uint32_t input_index,
+    const script& script_code, uint8_t sighash_type, bool anyone)
+{
+    input::list ins;
+    const auto& inputs = tx.inputs();
+    ins.reserve(anyone ? 1 : inputs.size());
+
+    BITCOIN_ASSERT(input_index < inputs.size());
+    const auto& self = inputs[input_index];
+
+    if (anyone)
+    {
+        // Retain only self.
+        ins.emplace_back(self.previous_output(), script_code, self.sequence());
+    }
+    else
+    {
+        // Erase all input scripts and sequences.
+        for (const auto& input: inputs)
+            ins.emplace_back(input.previous_output(), script{}, 0);
+
+        // Replace self that is lost in the loop.
+        ins[input_index].set_script(script_code);
+        ins[input_index].set_sequence(self.sequence());
+    }
+
+    // Trim and clear outputs except that of specified input index.
+    const auto& outputs = tx.outputs();
+    output::list outs(input_index + 1);
+
+    BITCOIN_ASSERT(input_index < outputs.size());
+    outs.back() = outputs[input_index];
+
+    // Move new inputs and new outputs to new transaction.
+    return transaction(tx.version(), tx.locktime(), std::move(ins),
+        std::move(outs)).hash(sighash_type);
+}
+
+static hash_digest sign_all(const transaction& tx, uint32_t input_index,
+    const script& script_code, uint8_t sighash_type, bool anyone)
+{
+    input::list ins;
+    const auto& inputs = tx.inputs();
+    ins.reserve(anyone ? 1 : inputs.size());
+
+    BITCOIN_ASSERT(input_index < inputs.size());
+    const auto& self = inputs[input_index];
+
+    if (anyone)
+    {
+        // Retain only self.
+        ins.emplace_back(self.previous_output(), script_code, self.sequence());
+    }
+    else
+    {
+        // Erase all input scripts.
+        for (const auto& input: inputs)
+            ins.emplace_back(input.previous_output(), script{},
+                input.sequence());
+
+        // Replace self that is lost in the loop.
+        ins[input_index].set_script(script_code);
+        ////ins[input_index].set_sequence(self.sequence());
+    }
+
+    // Move new inputs and copy outputs to new transaction.
+    transaction out(tx.version(), tx.locktime(), input::list{}, tx.outputs());
+    out.set_inputs(std::move(ins));
+    return out.hash(sighash_type);
+}
+
+static script strip_code_seperators(const script& script_code)
+{
+    operation::list ops;
+
+    for (auto op = script_code.begin(); op != script_code.end(); ++op)
+        if (op->code() != opcode::codeseparator)
+            ops.push_back(*op);
+
+    return script(std::move(ops));
+}
+
+// static
+hash_digest script::generate_signature_hash(const transaction& tx,
     uint32_t input_index, const script& script_code, uint8_t sighash_type)
 {
-    // Copy the parent transaction.
-    transaction parent(parent_tx);
+    const auto any = is_sighash_flag(sighash_type, anyone_flag);
+    const auto single = is_sighash_enum(sighash_type, sighash_single);
 
-    // This is NOT considered an error result and callers should not test
-    // for one_hash. This is a bitcoind bug we perpetuate.
-    if (input_index >= parent_tx.inputs.size())
-        return one_hash();
-
-    // FindAndDelete(OP_CODESEPARATOR) done in op_checksigverify(...)
-
-    // Blank all other inputs' signatures
-    for (auto& input: parent.inputs)
-        input.script.reset();
-
-    parent.inputs[input_index].script = script_code;
-
-    // The default sighash::all signs all outputs, and the current input.
-    // Transaction cannot be updated without resigning the input.
-    // (note the lack of nullify_input_sequences() call)
-
-    if (is_sighash_enum(sighash_type, signature_hash_algorithm::none))
+    if (input_index >= tx.inputs().size() || 
+        (input_index >= tx.outputs().size() && single))
     {
-        // Sign no outputs, so they can be changed.
-        parent.outputs.clear();
-        nullify_input_sequences(parent.inputs, input_index);
-    }
-    else if (is_sighash_enum(sighash_type, signature_hash_algorithm::single))
-    {
-
-        // Sign the single output corresponding to our index.
-        // We don't care about additional inputs or outputs to the tx.
-        auto& outputs = parent.outputs;
-        uint32_t output_index = input_index;
-
-        // This is NOT considered an error result and callers should not test
-        // for one_hash. This is a bitcoind bug we perpetuate.
-        if (output_index >= outputs.size())
-            return one_hash();
-
-        outputs.resize(output_index + 1);
-
-        // Loop through outputs except the last one.
-        for (auto it = outputs.begin(); it != outputs.end() - 1; ++it)
-        {
-            it->value = std::numeric_limits<uint64_t>::max();
-            it->script.reset();
-        }
-
-        nullify_input_sequences(parent.inputs, input_index);
+        //*********************************************************************
+        // CONSENSUS: wacky satoshi behavior we must perpetuate.
+        //*********************************************************************
+        return one_hash;
     }
 
-    // Flag to ignore the other inputs except our own.
-    if (is_sighash_flag(sighash_type,
-        signature_hash_algorithm::anyone_can_pay))
+    //*************************************************************************
+    // CONSENSUS: more wacky satoshi behavior we must perpetuate.
+    //*************************************************************************
+    const auto stripped = strip_code_seperators(script_code);
+
+    // The sighash serializations are isolated for clarity and optimization.
+    switch (to_sighash_enum(sighash_type))
     {
-        parent.inputs[0] = parent.inputs[input_index];
-        parent.inputs.resize(1);
+        case sighash_none:
+            return sign_none(tx, input_index, stripped, sighash_type, any);
+        case sighash_single:
+            return sign_single(tx, input_index, stripped, sighash_type, any);
+        default:
+        case sighash_all:
+            return sign_all(tx, input_index, stripped, sighash_type, any);
     }
-
-    return parent.hash(sighash_type);
-}
-
-inline bool cast_to_bool(const data_chunk& values)
-{
-    for (auto it = values.begin(); it != values.end(); ++it)
-    {
-        if (*it != 0)
-        {
-            // Can be negative zero
-            if (it == values.end() - 1 && *it == 0x80)
-                return false;
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
-inline uint8_t cast_to_number(bool value)
-{
-    return value ? 1 : 0;
-}
-
-template <typename DataStack>
-void stack_swap(DataStack& stack, size_t index_a, size_t index_b)
-{
-    std::swap(*(stack.end() - index_a), *(stack.end() - index_b));
-}
-
-template <typename DataStack>
-data_chunk pop_item(DataStack& stack)
-{
-    const auto value = stack.back();
-    stack.pop_back();
-    return value;
-}
-
-// Used by pick, roll and checkmultisig*
-template <typename DataStack>
-bool read_value(DataStack& stack, int32_t& value)
-{
-    if (stack.empty())
-        return false;
-
-    script_number middle;
-    if (!middle.set_data(pop_item(stack), max_number_size))
-        return false;
-
-    value = middle.int32();
-    return true;
-}
-
-template <typename DataStack>
-bool pick_roll_impl(DataStack& stack, bool is_roll)
-{
-    if (stack.size() < 2)
-        return false;
-
-    int32_t value;
-
-    if (!read_value(stack, value))
-        return false;
-
-    const auto stack_size = static_cast<int32_t>(stack.size());
-
-    if (value < 0 || value >= stack_size)
-        return false;
-
-    auto slice_iterator = stack.end() - value - 1;
-    auto item = *slice_iterator;
-
-    if (is_roll)
-        stack.erase(slice_iterator);
-
-    stack.push_back(item);
-    return true;
-}
-
-// Used by add, sub, mul, div, mod, lshift, rshift, booland, boolor,
-// numequal, numequalverify, numnotequal, lessthan, greaterthan,
-// lessthanorequal, greaterthanorequal, min, max
-template <typename DataStack>
-bool arithmetic_start_new(DataStack& stack, script_number& left,
-    script_number& right)
-{
-    if (stack.size() < 2)
-        return false;
-
-    // The second number is at the top of the stack.
-    if (!right.set_data(pop_item(stack), max_number_size))
-        return false;
-
-    // The first is at the second position.
-    if (!left.set_data(pop_item(stack), max_number_size))
-        return false;
-
-    return true;
-}
-
-// Convert opcode to its actual numeric value.
-template <typename OpCode>
-auto base_value(OpCode code) -> typename std::underlying_type<OpCode>::type
-{
-    return static_cast<typename std::underlying_type<OpCode>::type>(code);
-}
-
-bool is_condition_opcode(opcode code)
-{
-    return code == opcode::if_
-        || code == opcode::notif
-        || code == opcode::else_
-        || code == opcode::endif;
-}
-
-bool greater_op_16(opcode code)
-{
-    return base_value(code) > base_value(opcode::op_16);
-}
-
-bool op_negative_1(evaluation_context& context)
-{
-    static const script_number negative_1(-1);
-    context.stack.push_back(negative_1.data());
-    return true;
-}
-
-bool op_x(evaluation_context& context, opcode code)
-{
-    const auto difference = static_cast<uint8_t>(code) -
-        static_cast<uint8_t>(opcode::op_1) + 1;
-
-    const script_number value(difference);
-    context.stack.push_back(value.data());
-    return true;
-}
-
-bool op_if(evaluation_context& context)
-{
-    auto value = false;
-    if (context.conditional.succeeded())
-    {
-        if (context.stack.empty())
-            return false;
-
-        value = cast_to_bool(context.pop_stack());
-    }
-
-    context.conditional.open(value);
-    return true;
-}
-
-bool op_notif(evaluation_context& context)
-{
-    // A bit hackish...
-    // Open IF statement but then invert it to get NOTIF
-    if (!op_if(context))
-        return false;
-
-    context.conditional.else_();
-    return true;
-}
-
-bool op_else(evaluation_context& context)
-{
-    if (context.conditional.closed())
-        return false;
-
-    context.conditional.else_();
-    return true;
-}
-
-bool op_endif(evaluation_context& context)
-{
-    if (context.conditional.closed())
-        return false;
-
-    context.conditional.close();
-    return true;
-}
-
-bool op_verify(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    if (!cast_to_bool(context.stack.back()))
-        return false;
-
-    context.pop_stack();
-    return true;
-}
-
-bool op_toaltstack(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    const auto move_data = context.pop_stack();
-    context.alternate.push_back(move_data);
-    return true;
-}
-
-bool op_fromaltstack(evaluation_context& context)
-{
-    if (context.alternate.empty())
-        return false;
-
-    context.stack.push_back(context.alternate.back());
-    context.alternate.pop_back();
-    return true;
-}
-
-bool op_2drop(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    context.stack.pop_back();
-    context.stack.pop_back();
-    return true;
-}
-
-bool op_2dup(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    const auto dup_first = *(context.stack.end() - 2);
-    const auto dup_second = *(context.stack.end() - 1);
-
-    context.stack.push_back(dup_first);
-    context.stack.push_back(dup_second);
-    return true;
-}
-
-bool op_3dup(evaluation_context& context)
-{
-    if (context.stack.size() < 3)
-        return false;
-
-    const auto dup_first = *(context.stack.end() - 3);
-    const auto dup_second = *(context.stack.end() - 2);
-    const auto dup_third = *(context.stack.end() - 1);
-
-    context.stack.push_back(dup_first);
-    context.stack.push_back(dup_second);
-    context.stack.push_back(dup_third);
-    return true;
-}
-
-template <typename DataStack>
-void copy_item_over_stack(DataStack& stack, size_t index)
-{
-    stack.push_back(*(stack.end() - index));
-}
-
-bool op_2over(evaluation_context& context)
-{
-    if (context.stack.size() < 4)
-        return false;
-
-    copy_item_over_stack(context.stack, 4);
-
-    // Item -3 now becomes -4 because of last push
-    copy_item_over_stack(context.stack, 4);
-    return true;
-}
-
-bool op_2rot(evaluation_context& context)
-{
-    if (context.stack.size() < 6)
-        return false;
-
-    const auto first_position = context.stack.end() - 6;
-    const auto second_position = context.stack.end() - 5;
-    const auto third_position = context.stack.end() - 4;
-
-    const auto dup_first = *(first_position);
-    const auto dup_second = *(second_position);
-
-    context.stack.erase(first_position, third_position);
-    context.stack.push_back(dup_first);
-    context.stack.push_back(dup_second);
-    return true;
-}
-
-bool op_2swap(evaluation_context& context)
-{
-    if (context.stack.size() < 4)
-        return false;
-
-    // Before: x1 x2 x3 x4
-    // After:  x3 x4 x1 x2
-    stack_swap(context.stack, 4, 2);
-    stack_swap(context.stack, 3, 1);
-    return true;
-}
-
-bool op_ifdup(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    if (cast_to_bool(context.stack.back()))
-        context.stack.push_back(context.stack.back());
-
-    return true;
-}
-
-bool op_depth(evaluation_context& context)
-{
-    // Condition added by EKV on 2016.09.06.
-    const auto size = context.stack.size();
-    if (size > max_int32)
-        return false;
-
-    const script_number stack_size(size);
-    context.stack.push_back(stack_size.data());
-    return true;
-}
-
-bool op_drop(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    context.stack.pop_back();
-    return true;
-}
-
-bool op_dup(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    context.stack.push_back(context.stack.back());
-    return true;
-}
-
-bool op_nip(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    context.stack.erase(context.stack.end() - 2);
-    return true;
-}
-
-bool op_over(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    copy_item_over_stack(context.stack, 2);
-    return true;
-}
-
-bool op_pick(evaluation_context& context)
-{
-    return pick_roll_impl(context.stack, false);
-}
-
-bool op_roll(evaluation_context& context)
-{
-    return pick_roll_impl(context.stack, true);
-}
-
-bool op_rot(evaluation_context& context)
-{
-    // Top 3 stack items are rotated to the left.
-    // Before: x1 x2 x3
-    // After:  x2 x3 x1
-    if (context.stack.size() < 3)
-        return false;
-
-    stack_swap(context.stack, 3, 2);
-    stack_swap(context.stack, 2, 1);
-    return true;
-}
-
-bool op_swap(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    stack_swap(context.stack, 2, 1);
-    return true;
-}
-
-bool op_tuck(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    const auto data = context.stack.back();
-    context.stack.insert(context.stack.end() - 2, data);
-    return true;
-}
-
-bool op_size(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    // Condition added by EKV on 2016.09.06.
-    const auto size = context.stack.back().size();
-    if (size > max_int32)
-        return false;
-
-    const script_number top_item_size(size);
-    context.stack.push_back(top_item_size.data());
-    return true;
-}
-
-bool op_equal(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    if (context.pop_stack() == context.pop_stack())
-        context.stack.push_back(stack_true_value);
-    else
-        context.stack.push_back(stack_false_value);
-
-    return true;
-}
-
-bool op_equalverify(evaluation_context& context)
-{
-    if (context.stack.size() < 2)
-        return false;
-
-    return context.pop_stack() == context.pop_stack();
-}
-
-bool op_1add(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    script_number number;
-    if (!number.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    number += 1;
-    context.stack.push_back(number.data());
-    return true;
-}
-
-bool op_1sub(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    script_number number;
-    if (!number.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    number -= 1;
-    context.stack.push_back(number.data());
-    return true;
-}
-
-bool op_negate(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    script_number number;
-    if (!number.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    number = -number;
-    context.stack.push_back(number.data());
-    return true;
-}
-
-bool op_abs(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    script_number number;
-    if (!number.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    if (number < 0)
-        number = -number;
-
-    context.stack.push_back(number.data());
-    return true;
-}
-
-bool op_not(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    script_number number;
-    if (!number.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    context.stack.push_back(script_number(cast_to_number(number == 0)).data());
-    return true;
-}
-
-bool op_0notequal(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    script_number number;
-    if (!number.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    context.stack.push_back(script_number(cast_to_number(number != 0)).data());
-    return true;
-}
-
-bool op_add(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const auto result = left + right;
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_sub(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const auto result = left - right;
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_booland(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const script_number result(cast_to_number(left != 0 && right != 0));
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_boolor(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const script_number result(cast_to_number(left != 0 || right != 0));
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_numequal(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const auto value = left == right;
-    const script_number result(cast_to_number(value));
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_numequalverify(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    return left == right;
-}
-
-bool op_numnotequal(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const script_number result(cast_to_number(left != right));
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_lessthan(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const script_number result(cast_to_number(left < right));
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_greaterthan(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const script_number result(cast_to_number(left > right));
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_lessthanorequal(evaluation_context& context)
-{
-    script_number left, right;
-
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const script_number result(cast_to_number(left <= right));
-    context.stack.push_back(result.data());
-
-    return true;
-}
-
-bool op_greaterthanorequal(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    const script_number result(cast_to_number(left >= right));
-    context.stack.push_back(result.data());
-    return true;
-}
-
-bool op_min(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    if (left < right)
-        context.stack.push_back(left.data());
-    else
-        context.stack.push_back(right.data());
-
-    return true;
-}
-
-bool op_max(evaluation_context& context)
-{
-    script_number left, right;
-    if (!arithmetic_start_new(context.stack, left, right))
-        return false;
-
-    if (left < right)
-        context.stack.push_back(right.data());
-    else
-        context.stack.push_back(left.data());
-
-    return true;
-}
-
-bool op_within(evaluation_context& context)
-{
-    if (context.stack.size() < 3)
-        return false;
-
-    script_number upper;
-    if (!upper.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    script_number lower;
-    if (!lower.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    script_number value;
-    if (!value.set_data(context.pop_stack(), max_number_size))
-        return false;
-
-    if ((lower <= value) && (value < upper))
-        context.stack.push_back(stack_true_value);
-    else
-        context.stack.push_back(stack_false_value);
-
-    return true;
-}
-
-bool op_ripemd160(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    const auto hash = ripemd160_hash(context.pop_stack());
-    context.stack.push_back(to_chunk(hash));
-    return true;
-}
-
-bool op_sha1(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    const auto hash = sha1_hash(context.pop_stack());
-    context.stack.push_back(to_chunk(hash));
-    return true;
-}
-
-bool op_sha256(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
-
-    const auto hash = sha256_hash(context.pop_stack());
-    context.stack.push_back(to_chunk(hash));
-    return true;
 }
 
-bool op_hash160(evaluation_context& context)
+// static
+bool script::check_signature(const ec_signature& signature,
+    uint8_t sighash_type, const data_chunk& public_key,
+    const script& script_code, const transaction& tx, uint32_t input_index)
 {
-    if (context.stack.empty())
+    if (public_key.empty())
         return false;
-
-    const auto hash = bitcoin_short_hash(context.pop_stack());
-    context.stack.push_back(to_chunk(hash));
-    return true;
-}
 
-bool op_hash256(evaluation_context& context)
-{
-    if (context.stack.empty())
-        return false;
+    // This always produces a valid signature hash, including one_hash.
+    const auto sighash = script::generate_signature_hash(tx, input_index,
+        script_code, sighash_type);
 
-    const auto hash = bitcoin_hash(context.pop_stack());
-    context.stack.push_back(to_chunk(hash));
-    return true;
+    // Validate the EC signature.
+    return verify_signature(public_key, sighash, signature);
 }
 
+// static
 bool script::create_endorsement(endorsement& out, const ec_secret& secret,
-    const script& prevout_script, const transaction& new_tx,
-    uint32_t input_index, uint8_t sighash_type)
+    const script& prevout_script, const transaction& tx, uint32_t input_index,
+    uint8_t sighash_type)
 {
-    // This always produces a valid signature hash.
-    const auto sighash = script::generate_signature_hash(new_tx, input_index,
+    // This always produces a valid signature hash, including one_hash.
+    const auto sighash = script::generate_signature_hash(tx, input_index,
         prevout_script, sighash_type);
 
     // Create the EC signature and encode as DER.
@@ -1254,721 +628,431 @@ bool script::create_endorsement(endorsement& out, const ec_secret& secret,
     return true;
 }
 
-bool script::check_signature(const ec_signature& signature,
-    uint8_t sighash_type, const data_chunk& public_key,
-    const script& script_code, const transaction& parent_tx,
-    uint32_t input_index)
+// Utilities (static).
+//-----------------------------------------------------------------------------
+
+bool script::is_push_only(const operation::list& ops)
 {
-    if (public_key.empty())
-        return false;
-
-    // This always produces a valid signature hash.
-    const auto sighash = script::generate_signature_hash(parent_tx, input_index,
-        script_code, sighash_type);
-
-    // Validate the EC signature.
-    return verify_signature(public_key, sighash, signature);
-}
-
-signature_parse_result op_checksigverify(evaluation_context& context,
-    const script& script, const transaction& parent_tx, uint32_t input_index,
-    bool strict)
-{
-    if (context.stack.size() < 2)
-        return signature_parse_result::invalid;
-
-    const auto pubkey = context.pop_stack();
-    auto endorsement = context.pop_stack();
-    const auto sighash_type = endorsement.back();
-    auto& distinguished = endorsement;
-    distinguished.pop_back();
-
-    ec_signature signature;
-
-    if (strict && !parse_signature(signature, distinguished, true))
-        return signature_parse_result::lax_encoding;
-
-    chain::script script_code;
-
-    for (auto it = context.code_begin; it != script.operations.end(); ++it)
-        if (it->data != endorsement && it->code != opcode::codeseparator)
-            script_code.operations.push_back(*it);
-
-    if (!strict && !parse_signature(signature, distinguished, false))
-        return signature_parse_result::invalid;
-
-    return script::check_signature(signature, sighash_type, pubkey,
-        script_code, parent_tx, input_index) ?
-        signature_parse_result::valid :
-        signature_parse_result::invalid;
-}
-
-bool op_checksig(evaluation_context& context, const script& script,
-    const transaction& parent_tx, uint32_t input_index, bool strict)
-{
-    switch (op_checksigverify(context, script, parent_tx, input_index, strict))
+    const auto push = [](const operation& op)
     {
-        case signature_parse_result::valid:
-            context.stack.push_back(stack_true_value);
-            break;
-        case signature_parse_result::invalid:
-            context.stack.push_back(stack_false_value);
-            break;
-        case signature_parse_result::lax_encoding:
-            return false;
-    }
-
-    return true;
-}
-
-bool read_section(evaluation_context& context, data_stack& section,
-    size_t count)
-{
-    if (context.stack.size() < count)
-        return false;
-
-    for (size_t i = 0; i < count; ++i)
-        section.push_back(context.pop_stack());
-
-    return true;
-}
-
-signature_parse_result op_checkmultisigverify(evaluation_context& context,
-    const script& script, const transaction& parent_tx,
-    uint32_t input_index, bool strict)
-{
-    int32_t pubkeys_count;
-
-    if (!read_value(context.stack, pubkeys_count))
-        return signature_parse_result::invalid;
-
-    if (pubkeys_count < 0 || pubkeys_count > 20)
-        return signature_parse_result::invalid;
-
-    context.operation_counter += pubkeys_count;
-
-    if (context.operation_counter > op_counter_limit)
-        return signature_parse_result::invalid;
-
-    data_stack pubkeys;
-
-    if (!read_section(context, pubkeys, pubkeys_count))
-        return signature_parse_result::invalid;
-
-    int32_t sigs_count;
-
-    if (!read_value(context.stack, sigs_count))
-        return signature_parse_result::invalid;
-
-    if (sigs_count < 0 || sigs_count > pubkeys_count)
-        return signature_parse_result::invalid;
-
-    data_stack endorsements;
-
-    if (!read_section(context, endorsements, sigs_count))
-        return signature_parse_result::invalid;
-
-    // Due to a bug in bitcoind, we need to read an extra null value which we
-    // discard later.
-    if (context.stack.empty())
-        return signature_parse_result::invalid;
-
-    context.stack.pop_back();
-    const auto is_endorsement = [&endorsements](const data_chunk& data)
-    {
-        return std::find(endorsements.begin(), endorsements.end(), data) !=
-            endorsements.end();
+        return op.is_push();
     };
 
-    chain::script script_code;
-
-    for (auto it = context.code_begin; it != script.operations.end(); ++it)
-        if (it->code != opcode::codeseparator && !is_endorsement(it->data))
-            script_code.operations.push_back(*it);
-
-    // The exact number of signatures are required and must be in order.
-    // One key can validate more than one script. So we always advance 
-    // until we exhaust either pubkeys (fail) or signatures (pass).
-    auto pubkey_iterator = pubkeys.begin();
-
-    for (const auto& endorsement: endorsements)
-    {
-        const auto sighash_type = endorsement.back();
-        auto distinguished = endorsement;
-        distinguished.pop_back();
-
-        ec_signature signature;
-
-        if (!parse_signature(signature, distinguished, strict))
-            return strict ?
-                signature_parse_result::lax_encoding :
-                signature_parse_result::invalid;
-
-        while (true)
-        {
-            const auto& point = *pubkey_iterator;
-
-            if (script::check_signature(signature, sighash_type, point,
-                script_code, parent_tx, input_index))
-                break;
-
-            ++pubkey_iterator;
-
-            if (pubkey_iterator == pubkeys.end())
-                return signature_parse_result::invalid;
-        }
-    }
-
-    return signature_parse_result::valid;
+    return std::all_of(ops.begin(), ops.end(), push);
 }
 
-bool op_checkmultisig(evaluation_context& context, const script& script,
-    const transaction& parent_tx, uint32_t input_index, bool strict)
+bool script::is_null_data_pattern(const operation::list& ops)
 {
-    switch (op_checkmultisigverify(context, script, parent_tx, input_index,
-        strict))
-    {
-        case signature_parse_result::valid:
-            context.stack.push_back(stack_true_value);
-            break;
-        case signature_parse_result::invalid:
-            context.stack.push_back(stack_false_value);
-            break;
-        case signature_parse_result::lax_encoding:
+    return ops.size() == 2
+        && ops[0].code() == opcode::return_
+        && ops[1].is_push()
+        && ops[1].data().size() <= max_null_data_size;
+}
+
+bool script::is_pay_multisig_pattern(const operation::list& ops)
+{
+    static constexpr size_t op_1 = static_cast<uint8_t>(opcode::push_positive_1);
+    static constexpr size_t op_16 = static_cast<uint8_t>(opcode::push_positive_16);
+
+    const auto op_count = ops.size();
+
+    if (op_count < 4 || ops[op_count - 1].code() != opcode::checkmultisig)
+        return false;
+
+    const auto op_m = static_cast<uint8_t>(ops[0].code());
+    const auto op_n = static_cast<uint8_t>(ops[op_count - 2].code());
+
+    if (op_m < op_1 || op_m > op_n || op_n < op_1 || op_n > op_16)
+        return false;
+
+    const auto number = op_n - op_1;
+    const auto points = op_count - 3u;
+
+    if (number != points)
+        return false;
+
+    for (auto op = ops.begin() + 1; op != ops.end() - 2; ++op)
+        if (!is_public_key(op->data()))
             return false;
-    }
 
     return true;
 }
 
-bool is_locktime_type_match(int64_t left, int64_t right)
+bool script::is_pay_public_key_pattern(const operation::list& ops)
 {
-    const auto threshold = static_cast<int64_t>(locktime_threshold);
-    return (left < threshold) == (right < threshold);
+    return ops.size() == 2
+        && ops[0].is_push()
+        && is_public_key(ops[0].data())
+        && ops[1].code() == opcode::checksig;
 }
 
-bool op_checklocktimeverify(evaluation_context& context, const script& script,
-    const transaction& parent_tx, uint32_t input_index)
+bool script::is_pay_key_hash_pattern(const operation::list& ops)
 {
-    if (input_index >= parent_tx.inputs.size())
-        return false;
-
-    // BIP65: the nSequence field of the txin is 0xffffffff.
-    if (parent_tx.inputs[input_index].is_final())
-        return false;
-
-    // BIP65: the stack is empty.
-    if (context.stack.empty())
-        return false;
-
-    // BIP65: We extend the (signed) CLTV script number range to 5 bytes in
-    // order to reach the domain of the (unsigned) tx.locktime field.
-    script_number number;
-    if (!number.set_data(context.pop_stack(), cltv_max_number_size))
-        return false;
-
-    // BIP65: the top item on the stack is less than 0.
-    if (number < 0)
-        return false;
-
-    // BIP65: the top stack item is greater than the tx's nLockTime.
-    const auto stack = number.int64();
-    const auto transaction = static_cast<int64_t>(parent_tx.locktime);
-
-    if (stack > transaction)
-        return false;
-
-    // BIP65: the stack lock-time type differs from that of tx nLockTime.
-    return is_locktime_type_match(stack, transaction);
+    return ops.size() == 5
+        && ops[0].code() == opcode::dup
+        && ops[1].code() == opcode::hash160
+        && ops[2].is_push()
+        && ops[2].data().size() == short_hash_size
+        && ops[3].code() == opcode::equalverify
+        && ops[4].code() == opcode::checksig;
 }
 
-// Test flags for a given context.
-bool script::is_active(uint32_t flags, script_context flag)
+//*****************************************************************************
+// CONSENSUS: this pattern is used to activate bip16 validation rules.
+//*****************************************************************************
+bool script::is_pay_script_hash_pattern(const operation::list& ops)
 {
-    return (flag & flags) != 0;
+    return ops.size() == 3
+        && ops[0].code() == opcode::hash160
+        && ops[1].code() == opcode::push_size_20
+        && ops[1].data().size() == short_hash_size
+        && ops[2].code() == opcode::equal;
 }
 
-bool run_operation(const operation& op, const transaction& parent_tx,
-    uint32_t input_index, const script& script, evaluation_context& context,
-    uint32_t flags)
+bool script::is_sign_multisig_pattern(const operation::list& ops)
 {
-    switch (op.code)
-    {
-        case opcode::zero:
-        case opcode::special:
-        case opcode::pushdata1:
-        case opcode::pushdata2:
-        case opcode::pushdata4:
-            BITCOIN_ASSERT_MSG(false,
-                "Invalid push operation in run_operation");
-            return true;
+    if (ops.size() < 2 || !is_push_only(ops))
+        return false;
 
-        case opcode::negative_1:
-            return op_negative_1(context);
-
-        case opcode::reserved:
-            return false;
-
-        case opcode::op_1:
-        case opcode::op_2:
-        case opcode::op_3:
-        case opcode::op_4:
-        case opcode::op_5:
-        case opcode::op_6:
-        case opcode::op_7:
-        case opcode::op_8:
-        case opcode::op_9:
-        case opcode::op_10:
-        case opcode::op_11:
-        case opcode::op_12:
-        case opcode::op_13:
-        case opcode::op_14:
-        case opcode::op_15:
-        case opcode::op_16:
-            return op_x(context, op.code);
-
-        case opcode::nop:
-            return true;
-
-        case opcode::ver:
-            return false;
-
-        case opcode::if_:
-            return op_if(context);
-
-        case opcode::notif:
-            return op_notif(context);
-
-        case opcode::verif:
-        case opcode::vernotif:
-            BITCOIN_ASSERT_MSG(false,
-                "Disabled opcodes (verif/vernotif) in run_operation");
-            return false;
-
-        case opcode::else_:
-            return op_else(context);
-
-        case opcode::endif:
-            return op_endif(context);
-
-        case opcode::verify:
-            return op_verify(context);
-
-        case opcode::return_:
-            return false;
-
-        case opcode::toaltstack:
-            return op_toaltstack(context);
-
-        case opcode::fromaltstack:
-            return op_fromaltstack(context);
-
-        case opcode::op_2drop:
-            return op_2drop(context);
-
-        case opcode::op_2dup:
-            return op_2dup(context);
-
-        case opcode::op_3dup:
-            return op_3dup(context);
-
-        case opcode::op_2over:
-            return op_2over(context);
-
-        case opcode::op_2rot:
-            return op_2rot(context);
-
-        case opcode::op_2swap:
-            return op_2swap(context);
-
-        case opcode::ifdup:
-            return op_ifdup(context);
-
-        case opcode::depth:
-            return op_depth(context);
-
-        case opcode::drop:
-            return op_drop(context);
-
-        case opcode::dup:
-            return op_dup(context);
-
-        case opcode::nip:
-            return op_nip(context);
-
-        case opcode::over:
-            return op_over(context);
-
-        case opcode::pick:
-            return op_pick(context);
-
-        case opcode::roll:
-            return op_roll(context);
-
-        case opcode::rot:
-            return op_rot(context);
-
-        case opcode::swap:
-            return op_swap(context);
-
-        case opcode::cat:
-        case opcode::substr:
-        case opcode::left:
-        case opcode::right:
-            BITCOIN_ASSERT_MSG(false,
-                "Disabled splice operations in run_operation");
-            return false;
-
-        case opcode::tuck:
-            return op_tuck(context);
-
-        case opcode::size:
-            return op_size(context);
-
-        case opcode::invert:
-        case opcode::and_:
-        case opcode::or_:
-        case opcode::xor_:
-            BITCOIN_ASSERT_MSG(false,
-                "Disabled bit logic operations in run_operation");
-            return false;
-
-        case opcode::equal:
-            return op_equal(context);
-
-        case opcode::equalverify:
-            return op_equalverify(context);
-
-        case opcode::reserved1:
-        case opcode::reserved2:
-            return false;
-
-        case opcode::op_1add:
-            return op_1add(context);
-
-        case opcode::op_1sub:
-            return op_1sub(context);
-
-        case opcode::op_2mul:
-        case opcode::op_2div:
-            BITCOIN_ASSERT_MSG(false,
-                "Disabled opcodes (2mul/2div) in run_operation");
-            return false;
-
-        case opcode::negate:
-            return op_negate(context);
-
-        case opcode::abs:
-            return op_abs(context);
-
-        case opcode::not_:
-            return op_not(context);
-
-        case opcode::op_0notequal:
-            return op_0notequal(context);
-
-        case opcode::add:
-            return op_add(context);
-
-        case opcode::sub:
-            return op_sub(context);
-
-        case opcode::mul:
-        case opcode::div:
-        case opcode::mod:
-        case opcode::lshift:
-        case opcode::rshift:
-            BITCOIN_ASSERT_MSG(false,
-                "Disabled numeric operations in run_operation");
-            return false;
-
-        case opcode::booland:
-            return op_booland(context);
-
-        case opcode::boolor:
-            return op_boolor(context);
-
-        case opcode::numequal:
-            return op_numequal(context);
-
-        case opcode::numequalverify:
-            return op_numequalverify(context);
-
-        case opcode::numnotequal:
-            return op_numnotequal(context);
-
-        case opcode::lessthan:
-            return op_lessthan(context);
-
-        case opcode::greaterthan:
-            return op_greaterthan(context);
-
-        case opcode::lessthanorequal:
-            return op_lessthanorequal(context);
-
-        case opcode::greaterthanorequal:
-            return op_greaterthanorequal(context);
-
-        case opcode::min:
-            return op_min(context);
-
-        case opcode::max:
-            return op_max(context);
-
-        case opcode::within:
-            return op_within(context);
-
-        case opcode::ripemd160:
-            return op_ripemd160(context);
-
-        case opcode::sha1:
-            return op_sha1(context);
-
-        case opcode::sha256:
-            return op_sha256(context);
-
-        case opcode::hash160:
-            return op_hash160(context);
-
-        case opcode::hash256:
-            return op_hash256(context);
-
-        case opcode::codeseparator:
-            // This is set in the main evaluate(...) loop
-            // code_begin is updated to the current position
-            BITCOIN_ASSERT_MSG(false,
-                "Invalid operation (codeseparator) in run_operation");
-            return true;
-
-        case opcode::checksig:
-            return op_checksig(context, script, parent_tx, input_index,
-                script::is_active(flags, script_context::bip66_enabled));
-
-        case opcode::checksigverify:
-            return op_checksigverify(context, script, parent_tx, input_index,
-                script::is_active(flags, script_context::bip66_enabled)) ==
-                    signature_parse_result::valid;
-
-        case opcode::checkmultisig:
-            return op_checkmultisig(context, script, parent_tx, input_index,
-                script::is_active(flags, script_context::bip66_enabled));
-
-        case opcode::checkmultisigverify:
-            return op_checkmultisigverify(context, script, parent_tx, input_index,
-                script::is_active(flags, script_context::bip66_enabled)) ==
-                    signature_parse_result::valid;
-
-        case opcode::checklocktimeverify:
-            return script::is_active(context.flags, script_context::bip65_enabled) ?
-                op_checklocktimeverify(context, script, parent_tx,
-                    input_index) : true;
-
-        case opcode::op_nop1:
-
-        // op_nop2 has been consumed by checklocktimeverify
-        ////case opcode::op_nop2:
-
-        case opcode::op_nop3:
-        case opcode::op_nop4:
-        case opcode::op_nop5:
-        case opcode::op_nop6:
-        case opcode::op_nop7:
-        case opcode::op_nop8:
-        case opcode::op_nop9:
-        case opcode::op_nop10:
-            return true;
-
-        case opcode::raw_data:
-            return false;
-
-        default:
-            ////log::fatal(LOG_SCRIPT) << "Unimplemented operation <none "
-            ////    << static_cast<int>(op.code) << ">";
-            return false;
-    }
-
-    return false;
-}
-
-bool increment_op_counter(opcode code, evaluation_context& context)
-{
-    if (greater_op_16(code))
-        ++context.operation_counter;
-
-    if (context.operation_counter > op_counter_limit)
+    if (ops.front().code() != opcode::push_size_0)
         return false;
 
     return true;
 }
 
-bool opcode_is_disabled(opcode code)
+bool script::is_sign_public_key_pattern(const operation::list& ops)
 {
-    switch (code)
-    {
-        case opcode::cat:
-        case opcode::substr:
-        case opcode::left:
-        case opcode::right:
-        case opcode::invert:
-        case opcode::and_:
-        case opcode::or_:
-        case opcode::xor_:
-        case opcode::op_2mul:
-        case opcode::op_2div:
-        case opcode::mul:
-        case opcode::div:
-        case opcode::mod:
-        case opcode::lshift:
-        case opcode::rshift:
-            return true;
-
-        // These opcodes aren't in the main Satoshi EvalScript
-        // switch-case so the script loop always fails regardless of
-        // whether these are executed or not.
-        case opcode::verif:
-        case opcode::vernotif:
-            return true;
-
-        default:
-            return false;
-    }
+    return ops.size() == 1 && is_push_only(ops);
 }
 
-bool opcode_is_empty_pusher(opcode code)
+bool script::is_sign_key_hash_pattern(const operation::list& ops)
 {
-    switch (code)
-    {
-        // These operations may push empty data (opcode zero).
-        case opcode::special:
-        case opcode::pushdata1:
-        case opcode::pushdata2:
-        case opcode::pushdata4:
-            return true;
-
-        default:
-            return false;
-    }
+    return ops.size() == 2 && is_push_only(ops) &&
+        is_public_key(ops.back().data());
 }
 
-bool next_step(const transaction& parent_tx, uint32_t input_index,
-    operation::stack::const_iterator it, const script& script,
-    evaluation_context& context, uint32_t flags)
+bool script::is_sign_script_hash_pattern(const operation::list& ops)
 {
-    const auto& op = *it;
-
-    if (op.data.size() > 520)
+    if (ops.size() < 2 || !is_push_only(ops))
         return false;
 
-    if (!increment_op_counter(op.code, context))
+    const auto& redeem_data = ops.back().data();
+
+    if (redeem_data.empty())
         return false;
 
-    if (opcode_is_disabled(op.code))
+    script redeem;
+
+    if (!redeem.from_data(redeem_data, false))
         return false;
+
+    // Is the redeem script a standard pay (output) script?
+    const auto redeem_script_pattern = redeem.pattern();
+    return redeem_script_pattern == script_pattern::pay_multisig
+        || redeem_script_pattern == script_pattern::pay_public_key
+        || redeem_script_pattern == script_pattern::pay_key_hash
+        || redeem_script_pattern == script_pattern::pay_script_hash
+        || redeem_script_pattern == script_pattern::null_data;
+}
     
-    if (!context.conditional.succeeded() && !is_condition_opcode(op.code))
-        return true;
+operation::list script::to_null_data_pattern(data_slice data)
+{
+    if (data.size() > max_null_data_size)
+        return{};
 
-    // push data to the stack
-    if (op.code == opcode::zero)
+    return operation::list
     {
-        context.stack.push_back(data_chunk());
-    }
-    else if (op.code == opcode::codeseparator)
-    {
-        context.code_begin = it;
-    }
-    else if (opcode_is_empty_pusher(op.code))
-    {
-        context.stack.push_back(op.data);
-    }
-    else if (!run_operation(op, parent_tx, input_index, script, context,
-        flags))
-    {
-        // opcodes above should assert inside run_operation
-        return false;
-    }
-
-    //log::debug() << "--------------------";
-    //log::debug() << "Run: " << opcode_to_string(op.code);
-    //log::debug() << "Stack:";
-    //for (auto s: context.stack)
-    //    log::debug() << "[" << encode_base16(s) << "]";
-
-    return (context.stack.size() + context.alternate.size() <= 1000);
+        operation{ opcode::return_ },
+        operation{ to_chunk(data) }
+    };
 }
 
-bool evaluate(const transaction& parent_tx, uint32_t input_index,
-    const script& script, evaluation_context& context, uint32_t flags)
+operation::list script::to_pay_public_key_pattern(data_slice point)
 {
-    if (script.satoshi_content_size() > 10000)
-        return false;
+    if (!is_public_key(point))
+        return{};
 
-    context.operation_counter = 0;
-    context.code_begin = script.operations.begin();
-
-    for (auto it = script.operations.begin(); it != script.operations.end(); ++it)
-        if (!next_step(parent_tx, input_index, it, script, context, flags))
-            return false;
-
-    return context.conditional.closed();
+    return operation::list
+    {
+        { to_chunk(point) },
+        { opcode::checksig }
+    };
 }
 
-bool script::verify(const script& input_script, const script& output_script,
-    const transaction& parent_tx, uint32_t input_index, uint32_t flags)
+operation::list script::to_pay_key_hash_pattern(const short_hash& hash)
 {
-    evaluation_context input_context;
-    input_context.flags = flags;
-
-    if (!evaluate(parent_tx, input_index, input_script, input_context, flags))
-        return false;
-
-    evaluation_context output_context;
-    output_context.flags = flags;
-    output_context.stack = input_context.stack;
-
-    if (!evaluate(parent_tx, input_index, output_script, output_context,
-        flags))
-        return false;
-
-    if (output_context.stack.empty() ||
-        !cast_to_bool(output_context.stack.back()))
-        return false;
-
-    // Additional validation for pay-to-script-hash transactions
-    if (is_active(flags, script_context::bip16_enabled) &&
-        (output_script.pattern() == script_pattern::pay_script_hash))
+    return operation::list
     {
-        if (!operation::is_push_only(input_script.operations))
-            return false;
+        { opcode::dup },
+        { opcode::hash160 },
+        { to_chunk(hash) },
+        { opcode::equalverify },
+        { opcode::checksig }
+    };
+}
 
-        // Load last input_script stack item as a script
-        evaluation_context eval_context;
-        eval_context.flags = flags;
-        eval_context.stack = input_context.stack;
+operation::list script::to_pay_script_hash_pattern(const short_hash& hash)
+{
+    return operation::list
+    {
+        { opcode::hash160 },
+        { to_chunk(hash) },
+        { opcode::equal }
+    };
+}
 
-        // TODO: shouldn't this be parse_mode::strict?
-        // Invalid script - parsable only as raw_data
-        script eval_script;
+operation::list script::to_pay_multisig_pattern(uint8_t signatures,
+    const point_list& points)
+{
+    const auto conversion = [](const ec_compressed& point)
+    {
+        return to_chunk(point);
+    };
 
-        if (!eval_script.from_data(input_context.stack.back(), false,
-            parse_mode::raw_data_fallback))
-            return false;
+    data_stack chunks(points.size());
+    std::transform(points.begin(), points.end(), chunks.begin(), conversion);
+    return to_pay_multisig_pattern(signatures, chunks);
+}
 
-        // Pop last item and copy as starting stack to eval script
-        eval_context.stack.pop_back();
+operation::list script::to_pay_multisig_pattern(uint8_t signatures,
+    const data_stack& points)
+{
+    static constexpr auto op_81 = static_cast<uint8_t>(opcode::push_positive_1);
+    static constexpr auto op_96 = static_cast<uint8_t>(opcode::push_positive_16);
+    static constexpr auto zero = op_81 - 1;
+    static constexpr auto max = op_96 - zero;
 
-        // Run script
-        if (!evaluate(parent_tx, input_index, eval_script, eval_context,
-            flags))
-            return false;
+    const auto m = signatures;
+    const auto n = points.size();
 
-        if (eval_context.stack.empty())
-            return false;
+    if (m < 1 || m > n || n < 1 || n > max)
+        return operation::list();
 
-        return cast_to_bool(eval_context.stack.back());
+    const auto op_m = static_cast<opcode>(m + zero);
+    const auto op_n = static_cast<opcode>(points.size() + zero);
+
+    operation::list ops;
+    ops.reserve(points.size() + 3);
+    ops.push_back({ op_m });
+
+    for (const auto point: points)
+    {
+        if (!is_public_key(point))
+            return{};
+
+        ops.push_back(point);
     }
 
-    return true;
+    ops.push_back({ op_n });
+    ops.push_back({ opcode::checkmultisig });
+    return ops;
+}
+
+// Utilities (non-static).
+//-----------------------------------------------------------------------------
+
+script_pattern script::pattern() const
+{
+    // The first operations access must be method-based to guarantee the cache.
+    if (is_null_data_pattern(operation::list()))
+        return script_pattern::null_data;
+
+    if (is_pay_multisig_pattern(operations_))
+        return script_pattern::pay_multisig;
+
+    if (is_pay_public_key_pattern(operations_))
+        return script_pattern::pay_public_key;
+
+    if (is_pay_key_hash_pattern(operations_))
+        return script_pattern::pay_key_hash;
+
+    if (is_pay_script_hash_pattern(operations_))
+        return script_pattern::pay_script_hash;
+
+    if (is_sign_multisig_pattern(operations_))
+        return script_pattern::sign_multisig;
+
+    if (is_sign_public_key_pattern(operations_))
+        return script_pattern::sign_public_key;
+
+    if (is_sign_key_hash_pattern(operations_))
+        return script_pattern::sign_key_hash;
+
+    if (is_sign_script_hash_pattern(operations_))
+        return script_pattern::sign_script_hash;
+
+    return script_pattern::non_standard;
+}
+
+//*****************************************************************************
+// CONSENSUS: this pattern is used to activate bip16 validation rules.
+//*****************************************************************************
+bool script::is_relaxed_push() const
+{
+    const auto push = [&](const operation& op)
+    {
+        return op.is_relaxed_push();
+    };
+
+    return std::all_of(operations().begin(), operations().end(), push);
+}
+
+bool script::is_pay_to_script_hash(uint32_t forks) const
+{
+    // This is used internally as an optimization over using script::pattern.
+    // The prevout operations access must be method-based to guarantee the cache.
+    return is_enabled(forks, rule_fork::bip16_rule) &&
+        is_pay_script_hash_pattern(operations());
+}
+
+size_t script::sigops(bool embedded) const
+{
+    size_t total = 0;
+    auto preceding = opcode::reserved_255;
+
+    // The first operations access must be method-based to guarantee the cache.
+    for (const auto& op: operations())
+    {
+        const auto code = op.code();
+
+        if (code == opcode::checksig ||
+            code == opcode::checksigverify)
+        {
+            total++;
+        }
+        else if (
+            code == opcode::checkmultisig ||
+            code == opcode::checkmultisigverify)
+        {
+            total += embedded && operation::is_positive(preceding) ?
+                operation::opcode_to_positive(preceding) :
+                multisig_default_sigops;
+        }
+
+        preceding = code;
+    }
+
+    return total;
+}
+
+size_t script::embedded_sigops(const script& prevout_script) const
+{
+    // There are no embedded sigops when the prevout script is not p2sh.
+    if (!prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule))
+        return 0;
+
+    // The first operations access must be method-based to guarantee the cache.
+    if (operations().empty())
+        return 0;
+
+    // There are no embedded sigops when the input script is not push only.
+    if (!is_relaxed_push())
+        return 0;
+
+    // Parse the embedded script from the last input script item (data).
+    // This never fails because there is no prefix to validate the length.
+    script embedded(operations_.back().data(), false);
+
+    // Count the sigops in the embedded script using BIP16 rules.
+    return embedded.sigops(true);
+}
+
+//*****************************************************************************
+// CONSENSUS: this is a pointless, broken, premature optimization attempt.
+//*****************************************************************************
+void script::find_and_delete_(const data_chunk& endorsement)
+{
+    // If this is empty it would produce an empty script but not operation.
+    // So we test it for empty prior to operation reserialization.
+    if (endorsement.empty())
+        return;
+
+    // The value must be serialized to script using non-minimal encoding.
+    // Non-minimally-encoded target values will therefore not match.
+    const auto value = operation(endorsement, false).to_data();
+
+    // No copying occurs below. If a match is found the remainder is shifted
+    // into its place (erase). No memory allocation is caused by the shift.
+
+    operation op;
+    data_source stream(bytes_);
+    istream_reader source(stream);
+    auto begin = bytes_.begin();
+
+    // This test handles stream end and op deserialization failure.
+    while (!source.is_exhausted())
+    {
+        // This is the 'broken' aspect of this method. The comparison and erase
+        // are not limited to a single operation and so can erase arbitrary
+        // upstream data from the script. Unfortunately that is now consensus.
+        while (starts_with(begin, bytes_.end(), value))
+            begin = bytes_.erase(begin, begin + value.size());
+
+        // The source is not affected by changes upstream of its position.
+        op.from_data(source);
+        begin += op.serialized_size();
+    }
+}
+
+// Concurrent read/write is not supported, so no critical section.
+void script::find_and_delete(const data_stack& endorsements)
+{
+    for (auto& endorsement: endorsements)
+        find_and_delete_(endorsement);
+
+    // Invalidate the cache so that the operations may be regenerated.
+    operations_.clear();
+    cached_ = false;
+    bytes_.shrink_to_fit();
+}
+
+// Validation.
+//-----------------------------------------------------------------------------
+
+code script::verify(const transaction& tx, uint32_t input_index,
+    uint32_t forks, const script& input_script,
+    const script& prevout_script)
+{
+    code error;
+
+    program input(input_script, tx, input_index, forks);
+    if ((error = input.evaluate()))
+        return error;
+
+    program prevout(prevout_script, input);
+    if ((error = prevout.evaluate()))
+        return error;
+
+    if (prevout.stack_false())
+        return error::stack_false;
+
+    if (prevout_script.is_pay_to_script_hash(forks))
+    {
+        if (!input_script.is_relaxed_push())
+            return error::invalid_script_embed;
+
+        // The embedded p2sh script is at the top of the stack.
+        script embedded_script(input.pop(), false);
+
+        program embedded(embedded_script, std::move(input), true);
+        if ((error = embedded.evaluate()))
+            return error;
+
+        if (embedded.stack_false())
+            return error::stack_false;
+    }
+
+    return error::success;
+}
+
+code script::verify(const transaction& tx, uint32_t input, uint32_t forks)
+{
+    if (input >= tx.inputs().size())
+        return error::operation_failed;
+
+    const auto& in = tx.inputs()[input];
+    const auto& prevout = in.previous_output().validation.cache;
+    return verify(tx, input, forks, in.script(), prevout.script());
 }
 
 } // namespace chain

@@ -35,12 +35,24 @@ class BC_API filter_add
 {
 public:
     typedef std::shared_ptr<filter_add> ptr;
+    typedef std::shared_ptr<const filter_add> const_ptr;
 
     static filter_add factory_from_data(uint32_t version,
         const data_chunk& data);
     static filter_add factory_from_data(uint32_t version,
         std::istream& stream);
     static filter_add factory_from_data(uint32_t version, reader& source);
+
+    filter_add();
+    filter_add(const data_chunk& data);
+    filter_add(data_chunk&& data);
+    filter_add(const filter_add& other);
+    filter_add(filter_add&& other);
+
+    data_chunk& data();
+    const data_chunk& data() const;
+    void set_data(const data_chunk& value);
+    void set_data(data_chunk&& value);
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -52,15 +64,20 @@ public:
     void reset();
     uint64_t serialized_size(uint32_t version) const;
 
+    // This class is move assignable but not copy assignable.
+    filter_add& operator=(filter_add&& other);
+    void operator=(const filter_add&) = delete;
+
+    bool operator==(const filter_add& other) const;
+    bool operator!=(const filter_add& other) const;
+
     static const std::string command;
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-    data_chunk data;
+private:
+    data_chunk data_;
 };
-
-BC_API bool operator==(const filter_add& left,  const filter_add& right);
-BC_API bool operator!=(const filter_add& left, const filter_add& right);
 
 } // end message
 } // end libbitcoin

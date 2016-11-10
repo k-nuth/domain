@@ -21,7 +21,6 @@
 #define LIBBITCOIN_SCRIPT_NUMBER_HPP
 
 #include <cstddef>
-#include <bitcoin/bitcoin/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 
@@ -41,6 +40,27 @@ namespace libbitcoin {
 class BC_API script_number
 {
 public:
+    static const uint8_t negative_1;
+    static const uint8_t negative_0;
+    static const uint8_t positive_0;
+    static const uint8_t positive_1;
+    static const uint8_t positive_2;
+    static const uint8_t positive_3;
+    static const uint8_t positive_4;
+    static const uint8_t positive_5;
+    static const uint8_t positive_6;
+    static const uint8_t positive_7;
+    static const uint8_t positive_8;
+    static const uint8_t positive_9;
+    static const uint8_t positive_10;
+    static const uint8_t positive_11;
+    static const uint8_t positive_12;
+    static const uint8_t positive_13;
+    static const uint8_t positive_14;
+    static const uint8_t positive_15;
+    static const uint8_t positive_16;
+    static const uint8_t negative_mask;
+
     /// Construct with zero value, may call set_data() after.
     script_number();
 
@@ -56,14 +76,20 @@ public:
     /// Return the value bounded by the limits of int32.
     int32_t int32() const;
 
-    /// Return the value.
+    /// Return the unbounded value.
     int64_t int64() const;
 
+    /// Return value as stack boolean (nonzero is true).
+    bool is_true() const;
+
+    /// Return value as stack boolean (zero is false).
+    bool is_false() const;
+
     /// Arithmetic with a number (throws on overflow).
-    script_number operator+(const int64_t value) const;
-    script_number operator-(const int64_t value) const;
-    script_number& operator+=(const int64_t value);
-    script_number& operator-=(const int64_t value);
+    script_number operator+(int64_t value) const;
+    script_number operator-(int64_t value) const;
+    script_number& operator+=(int64_t value);
+    script_number& operator-=(int64_t value);
 
     /// Arithmetic with another script_number (throws on overflow).
     script_number operator+(const script_number& other) const;
@@ -78,12 +104,12 @@ public:
     script_number operator-() const;
 
     /// Comparison operators with a number.
-    bool operator==(const int64_t value) const;
-    bool operator!=(const int64_t value) const;
-    bool operator<=(const int64_t value) const;
-    bool operator<(const int64_t value) const;
-    bool operator>=(const int64_t value) const;
-    bool operator>(const int64_t value) const;
+    bool operator==(int64_t value) const;
+    bool operator!=(int64_t value) const;
+    bool operator<=(int64_t value) const;
+    bool operator<(int64_t value) const;
+    bool operator>=(int64_t value) const;
+    bool operator>(int64_t value) const;
 
     /// Comparison operators with another script_number.
     bool operator==(const script_number& other) const;

@@ -19,7 +19,6 @@
  */
 #include <bitcoin/bitcoin/message/get_address.hpp>
 
-#include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -57,6 +56,10 @@ get_address get_address::factory_from_data(uint32_t version,
     return instance;
 }
 
+get_address::get_address()
+{
+}
+
 bool get_address::is_valid() const
 {
     return true;
@@ -87,6 +90,7 @@ bool get_address::from_data(uint32_t version, reader& source)
 data_chunk get_address::to_data(uint32_t version) const
 {
     data_chunk data;
+    data.reserve(serialized_size(version));
     data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();

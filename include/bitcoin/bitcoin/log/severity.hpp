@@ -3,8 +3,8 @@
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
+ * libbitcoin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -17,26 +17,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_WALLET_SETTINGS_HPP
-#define LIBBITCOIN_WALLET_SETTINGS_HPP
+#ifndef LIBBITCOIN_LOG_SEVERITY_HPP
+#define LIBBITCOIN_LOG_SEVERITY_HPP
 
-#include <cstdint>
 #include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
-namespace wallet {
+namespace log {
 
-struct BC_API settings
+enum class severity
 {
-    uint8_t address_public_key;
-    uint8_t address_script;
-    uint8_t address_stealth;
-    uint8_t private_key;
-    uint64_t private_key_hd;
-    uint64_t public_key_hd;
+    debug,
+    info,
+    warning,
+    error,
+    fatal
 };
 
-} // namespace network
+} // namespace log
 } // namespace libbitcoin
 
 #endif

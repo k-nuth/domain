@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <iterator>
 #include <initializer_list>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 
@@ -77,18 +78,6 @@ void extend_data(Target& bytes, const Extension& other)
     bytes.insert(std::end(bytes), std::begin(other), std::end(other));
 }
 
-template <typename Value>
-Value range_constrain(Value value, Value minimum, Value maximum)
-{
-    if (value < minimum)
-        return minimum;
-
-    if (value > maximum)
-        return maximum;
-
-    return value;
-}
-
 // std::array<> is used in place of byte_array<> to enable Size deduction.
 template <size_t Start, size_t End, size_t Size>
 byte_array<End - Start> slice(const std::array<uint8_t, Size>& bytes)
@@ -124,8 +113,8 @@ byte_array_parts<Size / 2> split(const byte_array<Size>& bytes)
     static_assert(Size % 2 == 0, "Split requires an even length parameter.");
     static const size_t half = Size / 2;
     byte_array_parts<half> out;
-    std::copy(std::begin(bytes), std::begin(bytes) + half, out.left.begin());
-    std::copy(std::begin(bytes) + half, std::end(bytes), out.right.begin());
+    std::copy_n(std::begin(bytes), half, out.left.begin());
+    std::copy_n(std::begin(bytes) + half, half, out.right.begin());
     return out;
 }
 
@@ -143,6 +132,15 @@ template <typename Source>
 data_chunk to_chunk(const Source& bytes)
 {
     return data_chunk(std::begin(bytes), std::end(bytes));
+}
+
+template <typename Source>
+bool starts_with(const typename Source::const_iterator& begin,
+    const typename Source::const_iterator& end, const Source& value)
+{
+    const auto length = std::distance(begin, end);
+    return length >= 0 && static_cast<size_t>(length) >= value.size() &&
+        std::equal(value.begin(), value.end(), begin);
 }
 
 // unsafe

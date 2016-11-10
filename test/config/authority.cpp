@@ -73,7 +73,7 @@ static bool ip_equal(const message::ip_address& left,
 static bool net_equal(const message::network_address& left,
     const message::network_address& right)
 {
-    return ip_equal(left.ip, right.ip) && (left.port == right.port);
+    return ip_equal(left.ip(), right.ip()) && (left.port() == right.port());
 }
 
 // ------------------------------------------------------------------------- //
@@ -153,6 +153,30 @@ BOOST_AUTO_TEST_CASE(authority__port__boost_endpoint__expected)
     asio::endpoint tcp_endpoint(address, expected_port);
     const authority host(tcp_endpoint);
     BOOST_REQUIRE_EQUAL(host.port(), expected_port);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+// ------------------------------------------------------------------------- //
+
+BOOST_AUTO_TEST_SUITE(authority__ip)
+
+BOOST_AUTO_TEST_CASE(authority__bool__default__false)
+{
+    const authority host;
+    BOOST_REQUIRE(!host);
+}
+
+BOOST_AUTO_TEST_CASE(authority__bool__zero_port__false)
+{
+    const authority host(test_ipv6_address, 0);
+    BOOST_REQUIRE(!host);
+}
+
+BOOST_AUTO_TEST_CASE(authority__bool__nonzero_port__true)
+{
+    const authority host(test_ipv6_address, 42);
+    BOOST_REQUIRE(host);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -310,7 +334,7 @@ BOOST_AUTO_TEST_CASE(authority__to_network_address__ipv4_mapped_ip_address__ipv4
         0, 0, test_mapped_ip_address, 42,
     };
 
-    const authority host(expected_address.ip, expected_address.port);
+    const authority host(expected_address.ip(), expected_address.port());
     BOOST_REQUIRE(net_equal(host.to_network_address(), expected_address));
 }
 
@@ -321,7 +345,7 @@ BOOST_AUTO_TEST_CASE(authority__to_network_address__ipv4_compatible_ip_address__
         0, 0, test_compatible_ip_address, 42,
     };
 
-    const authority host(expected_address.ip, expected_address.port);
+    const authority host(expected_address.ip(), expected_address.port());
     BOOST_REQUIRE(net_equal(host.to_network_address(), expected_address));
 }
 
@@ -332,7 +356,7 @@ BOOST_AUTO_TEST_CASE(authority__to_network_address__ipv6_address__ipv6_compresse
         0, 0, test_ipv6_address, 42,
     };
 
-    const authority host(expected_address.ip, expected_address.port);
+    const authority host(expected_address.ip(), expected_address.port());
     BOOST_REQUIRE(net_equal(host.to_network_address(), expected_address));
 }
 

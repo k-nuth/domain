@@ -19,9 +19,9 @@
  */
 #include <bitcoin/bitcoin/wallet/message.hpp>
 
-#include <boost/iostreams/stream.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/ostream_writer.hpp>
 #include <bitcoin/bitcoin/wallet/ec_private.hpp>
@@ -45,8 +45,8 @@ hash_digest hash_message(data_slice message)
     data_sink ostream(data);
     ostream_writer sink(ostream);
     sink.write_string(prefix);
-    sink.write_variable_uint_little_endian(message.size());
-    sink.write_data(message);
+    sink.write_variable_little_endian(message.size());
+    sink.write_bytes(message.begin(), message.size());
     ostream.flush();
     return bitcoin_hash(data);
 }
@@ -109,7 +109,7 @@ bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed,
     if (out_compressed)
         recovery_id -= magic_differential;
 
-    out_recovery_id = static_cast<uint8_t>(recovery_id);
+    out_recovery_id = safe_to_unsigned<uint8_t>(recovery_id);
     return true;
 }
 

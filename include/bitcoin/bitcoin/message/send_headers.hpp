@@ -35,6 +35,7 @@ class BC_API send_headers
 {
 public:
     typedef std::shared_ptr<send_headers> ptr;
+    typedef std::shared_ptr<const send_headers> const_ptr;
 
     static send_headers factory_from_data(uint32_t version,
         const data_chunk& data);
@@ -45,6 +46,8 @@ public:
     static uint64_t satoshi_fixed_size(uint32_t version);
 
     send_headers();
+    send_headers(const send_headers& other);
+    send_headers(send_headers&& other);
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -60,8 +63,11 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
+protected:
+    send_headers(bool insufficient_version);
+
 private:
-    bool version_unsupported_;
+    bool insufficient_version_;
 };
 
 } // namespace message

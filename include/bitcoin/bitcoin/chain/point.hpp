@@ -38,49 +38,107 @@ namespace chain {
 class BC_API point
 {
 public:
+    /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
+    /// This value is serialized and defined by consensus, not implementation.
+    static const uint32_t null_index;
+
     typedef std::vector<point> list;
     typedef std::vector<uint32_t> indexes;
+
+    // Constructors.
+    //-------------------------------------------------------------------------
+
+    point();
+
+    point(point&& other);
+    point(const point& other);
+
+    point(hash_digest&& hash, uint32_t index);
+    point(const hash_digest& hash, uint32_t index);
+
+    // Operators.
+    //-------------------------------------------------------------------------
+
+    /// This class is move assignable and copy assignable.
+    point& operator=(point&& other);
+    point& operator=(const point& other);
+
+    bool operator==(const point& other) const;
+    bool operator!=(const point& other) const;
+
+    // Deserialization.
+    //-------------------------------------------------------------------------
 
     static point factory_from_data(const data_chunk& data);
     static point factory_from_data(std::istream& stream);
     static point factory_from_data(reader& source);
-    static uint64_t satoshi_fixed_size();
 
-    uint64_t checksum() const;
-
-    bool is_null() const;
     bool from_data(const data_chunk& data);
     bool from_data(std::istream& stream);
     bool from_data(reader& source);
+
+    bool is_valid() const;
+
+    // Serialization.
+    //-------------------------------------------------------------------------
+
     data_chunk to_data() const;
     void to_data(std::ostream& stream) const;
     void to_data(writer& sink) const;
+
     std::string to_string() const;
-    bool is_valid() const;
-    void reset();
-    uint64_t serialized_size() const;
+
+    // Iteration.
+    //-------------------------------------------------------------------------
 
     point_iterator begin() const;
     point_iterator end() const;
 
-    hash_digest hash;
-    uint32_t index;
-};
+    // Properties (size, accessors, cache).
+    //-------------------------------------------------------------------------
 
-BC_API bool operator==(const point& left, const point& right);
-BC_API bool operator!=(const point& left, const point& right);
+    static uint64_t satoshi_fixed_size();
+    uint64_t serialized_size() const;
+
+    // deprecated (unsafe)
+    hash_digest& hash();
+
+    const hash_digest& hash() const;
+    void set_hash(hash_digest&& value);
+    void set_hash(const hash_digest& value);
+
+    uint32_t index() const;
+    void set_index(uint32_t value);
+
+    // Utilities.
+    //-------------------------------------------------------------------------
+
+    uint64_t checksum() const;
+
+    // Validation.
+    //-------------------------------------------------------------------------
+
+    bool is_null() const;
+
+protected:
+    point(hash_digest&& hash, uint32_t index, bool valid);
+    point(const hash_digest& hash, uint32_t index, bool valid);
+    void reset();
+
+private:
+    hash_digest hash_;
+    uint32_t index_;
+    bool valid_;
+};
 
 typedef point input_point;
-typedef point output_point;
-
-struct BC_API points_info
-{
-    output_point::list points;
-    uint64_t change;
-};
 
 } // namespace chain
 } // namespace libbitcoin
+
+
+// Standard hash.
+//-----------------------------------------------------------------------------
 
 namespace std
 {
@@ -93,8 +151,8 @@ struct hash<bc::chain::point>
     size_t operator()(const bc::chain::point& point) const
     {
         size_t seed = 0;
-        boost::hash_combine(seed, point.hash);
-        boost::hash_combine(seed, point.index);
+        boost::hash_combine(seed, point.hash());
+        boost::hash_combine(seed, point.index());
         return seed;
     }
 };
