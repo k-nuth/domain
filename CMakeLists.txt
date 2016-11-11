@@ -401,6 +401,30 @@ add_library(bitprim-core ${MODE}
         src/math/secp256k1_initializer.hpp
         src/math/stealth.cpp
         src/math/uint256.cpp
+        src/math/external/aes256.h
+        src/math/external/crypto_scrypt.h
+        src/math/external/hmac_sha256.h
+        src/math/external/hmac_sha512.h
+        src/math/external/lax_der_parsing.h
+        src/math/external/pbkdf2_sha256.h
+        src/math/external/pkcs5_pbkdf2.h
+        src/math/external/ripemd160.h
+        src/math/external/sha1.h
+        src/math/external/sha256.h
+        src/math/external/sha512.h
+        src/math/external/zeroize.h
+        src/math/external/aes256.c
+        src/math/external/crypto_scrypt.c
+        src/math/external/hmac_sha256.c
+        src/math/external/hmac_sha512.c
+        src/math/external/lax_der_parsing.c
+        src/math/external/pbkdf2_sha256.c
+        src/math/external/pkcs5_pbkdf2.c
+        src/math/external/ripemd160.c
+        src/math/external/sha1.c
+        src/math/external/sha256.c
+        src/math/external/sha512.c
+        src/math/external/zeroize.c
         src/message/address.cpp
         src/message/alert.cpp
         src/message/alert_payload.cpp
