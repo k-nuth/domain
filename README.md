@@ -1,10 +1,8 @@
-[![Build Status](https://travis-ci.org/libbitcoin/libbitcoin.svg?branch=master)](https://travis-ci.org/libbitcoin/libbitcoin)
+[![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg?branch=master)](https://travis-ci.org/bitprim/bitprim-core)
 
-[![Coverage Status](https://coveralls.io/repos/libbitcoin/libbitcoin/badge.svg)](https://coveralls.io/r/libbitcoin/libbitcoin)
+# Bitprim Core
 
-# Bitprim
-
-*The Bitcoin Development Library*
+*Bitprim Core*
 
 **License Overview**
 
@@ -12,22 +10,13 @@ All files in this repository fall under the license specified in [COPYING](COPYI
 
 **About Bitprim**
 
-The Bitprim toolkit is a set of cross platform C++ libraries for building bitcoin applications. The toolkit consists of several libraries, most of which depend on the foundational [bitprim-core](https://github.com/bitprim/bitprim-core) library. Each library's repository can be cloned and built using common [automake](http://www.gnu.org/software/automake) 1.14+ instructions. There are no packages yet in distribution however each library includes an installation script (described below) which is regularly verified in the automated build.
+The Bitprim toolkit is a set of cross platform C++ libraries for building bitcoin applications. The toolkit consists of several libraries, most of which depend on the foundational [bitprim-core](https://github.com/bitprim/bitprim-core) library. Each library's repository can be cloned and built using common [automake](http://www.gnu.org/software/automake) 1.14+ instructions. 
 
 ## Installation
 
-On Linux and Macintosh bitprim is built using Autotools as follows.
-```sh
-$ ./autogen.sh
-$ ./configure
-$ make
-$ sudo make install
-$ sudo ldconfig
-```
 A minimal bitprim build requires boost and libsecp256k1. The [bitprim/secp256k1](https://github.com/bitprim/secp256k1) repository is forked from [bitcoin-core/secp256k1](https://github.com/bitcoin-core/secp256k1) in order to control for changes and to incorporate the necessary Visual Studio build. The original repository can be used directly but recent changes to the public interface may cause build breaks. The `--enable-module-recovery` switch is required.
 
 Detailed instructions are provided below.
-
   * [Debian/Ubuntu](#debianubuntu)
   * [Macintosh](#macintosh)
   * [Windows](#windows)
@@ -55,20 +44,62 @@ $ sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.8 50
 ```
 Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Automake minimum 1.14) and git:
 ```sh
-$ sudo apt-get install build-essential autoconf automake libtool pkg-config git
+$ sudo apt-get install build-essential autoconf automake libtool pkg-config git 
 ```
-Next install the [Boost](http://www.boost.org) (minimum 1.57.0) development package:
+
+If you intend to use libbbitcoin-consensus (this is the default), you will also need libcrypto:
+```sh
+$ sudo apt-get install libssl-dev
+```
+
+Next install the [Boost](http://www.boost.org) (minimum 1.56.0) development package:
 ```sh
 $ sudo apt-get install libboost-all-dev
 ```
-Next download the [install script](https://github.com/bitprim/bitprim-core/blob/version2/install.sh) and enable execution:
+Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
 ```sh
-$ wget https://raw.githubusercontent.com/bitprim/bitprim-core/version2/install.sh
-$ chmod +x install.sh
+$ git clone https://github.com/zeromq/libzmq
+$ cd libzmq
+$ ./autogen.sh && ./configure && make -j 4
+$ make check
+$ sudo make install
+$ sudo ldconfig
 ```
-Finally, install bitprim:
+
+Next install the [Protobuff](https://github.com/google/protobuf) (minimum 3.0.0) development package:
 ```sh
-$ sudo ./install.sh
+$ sudo apt-get install autoconf automake libtool curl make g++ unzip
+$ git clone https://github.com/google/protobuf
+$ cd protobuf
+$ ./autogen.sh 
+$ ./configure
+$ make
+$ make check
+$ sudo make install
+$ sudo ldconfig
+```
+
+Next install the [CMake](https://cmake.org/) (minimum 3.7.0-rc1) development package:
+```sh
+$ wget https://cmake.org/files/v3.7/cmake-3.7.0-rc1.tar.gz
+$ tar -xvzf cmake-3.7.0-rc1.tar.gz
+$ cd cmake-3.7.0-rc1
+$ ./bootstrap
+$ make 
+$ sudo make install
+$ sudo ln -s /usr/local/bin/cmake /usr/bin/cmake
+```
+
+Finally, install bitprim-build:
+```sh
+$ git clone --recursive https://github.com/bitprim/bitprim-build/
+$ cd bitprim-build
+$ mkdir build
+$ cd build
+$ cmake .. -G "Unix Makefiles" -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Release
+$ make
+$ sudo make install
+$ sudo ldconfig
 ```
 Bitprim is now installed in `/usr/local/`.
 
@@ -104,18 +135,21 @@ Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Aut
 ```sh
 $ brew install autoconf automake libtool pkgconfig wget
 ```
-Next install the [Boost](http://www.boost.org) (1.57.0 or newer) development package:
+Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development package:
 ```sh
 $ brew install boost
 ```
-Next download the [install script](https://github.com/bitprim/bitprim-core/blob/version2/install.sh) and enable execution:
-```sh
-$ wget https://raw.githubusercontent.com/bitprim/bitprim-core/version2/install.sh
-$ chmod +x install.sh
+Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
+```
+TODO: ZeroMQ Mac Install
+```
+Next install the [Protobuff](https://github.com/google/protobuf) (minimum 3.0.0) development package:
+```
+TODO: Protobuff Mac Install
 ```
 Finally install bitprim:
-```sh
-$ ./install.sh
+```
+TODO: Mac Install
 ```
 Bitprim is now installed in `/usr/local/`.
 
@@ -127,18 +161,21 @@ Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Aut
 ```sh
 $ sudo port install autoconf automake libtool pkgconfig wget
 ```
-Next install the [Boost](http://www.boost.org) (1.57.0 or newer) development package. The `-` options remove MacPort defaults that are not Boost defaults:
+Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development package. The `-` options remove MacPort defaults that are not Boost defaults:
 ```sh
 $ sudo port install boost -no_single -no_static -python27
 ```
-Next download the [install script](https://github.com/bitprim/bitprim-core/blob/version2/install.sh) and enable execution:
-```sh
-$ wget https://raw.githubusercontent.com/bitprim/bitprim-core/version2/install.sh
-$ chmod +x install.sh
+Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
+```
+TODO: ZeroMQ MacPorts Install
+```
+Next install the [Protobuff](https://github.com/google/protobuf) (minimum 3.0.0) development package:
+```
+TODO: Protobuff MacPorts Install
 ```
 Finally install bitprim:
-```sh
-$ ./install.sh
+```
+TODO: MacPorts Install
 ```
 Bitprim is now installed in `/usr/local/`.
 
@@ -155,86 +192,7 @@ The build script clones, builds and installs two unpackaged repositories, namely
 
 The script builds from the head of their `version4` and `version2` branches respectively. The `master` branch is a staging area for changes. The version branches are considered release quality.
 
-#### Build Options
-
-Any set of `./configure` options can be passed via the build script, for example:
-```sh
-$ ./install.sh CFLAGS="-Og -g" --prefix=/home/me/myprefix
-```
-
-#### Compiling with ICU (International Components for Unicode)
-
-Since the addition of [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) and later [BIP-38](https://github.com/bitcoin/bips/blob/master/bip-0038.mediawiki) support, bitprim conditionally incorporates [ICU](http://site.icu-project.org). To use the BIP-38 and BIP-39 passphrase normalization features bitprim must be compiled with the `--with-icu` option. Currently [bitprim-explorer](https://github.com/bitprim/bitprim-explorer) is the only other library that accesses this feature, so if you do not intend to use passphrase normalization this dependency can be avoided.
-```sh
-$ ./install.sh --with-icu
-```
-
-#### Compiling with QR Code Support
-
-Since the addition of [qrcode](https://github.com/evoskuil/libbitcoin/blob/master/src/wallet/qrcode.cpp) support, bitprim conditionally incorporates `qrencode`. This requires compiling with the `--with-qrencode` option. Currently [bitprim-explorer](https://github.com/bitprim/bitprim-explorer) is the only other library that accesses this feature, so if you do not intend to use qrcode this dependency can be avoided.
-```sh
-$ ./install.sh --with-qrencode
-```
-
-Since the addition of [png](https://github.com/evoskuil/libbitcoin/blob/master/src/utility/png.cpp) support, libbitcoin conditionally incorporates `libpng` (which in turn requires `zlib`). This requires compiling with the `--with-png` option. Currently [bitprim-explorer](https://github.com/bitprim/bitprim-explorer) is the only other library that accesses this feature, so if you do not intend to use png this dependency can be avoided.
-```sh
-$ ./install.sh --with-png
-```
-
-#### Building ICU, ZLib, PNG, QREncode and/or Boost
-
-The installer can download and install any or all of these dependencies. ICU is a large package that is not typically preinstalled at a sufficient level. Using these builds ensures compiler and configuration compatailbity across all of the build components. It is recommended to use a prefix directory when building these components.
-```sh
-$ ./install.sh --with-icu --with-png --with-qrencode --build-icu --build-zlib --build-png --build-qrencode --build-boost --prefix=/home/me/myprefix
-```
-
 ### Windows
-
-Visual Studio solutions are maintained for all bitprim libraries. NuGet packages exist for dependencies with the exceptions of the optional ZLib, PNG, and QREncode (required for QR code functionality). ICU is integrated into Windows and therefore not required as an additional dependency when using ICU features.
-
-> The bitprim execution environment supports `Windows XP Service Pack 2` and newer.
-
-#### Upgrade Compiler
-
-Bitprim requires a C++11 compiler, which means **Visual Studio 2013** minimum. Additionally a pre-release compiler must be installed as an update to Visual Studio. Download and install the following tools as necessary. Both are available free of charge:
-
-* [Visual Studio 2013 Express](http://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx)
-* [November 2013 CTP Compiler](http://www.microsoft.com/en-us/download/details.aspx?id=41151)
-
-#### Create Local NuGet Repository
-
-Dependencies apart from the bitprim libraries are available as [NuGet packages](https://www.nuget.org/packages?q=evoskuil). The bitprim solution files are configured with references to these packages. To avoid redundancies these references expect a [NuGet.config](http://docs.nuget.org/docs/release-notes/nuget-2.1) in a central location.
-
-The required set of NuGet packages can be viewed using the [NuGet package manager](http://docs.nuget.org/docs/start-here/managing-nuget-packages-using-the-dialog) from the bitprim solution. The NuGet package manager will automatically download missing packages, either from the build scripts or after prompting you in the Visual Studio environment. For your reference these are the required packages:
-
-* Packages maintained by [sergey.shandar](http://www.nuget.org/profiles/sergey.shandar)
- * [boost](http://www.nuget.org/packages/boost)
- * [boost\_chrono-vc120](http://www.nuget.org/packages/boost_chrono-vc120)
- * [boost\_date\_time-vc120](http://www.nuget.org/packages/boost_date_time-vc120)
- * [boost\_filesystem-vc120](http://www.nuget.org/packages/boost_filesystem-vc120)
- * [boost\_iostreams-vc120](http://www.nuget.org/packages/boost_iostreams-vc120)
- * [boost\_locale-vc120](http://www.nuget.org/packages/boost_locale-vc120)
- * [boost\_log-vc120](http://www.nuget.org/packages/boost_log-vc120)
- * [boost\_program\_options-vc120](http://www.nuget.org/packages/boost_program_options-vc120)
- * [boost\_regex-vc120](http://www.nuget.org/packages/boost_regex-vc120)
- * [boost\_system-vc120](http://www.nuget.org/packages/boost_system-vc120)
- * [boost\_thread-vc120](http://www.nuget.org/packages/boost_thread-vc120)
- * [boost\_unit\_test\_framework-vc120](http://www.nuget.org/packages/boost_unit_test_framework-vc120)
-* Packages maintained by [evoskuil](http://www.nuget.org/profiles/evoskuil)
- * [secp256k1\_vc120](http://www.nuget.org/packages/secp256k1_vc120)
-
-#### Build Bitprim Projects
-
-After cloning the the repository the bitprim build can be performed manually (from within Visual Studio) or using the `buildall.bat` script provided in the `builds\msvc\build\` subdirectory. The scripts automatically download the required NuGet packages.
-
-> Tip: The `buildall.bat` script builds *all* valid configurations. The build time can be significantly reduced by disabling all but the desired configuration in `buildbase.bat`.
-
-> The bitprim dynamic (DLL) build configurations do not compile, as the exports have not yet been fully implemented. These are currently disabled in the build scripts but you will encounter numerous errors if you build then manually.
-
-#### Optional: Building secp256k1
-
-The secp256k1 package above is maintained using the same [Visual Studio template](https://github.com/evoskuil/visual-studio-template) as all bitprim libraries. If so desired it can be built locally, in the same manner as bitprim.
-
-* [bitprim/secp256k1/version4](https://github.com/bitprim/secp256k1/tree/version4)
-
-This change is properly accomplished by disabling the "NuGet Dependencies" in the Visual Studio properties user interface and then importing `secp256k1.import.props`, which references `secp256k1.import.xml`.
+```
+TODO:Windows Install
+```
