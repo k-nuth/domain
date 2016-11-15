@@ -308,7 +308,7 @@ before_script:
 
 script:
 
-  - (cd build && make tests && make -j2 && make install)
+  - (cd build && make -j2 && make install)
   # - make tests -k
 
   # ############################################################################
