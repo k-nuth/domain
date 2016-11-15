@@ -213,23 +213,16 @@ install:
       brew unlink cmake
       brew install cmake
     fi
-    
-
-  # Install boost 1.58+
+  ############################################################################
+  # Install Boost
+  ############################################################################  
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       sudo apt-get -qq update
       sudo apt-get install -y libboost-all-dev
     fi
     #boost 1.60 already installed in osx
-    #brew install boost
-
-  ############################################################################
-  # Install Boost
-  ############################################################################  
-  
-  #- sudo apt-get -y install libboost-{chrono,program-options,date-time,thread,system,filesystem,regex,serialization,iostreams,locale}1.58{-dev,.0}
-    
+    #brew install boost    
   ############################################################################
   # Install ZeroMQ
   ############################################################################    
@@ -247,6 +240,23 @@ install:
   ############################################################################
   # Ldconfig only in linux
   ############################################################################
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      sudo ldconfig      
+    fi
+    
+  ############################################################################
+  # secp256k1
+  ############################################################################
+  - git clone https://github.com/bitprim/secp256k1.git
+  - cd secp256k1
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make -j2
+  - sudo make install
+  - cd ..
+  - cd ..
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       sudo ldconfig      
