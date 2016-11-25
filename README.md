@@ -36,7 +36,7 @@ $ sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.8 50
 ```
 Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Automake minimum 1.14) and git:
 ```sh
-$ sudo apt-get install build-essential autoconf automake libtool pkg-config git 
+$ sudo apt-get install build-essential autoconf automake libtool pkg-config git
 ```
 Next install the [Boost](http://www.boost.org) (minimum 1.56.0) development package:
 ```sh
@@ -48,20 +48,12 @@ $ wget https://cmake.org/files/v3.7/cmake-3.7.0-rc1.tar.gz
 $ tar -xvzf cmake-3.7.0-rc1.tar.gz
 $ cd cmake-3.7.0-rc1
 $ ./bootstrap
-$ make 
+$ make
 $ sudo make install
 $ sudo ln -s /usr/local/bin/cmake /usr/bin/cmake
 ```
-Next install the [bitprim/secp256k1]((https://github.com/bitprim/secp256k1)):
-```sh
-$ git clone https://github.com/bitprim/secp256k1.git
-$ cd secp256k1
-$	mkdir build
-$	cd build
-$	cmake .. -DENABLE_MODULE_RECOVERY=ON 
-$	make -j2 --silent
-$	sudo make install --silent
-```
+
+Next install [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
 
 Finally, install bitprim-core:
 ```sh
@@ -112,16 +104,9 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ brew install boost
 ```
-Next install the [bitprim/secp256k1]((https://github.com/bitprim/secp256k1)):
-```sh
-$ git clone https://github.com/bitprim/secp256k1.git
-$ cd secp256k1
-$	mkdir build
-$	cd build
-$	cmake .. -DENABLE_MODULE_RECOVERY=ON 
-$	make -j2 --silent
-$	sudo make install --silent
-```
+
+Next install [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
+
 Finally install bitprim:
 ```sh
 $ git clone https://github.com/bitprim/bitprim-core
@@ -146,16 +131,9 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ sudo port install boost -no_single -no_static -python27
 ```
-Next install the [bitprim/secp256k1]((https://github.com/bitprim/secp256k1)):
-```sh
-$ git clone https://github.com/bitprim/secp256k1.git
-$ cd secp256k1
-$	mkdir build
-$	cd build
-$	cmake .. -DENABLE_MODULE_RECOVERY=ON 
-$	make -j2 --silent
-$	sudo make install --silent
-```
+
+Next install [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
+
 Finally install bitprim:
 ```sh
 $ git clone https://github.com/bitprim/bitprim-core
