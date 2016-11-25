@@ -4,17 +4,9 @@
 
 *Bitprim Core*
 
-**License Overview**
-
-All files in this repository fall under the license specified in [COPYING](COPYING). The project is licensed as [AGPL with a lesser clause](https://wiki.unsystem.net/en/index.php/Libbitcoin/License). It may be used within a proprietary project, but the core library and any changes to it must be published online. Source code for this library must always remain free for everybody to access.
-
-**About Bitprim**
-
-The Bitprim toolkit is a set of cross platform C++ libraries for building bitcoin applications. The toolkit consists of several libraries, most of which depend on the foundational [bitprim-core](https://github.com/bitprim/bitprim-core) library. Each library's repository can be cloned and built using common [automake](http://www.gnu.org/software/automake) 1.14+ instructions. 
-
 ## Installation
 
-A minimal bitprim build requires boost and libsecp256k1. The [bitprim/secp256k1](https://github.com/bitprim/secp256k1) repository is forked from [bitcoin-core/secp256k1](https://github.com/bitcoin-core/secp256k1) in order to control for changes and to incorporate the necessary Visual Studio build. The original repository can be used directly but recent changes to the public interface may cause build breaks. The `--enable-module-recovery` switch is required.
+A build requires boost and libsecp256k1. The [bitprim/secp256k1](https://github.com/bitprim/secp256k1) repository is forked from [bitcoin-core/secp256k1](https://github.com/bitcoin-core/secp256k1) in order to control for changes and to incorporate the necessary Visual Studio build. The original repository can be used directly but recent changes to the public interface may cause build breaks. The `--enable-module-recovery` switch is required.
 
 Detailed instructions are provided below.
   * [Debian/Ubuntu](#debianubuntu)
@@ -46,39 +38,10 @@ Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Aut
 ```sh
 $ sudo apt-get install build-essential autoconf automake libtool pkg-config git 
 ```
-
-If you intend to use libbbitcoin-consensus (this is the default), you will also need libcrypto:
-```sh
-$ sudo apt-get install libssl-dev
-```
-
 Next install the [Boost](http://www.boost.org) (minimum 1.56.0) development package:
 ```sh
 $ sudo apt-get install libboost-all-dev
 ```
-Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
-```sh
-$ git clone https://github.com/zeromq/libzmq
-$ cd libzmq
-$ ./autogen.sh && ./configure && make -j 4
-$ make check
-$ sudo make install
-$ sudo ldconfig
-```
-
-Next install the [Protobuff](https://github.com/google/protobuf) (minimum 3.0.0) development package:
-```sh
-$ sudo apt-get install autoconf automake libtool curl make g++ unzip
-$ git clone https://github.com/google/protobuf
-$ cd protobuf
-$ ./autogen.sh 
-$ ./configure
-$ make
-$ make check
-$ sudo make install
-$ sudo ldconfig
-```
-
 Next install the [CMake](https://cmake.org/) (minimum 3.7.0-rc1) development package:
 ```sh
 $ wget https://cmake.org/files/v3.7/cmake-3.7.0-rc1.tar.gz
@@ -89,19 +52,29 @@ $ make
 $ sudo make install
 $ sudo ln -s /usr/local/bin/cmake /usr/bin/cmake
 ```
-
-Finally, install bitprim-build:
+Next install the [bitprim/secp256k1]((https://github.com/bitprim/secp256k1)):
 ```sh
-$ git clone --recursive https://github.com/bitprim/bitprim-build/
-$ cd bitprim-build
+$ git clone https://github.com/bitprim/secp256k1.git
+$ cd secp256k1
+$	mkdir build
+$	cd build
+$	cmake .. -DENABLE_MODULE_RECOVERY=ON 
+$	make -j2 --silent
+$	sudo make install --silent
+```
+
+Finally, install bitprim-core:
+```sh
+$ git clone https://github.com/bitprim/bitprim-core
+$ cd bitprim-core
 $ mkdir build
 $ cd build
-$ cmake .. -G "Unix Makefiles" -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Release
+$ cmake .. -G "Unix Makefiles" -DWITH_TESTS=OFF -DWITH_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"
 $ make
 $ sudo make install
 $ sudo ldconfig
 ```
-Bitprim is now installed in `/usr/local/`.
+Bitprim-core is now installed in `/usr/local/`.
 
 ### Macintosh
 
@@ -139,17 +112,25 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ brew install boost
 ```
-Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
-```
-TODO: ZeroMQ Mac Install
-```
-Next install the [Protobuff](https://github.com/google/protobuf) (minimum 3.0.0) development package:
-```
-TODO: Protobuff Mac Install
+Next install the [bitprim/secp256k1]((https://github.com/bitprim/secp256k1)):
+```sh
+$ git clone https://github.com/bitprim/secp256k1.git
+$ cd secp256k1
+$	mkdir build
+$	cd build
+$	cmake .. -DENABLE_MODULE_RECOVERY=ON 
+$	make -j2 --silent
+$	sudo make install --silent
 ```
 Finally install bitprim:
-```
-TODO: Mac Install
+```sh
+$ git clone https://github.com/bitprim/bitprim-core
+$ cd bitprim-core
+$ mkdir build
+$ cd build
+$ cmake .. -DWITH_TESTS=OFF -DWITH_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"
+$ make
+$ sudo make install
 ```
 Bitprim is now installed in `/usr/local/`.
 
@@ -165,32 +146,27 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ sudo port install boost -no_single -no_static -python27
 ```
-Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
-```
-TODO: ZeroMQ MacPorts Install
-```
-Next install the [Protobuff](https://github.com/google/protobuf) (minimum 3.0.0) development package:
-```
-TODO: Protobuff MacPorts Install
+Next install the [bitprim/secp256k1]((https://github.com/bitprim/secp256k1)):
+```sh
+$ git clone https://github.com/bitprim/secp256k1.git
+$ cd secp256k1
+$	mkdir build
+$	cd build
+$	cmake .. -DENABLE_MODULE_RECOVERY=ON 
+$	make -j2 --silent
+$	sudo make install --silent
 ```
 Finally install bitprim:
-```
-TODO: MacPorts Install
+```sh
+$ git clone https://github.com/bitprim/bitprim-core
+$ cd bitprim-core
+$ mkdir build
+$ cd build
+$ cmake .. -DWITH_TESTS=OFF -DWITH_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"
+$ make
+$ sudo make install
 ```
 Bitprim is now installed in `/usr/local/`.
-
-#### Notes
-
-The install script itself is commented so that the manual build steps for each dependency can be inferred by a developer.
-
-You can run the install script from any directory on your system. By default this will build bitprim in a subdirectory named `build-bitprim` and install it to `/usr/local/`. The install script requires `sudo` only if you do not have access to the installation location, which you can change using the `--prefix` option on the installer command line.
-
-The build script clones, builds and installs two unpackaged repositories, namely:
-
-- [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
-- [bitprim/bitprim-core](https://github.com/bitprim/bitprim-core)
-
-The script builds from the head of their `version4` and `version2` branches respectively. The `master` branch is a staging area for changes. The version branches are considered release quality.
 
 ### Windows
 ```
