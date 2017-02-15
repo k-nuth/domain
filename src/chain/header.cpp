@@ -399,6 +399,12 @@ hash_digest header::hash() const
 
     return hash;
 }
+#ifdef LITECOIN
+hash_digest header::litecoin_proof_of_work_hash() const
+{
+    return litecoin_hash(to_data());
+}
+#endif
 
 // Validation helpers.
 //-----------------------------------------------------------------------------
@@ -416,6 +422,14 @@ bool header::is_valid_time_stamp() const
 bool header::is_valid_proof_of_work() const
 {
     // TODO: This should be statically-initialized (optimization).
+    #ifdef LITECOIN
+    hash_number target;
+    if (!target.set_compact(bits_) || target > pow_limit) {
+        return false;
+    }
+    hash_number value(litecoin_proof_of_work_hash());
+    return value <= target;
+    #else
     hash_number maximum;
     if (!maximum.set_compact(max_work_bits))
         return false;
@@ -426,6 +440,7 @@ bool header::is_valid_proof_of_work() const
 
     hash_number value(hash());
     return value <= target;
+    #endif
 }
 
 // Validation.

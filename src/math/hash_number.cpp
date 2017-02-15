@@ -57,6 +57,11 @@ hash_digest hash_number::hash() const
     std::copy_n(hash_.begin(), hash_size, out.begin());
     return out;
 }
+#ifdef LITECOIN
+unsigned int hash_number::bits() const {
+    return hash_.bits();
+}
+#endif
 
 // Copy Operators.
 
@@ -71,6 +76,13 @@ hash_number hash_number::operator<<(uint32_t value)
 {
     return hash_number(*this) <<= value;
 }
+#ifdef LITECOIN
+//Note: for Litecoin use
+hash_number hash_number::operator>>(uint32_t value)
+{
+    return hash_number(*this) >>= value;
+}
+#endif
 
 hash_number hash_number::operator/(const hash_number& value)
 {
@@ -101,7 +113,14 @@ hash_number& hash_number::operator<<=(uint32_t value)
     hash_ <<= value;
     return *this;
 }
-
+#ifdef LITECOIN
+//Note: for Litecoin use
+hash_number& hash_number::operator>>=(uint32_t value)
+{
+    hash_ >>= value;
+    return *this;
+}
+#endif
 hash_number& hash_number::operator/=(const hash_number& value)
 {
     hash_ /= value.hash_;

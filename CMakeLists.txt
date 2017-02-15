@@ -37,6 +37,16 @@ if (WITH_PNG)
   add_definitions(-DWITH_PNG)
 endif()
 
+# Implement --with-litecoin.
+#------------------------------------------------------------------------------
+option(WITH_LITECOIN "Compile with Litecoin support." OFF)
+if (WITH_LITECOIN)
+  add_definitions(-DWITH_LITECOIN)
+  add_definitions(-DLITECOIN)
+endif()
+
+
+
 # Implement --with-qrencode and output ${qrencode}.
 #------------------------------------------------------------------------------
 option(WITH_QRENCODE "Compile with QREncode." OFF)
@@ -74,6 +84,13 @@ if (WITH_PNG)
     INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
     INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
     INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
+endif()
+
+
+# Require OpenSSL
+#------------------------------------------------------------------------------
+if (WITH_LITECOIN)
+  find_package(OpenSSL 1.0.1 REQUIRED)
 endif()
 
 # Require rt if on linux and output ${rt_LIBS}.
@@ -272,6 +289,12 @@ endif()
 #  src/math/external/sha512.h
 #  src/math/external/zeroize.c
 #  src/math/external/zeroize.h
+
+#  src/math/external/scrypt.cpp
+#  src/math/external/scrypt.h
+#  src/math/external/scrypt-sse2.cpp
+
+
 #  src/message/address.cpp
 #  src/message/alert.cpp
 #  src/message/alert_payload.cpp
@@ -415,6 +438,7 @@ add_library(bitprim-core ${MODE}
         src/math/external/pbkdf2_sha256.h
         src/math/external/pkcs5_pbkdf2.h
         src/math/external/ripemd160.h
+        src/math/external/scrypt.h
         src/math/external/sha1.h
         src/math/external/sha256.h
         src/math/external/sha512.h
@@ -427,6 +451,8 @@ add_library(bitprim-core ${MODE}
         src/math/external/pbkdf2_sha256.c
         src/math/external/pkcs5_pbkdf2.c
         src/math/external/ripemd160.c
+        src/math/external/scrypt.cpp
+        src/math/external/scrypt-sse2.cpp
         src/math/external/sha1.c
         src/math/external/sha256.c
         src/math/external/sha512.c
@@ -528,6 +554,10 @@ target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC)
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
+if (WITH_LITECOIN)
+  target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+endif()
+
 target_link_libraries(bitprim-core PUBLIC
   ${Boost_CHRONO_LIBRARY}
   ${Boost_DATE_TIME_LIBRARY}
@@ -544,6 +574,14 @@ target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 if (WITH_PNG)
   target_link_libraries(bitprim-core PUBLIC png)
+endif()
+
+if (WITH_LITECOIN)
+  target_link_libraries(bitprim-core PUBLIC ${OPENSSL_CRYPTO_LIBRARY})
+
+  # OPENSSL_CRYPTO_LIBRARY
+  # OPENSSL_SSL_LIBRARY
+  # OPENSSL_LIBRARIES
 endif()
 
 target_link_libraries(bitprim-core PUBLIC secp256k1)

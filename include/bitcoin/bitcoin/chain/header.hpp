@@ -136,6 +136,9 @@ public:
     void set_nonce(uint32_t value);
 
     hash_digest hash() const;
+    #ifdef LITECOIN
+    hash_digest litecoin_proof_of_work_hash() const;
+    #endif
 
     // Validation.
     //-----------------------------------------------------------------------------

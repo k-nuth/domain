@@ -44,15 +44,24 @@ public:
     hash_digest hash() const;
     uint32_t compact() const;
     bool set_compact(uint32_t value);
+    #ifdef LITECOIN
+    unsigned int bits() const;
+    #endif
 
     /// Copy Operators.
     hash_number operator~() const;
     hash_number operator<<(uint32_t value);
+    #ifdef LITECOIN
+    hash_number operator>>(uint32_t value);
+    #endif
     hash_number operator/(const hash_number& value);
     hash_number operator+(const hash_number& value);
 
     /// Change Operators.
     hash_number& operator<<=(uint32_t value);
+    #ifdef LITECOIN
+    hash_number& operator>>=(uint32_t value);
+    #endif
     hash_number& operator*=(uint32_t value);
     hash_number& operator/=(uint32_t value);
     hash_number& operator/=(const hash_number& value);

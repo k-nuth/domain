@@ -164,6 +164,30 @@ uint32_t chain_state::work_required(const data& values)
 
 uint32_t chain_state::work_required_retarget(const data& values)
 {
+    #ifdef LITECOIN
+    //*************************************************************************
+    // CONSENSUS: set_compact can fail but this is unguarded.
+    //*************************************************************************
+    hash_number retarget_new;
+    retarget_new.set_compact(bits_high(values));
+    bool shift = retarget_new.bits() > 235;
+    if (shift) {
+        retarget_new >>= 1;
+    }
+    //*************************************************************************
+    // CONSENSUS: multiplication overflow potential.
+    //*************************************************************************
+    const int64_t high = timestamp_high(values);
+    const int64_t retarget = values.timestamp.retarget;
+    std::cout << "high:            " << high << "\n";
+    const int64_t actual_timespan = range_constrain(high - retarget, (int64_t)min_timespan, (int64_t)max_timespan);
+    retarget_new *= actual_timespan;
+    retarget_new /= target_timespan_seconds;
+    if (shift) {
+        retarget_new <<= 1;
+    }
+    return retarget_new > pow_limit ? pow_limit.compact() : retarget_new.compact();
+    #else
     //*************************************************************************
     // CONSENSUS: set_compact can fail but this is unguarded.
     //*************************************************************************
@@ -180,6 +204,7 @@ uint32_t chain_state::work_required_retarget(const data& values)
     retarget /= target_timespan_seconds;
 
     return retarget > maximum ? maximum.compact() : retarget.compact();
+    #endif
 }
 
 // Get the bounded total time spanning the highest 2016 blocks.

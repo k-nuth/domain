@@ -50,7 +50,49 @@ namespace libbitcoin {
 namespace chain {
 
 using namespace bc::config;
+#ifdef LITECOIN
+//Litecoin mainnet genesis block
+static const std::string encoded_mainnet_genesis_block =
+    "01000000" //version
+    "0000000000000000000000000000000000000000000000000000000000000000" //prev hash
+    "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97" //merkle root le *
+    "b9aa8e4e" //timestamp le *
+    "f0ff0f1e" //bits =
+    "cd513f7c" //nonce X
+    "01" //nro txs
+    "01000000" //version
+    "01" // inputs
+    "0000000000000000000000000000000000000000000000000000000000000000ffffffff" //prev output
+    "48" //script length
+    "04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536" //scriptsig
+    "ffffffff" //sequence
+    "01" //outputs
+    "00f2052a01000000" //50 btc
+    "43" //pk_script length
+    "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac" //pk_script
+    "00000000"; //locktime
 
+//Litecoin testnet genesis block
+static const std::string encoded_testnet_genesis_block =
+    "01000000" //version
+    "0000000000000000000000000000000000000000000000000000000000000000" //prev hash
+    "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97" //merkle root le
+    "f6028c4e" //timestamp le
+    "f0ff0f1e" //bits
+    "38c3f616" //nonce
+    "01" //nro txs
+    "01000000" //version
+    "01" // inputs
+    "0000000000000000000000000000000000000000000000000000000000000000ffffffff" //prev output
+    "48" //script length
+    "04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536" //scriptsig
+    "ffffffff" //sequence
+    "01" //outputs
+    "00f2052a01000000" //50 btc
+    "43" //pk_script length
+    "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac" //pk_script
+    "00000000"; //locktime
+#else
 static const std::string encoded_mainnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
@@ -90,7 +132,7 @@ static const std::string encoded_testnet_genesis_block =
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000";
-
+#endif
 // Constructors.
 //-----------------------------------------------------------------------------
 
@@ -708,7 +750,7 @@ code block::accept(const chain_state& state) const
         std::cout << "too many block embedded signature operations for block: " << encode_hash(hash()) << '\n';
     }
     //else  //TODO: fpelliccioni: re-enable when merge of libbitcoin be done.
-        return accept_transactions(state);    
+        return accept_transactions(state);
 }
 
 code block::connect() const

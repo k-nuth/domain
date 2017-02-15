@@ -81,15 +81,29 @@ BC_CONSTEXPR size_t max_block_sigops = max_block_size / 50;
 BC_CONSTEXPR size_t coinbase_maturity = 100;
 BC_CONSTEXPR size_t time_stamp_future_hours = 2;
 BC_CONSTEXPR size_t locktime_threshold = 500000000;
+#ifdef LITECOIN
+// BC_CONSTEXPR size_t max_work_bits = 0x1e0ffff0;   //litecoin: 0x1d00ffff -> 0x1e0ffff0
+//Litecoin:
+/*BC_CONSTEXPR*/ const hash_number pow_limit(hash_digest{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00});
+/*BC_CONSTEXPR*/ const size_t max_work_bits = pow_limit.compact();
+#else
 BC_CONSTEXPR size_t max_work_bits = 0x1d00ffff;
+#endif
 
 // Timespan constants.
 //-----------------------------------------------------------------------------
 
 BC_CONSTEXPR uint32_t retargeting_factor = 4;
+#ifdef LITECOIN
+BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 15; //2.5*60=150
+BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15; //3.5 * 24 * 60 * 60 = 302400
+#else
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 60;
+BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60; //14 * 24 * 60 * 60 = 1209600
+#endif
+
 BC_CONSTEXPR uint32_t double_spacing_seconds = 2 * target_spacing_seconds;
-BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60;
+
 
 // The upper and lower bounds for the retargeting timespan.
 BC_CONSTEXPR uint32_t min_timespan =
@@ -97,7 +111,8 @@ BC_CONSTEXPR uint32_t min_timespan =
 BC_CONSTEXPR uint32_t max_timespan =
     target_timespan_seconds * retargeting_factor;
 
-// The target number of blocks for 2 weeks of work (2016 blocks).
+// Bitcoin:  The target number of blocks for 2 weeks of work (2016 blocks).
+// Litecoin: The target number of blocks for 3.5 days of work (2016 blocks).
 BC_CONSTEXPR size_t retargeting_interval =
     target_timespan_seconds / target_spacing_seconds;
 
@@ -175,7 +190,11 @@ BC_CONSTFUNC uint64_t initial_block_reward_satoshi()
     return bitcoin_to_satoshi(initial_block_reward_bitcoin);
 }
 
+#ifdef LITECOIN
+BC_CONSTEXPR uint64_t reward_interval = 840000;
+#else
 BC_CONSTEXPR uint64_t reward_interval = 210000;
+#endif
 BC_CONSTEXPR uint64_t recursive_money = 0x02540be3f5;
 BC_CONSTFUNC uint64_t max_money()
 {
