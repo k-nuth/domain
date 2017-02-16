@@ -233,7 +233,7 @@ endif()
 #  src/chain/script/conditional_stack.hpp
 #  src/chain/script/evaluation_context.cpp
 #  src/chain/script/evaluation_context.hpp
-#  src/chain/script/opcode.cpp
+#  src/chain/machine/opcode.cpp
 #  src/chain/script/operation.cpp
 #  src/chain/script/script.cpp
 #  src/config/authority.cpp
@@ -390,11 +390,11 @@ add_library(bitprim-core ${MODE}
         src/chain/output_point.cpp
         src/chain/point.cpp
         src/chain/point_iterator.cpp
-        src/chain/script/interpreter.cpp
-        src/chain/script/opcode.cpp
-        src/chain/script/operation.cpp
-        src/chain/script/program.cpp
-        src/chain/script/script.cpp
+        src/machine/interpreter.cpp
+        src/machine/opcode.cpp
+        src/machine/operation.cpp
+        src/machine/program.cpp
+        src/chain/script.cpp
         src/chain/transaction.cpp
         src/config/authority.cpp
         src/config/base16.cpp
@@ -419,17 +419,17 @@ add_library(bitprim-core ${MODE}
         src/log/file_collector.cpp
         src/log/file_collector_repository.cpp
         src/log/file_counter_formatter.cpp
-        src/log/sinks.cpp
+        src/log/sink.cpp
         src/math/checksum.cpp
         src/math/crypto.cpp
         src/math/elliptic_curve.cpp
         src/math/hash.cpp
         src/math/hash_number.cpp
-        src/math/script_number.cpp
+        # src/math/script_number.cpp
         src/math/secp256k1_initializer.cpp
         src/math/secp256k1_initializer.hpp
         src/math/stealth.cpp
-        src/math/uint256.cpp
+        # src/math/uint256.cpp
         src/math/external/aes256.h
         src/math/external/crypto_scrypt.h
         src/math/external/hmac_sha256.h
@@ -460,7 +460,7 @@ add_library(bitprim-core ${MODE}
         src/message/address.cpp
         src/message/alert.cpp
         src/message/alert_payload.cpp
-        src/message/block_message.cpp
+        # src/message/block_message.cpp
         src/message/block_transactions.cpp
         src/message/compact_block.cpp
         src/message/fee_filter.cpp
@@ -472,7 +472,7 @@ add_library(bitprim-core ${MODE}
         src/message/get_blocks.cpp
         src/message/get_data.cpp
         src/message/get_headers.cpp
-        src/message/header_message.cpp
+        # src/message/header_message.cpp
         src/message/headers.cpp
         src/message/heading.cpp
         src/message/inventory.cpp
@@ -485,9 +485,9 @@ add_library(bitprim-core ${MODE}
         src/message/pong.cpp
         src/message/prefilled_transaction.cpp
         src/message/reject.cpp
-        src/message/send_compact_blocks.cpp
+        # src/message/send_compact_blocks.cpp
         src/message/send_headers.cpp
-        src/message/transaction_message.cpp
+        # src/message/transaction_message.cpp
         src/message/verack.cpp
         src/message/version.cpp
         src/unicode/console_streambuf.cpp
@@ -513,7 +513,7 @@ add_library(bitprim-core ${MODE}
         src/utility/string.cpp
         src/utility/thread.cpp
         src/utility/threadpool.cpp
-        src/utility/variable_uint_size.cpp
+        # src/utility/variable_uint_size.cpp
         src/utility/work.cpp
         src/wallet/bitcoin_uri.cpp
         src/wallet/dictionary.cpp
@@ -719,7 +719,7 @@ add_executable(bitprim_core_test
         test/chain/point.cpp
         test/chain/point_iterator.cpp
         test/chain/satoshi_words.cpp
-        test/chain/script/opcode.cpp
+        test/chain/machine/opcode.cpp
         test/chain/script/operation.cpp
         test/chain/script/script.cpp
         test/chain/script/script.hpp
@@ -944,7 +944,7 @@ install(TARGETS bitprim-core
 #  bitcoin/bitcoin/chain/stealth.hpp
 #  bitcoin/bitcoin/chain/transaction.hpp
 #  # include_bitcoin_bitcoin_chain_script_HEADERS =
-#  bitcoin/bitcoin/chain/script/opcode.hpp
+#  bitcoin/bitcoin/chain/machine/opcode.hpp
 #  bitcoin/bitcoin/chain/script/operation.hpp
 #  bitcoin/bitcoin/chain/script/script.hpp
 #  # include_bitcoin_bitcoin_config_HEADERS =
@@ -1113,8 +1113,8 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/chain/output_point.hpp
     bitcoin/bitcoin/chain/point.hpp
     bitcoin/bitcoin/chain/point_iterator.hpp
-    bitcoin/bitcoin/chain/script/interpreter.hpp
-    bitcoin/bitcoin/chain/script/opcode.hpp
+    bitcoin/bitcoin/machine/interpreter.hpp
+    bitcoin/bitcoin/chain/machine/opcode.hpp
     bitcoin/bitcoin/chain/script/operation.hpp
     bitcoin/bitcoin/chain/script/program.hpp
     bitcoin/bitcoin/chain/script/rule_fork.hpp
@@ -1153,7 +1153,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/impl/formats/base_58.ipp
     bitcoin/bitcoin/impl/math/checksum.ipp
     bitcoin/bitcoin/impl/math/hash.ipp
-    bitcoin/bitcoin/impl/script/interpreter.ipp
+    bitcoin/bitcoin/impl/machine/interpreter.ipp
     bitcoin/bitcoin/impl/utility/array_slice.ipp
     bitcoin/bitcoin/impl/utility/collection.ipp
     bitcoin/bitcoin/impl/utility/data.ipp
@@ -1172,7 +1172,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/log/file_collector_repository.hpp
     bitcoin/bitcoin/log/file_counter_formatter.hpp
     bitcoin/bitcoin/log/severity.hpp
-    bitcoin/bitcoin/log/sinks.hpp
+    bitcoin/bitcoin/log/sink.hpp
     bitcoin/bitcoin/log/sources.hpp
     bitcoin/bitcoin/math/checksum.hpp
     bitcoin/bitcoin/math/crypto.hpp
