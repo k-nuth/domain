@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2016 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_NOTIFIER_IPP
 #define LIBBITCOIN_NOTIFIER_IPP
@@ -100,7 +99,7 @@ void notifier<Key, Args...>::stop()
 }
 
 template <typename Key, typename... Args>
-void notifier<Key, Args...>::subscribe(handler handler, const Key& key,
+void notifier<Key, Args...>::subscribe(handler&& notify, const Key& key,
     const asio::duration& duration, Args... stopped_args)
 {
     // Critical Section
@@ -113,21 +112,28 @@ void notifier<Key, Args...>::subscribe(handler handler, const Key& key,
 
         if (it != subscriptions_.end())
         {
-            const auto expires = asio::steady_clock::now() + duration;
+            // Do not make const as that voids the move.
+            auto expires = asio::steady_clock::now() + duration;
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             subscribe_mutex_.unlock_upgrade_and_lock();
-            it->second.expires = expires;
+            it->second.expires = std::move(expires);
             subscribe_mutex_.unlock();
             //---------------------------------------------------------------------
             return;
         }
         else if (limit_ == 0 || subscriptions_.size() < limit_)
         {
-            const auto expires = asio::steady_clock::now() + duration;
+            auto value = notifier<Key, Args...>::value
+            {
+                std::forward<handler>(notify),
+                asio::steady_clock::now() + duration
+            };
+
+            // Do not make const as that voids the move.
+            auto pair = std::make_pair(key, std::move(value));
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             subscribe_mutex_.unlock_upgrade_and_lock();
-            subscriptions_.emplace(
-                std::make_pair(key, value{ handler, expires }));
+            subscriptions_.emplace(std::move(pair));
             subscribe_mutex_.unlock();
             //---------------------------------------------------------------------
             return;
@@ -138,7 +144,7 @@ void notifier<Key, Args...>::subscribe(handler handler, const Key& key,
     ///////////////////////////////////////////////////////////////////////////
 
     // Limit exceeded and stopped share the same return arguments.
-    handler(stopped_args...);
+    notify(stopped_args...);
 }
 
 template <typename Key, typename... Args>
@@ -242,6 +248,9 @@ void notifier<Key, Args...>::do_invoke(Args... args)
     // Invoke subscribers from temporary map and resubscribe as indicated.
     for (const auto& entry: subscriptions)
     {
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // DEADLOCK RISK, notify must not return to invoke.
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (entry.second.notify(args...))
         {
             // Critical Section

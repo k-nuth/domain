@@ -1,26 +1,26 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/get_block_transactions.hpp>
 
 #include <initializer_list>
 #include <bitcoin/bitcoin/math/limits.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -157,12 +157,12 @@ void get_block_transactions::to_data(uint32_t version,
         sink.write_variable_little_endian(element);
 }
 
-uint64_t get_block_transactions::serialized_size(uint32_t version) const
+size_t get_block_transactions::serialized_size(uint32_t version) const
 {
-    uint64_t size = hash_size + variable_uint_size(indexes_.size());
+    auto size = hash_size + message::variable_uint_size(indexes_.size());
 
     for (const auto& element: indexes_)
-        size += variable_uint_size(element);
+        size += message::variable_uint_size(element);
 
     return size;
 }

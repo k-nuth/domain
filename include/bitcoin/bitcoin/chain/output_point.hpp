@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2016 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_CHAIN_OUTPUT_POINT_HPP
 #define LIBBITCOIN_CHAIN_OUTPUT_POINT_HPP
@@ -25,7 +24,7 @@
 #include <vector>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/chain/point.hpp>
-#include <bitcoin/bitcoin/chain/script/script.hpp>
+#include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
@@ -36,9 +35,8 @@ class BC_API output_point
 {
 public:
 
-    // This validation data IS copied on output_point copy/move.
-    // These properties facilitate block and transaction validation.
-    struct validation
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
+    struct validation_type
     {
         /// This is a .height sentinel.
         static const size_t not_specified;
@@ -56,7 +54,7 @@ public:
         /// This must be set to not_specified if the input is coinbase.
         /// This must be set to not_specified if the output is non-coinbase.
         /// This may be set to not_specified if the prevout is spent.
-        size_t height = validation::not_specified;
+        size_t height = validation_type::not_specified;
 
         /// The output cache contains the output referenced by the input point.
         /// If the cache.value is not_found then the output has not been found.
@@ -105,8 +103,8 @@ public:
     /// True if the previous output is mature enough to spend from target.
     bool is_mature(size_t target_height) const;
 
-    // These fields do not participate in serialization or comparison.
-    mutable validation validation;
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
+    mutable validation_type validation;
 
 protected:
     // So that input may call reset from its own.

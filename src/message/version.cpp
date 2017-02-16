@@ -1,25 +1,25 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/version.hpp>
 
 #include <algorithm>
+#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
@@ -155,18 +155,22 @@ bool version::from_data(uint32_t version, reader& source)
     user_agent_ = source.read_string();
     start_height_ = source.read_4_bytes_little_endian();
 
-    const auto effective_version = std::min(version, value_);
-    const auto before_relay = (effective_version < level::bip37);
+    // Nodes have no way to know if their peers supports relay, so it is always
+    // sent based on the version of the sender. This requires older protocols
+    // to have clairvoyance, or allow arbitrary extra bytes (bad). So we must
+    // read the extra byte even if our protocol level should not understand it.
+    // However if we are below bip37 we ignore the peer value and set true.
 
-    // Versions of /Satoshi:0.8.x/ parse but do not send the relay byte.
-    // This is undocumented and was resolved in /Satoshi:0.9.0/.
-    const auto buggy1 = (value_ == level::bip37 && source.is_exhausted());
+    // The /Satoshi:0.8.x/ node (70001) reads (but does not send) the relay byte.
+    // This bug was reported to bitcoin.org for documentation.
+    const auto own_bip37 = (version >= level::bip37);
 
-    // The /Satoshi:1.1.1/ node appears to be a fork of /Satoshi:0.8.x/.
-    // This presents a protocol version of 70006 while not including relay.
-    const auto buggy2 = (value_ == 70006 && source.is_exhausted());
+    // The /Satoshi:0.9.x/ node (70002) sends (and reads) the relay byte.
+    const auto peer_bip37 = (value_ >= level::bip61);
 
-    relay_ = (buggy1 || buggy2 || before_relay || (source.read_byte() != 0));
+    const auto read_relay = !peer_bip37 || (source.read_byte() != 0);
+
+    relay_ = (!own_bip37 || !peer_bip37 || read_relay);
 
     // HACK: disabled check due to inconsistent node implementation.
     // The protocol expects duplication of the sender's services.
@@ -212,16 +216,16 @@ void version::to_data(uint32_t version, writer& sink) const
         sink.write_byte(relay_ ? 1 : 0);
 }
 
-uint64_t version::serialized_size(uint32_t version) const
+size_t version::serialized_size(uint32_t version) const
 {
-    auto size = 
+    auto size =
         sizeof(value_) +
         sizeof(services_) +
         sizeof(timestamp_) +
         address_receiver_.serialized_size(version, false) +
         address_sender_.serialized_size(version, false) +
         sizeof(nonce_) +
-        variable_uint_size(user_agent_.size()) + user_agent_.size() +
+        message::variable_uint_size(user_agent_.size()) + user_agent_.size() +
         sizeof(start_height_);
 
     if (value_ >= level::bip37)

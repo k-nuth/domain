@@ -1,29 +1,30 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_WALLET_PAYMENT_ADDRESS_HPP
 #define LIBBITCOIN_WALLET_PAYMENT_ADDRESS_HPP
 
 #include <algorithm>
+#include <iostream>
 #include <cstdint>
+#include <memory>
 #include <string>
-#include <bitcoin/bitcoin/chain/script/script.hpp>
+#include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/math/checksum.hpp>
@@ -35,7 +36,7 @@
 
 namespace libbitcoin {
 namespace wallet {
-    
+
 static BC_CONSTEXPR size_t payment_size = 1u + short_hash_size + checksum_size;
 typedef byte_array<payment_size> payment;
 
@@ -45,6 +46,11 @@ class BC_API payment_address
 public:
     static const uint8_t mainnet_p2kh;
     static const uint8_t mainnet_p2sh;
+
+    static const uint8_t testnet_p2kh;
+    static const uint8_t testnet_p2sh;
+
+    typedef std::shared_ptr<payment_address> ptr;
 
     /// Extract a payment address from an input or output script.
     /// The address will be invalid if and only if the script type is not

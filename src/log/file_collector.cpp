@@ -314,7 +314,7 @@ void file_collector::store_file(filesystem::path const& src_path)
     BOOST_LOG_EXPR_IF_MT(boost::lock_guard<boost::mutex> lock(mutex_);)
 
     // Check if an old file should be erased
-    size_t free_space = min_free_space_ ?
+    uintmax_t free_space = min_free_space_ ?
         filesystem::space(storage_dir_).available : 0;
 
     file_list::iterator it = files_.begin(), end = files_.end();
@@ -357,11 +357,11 @@ void file_collector::store_file(filesystem::path const& src_path)
 
 
 //! Scans the target directory for the files that have already been stored
-size_t file_collector::scan_for_files(
+uintmax_t file_collector::scan_for_files(
     boost::log::sinks::file::scan_method method,
     filesystem::path const& pattern, unsigned int* counter)
 {
-    size_t file_count = 0;
+    uintmax_t file_count = 0;
     if (method != boost::log::sinks::file::no_scan)
     {
         filesystem::path dir = storage_dir_;
@@ -386,7 +386,7 @@ size_t file_collector::scan_for_files(
 
             file_list files;
             filesystem::directory_iterator it(dir), end;
-            size_t total_size = 0;
+            uintmax_t total_size = 0;
             for (; it != end; ++it)
             {
                 file_info info;

@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
@@ -27,17 +26,17 @@ static bool all_valid(const chain::transaction::list& transactions)
 {
     auto valid = true;
 
-    for (const auto& tx : transactions)
+    for (const auto& tx: transactions)
     {
         valid &= tx.is_valid();
 
-        for (const auto& input : tx.inputs())
+        for (const auto& input: tx.inputs())
         {
             valid &= input.is_valid();
             valid &= input.script().is_valid();
         }
 
-        for (const auto& output : tx.outputs())
+        for (const auto& output: tx.outputs())
         {
             valid &= output.is_valid();
             valid &= output.script().is_valid();
@@ -47,7 +46,18 @@ static bool all_valid(const chain::transaction::list& transactions)
     return valid;
 }
 
-BOOST_AUTO_TEST_SUITE(block_tests)
+BOOST_AUTO_TEST_SUITE(chain_block_tests)
+
+BOOST_AUTO_TEST_CASE(block__proof1__genesis_mainnet__expected)
+{
+    BOOST_REQUIRE_EQUAL(chain::block::proof(0x1d00ffff), 0x0000000100010001);
+}
+
+BOOST_AUTO_TEST_CASE(block__proof2__genesis_mainnet__expected)
+{
+    const auto block = chain::block::genesis_mainnet();
+    BOOST_REQUIRE_EQUAL(block.proof(), 0x0000000100010001);
+}
 
 BOOST_AUTO_TEST_CASE(block__locator_size__zero_backoff__returns_top_plus_one)
 {
@@ -203,7 +213,7 @@ BOOST_AUTO_TEST_CASE(block__is_valid_merkle_root__uninitialized__returns_true)
 BOOST_AUTO_TEST_CASE(block__is_valid_merkle_root__non_empty_tx_invalid_block__returns_false)
 {
     chain::block instance;
-    instance.transactions().emplace_back();
+    instance.set_transactions(chain::transaction::list{ chain::transaction{} });
     BOOST_REQUIRE(!instance.is_valid_merkle_root());
 }
 

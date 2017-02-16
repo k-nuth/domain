@@ -1,26 +1,26 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 
 #include <algorithm>
 #include <cstdint>
+#include <iostream>
 #include <string>
 #include <boost/program_options.hpp>
 #include <bitcoin/bitcoin/formats/base_58.hpp>
@@ -32,8 +32,13 @@
 namespace libbitcoin {
 namespace wallet {
 
+using namespace bc::machine;
+
 const uint8_t payment_address::mainnet_p2kh = 0x00;
 const uint8_t payment_address::mainnet_p2sh = 0x05;
+
+const uint8_t payment_address::testnet_p2kh = 0x6f;
+const uint8_t payment_address::testnet_p2sh = 0xc4;
 
 payment_address::payment_address()
   : valid_(false), version_(0), hash_(null_short_hash)
@@ -243,39 +248,39 @@ payment_address payment_address::extract(const chain::script& script,
     {
         // pay
         // --------------------------------------------------------------------
-        case chain::script_pattern::pay_multisig:
+        case script_pattern::pay_multisig:
             break;
-        case chain::script_pattern::pay_public_key:
+        case script_pattern::pay_public_key:
             BITCOIN_ASSERT(script.size() == 2);
             BITCOIN_ASSERT(
                 script[0].data().size() == ec_compressed_size ||
                 script[0].data().size() == ec_uncompressed_size);
             break;
-        case chain::script_pattern::pay_key_hash:
+        case script_pattern::pay_key_hash:
             BITCOIN_ASSERT(script.size() == 5);
             BITCOIN_ASSERT(script[2].data().size() == short_hash_size);
             break;
-        case chain::script_pattern::pay_script_hash:
+        case script_pattern::pay_script_hash:
             BITCOIN_ASSERT(script.size() == 3);
             BITCOIN_ASSERT(script[1].data().size() == short_hash_size);
             break;
 
         // sign
         // --------------------------------------------------------------------
-        case chain::script_pattern::sign_multisig:
+        case script_pattern::sign_multisig:
             break;
-        case chain::script_pattern::sign_public_key:
+        case script_pattern::sign_public_key:
             break;
-        case chain::script_pattern::sign_key_hash:
+        case script_pattern::sign_key_hash:
             BITCOIN_ASSERT(script.size() == 2);
             BITCOIN_ASSERT(
                 script[1].data().size() == ec_compressed_size ||
                 script[1].data().size() == ec_uncompressed_size);
             break;
-        case chain::script_pattern::sign_script_hash:
+        case script_pattern::sign_script_hash:
             BITCOIN_ASSERT(script.size() > 1);
             break;
-        case chain::script_pattern::non_standard:
+        case script_pattern::non_standard:
         default:;
     }
 
@@ -285,10 +290,10 @@ payment_address payment_address::extract(const chain::script& script,
         // pay
         // --------------------------------------------------------------------
 
-        case chain::script_pattern::pay_multisig:
+        case script_pattern::pay_multisig:
             return payment_address();
 
-        case chain::script_pattern::pay_public_key:
+        case script_pattern::pay_public_key:
         {
             const auto& data = script[0].data();
             if (data.size() == ec_compressed_size)
@@ -301,24 +306,24 @@ payment_address payment_address::extract(const chain::script& script,
             return payment_address(point, p2kh_version);
         }
 
-        case chain::script_pattern::pay_key_hash:
+        case script_pattern::pay_key_hash:
             hash = to_array<short_hash_size>(script[2].data());
             return payment_address(hash, p2kh_version);
 
-        case chain::script_pattern::pay_script_hash:
+        case script_pattern::pay_script_hash:
             hash = to_array<short_hash_size>(script[1].data());
             return payment_address(hash, p2sh_version);
-            
+
         // sign
         // --------------------------------------------------------------------
 
-        case chain::script_pattern::sign_multisig:
+        case script_pattern::sign_multisig:
             return payment_address();
 
-        case chain::script_pattern::sign_public_key:
+        case script_pattern::sign_public_key:
             return payment_address();
 
-        case chain::script_pattern::sign_key_hash:
+        case script_pattern::sign_key_hash:
         {
             const auto& data = script[1].data();
             if (data.size() == ec_compressed_size)
@@ -331,11 +336,11 @@ payment_address payment_address::extract(const chain::script& script,
             return payment_address(point, p2kh_version);
         }
 
-        case chain::script_pattern::sign_script_hash:
+        case script_pattern::sign_script_hash:
             hash = bitcoin_short_hash(script.back().data());
             return payment_address(hash, p2sh_version);
 
-        case chain::script_pattern::non_standard:
+        case script_pattern::non_standard:
         default:
             return payment_address();
     }

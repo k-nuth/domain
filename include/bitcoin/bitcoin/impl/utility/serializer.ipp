@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_SERIALIZER_IPP
 #define LIBBITCOIN_SERIALIZER_IPP
@@ -222,6 +221,15 @@ void serializer<Iterator>::skip(size_t size)
     iterator_ += size;
 }
 
+// non-interface
+//-------------------------------------------------------------------------
+
+template <typename Iterator>
+void serializer<Iterator>::write_delegated(functor write)
+{
+    write(*this);
+}
+
 template <typename Iterator>
 template <typename Buffer>
 void serializer<Iterator>::write_forward(const Buffer& data)
@@ -249,9 +257,6 @@ void serializer<Iterator>::write_little_endian(Integer value)
 {
     return write_forward(to_little_endian(value));
 }
-
-// Not part of writer interface, used for variable skipping of writer.
-//-----------------------------------------------------------------------------
 
 template <typename Iterator>
 size_t serializer<Iterator>::read_size_big_endian()

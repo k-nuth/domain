@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/ping.hpp>
 
@@ -53,13 +52,13 @@ ping ping::factory_from_data(uint32_t version, reader& source)
     return instance;
 }
 
-uint64_t ping::satoshi_fixed_size(uint32_t version)
+size_t ping::satoshi_fixed_size(uint32_t version)
 {
     return version < version::level::bip31 ? 0 : sizeof(nonce_);
 }
 
 ping::ping()
-  : ping(0)
+  : nonce_(0), nonceless_(false), valid_(false)
 {
 }
 
@@ -68,14 +67,8 @@ ping::ping(uint64_t nonce)
 {
 }
 
-// protected
-ping::ping(uint64_t nonce, bool valid)
-  : nonce_(nonce), nonceless_(false), valid_(valid)
-{
-}
-
 ping::ping(const ping& other)
-  : ping(other.nonce_, other.valid_)
+  : nonce_(other.nonce_), nonceless_(other.nonceless_), valid_(other.valid_)
 {
 }
 
@@ -95,15 +88,11 @@ bool ping::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    // All nonce values are valid so we cannot use a sentinel value.
+    valid_ = true;
     nonceless_ = (version < version::level::bip31);
 
     if (!nonceless_)
         nonce_ = source.read_8_bytes_little_endian();
-
-    // Must track valid because is_valid doesn't include version parameter.
-    // Otherwise when below bip31 then the object would always be invalid.
-    valid_ = source;
 
     if (!source)
         reset();
@@ -136,17 +125,17 @@ void ping::to_data(uint32_t version, writer& sink) const
 
 bool ping::is_valid() const
 {
-    return valid_ && (nonceless_ || nonce_ != 0);
+    return valid_ || nonceless_ || nonce_ != 0;
 }
 
 void ping::reset()
 {
     nonce_ = 0;
     nonceless_ = false;
-    valid_ = true;
+    valid_ = false;
 }
 
-uint64_t ping::serialized_size(uint32_t version) const
+size_t ping::serialized_size(uint32_t version) const
 {
     return satoshi_fixed_size(version);
 }

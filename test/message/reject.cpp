@@ -1,21 +1,20 @@
-/*
- * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
+/**
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
 
@@ -24,17 +23,35 @@
 
 using namespace bc;
 
-const std::string reason_text = "My Reason...";
+// /Satoshi:0.12.1/
+// Invalid reject payload from [46.101.110.115:8333] bad data stream
+// This contradicts docs in that it is tx with readable text vs. hash.
+// tx : nonstandard : too-long-mempool-chain : <empty>
+#define MALFORMED_REJECT "0274784016746f6f2d6c6f6e672d6d656d706f6f6c2d636861696e"
+
+static const std::string reason_text = "My Reason...";
+static const auto version_maximum = message::version::level::maximum;
 
 static const hash_digest data
 {
-    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-    0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-    0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F
+    {
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F
+    }
 };
 
 BOOST_AUTO_TEST_SUITE(reject_tests)
+
+BOOST_AUTO_TEST_CASE(reject__factory_from_data__tx_nonstandard_empty_data__valid)
+{
+    data_chunk payload;
+    BOOST_REQUIRE(decode_base16(payload, MALFORMED_REJECT));
+    const auto reject = message::reject::factory_from_data(version_maximum, payload);
+    BOOST_REQUIRE(reject.is_valid());
+}
+
 
 BOOST_AUTO_TEST_CASE(reject__constructor_1__always__invalid)
 {
@@ -101,41 +118,35 @@ BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_bytes__failure)
 {
     static const data_chunk raw{ 0xab };
     message::reject instance{};
-
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::maximum, raw));
+    BOOST_REQUIRE_EQUAL(false, instance.from_data(version_maximum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure)
 {
     const message::reject expected(
         message::reject::reason_code::dust,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
-
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
-        message::reject::version_minimum - 1, raw));
+    BOOST_REQUIRE_EQUAL(false, instance.from_data( message::reject::version_minimum - 1, raw));
 }
 
 BOOST_AUTO_TEST_CASE(reject__from_data__code_malformed__success)
 {
     const message::reject expected(
         message::reject::reason_code::malformed,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
-
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -143,17 +154,15 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_invalid__success)
 {
     const message::reject expected(
         message::reject::reason_code::invalid,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -161,17 +170,14 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_obsolete__success)
 {
     const message::reject expected(
         message::reject::reason_code::obsolete,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
-
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -179,17 +185,14 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_duplicate__success)
 {
     const message::reject expected(
         message::reject::reason_code::duplicate,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
-
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -197,17 +200,14 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_nonstandard__success)
 {
     const message::reject expected(
         message::reject::reason_code::nonstandard,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
-
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -215,17 +215,14 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_dust__success)
 {
     const message::reject expected(
         message::reject::reason_code::dust,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
-
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -233,17 +230,14 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_insufficient_fee__success)
 {
     const message::reject expected(
         message::reject::reason_code::insufficient_fee,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
-
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -251,17 +245,15 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_checkpoint__success)
 {
     const message::reject expected(
         message::reject::reason_code::checkpoint,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -269,17 +261,15 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_undefined__success)
 {
     const message::reject expected(
         message::reject::reason_code::undefined,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const data_chunk raw = expected.to_data(message::version::level::maximum);
+    const data_chunk raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(instance.from_data(
-        message::reject::version_minimum, raw));
-
+    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -287,66 +277,54 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_1__valid_input__success)
 {
     const message::reject expected(
         message::reject::reason_code::dust,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const auto data = expected.to_data(message::version::level::maximum);
-    const auto result = message::reject::factory_from_data(
-        message::version::level::maximum, data);
-
+    const auto data = expected.to_data(version_maximum);
+    const auto result = message::reject::factory_from_data(version_maximum, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-        result.serialized_size(message::version::level::maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::maximum),
-        result.serialized_size(message::version::level::maximum));
+    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
+    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
 }
 
 BOOST_AUTO_TEST_CASE(reject__factory_from_data_2__valid_input__success)
 {
     const message::reject expected(
         message::reject::reason_code::insufficient_fee,
-        message::block_message::command,
+        message::block::command,
         reason_text,
         data
     );
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    const auto data = expected.to_data(version_maximum);
     data_source istream(data);
-    const auto result = message::reject::factory_from_data(
-        message::version::level::maximum, istream);
-
+    const auto result = message::reject::factory_from_data(version_maximum, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-        result.serialized_size(message::version::level::maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::maximum),
-        result.serialized_size(message::version::level::maximum));
+    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
+    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
 }
 
 BOOST_AUTO_TEST_CASE(reject__factory_from_data_3__valid_input__success)
 {
     const message::reject expected(
         message::reject::reason_code::duplicate,
-        message::transaction_message::command,
+        message::transaction::command,
         reason_text,
         data
     );
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    const auto data = expected.to_data(version_maximum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::reject::factory_from_data(
-        message::version::level::maximum, source);
-
+    const auto result = message::reject::factory_from_data(version_maximum, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-        result.serialized_size(message::version::level::maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::maximum),
-        result.serialized_size(message::version::level::maximum));
+    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
+    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
 }
 
 BOOST_AUTO_TEST_CASE(reject__code_accessor__always__returns_initialized_value)

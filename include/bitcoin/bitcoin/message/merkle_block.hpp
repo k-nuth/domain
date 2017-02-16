@@ -1,21 +1,20 @@
-/*
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+/**
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_MESSAGE_MERKLE_BLOCK_HPP
 #define LIBBITCOIN_MESSAGE_MERKLE_BLOCK_HPP
@@ -24,6 +23,7 @@
 #include <memory>
 #include <string>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
@@ -46,10 +46,11 @@ public:
     static merkle_block factory_from_data(uint32_t version, reader& source);
 
     merkle_block();
-    merkle_block(const chain::header& header, uint32_t total_transactions,
+    merkle_block(const chain::header& header, size_t total_transactions,
         const hash_list& hashes, const data_chunk& flags);
-    merkle_block(chain::header&& header, uint32_t total_transactions,
+    merkle_block(chain::header&& header, size_t total_transactions,
         hash_list&& hashes, data_chunk&& flags);
+    merkle_block(const chain::block& block);
     merkle_block(const merkle_block& other);
     merkle_block(merkle_block&& other);
 
@@ -58,8 +59,8 @@ public:
     void set_header(const chain::header& value);
     void set_header(chain::header&& value);
 
-    uint32_t total_transactions() const;
-    void set_total_transactions(uint32_t value);
+    size_t total_transactions() const;
+    void set_total_transactions(size_t value);
 
     hash_list& hashes();
     const hash_list& hashes() const;
@@ -79,7 +80,7 @@ public:
     void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
-    uint64_t serialized_size(uint32_t version) const;
+    size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
     merkle_block& operator=(merkle_block&& other);
@@ -94,15 +95,12 @@ public:
 
 private:
     chain::header header_;
-    uint32_t total_transactions_;
+    size_t total_transactions_;
     hash_list hashes_;
-
-    // TODO: provide utility to compute this from the list of hashes based on
-    // the assumption that the hash list represents that of a complete block.
     data_chunk flags_;
 };
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin
 
 #endif

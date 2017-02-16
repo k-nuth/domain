@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
@@ -291,8 +290,8 @@ BOOST_AUTO_TEST_CASE(heading__type__all_cases__match_expected)
     BOOST_REQUIRE(message::message_type::address == instance.type());
     instance.set_command(message::alert::command);
     BOOST_REQUIRE(message::message_type::alert == instance.type());
-    instance.set_command(message::block_message::command);
-    BOOST_REQUIRE(message::message_type::block_message == instance.type());
+    instance.set_command(message::block::command);
+    BOOST_REQUIRE(message::message_type::block == instance.type());
     instance.set_command(message::block_transactions::command);
     BOOST_REQUIRE(message::message_type::block_transactions == instance.type());
     instance.set_command(message::compact_block::command);
@@ -329,12 +328,12 @@ BOOST_AUTO_TEST_CASE(heading__type__all_cases__match_expected)
     BOOST_REQUIRE(message::message_type::pong == instance.type());
     instance.set_command(message::reject::command);
     BOOST_REQUIRE(message::message_type::reject == instance.type());
-    instance.set_command(message::send_compact_blocks::command);
-    BOOST_REQUIRE(message::message_type::send_compact_blocks == instance.type());
+    instance.set_command(message::send_compact::command);
+    BOOST_REQUIRE(message::message_type::send_compact == instance.type());
     instance.set_command(message::send_headers::command);
     BOOST_REQUIRE(message::message_type::send_headers == instance.type());
-    instance.set_command(message::transaction_message::command);
-    BOOST_REQUIRE(message::message_type::transaction_message == instance.type());
+    instance.set_command(message::transaction::command);
+    BOOST_REQUIRE(message::message_type::transaction == instance.type());
     instance.set_command(message::verack::command);
     BOOST_REQUIRE(message::message_type::verack == instance.type());
     instance.set_command(message::version::command);

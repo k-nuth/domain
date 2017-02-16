@@ -1,27 +1,27 @@
-/*
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+/**
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/reject.hpp>
 
+#include <bitcoin/bitcoin/message/block.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/bitcoin/message/transaction.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/bitcoin/message/block_message.hpp>
-#include <bitcoin/bitcoin/message/transaction_message.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
@@ -64,14 +64,33 @@ reject::reject()
 }
 
 reject::reject(reason_code code, const std::string& message,
+    const std::string& reason)
+  : reject(code, message, reason, null_hash)
+{
+}
+
+reject::reject(reason_code code, std::string&& message, std::string&& reason)
+  : code_(code),
+    message_(std::move(message)),
+    reason_(std::move(reason)),
+    data_(null_hash)
+{
+}
+
+reject::reject(reason_code code, const std::string& message,
     const std::string& reason, const hash_digest& data)
-  : code_(code), message_(message), reason_(reason), data_(data)
+  : code_(code),
+    message_(message),
+    reason_(reason),
+    data_(data)
 {
 }
 
 reject::reject(reason_code code, std::string&& message, std::string&& reason,
     hash_digest&& data)
-  : code_(code), message_(std::move(message)), reason_(std::move(reason)),
+  : code_(code),
+    message_(std::move(message)),
+    reason_(std::move(reason)),
     data_(std::move(data))
 {
 }
@@ -125,10 +144,15 @@ bool reject::from_data(uint32_t version, reader& source)
     code_ = reason_from_byte(source.read_byte());
     reason_ = source.read_string();
 
-    if ((message_ == block_message::command) ||
-        (message_ == transaction_message::command))
+    if ((message_ == block::command) ||
+        (message_ == transaction::command))
     {
-        data_ = source.read_hash();
+        // Some nodes do not follow the documented convention of supplying hash
+        // for tx and block rejects. Use this to prevent error on empty stream.
+        const auto bytes = source.read_bytes();
+
+        if (bytes.size() == hash_size)
+            build_array(data_, { bytes });
     }
 
     if (version < reject::version_minimum)
@@ -163,20 +187,21 @@ void reject::to_data(uint32_t version, writer& sink) const
     sink.write_byte(reason_to_byte(code_));
     sink.write_string(reason_);
 
-    if ((message_ == block_message::command) ||
-        (message_ == transaction_message::command))
+    if ((message_ == block::command) ||
+        (message_ == transaction::command))
     {
         sink.write_hash(data_);
     }
 }
 
-uint64_t reject::serialized_size(uint32_t version) const
+size_t reject::serialized_size(uint32_t version) const
 {
-    uint64_t size = 1 + variable_uint_size(message_.size()) + message_.size() +
-        variable_uint_size(reason_.size()) + reason_.size();
+    size_t size = 1u + message::variable_uint_size(message_.size()) +
+        message_.size() + message::variable_uint_size(reason_.size()) +
+        reason_.size();
 
-    if ((message_ == block_message::command) ||
-        (message_ == transaction_message::command))
+    if ((message_ == block::command) ||
+        (message_ == transaction::command))
     {
         size += hash_size;
     }
@@ -324,5 +349,5 @@ uint8_t reject::reason_to_byte(reason_code value)
     }
 }
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin

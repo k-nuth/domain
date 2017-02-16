@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/chain/block.hpp>
 
@@ -29,17 +28,19 @@
 #include <type_traits>
 #include <utility>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/script/opcode.hpp>
-#include <bitcoin/bitcoin/chain/script/rule_fork.hpp>
-#include <bitcoin/bitcoin/chain/script/script.hpp>
+#include <bitcoin/bitcoin/chain/compact.hpp>
+#include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/formats/base_16.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/math/hash_number.hpp>
 #include <bitcoin/bitcoin/math/limits.hpp>
-#include <bitcoin/bitcoin/math/script_number.hpp>
+#include <bitcoin/bitcoin/machine/number.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/bitcoin/utility/asio.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -50,6 +51,8 @@ namespace libbitcoin {
 namespace chain {
 
 using namespace bc::config;
+using namespace bc::machine;
+
 #ifdef LITECOIN
 //Litecoin mainnet genesis block
 static const std::string encoded_mainnet_genesis_block =
@@ -92,7 +95,8 @@ static const std::string encoded_testnet_genesis_block =
     "43" //pk_script length
     "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac" //pk_script
     "00000000"; //locktime
-#else
+#else //LITECOIN
+
 static const std::string encoded_mainnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
@@ -132,35 +136,39 @@ static const std::string encoded_testnet_genesis_block =
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000";
-#endif
+#endif //LITECOIN
+
 // Constructors.
 //-----------------------------------------------------------------------------
 
 block::block()
-  : header_(), transactions_()
+  : header_{}, validation{}
 {
 }
 
 block::block(const block& other)
   : block(other.header_, other.transactions_)
 {
+    validation = other.validation;
 }
 
 block::block(block&& other)
   : block(std::move(other.header_), std::move(other.transactions_))
 {
+    validation = std::move(other.validation);
 }
 
 // TODO: deal with possibility of inconsistent merkle root in relation to txs.
 block::block(const chain::header& header,
     const transaction::list& transactions)
-  : header_(header), transactions_(transactions)
+  : header_(header), transactions_(transactions), validation{}
 {
 }
 
 // TODO: deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header&& header, transaction::list&& transactions)
-  : header_(std::move(header)), transactions_(std::move(transactions))
+  : header_(std::move(header)), transactions_(std::move(transactions)),
+    validation{}
 {
 }
 
@@ -171,13 +179,13 @@ block& block::operator=(block&& other)
 {
     header_ = std::move(other.header_);
     transactions_ = std::move(other.transactions_);
+    validation = std::move(other.validation);
     return *this;
 }
 
 bool block::operator==(const block& other) const
 {
-    return (header_ == other.header_)
-        && (transactions_ == other.transactions_);
+    return (header_ == other.header_) && (transactions_ == other.transactions_);
 }
 
 bool block::operator!=(const block& other) const
@@ -226,6 +234,7 @@ bool block::from_data(std::istream& stream)
 
 bool block::from_data(reader& source)
 {
+    validation.start_deserialize = asio::steady_clock::now();
     reset();
 
     if (!header_.from_data(source))
@@ -241,6 +250,7 @@ bool block::from_data(reader& source)
     if (!source)
         reset();
 
+    validation.end_deserialize = asio::steady_clock::now();
     return source;
 }
 
@@ -285,45 +295,32 @@ void block::to_data(writer& sink) const
     std::for_each(transactions_.begin(), transactions_.end(), to);
 }
 
-// TODO: provide optimization option to balance total sigops across buckets.
-// Disperse the inputs of the block evenly to the specified number of buckets.
-transaction::sets_const_ptr block::to_input_sets(size_t fanout,
-    bool with_coinbase) const
+hash_list block::to_hashes() const
 {
-    const auto total = total_inputs(with_coinbase);
-    const auto buckets = transaction::reserve_buckets(total, fanout);
+    const auto to_hash = [](const transaction& tx) { return tx.hash(); };
 
-    // Guard against division by zero.
-    if (!buckets->empty())
-    {
-        size_t count = 0;
-        const auto& txs = transactions_;
-        const auto start = with_coinbase ? 0 : 1;
-
-        // Populate each bucket with full (or full-1) input references.
-        for (auto tx = txs.begin() + start; tx != txs.end(); ++tx)
-            for (size_t index = 0; index < tx->inputs().size(); ++index)
-                (*buckets)[count++ % fanout].push_back({ *tx, index });
-    }
-
-    return std::const_pointer_cast<const transaction::sets>(buckets);
+    hash_list out;
+    const auto& txs = transactions();
+    out.resize(txs.size());
+    std::transform(txs.begin(), txs.end(), out.begin(), to_hash);
+    return out;
 }
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
 
-uint64_t block::serialized_size() const
+size_t block::serialized_size() const
 {
-    const auto sum = [](uint64_t total, const transaction& tx)
+    const auto sum = [](size_t total, const transaction& tx)
     {
         return safe_add(total, tx.serialized_size());
     };
 
     const auto& txs = transactions_;
 
-    return header_.serialized_size()
-        + variable_uint_size(transactions_.size())
-        + std::accumulate(txs.begin(), txs.end(), size_t{0}, sum);
+    return header_.serialized_size() +
+        message::variable_uint_size(transactions_.size()) +
+        std::accumulate(txs.begin(), txs.end(), size_t{0}, sum);
 }
 
 chain::header& block::header()
@@ -364,12 +361,14 @@ const transaction::list& block::transactions() const
 void block::set_transactions(const transaction::list& value)
 {
     transactions_ = value;
+    total_inputs_ = boost::none;
 }
 
 // TODO: see set_header comments.
 void block::set_transactions(transaction::list&& value)
 {
     transactions_ = std::move(value);
+    total_inputs_ = boost::none;
 }
 
 // Convenience property.
@@ -405,6 +404,8 @@ chain::block block::genesis_testnet()
     return genesis;
 }
 
+// With a 32 bit chain the size of the result should not exceed 43 and with a
+// 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
 size_t block::locator_size(size_t top)
 {
     // Set rounding behavior, not consensus-related, thread side effect :<.
@@ -447,23 +448,34 @@ block::indexes block::locator_heights(size_t top)
 //-----------------------------------------------------------------------------
 
 // static
-hash_number block::difficulty(uint32_t bits)
+uint256_t block::proof(uint32_t bits)
 {
-    hash_number target;
+    const auto header_bits = compact(bits);
 
-    if (!target.set_compact(bits) || target == 0)
+    if (header_bits.is_overflowed())
         return 0;
 
-    // We need to compute 2**256 / (target+1), but we can't represent 2**256
+    uint256_t target(header_bits);
+
+    //*************************************************************************
+    // CONSENSUS: satoshi will throw division by zero in the case where the
+    // target is (2^256)-1 as the overflow will result in a zero divisor.
+    // While actually achieving this work is improbable, this method operates
+    // on user data method and therefore must be guarded.
+    //*************************************************************************
+    const auto divisor = target + 1;
+
+    // We need to compute 2**256 / (target + 1), but we can't represent 2**256
     // as it's too large for uint256. However as 2**256 is at least as large as
-    // target+1, it is equal to ((2**256 - target - 1) / (target+1)) + 1, or 
-    // ~target / (target+1) + 1.
-    return (~target / (target + 1)) + 1;
+    // target + 1, it is equal to ((2**256 - target - 1) / (target + 1)) + 1, or
+    // (~target / (target + 1)) + 1.
+    return (divisor == 0) ? 0 : (~target / divisor) + 1;
 }
 
-hash_number block::difficulty() const
+// [GetBlockProof]
+uint256_t block::proof() const
 {
-    return difficulty(header_.bits());
+    return proof(header_.bits());
 }
 
 uint64_t block::subsidy(size_t height)
@@ -500,6 +512,23 @@ size_t block::signature_operations(bool bip16_active) const
 
 size_t block::total_inputs(bool with_coinbase) const
 {
+    size_t value;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    mutex_.lock_upgrade();
+
+    if (total_inputs_ != boost::none)
+    {
+        value = total_inputs_.get();
+        mutex_.unlock_upgrade();
+        //---------------------------------------------------------------------
+        return value;
+    }
+
+    mutex_.unlock_upgrade_and_lock();
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     const auto inputs = [](size_t total, const transaction& tx)
     {
         return safe_add(total, tx.inputs().size());
@@ -507,7 +536,12 @@ size_t block::total_inputs(bool with_coinbase) const
 
     const auto& txs = transactions_;
     const size_t offset = with_coinbase ? 0 : 1;
-    return std::accumulate(txs.begin() + offset, txs.end(), size_t{0}, inputs);
+    value = std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
+    total_inputs_ = value;
+    mutex_.unlock();
+    ///////////////////////////////////////////////////////////////////////////
+
+    return value;
 }
 
 // True if there is another coinbase other than the first tx.
@@ -585,6 +619,14 @@ hash_digest block::generate_merkle_root() const
     return merkle.front();
 }
 
+bool block::is_internal_double_spend() const
+{
+    // TODO: check all inputs for duplicate reference to an output.
+    // It is not necessary to confirm the output is within the block.
+    // This is an early check that is redundant with orphan pool accept checks.
+    return false;
+}
+
 bool block::is_valid_merkle_root() const
 {
     return (generate_merkle_root() == header_.merkle());
@@ -626,18 +668,8 @@ bool block::is_valid_coinbase_script(size_t height) const
     if (transactions_.empty() || transactions_.front().inputs().empty())
         return false;
 
-    // Get the serialized coinbase input script as a byte vector.
-    const auto& actual_tx = transactions_.front();
-    const auto& actual_script = actual_tx.inputs().front().script();
-    const auto actual = actual_script.to_data(false);
-
-    // Create the expected script as a byte vector.
-    script_number number(height);
-    script expected_script(operation::list{ { number.data() } });
-    const auto expected = expected_script.to_data(false);
-
-    // Require that the coinbase script match the expected coinbase script.
-    return std::equal(expected.begin(), expected.end(), actual.begin());
+    const auto& script = transactions_.front().inputs().front().script();
+    return script::is_coinbase_pattern(script.operations(), height);
 }
 
 code block::check_transactions() const
@@ -679,6 +711,8 @@ code block::connect_transactions(const chain_state& state) const
 // These checks are self-contained; blockchain (and so version) independent.
 code block::check() const
 {
+    validation.start_check = asio::steady_clock::now();
+
     code ec;
 
     if ((ec = header_.check()))
@@ -699,6 +733,9 @@ code block::check() const
     else if (!is_distinct_transaction_set())
         return error::internal_duplicate;
 
+    else if (is_internal_double_spend())
+        return error::internal_double_spend;
+
     else if (!is_valid_merkle_root())
         return error::merkle_mismatch;
 
@@ -714,17 +751,17 @@ code block::check() const
         return check_transactions();
 }
 
-code block::accept() const
+code block::accept(bool transactions) const
 {
     const auto state = validation.state;
-    return state ? accept(*state) : error::operation_failed;
+    return state ? accept(*state, transactions) : error::operation_failed;
 }
 
-// TODO: implement sigops and total input/output value caching.
 // These checks assume that prevout caching is completed on all tx.inputs.
-// Flags should be based on connecting at the specified blockchain height.
-code block::accept(const chain_state& state) const
+code block::accept(const chain_state& state, bool transactions) const
 {
+    validation.start_accept = asio::steady_clock::now();
+
     code ec;
     const auto bip16 = state.is_enabled(rule_fork::bip16_rule);
     const auto bip34 = state.is_enabled(rule_fork::bip34_rule);
@@ -732,25 +769,53 @@ code block::accept(const chain_state& state) const
     if ((ec = header_.accept(state)))
         return ec;
 
-    // This recurses txs but is not applied to mempool (timestamp required).
+    else if (state.is_under_checkpoint())
+        return error::success;
+
+    // TODO: relates timestamp to tx.locktime (pool cache min tx.timestamp).
+    // This recurses txs but is not applied via mempool (timestamp required).
     else if (!is_final(state.height()))
         return error::non_final_transaction;
 
+    // The coinbase tx is never seen/cached by the tx pool.
     else if (bip34 && !is_valid_coinbase_script(state.height()))
         return error::coinbase_height_mismatch;
 
+    // TODO: relates height to total of tx.fee (pool cache tx.fee).
     else if (!is_valid_coinbase_claim(state.height()))
         return error::coinbase_value_limit;
 
+    // TODO: relates block limit to total of tx.sigops (pool cache tx.sigops).
     // This recomputes sigops to include p2sh from prevouts.
-    else if (signature_operations(bip16) > max_block_sigops) {
-        //TODO: fpelliccioni: re-enable when merge of libbitcoin be done.
-        // return error::block_embedded_sigop_limit;
-        // LOG_ERROR("CORE") << "too many block embedded signature operations for block: " << hash();
-        std::cout << "too many block embedded signature operations for block: " << encode_hash(hash()) << '\n';
-    }
-    //else  //TODO: fpelliccioni: re-enable when merge of libbitcoin be done.
+    else if (transactions && (signature_operations(bip16) > max_block_sigops))
+        return error::block_embedded_sigop_limit;
+
+    else if (transactions)
         return accept_transactions(state);
+
+    else
+        return ec;
+
+
+
+
+
+
+
+
+    // // TODO: relates block limit to total of tx.sigops (pool cache tx.sigops).
+    // // This recomputes sigops to include p2sh from prevouts.
+    // else if (signature_operations(bip16) > max_block_sigops) {
+    //     //TODO: fpelliccioni: re-enable when merge of libbitcoin be done.
+    //     // return error::block_embedded_sigop_limit;
+    //     // LOG_ERROR("CORE") << "too many block embedded signature operations for block: " << hash();
+    //     std::cout << "too many block embedded signature operations for block: " << encode_hash(hash()) << '\n';
+    // }
+    // //else  //TODO: fpelliccioni: re-enable when merge of libbitcoin be done.
+    //     return accept_transactions(state);
+
+    // else
+    //     return ec;
 }
 
 code block::connect() const
@@ -761,7 +826,13 @@ code block::connect() const
 
 code block::connect(const chain_state& state) const
 {
-    return connect_transactions(state);
+    validation.start_connect = asio::steady_clock::now();
+
+    if (state.is_under_checkpoint())
+        return error::success;
+
+    else
+        return connect_transactions(state);
 }
 
 } // namespace chain

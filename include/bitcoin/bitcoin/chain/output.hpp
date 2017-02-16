@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_CHAIN_OUTPUT_HPP
 #define LIBBITCOIN_CHAIN_OUTPUT_HPP
@@ -24,10 +23,12 @@
 #include <cstdint>
 #include <istream>
 #include <string>
-#include <bitcoin/bitcoin/chain/script/script.hpp>
+#include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
+#include <bitcoin/bitcoin/utility/thread.hpp>
 #include <bitcoin/bitcoin/utility/writer.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -42,14 +43,12 @@ public:
     /// This is a consensus value used in script::generate_signature_hash.
     static const uint64_t not_found;
 
-    // These properties facilitate block and transaction validation.
-    // This validation data IS copied on output copy/move.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation
     {
-        // This is a non-consensus sentinel used to indicate an output is unspent.
+        /// This is a non-consensus sentinel used to indicate an output is unspent.
         static const uint32_t not_spent;
 
-        // These are used by database only.
         size_t spender_height = validation::not_spent;
     };
 
@@ -94,12 +93,10 @@ public:
     void to_data(std::ostream& stream, bool wire=true) const;
     void to_data(writer& sink, bool wire=true) const;
 
-    std::string to_string(uint32_t flags) const;
-
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    uint64_t serialized_size(bool wire=true) const;
+    size_t serialized_size(bool wire=true) const;
 
     uint64_t value() const;
     void set_value(uint64_t value);
@@ -111,21 +108,25 @@ public:
     void set_script(const chain::script& value);
     void set_script(chain::script&& value);
 
+    /// The payment address extracted from this output as a standard script.
+    wallet::payment_address address() const;
+
     // Validation.
     //-----------------------------------------------------------------------------
 
     size_t signature_operations() const;
 
-    // These fields do not participate in wire serialization or comparison.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
 protected:
-    output(uint64_t value, chain::script&& script, size_t spender_height);
-    output(uint64_t value, const chain::script& script, size_t spender_height);
-
     void reset();
+    void invalidate_cache() const;
 
 private:
+    mutable upgrade_mutex mutex_;
+    mutable wallet::payment_address::ptr address_;
+
     uint64_t value_;
     chain::script script_;
 };

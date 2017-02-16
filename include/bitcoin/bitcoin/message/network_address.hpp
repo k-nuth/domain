@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_MESSAGE_NETWORK_ADDRESS_HPP
 #define LIBBITCOIN_MESSAGE_NETWORK_ADDRESS_HPP
@@ -44,7 +43,7 @@ public:
         std::istream& stream, bool with_timestamp);
     static network_address factory_from_data(uint32_t version,
         reader& source, bool with_timestamp);
-    static uint64_t satoshi_fixed_size(uint32_t version,
+    static size_t satoshi_fixed_size(uint32_t version,
         bool with_timestamp);
 
     network_address();
@@ -88,7 +87,7 @@ public:
     void to_data(uint32_t version, writer& sink, bool with_timestamp) const;
     bool is_valid() const;
     void reset();
-    uint64_t serialized_size(uint32_t version, bool with_timestamp) const;
+    size_t serialized_size(uint32_t version, bool with_timestamp) const;
 
     network_address& operator=(network_address&& other);
     network_address& operator=(const network_address& other);

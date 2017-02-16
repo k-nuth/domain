@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 
@@ -28,16 +27,19 @@
 #include <sstream>
 #include <utility>
 #include <vector>
+#include <boost/optional.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
-#include <bitcoin/bitcoin/chain/script/opcode.hpp>
-#include <bitcoin/bitcoin/chain/script/operation.hpp>
-#include <bitcoin/bitcoin/chain/script/rule_fork.hpp>
-#include <bitcoin/bitcoin/chain/script/script.hpp>
+#include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/math/limits.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/operation.hpp>
+#include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/bitcoin/utility/collection.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/endian.hpp>
@@ -47,7 +49,7 @@
 namespace libbitcoin {
 namespace chain {
 
-const size_t transaction::validation::unspecified_height = 0;
+using namespace bc::machine;
 
 // Read a length-prefixed collection of inputs or outputs from the source.
 template<class Source, class Put>
@@ -78,32 +80,11 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire)
     std::for_each(puts.begin(), puts.end(), serialize);
 }
 
-// Reserve uniform buckets of minimum size and full distribution.
-transaction::sets_ptr transaction::reserve_buckets(size_t total, size_t fanout)
-{
-    // Guard against division by zero.
-    if (fanout == 0)
-        return std::make_shared<transaction::sets>(0);
-
-    const auto quotient = total / fanout;
-    const auto remainder = total % fanout;
-    const auto capacity = quotient + (remainder == 0 ? 0 : 1);
-    const auto quantity = quotient == 0 ? remainder : fanout;
-    const auto buckets = std::make_shared<transaction::sets>(quantity);
-    const auto reserve = [capacity](transaction::set& set)
-    {
-        set.reserve(capacity);
-    };
-
-    std::for_each(buckets->begin(), buckets->end(), reserve);
-    return buckets;
-}
-
 // Constructors.
 //-----------------------------------------------------------------------------
 
 transaction::transaction()
-    : version_{0}, locktime_{0}, validation{}
+  : version_(0), locktime_(0), validation{}
 {
 }
 
@@ -112,25 +93,29 @@ transaction::transaction(transaction&& other)
       std::move(other.outputs_))
 {
     // TODO: implement safe private accessor for conditional cache transfer.
+    validation = std::move(other.validation);
 }
 
 transaction::transaction(const transaction& other)
   : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_)
 {
     // TODO: implement safe private accessor for conditional cache transfer.
+    validation = other.validation;
 }
 
 transaction::transaction(transaction&& other, hash_digest&& hash)
   : transaction(other.version_, other.locktime_, std::move(other.inputs_),
-    std::move(other.outputs_))
+        std::move(other.outputs_))
 {
     hash_ = std::make_shared<hash_digest>(std::move(hash));
+    validation = std::move(other.validation);
 }
 
 transaction::transaction(const transaction& other, const hash_digest& hash)
   : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_)
 {
     hash_ = std::make_shared<hash_digest>(hash);
+    validation = other.validation;
 }
 
 transaction::transaction(uint32_t version, uint32_t locktime,
@@ -163,6 +148,7 @@ transaction& transaction::operator=(transaction&& other)
     locktime_ = other.locktime_;
     inputs_ = std::move(other.inputs_);
     outputs_ = std::move(other.outputs_);
+    validation = std::move(other.validation);
     return *this;
 }
 
@@ -173,6 +159,7 @@ transaction& transaction::operator=(const transaction& other)
     locktime_ = other.locktime_;
     inputs_ = other.inputs_;
     outputs_ = other.outputs_;
+    validation = other.validation;
     return *this;
 }
 
@@ -263,6 +250,8 @@ void transaction::reset()
     outputs_.clear();
     outputs_.shrink_to_fit();
     invalidate_cache();
+    total_input_value_ = boost::none;
+    total_output_value_ = boost::none;
 }
 
 bool transaction::is_valid() const
@@ -315,50 +304,10 @@ void transaction::to_data(writer& sink, bool wire) const
     }
 }
 
-std::string transaction::to_string(uint32_t flags) const
-{
-    std::ostringstream value;
-    value << "Transaction:\n"
-        << "\tversion = " << version_ << "\n"
-        << "\tlocktime = " << locktime_ << "\n"
-        << "Inputs:\n";
-
-    for (const auto input: inputs_)
-        value << input.to_string(flags);
-
-    value << "Outputs:\n";
-    for (const auto output: outputs_)
-        value << output.to_string(flags);
-
-    value << "\n";
-    return value.str();
-}
-
-// TODO: provide optimization option to balance total sigops across buckets.
-// Disperse the inputs of the tx evenly to the specified number of buckets.
-transaction::sets_const_ptr transaction::to_input_sets(size_t fanout) const
-{
-    const auto total = inputs_.size();
-    const auto buckets = reserve_buckets(total, fanout);
-
-    // Guard against division by zero.
-    if (!buckets->empty())
-    {
-        size_t count = 0;
-
-        // Populate each bucket with either full (or full-1) input references.
-        for (size_t index = 0; index < inputs_.size(); ++index)
-            (*buckets)[count++ % fanout].push_back({ *this, index });
-    }
-
-    return std::const_pointer_cast<const sets>(buckets);
-}
-
-
 // Size.
 //-----------------------------------------------------------------------------
 
-uint64_t transaction::serialized_size(bool wire) const
+size_t transaction::serialized_size(bool wire) const
 {
     const auto ins = [wire](size_t size, const input& input)
     {
@@ -370,10 +319,10 @@ uint64_t transaction::serialized_size(bool wire) const
         return size + output.serialized_size(wire);
     };
 
-    return sizeof(version_) 
-        + sizeof(locktime_) 
-        + variable_uint_size(inputs_.size())
-        + variable_uint_size(outputs_.size())
+    return sizeof(version_)
+        + sizeof(locktime_)
+        + message::variable_uint_size(inputs_.size())
+        + message::variable_uint_size(outputs_.size())
         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins)
         + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs);
 }
@@ -417,12 +366,14 @@ void transaction::set_inputs(const input::list& value)
 {
     inputs_ = value;
     invalidate_cache();
+    total_input_value_ = boost::none;
 }
 
 void transaction::set_inputs(input::list&& value)
 {
     inputs_ = std::move(value);
     invalidate_cache();
+    total_input_value_ = boost::none;
 }
 
 output::list& transaction::outputs()
@@ -439,12 +390,14 @@ void transaction::set_outputs(const output::list& value)
 {
     outputs_ = value;
     invalidate_cache();
+    total_output_value_ = boost::none;
 }
 
 void transaction::set_outputs(output::list&& value)
 {
     outputs_ = std::move(value);
     invalidate_cache();
+    total_output_value_ = boost::none;
 }
 
 // Cache.
@@ -503,6 +456,9 @@ hash_digest transaction::hash(uint32_t sighash_type) const
 
 bool transaction::is_coinbase() const
 {
+    if (inputs_.empty())
+        return false;
+
     const auto& prevout = inputs_.front().previous_output();
     return (inputs_.size() == 1) && prevout.is_null();
 }
@@ -531,47 +487,57 @@ bool transaction::is_null_non_coinbase() const
     return std::any_of(inputs_.begin(), inputs_.end(), invalid);
 }
 
-bool transaction::is_final(size_t block_height, uint32_t block_time) const
+// private
+bool transaction::all_inputs_final() const
 {
-    if (locktime_ == 0)
-        return true;
-
-    const auto max_locktime = locktime_ < locktime_threshold ?
-        safe_unsigned<uint32_t>(block_height) : block_time;
-
-    if (locktime_ < max_locktime)
-        return true;
-
     const auto finalized = [](const input& input)
     {
         return input.is_final();
     };
 
     return std::all_of(inputs_.begin(), inputs_.end(), finalized);
+}
+
+bool transaction::is_final(size_t block_height, uint32_t block_time) const
+{
+    const auto max_locktime = [=]()
+    {
+        return locktime_ < locktime_threshold ?
+            safe_unsigned<uint32_t>(block_height) : block_time;
+    };
+
+    return locktime_ == 0 || locktime_ < max_locktime() || all_inputs_final();
 }
 
 // This is not a consensus rule, just detection of an irrational use.
 bool transaction::is_locktime_conflict() const
 {
-    if (locktime_ == 0)
-        return false;
-
-    const auto finalized = [](const input& input)
-    {
-        return input.is_final();
-    };
-
-    return std::all_of(inputs_.begin(), inputs_.end(), finalized);
+    return locktime_ != 0 && all_inputs_final();
 }
 
 // Returns max_uint64 in case of overflow.
 uint64_t transaction::total_input_value() const
 {
+    uint64_t value;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    mutex_.lock_upgrade();
+
+    if (total_input_value_ != boost::none)
+    {
+        value = total_input_value_.get();
+        mutex_.unlock_upgrade();
+        //---------------------------------------------------------------------
+        return value;
+    }
+
+    mutex_.unlock_upgrade_and_lock();
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
     const auto sum = [](uint64_t total, const input& input)
     {
-        // Breaks debug build unit testing.
-        ////BITCOIN_ASSERT(input.previous_output().is_valid());
         const auto& prevout = input.previous_output().validation.cache;
         const auto missing = !prevout.is_valid();
 
@@ -579,19 +545,46 @@ uint64_t transaction::total_input_value() const
         return ceiling_add(total, missing ? 0 : prevout.value());
     };
 
-    return std::accumulate(inputs_.begin(), inputs_.end(), uint64_t{0}, sum);
+    value = std::accumulate(inputs_.begin(), inputs_.end(), uint64_t(0), sum);
+    total_input_value_ = value;
+    mutex_.unlock();
+    ///////////////////////////////////////////////////////////////////////////
+
+    return value;
 }
 
 // Returns max_uint64 in case of overflow.
 uint64_t transaction::total_output_value() const
 {
+    uint64_t value;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    mutex_.lock_upgrade();
+
+    if (total_output_value_ != boost::none)
+    {
+        value = total_output_value_.get();
+        mutex_.unlock_upgrade();
+        //---------------------------------------------------------------------
+        return value;
+    }
+
+    mutex_.unlock_upgrade_and_lock();
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
     const auto sum = [](uint64_t total, const output& output)
     {
         return ceiling_add(total, output.value());
     };
 
-    return std::accumulate(outputs_.begin(), outputs_.end(), uint64_t{0}, sum);
+    value = std::accumulate(outputs_.begin(), outputs_.end(), uint64_t(0), sum);
+    total_output_value_ = value;
+    mutex_.unlock();
+    ///////////////////////////////////////////////////////////////////////////
+
+    return value;
 }
 
 uint64_t transaction::fees() const
@@ -602,6 +595,14 @@ uint64_t transaction::fees() const
 bool transaction::is_overspent() const
 {
     return !is_coinbase() && total_output_value() > total_input_value();
+}
+
+// Returns max_size_t in case of overflow.
+size_t transaction::signature_operations() const
+{
+    const auto state = validation.state;
+    return state ? signature_operations(
+        state->is_enabled(rule_fork::bip16_rule)) : max_size_t;
 }
 
 // Returns max_size_t in case of overflow.
@@ -622,33 +623,44 @@ size_t transaction::signature_operations(bool bip16_active) const
         std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, out);
 }
 
-bool transaction::is_missing_inputs() const
+bool transaction::is_missing_previous_outputs() const
 {
     const auto missing = [](const input& input)
     {
         const auto& prevout = input.previous_output();
-        auto missing = !prevout.validation.cache.is_valid();
-        return missing && !prevout.is_null();
+        const auto coinbase = prevout.is_null();
+        const auto missing = !prevout.validation.cache.is_valid();
+        return missing && !coinbase;
     };
 
     // This is an optimization of !missing_inputs().empty();
     return std::any_of(inputs_.begin(), inputs_.end(), missing);
 }
 
-point::indexes transaction::missing_inputs() const
+output_point::list transaction::missing_previous_outputs() const
 {
-    point::indexes indexes;
+    output_point::list out;
 
-    for (size_t in = 0; in < inputs_.size(); ++in)
+    for (auto& input: inputs_)
     {
-        const auto& prevout = inputs_[in].previous_output();
-        auto missing = !prevout.validation.cache.is_valid();
+        const auto& prevout = input.previous_output();
+        const auto coinbase = prevout.is_null();
+        const auto missing = !prevout.validation.cache.is_valid();
 
-        if (missing && !prevout.is_null())
-            indexes.push_back(safe_unsigned<uint32_t>(in));
+        if (missing && !coinbase)
+            out.push_back(prevout);
     }
 
-    return indexes;
+    return out;
+}
+
+hash_list transaction::missing_previous_transactions() const
+{
+    const auto points = missing_previous_outputs();
+    hash_list hashes(points.size());
+    const auto hasher = [](const output_point& point) { return point.hash(); };
+    std::transform(points.begin(), points.end(), hashes.begin(), hasher);
+    return distinct(hashes);
 }
 
 bool transaction::is_double_spend(bool include_unconfirmed) const
@@ -663,21 +675,6 @@ bool transaction::is_double_spend(bool include_unconfirmed) const
     return std::any_of(inputs_.begin(), inputs_.end(), spent);
 }
 
-point::indexes transaction::double_spends(bool include_unconfirmed) const
-{
-    point::indexes spends;
-
-    for (size_t in = 0; in < inputs_.size(); ++in)
-    {
-        const auto& prevout = inputs_[in].previous_output().validation;
-
-        if (prevout.spent && (include_unconfirmed || prevout.confirmed))
-            spends.push_back(safe_unsigned<uint32_t>(in));
-    }
-
-    return spends;
-}
-
 bool transaction::is_immature(size_t target_height) const
 {
     const auto immature = [target_height](const input& input)
@@ -687,21 +684,6 @@ bool transaction::is_immature(size_t target_height) const
 
     // This is an optimization of !immature_inputs().empty();
     return std::any_of(inputs_.begin(), inputs_.end(), immature);
-}
-
-point::indexes transaction::immature_inputs(size_t target_height) const
-{
-    point::indexes immatures;
-
-    for (size_t in = 0; in < inputs_.size(); ++in)
-    {
-        const auto& prevout = inputs_[in].previous_output();
-
-        if (!prevout.is_mature(target_height))
-            immatures.push_back(safe_unsigned<uint32_t>(in));
-    }
-
-    return immatures;
 }
 
 // Coinbase transactions return success, to simplify iteration.
@@ -718,7 +700,7 @@ code transaction::connect_input(const chain_state& state,
 
     // Verify that the previous output cache has been populated.
     if (!prevout.cache.is_valid())
-        return error::missing_input;
+        return error::missing_previous_output;
 
     const auto forks = state.enabled_forks();
     const auto index32 = static_cast<uint32_t>(input_index);
@@ -749,12 +731,12 @@ code transaction::check(bool transaction_pool) const
         return error::coinbase_transaction;
 
     else if (transaction_pool && serialized_size() >= max_block_size)
-        return error::transction_size_limit;
+        return error::transaction_size_limit;
 
     // We cannot know if bip16 is enabled at this point so we disable it.
     // This will not make a difference unless prevouts are populated, in which
     // case they are ignored. This means that p2sh sigops are not counted here.
-    // This is a preliminary check, the final count must come from connect().
+    // This is a preliminary check, the final count must come from accept().
     // Reenable once sigop caching is implemented, otherwise is deoptimization.
     ////else if (transaction_pool && signature_operations(false) > max_block_sigops)
     ////    return error::transaction_legacy_sigop_limit;
@@ -763,7 +745,12 @@ code transaction::check(bool transaction_pool) const
         return error::success;
 }
 
-// TODO: implement sigops and total input/output value caching.
+code transaction::accept(bool transaction_pool) const
+{
+    const auto state = validation.state;
+    return state ? accept(*state, transaction_pool) : error::operation_failed;
+}
+
 // These checks assume that prevout caching is completed on all tx.inputs.
 // Flags for tx pool calls should be based on the current blockchain height.
 code transaction::accept(const chain_state& state, bool transaction_pool) const
@@ -771,27 +758,53 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const
     const auto bip16 = state.is_enabled(rule_fork::bip16_rule);
     const auto bip30 = state.is_enabled(rule_fork::bip30_rule);
 
-    if (bip30 && validation.duplicate)
+    //*************************************************************************
+    // CONSENSUS:
+    // We don't need to allow tx pool acceptance of an unspent duplicate
+    // because tx pool validation is not strinctly a matter of consensus.
+    //*************************************************************************
+    const auto duplicates = state.is_enabled(rule_fork::allow_collisions) &&
+        !transaction_pool;
+
+    if (transaction_pool && state.is_under_checkpoint())
+        return error::premature_validation;
+
+    //*************************************************************************
+    // CONSENSUS:
+    // A transaction hash that exists in the chain is not acceptable even if
+    // the original is spent in the new block. This is not necessary nor is it
+    // described by BIP30, but it is in the code referenced by BIP30. As such
+    // the tx pool need only test against the chain, skipping the pool.
+    //*************************************************************************
+    else if (!duplicates && bip30 && validation.duplicate)
         return error::unspent_duplicate;
 
-    else if (is_missing_inputs())
-        return error::missing_input;
+    else if (is_missing_previous_outputs())
+        return error::missing_previous_output;
 
     else if (is_double_spend(transaction_pool))
         return error::double_spend;
 
+    // This relates height to maturity of spent coinbase. Since reorg is the
+    // only way to decrease height and reorg invalidates, this is cache safe.
     else if (is_immature(state.height()))
         return error::coinbase_maturity;
 
     else if (is_overspent())
         return error::spend_exceeds_value;
 
-    // This recomputes sigops to include p2sh from prevouts.
+    // This recomputes sigops to include p2sh from prevouts if bip16 is true.
     else if (transaction_pool && signature_operations(bip16) > max_block_sigops)
         return error::transaction_embedded_sigop_limit;
 
     else
         return error::success;
+}
+
+code transaction::connect() const
+{
+    const auto state = validation.state;
+    return state ? connect(*state) : error::operation_failed;
 }
 
 code transaction::connect(const chain_state& state) const

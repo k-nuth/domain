@@ -1,27 +1,27 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_ERROR_HPP
 #define LIBBITCOIN_ERROR_HPP
 
 #include <string>
 #include <system_error>
+#include <unordered_map>
 #include <boost/system/error_code.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -53,6 +53,7 @@ enum error_code_t
     not_found = 3,
     file_system = 42,
     non_standard = 17,
+    not_implemented = 4,
 
     // network
     service_stopped = 1,
@@ -67,16 +68,20 @@ enum error_code_t
     address_blocked = 44,
     channel_stopped = 45,
 
+    // database
+    store_block_duplicate = 66,
+    store_block_invalid_height = 67,
+    store_block_missing_parent = 68,
+
     // block pool
     duplicate_block = 51,
     orphan_block = 5,
     invalid_previous_block = 24,
-    //// TODO: block_pool_filled,
+    insufficient_work = 48,
 
     // transaction pool
-    blockchain_reorganized = 14,
-    transaction_pool_filled = 15,
-    duplicate_pool_transaction = 4,
+    orphan_transaction = 14,
+    insufficient_fee = 70,
 
     // check header
     invalid_proof_of_work = 26,
@@ -94,8 +99,8 @@ enum error_code_t
     first_not_coinbase = 28,
     extra_coinbases = 29,
     internal_duplicate = 49,
+    internal_double_spend = 15,
     merkle_mismatch = 31,
-    insufficient_work = 48,
     block_legacy_sigop_limit = 30,
 
     // accept block
@@ -110,18 +115,19 @@ enum error_code_t
     spend_overflow = 21,
     invalid_coinbase_script_size = 22,
     coinbase_transaction = 16,
-    transction_size_limit = 53,
+    transaction_size_limit = 53,
     transaction_legacy_sigop_limit = 54,
 
     // accept transaction
+    premature_validation = 69,
     unspent_duplicate = 38,
-    missing_input = 19,
+    missing_previous_output = 19,
     double_spend = 18,
     coinbase_maturity = 46,
     spend_exceeds_value = 40,
     transaction_embedded_sigop_limit = 55,
 
-    // script verify / interpreter run
+    // connect input
     invalid_script = 39,
     invalid_script_size = 56,
     invalid_push_data_size = 57,
@@ -210,7 +216,7 @@ enum error_code_t
     op_check_locktime_verify3,
     op_check_locktime_verify4,
     op_check_locktime_verify5,
-    op_check_locktime_verify6,
+    op_check_locktime_verify6
 };
 
 enum error_condition_t

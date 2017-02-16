@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
@@ -27,27 +26,27 @@ BOOST_AUTO_TEST_SUITE(inventory_vector_tests)
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_number__error__returns_0)
 {
-    BOOST_REQUIRE_EQUAL(0u, inventory_vector::to_number(inventory_vector::type_id::error));
-}
-
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__none__returns_0)
-{
-    BOOST_REQUIRE_EQUAL(0u, inventory_vector::to_number(inventory_vector::type_id::none));
+    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::error), 0u);
 }
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_number__transaction__returns_1)
 {
-    BOOST_REQUIRE_EQUAL(1u, inventory_vector::to_number(inventory_vector::type_id::transaction));
+    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::transaction), 1u);
 }
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_number__block__returns_2)
 {
-    BOOST_REQUIRE_EQUAL(2u, inventory_vector::to_number(inventory_vector::type_id::block));
+    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::block), 2u);
+}
+
+BOOST_AUTO_TEST_CASE(inventory_vector__to_number__filtered_block__returns_3)
+{
+    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::filtered_block), 3u);
 }
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_number__compact_block__returns_4)
 {
-    BOOST_REQUIRE_EQUAL(4u, inventory_vector::to_number(inventory_vector::type_id::compact_block));
+    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::compact_block), 4u);
 }
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_type__0__returns_error)
@@ -65,14 +64,14 @@ BOOST_AUTO_TEST_CASE(inventory_vector__to_type__2__returns_block)
     BOOST_REQUIRE(inventory_vector::type_id::block == inventory_vector::to_type(2));
 }
 
+BOOST_AUTO_TEST_CASE(inventory_vector__to_type__3__returns_filtered_block)
+{
+    BOOST_REQUIRE(inventory_vector::type_id::filtered_block == inventory_vector::to_type(3));
+}
+
 BOOST_AUTO_TEST_CASE(inventory_vector__to_type__4__returns_compact_block)
 {
     BOOST_REQUIRE(inventory_vector::type_id::compact_block == inventory_vector::to_type(4));
-}
-
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__3__returns_none)
-{
-    BOOST_REQUIRE(inventory_vector::type_id::none == inventory_vector::to_type(3));
 }
 
 BOOST_AUTO_TEST_CASE(inventory_vector__constructor_1__always__invalid)

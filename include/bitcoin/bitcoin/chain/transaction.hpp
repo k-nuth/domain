@@ -1,41 +1,41 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_CHAIN_TRANSACTION_HPP
 #define LIBBITCOIN_CHAIN_TRANSACTION_HPP
 
 #include <cstddef>
 #include <cstdint>
-#include <functional>
 #include <istream>
 #include <memory>
 #include <string>
 #include <vector>
+#include <boost/optional.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/chain/point.hpp>
-#include <bitcoin/bitcoin/chain/script/opcode.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/math/elliptic_curve.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
 #include <bitcoin/bitcoin/utility/thread.hpp>
 #include <bitcoin/bitcoin/utility/writer.hpp>
@@ -50,36 +50,25 @@ public:
     typedef output::list outs;
     typedef std::vector<transaction> list;
 
-    // validation-related
-    typedef struct { const transaction& tx; size_t input_index; } element;
-    typedef std::vector<element> set;
-    typedef std::vector<set> sets;
-    typedef std::shared_ptr<sets> sets_ptr;
-    typedef std::shared_ptr<const sets> sets_const_ptr;
-    typedef std::function<void(const code&)> confirm_handler;
-
-    // These properties facilitate block and transaction validation.
-    // This validation data is not copied on block or transaction copy.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation
     {
-        static const size_t unspecified_height;
-
-        // These are used for transaction pool validation only.
-        size_t height = validation::unspecified_height;
-        code result = error::not_found;
+        uint64_t originator = 0;
+        code error = error::not_found;
         chain_state::ptr state = nullptr;
-        sets_const_ptr sets = nullptr;
 
-        /// The handler to invoke when the tx clears the pool.
-        confirm_handler confirm = nullptr;
-
-        /// This does not exclude the two excepted transactions (see BIP30).
-        /// The transaction hash duplicates one in the blockchain (only).
-        /// This is for block validation, pool validation uses the result code.
+        // The transaction is an unspent duplicate.
         bool duplicate = false;
-    };
 
-    static sets_ptr reserve_buckets(size_t total, size_t fanout);
+        // The unconfirmed tx exists in the store.
+        bool pooled = false;
+
+        // The unconfirmed tx is validated at the block's current fork state.
+        bool current = false;
+
+        // Similate organization and instead just validate the transaction.
+        bool simulate = false;
+    };
 
     // Constructors.
     //-----------------------------------------------------------------------------
@@ -126,13 +115,10 @@ public:
     void to_data(std::ostream& stream, bool wire=true) const;
     void to_data(writer& sink, bool wire=true) const;
 
-    std::string to_string(uint32_t flags) const;
-    sets_const_ptr to_input_sets(size_t fanout) const;
-
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    uint64_t serialized_size(bool wire=true) const;
+    size_t serialized_size(bool wire=true) const;
 
     uint32_t version() const;
     void set_version(uint32_t value);
@@ -161,11 +147,11 @@ public:
     //-----------------------------------------------------------------------------
 
     uint64_t fees() const;
-    point::indexes double_spends(bool include_unconfirmed) const;
-    point::indexes immature_inputs(size_t target_height) const;
-    point::indexes missing_inputs() const;
+    output_point::list missing_previous_outputs() const;
+    hash_list missing_previous_transactions() const;
     uint64_t total_input_value() const;
     uint64_t total_output_value() const;
+    size_t signature_operations() const;
     size_t signature_operations(bool bip16_active) const;
 
     bool is_coinbase() const;
@@ -174,21 +160,24 @@ public:
     bool is_immature(size_t target_height) const;
     bool is_overspent() const;
     bool is_double_spend(bool include_unconfirmed) const;
-    bool is_missing_inputs() const;
+    bool is_missing_previous_outputs() const;
     bool is_final(size_t block_height, uint32_t block_time) const;
     bool is_locktime_conflict() const;
 
-    code check(bool transaction_pool = true) const;
+    code check(bool transaction_pool=true) const;
+    code accept(bool transaction_pool=true) const;
     code accept(const chain_state& state, bool transaction_pool=true) const;
+    code connect() const;
     code connect(const chain_state& state) const;
     code connect_input(const chain_state& state, size_t input_index) const;
 
-    // These fields do not participate in serialization or comparison.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
 protected:
     void reset();
     void invalidate_cache() const;
+    bool all_inputs_final() const;
 
 private:
     uint32_t version_;
@@ -196,8 +185,11 @@ private:
     input::list inputs_;
     output::list outputs_;
 
-    mutable upgrade_mutex mutex_;
+    // These share a mutex as they are not expected to conflict.
+    mutable boost::optional<size_t> total_input_value_;
+    mutable boost::optional<size_t> total_output_value_;
     mutable std::shared_ptr<hash_digest> hash_;
+    mutable upgrade_mutex mutex_;
 };
 
 } // namespace chain

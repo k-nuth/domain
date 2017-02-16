@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_CHAIN_BLOCK_HPP
 #define LIBBITCOIN_CHAIN_BLOCK_HPP
@@ -26,15 +25,17 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <boost/optional.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/error.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/math/hash_number.hpp>
+#include <bitcoin/bitcoin/utility/asio.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
+#include <bitcoin/bitcoin/utility/thread.hpp>
 #include <bitcoin/bitcoin/utility/writer.hpp>
 
 namespace libbitcoin {
@@ -46,16 +47,24 @@ public:
     typedef std::vector<block> list;
     typedef std::vector<size_t> indexes;
 
-    // validation-related
-    typedef transaction::sets_const_ptr input_sets;
-
-    // These properties facilitate block validation.
-    // This validation data is not copied on block copy.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation
     {
-        code result = error::not_found;
+        uint64_t originator = 0;
+        code error = error::not_found;
         chain_state::ptr state = nullptr;
-        transaction::sets_const_ptr sets = nullptr;
+
+        asio::time_point start_deserialize;
+        asio::time_point end_deserialize;
+        asio::time_point start_check;
+        asio::time_point start_populate;
+        asio::time_point start_accept;
+        asio::time_point start_connect;
+        asio::time_point start_notify;
+        asio::time_point start_pop;
+        asio::time_point start_push;
+        asio::time_point end_push;
+        float cache_efficiency;
     };
 
     // Constructors.
@@ -98,13 +107,12 @@ public:
     data_chunk to_data() const;
     void to_data(std::ostream& stream) const;
     void to_data(writer& sink) const;
-
-    input_sets to_input_sets(size_t fanout, bool with_coinbase=true) const;
+    hash_list to_hashes() const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    uint64_t serialized_size() const;
+    size_t serialized_size() const;
 
     // deprecated (unsafe)
     chain::header& header();
@@ -134,12 +142,12 @@ public:
     //-------------------------------------------------------------------------
 
     static uint64_t subsidy(size_t height);
-    static hash_number difficulty(uint32_t bits);
+    static uint256_t proof(uint32_t bits);
 
     uint64_t fees() const;
     uint64_t claim() const;
     uint64_t reward(size_t height) const;
-    hash_number difficulty() const;
+    uint256_t proof() const;
     hash_digest generate_merkle_root() const;
     size_t signature_operations() const;
     size_t signature_operations(bool bip16_active) const;
@@ -150,18 +158,19 @@ public:
     bool is_distinct_transaction_set() const;
     bool is_valid_coinbase_claim(size_t height) const;
     bool is_valid_coinbase_script(size_t height) const;
+    bool is_internal_double_spend() const;
     bool is_valid_merkle_root() const;
 
     code check() const;
     code check_transactions() const;
-    code accept() const;
-    code accept(const chain_state& state) const;
+    code accept(bool transactions=true) const;
+    code accept(const chain_state& state, bool transactions=true) const;
     code accept_transactions(const chain_state& state) const;
     code connect() const;
     code connect(const chain_state& state) const;
     code connect_transactions(const chain_state& state) const;
 
-    // These fields do not participate in serialization or comparison.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
 protected:
@@ -170,6 +179,9 @@ protected:
 private:
     chain::header header_;
     transaction::list transactions_;
+
+    mutable boost::optional<size_t> total_inputs_;
+    mutable upgrade_mutex mutex_;
 };
 
 } // namespace chain

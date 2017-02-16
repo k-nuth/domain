@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
 
@@ -73,13 +72,13 @@ BOOST_AUTO_TEST_CASE(thread__set_thread_priorites__all__set_as_expected)
     // Save so we can restore at the end of this test case.
     const int save = get_thread_priority_test();
 
-    set_thread_priority(thread_priority::high);
+    set_priority(thread_priority::high);
     BOOST_REQUIRE_EQUAL(THREAD_PRIORITY_ABOVE_NORMAL, get_thread_priority_test());
-    set_thread_priority(thread_priority::normal);
+    set_priority(thread_priority::normal);
     BOOST_REQUIRE_EQUAL(THREAD_PRIORITY_NORMAL, get_thread_priority_test());
-    set_thread_priority(thread_priority::low);
+    set_priority(thread_priority::low);
     BOOST_REQUIRE_EQUAL(THREAD_PRIORITY_BELOW_NORMAL, get_thread_priority_test());
-    set_thread_priority(thread_priority::lowest);
+    set_priority(thread_priority::lowest);
     BOOST_REQUIRE_EQUAL(THREAD_PRIORITY_LOWEST, get_thread_priority_test());
 
     // Restore and verify test execution thread priority to minimize side effect.
@@ -97,10 +96,10 @@ BOOST_AUTO_TEST_CASE(thread__set_thread_priorites__all__set_as_expected)
     const int save = get_thread_priority_test();
 
     // Haven't had any luck matching the set and get priority calls as in win.
-    BOOST_REQUIRE_NO_THROW(set_thread_priority(thread_priority::high));
-    BOOST_REQUIRE_NO_THROW(set_thread_priority(thread_priority::normal));
-    BOOST_REQUIRE_NO_THROW(set_thread_priority(thread_priority::low));
-    BOOST_REQUIRE_NO_THROW(set_thread_priority(thread_priority::lowest));
+    BOOST_REQUIRE_NO_THROW(set_priority(thread_priority::high));
+    BOOST_REQUIRE_NO_THROW(set_priority(thread_priority::normal));
+    BOOST_REQUIRE_NO_THROW(set_priority(thread_priority::low));
+    BOOST_REQUIRE_NO_THROW(set_priority(thread_priority::lowest));
 
     // Restore and verify test execution thread priority to minimize side effect.
     set_thread_priority_test(save);
@@ -110,7 +109,7 @@ BOOST_AUTO_TEST_CASE(thread__set_thread_priorites__all__set_as_expected)
 
 BOOST_AUTO_TEST_CASE(thread__set_thread_priority__invalid__throws_invalid_argument)
 {
-    BOOST_REQUIRE_THROW(set_thread_priority(static_cast<thread_priority>(42)), std::invalid_argument);
+    BOOST_REQUIRE_THROW(set_priority(static_cast<thread_priority>(42)), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

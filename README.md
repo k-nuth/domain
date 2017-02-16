@@ -56,14 +56,10 @@ Next install the [Boost](http://www.boost.org) (minimum 1.56.0) development pack
 ```sh
 $ sudo apt-get install libboost-all-dev
 ```
-Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
+Next download the [install script](https://github.com/libbitcoin/libbitcoin/blob/version3/install.sh) and enable execution:
 ```sh
-$ git clone https://github.com/zeromq/libzmq
-$ cd libzmq
-$ ./autogen.sh && ./configure && make -j 4
-$ make check
-$ sudo make install
-$ sudo ldconfig
+$ wget https://raw.githubusercontent.com/libbitcoin/libbitcoin/version3/install.sh
+$ chmod +x install.sh
 ```
 
 Next install the [Protobuff](https://github.com/google/protobuf) (minimum 3.0.0) development package:
@@ -139,7 +135,10 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ brew install boost
 ```
-Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
+Next download the [install script](https://github.com/libbitcoin/libbitcoin/blob/version3/install.sh) and enable execution:
+```sh
+$ wget https://raw.githubusercontent.com/libbitcoin/libbitcoin/version3/install.sh
+$ chmod +x install.sh
 ```
 TODO: ZeroMQ Mac Install
 ```
@@ -165,7 +164,10 @@ Next install the [Boost](http://www.boost.org) (1.56.0 or newer) development pac
 ```sh
 $ sudo port install boost -no_single -no_static -python27
 ```
-Next install the [ZeroMQ](http://zeromq.org/) (minimum 4.2.0) development package:
+Next download the [install script](https://github.com/libbitcoin/libbitcoin/blob/version3/install.sh) and enable execution:
+```sh
+$ wget https://raw.githubusercontent.com/libbitcoin/libbitcoin/version3/install.sh
+$ chmod +x install.sh
 ```
 TODO: ZeroMQ MacPorts Install
 ```
@@ -190,9 +192,62 @@ The build script clones, builds and installs two unpackaged repositories, namely
 - [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
 - [bitprim/bitprim-core](https://github.com/bitprim/bitprim-core)
 
-The script builds from the head of their `version4` and `version2` branches respectively. The `master` branch is a staging area for changes. The version branches are considered release quality.
+The script builds from the head of their `version4` and `version3` branches respectively. The `master` branch is a staging area for changes. The version branches are considered release quality.
 
 ### Windows
 ```
 TODO:Windows Install
 ```
+
+### Windows
+
+Visual Studio solutions are maintained for all libbitcoin libraries. NuGet packages exist for dependencies with the exceptions of the optional ZLib, PNG, and QREncode (required for QR code functionality). ICU is integrated into Windows and therefore not required as an additional dependency when using ICU features.
+
+> The libbitcoin execution environment supports `Windows XP Service Pack 2` and newer.
+
+#### Upgrade Compiler
+
+Libbitcoin requires a C++11 compiler, which means **Visual Studio 2013** minimum. Additionally a pre-release compiler must be installed as an update to Visual Studio. Download and install the following tools as necessary. Both are available free of charge:
+
+* [Visual Studio 2013 Express](https://www.microsoft.com/en-us/download/details.aspx?id=44914)
+* [November 2013 CTP Compiler](http://www.microsoft.com/en-us/download/details.aspx?id=41151)
+* See also: [CTP Compiler installation issue](http://stackoverflow.com/a/34548651/1172329)
+
+#### Create Local NuGet Repository
+
+Dependencies apart from the libbitcoin libraries are available as [NuGet packages](https://www.nuget.org/packages?q=evoskuil). The libbitcoin solution files are configured with references to these packages. To avoid redundancies these references expect a [NuGet.config](http://docs.nuget.org/docs/release-notes/nuget-2.1) in a central location.
+
+The required set of NuGet packages can be viewed using the [NuGet package manager](http://docs.nuget.org/docs/start-here/managing-nuget-packages-using-the-dialog) from the libbitcoin solution. The NuGet package manager will automatically download missing packages, either from the build scripts or after prompting you in the Visual Studio environment. For your reference these are the required packages:
+
+* Packages maintained by [sergey.shandar](http://www.nuget.org/profiles/sergey.shandar)
+ * [boost](http://www.nuget.org/packages/boost)
+ * [boost\_chrono-vc120](http://www.nuget.org/packages/boost_chrono-vc120)
+ * [boost\_date\_time-vc120](http://www.nuget.org/packages/boost_date_time-vc120)
+ * [boost\_filesystem-vc120](http://www.nuget.org/packages/boost_filesystem-vc120)
+ * [boost\_iostreams-vc120](http://www.nuget.org/packages/boost_iostreams-vc120)
+ * [boost\_locale-vc120](http://www.nuget.org/packages/boost_locale-vc120)
+ * [boost\_log-vc120](http://www.nuget.org/packages/boost_log-vc120)
+ * [boost\_program\_options-vc120](http://www.nuget.org/packages/boost_program_options-vc120)
+ * [boost\_regex-vc120](http://www.nuget.org/packages/boost_regex-vc120)
+ * [boost\_system-vc120](http://www.nuget.org/packages/boost_system-vc120)
+ * [boost\_thread-vc120](http://www.nuget.org/packages/boost_thread-vc120)
+ * [boost\_unit\_test\_framework-vc120](http://www.nuget.org/packages/boost_unit_test_framework-vc120)
+* Packages maintained by [evoskuil](http://www.nuget.org/profiles/evoskuil)
+ * [secp256k1\_vc120](http://www.nuget.org/packages/secp256k1_vc120)
+
+#### Build Libbitcoin Projects
+
+After cloning the the repository the libbitcoin build can be performed manually (from within Visual Studio) or using the `buildall.bat` script provided in the `builds\msvc\build\` subdirectory. The scripts automatically download the required NuGet packages.
+
+> Tip: The `buildall.bat` script builds *all* valid configurations. The build time can be significantly reduced by disabling all but the desired configuration in `buildbase.bat`.
+
+> The libbitcoin dynamic (DLL) build configurations do not compile, as the exports have not yet been fully implemented. These are currently disabled in the build scripts but you will encounter numerous errors if you build then manually.
+
+#### Optional: Building secp256k1
+
+The secp256k1 package above is maintained using the same [Visual Studio template](https://github.com/evoskuil/visual-studio-template) as all libbitcoin libraries. If so desired it can be built locally, in the same manner as libbitcoin.
+
+* [libbitcoin/secp256k1/version4](https://github.com/libbitcoin/secp256k1/tree/version4/builds/msvc)
+
+This change is properly accomplished by disabling the "NuGet Dependencies" in the Visual Studio properties user interface and then importing `secp256k1.import.props`, which references `secp256k1.import.xml`.
+

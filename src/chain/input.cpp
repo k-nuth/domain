@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/chain/input.hpp>
 
@@ -25,15 +24,18 @@
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
 #include <bitcoin/bitcoin/utility/ostream_writer.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 
 namespace libbitcoin {
 namespace chain {
+
+using namespace bc::wallet;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
 input::input()
-  : previous_output_(), sequence_{0}
+  : previous_output_{}, sequence_(0)
 {
 }
 
@@ -184,21 +186,10 @@ void input::to_data(writer& sink, bool) const
     sink.write_4_bytes_little_endian(sequence_);
 }
 
-std::string input::to_string(uint32_t flags) const
-{
-    std::ostringstream text;
-
-    text << previous_output_.to_string() << "\n"
-        << "\t" << script_.to_string(flags) << "\n"
-        << "\tsequence = " << sequence_ << "\n";
-
-    return text.str();
-}
-
 // Size.
 //-----------------------------------------------------------------------------
 
-uint64_t input::serialized_size(bool) const
+size_t input::serialized_size(bool) const
 {
     return previous_output_.serialized_size() +
         script_.serialized_size(true) + sizeof(sequence_);
@@ -240,11 +231,13 @@ const chain::script& input::script() const
 void input::set_script(const chain::script& value)
 {
     script_ = value;
+    invalidate_cache();
 }
 
 void input::set_script(chain::script&& value)
 {
     script_ = std::move(value);
+    invalidate_cache();
 }
 
 uint32_t input::sequence() const
@@ -255,6 +248,49 @@ uint32_t input::sequence() const
 void input::set_sequence(uint32_t value)
 {
     sequence_ = value;
+}
+
+// protected
+void input::invalidate_cache() const
+{
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    mutex_.lock_upgrade();
+
+    if (address_)
+    {
+        mutex_.unlock_upgrade_and_lock();
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        address_.reset();
+        //---------------------------------------------------------------------
+        mutex_.unlock_and_lock_upgrade();
+    }
+
+    mutex_.unlock_upgrade();
+    ///////////////////////////////////////////////////////////////////////////
+}
+
+payment_address input::address() const
+{
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    mutex_.lock_upgrade();
+
+    if (!address_)
+    {
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        mutex_.unlock_upgrade_and_lock();
+        address_ = std::make_shared<payment_address>(
+            payment_address::extract(script_));
+        mutex_.unlock_and_lock_upgrade();
+        //---------------------------------------------------------------------
+    }
+
+    const auto address = *address_;
+    mutex_.unlock_upgrade();
+    ///////////////////////////////////////////////////////////////////////////
+
+    return address;
 }
 
 // Validation helpers.

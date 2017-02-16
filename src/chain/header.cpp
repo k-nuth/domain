@@ -1,31 +1,31 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/chain/header.hpp>
 
-#include <cstddef>
 #include <chrono>
+#include <cstddef>
 #include <utility>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
+#include <bitcoin/bitcoin/chain/compact.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/error.hpp>
-#include <bitcoin/bitcoin/math/hash_number.hpp>
+#include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
@@ -34,7 +34,10 @@
 namespace libbitcoin {
 namespace chain {
 
-const size_t header::validation::orphan_height = 0;
+// Use system clock because we require accurate time of day.
+using wall_clock = std::chrono::system_clock;
+
+const size_t header::validation::undetermined_height = 0;
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -49,6 +52,7 @@ header::header(header&& other)
       std::move(other.merkle_), other.timestamp_, other.bits_, other.nonce_)
 {
     // TODO: implement safe private accessor for conditional cache transfer.
+    validation = std::move(other.validation);
 }
 
 header::header(const header& other)
@@ -56,6 +60,7 @@ header::header(const header& other)
         other.timestamp_, other.bits_, other.nonce_)
 {
     // TODO: implement safe private accessor for conditional cache transfer.
+    validation = other.validation;
 }
 
 header::header(header&& other, hash_digest&& hash)
@@ -63,6 +68,7 @@ header::header(header&& other, hash_digest&& hash)
       std::move(other.merkle_), other.timestamp_, other.bits_, other.nonce_)
 {
     hash_ = std::make_shared<hash_digest>(std::move(hash));
+    validation = std::move(other.validation);
 }
 
 header::header(const header& other, const hash_digest& hash)
@@ -70,6 +76,7 @@ header::header(const header& other, const hash_digest& hash)
         other.timestamp_, other.bits_, other.nonce_)
 {
     hash_ = std::make_shared<hash_digest>(hash);
+    validation = other.validation;
 }
 
 header::header(uint32_t version, hash_digest&& previous_block_hash,
@@ -79,7 +86,8 @@ header::header(uint32_t version, hash_digest&& previous_block_hash,
     merkle_(std::move(merkle)),
     timestamp_(timestamp),
     bits_(bits),
-    nonce_(nonce)
+    nonce_(nonce),
+    validation{}
 {
 }
 
@@ -91,7 +99,8 @@ header::header(uint32_t version, const hash_digest& previous_block_hash,
     merkle_(merkle),
     timestamp_(timestamp),
     bits_(bits),
-    nonce_(nonce)
+    nonce_(nonce),
+    validation{}
 {
 }
 
@@ -107,6 +116,7 @@ header& header::operator=(header&& other)
     timestamp_ = other.timestamp_;
     bits_ = other.bits_;
     nonce_ = other.nonce_;
+    validation = std::move(other.validation);
     return *this;
 }
 
@@ -119,6 +129,7 @@ header& header::operator=(const header& other)
     timestamp_ = other.timestamp_;
     bits_ = other.bits_;
     nonce_ = other.nonce_;
+    validation = other.validation;
     return *this;
 }
 
@@ -249,7 +260,7 @@ void header::to_data(writer& sink) const
 //-----------------------------------------------------------------------------
 
 // static
-uint64_t header::satoshi_fixed_size()
+size_t header::satoshi_fixed_size()
 {
     return sizeof(version_)
         + hash_size
@@ -259,7 +270,7 @@ uint64_t header::satoshi_fixed_size()
         + sizeof(nonce_);
 }
 
-uint64_t header::serialized_size() const
+size_t header::serialized_size() const
 {
     return satoshi_fixed_size();
 }
@@ -399,37 +410,78 @@ hash_digest header::hash() const
 
     return hash;
 }
+
 #ifdef LITECOIN
 hash_digest header::litecoin_proof_of_work_hash() const
 {
     return litecoin_hash(to_data());
 }
-#endif
+#endif //LITECOIN
 
 // Validation helpers.
 //-----------------------------------------------------------------------------
 
+/// BUGBUG: bitcoin 32bit unix time: en.wikipedia.org/wiki/Year_2038_problem
 bool header::is_valid_time_stamp() const
 {
-    // Use system clock because we require accurate time of day.
-    typedef std::chrono::system_clock wall_clock;
     static const auto two_hours = std::chrono::hours(time_stamp_future_hours);
     const auto time = wall_clock::from_time_t(timestamp_);
     const auto future = wall_clock::now() + two_hours;
     return time <= future;
 }
 
+/*
+// [CheckProofOfWork]
 bool header::is_valid_proof_of_work() const
 {
+<<<<<<< HEAD
     // TODO: This should be statically-initialized (optimization).
-    #ifdef LITECOIN
+#ifdef LITECOIN
     hash_number target;
     if (!target.set_compact(bits_) || target > pow_limit) {
         return false;
     }
     hash_number value(litecoin_proof_of_work_hash());
     return value <= target;
-    #else
+#else //LITECOIN
+    hash_number maximum;
+    if (!maximum.set_compact(max_work_bits))
+=======
+    static const uint256_t pow_limit(compact{ proof_of_work_limit });
+    const auto bits = compact(bits_);
+
+    if (bits.is_overflowed())
+>>>>>>> libbitcoin-origin/version3
+        return false;
+
+    uint256_t target(bits);
+
+    // Ensure claimed work is within limits.
+    if (target < 1 || target > pow_limit)
+        return false;
+
+<<<<<<< HEAD
+    hash_number value(hash());
+    return value <= target;
+#endif //LITECOIN
+=======
+    // Ensure actual work is at least claimed amount (smaller is more work).
+    return to_uint256(hash()) <= target;
+>>>>>>> libbitcoin-origin/version3
+}
+
+// [CheckProofOfWork]
+bool header::is_valid_proof_of_work() const
+{
+    // TODO: This should be statically-initialized (optimization).
+#ifdef LITECOIN
+    hash_number target;
+    if (!target.set_compact(bits_) || target > pow_limit) {
+        return false;
+    }
+    hash_number value(litecoin_proof_of_work_hash());
+    return value <= target;
+#else //LITECOIN
     hash_number maximum;
     if (!maximum.set_compact(max_work_bits))
         return false;
@@ -440,8 +492,57 @@ bool header::is_valid_proof_of_work() const
 
     hash_number value(hash());
     return value <= target;
-    #endif
+#endif //LITECOIN
 }
+*/
+
+// [CheckProofOfWork]
+bool header::is_valid_proof_of_work() const
+{
+    // TODO: This should be statically-initialized (optimization).
+#ifndef LITECOIN
+    static const uint256_t pow_limit(compact{ proof_of_work_limit });
+#endif
+
+    const auto bits = compact(bits_);
+
+    if (bits.is_overflowed())
+        return false;
+
+    uint256_t target(bits);
+
+    // Ensure claimed work is within limits.
+    if (target < 1 || target > pow_limit)
+        return false;
+
+    // Ensure actual work is at least claimed amount (smaller is more work).
+#ifdef LITECOIN
+    return to_uint256(litecoin_proof_of_work_hash()) <= target;
+#else //LITECOIN
+    return to_uint256(hash()) <= target;
+#endif //LITECOIN
+}
+
+/*
+// [CheckProofOfWork]
+bool header::is_valid_proof_of_work() const
+{
+    static const uint256_t pow_limit(compact{ proof_of_work_limit });
+    const auto bits = compact(bits_);
+
+    if (bits.is_overflowed())
+        return false;
+
+    uint256_t target(bits);
+
+    // Ensure claimed work is within limits.
+    if (target < 1 || target > pow_limit)
+        return false;
+
+    // Ensure actual work is at least claimed amount (smaller is more work).
+    return to_uint256(hash()) <= target;
+}
+*/
 
 // Validation.
 //-----------------------------------------------------------------------------
@@ -460,14 +561,17 @@ code header::check() const
 
 code header::accept(const chain_state& state) const
 {
-    if (state.is_checkpoint_failure(hash()))
+    if (bits_ != state.work_required())
+        return error::incorrect_proof_of_work;
+
+    else if (state.is_checkpoint_conflict(hash()))
         return error::checkpoints_failed;
+
+    else if (state.is_under_checkpoint())
+        return error::success;
 
     else if (version_ < state.minimum_version())
         return error::old_version_block;
-
-    else if (bits_ != state.work_required())
-        return error::incorrect_proof_of_work;
 
     else if (timestamp_ <= state.median_time_past())
         return error::timestamp_too_early;

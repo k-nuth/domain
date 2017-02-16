@@ -1,28 +1,27 @@
 /**
- * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
 
 using namespace bc;
 
-BOOST_AUTO_TEST_SUITE(transaction_tests)
+BOOST_AUTO_TEST_SUITE(chain_transaction_tests)
 
 BOOST_AUTO_TEST_CASE(transaction__constructor_1__always__returns_default_initialized)
 {
@@ -498,18 +497,6 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_2__success)
     BOOST_REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__to_string__valid_data__success)
-{
-    static const uint32_t flags = 0;
-    static const std::string expected = TX4_TEXT;
-    static const auto raw_tx = to_chunk(base16_literal(TX4));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
-
-    chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(raw_tx));
-    BOOST_REQUIRE_EQUAL(expected, instance.to_string(flags));
-}
-
 BOOST_AUTO_TEST_CASE(transaction__version__roundtrip__success)
 {
     uint32_t version = 1254u;
@@ -662,7 +649,7 @@ BOOST_AUTO_TEST_CASE(transaction__total_input_value__no_cache__returns_zero)
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().emplace_back();
-    BOOST_REQUIRE_EQUAL(0u, instance.total_input_value());
+    BOOST_REQUIRE_EQUAL(instance.total_input_value(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE(transaction__total_input_value__cache__returns_cache_value_sum)
@@ -673,18 +660,17 @@ BOOST_AUTO_TEST_CASE(transaction__total_input_value__cache__returns_cache_value_
     inputs.back().previous_output().validation.cache.set_value(123u);
     inputs.emplace_back();
     inputs.back().previous_output().validation.cache.set_value(321u);
-    BOOST_REQUIRE_EQUAL(444u, instance.total_input_value());
+    BOOST_REQUIRE_EQUAL(instance.total_input_value(), 444u);
 }
 
 BOOST_AUTO_TEST_CASE(transaction__total_output_value__empty_outputs__returns_zero)
 {
     chain::transaction instance;
-    BOOST_REQUIRE_EQUAL(0u, instance.total_output_value());
+    BOOST_REQUIRE_EQUAL(instance.total_output_value(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE(transaction__total_output_value__non_empty_outputs__returns_sum)
 {
-    static const uint64_t expected = 1234;
     chain::transaction instance;
 
     // This must be non-const.
@@ -695,7 +681,7 @@ BOOST_AUTO_TEST_CASE(transaction__total_output_value__non_empty_outputs__returns
     outputs.emplace_back();
     outputs.back().set_value(34);
     instance.set_outputs(std::move(outputs));
-    BOOST_REQUIRE_EQUAL(expected, instance.total_output_value());
+    BOOST_REQUIRE_EQUAL(instance.total_output_value(), 1234u);
 }
 
 BOOST_AUTO_TEST_CASE(transaction__fees__nonempty__returns_outputs_minus_inputs)
@@ -708,7 +694,7 @@ BOOST_AUTO_TEST_CASE(transaction__fees__nonempty__returns_outputs_minus_inputs)
     inputs.back().previous_output().validation.cache.set_value(321u);
     instance.outputs().emplace_back();
     instance.outputs().back().set_value(44u);
-    BOOST_REQUIRE_EQUAL(400u, instance.fees());
+    BOOST_REQUIRE_EQUAL(instance.fees(), 400u);
 }
 
 BOOST_AUTO_TEST_CASE(transaction__is_overspent__output_does_not_exceed_input__returns_false)
@@ -737,49 +723,49 @@ BOOST_AUTO_TEST_CASE(transaction__signature_operations_single_input_output_unini
     BOOST_REQUIRE_EQUAL(instance.signature_operations(false), 0u);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_missing_inputs__empty_inputs__returns_false)
+BOOST_AUTO_TEST_CASE(transaction__is_missing_previous_outputs__empty_inputs__returns_false)
 {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_missing_inputs());
+    BOOST_REQUIRE(!instance.is_missing_previous_outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_missing_inputs__inputs_without_cache_value__returns_true)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    BOOST_REQUIRE(instance.is_missing_inputs());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__is_missing_inputs__inputs_with_cache_value__returns_false)
+BOOST_AUTO_TEST_CASE(transaction__is_missing_previous_outputs__inputs_without_cache_value__returns_true)
 {
     chain::transaction instance;
     instance.inputs().emplace_back();
-    instance.inputs().back().previous_output().validation.cache.set_value(123u);
-    BOOST_REQUIRE(!instance.is_missing_inputs());
+    BOOST_REQUIRE(instance.is_missing_previous_outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__missing_inputs__empty_inputs__returns_empty)
-{
-    chain::transaction instance;
-    BOOST_REQUIRE_EQUAL(0u, instance.missing_inputs().size());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__missing_inputs__inputs_without_cache_value__returns_single_index)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    auto result = instance.missing_inputs();
-    BOOST_REQUIRE_EQUAL(1u, result.size());
-    BOOST_REQUIRE_EQUAL(0u, result.back());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__missing_inputs__inputs_with_cache_value__returns_empty)
+BOOST_AUTO_TEST_CASE(transaction__is_missing_previous_outputs__inputs_with_cache_value__returns_false)
 {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().validation.cache.set_value(123u);
-    BOOST_REQUIRE_EQUAL(0u, instance.missing_inputs().size());
+    BOOST_REQUIRE(!instance.is_missing_previous_outputs());
 }
+
+////BOOST_AUTO_TEST_CASE(transaction__missing_previous_outputs__empty_inputs__returns_empty)
+////{
+////    chain::transaction instance;
+////    BOOST_REQUIRE_EQUAL(instance.missing_previous_outputs().size(), 0u);
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__missing_previous_outputs__inputs_without_cache_value__returns_single_index)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    auto result = instance.missing_previous_outputs();
+////    BOOST_REQUIRE_EQUAL(result.size(), 1u);
+////    BOOST_REQUIRE_EQUAL(result.back(), 0u);
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__missing_previous_outputs__inputs_with_cache_value__returns_empty)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    instance.inputs().back().previous_output().validation.cache.set_value(123u);
+////    BOOST_REQUIRE_EQUAL(instance.missing_previous_outputs().size(), 0u);
+////}
 
 BOOST_AUTO_TEST_CASE(transaction__is_double_spend__empty_inputs__returns_false)
 {
@@ -821,49 +807,49 @@ BOOST_AUTO_TEST_CASE(transaction__is_double_spend__include_unconfirmed_true_with
     BOOST_REQUIRE(instance.is_double_spend(true));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__double_spends__empty_inputs__returns_empty)
-{
-    chain::transaction instance;
-    BOOST_REQUIRE(instance.double_spends(false).empty());
-    BOOST_REQUIRE(instance.double_spends(true).empty());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__double_spends__unspent_inputs__returns_empty)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    BOOST_REQUIRE(instance.double_spends(false).empty());
-    BOOST_REQUIRE(instance.double_spends(true).empty());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__double_spends__include_unconfirmed_false_with_unconfirmed__returns_empty)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    instance.inputs().back().previous_output().validation.spent = true;
-    BOOST_REQUIRE(!instance.is_double_spend(false));
-}
-
-BOOST_AUTO_TEST_CASE(transaction__double_spends__include_unconfirmed_false_with_confirmed__returns_expected)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    instance.inputs().back().previous_output().validation.spent = true;
-    instance.inputs().back().previous_output().validation.confirmed = true;
-    auto result = instance.double_spends(false);
-    BOOST_REQUIRE_EQUAL(1u, result.size());
-    BOOST_REQUIRE_EQUAL(0u, result.back());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__double_spends__include_unconfirmed_true_with_unconfirmed__returns_expected)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    instance.inputs().back().previous_output().validation.spent = true;
-    auto result = instance.double_spends(true);
-    BOOST_REQUIRE_EQUAL(1u, result.size());
-    BOOST_REQUIRE_EQUAL(0u, result.back());
-}
+////BOOST_AUTO_TEST_CASE(transaction__double_spends__empty_inputs__returns_empty)
+////{
+////    chain::transaction instance;
+////    BOOST_REQUIRE(instance.double_spends(false).empty());
+////    BOOST_REQUIRE(instance.double_spends(true).empty());
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__double_spends__unspent_inputs__returns_empty)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    BOOST_REQUIRE(instance.double_spends(false).empty());
+////    BOOST_REQUIRE(instance.double_spends(true).empty());
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__double_spends__include_unconfirmed_false_with_unconfirmed__returns_empty)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    instance.inputs().back().previous_output().validation.spent = true;
+////    BOOST_REQUIRE(!instance.is_double_spend(false));
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__double_spends__include_unconfirmed_false_with_confirmed__returns_expected)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    instance.inputs().back().previous_output().validation.spent = true;
+////    instance.inputs().back().previous_output().validation.confirmed = true;
+////    auto result = instance.double_spends(false);
+////    BOOST_REQUIRE_EQUAL(1u, result.size());
+////    BOOST_REQUIRE_EQUAL(0u, result.back());
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__double_spends__include_unconfirmed_true_with_unconfirmed__returns_expected)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    instance.inputs().back().previous_output().validation.spent = true;
+////    auto result = instance.double_spends(true);
+////    BOOST_REQUIRE_EQUAL(1u, result.size());
+////    BOOST_REQUIRE_EQUAL(0u, result.back());
+////}
 
 BOOST_AUTO_TEST_CASE(transaction__is_immature__empty_inputs__returns_false)
 {
@@ -887,29 +873,29 @@ BOOST_AUTO_TEST_CASE(transaction__is_immature__immature_inputs__returns_true)
     BOOST_REQUIRE(instance.is_immature(50u));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__immature_inputs__empty_inputs__returns_empty)
-{
-    chain::transaction instance;
-    BOOST_REQUIRE(instance.immature_inputs(453u).empty());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__immature_inputs__mature_inputs__returns_empty)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    instance.inputs().back().previous_output().set_index(123u);
-    BOOST_REQUIRE(instance.immature_inputs(453u).empty());
-}
-
-BOOST_AUTO_TEST_CASE(transaction__immature_inputs__immature_inputs__returns_input_indexes)
-{
-    chain::transaction instance;
-    instance.inputs().emplace_back();
-    instance.inputs().back().previous_output().validation.height = 20u;
-    auto result = instance.immature_inputs(50u);
-    BOOST_REQUIRE_EQUAL(1u, result.size());
-    BOOST_REQUIRE_EQUAL(0u, result.back());
-}
+////BOOST_AUTO_TEST_CASE(transaction__immature_inputs__empty_inputs__returns_empty)
+////{
+////    chain::transaction instance;
+////    BOOST_REQUIRE(instance.immature_inputs(453u).empty());
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__immature_inputs__mature_inputs__returns_empty)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    instance.inputs().back().previous_output().set_index(123u);
+////    BOOST_REQUIRE(instance.immature_inputs(453u).empty());
+////}
+////
+////BOOST_AUTO_TEST_CASE(transaction__immature_inputs__immature_inputs__returns_input_indexes)
+////{
+////    chain::transaction instance;
+////    instance.inputs().emplace_back();
+////    instance.inputs().back().previous_output().validation.height = 20u;
+////    auto result = instance.immature_inputs(50u);
+////    BOOST_REQUIRE_EQUAL(1u, result.size());
+////    BOOST_REQUIRE_EQUAL(0u, result.back());
+////}
 
 BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equivalent)
 {

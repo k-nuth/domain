@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_COLLECTION_HPP
 #define LIBBITCOIN_COLLECTION_HPP
@@ -40,6 +39,15 @@ namespace libbitcoin {
  */
 template <typename Source, typename Target>
 std::vector<Target> cast(const std::vector<Source>& source);
+
+/**
+ * Obtain the sorted distinct elements of the list.
+ * @param      <Element>  The list element type.
+ * @param[in]  list       The list.
+ * @return                The sorted list reduced to its distinct elements.
+ */
+template <typename Element>
+std::vector<Element>& distinct(std::vector<Element>& list);
 
 /**
  * Find the position of a pair in an ordered list.
@@ -82,15 +90,6 @@ typename std::vector<Type>::iterator insert_sorted(std::vector<Type>& list,
  */
 template <typename Type>
 void move_append(std::vector<Type>& target, std::vector<Type>& source);
-
-/////**
-//// * Reverse a list, returning the new list.
-//// * @param      <Collection> The type of list.
-//// * @param[in]  list         The target list.
-//// * @returns                 The new reversed list
-//// */
-////template <typename Collection>
-////Collection reverse(const std::vector<Collection>& list);
 
 } // namespace libbitcoin
 

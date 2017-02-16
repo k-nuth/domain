@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_CONSTANTS_HPP
 #define LIBBITCOIN_CONSTANTS_HPP
@@ -25,8 +24,8 @@
 #include <bitcoin/bitcoin/compat.hpp>
 #include <bitcoin/bitcoin/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/message/network_address.hpp>
-#include <bitcoin/bitcoin/math/hash_number.hpp>
 #include <bitcoin/bitcoin/version.hpp>
 
 namespace libbitcoin {
@@ -58,8 +57,6 @@ BC_CONSTEXPR uint64_t sighash_null_value = max_uint64;
 // Script/interpreter constants.
 //-----------------------------------------------------------------------------
 
-BC_CONSTEXPR size_t max_number_size = 4;
-BC_CONSTEXPR size_t max_cltv_number_size = 5;
 BC_CONSTEXPR size_t max_counted_ops = 201;
 BC_CONSTEXPR size_t max_stack_size = 1000;
 BC_CONSTEXPR size_t max_script_size = 10000;
@@ -70,6 +67,10 @@ BC_CONSTEXPR size_t multisig_default_sigops = 20;
 // This is policy, not consensus.
 BC_CONSTEXPR size_t max_null_data_size = 80;
 
+// These may not be flexible, keep internal.
+BC_CONSTEXPR size_t max_number_size = 4;
+BC_CONSTEXPR size_t max_cltv_number_size = 5;
+
 // Various validation constants.
 //-----------------------------------------------------------------------------
 
@@ -77,33 +78,42 @@ BC_CONSTEXPR size_t min_coinbase_size = 2;
 BC_CONSTEXPR size_t max_coinbase_size = 100;
 BC_CONSTEXPR size_t median_time_past_interval = 11;
 BC_CONSTEXPR size_t max_block_size = 1000000;
-BC_CONSTEXPR size_t max_block_sigops = max_block_size / 50;
 BC_CONSTEXPR size_t coinbase_maturity = 100;
 BC_CONSTEXPR size_t time_stamp_future_hours = 2;
 BC_CONSTEXPR size_t locktime_threshold = 500000000;
+
 #ifdef LITECOIN
-// BC_CONSTEXPR size_t max_work_bits = 0x1e0ffff0;   //litecoin: 0x1d00ffff -> 0x1e0ffff0
-//Litecoin:
-/*BC_CONSTEXPR*/ const hash_number pow_limit(hash_digest{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00});
-/*BC_CONSTEXPR*/ const size_t max_work_bits = pow_limit.compact();
-#else
+// /*BC_CONSTEXPR*/ const hash_number pow_limit(hash_digest{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00});
+// /*BC_CONSTEXPR*/ const size_t max_work_bits = pow_limit.compact();
+uint256_t const pow_limit("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0f0000");
+#else // LITECOIN
 BC_CONSTEXPR size_t max_work_bits = 0x1d00ffff;
-#endif
+// This may not be flexible, keep internal.
+BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1d00ffff;
+#endif // LITECOIN
+
+// Derived.
+BC_CONSTEXPR size_t max_block_sigops = max_block_size / 50; //TODO: BITPRIM: esto es producto del merge de Febrero de 2017. Revisar si en Litecoin la constante es distinta
 
 // Timespan constants.
 //-----------------------------------------------------------------------------
 
 BC_CONSTEXPR uint32_t retargeting_factor = 4;
+
 #ifdef LITECOIN
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 15; //2.5*60=150
 BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15; //3.5 * 24 * 60 * 60 = 302400
-#else
+#else //LITECOIN
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 60;
 BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60; //14 * 24 * 60 * 60 = 1209600
-#endif
+#endif //LITECOIN
 
-BC_CONSTEXPR uint32_t double_spacing_seconds = 2 * target_spacing_seconds;
+BC_CONSTEXPR uint32_t easy_spacing_factor = 2;
 
+
+// Derived.
+BC_CONSTEXPR uint32_t double_spacing_seconds =
+    easy_spacing_factor * target_spacing_seconds;
 
 // The upper and lower bounds for the retargeting timespan.
 BC_CONSTEXPR uint32_t min_timespan =
@@ -125,15 +135,25 @@ BC_CONSTEXPR size_t bip66_version = 3;
 BC_CONSTEXPR size_t bip34_version = 2;
 BC_CONSTEXPR size_t first_version = 1;
 
-// Testnet activation parameters.
+// Mainnet activation parameters (bip34-style activations).
+BC_CONSTEXPR size_t mainnet_active = 750;
+BC_CONSTEXPR size_t mainnet_enforce = 950;
+BC_CONSTEXPR size_t mainnet_sample = 1000;
+
+// Testnet activation parameters (bip34-style activations).
 BC_CONSTEXPR size_t testnet_active = 51;
 BC_CONSTEXPR size_t testnet_enforce = 75;
 BC_CONSTEXPR size_t testnet_sample = 100;
 
-// Mainnet activation parameters.
-BC_CONSTEXPR size_t mainnet_active = 750;
-BC_CONSTEXPR size_t mainnet_enforce = 950;
-BC_CONSTEXPR size_t mainnet_sample = 1000;
+// Mainnet frozen activation heights (frozen_activations).
+BC_CONSTEXPR size_t mainnet_bip65_freeze = 388381;
+BC_CONSTEXPR size_t mainnet_bip66_freeze = 363725;
+BC_CONSTEXPR size_t mainnet_bip34_freeze = 227931;
+
+// Testnet frozen activation heights (frozen_activations).
+BC_CONSTEXPR size_t testnet_bip65_freeze = 581885;
+BC_CONSTEXPR size_t testnet_bip66_freeze = 330776;
+BC_CONSTEXPR size_t testnet_bip34_freeze = 21111;
 
 // Block 514 is the first testnet block after date-based activation.
 // Block 173805 is the first mainnet block after date-based activation.
@@ -146,21 +166,41 @@ static const config::checkpoint mainnet_bip16_exception_checkpoint
     "00000000000002dc756eebf4f49723ed8d30cc28a5f108eb94b1ba88ac4f9c22", 170060
 };
 
-////// github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
-////static const config::checkpoint mainnet_bip30_exception_checkpoint1
-////{
-////    "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842
-////};
-////static const config::checkpoint mainnet_bip30_exception_checkpoint2
-////{
-////    "00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880
-////};
+// github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
+static const config::checkpoint mainnet_bip30_exception_checkpoint1
+{
+    // TODO: figure out why this block validates without an exception.
+    "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842
+};
+static const config::checkpoint mainnet_bip30_exception_checkpoint2
+{
+    "00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880
+};
+
+// Hard fork to stop checking unspent duplicates above fixed bip34 activation.
+static const config::checkpoint mainnet_allow_collisions_checkpoint
+{
+    "000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8", 227931
+};
+static const config::checkpoint testnet_allow_collisions_checkpoint
+{
+    "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111
+};
 
 // Network protocol constants.
 //-----------------------------------------------------------------------------
 
+// Explicit size.
 BC_CONSTEXPR size_t command_size = 12;
-BC_CONSTEXPR size_t max_inventory_count = 50000;
+
+// Explicit limits.
+BC_CONSTEXPR size_t max_get_blocks = 500;
+BC_CONSTEXPR size_t max_get_headers = 2000;
+BC_CONSTEXPR size_t max_get_data = 50000;
+BC_CONSTEXPR size_t max_inventory = 50000;
+
+// Effective limit given a 32 bit chain height boundary: 10 + log2(2^32) + 1.
+BC_CONSTEXPR size_t max_locator = 43;
 
 /// Variable integer prefix sentinels.
 BC_CONSTEXPR uint8_t varint_two_bytes = 0xfd;

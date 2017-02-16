@@ -1,33 +1,32 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/utility/threadpool.hpp>
 
-#include <memory>
-#include <new>
 #include <thread>
 #include <bitcoin/bitcoin/utility/asio.hpp>
+#include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/thread.hpp>
 
 namespace libbitcoin {
 
 threadpool::threadpool(size_t number_threads, thread_priority priority)
+  : size_(0)
 {
     spawn(number_threads, priority);
 }
@@ -38,35 +37,28 @@ threadpool::~threadpool()
     join();
 }
 
+// Should not be called during spawn.
 bool threadpool::empty() const
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Critical Section
-    shared_lock(threads_mutex);
-
-    return threads_.size() != 0;
-    ///////////////////////////////////////////////////////////////////////////
+    return size() != 0;
 }
 
 // Should not be called during spawn.
 size_t threadpool::size() const
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Critical Section
-    shared_lock(threads_mutex);
-
-    return threads_.size();
-    ///////////////////////////////////////////////////////////////////////////
+    return size_.load();
 }
 
-// Not thread safe.
+// This is not thread safe.
 void threadpool::spawn(size_t number_threads, thread_priority priority)
 {
+    // This allows the pool to be restarted.
+    service_.reset();
+
     for (size_t i = 0; i < number_threads; ++i)
         spawn_once(priority);
 }
 
-// Not thread safe.
 void threadpool::spawn_once(thread_priority priority)
 {
     ///////////////////////////////////////////////////////////////////////////
@@ -76,9 +68,10 @@ void threadpool::spawn_once(thread_priority priority)
     // Work prevents the service from running out of work and terminating.
     if (!work_)
     {
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         work_mutex_.unlock_upgrade_and_lock();
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         work_ = std::make_shared<asio::service::work>(service_);
+
         work_mutex_.unlock_and_lock_upgrade();
         //-----------------------------------------------------------------
     }
@@ -86,17 +79,17 @@ void threadpool::spawn_once(thread_priority priority)
     work_mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 
-    const auto action = [this, priority]
-    {
-        set_thread_priority(priority);
-        service_.run();
-    };
-
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
-    unique_lock(threads_mutex);
+    unique_lock lock(threads_mutex_);
 
-    threads_.push_back(asio::thread(action));
+    threads_.push_back(asio::thread([this, priority]()
+    {
+        set_priority(priority);
+        service_.run();
+    }));
+
+    ++size_;
     ///////////////////////////////////////////////////////////////////////////
 }
 
@@ -111,34 +104,27 @@ void threadpool::shutdown()
     // Critical Section
     unique_lock lock(work_mutex_);
 
-    work_ = nullptr;
+    work_.reset();
     ///////////////////////////////////////////////////////////////////////////
 }
 
-// Not thread safe.
 void threadpool::join()
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
-    threads_mutex_.lock_upgrade();
+    unique_lock lock(threads_mutex_);
+
+    DEBUG_ONLY(const auto this_id = boost::this_thread::get_id();)
 
     for (auto& thread: threads_)
     {
-        if (thread.joinable())
-        {
-            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            threads_mutex_.unlock_upgrade_and_lock();
-            thread.join();
-            threads_mutex_.unlock_and_lock_upgrade();
-            //-----------------------------------------------------------------
-        }
+        BITCOIN_ASSERT(this_id != thread.get_id());
+        BITCOIN_ASSERT(thread.joinable());
+        thread.join();
     }
 
-    // This allows the pool to be cleanly restarted by calling spawn.
     threads_.clear();
-    service_.reset();
-
-    threads_mutex_.unlock_upgrade();
+    size_.store(0);
     ///////////////////////////////////////////////////////////////////////////
 }
 

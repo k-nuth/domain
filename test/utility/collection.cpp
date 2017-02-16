@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <boost/test/unit_test.hpp>
 
@@ -27,6 +26,63 @@ using namespace bc;
 BOOST_AUTO_TEST_SUITE(collection_tests)
 
 typedef std::vector<uint8_t> collection;
+
+// distinct
+
+BOOST_AUTO_TEST_CASE(collection__distinct__empty__same)
+{
+    collection parameter;
+    const auto& result = distinct(parameter);
+    BOOST_REQUIRE(parameter.empty());
+    BOOST_REQUIRE(&result == &parameter);
+}
+
+BOOST_AUTO_TEST_CASE(collection__distinct__single__match)
+{
+    const uint8_t expected = 42;
+    collection set{ expected };
+    const auto& result = distinct(set);
+    BOOST_REQUIRE_EQUAL(result.size(), 1u);
+    BOOST_REQUIRE_EQUAL(result[0], expected);
+}
+
+BOOST_AUTO_TEST_CASE(collection__distinct__distinct_sorted__sorted)
+{
+    collection set{ 0, 2, 4, 6, 8 };
+    const auto& result = distinct(set);
+    BOOST_REQUIRE_EQUAL(result.size(), 5u);
+    BOOST_REQUIRE_EQUAL(result[0], 0u);
+    BOOST_REQUIRE_EQUAL(result[1], 2u);
+    BOOST_REQUIRE_EQUAL(result[2], 4u);
+    BOOST_REQUIRE_EQUAL(result[3], 6u);
+    BOOST_REQUIRE_EQUAL(result[4], 8u);
+}
+
+BOOST_AUTO_TEST_CASE(collection__distinct__distinct_unsorted__sorted)
+{
+    collection set{ 2, 0, 8, 6, 4 };
+    const auto& result = distinct(set);
+    BOOST_REQUIRE_EQUAL(result.size(), 5u);
+    BOOST_REQUIRE_EQUAL(result[0], 0u);
+    BOOST_REQUIRE_EQUAL(result[1], 2u);
+    BOOST_REQUIRE_EQUAL(result[2], 4u);
+    BOOST_REQUIRE_EQUAL(result[3], 6u);
+    BOOST_REQUIRE_EQUAL(result[4], 8u);
+}
+
+BOOST_AUTO_TEST_CASE(collection__distinct__distinct_unsorted_duplicates__sorted_distinct)
+{
+    collection set{ 2, 0, 0, 8, 6, 4 };
+    const auto& result = distinct(set);
+    BOOST_REQUIRE_EQUAL(result.size(), 5u);
+    BOOST_REQUIRE_EQUAL(result[0], 0u);
+    BOOST_REQUIRE_EQUAL(result[1], 2u);
+    BOOST_REQUIRE_EQUAL(result[2], 4u);
+    BOOST_REQUIRE_EQUAL(result[3], 6u);
+    BOOST_REQUIRE_EQUAL(result[4], 8u);
+}
+
+// move_append
 
 BOOST_AUTO_TEST_CASE(collection__move_append__both_empty__both_empty)
 {

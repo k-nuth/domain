@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_HASH_HPP
 #define LIBBITCOIN_HASH_HPP
@@ -24,9 +23,11 @@
 #include <string>
 #include <vector>
 #include <boost/functional/hash_fwd.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
 #include <bitcoin/bitcoin/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
+#include <bitcoin/bitcoin/utility/endian.hpp>
 
 namespace libbitcoin {
 
@@ -53,6 +54,9 @@ typedef std::vector<quarter_hash> quarter_hash_list;
 typedef std::vector<long_hash> long_hash_list;
 typedef std::vector<short_hash> short_hash_list;
 typedef std::vector<mini_hash> mini_hash_list;
+
+// Alias for boost big integer type.
+typedef boost::multiprecision::uint256_t uint256_t;
 
 // Null-valued common bitcoin hashes.
 
@@ -102,6 +106,11 @@ BC_CONSTEXPR mini_hash null_mini_hash
         0, 0, 0, 0, 0, 0
     }
 };
+
+inline uint256_t to_uint256(const hash_digest& hash)
+{
+    return from_little_endian<uint256_t>(hash.begin(), hash.end());
+}
 
 /// Generate a scrypt hash to fill a byte array.
 template <size_t Size>

@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_ASIO_HPP
 #define LIBBITCOIN_ASIO_HPP
@@ -45,7 +44,6 @@ typedef steady_clock::duration duration;
 typedef steady_clock::time_point time_point;
 typedef boost::asio::basic_waitable_timer<steady_clock> timer;
 
-typedef boost::asio::const_buffer const_buffer;
 typedef boost::asio::io_service service;
 typedef boost::asio::ip::address address;
 typedef boost::asio::ip::address_v4 ipv4;
@@ -64,9 +62,6 @@ typedef tcp::resolver::iterator iterator;
 typedef boost::thread thread;
 
 typedef std::shared_ptr<socket> socket_ptr;
-typedef std::shared_ptr<acceptor> acceptor_ptr;
-typedef std::shared_ptr<resolver> resolver_ptr;
-typedef std::shared_ptr<query> query_ptr;
 
 BC_CONSTEXPR int max_connections = boost::asio::socket_base::max_connections;
 

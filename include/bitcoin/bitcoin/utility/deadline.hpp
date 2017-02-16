@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_DEADLINE_HPP
 #define LIBBITCOIN_DEADLINE_HPP
@@ -26,6 +25,7 @@
 #include <bitcoin/bitcoin/utility/asio.hpp>
 #include <bitcoin/bitcoin/utility/enable_shared_from_base.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
+#include <bitcoin/bitcoin/utility/noncopyable.hpp>
 #include <bitcoin/bitcoin/utility/thread.hpp>
 #include <bitcoin/bitcoin/utility/threadpool.hpp>
 ////#include <bitcoin/bitcoin/utility/track.hpp>
@@ -38,22 +38,20 @@ namespace libbitcoin {
  * makes timer firing and cancellation conditions safer.
  */
 class BC_API deadline
-  : public enable_shared_from_base<deadline> /*, track<deadline>*/
+  : public enable_shared_from_base<deadline>,
+    noncopyable
+    /*, track<deadline>*/
 {
 public:
     typedef std::shared_ptr<deadline> ptr;
     typedef std::function<void(const code&)> handler;
-    
+
     /**
      * Construct a deadline timer.
      * @param[in]  pool      The thread pool used by the timer.
      * @param[in]  duration  The default time period from start to expiration.
      */
     deadline(threadpool& pool, const asio::duration duration);
-
-    /// This class is not copyable.
-    deadline(const deadline&) = delete;
-    void operator=(const deadline&) = delete;
 
     /**
      * Start or restart the timer.

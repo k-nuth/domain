@@ -1,25 +1,25 @@
-/*
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+/**
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/alert_payload.hpp>
 
 #include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
@@ -298,16 +298,17 @@ void alert_payload::to_data(uint32_t version, writer& sink) const
     sink.write_string(reserved_);
 }
 
-uint64_t alert_payload::serialized_size(uint32_t version) const
+size_t alert_payload::serialized_size(uint32_t version) const
 {
-    uint64_t size = 40 + variable_uint_size(comment_.size()) + comment_.size() +
-        variable_uint_size(status_bar_.size()) + status_bar_.size() +
-        variable_uint_size(reserved_.size()) + reserved_.size() +
-        variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
-        variable_uint_size(set_sub_version_.size());
+    size_t size = 40u +
+        message::variable_uint_size(comment_.size()) + comment_.size() +
+        message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
+        message::variable_uint_size(reserved_.size()) + reserved_.size() +
+        message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
+        message::variable_uint_size(set_sub_version_.size());
 
     for (const auto& sub_version : set_sub_version_)
-        size += variable_uint_size(sub_version.size()) + sub_version.size();
+        size += message::variable_uint_size(sub_version.size()) + sub_version.size();
 
     return size;
 }
@@ -532,5 +533,5 @@ bool alert_payload::operator!=(const alert_payload& other) const
     return !(*this == other);
 }
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin

@@ -1,26 +1,25 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/heading.hpp>
 
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/messages.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -41,11 +40,14 @@ const size_t heading::maximum_size()
 // The variable integer portion is maximum 3 bytes (with a count of 50,000).
 // According to protocol documentation get_blocks is limited only by the
 // general maximum payload size of 0x02000000 (33,554,432). But this is an
-// absurd limit for a message that should always be very small.
+// absurd limit for a message that is properly [10 + log2(height) + 1]. Since
+// protocol limits height to 2^32 this is 43. Even with expansion to 2^62
+// this is limited to 75. So we limit payloads to the maximum inventory
+// payload size.
 const size_t heading::maximum_payload_size(uint32_t)
 {
     static constexpr size_t vector = sizeof(uint32_t) + hash_size;
-    static constexpr size_t maximum = 3u + vector * max_inventory_count;
+    static constexpr size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
     return maximum;
 }
@@ -183,10 +185,12 @@ message_type heading::type() const
         return message_type::alert;
     if (command_ == block_transactions::command)
         return message_type::block_transactions;
-    if (command_ == block_message::command)
-        return message_type::block_message;
+    if (command_ == block::command)
+        return message_type::block;
     if (command_ == compact_block::command)
         return message_type::compact_block;
+    if (command_ == fee_filter::command)
+        return message_type::fee_filter;
     if (command_ == filter_add::command)
         return message_type::filter_add;
     if (command_ == filter_clear::command)
@@ -219,12 +223,12 @@ message_type heading::type() const
         return message_type::pong;
     if (command_ == reject::command)
         return message_type::reject;
-    if (command_ == send_compact_blocks::command)
-        return message_type::send_compact_blocks;
+    if (command_ == send_compact::command)
+        return message_type::send_compact;
     if (command_ == send_headers::command)
         return message_type::send_headers;
-    if (command_ == transaction_message::command)
-        return message_type::transaction_message;
+    if (command_ == transaction::command)
+        return message_type::transaction;
     if (command_ == verack::command)
         return message_type::verack;
     if (command_ == version::command)

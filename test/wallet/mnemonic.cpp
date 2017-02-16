@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "mnemonic.hpp"
 
@@ -125,6 +124,70 @@ BOOST_AUTO_TEST_CASE(mnemonic__dictionary__en_es__no_intersection)
         std::string test(es);
         const auto it = std::find(english.begin(), english.end(), test);
         if (it != std::end(english))
+            intersection++;
+    }
+
+    BOOST_REQUIRE_EQUAL(intersection, 0u);
+}
+
+BOOST_AUTO_TEST_CASE(mnemonic__dictionary__en_it__no_intersection)
+{
+    const auto& english = language::en;
+    const auto& italian = language::it;
+    size_t intersection = 0;
+    for (const auto it: italian)
+    {
+        std::string test(it);
+        const auto iter = std::find(english.begin(), english.end(), test);
+        if (iter != std::end(english))
+            intersection++;
+    }
+
+    BOOST_REQUIRE_EQUAL(intersection, 0u);
+}
+
+BOOST_AUTO_TEST_CASE(mnemonic__dictionary__fr_es__no_intersection)
+{
+    const auto& french = language::fr;
+    const auto& spanish = language::es;
+    size_t intersection = 0;
+    for (const auto es: spanish)
+    {
+        std::string test(es);
+        const auto it = std::find(french.begin(), french.end(), test);
+        if (it != std::end(french))
+            intersection++;
+    }
+
+    BOOST_REQUIRE_EQUAL(intersection, 0u);
+}
+
+BOOST_AUTO_TEST_CASE(mnemonic__dictionary__it_es__no_intersection)
+{
+    const auto& italian = language::it;
+    const auto& spanish = language::es;
+    size_t intersection = 0;
+    for (const auto es: spanish)
+    {
+        std::string test(es);
+        const auto it = std::find(italian.begin(), italian.end(), test);
+        if (it != std::end(italian))
+            intersection++;
+    }
+
+    BOOST_REQUIRE_EQUAL(intersection, 0u);
+}
+
+BOOST_AUTO_TEST_CASE(mnemonic__dictionary__fr_it__no_intersection)
+{
+    const auto& french = language::fr;
+    const auto& italian = language::it;
+    size_t intersection = 0;
+    for (const auto it: italian)
+    {
+        std::string test(it);
+        const auto iter = std::find(french.begin(), french.end(), test);
+        if (iter != std::end(french))
             intersection++;
     }
 

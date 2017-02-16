@@ -1,30 +1,30 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/inventory.hpp>
 
 #include <algorithm>
 #include <initializer_list>
 #include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
-#include <bitcoin/bitcoin/math/limits.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -189,10 +189,10 @@ void inventory::reduce(inventory_vector::list& out, type_id type) const
     out.shrink_to_fit();
 }
 
-uint64_t inventory::serialized_size(uint32_t version) const
+size_t inventory::serialized_size(uint32_t version) const
 {
-    return variable_uint_size(inventories_.size()) + inventories_.size() *
-        inventory_vector::satoshi_fixed_size(version);
+    return message::variable_uint_size(inventories_.size()) +
+        inventories_.size() * inventory_vector::satoshi_fixed_size(version);
 }
 
 size_t inventory::count(type_id type) const

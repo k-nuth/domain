@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/chain/point.hpp>
 
@@ -156,12 +155,12 @@ void point::to_data(writer& sink) const
     sink.write_4_bytes_little_endian(index_);
 }
 
-uint64_t point::serialized_size() const
+size_t point::serialized_size() const
 {
     return point::satoshi_fixed_size();
 }
 
-uint64_t point::satoshi_fixed_size()
+size_t point::satoshi_fixed_size()
 {
     return hash_size + sizeof(uint32_t);
 }
@@ -174,13 +173,6 @@ point_iterator point::begin() const
 point_iterator point::end() const
 {
     return point_iterator(*this, static_cast<unsigned>(satoshi_fixed_size()));
-}
-
-std::string point::to_string() const
-{
-    std::ostringstream value;
-    value << "\thash = " << encode_hash(hash_) << "\n\tindex = " << index_;
-    return value.str();
 }
 
 bool point::is_null() const

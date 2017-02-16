@@ -1,26 +1,27 @@
-/*
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+/**
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/message/merkle_block.hpp>
 
+#include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/math/limits.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
@@ -65,17 +66,26 @@ merkle_block::merkle_block()
 }
 
 merkle_block::merkle_block(const chain::header& header,
-    uint32_t total_transactions, const hash_list& hashes,
+    size_t total_transactions, const hash_list& hashes,
     const data_chunk& flags)
   : header_(header), total_transactions_(total_transactions), hashes_(hashes),
     flags_(flags)
 {
 }
 
-merkle_block::merkle_block(chain::header&& header, uint32_t total_transactions,
+merkle_block::merkle_block(chain::header&& header, size_t total_transactions,
     hash_list&& hashes, data_chunk&& flags)
   : header_(std::move(header)), total_transactions_(total_transactions),
     hashes_(std::move(hashes)), flags_(std::move(flags))
+{
+}
+
+// Hack: use of safe_unsigned here isn't great. We should consider using size_t
+// for the transaction count and invalidating on deserialization and construct.
+merkle_block::merkle_block(const chain::block& block)
+  : merkle_block(block.header(),
+        safe_unsigned<uint32_t>(block.transactions().size()),
+        block.to_hashes(), {})
 {
 }
 
@@ -163,7 +173,8 @@ void merkle_block::to_data(uint32_t version, writer& sink) const
 {
     header_.to_data(sink);
 
-    sink.write_4_bytes_little_endian(total_transactions_);
+    const auto total32 = safe_unsigned<uint32_t>(total_transactions_);
+    sink.write_4_bytes_little_endian(total32);
     sink.write_variable_little_endian(hashes_.size());
 
     for (const auto& hash : hashes_)
@@ -173,11 +184,11 @@ void merkle_block::to_data(uint32_t version, writer& sink) const
     sink.write_bytes(flags_);
 }
 
-uint64_t merkle_block::serialized_size(uint32_t version) const
+size_t merkle_block::serialized_size(uint32_t version) const
 {
-    return header_.serialized_size() + 4 +
-        variable_uint_size(hashes_.size()) + (hash_size * hashes_.size()) +
-        variable_uint_size(flags_.size()) + flags_.size();
+    return header_.serialized_size() + 4u +
+        message::variable_uint_size(hashes_.size()) + (hash_size * hashes_.size()) +
+        message::variable_uint_size(flags_.size()) + flags_.size();
 }
 
 chain::header& merkle_block::header()
@@ -200,12 +211,12 @@ void merkle_block::set_header(chain::header&& value)
     header_ = std::move(value);
 }
 
-uint32_t merkle_block::total_transactions() const
+size_t merkle_block::total_transactions() const
 {
     return total_transactions_;
 }
 
-void merkle_block::set_total_transactions(uint32_t value)
+void merkle_block::set_total_transactions(size_t value)
 {
     total_transactions_ = value;
 }
@@ -264,10 +275,10 @@ bool merkle_block::operator==(const merkle_block& other) const
         (hashes_.size() == other.hashes_.size()) &&
         (flags_.size() == other.flags_.size());
 
-    for (hash_list::size_type i = 0; i < hashes_.size() && result; i++)
+    for (size_t i = 0; i < hashes_.size() && result; i++)
         result = (hashes_[i] == other.hashes_[i]);
 
-    for (data_chunk::size_type i = 0; i < flags_.size() && result; i++)
+    for (size_t i = 0; i < flags_.size() && result; i++)
         result = (flags_[i] == other.flags_[i]);
 
     return result;

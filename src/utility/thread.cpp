@@ -1,25 +1,28 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/utility/thread.hpp>
 
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <stdexcept>
+#include <thread>
 
 #ifdef _MSC_VER
     #include <windows.h>
@@ -40,7 +43,7 @@
 namespace libbitcoin {
 
 // Privately map the class enum thread priority value to an interger.
-static int get_thread_priority(thread_priority priority)
+static int get_priority(thread_priority priority)
 {
     switch (priority)
     {
@@ -58,9 +61,9 @@ static int get_thread_priority(thread_priority priority)
 }
 
 // Set the thread priority (or process if thread priority is not avaliable).
-void set_thread_priority(thread_priority priority)
+void set_priority(thread_priority priority)
 {
-    const auto prioritization = get_thread_priority(priority);
+    const auto prioritization = get_priority(priority);
 
 #if defined(_MSC_VER)
     SetThreadPriority(GetCurrentThread(), prioritization);
@@ -69,6 +72,52 @@ void set_thread_priority(thread_priority priority)
 #else
     setpriority(PRIO_PROCESS, getpid(), prioritization);
 #endif
+}
+
+thread_priority priority(bool priority)
+{
+    return priority ? thread_priority::high : thread_priority::normal;
+}
+
+inline size_t cores()
+{
+    // Cores must be at least 1 (guards against irrational API return).
+    return std::max(std::thread::hardware_concurrency(), 1u);
+}
+
+// This is used to default the number of threads to the number of cores and to
+// ensure that no less than one thread is configured.
+size_t thread_default(size_t configured)
+{
+    if (configured == 0)
+        return cores();
+
+    // Configured but no less than 1.
+    return std::max(configured, size_t(1));
+}
+
+// This is used to ensure that threads does not exceed cores in the case of
+// parallel work distribution, while allowing the user to reduce parallelism so
+// as not to monopolize the processor. It also makes optimal config easy (0).
+size_t thread_ceiling(size_t configured)
+{
+    if (configured == 0)
+        return cores();
+
+    // Cores/1 but no more than configured.
+    return std::min(configured, cores());
+}
+
+// This is used to ensure that at least a minimum required number of threads is
+// allocated, so that thread starvation does not occur. It also allows the user
+// to increase threads above minimum. It always ensures at least core threads.
+size_t thread_floor(size_t configured)
+{
+    if (configured == 0)
+        return cores();
+
+    // Configured but no less than cores/1.
+    return std::max(configured, cores());
 }
 
 } // namespace libbitcoin

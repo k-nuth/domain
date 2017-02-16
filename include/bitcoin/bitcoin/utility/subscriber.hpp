@@ -1,30 +1,28 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef  LIBBITCOIN_SUBSCRIBER_HPP
-#define  LIBBITCOIN_SUBSCRIBER_HPP
+#ifndef LIBBITCOIN_SUBSCRIBER_HPP
+#define LIBBITCOIN_SUBSCRIBER_HPP
 
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
-#include <bitcoin/bitcoin/utility/assert.hpp>
 #include <bitcoin/bitcoin/utility/dispatcher.hpp>
 #include <bitcoin/bitcoin/utility/enable_shared_from_base.hpp>
 #include <bitcoin/bitcoin/utility/thread.hpp>
@@ -43,7 +41,7 @@ public:
     typedef std::shared_ptr<subscriber<Args...>> ptr;
 
     subscriber(threadpool& pool, const std::string& class_name);
-    ~subscriber();
+    virtual ~subscriber();
 
     /// Enable new subscriptions.
     void start();
@@ -52,7 +50,7 @@ public:
     void stop();
 
     /// Subscribe to notifications (for one invocation only).
-    void subscribe(handler handler, Args... stopped_args);
+    void subscribe(handler&& notify, Args... stopped_args);
 
     /// Invoke and clear all handlers sequentially (blocking).
     void invoke(Args... args);

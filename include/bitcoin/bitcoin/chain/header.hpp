@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_CHAIN_HEADER_HPP
 #define LIBBITCOIN_CHAIN_HEADER_HPP
@@ -47,13 +46,12 @@ public:
     typedef std::vector<header> ptr_list;
     typedef std::vector<const_ptr> const_ptr_list;
 
-    // These properties facilitate block validation.
-    // This validation data is not copied on block/header copy.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation
     {
-        static const size_t orphan_height;
+        static const size_t undetermined_height;
 
-        size_t height = validation::orphan_height;
+        size_t height = validation::undetermined_height;
     };
 
     // Constructors.
@@ -106,8 +104,8 @@ public:
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    static uint64_t satoshi_fixed_size();
-    uint64_t serialized_size() const;
+    static size_t satoshi_fixed_size();
+    size_t serialized_size() const;
 
     uint32_t version() const;
     void set_version(uint32_t value);
@@ -149,7 +147,7 @@ public:
     code check() const;
     code accept(const chain_state& state) const;
 
-    // These fields do not participate in serialization or comparison.
+    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
 protected:

@@ -1,29 +1,26 @@
 /**
- * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/wallet/select_outputs.hpp>
 
 #include <algorithm>
 #include <cstdint>
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/formats/base_16.hpp>
-#include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 
 namespace libbitcoin {
@@ -31,15 +28,10 @@ namespace wallet {
 
 using namespace bc::chain;
 
-void select_outputs::select(points_info& out, output_info::list unspent,
-    uint64_t minimum_value, algorithm DEBUG_ONLY(option))
+// unspent list is sorted in this method, so a copied parameter is used
+static void greedy_select(points_info& out, output_info::list unspent,
+    uint64_t minimum_value)
 {
-    out.change = 0;
-    out.points.clear();
-
-    if (unspent.empty())
-        return;
-
     const auto below_minimum = [minimum_value](const output_info& out_info)
     {
         return out_info.value < minimum_value;
@@ -92,5 +84,35 @@ void select_outputs::select(points_info& out, output_info::list unspent,
     out.points.clear();
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+static void individual_select(points_info& out,
+    const output_info::list& unspent_list, uint64_t minimum_value)
+{
+    for (const auto& unspent: unspent_list)
+        if (unspent.value >= minimum_value)
+            out.points.push_back(unspent.point);
+}
+
+void select_outputs::select(points_info& out, const output_info::list& unspent,
+    uint64_t minimum_value, algorithm option)
+{
+    out.change = 0;
+    out.points.clear();
+
+    if (unspent.empty())
+        return;
+
+    switch(option)
+    {
+        case algorithm::individual:
+            individual_select(out, unspent, minimum_value);
+            break;
+
+        case algorithm::greedy:
+        default:
+            greedy_select(out, unspent, minimum_value);
+            break;
+    }
+}
+
+} // namspace wallet
+} // namspace libbitcoin
