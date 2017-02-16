@@ -381,7 +381,7 @@ endif()
 #  src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
 #  src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp)
 
-add_library(bitprim-core ${MODE}
+set(bitprim_core_sources 
         src/chain/block.cpp
         src/chain/chain_state.cpp
         src/chain/header.cpp
@@ -424,7 +424,7 @@ add_library(bitprim-core ${MODE}
         src/math/crypto.cpp
         src/math/elliptic_curve.cpp
         src/math/hash.cpp
-        src/math/hash_number.cpp
+        # src/math/hash_number.cpp
         # src/math/script_number.cpp
         src/math/secp256k1_initializer.cpp
         src/math/secp256k1_initializer.hpp
@@ -451,8 +451,7 @@ add_library(bitprim-core ${MODE}
         src/math/external/pbkdf2_sha256.c
         src/math/external/pkcs5_pbkdf2.c
         src/math/external/ripemd160.c
-        src/math/external/scrypt.cpp
-        src/math/external/scrypt-sse2.cpp
+
         src/math/external/sha1.c
         src/math/external/sha256.c
         src/math/external/sha512.c
@@ -544,7 +543,22 @@ add_library(bitprim-core ${MODE}
         src/wallet/stealth_address.cpp
         src/wallet/uri.cpp)
 
+if (WITH_LITECOIN)
+    set(bitprim_core_sources ${bitprim_core_sources}         
+      src/math/external/scrypt.cpp
+      src/math/external/scrypt-sse2.cpp)
+endif()
 
+add_library(bitprim-core ${MODE} ${bitprim_core_sources})
+
+
+# add_library(bitprim-core ${MODE}
+#        src/wallet/uri.cpp)
+
+
+if (WITH_LITECOIN)
+  target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+endif()
 
 target_include_directories(bitprim-core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -743,7 +757,7 @@ add_executable(bitprim_core_test
         test/math/elliptic_curve.cpp
         test/math/hash.cpp
         test/math/hash.hpp
-        test/math/hash_number.cpp
+        # test/math/hash_number.cpp
         test/math/limits.cpp
         test/math/script_number.cpp
         test/math/script_number.hpp
@@ -1178,7 +1192,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/math/crypto.hpp
     bitcoin/bitcoin/math/elliptic_curve.hpp
     bitcoin/bitcoin/math/hash.hpp
-    bitcoin/bitcoin/math/hash_number.hpp
+    # bitcoin/bitcoin/math/hash_number.hpp
     bitcoin/bitcoin/math/limits.hpp
     bitcoin/bitcoin/math/script_number.hpp
     bitcoin/bitcoin/math/stealth.hpp
