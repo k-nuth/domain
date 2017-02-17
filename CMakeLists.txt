@@ -1234,10 +1234,10 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/log/udp_client_sink.hpp
 
     bitcoin/bitcoin/log/features/counter.hpp
-    bitcoin/bitcoin/log/features/gauge.ipp
-    bitcoin/bitcoin/log/features/metric.ipp
-    bitcoin/bitcoin/log/features/rate.ipp
-    bitcoin/bitcoin/log/features/timer.ipp
+    bitcoin/bitcoin/log/features/gauge.hpp
+    bitcoin/bitcoin/log/features/metric.hpp
+    bitcoin/bitcoin/log/features/rate.hpp
+    bitcoin/bitcoin/log/features/timer.hpp
 
 
     bitcoin/bitcoin/math/checksum.hpp
