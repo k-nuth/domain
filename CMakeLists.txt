@@ -384,18 +384,22 @@ endif()
 set(bitprim_core_sources 
         src/chain/block.cpp
         src/chain/chain_state.cpp
+        src/chain/compact.cpp
         src/chain/header.cpp
         src/chain/input.cpp
         src/chain/output.cpp
         src/chain/output_point.cpp
         src/chain/point.cpp
         src/chain/point_iterator.cpp
+        src/chain/script.cpp
+        src/chain/transaction.cpp
+
         src/machine/interpreter.cpp
+        src/machine/number.cpp
         src/machine/opcode.cpp
         src/machine/operation.cpp
         src/machine/program.cpp
-        src/chain/script.cpp
-        src/chain/transaction.cpp
+
         src/config/authority.cpp
         src/config/base16.cpp
         src/config/base2.cpp
@@ -410,16 +414,22 @@ set(bitprim_core_sources
         src/config/parser.cpp
         src/config/printer.cpp
         src/config/sodium.cpp
+
         src/error.cpp
+
         src/formats/base_10.cpp
         src/formats/base_16.cpp
         src/formats/base_58.cpp
         src/formats/base_64.cpp
         src/formats/base_85.cpp
+
         src/log/file_collector.cpp
         src/log/file_collector_repository.cpp
         src/log/file_counter_formatter.cpp
         src/log/sink.cpp
+        src/log/statsd_sink.cpp
+        src/log/udp_client_sink.cpp
+
         src/math/checksum.cpp
         src/math/crypto.cpp
         src/math/elliptic_curve.cpp
@@ -451,15 +461,15 @@ set(bitprim_core_sources
         src/math/external/pbkdf2_sha256.c
         src/math/external/pkcs5_pbkdf2.c
         src/math/external/ripemd160.c
-
         src/math/external/sha1.c
         src/math/external/sha256.c
         src/math/external/sha512.c
         src/math/external/zeroize.c
+
         src/message/address.cpp
         src/message/alert.cpp
         src/message/alert_payload.cpp
-        # src/message/block_message.cpp
+        src/message/block.cpp
         src/message/block_transactions.cpp
         src/message/compact_block.cpp
         src/message/fee_filter.cpp
@@ -471,7 +481,7 @@ set(bitprim_core_sources
         src/message/get_blocks.cpp
         src/message/get_data.cpp
         src/message/get_headers.cpp
-        # src/message/header_message.cpp
+        src/message/header.cpp
         src/message/headers.cpp
         src/message/heading.cpp
         src/message/inventory.cpp
@@ -484,11 +494,12 @@ set(bitprim_core_sources
         src/message/pong.cpp
         src/message/prefilled_transaction.cpp
         src/message/reject.cpp
-        # src/message/send_compact_blocks.cpp
+        src/message/send_compact.cpp
         src/message/send_headers.cpp
-        # src/message/transaction_message.cpp
+        src/message/transaction.cpp
         src/message/verack.cpp
         src/message/version.cpp
+        
         src/unicode/console_streambuf.cpp
         src/unicode/ifstream.cpp
         src/unicode/ofstream.cpp
@@ -496,6 +507,7 @@ set(bitprim_core_sources
         src/unicode/unicode_istream.cpp
         src/unicode/unicode_ostream.cpp
         src/unicode/unicode_streambuf.cpp
+        
         src/utility/binary.cpp
         src/utility/conditional_lock.cpp
         src/utility/deadline.cpp
@@ -508,12 +520,14 @@ set(bitprim_core_sources
         src/utility/png.cpp
         src/utility/random.cpp
         src/utility/scope_lock.cpp
+        src/utility/sequencer.cpp
         src/utility/sequential_lock.cpp
+        src/utility/socket.cpp
         src/utility/string.cpp
         src/utility/thread.cpp
         src/utility/threadpool.cpp
-        # src/utility/variable_uint_size.cpp
         src/utility/work.cpp
+
         src/wallet/bitcoin_uri.cpp
         src/wallet/dictionary.cpp
         src/wallet/ec_private.cpp
@@ -541,6 +555,8 @@ set(bitprim_core_sources
         src/wallet/qrcode.cpp
         src/wallet/select_outputs.cpp
         src/wallet/stealth_address.cpp
+        src/wallet/stealth_receiver.cpp
+        src/wallet/stealth_sender.cpp
         src/wallet/uri.cpp)
 
 if (WITH_LITECOIN)
@@ -752,7 +768,7 @@ add_executable(bitprim_core_test
         test/formats/base_85.cpp
         test/main.cpp
         test/math/big_number.cpp
-        test/math/big_number.hpp
+        test/math/big_number.hppcompact
         test/math/checksum.cpp
         test/math/elliptic_curve.cpp
         test/math/hash.cpp
@@ -1117,8 +1133,17 @@ install(TARGETS bitprim-core
 #  bitcoin/bitcoin/wallet/uri_reader.hpp)
 
 set(_bitprim_core_headers
+    bitcoin/bitcoin/compat.h
+    bitcoin/bitcoin/compat.hpp
+    bitcoin/bitcoin/constants.hpp
+    bitcoin/bitcoin/define.hpp
+    bitcoin/bitcoin/error.hpp
+    bitcoin/bitcoin/handlers.hpp
+    bitcoin/bitcoin/version.hpp
+
     bitcoin/bitcoin/chain/block.hpp
     bitcoin/bitcoin/chain/chain_state.hpp
+    bitcoin/bitcoin/chain/compact.hpp    
     bitcoin/bitcoin/chain/header.hpp
     bitcoin/bitcoin/chain/history.hpp
     bitcoin/bitcoin/chain/input.hpp
@@ -1127,18 +1152,19 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/chain/output_point.hpp
     bitcoin/bitcoin/chain/point.hpp
     bitcoin/bitcoin/chain/point_iterator.hpp
-    bitcoin/bitcoin/machine/interpreter.hpp
-    bitcoin/bitcoin/chain/machine/opcode.hpp
-    bitcoin/bitcoin/chain/script/operation.hpp
-    bitcoin/bitcoin/chain/script/program.hpp
-    bitcoin/bitcoin/chain/script/rule_fork.hpp
-    bitcoin/bitcoin/chain/script/script.hpp
-    bitcoin/bitcoin/chain/script/script_pattern.hpp
-    bitcoin/bitcoin/chain/script/sighash_algorithm.hpp
+    bitcoin/bitcoin/chain/script.hpp
     bitcoin/bitcoin/chain/stealth.hpp
     bitcoin/bitcoin/chain/transaction.hpp
-    bitcoin/bitcoin/compat.h
-    bitcoin/bitcoin/compat.hpp
+
+    bitcoin/bitcoin/machine/interpreter.hpp
+    bitcoin/bitcoin/machine/number.hpp    
+    bitcoin/bitcoin/machine/opcode.hpp
+    bitcoin/bitcoin/machine/operation.hpp
+    bitcoin/bitcoin/machine/program.hpp
+    bitcoin/bitcoin/machine/rule_fork.hpp
+    bitcoin/bitcoin/machine/script_pattern.hpp
+    bitcoin/bitcoin/machine/sighash_algorithm.hpp
+
     bitcoin/bitcoin/config/authority.hpp
     bitcoin/bitcoin/config/base16.hpp
     bitcoin/bitcoin/config/base2.hpp
@@ -1154,20 +1180,31 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/config/printer.hpp
     bitcoin/bitcoin/config/settings.hpp
     bitcoin/bitcoin/config/sodium.hpp
-    bitcoin/bitcoin/constants.hpp
-    bitcoin/bitcoin/define.hpp
-    bitcoin/bitcoin/error.hpp
+
     bitcoin/bitcoin/formats/base_10.hpp
     bitcoin/bitcoin/formats/base_16.hpp
     bitcoin/bitcoin/formats/base_58.hpp
     bitcoin/bitcoin/formats/base_64.hpp
     bitcoin/bitcoin/formats/base_85.hpp
-    bitcoin/bitcoin/handlers.hpp
+
+    
     bitcoin/bitcoin/impl/formats/base_16.ipp
     bitcoin/bitcoin/impl/formats/base_58.ipp
+   
     bitcoin/bitcoin/impl/math/checksum.ipp
     bitcoin/bitcoin/impl/math/hash.ipp
+
+    bitcoin/bitcoin/impl/log/features/counter.ipp
+    bitcoin/bitcoin/impl/log/features/gauge.ipp
+    bitcoin/bitcoin/impl/log/features/metric.ipp
+    bitcoin/bitcoin/impl/log/features/rate.ipp
+    bitcoin/bitcoin/impl/log/features/timer.ipp
+
     bitcoin/bitcoin/impl/machine/interpreter.ipp
+    bitcoin/bitcoin/impl/machine/number.ipp
+    bitcoin/bitcoin/impl/machine/operation.ipp
+    bitcoin/bitcoin/impl/machine/program.ipp
+
     bitcoin/bitcoin/impl/utility/array_slice.ipp
     bitcoin/bitcoin/impl/utility/collection.ipp
     bitcoin/bitcoin/impl/utility/data.ipp
@@ -1176,31 +1213,46 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/impl/utility/istream_reader.ipp
     bitcoin/bitcoin/impl/utility/notifier.ipp
     bitcoin/bitcoin/impl/utility/ostream_writer.ipp
+    bitcoin/bitcoin/impl/utility/pending.ipp    
     bitcoin/bitcoin/impl/utility/resubscriber.ipp
     bitcoin/bitcoin/impl/utility/serializer.ipp
     bitcoin/bitcoin/impl/utility/subscriber.ipp
     bitcoin/bitcoin/impl/utility/track.ipp
+
     bitcoin/bitcoin/log/attributes.hpp
     bitcoin/bitcoin/log/file_char_traits.hpp
     bitcoin/bitcoin/log/file_collector.hpp
     bitcoin/bitcoin/log/file_collector_repository.hpp
     bitcoin/bitcoin/log/file_counter_formatter.hpp
+    bitcoin/bitcoin/log/rotable_file.hpp    
     bitcoin/bitcoin/log/severity.hpp
     bitcoin/bitcoin/log/sink.hpp
-    bitcoin/bitcoin/log/sources.hpp
+    bitcoin/bitcoin/log/source.hpp
+    bitcoin/bitcoin/log/statsd_sink.hpp
+    bitcoin/bitcoin/log/statsd_source.hpp
+    bitcoin/bitcoin/log/udp_client_sink.hpp
+
+    bitcoin/bitcoin/log/features/counter.hpp
+    bitcoin/bitcoin/log/features/gauge.ipp
+    bitcoin/bitcoin/log/features/metric.ipp
+    bitcoin/bitcoin/log/features/rate.ipp
+    bitcoin/bitcoin/log/features/timer.ipp
+
+
     bitcoin/bitcoin/math/checksum.hpp
     bitcoin/bitcoin/math/crypto.hpp
     bitcoin/bitcoin/math/elliptic_curve.hpp
     bitcoin/bitcoin/math/hash.hpp
     # bitcoin/bitcoin/math/hash_number.hpp
     bitcoin/bitcoin/math/limits.hpp
-    bitcoin/bitcoin/math/script_number.hpp
+    #bitcoin/bitcoin/math/script_number.hpp
     bitcoin/bitcoin/math/stealth.hpp
     bitcoin/bitcoin/math/uint256.hpp
+    
     bitcoin/bitcoin/message/address.hpp
     bitcoin/bitcoin/message/alert.hpp
     bitcoin/bitcoin/message/alert_payload.hpp
-    bitcoin/bitcoin/message/block_message.hpp
+    bitcoin/bitcoin/message/block.hpp
     bitcoin/bitcoin/message/block_transactions.hpp
     bitcoin/bitcoin/message/compact_block.hpp
     bitcoin/bitcoin/message/fee_filter.hpp
@@ -1212,25 +1264,26 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/message/get_blocks.hpp
     bitcoin/bitcoin/message/get_data.hpp
     bitcoin/bitcoin/message/get_headers.hpp
-    bitcoin/bitcoin/message/header_message.hpp
+    bitcoin/bitcoin/message/header.hpp
     bitcoin/bitcoin/message/headers.hpp
     bitcoin/bitcoin/message/heading.hpp
     bitcoin/bitcoin/message/inventory.hpp
     bitcoin/bitcoin/message/inventory_vector.hpp
     bitcoin/bitcoin/message/memory_pool.hpp
     bitcoin/bitcoin/message/merkle_block.hpp
+    bitcoin/bitcoin/message/messages.hpp
     bitcoin/bitcoin/message/network_address.hpp
     bitcoin/bitcoin/message/not_found.hpp
     bitcoin/bitcoin/message/ping.hpp
     bitcoin/bitcoin/message/pong.hpp
     bitcoin/bitcoin/message/prefilled_transaction.hpp
     bitcoin/bitcoin/message/reject.hpp
-    bitcoin/bitcoin/message/send_compact_blocks.hpp
+    bitcoin/bitcoin/message/send_compact.hpp
     bitcoin/bitcoin/message/send_headers.hpp
-    bitcoin/bitcoin/message/transaction_message.hpp
+    bitcoin/bitcoin/message/transaction.hpp
     bitcoin/bitcoin/message/verack.hpp
     bitcoin/bitcoin/message/version.hpp
-    bitcoin/bitcoin/messages.hpp
+
     bitcoin/bitcoin/unicode/console_streambuf.hpp
     bitcoin/bitcoin/unicode/file_lock.hpp
     bitcoin/bitcoin/unicode/ifstream.hpp
@@ -1239,6 +1292,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/unicode/unicode_istream.hpp
     bitcoin/bitcoin/unicode/unicode_ostream.hpp
     bitcoin/bitcoin/unicode/unicode_streambuf.hpp
+
     bitcoin/bitcoin/utility/array_slice.hpp
     bitcoin/bitcoin/utility/asio.hpp
     bitcoin/bitcoin/utility/assert.hpp
@@ -1262,15 +1316,19 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/interprocess_lock.hpp
     bitcoin/bitcoin/utility/istream_reader.hpp
     bitcoin/bitcoin/utility/monitor.hpp
+    bitcoin/bitcoin/utility/noncopyable.hpp
     bitcoin/bitcoin/utility/notifier.hpp
     bitcoin/bitcoin/utility/ostream_writer.hpp
+    bitcoin/bitcoin/utility/pending.hpp
     bitcoin/bitcoin/utility/png.hpp
     bitcoin/bitcoin/utility/random.hpp
     bitcoin/bitcoin/utility/reader.hpp
     bitcoin/bitcoin/utility/resubscriber.hpp
     bitcoin/bitcoin/utility/scope_lock.hpp
+    bitcoin/bitcoin/utility/sequencer.hpp
     bitcoin/bitcoin/utility/sequential_lock.hpp
     bitcoin/bitcoin/utility/serializer.hpp
+    bitcoin/bitcoin/utility/socket.hpp    
     bitcoin/bitcoin/utility/string.hpp
     bitcoin/bitcoin/utility/subscriber.hpp
     bitcoin/bitcoin/utility/synchronizer.hpp
@@ -1278,10 +1336,10 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/threadpool.hpp
     bitcoin/bitcoin/utility/timer.hpp
     bitcoin/bitcoin/utility/track.hpp
-    bitcoin/bitcoin/utility/variable_uint_size.hpp
+    #bitcoin/bitcoin/utility/variable_uint_size.hpp
     bitcoin/bitcoin/utility/work.hpp
     bitcoin/bitcoin/utility/writer.hpp
-    bitcoin/bitcoin/version.hpp
+    
     bitcoin/bitcoin/wallet/bitcoin_uri.hpp
     bitcoin/bitcoin/wallet/dictionary.hpp
     bitcoin/bitcoin/wallet/ec_private.hpp
@@ -1299,6 +1357,8 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/wallet/qrcode.hpp
     bitcoin/bitcoin/wallet/select_outputs.hpp
     bitcoin/bitcoin/wallet/stealth_address.hpp
+    bitcoin/bitcoin/wallet/stealth_receiver.hpp
+    bitcoin/bitcoin/wallet/stealth_sender.hpp
     bitcoin/bitcoin/wallet/uri.hpp
     bitcoin/bitcoin/wallet/uri_reader.hpp
     bitcoin/bitcoin.hpp)
