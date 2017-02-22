@@ -430,72 +430,6 @@ bool header::is_valid_time_stamp() const
     return time <= future;
 }
 
-/*
-// [CheckProofOfWork]
-bool header::is_valid_proof_of_work() const
-{
-<<<<<<< HEAD
-    // TODO: This should be statically-initialized (optimization).
-#ifdef LITECOIN
-    hash_number target;
-    if (!target.set_compact(bits_) || target > pow_limit) {
-        return false;
-    }
-    hash_number value(litecoin_proof_of_work_hash());
-    return value <= target;
-#else //LITECOIN
-    hash_number maximum;
-    if (!maximum.set_compact(max_work_bits))
-=======
-    static const uint256_t pow_limit(compact{ proof_of_work_limit });
-    const auto bits = compact(bits_);
-
-    if (bits.is_overflowed())
->>>>>>> libbitcoin-origin/version3
-        return false;
-
-    uint256_t target(bits);
-
-    // Ensure claimed work is within limits.
-    if (target < 1 || target > pow_limit)
-        return false;
-
-<<<<<<< HEAD
-    hash_number value(hash());
-    return value <= target;
-#endif //LITECOIN
-=======
-    // Ensure actual work is at least claimed amount (smaller is more work).
-    return to_uint256(hash()) <= target;
->>>>>>> libbitcoin-origin/version3
-}
-
-// [CheckProofOfWork]
-bool header::is_valid_proof_of_work() const
-{
-    // TODO: This should be statically-initialized (optimization).
-#ifdef LITECOIN
-    hash_number target;
-    if (!target.set_compact(bits_) || target > pow_limit) {
-        return false;
-    }
-    hash_number value(litecoin_proof_of_work_hash());
-    return value <= target;
-#else //LITECOIN
-    hash_number maximum;
-    if (!maximum.set_compact(max_work_bits))
-        return false;
-
-    hash_number target;
-    if (!target.set_compact(bits_) || target > maximum)
-        return false;
-
-    hash_number value(hash());
-    return value <= target;
-#endif //LITECOIN
-}
-*/
-
 // [CheckProofOfWork]
 bool header::is_valid_proof_of_work() const
 {
@@ -522,27 +456,6 @@ bool header::is_valid_proof_of_work() const
     return to_uint256(hash()) <= target;
 #endif //LITECOIN
 }
-
-/*
-// [CheckProofOfWork]
-bool header::is_valid_proof_of_work() const
-{
-    static const uint256_t pow_limit(compact{ proof_of_work_limit });
-    const auto bits = compact(bits_);
-
-    if (bits.is_overflowed())
-        return false;
-
-    uint256_t target(bits);
-
-    // Ensure claimed work is within limits.
-    if (target < 1 || target > pow_limit)
-        return false;
-
-    // Ensure actual work is at least claimed amount (smaller is more work).
-    return to_uint256(hash()) <= target;
-}
-*/
 
 // Validation.
 //-----------------------------------------------------------------------------

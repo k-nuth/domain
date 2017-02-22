@@ -149,7 +149,7 @@ public:
     /// This block height is less than or equal to that of the top checkpoint.
     bool is_under_checkpoint() const;
 
-    static bool is_retarget_height(size_t height);
+    static bool is_retarget_height(size_t height); //FOR LITECOIN
 
 protected:
     struct activations
@@ -181,18 +181,15 @@ private:
     static uint32_t work_required_retarget(const data& values);
     static uint32_t retarget_timespan(const chain_state::data& values);
 
-
-    // easy blocks
-    static uint32_t work_required_testnet(const data& values);
-    static uint32_t work_required_easy(const data& values); //TODO: BITPRIM: nueva, producto del merge Febrero2017
-
-    static uint32_t elapsed_time_limit(const chain_state::data& values);
-
-    static bool is_retarget_or_nonmax(size_t height, uint32_t bits);
-    static bool is_retarget_or_non_limit(size_t height, uint32_t bits); //TODO: BITPRIM: nueva, producto del merge Febrero2017
-
+    //static uint32_t work_required_testnet(const data& values);
+    //static bool is_retarget_or_nonmax(size_t height, uint32_t bits);
     // TODO: BITPRIM: make function private again. Moved to public in the litecoin merge
     // static bool is_retarget_height(size_t height);
+
+    // easy blocks
+    static uint32_t work_required_easy(const data& values); //TODO: BITPRIM: nueva, producto del merge Febrero2017
+    static uint32_t elapsed_time_limit(const chain_state::data& values);
+    static bool is_retarget_or_non_limit(size_t height, uint32_t bits); //TODO: BITPRIM: nueva, producto del merge Febrero2017
 
     // This is retained as an optimization for other constructions.
     // A similar height clone can be partially computed, reducing query cost.

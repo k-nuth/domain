@@ -795,27 +795,6 @@ code block::accept(const chain_state& state, bool transactions) const
 
     else
         return ec;
-
-
-
-
-
-
-
-
-    // // TODO: relates block limit to total of tx.sigops (pool cache tx.sigops).
-    // // This recomputes sigops to include p2sh from prevouts.
-    // else if (signature_operations(bip16) > max_block_sigops) {
-    //     //TODO: fpelliccioni: re-enable when merge of libbitcoin be done.
-    //     // return error::block_embedded_sigop_limit;
-    //     // LOG_ERROR("CORE") << "too many block embedded signature operations for block: " << hash();
-    //     std::cout << "too many block embedded signature operations for block: " << encode_hash(hash()) << '\n';
-    // }
-    // //else  //TODO: fpelliccioni: re-enable when merge of libbitcoin be done.
-    //     return accept_transactions(state);
-
-    // else
-    //     return ec;
 }
 
 code block::connect() const

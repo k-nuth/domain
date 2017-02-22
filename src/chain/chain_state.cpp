@@ -297,8 +297,6 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks)
     return bits_high(values);
 }
 
-
-
 // [CalculateNextWorkRequired]
 uint32_t chain_state::work_required_retarget(const data& values)
 {
@@ -343,18 +341,8 @@ uint32_t chain_state::work_required_retarget(const data& values)
 
     // The proof_of_work_limit constant is pre-normalized.
     return target > pow_limit ? proof_of_work_limit : compact(target).normal();
-
 #endif //LITECOIN
 }
-
-
-
-
-
-// [CalculateNextWorkRequired]
-
-
-
 
 // Get the bounded total time spanning the highest 2016 blocks.
 uint32_t chain_state::retarget_timespan(const data& values)
@@ -439,28 +427,15 @@ chain_state::map chain_state::get_map(size_t height,
     // The height bound of the reverse (high to low) retarget search.
     map.bits_self = height;
     map.bits.high = height - 1;
-
-    // // Mainnet doesn't do retarget search.
-    // map.bits.count = testnet ? (std::min)(height, retargeting_interval) : 1;
     map.bits.count = bits_count(height, forks);
 
     // Timestamp.
     //-------------------------------------------------------------------------
     // The height bound of the median time past function.
-
-
-//----------------------- BEGIN
-//TODO: BITPRIM... que onda con esto? parece que fue eliminado
-    // Height must be a positive multiple of interval, so underflow safe.
-    map.timestamp.high = height - 1;
-    map.timestamp.count = (std::min)(height, median_time_past_interval);
-
-    // Additional timestamps required (or zero for not).
-//----------------------- END
-
     map.timestamp_self = height;
     map.timestamp.high = height - 1;
     map.timestamp.count = timestamp_count(height, checkpoints);
+    //map.timestamp.count = (std::min)(height, median_time_past_interval);
     map.timestamp_retarget = retarget_height(height);
 
     // Version.
@@ -468,9 +443,6 @@ chain_state::map chain_state::get_map(size_t height,
     // The height bound of the version sample for activations.
     map.version_self = height;
     map.version.high = height - 1;
-
-    // map.version.count = enabled ? 
-    //     (std::min)(height, version_sample_size(testnet)) : 0;
     map.version.count = version_count(height, forks, checkpoints);
 
     // Allowed collisions.

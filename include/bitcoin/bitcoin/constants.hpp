@@ -61,7 +61,7 @@ BC_CONSTEXPR size_t max_counted_ops = 201;
 BC_CONSTEXPR size_t max_stack_size = 1000;
 BC_CONSTEXPR size_t max_script_size = 10000;
 BC_CONSTEXPR size_t max_push_data_size = 520;
-BC_CONSTEXPR size_t max_script_public_key_count = 20;
+BC_CONSTEXPR size_t max_script_public_keys = 20;
 BC_CONSTEXPR size_t multisig_default_sigops = 20;
 
 // This is policy, not consensus.
@@ -99,16 +99,15 @@ BC_CONSTEXPR size_t max_block_sigops = max_block_size / 50; //TODO: BITPRIM: est
 //-----------------------------------------------------------------------------
 
 BC_CONSTEXPR uint32_t retargeting_factor = 4;
-
+BC_CONSTEXPR uint32_t easy_spacing_factor = 2;
 #ifdef LITECOIN
-BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 15; //2.5*60=150
-BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15; //3.5 * 24 * 60 * 60 = 302400
+BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 15;
+BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15;
 #else //LITECOIN
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 60;
-BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60; //14 * 24 * 60 * 60 = 1209600
+BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60;
 #endif //LITECOIN
 
-BC_CONSTEXPR uint32_t easy_spacing_factor = 2;
 
 
 // Derived.
