@@ -95,6 +95,7 @@ BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1d00ffff;
 // Derived.
 BC_CONSTEXPR size_t max_block_sigops = max_block_size / 50; //TODO: BITPRIM: esto es producto del merge de Febrero de 2017. Revisar si en Litecoin la constante es distinta
 
+
 // Timespan constants.
 //-----------------------------------------------------------------------------
 
@@ -107,8 +108,6 @@ BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15;
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 60;
 BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60;
 #endif //LITECOIN
-
-
 
 // Derived.
 BC_CONSTEXPR uint32_t double_spacing_seconds =

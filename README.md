@@ -189,8 +189,17 @@ You can run the install script from any directory on your system. By default thi
 
 The build script clones, builds and installs two unpackaged repositories, namely:
 
-- [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
-- [bitprim/bitprim-core](https://github.com/bitprim/bitprim-core)
+- [libbitcoin/secp256k1](https://github.com/libbitcoin/secp256k1)
+- [libbitcoin/libbitcoin](https://github.com/libbitcoin/libbitcoin)
+
+The script builds from the head of their `version4` and `version3` branches respectively. The `master` branch is a staging area for changes. The version branches are considered release quality.
+
+#### Build Options
+
+Any set of `./configure` options can be passed via the build script, for example:
+```sh
+$ ./install.sh CFLAGS="-Og -g" --prefix=/home/me/myprefix
+```
 
 The script builds from the head of their `version4` and `version3` branches respectively. The `master` branch is a staging area for changes. The version branches are considered release quality.
 
