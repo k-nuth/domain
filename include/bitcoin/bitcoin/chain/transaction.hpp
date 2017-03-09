@@ -143,6 +143,8 @@ public:
     hash_digest hash() const;
     hash_digest hash(uint32_t sighash_type) const;
 
+    void recompute_hash();
+
     // Validation.
     //-----------------------------------------------------------------------------
 

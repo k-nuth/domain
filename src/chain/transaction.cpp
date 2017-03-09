@@ -451,6 +451,12 @@ hash_digest transaction::hash(uint32_t sighash_type) const
     return bitcoin_hash(serialized);
 }
 
+void transaction::recompute_hash()
+{
+    hash_ = nullptr;
+    hash();
+}
+
 // Validation helpers.
 //-----------------------------------------------------------------------------
 
