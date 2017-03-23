@@ -434,9 +434,8 @@ bool header::is_valid_time_stamp() const
 bool header::is_valid_proof_of_work() const
 {
     // TODO: This should be statically-initialized (optimization).
-#ifndef LITECOIN
     static const uint256_t pow_limit(compact{ proof_of_work_limit });
-#endif
+
 
     const auto bits = compact(bits_);
 

@@ -85,10 +85,15 @@ BC_CONSTEXPR size_t locktime_threshold = 500000000;
 #ifdef LITECOIN
 // /*BC_CONSTEXPR*/ const hash_number pow_limit(hash_digest{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00});
 // /*BC_CONSTEXPR*/ const size_t max_work_bits = pow_limit.compact();
-uint256_t const pow_limit("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0f0000");
+
+//0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1e0fffff;
+
 #else // LITECOIN
 BC_CONSTEXPR size_t max_work_bits = 0x1d00ffff;
 // This may not be flexible, keep internal.
+
+//0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1d00ffff;
 #endif // LITECOIN
 

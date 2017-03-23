@@ -34,6 +34,7 @@
 #include <bitcoin/bitcoin/unicode/unicode.hpp>
 #include <bitcoin/bitcoin/utility/timer.hpp>
 
+
 namespace libbitcoin {
 namespace chain {
 
@@ -301,14 +302,15 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks)
 uint32_t chain_state::work_required_retarget(const data& values)
 {
     const compact bits(bits_high(values));
-
+    static const uint256_t pow_limit(compact{ proof_of_work_limit });    
 #ifdef LITECOIN
     uint256_t target(bits);
 
     // hash_number retarget_new;
     // retarget_new.set_compact(bits_high(values));
 
-    bool shift = target.bits() > 235;
+//    bool shift = target.bits() > 235;
+    bool shift = target > (2^235);
 
     if (shift) {
         target >>= 1;
@@ -328,11 +330,11 @@ uint32_t chain_state::work_required_retarget(const data& values)
     }
 
     // return target > pow_limit ? pow_limit.compact() : target.compact();
-    return target > pow_limit ? pow_limit.compact() : compact(target).normal();
+
+    return target > pow_limit ? proof_of_work_limit : compact(target).normal();
 
 
 #else //LITECOIN
-    static const uint256_t pow_limit(compact{ proof_of_work_limit });
     BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
 
     uint256_t target(bits);
