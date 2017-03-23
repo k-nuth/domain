@@ -80,9 +80,9 @@ static const std::string encoded_testnet_genesis_block =
     "01000000" //version
     "0000000000000000000000000000000000000000000000000000000000000000" //prev hash
     "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97" //merkle root le
-    "f6028c4e" //timestamp le
+    "f60ba158" //timestamp le
     "f0ff0f1e" //bits
-    "38c3f616" //nonce
+    "e1790400" //nonce
     "01" //nro txs
     "01000000" //version
     "01" // inputs
