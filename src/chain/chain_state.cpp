@@ -309,8 +309,7 @@ uint32_t chain_state::work_required_retarget(const data& values)
     // hash_number retarget_new;
     // retarget_new.set_compact(bits_high(values));
 
-//    bool shift = target.bits() > 235;
-    bool shift = target > (2^235);
+    bool shift = target > ((uint256_t(1) << 236) - 1);
 
     if (shift) {
         target >>= 1;
