@@ -305,7 +305,7 @@ uint32_t chain_state::work_required_retarget(const data& values)
     
 #ifdef LITECOIN
     uint256_t target(bits);
-    static const uint256_t pow_limit("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    static const uint256_t pow_limit("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     // hash_number retarget_new;
     // retarget_new.set_compact(bits_high(values));
 
