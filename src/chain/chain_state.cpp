@@ -302,10 +302,10 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks)
 uint32_t chain_state::work_required_retarget(const data& values)
 {
     const compact bits(bits_high(values));
-    static const uint256_t pow_limit(compact{ proof_of_work_limit });    
+    
 #ifdef LITECOIN
     uint256_t target(bits);
-
+    static const uint256_t pow_limit("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     // hash_number retarget_new;
     // retarget_new.set_compact(bits_high(values));
 
@@ -335,6 +335,7 @@ uint32_t chain_state::work_required_retarget(const data& values)
 
 #else //LITECOIN
     BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
+	static const uint256_t pow_limit(compact{ proof_of_work_limit });    
 
     uint256_t target(bits);
     target *= retarget_timespan(values);
