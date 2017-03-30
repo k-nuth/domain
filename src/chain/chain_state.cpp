@@ -172,11 +172,19 @@ chain_state::activations chain_state::activation(const data& values,
         result.forks |= (rule_fork::bip30_rule & forks);
     }
 
+
+#ifdef LITECOIN
+    if (bip34_ice)
+    {
+        result.forks |= (rule_fork::bip34_rule & forks);
+    }
+#else
     // bip34 is activated based on 75% of preceding 1000 mainnet blocks.
     if (bip34_ice || (is_active(count_2, testnet) && version >= bip34_version))
     {
         result.forks |= (rule_fork::bip34_rule & forks);
     }
+#endif
 
     // bip66 is activated based on 75% of preceding 1000 mainnet blocks.
     if (bip66_ice || (is_active(count_3, testnet) && version >= bip66_version))
