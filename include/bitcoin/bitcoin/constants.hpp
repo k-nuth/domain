@@ -138,6 +138,63 @@ BC_CONSTEXPR size_t bip66_version = 3;
 BC_CONSTEXPR size_t bip34_version = 2;
 BC_CONSTEXPR size_t first_version = 1;
 
+
+#ifdef LITECOIN
+
+// Mainnet activation parameters (bip34-style activations).
+BC_CONSTEXPR size_t mainnet_active = 750;
+BC_CONSTEXPR size_t mainnet_enforce = 950;
+BC_CONSTEXPR size_t mainnet_sample = 1000;
+
+// Testnet activation parameters (bip34-style activations).
+BC_CONSTEXPR size_t testnet_active = 51;
+BC_CONSTEXPR size_t testnet_enforce = 75;
+BC_CONSTEXPR size_t testnet_sample = 100;
+
+// Mainnet frozen activation heights (frozen_activations).
+BC_CONSTEXPR size_t mainnet_bip65_freeze = MAX_UINT32; //Not Active
+BC_CONSTEXPR size_t mainnet_bip66_freeze = MAX_UINT32; //Not Active
+BC_CONSTEXPR size_t mainnet_bip34_freeze = 710000;
+
+// Testnet frozen activation heights (frozen_activations).
+BC_CONSTEXPR size_t testnet_bip65_freeze = MAX_UINT32; //Not Active
+BC_CONSTEXPR size_t testnet_bip66_freeze = MAX_UINT32; //Not Active
+BC_CONSTEXPR size_t testnet_bip34_freeze = 21111; //Always Active
+
+// Block 514 is the first testnet block after date-based activation.
+// Block 173805 is the first mainnet block after date-based activation.
+BC_CONSTEXPR uint32_t bip16_activation_time = 0x4f779a80;
+
+// Block 170060 was mined with an invalid p2sh (code shipped late).
+// bitcointalk.org/index.php?topic=63165.msg788832#msg788832
+static const config::checkpoint mainnet_bip16_exception_checkpoint
+{
+    "00000000000002dc756eebf4f49723ed8d30cc28a5f108eb94b1ba88ac4f9c22", 170060
+};
+
+// github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
+static const config::checkpoint mainnet_bip30_exception_checkpoint1
+{
+    // TODO: figure out why this block validates without an exception.
+    "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842
+};
+static const config::checkpoint mainnet_bip30_exception_checkpoint2
+{
+    "00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880
+};
+
+// Hard fork to stop checking unspent duplicates above fixed bip34 activation.
+static const config::checkpoint mainnet_allow_collisions_checkpoint
+{
+    "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 710000
+};
+static const config::checkpoint testnet_allow_collisions_checkpoint
+{
+    "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111
+};
+
+
+#else //LITECOIN
 // Mainnet activation parameters (bip34-style activations).
 BC_CONSTEXPR size_t mainnet_active = 750;
 BC_CONSTEXPR size_t mainnet_enforce = 950;
@@ -189,7 +246,7 @@ static const config::checkpoint testnet_allow_collisions_checkpoint
 {
     "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111
 };
-
+#endif //LITECOIN
 // Network protocol constants.
 //-----------------------------------------------------------------------------
 
