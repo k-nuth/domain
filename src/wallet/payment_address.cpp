@@ -34,7 +34,12 @@ namespace wallet {
 
 using namespace bc::machine;
 
+#ifdef LITECOIN
+const uint8_t payment_address::mainnet_p2kh = 0x30;
+#else
 const uint8_t payment_address::mainnet_p2kh = 0x00;
+#endif
+
 const uint8_t payment_address::mainnet_p2sh = 0x05;
 
 const uint8_t payment_address::testnet_p2kh = 0x6f;
