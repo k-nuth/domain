@@ -189,7 +189,15 @@ bool script::from_data(reader& source, bool prefix)
     valid_ = true;
 
     if (prefix)
-        bytes_ = source.read_bytes(source.read_size_little_endian());
+    {
+        const auto size = source.read_size_little_endian();
+
+        // Guard against potential for arbitary memory allocation.
+        if (size > max_script_size)
+            source.invalidate();
+        else
+            bytes_ = source.read_bytes(size);
+    }
     else
         bytes_ = source.read_bytes();
 
