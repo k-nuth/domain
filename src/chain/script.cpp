@@ -193,7 +193,7 @@ bool script::from_data(reader& source, bool prefix)
         const auto size = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (size > max_script_size)
+        if (size > max_block_size)
             source.invalidate();
         else
             bytes_ = source.read_bytes(size);
