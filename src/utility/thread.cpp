@@ -82,7 +82,7 @@ thread_priority priority(bool priority)
 inline size_t cores()
 {
     // Cores must be at least 1 (guards against irrational API return).
-    return std::max(std::thread::hardware_concurrency(), 1u);
+    return (std::max)(std::thread::hardware_concurrency(), 1u);
 }
 
 // This is used to default the number of threads to the number of cores and to
@@ -93,7 +93,7 @@ size_t thread_default(size_t configured)
         return cores();
 
     // Configured but no less than 1.
-    return std::max(configured, size_t(1));
+    return (std::max)(configured, size_t(1));
 }
 
 // This is used to ensure that threads does not exceed cores in the case of
@@ -105,7 +105,7 @@ size_t thread_ceiling(size_t configured)
         return cores();
 
     // Cores/1 but no more than configured.
-    return std::min(configured, cores());
+    return (std::min)(configured, cores());
 }
 
 // This is used to ensure that at least a minimum required number of threads is
@@ -117,7 +117,7 @@ size_t thread_floor(size_t configured)
         return cores();
 
     // Configured but no less than cores/1.
-    return std::max(configured, cores());
+    return (std::max)(configured, cores());
 }
 
 } // namespace libbitcoin
