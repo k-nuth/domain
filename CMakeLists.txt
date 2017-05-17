@@ -365,6 +365,7 @@ set(bitprim_core_sources
         src/config/output.cpp
         src/config/point.cpp
         src/config/transaction.cpp
+        src/config/script.cpp
         src/utility/property_tree.cpp
 
         src/error.cpp
@@ -976,6 +977,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/config/input.hpp
     bitcoin/bitcoin/config/output.hpp
     bitcoin/bitcoin/config/transaction.hpp
+    bitcoin/bitcoin/config/script.hpp
     bitcoin/bitcoin/utility/property_tree.hpp
     bitcoin/bitcoin/impl/utility/property_tree.ipp
     bitcoin/bitcoin/utility/string.hpp
