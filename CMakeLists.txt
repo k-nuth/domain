@@ -67,9 +67,7 @@ option(ENABLE_SHARED "" OFF)
 #==============================================================================
 # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
-message(fernandito)
 if (NOT ENABLE_SHARED)
-	message(usandoShared)
   set(Boost_USE_STATIC_LIBS ON)
 endif()
 
@@ -107,6 +105,12 @@ endif()
 #------------------------------------------------------------------------------
 
 # Require qrencode of at least version 3.4.4 and output ${qrencode_CPPFLAGS/LIBS/PKG}.
+
+if (UNIX)
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
+elseif (WIN32)
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
+endif()
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
@@ -958,188 +962,6 @@ install(TARGETS bitprim-core
   EXPORT bitprim-core
   ARCHIVE DESTINATION lib)
 
-#set(_bitprim_core_headers
-#  # include_bitcoin_HEADERS =
-#  bitcoin/bitcoin.hpp
-#  # include_bitcoin_bitcoin_HEADERS =
-#  bitcoin/bitcoin/compat.h
-#  bitcoin/bitcoin/compat.hpp
-#  bitcoin/bitcoin/constants.hpp
-#  bitcoin/bitcoin/define.hpp
-#  bitcoin/bitcoin/error.hpp
-#  bitcoin/bitcoin/handlers.hpp
-#  bitcoin/bitcoin/messages.hpp
-#  bitcoin/bitcoin/version.hpp
-#  # include_bitcoin_bitcoin_chain_HEADERS =
-#  bitcoin/bitcoin/chain/block.hpp
-#  bitcoin/bitcoin/chain/header.hpp
-#  bitcoin/bitcoin/chain/history.hpp
-#  bitcoin/bitcoin/chain/input.hpp
-#  bitcoin/bitcoin/chain/output.hpp
-#  bitcoin/bitcoin/chain/point.hpp
-#  bitcoin/bitcoin/chain/point_iterator.hpp
-#  bitcoin/bitcoin/chain/spend.hpp
-#  bitcoin/bitcoin/chain/stealth.hpp
-#  bitcoin/bitcoin/chain/transaction.hpp
-#  # include_bitcoin_bitcoin_chain_script_HEADERS =
-#  bitcoin/bitcoin/chain/machine/opcode.hpp
-#  bitcoin/bitcoin/chain/script/operation.hpp
-#  bitcoin/bitcoin/chain/script/script.hpp
-#  # include_bitcoin_bitcoin_config_HEADERS =
-#  bitcoin/bitcoin/config/authority.hpp
-#  bitcoin/bitcoin/config/base16.hpp
-#  bitcoin/bitcoin/config/base2.hpp
-#  bitcoin/bitcoin/config/base58.hpp
-#  bitcoin/bitcoin/config/base64.hpp
-#  bitcoin/bitcoin/config/checkpoint.hpp
-#  bitcoin/bitcoin/config/directory.hpp
-#  bitcoin/bitcoin/config/endpoint.hpp
-#  bitcoin/bitcoin/config/hash160.hpp
-#  bitcoin/bitcoin/config/hash256.hpp
-#  bitcoin/bitcoin/config/parameter.hpp
-#  bitcoin/bitcoin/config/parser.hpp
-#  bitcoin/bitcoin/config/printer.hpp
-#  bitcoin/bitcoin/config/sodium.hpp
-#  # include_bitcoin_bitcoin_formats_HEADERS =
-#  bitcoin/bitcoin/formats/base_10.hpp
-#  bitcoin/bitcoin/formats/base_16.hpp
-#  bitcoin/bitcoin/formats/base_58.hpp
-#  bitcoin/bitcoin/formats/base_64.hpp
-#  bitcoin/bitcoin/formats/base_85.hpp
-#  # include_bitcoin_bitcoin_impl_formats_HEADERS =
-#  bitcoin/bitcoin/impl/formats/base_16.ipp
-#  bitcoin/bitcoin/impl/formats/base_58.ipp
-#  # include_bitcoin_bitcoin_impl_math_HEADERS =
-#  bitcoin/bitcoin/impl/math/checksum.ipp
-#  bitcoin/bitcoin/impl/math/hash.ipp
-#  # include_bitcoin_bitcoin_impl_utility_HEADERS =
-#  bitcoin/bitcoin/impl/utility/array_slice.ipp
-#  bitcoin/bitcoin/impl/utility/collection.ipp
-#  bitcoin/bitcoin/impl/utility/data.ipp
-#  bitcoin/bitcoin/impl/utility/deserializer.ipp
-#  bitcoin/bitcoin/impl/utility/endian.ipp
-#  bitcoin/bitcoin/impl/utility/istream_reader.ipp
-#  bitcoin/bitcoin/impl/utility/notifier.ipp
-#  bitcoin/bitcoin/impl/utility/ostream_writer.ipp
-#  bitcoin/bitcoin/impl/utility/resubscriber.ipp
-#  bitcoin/bitcoin/impl/utility/serializer.ipp
-#  bitcoin/bitcoin/impl/utility/subscriber.ipp
-#  bitcoin/bitcoin/impl/utility/track.ipp
-#  # include_bitcoin_bitcoin_math_HEADERS =
-#  bitcoin/bitcoin/math/checksum.hpp
-#  bitcoin/bitcoin/math/crypto.hpp
-#  bitcoin/bitcoin/math/elliptic_curve.hpp
-#  bitcoin/bitcoin/math/hash.hpp
-#  bitcoin/bitcoin/math/hash_number.hpp
-#  bitcoin/bitcoin/math/script_number.hpp
-#  bitcoin/bitcoin/math/stealth.hpp
-#  bitcoin/bitcoin/math/uint256.hpp
-#  # include_bitcoin_bitcoin_message_HEADERS =
-#  bitcoin/bitcoin/message/address.hpp
-#  bitcoin/bitcoin/message/alert.hpp
-#  bitcoin/bitcoin/message/alert_payload.hpp
-#  bitcoin/bitcoin/message/block_message.hpp
-#  bitcoin/bitcoin/message/block_transactions.hpp
-#  bitcoin/bitcoin/message/compact_block.hpp
-#  bitcoin/bitcoin/message/fee_filter.hpp
-#  bitcoin/bitcoin/message/filter_add.hpp
-#  bitcoin/bitcoin/message/filter_clear.hpp
-#  bitcoin/bitcoin/message/filter_load.hpp
-#  bitcoin/bitcoin/message/get_address.hpp
-#  bitcoin/bitcoin/message/get_block_transactions.hpp
-#  bitcoin/bitcoin/message/get_blocks.hpp
-#  bitcoin/bitcoin/message/get_data.hpp
-#  bitcoin/bitcoin/message/get_headers.hpp
-#  bitcoin/bitcoin/message/header_message.hpp
-#  bitcoin/bitcoin/message/headers.hpp
-#  bitcoin/bitcoin/message/heading.hpp
-#  bitcoin/bitcoin/message/inventory.hpp
-#  bitcoin/bitcoin/message/inventory_vector.hpp
-#  bitcoin/bitcoin/message/memory_pool.hpp
-#  bitcoin/bitcoin/message/merkle_block.hpp
-#  bitcoin/bitcoin/message/network_address.hpp
-#  bitcoin/bitcoin/message/not_found.hpp
-#  bitcoin/bitcoin/message/ping.hpp
-#  bitcoin/bitcoin/message/pong.hpp
-#  bitcoin/bitcoin/message/prefilled_transaction.hpp
-#  bitcoin/bitcoin/message/reject.hpp
-#  bitcoin/bitcoin/message/send_compact_blocks.hpp
-#  bitcoin/bitcoin/message/send_headers.hpp
-#  bitcoin/bitcoin/message/transaction_message.hpp
-#  bitcoin/bitcoin/message/verack.hpp
-#  bitcoin/bitcoin/message/version.hpp
-#  # include_bitcoin_bitcoin_unicode_HEADERS =
-#  bitcoin/bitcoin/unicode/console_streambuf.hpp
-#  bitcoin/bitcoin/unicode/ifstream.hpp
-#  bitcoin/bitcoin/unicode/ofstream.hpp
-#  bitcoin/bitcoin/unicode/unicode.hpp
-#  bitcoin/bitcoin/unicode/unicode_istream.hpp
-#  bitcoin/bitcoin/unicode/unicode_ostream.hpp
-#  bitcoin/bitcoin/unicode/unicode_streambuf.hpp
-#  # include_bitcoin_bitcoin_utility_HEADERS =
-#  bitcoin/bitcoin/utility/array_slice.hpp
-#  bitcoin/bitcoin/utility/asio.hpp
-#  bitcoin/bitcoin/utility/assert.hpp
-#  bitcoin/bitcoin/utility/atomic.hpp
-#  bitcoin/bitcoin/utility/binary.hpp
-#  bitcoin/bitcoin/utility/collection.hpp
-#  bitcoin/bitcoin/utility/color.hpp
-#  bitcoin/bitcoin/utility/conditional_lock.hpp
-#  bitcoin/bitcoin/utility/container_sink.hpp
-#  bitcoin/bitcoin/utility/container_source.hpp
-#  bitcoin/bitcoin/utility/data.hpp
-#  bitcoin/bitcoin/utility/deadline.hpp
-#  bitcoin/bitcoin/utility/decorator.hpp
-#  bitcoin/bitcoin/utility/delegates.hpp
-#  bitcoin/bitcoin/utility/deserializer.hpp
-#  bitcoin/bitcoin/utility/dispatcher.hpp
-#  bitcoin/bitcoin/utility/enable_shared_from_base.hpp
-#  bitcoin/bitcoin/utility/endian.hpp
-#  bitcoin/bitcoin/utility/exceptions.hpp
-#  bitcoin/bitcoin/utility/istream_reader.hpp
-#  bitcoin/bitcoin/utility/log.hpp
-#  bitcoin/bitcoin/utility/monitor.hpp
-#  bitcoin/bitcoin/utility/notifier.hpp
-#  bitcoin/bitcoin/utility/ostream_writer.hpp
-#  bitcoin/bitcoin/utility/png.hpp
-#  bitcoin/bitcoin/utility/random.hpp
-#  bitcoin/bitcoin/utility/reader.hpp
-#  bitcoin/bitcoin/utility/resource_lock.hpp
-#  bitcoin/bitcoin/utility/resubscriber.hpp
-#  bitcoin/bitcoin/utility/scope_lock.hpp
-#  bitcoin/bitcoin/utility/serializer.hpp
-#  bitcoin/bitcoin/utility/string.hpp
-#  bitcoin/bitcoin/utility/subscriber.hpp
-#  bitcoin/bitcoin/utility/synchronizer.hpp
-#  bitcoin/bitcoin/utility/thread.hpp
-#  bitcoin/bitcoin/utility/threadpool.hpp
-#  bitcoin/bitcoin/utility/timer.hpp
-#  bitcoin/bitcoin/utility/track.hpp
-#  bitcoin/bitcoin/utility/variable_uint_size.hpp
-#  bitcoin/bitcoin/utility/work.hpp
-#  bitcoin/bitcoin/utility/writer.hpp
-#  # include_bitcoin_bitcoin_wallet_HEADERS =
-#  bitcoin/bitcoin/wallet/bitcoin_uri.hpp
-#  bitcoin/bitcoin/wallet/dictionary.hpp
-#  bitcoin/bitcoin/wallet/ec_private.hpp
-#  bitcoin/bitcoin/wallet/ec_public.hpp
-#  bitcoin/bitcoin/wallet/ek_private.hpp
-#  bitcoin/bitcoin/wallet/ek_public.hpp
-#  bitcoin/bitcoin/wallet/ek_token.hpp
-#  bitcoin/bitcoin/wallet/encrypted_keys.hpp
-#  bitcoin/bitcoin/wallet/hd_private.hpp
-#  bitcoin/bitcoin/wallet/hd_public.hpp
-#  bitcoin/bitcoin/wallet/message.hpp
-#  bitcoin/bitcoin/wallet/mini_keys.hpp
-#  bitcoin/bitcoin/wallet/mnemonic.hpp
-#  bitcoin/bitcoin/wallet/payment_address.hpp
-#  bitcoin/bitcoin/wallet/qrcode.hpp
-#  bitcoin/bitcoin/wallet/select_outputs.hpp
-#  bitcoin/bitcoin/wallet/settings.hpp
-#  bitcoin/bitcoin/wallet/stealth_address.hpp
-#  bitcoin/bitcoin/wallet/uri.hpp
-#  bitcoin/bitcoin/wallet/uri_reader.hpp)
-
 set(_bitprim_core_headers
     bitcoin/bitcoin/compat.h
     bitcoin/bitcoin/compat.hpp
@@ -1369,7 +1191,8 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/wallet/stealth_sender.hpp
     bitcoin/bitcoin/wallet/uri.hpp
     bitcoin/bitcoin/wallet/uri_reader.hpp
-    bitcoin/bitcoin.hpp)
+    bitcoin/bitcoin.hpp
+    )
 
 foreach (_header ${_bitprim_core_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
