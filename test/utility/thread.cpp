@@ -21,7 +21,8 @@
 #include <stdexcept>
 #include <bitcoin/bitcoin.hpp>
 
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
+#ifdef BOOST_WINDOWS_API
     #include <windows.h>
 #else
     #include <unistd.h>

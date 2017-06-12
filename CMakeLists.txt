@@ -25,7 +25,6 @@ option(WITH_EXAMPLES "Compile with examples." ON)
 set(Boost_DEBUG ON)
 
 
-
 # Implement --with-icu and define BOOST_HAS_ICU and output ${icu}.
 #------------------------------------------------------------------------------
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
@@ -67,11 +66,13 @@ option(ENABLE_SHARED "" OFF)
 #==============================================================================
 # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
-message(fernandito)
+# message(fernandito)
+
 if (NOT ENABLE_SHARED)
-	message(usandoShared)
+#	message(usandoShared)
   set(Boost_USE_STATIC_LIBS ON)
 endif()
+
 
 find_package(
   Boost 1.56.0 REQUIRED
@@ -193,7 +194,7 @@ _add_cxx_compile_flag(-fvisibility-inlines-hidden _has_visibility_inlines_hidden
 
 # Target Windows Vista. Enabled in msvc only.
 #------------------------------------------------------------------------------
-if (MSVC)
+if (MSVC OR MINGW)
   add_definitions(-D_WIN32_WINNT=0x0600)
 endif()
 
@@ -608,7 +609,19 @@ target_link_libraries(bitprim-core PUBLIC
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_THREAD_LIBRARY})
 
+#message(CMAKE_THREAD_LIBS_INIT)
+##message(${CMAKE_THREAD_LIBS_INIT})
+#
+#foreach(LETTER ${CMAKE_THREAD_LIBS_INIT})
+#    message($LETTER)
+#endforeach(LETTER)
+
 target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+
+if (MINGW) #(WIN32)
+    target_link_libraries(bitprim-core PUBLIC ws2_32) #  wsock32
+endif()
+
 
 if (WITH_PNG)
   target_link_libraries(bitprim-core PUBLIC png)
@@ -847,8 +860,18 @@ add_executable(bitprim_core_test
         test/wallet/uri.cpp
         test/wallet/uri_reader.cpp)
 
-  target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
-  _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
+
+    target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
+#    if (WIN32)
+#        target_link_libraries(bitprim_core_test PUBLIC bitprim-core ws2_32) # ws2_32)
+#        #    target_link_libraries(bitprim_core_examples wsock32 ws2_32)
+#        #    target_link_libraries(bitprim_core_examples ws2_32)
+#    else()
+#        target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
+#    endif()
+
+
+_group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
 #    TODO: Fer: chequear si hay nuevos tests en los makefiles (no Cmake)
   _add_tests(bitprim_core_test
@@ -948,7 +971,17 @@ endif()
 if (WITH_EXAMPLES)
   add_executable(bitprim_core_examples
     examples/main.cpp)
+
+
   target_link_libraries(bitprim_core_examples PUBLIC bitprim-core)
+#  if (WIN32)
+#      target_link_libraries(bitprim_core_examples PUBLIC bitprim-core ws2_32)
+##    target_link_libraries(bitprim_core_examples wsock32 ws2_32)
+##    target_link_libraries(bitprim_core_examples ws2_32)
+#  else()
+#      target_link_libraries(bitprim_core_examples PUBLIC bitprim-core)
+#  endif()
+
   _group_sources(bitprim_core_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
 endif()
 

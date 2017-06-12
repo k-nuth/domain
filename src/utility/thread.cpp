@@ -24,7 +24,8 @@
 #include <stdexcept>
 #include <thread>
 
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
+#ifdef BOOST_WINDOWS_API
     #include <windows.h>
 #else
     #include <unistd.h>
@@ -65,7 +66,8 @@ void set_priority(thread_priority priority)
 {
     const auto prioritization = get_priority(priority);
 
-#if defined(_MSC_VER)
+//#if defined(_MSC_VER)
+#ifdef BOOST_WINDOWS_API
     SetThreadPriority(GetCurrentThread(), prioritization);
 #elif defined(PRIO_THREAD)
     setpriority(PRIO_THREAD, pthread_self(), prioritization);

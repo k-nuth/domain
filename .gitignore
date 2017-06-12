@@ -67,3 +67,9 @@ test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/x64/Debug/sha256_tes
 .idea/misc.xml
 .idea/modules.xml
 .idea/workspace.xml
+
+
+.idea/
+cmake-build-debug/
+
+CMakeSettings.json
