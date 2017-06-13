@@ -194,7 +194,7 @@ _add_cxx_compile_flag(-fvisibility-inlines-hidden _has_visibility_inlines_hidden
 
 # Target Windows Vista. Enabled in msvc only.
 #------------------------------------------------------------------------------
-if (MSVC OR MINGW)
+if (MSVC) # OR MINGW)
   add_definitions(-D_WIN32_WINNT=0x0600)
 endif()
 
@@ -619,7 +619,7 @@ target_link_libraries(bitprim-core PUBLIC
 target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 if (MINGW) #(WIN32)
-    target_link_libraries(bitprim-core PUBLIC ws2_32) #  wsock32
+    target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
 endif()
 
 
@@ -862,13 +862,6 @@ add_executable(bitprim_core_test
 
 
     target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
-#    if (WIN32)
-#        target_link_libraries(bitprim_core_test PUBLIC bitprim-core ws2_32) # ws2_32)
-#        #    target_link_libraries(bitprim_core_examples wsock32 ws2_32)
-#        #    target_link_libraries(bitprim_core_examples ws2_32)
-#    else()
-#        target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
-#    endif()
 
 
 _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
@@ -974,13 +967,6 @@ if (WITH_EXAMPLES)
 
 
   target_link_libraries(bitprim_core_examples PUBLIC bitprim-core)
-#  if (WIN32)
-#      target_link_libraries(bitprim_core_examples PUBLIC bitprim-core ws2_32)
-##    target_link_libraries(bitprim_core_examples wsock32 ws2_32)
-##    target_link_libraries(bitprim_core_examples ws2_32)
-#  else()
-#      target_link_libraries(bitprim_core_examples PUBLIC bitprim-core)
-#  endif()
 
   _group_sources(bitprim_core_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
 endif()
