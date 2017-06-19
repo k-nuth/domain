@@ -25,7 +25,6 @@ option(WITH_EXAMPLES "Compile with examples." OFF)
 set(Boost_DEBUG ON)
 
 
-
 # Implement --with-icu and define BOOST_HAS_ICU and output ${icu}.
 #------------------------------------------------------------------------------
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
@@ -67,15 +66,23 @@ option(ENABLE_SHARED "" OFF)
 #==============================================================================
 # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
-message(fernandito)
+
 if (NOT ENABLE_SHARED)
-	message(usandoShared)
   set(Boost_USE_STATIC_LIBS ON)
 endif()
 
-find_package(
-  Boost 1.56.0 REQUIRED
-  COMPONENTS chrono date_time filesystem iostreams locale log program_options regex system thread unit_test_framework)
+
+if (MSVC)
+	find_package(
+	  Boost 1.56.0 REQUIRED
+	  COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options regex system thread unit_test_framework
+	)
+else()
+	find_package(
+	  Boost 1.56.0 REQUIRED
+	  COMPONENTS chrono date_time filesystem iostreams locale log program_options regex system thread unit_test_framework
+	)
+endif()
 
 # Require pthread and output ${pthread_CPPFLAGS/LIBS}.
 #------------------------------------------------------------------------------
@@ -148,6 +155,7 @@ if (NOT MSVC)
 else()
   _add_c_compile_flag(-W4 _has_all_warning_flag)
   add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 # Warn on extra stuff.
@@ -193,7 +201,7 @@ _add_cxx_compile_flag(-fvisibility-inlines-hidden _has_visibility_inlines_hidden
 
 # Target Windows Vista. Enabled in msvc only.
 #------------------------------------------------------------------------------
-if (MSVC)
+if (MSVC) # OR MINGW)
   add_definitions(-D_WIN32_WINNT=0x0600)
 endif()
 
@@ -280,12 +288,9 @@ set(bitprim_core_sources
         src/math/crypto.cpp
         src/math/elliptic_curve.cpp
         src/math/hash.cpp
-        # src/math/hash_number.cpp
-        # src/math/script_number.cpp
         src/math/secp256k1_initializer.cpp
         src/math/secp256k1_initializer.hpp
         src/math/stealth.cpp
-        # src/math/uint256.cpp
         src/math/external/aes256.h
         src/math/external/crypto_scrypt.h
         src/math/external/hmac_sha256.h
@@ -436,6 +441,13 @@ if (WITH_LITECOIN)
   target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
 endif()
 
+if (MSVC)
+	target_link_libraries(bitprim-core PUBLIC
+	  ${Boost_ATOMIC_LIBRARY}
+    ${Boost_LOG_SETUP_LIBRARY}
+	)
+endif()
+
 target_link_libraries(bitprim-core PUBLIC
   ${Boost_CHRONO_LIBRARY}
   ${Boost_DATE_TIME_LIBRARY}
@@ -446,9 +458,24 @@ target_link_libraries(bitprim-core PUBLIC
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${Boost_REGEX_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
-  ${Boost_THREAD_LIBRARY})
+  ${Boost_THREAD_LIBRARY}
+)
+
+
+
+#message(CMAKE_THREAD_LIBS_INIT)
+##message(${CMAKE_THREAD_LIBS_INIT})
+#
+#foreach(LETTER ${CMAKE_THREAD_LIBS_INIT})
+#    message($LETTER)
+#endforeach(LETTER)
 
 target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+
+if (MINGW) #(WIN32)
+    target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
+endif()
+
 
 if (WITH_PNG)
   target_link_libraries(bitprim-core PUBLIC png)
@@ -494,99 +521,6 @@ endif()
 # local: test/bitprim_core_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
-#  add_executable(bitprim_core_test
-#    test/main.cpp
-#    test/chain/block.cpp
-#    test/chain/header.cpp
-#    test/chain/input.cpp
-#    test/chain/output.cpp
-#    test/chain/point.cpp
-#    test/chain/satoshi_words.cpp
-#    test/chain/script.cpp
-#    test/chain/script.hpp
-#    test/chain/transaction.cpp
-#    test/config/authority.cpp
-#    test/config/base58.cpp
-#    test/config/checkpoint.cpp
-#    test/config/endpoint.cpp
-#    test/config/hash256.cpp
-#    test/config/parameter.cpp
-#    test/config/printer.cpp
-#    test/formats/base_10.cpp
-#    test/formats/base_16.cpp
-#    test/formats/base_58.cpp
-#    test/formats/base_64.cpp
-#    test/formats/base_85.cpp
-#    test/math/big_number.cpp
-#    test/math/big_number.hpp
-#    test/math/checksum.cpp
-#    test/math/elliptic_curve.cpp
-#    test/math/hash.cpp
-#    test/math/hash.hpp
-#    test/math/hash_number.cpp
-#    test/math/script_number.cpp
-#    test/math/script_number.hpp
-#    test/math/stealth.cpp
-#    test/message/address.cpp
-#    test/message/alert.cpp
-#    test/message/alert_payload.cpp
-#    test/message/block_message.cpp
-#    test/message/block_transactions.cpp
-#    test/message/compact_block.cpp
-#    test/message/fee_filter.cpp
-#    test/message/filter_add.cpp
-#    test/message/filter_clear.cpp
-#    test/message/filter_load.cpp
-#    test/message/get_address.cpp
-#    test/message/get_block_transactions.cpp
-#    test/message/get_blocks.cpp
-#    test/message/get_data.cpp
-#    test/message/get_headers.cpp
-#    test/message/headers.cpp
-#    test/message/heading.cpp
-#    test/message/inventory.cpp
-#    test/message/inventory_vector.cpp
-#    test/message/memory_pool.cpp
-#    test/message/merkle_block.cpp
-#    test/message/network_address.cpp
-#    test/message/not_found.cpp
-#    test/message/ping.cpp
-#    test/message/pong.cpp
-#    test/message/prefilled_transaction.cpp
-#    test/message/reject.cpp
-#    test/message/send_compact_blocks.cpp
-#    test/message/send_headers.cpp
-#    test/message/transaction_message.cpp
-#    test/message/verack.cpp
-#    test/message/version.cpp
-#    test/unicode/unicode.cpp
-#    test/unicode/unicode_istream.cpp
-#    test/unicode/unicode_ostream.cpp
-#    test/utility/binary.cpp
-#    test/utility/collection.cpp
-#    test/utility/data.cpp
-#    test/utility/endian.cpp
-#    test/utility/png.cpp
-#    test/utility/random.cpp
-#    test/utility/resource_lock.cpp
-#    test/utility/serializer.cpp
-#    test/utility/stream.cpp
-#    test/utility/thread.cpp
-#    test/utility/variable_uint_size.cpp
-#    test/wallet/bitcoin_uri.cpp
-#    test/wallet/ec_private.cpp
-#    test/wallet/ec_public.cpp
-#    test/wallet/encrypted_keys.cpp
-#    test/wallet/hd_private.cpp
-#    test/wallet/hd_public.cpp
-#    test/wallet/message.cpp
-#    test/wallet/mnemonic.cpp
-#    test/wallet/mnemonic.hpp
-#    test/wallet/payment_address.cpp
-#    test/wallet/qrcode.cpp
-#    test/wallet/stealth_address.cpp
-#    test/wallet/uri.cpp
-#    test/wallet/uri_reader.cpp)
 
 add_executable(bitprim_core_test
         test/chain/block.cpp
@@ -687,8 +621,10 @@ add_executable(bitprim_core_test
         test/wallet/uri.cpp
         test/wallet/uri_reader.cpp)
 
-  target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
-  _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
+    target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
+
+
+_group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
 #    TODO: Fer: chequear si hay nuevos tests en los makefiles (no Cmake)
   _add_tests(bitprim_core_test
@@ -788,7 +724,10 @@ endif()
 if (WITH_EXAMPLES)
   add_executable(bitprim_core_examples
     examples/main.cpp)
+
+
   target_link_libraries(bitprim_core_examples PUBLIC bitprim-core)
+
   _group_sources(bitprim_core_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
 endif()
 
@@ -797,188 +736,6 @@ endif()
 install(TARGETS bitprim-core
   EXPORT bitprim-core
   ARCHIVE DESTINATION lib)
-
-#set(_bitprim_core_headers
-#  # include_bitcoin_HEADERS =
-#  bitcoin/bitcoin.hpp
-#  # include_bitcoin_bitcoin_HEADERS =
-#  bitcoin/bitcoin/compat.h
-#  bitcoin/bitcoin/compat.hpp
-#  bitcoin/bitcoin/constants.hpp
-#  bitcoin/bitcoin/define.hpp
-#  bitcoin/bitcoin/error.hpp
-#  bitcoin/bitcoin/handlers.hpp
-#  bitcoin/bitcoin/messages.hpp
-#  bitcoin/bitcoin/version.hpp
-#  # include_bitcoin_bitcoin_chain_HEADERS =
-#  bitcoin/bitcoin/chain/block.hpp
-#  bitcoin/bitcoin/chain/header.hpp
-#  bitcoin/bitcoin/chain/history.hpp
-#  bitcoin/bitcoin/chain/input.hpp
-#  bitcoin/bitcoin/chain/output.hpp
-#  bitcoin/bitcoin/chain/point.hpp
-#  bitcoin/bitcoin/chain/point_iterator.hpp
-#  bitcoin/bitcoin/chain/spend.hpp
-#  bitcoin/bitcoin/chain/stealth.hpp
-#  bitcoin/bitcoin/chain/transaction.hpp
-#  # include_bitcoin_bitcoin_chain_script_HEADERS =
-#  bitcoin/bitcoin/chain/machine/opcode.hpp
-#  bitcoin/bitcoin/chain/script/operation.hpp
-#  bitcoin/bitcoin/chain/script/script.hpp
-#  # include_bitcoin_bitcoin_config_HEADERS =
-#  bitcoin/bitcoin/config/authority.hpp
-#  bitcoin/bitcoin/config/base16.hpp
-#  bitcoin/bitcoin/config/base2.hpp
-#  bitcoin/bitcoin/config/base58.hpp
-#  bitcoin/bitcoin/config/base64.hpp
-#  bitcoin/bitcoin/config/checkpoint.hpp
-#  bitcoin/bitcoin/config/directory.hpp
-#  bitcoin/bitcoin/config/endpoint.hpp
-#  bitcoin/bitcoin/config/hash160.hpp
-#  bitcoin/bitcoin/config/hash256.hpp
-#  bitcoin/bitcoin/config/parameter.hpp
-#  bitcoin/bitcoin/config/parser.hpp
-#  bitcoin/bitcoin/config/printer.hpp
-#  bitcoin/bitcoin/config/sodium.hpp
-#  # include_bitcoin_bitcoin_formats_HEADERS =
-#  bitcoin/bitcoin/formats/base_10.hpp
-#  bitcoin/bitcoin/formats/base_16.hpp
-#  bitcoin/bitcoin/formats/base_58.hpp
-#  bitcoin/bitcoin/formats/base_64.hpp
-#  bitcoin/bitcoin/formats/base_85.hpp
-#  # include_bitcoin_bitcoin_impl_formats_HEADERS =
-#  bitcoin/bitcoin/impl/formats/base_16.ipp
-#  bitcoin/bitcoin/impl/formats/base_58.ipp
-#  # include_bitcoin_bitcoin_impl_math_HEADERS =
-#  bitcoin/bitcoin/impl/math/checksum.ipp
-#  bitcoin/bitcoin/impl/math/hash.ipp
-#  # include_bitcoin_bitcoin_impl_utility_HEADERS =
-#  bitcoin/bitcoin/impl/utility/array_slice.ipp
-#  bitcoin/bitcoin/impl/utility/collection.ipp
-#  bitcoin/bitcoin/impl/utility/data.ipp
-#  bitcoin/bitcoin/impl/utility/deserializer.ipp
-#  bitcoin/bitcoin/impl/utility/endian.ipp
-#  bitcoin/bitcoin/impl/utility/istream_reader.ipp
-#  bitcoin/bitcoin/impl/utility/notifier.ipp
-#  bitcoin/bitcoin/impl/utility/ostream_writer.ipp
-#  bitcoin/bitcoin/impl/utility/resubscriber.ipp
-#  bitcoin/bitcoin/impl/utility/serializer.ipp
-#  bitcoin/bitcoin/impl/utility/subscriber.ipp
-#  bitcoin/bitcoin/impl/utility/track.ipp
-#  # include_bitcoin_bitcoin_math_HEADERS =
-#  bitcoin/bitcoin/math/checksum.hpp
-#  bitcoin/bitcoin/math/crypto.hpp
-#  bitcoin/bitcoin/math/elliptic_curve.hpp
-#  bitcoin/bitcoin/math/hash.hpp
-#  bitcoin/bitcoin/math/hash_number.hpp
-#  bitcoin/bitcoin/math/script_number.hpp
-#  bitcoin/bitcoin/math/stealth.hpp
-#  bitcoin/bitcoin/math/uint256.hpp
-#  # include_bitcoin_bitcoin_message_HEADERS =
-#  bitcoin/bitcoin/message/address.hpp
-#  bitcoin/bitcoin/message/alert.hpp
-#  bitcoin/bitcoin/message/alert_payload.hpp
-#  bitcoin/bitcoin/message/block_message.hpp
-#  bitcoin/bitcoin/message/block_transactions.hpp
-#  bitcoin/bitcoin/message/compact_block.hpp
-#  bitcoin/bitcoin/message/fee_filter.hpp
-#  bitcoin/bitcoin/message/filter_add.hpp
-#  bitcoin/bitcoin/message/filter_clear.hpp
-#  bitcoin/bitcoin/message/filter_load.hpp
-#  bitcoin/bitcoin/message/get_address.hpp
-#  bitcoin/bitcoin/message/get_block_transactions.hpp
-#  bitcoin/bitcoin/message/get_blocks.hpp
-#  bitcoin/bitcoin/message/get_data.hpp
-#  bitcoin/bitcoin/message/get_headers.hpp
-#  bitcoin/bitcoin/message/header_message.hpp
-#  bitcoin/bitcoin/message/headers.hpp
-#  bitcoin/bitcoin/message/heading.hpp
-#  bitcoin/bitcoin/message/inventory.hpp
-#  bitcoin/bitcoin/message/inventory_vector.hpp
-#  bitcoin/bitcoin/message/memory_pool.hpp
-#  bitcoin/bitcoin/message/merkle_block.hpp
-#  bitcoin/bitcoin/message/network_address.hpp
-#  bitcoin/bitcoin/message/not_found.hpp
-#  bitcoin/bitcoin/message/ping.hpp
-#  bitcoin/bitcoin/message/pong.hpp
-#  bitcoin/bitcoin/message/prefilled_transaction.hpp
-#  bitcoin/bitcoin/message/reject.hpp
-#  bitcoin/bitcoin/message/send_compact_blocks.hpp
-#  bitcoin/bitcoin/message/send_headers.hpp
-#  bitcoin/bitcoin/message/transaction_message.hpp
-#  bitcoin/bitcoin/message/verack.hpp
-#  bitcoin/bitcoin/message/version.hpp
-#  # include_bitcoin_bitcoin_unicode_HEADERS =
-#  bitcoin/bitcoin/unicode/console_streambuf.hpp
-#  bitcoin/bitcoin/unicode/ifstream.hpp
-#  bitcoin/bitcoin/unicode/ofstream.hpp
-#  bitcoin/bitcoin/unicode/unicode.hpp
-#  bitcoin/bitcoin/unicode/unicode_istream.hpp
-#  bitcoin/bitcoin/unicode/unicode_ostream.hpp
-#  bitcoin/bitcoin/unicode/unicode_streambuf.hpp
-#  # include_bitcoin_bitcoin_utility_HEADERS =
-#  bitcoin/bitcoin/utility/array_slice.hpp
-#  bitcoin/bitcoin/utility/asio.hpp
-#  bitcoin/bitcoin/utility/assert.hpp
-#  bitcoin/bitcoin/utility/atomic.hpp
-#  bitcoin/bitcoin/utility/binary.hpp
-#  bitcoin/bitcoin/utility/collection.hpp
-#  bitcoin/bitcoin/utility/color.hpp
-#  bitcoin/bitcoin/utility/conditional_lock.hpp
-#  bitcoin/bitcoin/utility/container_sink.hpp
-#  bitcoin/bitcoin/utility/container_source.hpp
-#  bitcoin/bitcoin/utility/data.hpp
-#  bitcoin/bitcoin/utility/deadline.hpp
-#  bitcoin/bitcoin/utility/decorator.hpp
-#  bitcoin/bitcoin/utility/delegates.hpp
-#  bitcoin/bitcoin/utility/deserializer.hpp
-#  bitcoin/bitcoin/utility/dispatcher.hpp
-#  bitcoin/bitcoin/utility/enable_shared_from_base.hpp
-#  bitcoin/bitcoin/utility/endian.hpp
-#  bitcoin/bitcoin/utility/exceptions.hpp
-#  bitcoin/bitcoin/utility/istream_reader.hpp
-#  bitcoin/bitcoin/utility/log.hpp
-#  bitcoin/bitcoin/utility/monitor.hpp
-#  bitcoin/bitcoin/utility/notifier.hpp
-#  bitcoin/bitcoin/utility/ostream_writer.hpp
-#  bitcoin/bitcoin/utility/png.hpp
-#  bitcoin/bitcoin/utility/random.hpp
-#  bitcoin/bitcoin/utility/reader.hpp
-#  bitcoin/bitcoin/utility/resource_lock.hpp
-#  bitcoin/bitcoin/utility/resubscriber.hpp
-#  bitcoin/bitcoin/utility/scope_lock.hpp
-#  bitcoin/bitcoin/utility/serializer.hpp
-#  bitcoin/bitcoin/utility/string.hpp
-#  bitcoin/bitcoin/utility/subscriber.hpp
-#  bitcoin/bitcoin/utility/synchronizer.hpp
-#  bitcoin/bitcoin/utility/thread.hpp
-#  bitcoin/bitcoin/utility/threadpool.hpp
-#  bitcoin/bitcoin/utility/timer.hpp
-#  bitcoin/bitcoin/utility/track.hpp
-#  bitcoin/bitcoin/utility/variable_uint_size.hpp
-#  bitcoin/bitcoin/utility/work.hpp
-#  bitcoin/bitcoin/utility/writer.hpp
-#  # include_bitcoin_bitcoin_wallet_HEADERS =
-#  bitcoin/bitcoin/wallet/bitcoin_uri.hpp
-#  bitcoin/bitcoin/wallet/dictionary.hpp
-#  bitcoin/bitcoin/wallet/ec_private.hpp
-#  bitcoin/bitcoin/wallet/ec_public.hpp
-#  bitcoin/bitcoin/wallet/ek_private.hpp
-#  bitcoin/bitcoin/wallet/ek_public.hpp
-#  bitcoin/bitcoin/wallet/ek_token.hpp
-#  bitcoin/bitcoin/wallet/encrypted_keys.hpp
-#  bitcoin/bitcoin/wallet/hd_private.hpp
-#  bitcoin/bitcoin/wallet/hd_public.hpp
-#  bitcoin/bitcoin/wallet/message.hpp
-#  bitcoin/bitcoin/wallet/mini_keys.hpp
-#  bitcoin/bitcoin/wallet/mnemonic.hpp
-#  bitcoin/bitcoin/wallet/payment_address.hpp
-#  bitcoin/bitcoin/wallet/qrcode.hpp
-#  bitcoin/bitcoin/wallet/select_outputs.hpp
-#  bitcoin/bitcoin/wallet/settings.hpp
-#  bitcoin/bitcoin/wallet/stealth_address.hpp
-#  bitcoin/bitcoin/wallet/uri.hpp
-#  bitcoin/bitcoin/wallet/uri_reader.hpp)
 
 set(_bitprim_core_headers
     bitcoin/bitcoin/compat.h

@@ -23,6 +23,7 @@
 #include <secp256k1.h>
 #include <bitcoin/bitcoin/define.hpp>
 
+
 namespace libbitcoin {
 
 /**

@@ -28,11 +28,13 @@ namespace log {
 // modified from class extracted from boost/log/sinks/text_file_backend.*pp
 struct BC_API file_char_traits
 {
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
+#ifdef BOOST_WINDOWS_API
     typedef wchar_t char_type;
 #else
     typedef char char_type;
 #endif
+
 
     static const char_type percent = '%';
     static const char_type number_placeholder = 'N';
