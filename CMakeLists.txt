@@ -16,11 +16,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #==============================================================================
 # Implement --with-tests and declare WITH_TESTS.
 #------------------------------------------------------------------------------
-option(WITH_TESTS "Compile with unit tests." ON)
+option(WITH_TESTS "Compile with unit tests." OFF)
 
 # Implement --with-examples and declare WITH_EXAMPLES.
 #------------------------------------------------------------------------------
-option(WITH_EXAMPLES "Compile with examples." ON)
+option(WITH_EXAMPLES "Compile with examples." OFF)
 
 set(Boost_DEBUG ON)
 
@@ -227,167 +227,6 @@ if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-#add_library(bitprim-core ${MODE}
-#  src/error.cpp
-#  src/chain/block.cpp
-#  src/chain/header.cpp
-#  src/chain/input.cpp
-#  src/chain/output.cpp
-#  src/chain/point.cpp
-#  src/chain/point_iterator.cpp
-#  src/chain/transaction.cpp
-#  src/chain/script/conditional_stack.cpp
-#  src/chain/script/conditional_stack.hpp
-#  src/chain/script/evaluation_context.cpp
-#  src/chain/script/evaluation_context.hpp
-#  src/chain/machine/opcode.cpp
-#  src/chain/script/operation.cpp
-#  src/chain/script/script.cpp
-#  src/config/authority.cpp
-#  src/config/base16.cpp
-#  src/config/base2.cpp
-#  src/config/base58.cpp
-#  src/config/base64.cpp
-#  src/config/checkpoint.cpp
-#  src/config/directory.cpp
-#  src/config/endpoint.cpp
-#  src/config/hash160.cpp
-#  src/config/hash256.cpp
-#  src/config/parameter.cpp
-#  src/config/parser.cpp
-#  src/config/printer.cpp
-#  src/config/sodium.cpp
-#  src/formats/base_10.cpp
-#  src/formats/base_16.cpp
-#  src/formats/base_58.cpp
-#  src/formats/base_64.cpp
-#  src/formats/base_85.cpp
-#  src/math/checksum.cpp
-#  src/math/crypto.cpp
-#  src/math/elliptic_curve.cpp
-#  src/math/hash.cpp
-#  src/math/hash_number.cpp
-#  src/math/script_number.cpp
-#  src/math/secp256k1_initializer.cpp
-#  src/math/secp256k1_initializer.hpp
-#  src/math/stealth.cpp
-#  src/math/uint256.cpp
-#  src/math/external/aes256.c
-#  src/math/external/aes256.h
-#  src/math/external/crypto_scrypt.c
-#  src/math/external/crypto_scrypt.h
-#  src/math/external/hmac_sha256.c
-#  src/math/external/hmac_sha256.h
-#  src/math/external/hmac_sha512.c
-#  src/math/external/hmac_sha512.h
-#  src/math/external/lax_der_parsing.c
-#  src/math/external/lax_der_parsing.h
-#  src/math/external/pbkdf2_sha256.c
-#  src/math/external/pbkdf2_sha256.h
-#  src/math/external/pkcs5_pbkdf2.c
-#  src/math/external/pkcs5_pbkdf2.h
-#  src/math/external/ripemd160.c
-#  src/math/external/ripemd160.h
-#  src/math/external/sha1.c
-#  src/math/external/sha1.h
-#  src/math/external/sha256.c
-#  src/math/external/sha256.h
-#  src/math/external/sha512.c
-#  src/math/external/sha512.h
-#  src/math/external/zeroize.c
-#  src/math/external/zeroize.h
-
-#  src/math/external/scrypt.cpp
-#  src/math/external/scrypt.h
-#  src/math/external/scrypt-sse2.cpp
-
-
-#  src/message/address.cpp
-#  src/message/alert.cpp
-#  src/message/alert_payload.cpp
-#  src/message/block_message.cpp
-#  src/message/block_transactions.cpp
-#  src/message/compact_block.cpp
-#  src/message/fee_filter.cpp
-#  src/message/filter_add.cpp
-#  src/message/filter_clear.cpp
-#  src/message/filter_load.cpp
-#  src/message/get_address.cpp
-#  src/message/get_block_transactions.cpp
-#  src/message/get_blocks.cpp
-#  src/message/get_data.cpp
-#  src/message/get_headers.cpp
-#  src/message/header_message.cpp
-#  src/message/headers.cpp
-#  src/message/heading.cpp
-#  src/message/inventory.cpp
-#  src/message/inventory_vector.cpp
-#  src/message/memory_pool.cpp
-#  src/message/merkle_block.cpp
-#  src/message/network_address.cpp
-#  src/message/not_found.cpp
-#  src/message/ping.cpp
-#  src/message/pong.cpp
-#  src/message/prefilled_transaction.cpp
-#  src/message/reject.cpp
-#  src/message/send_compact_blocks.cpp
-#  src/message/send_headers.cpp
-#  src/message/transaction_message.cpp
-#  src/message/verack.cpp
-#  src/message/version.cpp
-#  src/unicode/console_streambuf.cpp
-#  src/unicode/ifstream.cpp
-#  src/unicode/ofstream.cpp
-#  src/unicode/unicode.cpp
-#  src/unicode/unicode_istream.cpp
-#  src/unicode/unicode_ostream.cpp
-#  src/unicode/unicode_streambuf.cpp
-#  src/utility/binary.cpp
-#  src/utility/conditional_lock.cpp
-#  src/utility/deadline.cpp
-#  src/utility/dispatcher.cpp
-#  src/utility/istream_reader.cpp
-#  src/utility/log.cpp
-#  src/utility/monitor.cpp
-#  src/utility/ostream_writer.cpp
-#  src/utility/png.cpp
-#  src/utility/random.cpp
-#  src/utility/resource_lock.cpp
-#  src/utility/scope_lock.cpp
-#  src/utility/string.cpp
-#  src/utility/thread.cpp
-#  src/utility/threadpool.cpp
-#  src/utility/variable_uint_size.cpp
-#  src/utility/work.cpp
-#  src/wallet/bitcoin_uri.cpp
-#  src/wallet/dictionary.cpp
-#  src/wallet/ec_private.cpp
-#  src/wallet/ec_public.cpp
-#  src/wallet/ek_private.cpp
-#  src/wallet/ek_public.cpp
-#  src/wallet/ek_token.cpp
-#  src/wallet/encrypted_keys.cpp
-#  src/wallet/hd_private.cpp
-#  src/wallet/hd_public.cpp
-#  src/wallet/message.cpp
-#  src/wallet/mini_keys.cpp
-#  src/wallet/mnemonic.cpp
-#  src/wallet/payment_address.cpp
-#  src/wallet/qrcode.cpp
-#  src/wallet/select_outputs.cpp
-#  src/wallet/stealth_address.cpp
-#  src/wallet/uri.cpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_key.hpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_key.ipp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_prefix.hpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_prefix.ipp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_private.cpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_private.hpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_public.cpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_public.hpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
-#  src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp)
-
 set(bitprim_core_sources 
         src/chain/block.cpp
         src/chain/chain_state.cpp
@@ -574,7 +413,8 @@ if (WITH_LITECOIN)
 endif()
 
 add_library(bitprim-core ${MODE} ${bitprim_core_sources})
-
+set_property(TARGET bitprim-core PROPERTY POSITION_INDEPENDENT_CODE ON)
+  
 
 # add_library(bitprim-core ${MODE}
 #        src/wallet/uri.cpp)
