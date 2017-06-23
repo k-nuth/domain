@@ -69,4 +69,3 @@ test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/x64/Debug/sha256_tes
 cmake-build-debug/
 cmake-build-release/
 CMakeSettings.json
-
