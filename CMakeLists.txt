@@ -66,7 +66,6 @@ option(ENABLE_SHARED "" OFF)
 #==============================================================================
 # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
-
 if (NOT ENABLE_SHARED)
   set(Boost_USE_STATIC_LIBS ON)
 endif()
@@ -114,6 +113,12 @@ endif()
 #------------------------------------------------------------------------------
 
 # Require qrencode of at least version 3.4.4 and output ${qrencode_CPPFLAGS/LIBS/PKG}.
+
+if (UNIX)
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
+elseif (WIN32)
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
+endif()
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
@@ -966,7 +971,8 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/wallet/stealth_sender.hpp
     bitcoin/bitcoin/wallet/uri.hpp
     bitcoin/bitcoin/wallet/uri_reader.hpp
-    bitcoin/bitcoin.hpp)
+    bitcoin/bitcoin.hpp
+    )
 
 foreach (_header ${_bitprim_core_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
