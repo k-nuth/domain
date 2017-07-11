@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg?branch=master)](https://travis-ci.org/bitprim/bitprim-core)
+[![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg?branch=c-api)](https://travis-ci.org/bitprim/bitprim-core)
 
 # Bitprim Core
 
