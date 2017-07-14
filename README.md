@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg?branch=c-api)](https://travis-ci.org/bitprim/bitprim-core)
+[![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg?branch=c-api)](https://travis-ci.org/bitprim/bitprim-core) [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?branch=c-api&svg=true)](https://ci.appveyor.com/project/hanchon/bitprim-core?branch=c-api)
 
 # Bitprim Core
 
