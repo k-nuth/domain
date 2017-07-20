@@ -391,7 +391,11 @@ endif()
 
 add_library(bitprim-core ${MODE} ${bitprim_core_sources})
 set_property(TARGET bitprim-core PROPERTY POSITION_INDEPENDENT_CODE ON)
-  
+
+#set_target_properties(bitprim-core PROPERTIES CXX_VISIBILITY_PRESET hidden)
+#set_target_properties(bitprim-core PROPERTIES CXX_VISIBILITY_PRESET internal)
+
+#-fvisibility=default|internal|hidden|protected
 
 # add_library(bitprim-core ${MODE}
 #        src/wallet/uri.cpp)
