@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.4)
 project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check for baseline language coverage in the compiler for the C++11 standard.
@@ -123,35 +124,16 @@ endif()
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (NOT TARGET secp256k1)
-  find_package(secp256k1 0.0.01 REQUIRED)
+#    message("secp256k1 hola 1")
+    find_package(secp256k1 0.0.01 REQUIRED)
+#else()
+#    message("secp256k1 hola 2")
 endif()
 
 # Set flags.
 #==============================================================================
 include(CheckCXXCompilerFlag)
 
-function(_add_c_compile_flag _Flag _Var)
-  check_cxx_compiler_flag(${_Flag} ${_Var})
-  if (${_Var})
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_Flag}" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_Flag}" )
-  endif()
-endfunction()
-
-function(_add_cxx_compile_flag _Flag _Var)
-  check_cxx_compiler_flag(${_Flag} ${_Var})
-  if (${_Var})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_Flag}" )
-  endif()
-endfunction()
-
-function(_add_link_flag _Flag _Var)
-  check_cxx_compiler_flag(${_Flag} ${_Var})
-  if (${_Var})
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${_Flag}" )
-    set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${_Flag}" )
-  endif()
-endfunction()
 
 # Warn on all stuff.
 #------------------------------------------------------------------------------
@@ -212,26 +194,6 @@ endif()
 
 # Build
 #==============================================================================
-function(_group_sources target sources_dir)
-  file(GLOB_RECURSE _headers
-    ${sources_dir}/include/*.h ${sources_dir}/include/*.hpp)
-  target_sources(${target} PRIVATE ${_headers})
-
-  get_target_property(sources ${target} SOURCES)
-  foreach (source ${sources})
-    get_filename_component(group ${source} ABSOLUTE)
-    get_filename_component(group ${group} DIRECTORY)
-    file(RELATIVE_PATH group "${sources_dir}" "${group}")
-    if (group)
-      if (MSVC)
-        string(REPLACE "/" "\\" group "${group}")
-      endif()
-      source_group("${group}" FILES "${source}")
-    endif()
-  endforeach()
-
-  set_target_properties(${target} PROPERTIES FOLDER "core")
-endfunction()
 
 # src/bitprim-core.la => ${libdir}
 #------------------------------------------------------------------------------
@@ -500,24 +462,6 @@ _group_sources(bitprim-core "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
-function(_add_tests target)
-  if (ENABLE_SHARED)
-    target_compile_definitions(${target} PRIVATE -DBOOST_TEST_DYN_LINK)
-  endif()
-  target_include_directories(${target} SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
-  target_link_libraries(${target} PUBLIC ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-
-  foreach (_test_name ${ARGN})
-    add_test(
-      NAME test.core.${_test_name}
-      COMMAND ${target}
-        --run_test=${_test_name}
-        --show_progress=no
-        --detect_memory_leak=0
-        --report_level=no
-        --build_info=yes)
-  endforeach()
-endfunction()
 
 if (WITH_TESTS)
   enable_testing()
@@ -738,9 +682,16 @@ endif()
 
 # Install
 #==============================================================================
-install(TARGETS bitprim-core
-  EXPORT bitprim-core
-  ARCHIVE DESTINATION lib)
+install(TARGETS bitprim-core EXPORT bitprim-core
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+)
+
+#install(EXPORT bitprim-coreTargets
+#
+#)
 
 set(_bitprim_core_headers
     bitcoin/bitcoin/compat.h
