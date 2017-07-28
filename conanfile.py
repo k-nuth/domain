@@ -15,7 +15,7 @@ class BitprimcoreConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure()
+        cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
 
     def package(self):
