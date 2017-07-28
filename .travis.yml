@@ -58,6 +58,7 @@ install:
   # Download and install packages.
   - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew unlink boost; brew install boost; fi
 
+  - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/install.sh
   - ./.travis/install.sh
 
@@ -111,5 +112,6 @@ script:
   - sudo chmod 777 build_bitprim.sh
   #Install bitprim-secp256k1
   - ./build_bitprim.sh secp256k1 "${TRAVIS_OS_NAME}"
+  - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/run.sh
   - ./.travis/run.sh
