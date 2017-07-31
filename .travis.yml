@@ -42,9 +42,9 @@ install:
 
   - gcc --version
   - g++ --version
-  - gcc49 --version
-  - gcc54 --version
-  - gcc63 --version
+  - gcc-4.9 --version
+  - gcc-5.4 --version
+  - gcc-6.3 --version
 
   - chmod +x .travis/install.sh
   - ./.travis/install.sh
