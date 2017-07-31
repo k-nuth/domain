@@ -17,7 +17,7 @@ class BitprimcoreConan(ConanFile):
 
 
 
-    requires = (("conan_boost/1.64.0@dario-ramos/stable"),
+    requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                ("secp256k1/0.1@bitprim/stable"))
 
 #    def build(self):
