@@ -93,10 +93,6 @@ before_script:
   - mkdir build
   - cd build 
 
-  - cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ${BOOST_OPTS}
-
-script:
-
   ############################################################################
   # Custom script for external dependences
   ############################################################################
@@ -128,5 +124,9 @@ script:
   #Install bitprim-secp256k1
   - ./build_bitprim.sh secp256k1 "${TRAVIS_OS_NAME}"
   - cd ${TRAVIS_BUILD_DIR}
+
+  - cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ${BOOST_OPTS}
+
+script:
   - chmod +x .travis/run.sh
   - ./.travis/run.sh
