@@ -45,8 +45,8 @@ install:
 #  - g++-4.9 --version
 #  - g++-5.4 --version
 #  - g++-6.3 --version
-  - export CC=gcc-${GCC_VERSION}
-  - export CXX=g++-${GCC_VERSION}
+  #- export CC=gcc-${GCC_VERSION}
+  #- export CXX=g++-${GCC_VERSION}
 
   ############################################################################
   # All the dependencies are installed in /home/travis/deps/
