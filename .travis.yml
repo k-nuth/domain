@@ -129,10 +129,10 @@ before_script:
   ###########################################################################
   # Build this repo
   ###########################################################################
-  - cd ${TRAVIS_BUILD_DIR}
-  - mkdir build
-  - cd build
-  - conan install .. --build missing
+#  - cd ${TRAVIS_BUILD_DIR}
+#  - mkdir build
+#  - cd build
+#  - conan install .. --build missing
 #  - cmake .. -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ${BOOST_OPTS}
 
 script:
