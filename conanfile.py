@@ -12,11 +12,12 @@ class BitprimcoreConan(ConanFile):
     default_options = "shared=False"
     generators = "cmake"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
+    package_files = "build/lbitprim-core.a"
 
-    def build(self):
-        cmake = CMake(self)
-        cmake.configure(source_dir=self.conanfile_directory)
-        cmake.build()
+#    def build(self):
+#        cmake = CMake(self)
+#        cmake.configure(source_dir=self.conanfile_directory)
+#        cmake.build()
 
     def package(self):
         self.copy("*.h", dst="include", src="src")
