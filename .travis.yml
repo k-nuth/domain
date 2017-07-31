@@ -76,19 +76,6 @@ before_script:
   - if [ -n "$GCC_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} -Wall -Wextra"; fi
   - if [ -n "$CLANG_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} -Wall -Wextra"; fi
 
-  - cd ${TRAVIS_BUILD_DIR}
-  - mkdir build
-  - cd build 
-  - cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ${BOOST_OPTS}
-
-script:
-
-  ############################################################################
-  # Custom script for external dependences
-  ############################################################################
-  - cd ${DEPS_DIR}
-  - wget -O build_deps.sh  https://raw.githubusercontent.com/hanchon/travis_complete_cache/master/build_deps.sh
-  - sudo chmod 777 build_deps.sh  
   ############################################################################
   # Install a recent CMake
   ############################################################################
@@ -101,6 +88,21 @@ script:
       brew unlink cmake
       brew install cmake
     fi
+
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build
+  - cd build 
+
+  - cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ${BOOST_OPTS}
+
+script:
+
+  ############################################################################
+  # Custom script for external dependences
+  ############################################################################
+  - cd ${DEPS_DIR}
+  - wget -O build_deps.sh  https://raw.githubusercontent.com/hanchon/travis_complete_cache/master/build_deps.sh
+  - sudo chmod 777 build_deps.sh  
 
   # Install Boost
   - ./build_deps.sh boost "${TRAVIS_OS_NAME}"
