@@ -43,6 +43,9 @@ before_install:
 install:
   - sudo find / -name "*gcc*"
   - sudo find /usr -name "*gcc*"
+  - cd
+  - pwd
+  - sudo find ~ -name "*gcc*"
 
   - gcc --version
   - g++ --version
