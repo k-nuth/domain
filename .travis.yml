@@ -42,12 +42,11 @@ install:
 
   - gcc --version
   - g++ --version
-  - g++-4.9 --version
-  - g++-5.4 --version
-  - g++-6.3 --version
-
-  - chmod +x .travis/install.sh
-  - ./.travis/install.sh
+#  - g++-4.9 --version
+#  - g++-5.4 --version
+#  - g++-6.3 --version
+  - export CC=gcc-${GCC_VERSION}
+  - export CXX=g++-${GCC_VERSION}
 
   ############################################################################
   # All the dependencies are installed in /home/travis/deps/
@@ -67,8 +66,8 @@ install:
   # Setup Conan 
   ############################################################################
 
-  - conan remote add bitprim_sec https://api.bintray.com/conan/bitprim/secp256k1
-  - conan remote add dario_boost https://api.bintray.com/conan/dario-ramos/conan_boost
+  #- conan remote add bitprim_sec https://api.bintray.com/conan/bitprim/secp256k1
+  #- conan remote add dario_boost https://api.bintray.com/conan/dario-ramos/conan_boost
 
   # ############################################################################
   # # Install a Boost with -fPIC
@@ -85,6 +84,10 @@ install:
   # - cd ${TRAVIS_BUILD_DIR}
   # - chmod +x .travis/install.sh
   # - ./.travis/install.sh
+
+  - cd ${TRAVIS_BUILD_DIR}
+  - chmod +x .travis/install.sh
+  - ./.travis/install.sh
 
 
 before_script:
