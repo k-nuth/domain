@@ -52,6 +52,19 @@ install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
 
+  ############################################################################
+  # Install a recent CMake
+  ############################################################################
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.0-rc3-Linux-x86_64.tar.gz"
+      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+    else 
+      brew unlink cmake
+      brew install cmake
+    fi
+
   # Export CC/CXX to control gcc version.
   #- if [[ $GCC                         ]]; then export CC=gcc-4.8; export CXX=g++-4.8; fi
 
@@ -75,19 +88,6 @@ before_script:
 
   - if [ -n "$GCC_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} -Wall -Wextra"; fi
   - if [ -n "$CLANG_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} -Wall -Wextra"; fi
-
-  ############################################################################
-  # Install a recent CMake
-  ############################################################################
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.0-rc3-Linux-x86_64.tar.gz"
-      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    else 
-      brew unlink cmake
-      brew install cmake
-    fi
 
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build
