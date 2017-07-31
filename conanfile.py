@@ -14,6 +14,12 @@ class BitprimcoreConan(ConanFile):
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
     package_files = "build/lbitprim-core.a"
 
+
+
+
+    requires = (("conan_boost/1.64.0@dario-ramos/stable"),
+               ("secp256k1/0.1@bitprim/stable"))
+
 #    def build(self):
 #        cmake = CMake(self)
 #        cmake.configure(source_dir=self.conanfile_directory)

@@ -6,6 +6,11 @@ project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check for baseline language coverage in the compiler for the C++11 standard.
@@ -72,17 +77,17 @@ if (NOT ENABLE_SHARED)
 endif()
 
 
-if (MSVC)
-	find_package(
-	  Boost 1.56.0 REQUIRED
-	  COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options regex system thread unit_test_framework
-	)
-else()
-	find_package(
-	  Boost 1.56.0 REQUIRED
-	  COMPONENTS chrono date_time filesystem iostreams locale log program_options regex system thread unit_test_framework
-	)
-endif()
+#if (MSVC)
+#	find_package(
+#	  Boost 1.56.0 REQUIRED
+#	  COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options regex system thread unit_test_framework
+#	)
+#else()
+#	find_package(
+#	  Boost 1.56.0 REQUIRED
+#	  COMPONENTS chrono date_time filesystem iostreams locale log program_options regex system thread unit_test_framework
+#	)
+#endif()
 
 # Require pthread and output ${pthread_CPPFLAGS/LIBS}.
 #------------------------------------------------------------------------------
@@ -123,12 +128,12 @@ endif()
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-if (NOT TARGET secp256k1)
-#    message("secp256k1 hola 1")
-    find_package(secp256k1 0.0.01 REQUIRED)
-#else()
-#    message("secp256k1 hola 2")
-endif()
+#if (NOT TARGET secp256k1)
+##    message("secp256k1 hola 1")
+#    find_package(secp256k1 0.0.01 REQUIRED)
+##else()
+##    message("secp256k1 hola 2")
+#endif()
 
 # Set flags.
 #==============================================================================
@@ -417,26 +422,27 @@ if (WITH_LITECOIN)
   target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
 endif()
 
-if (MSVC)
-	target_link_libraries(bitprim-core PUBLIC
-	  ${Boost_ATOMIC_LIBRARY}
-    ${Boost_LOG_SETUP_LIBRARY}
-	)
-endif()
+#if (MSVC)
+#	target_link_libraries(bitprim-core PUBLIC
+#	  ${Boost_ATOMIC_LIBRARY}
+#    ${Boost_LOG_SETUP_LIBRARY}
+#	)
+#endif()
+#
+#target_link_libraries(bitprim-core PUBLIC
+#  ${Boost_CHRONO_LIBRARY}
+#  ${Boost_DATE_TIME_LIBRARY}
+#  ${Boost_FILESYSTEM_LIBRARY}
+#  ${Boost_IOSTREAMS_LIBRARY}
+#  ${Boost_LOCALE_LIBRARY}
+#  ${Boost_LOG_LIBRARY}
+#  ${Boost_PROGRAM_OPTIONS_LIBRARY}
+#  ${Boost_REGEX_LIBRARY}
+#  ${Boost_SYSTEM_LIBRARY}
+#  ${Boost_THREAD_LIBRARY}
+#)
 
-target_link_libraries(bitprim-core PUBLIC
-  ${Boost_CHRONO_LIBRARY}
-  ${Boost_DATE_TIME_LIBRARY}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_IOSTREAMS_LIBRARY}
-  ${Boost_LOCALE_LIBRARY}
-  ${Boost_LOG_LIBRARY}
-  ${Boost_PROGRAM_OPTIONS_LIBRARY}
-  ${Boost_REGEX_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
-  ${Boost_THREAD_LIBRARY}
-)
-
+target_link_libraries(bitprim-core ${CONAN_LIBS})
 
 
 #message(CMAKE_THREAD_LIBS_INIT)
@@ -465,7 +471,7 @@ if (WITH_LITECOIN)
   # OPENSSL_LIBRARIES
 endif()
 
-target_link_libraries(bitprim-core PUBLIC secp256k1)
+#target_link_libraries(bitprim-core PUBLIC secp256k1)
 
 _group_sources(bitprim-core "${CMAKE_CURRENT_LIST_DIR}")
 
