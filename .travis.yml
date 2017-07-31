@@ -107,7 +107,9 @@ before_script:
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
+  - cd build
   - make -j2
   - sudo make install
+  - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/run.sh
   - ./.travis/run.sh
