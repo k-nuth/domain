@@ -38,6 +38,14 @@ before_install:
   - if [ -n "$CLANG_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} "; fi
 
 install:
+  - sudo find / -name "gcc"
+
+  - gcc --version
+  - g++ --version
+  - gcc49 --version
+  - gcc54 --version
+  - gcc63 --version
+
   - chmod +x .travis/install.sh
   - ./.travis/install.sh
 
