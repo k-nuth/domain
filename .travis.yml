@@ -63,6 +63,10 @@ install:
   - export BOOST_OPTS="-DBOOST_ROOT=/home/travis/deps/boost_1_64_0 -DBOOST_INCLUDEDIR=/home/travis/deps/boost_1_64_0 -DBOOST_LIBRARYDIR=/home/travis/deps/boost_1_64_0/lib"
   - sudo ldconfig
   - echo 'Boost 1.64.0 installed';
+  - cd ${TRAVIS_BUILD_DIR}
+  - chmod +x .travis/install.sh
+  - ./.travis/install.sh
+
 
 before_script:
   ############################################################################
