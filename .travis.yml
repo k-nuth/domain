@@ -41,7 +41,8 @@ before_install:
   - if [ -n "$CLANG_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} "; fi
 
 install:
-  - sudo find / -name "gcc"
+  - sudo find / -name "*gcc*"
+  - sudo find /usr -name "*gcc*"
 
   - gcc --version
   - g++ --version
