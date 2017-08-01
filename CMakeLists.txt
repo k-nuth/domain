@@ -442,7 +442,7 @@ endif()
 #  ${Boost_THREAD_LIBRARY}
 #)
 
-target_link_libraries(bitprim-core ${CONAN_LIBS} PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(bitprim-core PUBLIC ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
 
 #message(CMAKE_THREAD_LIBS_INIT)
