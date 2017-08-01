@@ -18,7 +18,7 @@ class BitprimcoreConan(ConanFile):
                ("secp256k1/0.1@bitprim/stable"))
 
     def build(self):
-        os.environ["CPATH"] += self.conanfile_directory + "/include"
+        os.environ["CPATH"] = self.conanfile_directory + "/include"
         print os.environ["CPATH"] #TODO <TEST>
         cmake = CMake(self)
         cmake.configure(source_dir=self.conanfile_directory)
