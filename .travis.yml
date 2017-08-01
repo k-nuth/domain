@@ -1,3 +1,22 @@
+#
+# Copyright (c) 2017 Bitprim developers (see AUTHORS)
+#
+# This file is part of Bitprim.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 env:
    global:
      - CONAN_REFERENCE: "bitprim-core/0.1"
@@ -28,6 +47,12 @@ matrix:
 
       - <<: *linux
         env: CONAN_GCC_VERSIONS=6.3 CONAN_DOCKER_IMAGE=lasote/conangcc63
+
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=lasote/conanclang39
+
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=4.0 CONAN_DOCKER_IMAGE=lasote/conanclang40
 
       - <<: *osx
         osx_image: xcode7.3
