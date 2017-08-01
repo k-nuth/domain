@@ -19,7 +19,8 @@ class BitprimcoreConan(ConanFile):
 
     def build(self):
         #os.environ["CPATH"] = self.conanfile_directory + "/include"
-        #print os.environ["CPATH"] #TODO <TEST>
+        print "UPALALA"
+        print os.environ["CONAN_INCLUDE_DIRS"]
         cmake = CMake(self)
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
