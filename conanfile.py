@@ -22,9 +22,9 @@ class BitprimcoreConan(ConanFile):
         #print self.deps_env_info["secp256k1"].C_INCLUDE_PATH
         #print self.deps_env_info["secp256k1"].CPLUS_INCLUDE_PATH
         if "CPATH" in os.environ:
-            os.environ["CPATH"] += os.pathsep + self.deps_env_info["secp256k1"].CPATH
+            os.environ["CPATH"] += os.pathsep + self.deps_env_info["secp256k1"].CPATH[0]
         else:
-            os.environ["CPATH"] = self.deps_env_info["secp256k1"].CPATH
+            os.environ["CPATH"] = self.deps_env_info["secp256k1"].CPATH[0]
         cmake = CMake(self)
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
