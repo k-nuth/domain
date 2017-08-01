@@ -11,7 +11,7 @@ class BitprimcoreConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = "shared=False"
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
+    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in"
     package_files = "build/lbitprim-core.a"
 
 
