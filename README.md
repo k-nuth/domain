@@ -134,7 +134,7 @@ $ sudo port install boost -no_single -no_static -python27
 
 Next install [bitprim/secp256k1](https://github.com/bitprim/secp256k1)
 
-Finally install bitprim:
+Finally, install bitprim:
 ```sh
 $ git clone https://github.com/bitprim/bitprim-core
 $ cd bitprim-core
