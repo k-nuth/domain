@@ -29,118 +29,27 @@ matrix:
       - <<: *linux
         env: CONAN_GCC_VERSIONS=6.3 CONAN_DOCKER_IMAGE=lasote/conangcc63
 
-before_install:
-  - gcc --version
-  - g++ --version
-  - echo ${GCC_VERSION}
-
-  # Set aliases for readability.
-  - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
-  - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
-  - if [ -n "$GCC_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} "; fi
-  - if [ -n "$CLANG_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} "; fi
-
 install:
-  - sudo find / -name "*gcc*"
-  - sudo find /usr -name "*gcc*"
-  - cd
-  - pwd
-  - sudo find ~ -name "*gcc*"
 
-  - gcc --version
-  - g++ --version
-#  - g++-4.9 --version
-#  - g++-5.4 --version
-#  - g++-6.3 --version
-  #- export CC=gcc-${GCC_VERSION}
-  #- export CXX=g++-${GCC_VERSION}
-
-  ############################################################################
-  # All the dependencies are installed in /home/travis/deps/
-  ############################################################################
-  - DEPS_DIR="/home/travis/deps"
-  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
-
-  ############################################################################
-  # Install a recent CMake
-  ############################################################################
-  - CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.0-rc5-Linux-x86_64.tar.gz"
-  - mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-  - echo 'Cmake 3.9.0 installed';
-  - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-
-  ############################################################################
-  # Setup Conan 
-  ############################################################################
-
-  #- conan remote add bitprim_sec https://api.bintray.com/conan/bitprim/secp256k1
-  #- conan remote add dario_boost https://api.bintray.com/conan/dario-ramos/conan_boost
-
-  # ############################################################################
-  # # Install a Boost with -fPIC
-  # ############################################################################
-  # - cd ${DEPS_DIR}
-  # - wget -O boost_1_64_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.gz/download
-  # - tar -xzf boost_1_64_0.tar.gz
-  # - cd boost_1_64_0
-  # - wget -O boost_bin_fpic.tar.bz2 http://repo.bitprim.org/packages/binary/boost_bin_fpic.tar.bz2
-  # - tar -xvjf boost_bin_fpic.tar.bz2
-  # - export BOOST_OPTS="-DBOOST_ROOT=/home/travis/deps/boost_1_64_0 -DBOOST_INCLUDEDIR=/home/travis/deps/boost_1_64_0 -DBOOST_LIBRARYDIR=/home/travis/deps/boost_1_64_0/lib"
-  # - sudo ldconfig
-  # - echo 'Boost 1.64.0 installed';
-  # - cd ${TRAVIS_BUILD_DIR}
-  # - chmod +x .travis/install.sh
-  # - ./.travis/install.sh
+#  ############################################################################
+#  # All the dependencies are installed in /home/travis/deps/
+#  ############################################################################
+#  - DEPS_DIR="/home/travis/deps"
+#  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+#
+#  ############################################################################
+#  # Install a recent CMake
+#  ############################################################################
+#  - CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.0-rc5-Linux-x86_64.tar.gz"
+#  - mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+#  - echo 'Cmake 3.9.0 installed';
+#  - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
 
   - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/install.sh
   - ./.travis/install.sh
 
-
-before_script:
-  ############################################################################
-  # Set the git identity (for pushing the documentation and the benchmarks)
-  ############################################################################
-  - git config --global user.name "Travis bot"
-  - git config --global user.email travis-bot@travis-ci.org
-
-  - if [ -n "$GCC_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} "; fi
-  - if [ -n "$CLANG_VERSION" ]; then export CXX_FLAGS="${CXX_FLAGS} "; fi
-
-  # ############################################################################
-  # # Build and install local deps
-  # ############################################################################
-  # - cd ${DEPS_DIR}
-  # - |
-  #   function build_project
-  #   {
-  #   cd $1
-  #   mkdir build
-  #   cd build
-  #   cmake .. -G "Unix Makefiles" -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ${BOOST_OPTS} -DENABLE_TESTS=OFF -DWITH_EXAMPLES=OFF -DWITH_REMOTE_DATABASE=OFF -DWITH_REMOTE_BLOCKCHAIN=OFF -DWITH_LITECOIN=OFF -DWITH_TESTS=OFF -DENABLE_MODULE_RECOVERY=ON -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Debug
-  #   make -j4
-  #   sudo make install
-  #   cd ..
-  #   cd ..
-  #   }
-  # - git clone 'https://github.com/bitprim/secp256k1' -b c-api
-  # - build_project secp256k1
-
-  ###########################################################################
-  # Build this repo
-  ###########################################################################
-#  - cd ${TRAVIS_BUILD_DIR}
-#  - mkdir build
-#  - cd build
-#  - conan install .. --build missing
-#  - cmake .. -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ${BOOST_OPTS}
-
 script:
-#  - cd ${TRAVIS_BUILD_DIR}
-#  - cd build
-#  - make -j2
-#  - sudo make install
-
   - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/run.sh
   - ./.travis/run.sh
