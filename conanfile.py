@@ -18,9 +18,9 @@ class BitprimcoreConan(ConanFile):
                ("secp256k1/0.1@bitprim/stable"))
 
     def build(self):
-        self.out.warn(self.deps_env_info["secp256k1"].CPATH)
-        self.out.warn(self.deps_env_info["secp256k1"].C_INCLUDE_PATH)
-        self.out.warn(self.deps_env_info["secp256k1"].CPLUS_INCLUDE_PATH)
+        print self.deps_env_info["secp256k1"].CPATH
+        print self.deps_env_info["secp256k1"].C_INCLUDE_PATH
+        print self.deps_env_info["secp256k1"].CPLUS_INCLUDE_PATH
         cmake = CMake(self)
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
