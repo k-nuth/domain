@@ -19,11 +19,16 @@ class BitprimcoreConan(ConanFile):
 
     def build(self):
         #os.environ["CPATH"] = self.conanfile_directory + "/include"
-        print "UPALALA"
-        print os.environ["CONAN_INCLUDE_DIRS"]
+        #print "UPALALA"
+        #print os.environ["CONAN_INCLUDE_DIRS"]
         cmake = CMake(self)
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
+
+    def imports(self):
+        #self.copy("*.dll", "", "bin")
+        #self.copy("*.dylib", "", "lib")
+        self.copy("*.h", "", "include")
 
     def package(self):
         self.copy("*.h", dst="include", src="src")
