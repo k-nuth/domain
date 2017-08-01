@@ -18,9 +18,9 @@ class BitprimcoreConan(ConanFile):
                ("secp256k1/0.1@bitprim/stable"))
 
     def build(self):
-        #os.environ["CPATH"] = self.conanfile_directory + "/include"
-        #print "UPALALA"
-        #print os.environ["CONAN_INCLUDE_DIRS"]
+        self.out.warn(self.deps_env_info["secp256k1"].CPATH)
+        self.out.warn(self.deps_env_info["secp256k1"].C_INCLUDE_PATH)
+        self.out.warn(self.deps_env_info["secp256k1"].CPLUS_INCLUDE_PATH)
         cmake = CMake(self)
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
@@ -39,4 +39,5 @@ class BitprimcoreConan(ConanFile):
         self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
+        self.cpp_info.includedirs = ['include']
         self.cpp_info.libs = ["bitprim-core"]
