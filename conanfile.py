@@ -13,6 +13,7 @@ class BitprimcoreConan(ConanFile):
     generators = "cmake"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "include/*"
     package_files = "build/lbitprim-core.a"
+    build_policy = "missing"
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                ("secp256k1/0.1@bitprim/stable"))
