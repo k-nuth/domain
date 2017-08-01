@@ -1,5 +1,5 @@
 from conans import ConanFile, CMake
-
+import os
 
 class BitprimcoreConan(ConanFile):
     name = "bitprim-core"
@@ -14,13 +14,12 @@ class BitprimcoreConan(ConanFile):
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in"
     package_files = "build/lbitprim-core.a"
 
-
-
-
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                ("secp256k1/0.1@bitprim/stable"))
 
     def build(self):
+        os.environ["CPATH"] += self.conanfile_directory + "/include"
+        print os.environ["CPATH"] #TODO <TEST>
         cmake = CMake(self)
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
