@@ -442,7 +442,7 @@ endif()
 #  ${Boost_THREAD_LIBRARY}
 #)
 
-target_link_libraries(bitprim-core ${CONAN_LIBS})
+target_link_libraries(bitprim-core ${CONAN_LIBS} PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 
 #message(CMAKE_THREAD_LIBS_INIT)
@@ -452,7 +452,7 @@ target_link_libraries(bitprim-core ${CONAN_LIBS})
 #    message($LETTER)
 #endforeach(LETTER)
 
-target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+#target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 if (MINGW) #(WIN32)
     target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
