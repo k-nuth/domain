@@ -23,7 +23,7 @@ env:
      - CONAN_USERNAME: "bitprim"
      - CONAN_LOGIN_USERNAME: "dario-ramos"
      - CONAN_CHANNEL: "stable"
-     - CONAN_UPLOAD: "https://api.bintray.com/conan/bitprim/bitprim-core"
+     - CONAN_UPLOAD: "https://api.bintray.com/conan/bitprim/bitprim"
 
 linux: &linux
    os: linux
