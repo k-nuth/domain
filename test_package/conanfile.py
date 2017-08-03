@@ -10,6 +10,7 @@ class BitprimcoreTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = "bitprim-core/0.1@%s/%s" % (username, channel)
     generators = "cmake"
+    # build_policy = "missing"
 
     def build(self):
         cmake = CMake(self)
