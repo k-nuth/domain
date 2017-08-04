@@ -39,3 +39,6 @@ class BitprimcoreConan(ConanFile):
     def package_info(self):
         self.cpp_info.includedirs = ['include']
         self.cpp_info.libs = ["bitprim-core"]
+
+        if self.settings.os == "Linux":
+            self.cpp_info.libs.append("pthread")
