@@ -154,3 +154,4 @@ Bitprim is now installed in `/usr/local/`.
 ```
 TODO:Windows Install
 ```
+[badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
