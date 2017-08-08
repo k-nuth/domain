@@ -1,9 +1,9 @@
 # Bitprim Core
 
-*Bitprim Core*
+*Core Bitcoin functionality*
 
 | **master(linux/osx)** | **conan-build-win(linux/osx)**   | **master(windows)**   | **conan-build-win(windows)** |
-|--------|---|---|---|
+|:------:|:-:|:-:|:-:|
 | [![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg)](https://travis-ci.org/bitprim/bitprim-core)       | [![Build StatusB](https://travis-ci.org/bitprim/bitprim-core.svg?branch=conan-build-win)](https://travis-ci.org/bitprim/bitprim-core?branch=conan-build-win)  | [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-core)  | [![Appveyor StatusB](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?branch=conan-build-win&svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-core?branch=conan-build-win)  |
 
 
