@@ -1,4 +1,4 @@
-# Bitprim Core
+# Bitprim Core <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
 
 *Core Bitcoin functionality*
 
