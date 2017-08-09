@@ -15,8 +15,8 @@ class BitprimcoreConan(ConanFile):
     package_files = "build/lbitprim-core.a"
     build_policy = "missing"
 
-    requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-               ("secp256k1/0.1@bitprim/stable"))
+    requires = (("bitprim-conan-boost/1.64.0@bitprim/testing"),
+               ("secp256k1/0.1@bitprim/testing"))
 
     def build(self):
         cmake = CMake(self)
