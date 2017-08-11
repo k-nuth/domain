@@ -18,7 +18,7 @@
  */
 #include <bitcoin/bitcoin/chain/compact.hpp>
 
-#include <cstdint>
+#include <boost/cstdint.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/utility/assert.hpp>
 
