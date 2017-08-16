@@ -18,11 +18,11 @@
  */
 #include <bitcoin/bitcoin/config/endpoint.hpp>
 
-#ifdef __MINGW32__
-  #include <bitcoin/bitcoin/utility/byteswap.h>
-#else
+//#ifdef __MINGW32__
+//  #include <bitcoin/bitcoin/utility/byteswap.h>
+//#else
   #include <bitcoin/bitcoin/utility/asio.hpp>
-#endif
+//#endif
 
 #include <cstdint>
 #include <iostream>
