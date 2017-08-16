@@ -17,7 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <bitcoin/bitcoin/config/endpoint.hpp>
-#include <bitcoin/bitcoin/utility/byteswap.h>
+
+#ifdef __MINGW32__
+  #include <bitcoin/bitcoin/utility/byteswap.h>
+#else
+  #include <bitcoin/bitcoin/utility/asio.hpp>
+#endif
 
 #include <cstdint>
 #include <iostream>
@@ -29,7 +34,6 @@
 #include <bitcoin/bitcoin/config/endpoint.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/formats/base_16.hpp>
-#include <bitcoin/bitcoin/utility/asio.hpp>
 
 namespace libbitcoin {
 namespace config {
