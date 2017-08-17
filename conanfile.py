@@ -34,7 +34,7 @@ class BitprimcoreConan(ConanFile):
         cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
 
         if self.settings.compiler == "gcc":
-            if float(self.settings.compiler.version) >= 5:
+            if float(str(self.settings.compiler.version)) >= 5:
                 cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "1"
             else:
                 cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
