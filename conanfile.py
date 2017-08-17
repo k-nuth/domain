@@ -18,9 +18,27 @@ class BitprimcoreConan(ConanFile):
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                ("secp256k1/0.1@bitprim/testing"))
 
+
+# def is_clang_or_gcc5(sett):
+#     # precondition: sett["compiler"] and sett["compiler.version"] are valid
+#     return sett["compiler"] == "clang" or (sett["compiler"] == "gcc" and float(sett["compiler.version"]) >= 5)
+
+# def replace_libcxx(sett):
+#     if "compiler" in sett and "compiler.libcxx" in sett and "compiler.version" in sett and is_clang_or_gcc5(sett) and sett["compiler.libcxx"] == "libstdc++":
+#         sett["compiler.libcxx"] = "libstdc++11"
+#     return sett
+
+
     def build(self):
         cmake = CMake(self)
         cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
+
+        if self.settings.compiler == "gcc":
+            if float(self.settings.compiler.version) >= 5):
+                cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "1"
+            else:
+                cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
+
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
 
