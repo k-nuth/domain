@@ -6,6 +6,7 @@ project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
 
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
