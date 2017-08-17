@@ -417,7 +417,7 @@ target_include_directories(bitprim-core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC)
+target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC -D_GLIBCXX_USE_CXX11_ABI)
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
