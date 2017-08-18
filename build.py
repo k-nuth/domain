@@ -18,7 +18,7 @@ if __name__ == "__main__":
     builder.add_common_builds(shared_option_name="bitprim-core:shared", pure_c=False)
 
     filtered_builds = []
-    add_special_case = False
+    # add_special_case = False
     for settings, options, env_vars, build_requires in builder.builds:
         if settings["build_type"] == "Release" \
                 and options["bitprim-core:shared"] == False:
@@ -26,14 +26,25 @@ if __name__ == "__main__":
             #settings = replace_libcxx(settings)
             #filtered_builds.append([settings, options, env_vars, build_requires])
 
+            # #TODO: Adding gcc 4.9 c++11 build manually until Conan fixes it
+            # if settings["compiler"] == "gcc" and settings["compiler.version"] == "4.9":
+            #     add_special_case = True
+            # else:
+            #     if not "compiler.libcxx" in settings or settings["compiler"] == "apple-clang" or ("compiler.libcxx" in settings and settings["compiler.libcxx"] == "libstdc++"):
+            #         filtered_builds.append([settings, options, env_vars, build_requires])
+
+
             #TODO: Adding gcc 4.9 c++11 build manually until Conan fixes it
             if settings["compiler"] == "gcc" and settings["compiler.version"] == "4.9":
-                add_special_case = True
+                # new_settings={'compiler.version': '4.9', 'compiler.libcxx': 'libstdc++11', 'arch': 'x86_64', 'build_type': 'Release', 'compiler': 'gcc'}, options={'bitprim-conan-boost:shared': False})
+                # new_settings = {'compiler.libcxx': settings["compiler.libcxx"], 'compiler.exception': settings["compiler.exception"], 'compiler.threads': settings["compiler.threads"], 'compiler.version': settings["compiler.version"], 'arch': settings["arch"], 'build_type': settings["build_type"], 'compiler': settings["compiler"]}
+                new_settings = {'compiler.libcxx': 'libstdc++11', 'compiler.exception': settings["compiler.exception"], 'compiler.threads': settings["compiler.threads"], 'compiler.version': settings["compiler.version"], 'arch': settings["arch"], 'build_type': settings["build_type"], 'compiler': settings["compiler"]}
+                filtered_builds.append([new_settings, options, env_vars, build_requires])
             else:
-                if not "compiler.libcxx" in settings or settings["compiler"] == "apple-clang" or ("compiler.libcxx" in settings and settings["compiler.libcxx"] == "libstdc++"):
-                    filtered_builds.append([settings, options, env_vars, build_requires])
+                filtered_builds.append([settings, options, env_vars, build_requires])
+
 
     builder.builds = filtered_builds
-    if add_special_case:
-        builder.add(settings={'compiler.version': '4.9', 'compiler.libcxx': 'libstdc++11', 'arch': 'x86_64', 'build_type': 'Release', 'compiler': 'gcc'}, options={'bitprim-conan-boost:shared': False})
+    # if add_special_case:
+    #     builder.add(settings={'compiler.version': '4.9', 'compiler.libcxx': 'libstdc++11', 'arch': 'x86_64', 'build_type': 'Release', 'compiler': 'gcc'}, options={'bitprim-conan-boost:shared': False})
     builder.run()
