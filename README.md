@@ -1,8 +1,12 @@
-[![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg?branch=conan-build)](https://travis-ci.org/bitprim/bitprim-core) [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?branch=conan-build&svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-core?branch=conan-build)
+# Bitprim Core <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
 
-# Bitprim Core
+*Core Bitcoin functionality*
 
-*Bitprim Core*
+| **master(linux/osx)** | **conan-build-win(linux/osx)**   | **master(windows)**   | **conan-build-win(windows)** |
+|:------:|:-:|:-:|:-:|
+| [![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg)](https://travis-ci.org/bitprim/bitprim-core)       | [![Build StatusB](https://travis-ci.org/bitprim/bitprim-core.svg?branch=conan-build-win)](https://travis-ci.org/bitprim/bitprim-core?branch=conan-build-win)  | [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-core)  | [![Appveyor StatusB](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?branch=conan-build-win&svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-core?branch=conan-build-win)  |
+
+
 
 ## Installation
 
@@ -150,3 +154,4 @@ Bitprim is now installed in `/usr/local/`.
 ```
 TODO:Windows Install
 ```
+[badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
