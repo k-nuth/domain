@@ -1,3 +1,22 @@
+#
+# Copyright (c) 2017 Bitprim developers (see AUTHORS)
+#
+# This file is part of Bitprim.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 cmake_minimum_required(VERSION 3.4)
 
 # bitprim-core
@@ -24,6 +43,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Process options.
 #==============================================================================
+
+# Implement --use-conan
+#------------------------------------------------------------------------------
+option(USE_CONAN "Use Conan Build Tool." OFF)
+
+# Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
+#------------------------------------------------------------------------------
+option(ENABLE_SHARED "" OFF)
+
+# Implement POSITION_INDEPENDENT_CODE
+#------------------------------------------------------------------------------
+option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE property" ON)
+
 # Implement --with-tests and declare WITH_TESTS.
 #------------------------------------------------------------------------------
 option(WITH_TESTS "Compile with unit tests." ON)
@@ -31,8 +63,6 @@ option(WITH_TESTS "Compile with unit tests." ON)
 # Implement --with-examples and declare WITH_EXAMPLES.
 #------------------------------------------------------------------------------
 option(WITH_EXAMPLES "Compile with examples." OFF)
-
-set(Boost_DEBUG ON)
 
 
 # Implement --with-icu and define BOOST_HAS_ICU and output ${icu}.
@@ -68,9 +98,9 @@ if (WITH_QRENCODE)
   message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
 endif()
 
-# Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
-#------------------------------------------------------------------------------
-option(ENABLE_SHARED "" OFF)
+
+
+set(Boost_DEBUG ON)
 
 # Check dependencies.
 #==============================================================================
@@ -95,12 +125,12 @@ endif()
 
 # Require pthread and output ${pthread_CPPFLAGS/LIBS}.
 #------------------------------------------------------------------------------
-find_package(Threads REQUIRED)
+find_package(Threads REQUIRED)  #TODO(fernando): manage with conan
 
 # Require png of at least version 1.6.25 and output ${png_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (WITH_PNG)
-  find_package(PNG 1.6.25 REQUIRED)
+  find_package(PNG 1.6.25 REQUIRED) #TODO(fernando): manage with conan
 
   add_library(png INTERFACE IMPORTED)
   set_target_properties(png PROPERTIES
@@ -113,7 +143,7 @@ endif()
 # Require OpenSSL
 #------------------------------------------------------------------------------
 if (WITH_LITECOIN)
-  find_package(OpenSSL 1.0.1 REQUIRED)
+  find_package(OpenSSL 1.0.1 REQUIRED)  #TODO(fernando): manage with conan
 endif()
 
 # Require rt if on linux and output ${rt_LIBS}.
@@ -124,20 +154,22 @@ endif()
 
 # Require qrencode of at least version 3.4.4 and output ${qrencode_CPPFLAGS/LIBS/PKG}.
 
+
+
+if (NOT USE_CONAN)
+# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+#------------------------------------------------------------------------------
+  if (NOT TARGET secp256k1)
+    find_package(secp256k1 0.0.01 REQUIRED) 
+  endif()
+endif()
+
+
 if (UNIX)
   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
 elseif (WIN32)
   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
 endif()
-
-# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-#if (NOT TARGET secp256k1)
-##    message("secp256k1 hola 1")
-#    find_package(secp256k1 0.0.01 REQUIRED)
-##else()
-##    message("secp256k1 hola 2")
-#endif()
 
 # Set flags.
 #==============================================================================
@@ -399,7 +431,12 @@ if (WITH_LITECOIN)
 endif()
 
 add_library(bitprim-core ${MODE} ${bitprim_core_sources})
-set_property(TARGET bitprim-core PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+if (ENABLE_POSITION_INDEPENDENT_CODE)
+    set_property(TARGET bitprim-core PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif(ENABLE_POSITION_INDEPENDENT_CODE)
+
+
 
 #set_target_properties(bitprim-core PROPERTIES CXX_VISIBILITY_PRESET hidden)
 #set_target_properties(bitprim-core PROPERTIES CXX_VISIBILITY_PRESET internal)
@@ -451,22 +488,24 @@ target_link_libraries(bitprim-core PUBLIC ${CONAN_LIBS})
 target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 if (MINGW) #(WIN32)
-    target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
+    target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
 endif()
 
 if (WITH_PNG)
-  target_link_libraries(bitprim-core PUBLIC png)
+  target_link_libraries(bitprim-core PUBLIC png)  #TODO(fernando): manage with Conan
 endif()
 
 if (WITH_LITECOIN)
-  target_link_libraries(bitprim-core PUBLIC ${OPENSSL_CRYPTO_LIBRARY})
+  target_link_libraries(bitprim-core PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
 
   # OPENSSL_CRYPTO_LIBRARY
   # OPENSSL_SSL_LIBRARY
   # OPENSSL_LIBRARIES
 endif()
 
-#target_link_libraries(bitprim-core PUBLIC secp256k1)
+if (NOT USE_CONAN)
+  target_link_libraries(bitprim-core PUBLIC secp256k1)
+endif()
 
 _group_sources(bitprim-core "${CMAKE_CURRENT_LIST_DIR}")
 
