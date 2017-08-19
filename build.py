@@ -5,12 +5,12 @@ if __name__ == "__main__":
                                  remotes="https://api.bintray.com/conan/bitprim/bitprim",
                                  archs=["x86_64"])
 
-    builder.add_common_builds(shared_option_name="bitprim-core:shared", pure_c=False)
+    builder.add_common_builds(shared_option_name="bitprim-core:shared")
 
     filtered_builds = []
     for settings, options, env_vars, build_requires in builder.builds:
         if settings["build_type"] == "Release" \
-                and options["bitprim-core:shared"] == False \
+                and not options["bitprim-core:shared"] \
                 and (not "compiler.runtime" in settings or not settings["compiler.runtime"] == "MD"):
             filtered_builds.append([settings, options, env_vars, build_requires])
 
