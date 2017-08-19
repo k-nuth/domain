@@ -488,9 +488,9 @@ endif()
 target_link_libraries(bitprim-core PUBLIC ${CONAN_LIBS})
 target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
-# if (MINGW) #(WIN32)
-    # target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
-# endif()
+if (MINGW) #(WIN32)
+    target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
+endif()
 
 if (WITH_PNG)
   target_link_libraries(bitprim-core PUBLIC png)  #TODO(fernando): manage with Conan
