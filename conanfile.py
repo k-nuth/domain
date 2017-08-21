@@ -76,6 +76,7 @@ class BitprimcoreConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = "ON"
+        cmake.definitions["NO_CONAN_AT_ALL"] = "OFF"
         cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
