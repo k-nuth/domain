@@ -54,7 +54,7 @@ class BitprimcoreConan(ConanFile):
         "with_png=False", \
         "with_litecoin=False", \
         "with_qrencode=False", \
-        "use_cpp11_abi=False"
+        "use_cpp11_abi=True"
 
 
 # option(USE_CONAN "Use Conan Build Tool." OFF)
