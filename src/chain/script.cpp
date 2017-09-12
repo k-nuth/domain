@@ -193,7 +193,7 @@ bool script::from_data(reader& source, bool prefix)
         const auto size = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (size > max_block_size)
+        if (size > get_max_block_size(is_bitcoin_cash()))
             source.invalidate();
         else
             bytes_ = source.read_bytes(size);

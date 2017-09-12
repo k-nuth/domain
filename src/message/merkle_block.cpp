@@ -139,7 +139,7 @@ bool merkle_block::from_data(uint32_t version, reader& source)
     const auto count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
-    if (count > max_block_size)
+    if (count > get_max_block_size(is_bitcoin_cash()))
         source.invalidate();
     else
         hashes_.reserve(count);

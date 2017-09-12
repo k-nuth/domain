@@ -21,8 +21,6 @@
 #include <mutex>
 #include <secp256k1.h>
 
-//#include <C:/development/libs/boost_1_64_0/boost/thread/once.hpp>
-
 namespace libbitcoin {
 
 // We do not share contexts because they may or may not both be required.
@@ -53,7 +51,6 @@ secp256k1_initializer::~secp256k1_initializer()
 secp256k1_context* secp256k1_initializer::context()
 {
     std::call_once(mutex_, set_context, &context_, flags_);
-//    boost::call_once(mutex_, set_context, &context_, flags_);
     return context_;
 }
 

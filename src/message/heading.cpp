@@ -46,10 +46,12 @@ const size_t heading::maximum_size()
 // payload size.
 const size_t heading::maximum_payload_size(uint32_t)
 {
-    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
+/*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
-    return maximum;
+    return maximum;*/
+    // return 33554432;
+    return max_payload_size;
 }
 
 const size_t heading::serialized_size()

@@ -105,7 +105,10 @@ public:
 
         // Requires version.value >= level::bip111
         // The network is capable and willing to handle bloom-filtered connections.
-        bloom_filters = (1 << 2)
+        bloom_filters = (1 << 2),
+
+        node_network_cash = (1 << 5) //TODO(bitprim): check what happens with node_network (or node_network_cash)
+
     };
 
     static version factory_from_data(uint32_t version, const data_chunk& data);

@@ -304,6 +304,7 @@ set(bitprim_core_sources
         src/config/sodium.cpp
 
         src/error.cpp
+        src/bitcoin_cash_support.cpp
 
         src/formats/base_10.cpp
         src/formats/base_16.cpp
@@ -766,6 +767,7 @@ install(TARGETS bitprim-core EXPORT bitprim-core
 #)
 
 set(_bitprim_core_headers
+    bitcoin/bitcoin/bitcoin_cash_support.hpp
     bitcoin/bitcoin/compat.h
     bitcoin/bitcoin/compat.hpp
     bitcoin/bitcoin/constants.hpp

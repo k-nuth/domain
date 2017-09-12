@@ -76,8 +76,14 @@ BC_CONSTEXPR size_t max_cltv_number_size = 5;
 
 BC_CONSTEXPR size_t min_coinbase_size = 2;
 BC_CONSTEXPR size_t max_coinbase_size = 100;
+
 BC_CONSTEXPR size_t median_time_past_interval = 11;
+BC_CONSTEXPR size_t bitcoin_cash_retarget_blocks = 6;
+BC_CONSTEXPR size_t chain_state_timestamp_count = median_time_past_interval + bitcoin_cash_retarget_blocks;
+
 BC_CONSTEXPR size_t max_block_size = 1000000;
+BC_CONSTEXPR size_t max_block_size_cash = 8000000;
+
 BC_CONSTEXPR size_t coinbase_maturity = 100;
 BC_CONSTEXPR size_t time_stamp_future_hours = 2;
 BC_CONSTEXPR size_t locktime_threshold = 500000000;
@@ -99,6 +105,21 @@ BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1d00ffff;
 
 // Derived.
 BC_CONSTEXPR size_t max_block_sigops = max_block_size / 50; //TODO: BITPRIM: esto es producto del merge de Febrero de 2017. Revisar si en Litecoin la constante es distinta
+BC_CONSTEXPR size_t max_block_sigops_cash = max_block_size_cash / 50;
+
+
+constexpr
+size_t get_max_block_size(bool bitcoin_cash) {
+    return bitcoin_cash ? max_block_size_cash : max_block_size;
+}
+
+constexpr
+size_t get_max_block_sigops(bool bitcoin_cash) {
+    return bitcoin_cash ? max_block_sigops_cash : max_block_sigops;
+}
+
+
+
 
 
 // Timespan constants.
@@ -138,6 +159,7 @@ BC_CONSTEXPR size_t bip66_version = 3;
 BC_CONSTEXPR size_t bip34_version = 2;
 BC_CONSTEXPR size_t first_version = 1;
 
+BC_CONSTEXPR size_t bitcoin_cash_activation_height = 478558;
 
 #ifdef LITECOIN
 
@@ -262,6 +284,8 @@ BC_CONSTEXPR size_t max_get_blocks = 500;
 BC_CONSTEXPR size_t max_get_headers = 2000;
 BC_CONSTEXPR size_t max_get_data = 50000;
 BC_CONSTEXPR size_t max_inventory = 50000;
+
+BC_CONSTEXPR size_t max_payload_size = 33554432;
 
 // Effective limit given a 32 bit chain height boundary: 10 + log2(2^32) + 1.
 BC_CONSTEXPR size_t max_locator = 43;

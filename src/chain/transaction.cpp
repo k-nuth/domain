@@ -59,7 +59,7 @@ bool read(Source& source, std::vector<Put>& puts, bool wire)
     const auto count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
-    if (count > max_block_size)
+    if (count > get_max_block_size(is_bitcoin_cash()))
         source.invalidate();
     else
         puts.resize(count);
@@ -743,7 +743,7 @@ code transaction::check(bool transaction_pool) const
     else if (transaction_pool && is_coinbase())
         return error::coinbase_transaction;
 
-    else if (transaction_pool && serialized_size() >= max_block_size)
+    else if (transaction_pool && serialized_size() >= get_max_block_size(is_bitcoin_cash()))
         return error::transaction_size_limit;
 
     // We cannot know if bip16 is enabled at this point so we disable it.
@@ -751,7 +751,7 @@ code transaction::check(bool transaction_pool) const
     // case they are ignored. This means that p2sh sigops are not counted here.
     // This is a preliminary check, the final count must come from accept().
     // Reenable once sigop caching is implemented, otherwise is deoptimization.
-    ////else if (transaction_pool && signature_operations(false) > max_block_sigops)
+    ////else if (transaction_pool && signature_operations(false) > get_max_block_sigops(is_bitcoin_cash()))
     ////    return error::transaction_legacy_sigop_limit;
 
     else
@@ -807,7 +807,7 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const
         return error::spend_exceeds_value;
 
     // This recomputes sigops to include p2sh from prevouts if bip16 is true.
-    else if (transaction_pool && signature_operations(bip16) > max_block_sigops)
+    else if (transaction_pool && signature_operations(bip16) > get_max_block_sigops(is_bitcoin_cash()))
         return error::transaction_embedded_sigop_limit;
 
     else

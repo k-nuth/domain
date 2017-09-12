@@ -151,6 +151,8 @@ public:
 
     static bool is_retarget_height(size_t height); //FOR LITECOIN
 
+    static uint256_t difficulty_adjustment_cash(uint256_t);
+
 protected:
     struct activations
     {
@@ -162,7 +164,9 @@ protected:
     };
 
     static activations activation(const data& values, uint32_t forks);
-    static uint32_t median_time_past(const data& values, uint32_t forks);
+    static uint32_t median_time_past(const data& values, uint32_t forks, const bool tip = true);
+
+//    static uint32_t work_required(const data& values, uint32_t forks, bool bitcoin_cash = false);
     static uint32_t work_required(const data& values, uint32_t forks);
 
 private:
@@ -190,6 +194,9 @@ private:
     static uint32_t work_required_easy(const data& values); //TODO: BITPRIM: nueva, producto del merge Febrero2017
     static uint32_t elapsed_time_limit(const chain_state::data& values);
     static bool is_retarget_or_non_limit(size_t height, uint32_t bits); //TODO: BITPRIM: nueva, producto del merge Febrero2017
+    
+    static uint32_t work_required_adjust_cash(const data& values);
+
 
     // This is retained as an optimization for other constructions.
     // A similar height clone can be partially computed, reducing query cost.

@@ -39,7 +39,6 @@
     #include <io.h>
 #endif
 
-
 namespace libbitcoin {
 
 using namespace boost::locale;
@@ -60,8 +59,6 @@ static std::once_flag icu_mutex;
 static std::istream& cin_stream()
 {
     std::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
-//    boost::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
-
     static unicode_istream input(std::cin, std::wcin, utf16_buffer_size);
     return input;
 }
@@ -70,8 +67,6 @@ static std::istream& cin_stream()
 static std::ostream& cout_stream()
 {
     std::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
-//    boost::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
-
     static unicode_ostream output(std::cout, std::wcout, utf16_buffer_size);
     return output;
 }
@@ -80,8 +75,6 @@ static std::ostream& cout_stream()
 static std::ostream& cerr_stream()
 {
     std::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
-//    boost::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
-
     static unicode_ostream error(std::cerr, std::wcerr, utf16_buffer_size);
     return error;
 }
