@@ -18,4 +18,3 @@
  */
 #include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 
-static bool libbitcoin::is_bitcoin_cash_ = false;
