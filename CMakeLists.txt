@@ -25,12 +25,31 @@ project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
 
-if (NOT NOT_USE_CPP11_ABI)
-#  message("Using C++11 ABI")
-  add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-else()
-#  message("Not using C++11 ABI")
-  add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+
+#if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+#  # using Clang
+#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#  # using GCC
+#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+#  # using Intel C++
+#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+#  # using Visual Studio C++
+#endif()
+#if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#  # using regular Clang or AppleClang
+#endif()
+
+message(CMAKE_CXX_COMPILER_ID)
+message(${CMAKE_CXX_COMPILER_ID})
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  if (NOT NOT_USE_CPP11_ABI)
+  #  message("Using C++11 ABI")
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+  else()
+  #  message("Not using C++11 ABI")
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+  endif()
 endif()
 
 

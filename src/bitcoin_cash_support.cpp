@@ -29,7 +29,7 @@ bool is_bitcoin_cash() {
     return is_bitcoin_cash_;
 }
 
-bool set_bitcoin_cash(bool value) {
+void set_bitcoin_cash(bool value) {
     std::cout << "set_bitcoin_cash(): " << is_bitcoin_cash_ << std::endl;
 
     is_bitcoin_cash_ = value;
