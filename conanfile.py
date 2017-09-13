@@ -43,7 +43,7 @@ class BitprimcoreConan(ConanFile):
                "with_png": [True, False],
                "with_litecoin": [True, False],
                "with_qrencode": [True, False],
-               "use_cpp11_abi": [True, False]
+               "not_use_cpp11_abi": [True, False]
     }
 
     default_options = "shared=False", \
@@ -54,7 +54,7 @@ class BitprimcoreConan(ConanFile):
         "with_png=False", \
         "with_litecoin=False", \
         "with_qrencode=False", \
-        "use_cpp11_abi=True"
+        "not_use_cpp11_abi=True"
 
 
 # option(USE_CONAN "Use Conan Build Tool." OFF)
@@ -82,7 +82,7 @@ class BitprimcoreConan(ConanFile):
         cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
-        cmake.definitions["USE_CPP11_ABI"] = option_on_off(self.options.use_cpp11_abi)
+        cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)

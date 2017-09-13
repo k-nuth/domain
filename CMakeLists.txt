@@ -25,7 +25,7 @@ project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
 
-if(USE_CPP11_ABI)
+if (USE_CPP11_ABI)
   message("Using C++11 ABI")
   add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 else()
