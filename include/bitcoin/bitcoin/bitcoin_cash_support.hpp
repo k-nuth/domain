@@ -23,16 +23,9 @@ namespace libbitcoin {
 
 static bool is_bitcoin_cash_= false;
 
-static
-bool is_bitcoin_cash() {
-    return is_bitcoin_cash_;
-}
+static bool is_bitcoin_cash();
+static bool set_bitcoin_cash(bool value);
 
-static
-bool set_bitcoin_cash(bool value) {
-    is_bitcoin_cash_ = value;
-}
-
-}
+} /*namespace libbitcoin*/
 
 #endif /*LIBBITCOIN_CASH_SUPPORT_HPP*/

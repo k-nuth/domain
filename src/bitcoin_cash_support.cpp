@@ -16,5 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
+
+namespace libbitcoin {
+
+static bool is_bitcoin_cash_= false;
+
+static
+bool is_bitcoin_cash() {
+    return is_bitcoin_cash_;
+}
+
+static
+bool set_bitcoin_cash(bool value) {
+    is_bitcoin_cash_ = value;
+}
+
+} /*namespace libbitcoin*/
 
