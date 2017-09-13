@@ -42,7 +42,7 @@ project(bitprim-core
 message(CMAKE_CXX_COMPILER_ID)
 message(${CMAKE_CXX_COMPILER_ID})
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   if (NOT NOT_USE_CPP11_ABI)
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
   else()

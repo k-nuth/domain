@@ -99,6 +99,7 @@ class BitprimcoreConan(ConanFile):
         #     else:
         #         cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
 
+        # if self.settings.compiler != "Visual Studio"
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
