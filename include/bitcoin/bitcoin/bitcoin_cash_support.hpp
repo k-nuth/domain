@@ -21,7 +21,7 @@
 
 namespace libbitcoin {
 
-bool is_bitcoin_cash_; /*= false;*/
+//bool is_bitcoin_cash_; /*= false;*/
 
 bool is_bitcoin_cash();
 bool set_bitcoin_cash(bool value);

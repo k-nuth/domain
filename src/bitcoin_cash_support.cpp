@@ -17,17 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
 #include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 
 namespace libbitcoin {
 
-is_bitcoin_cash_= false;
+static bool is_bitcoin_cash_= false;
 
 bool is_bitcoin_cash() {
+    std::cout << "is_bitcoin_cash(): " << is_bitcoin_cash_ << std::endl;
     return is_bitcoin_cash_;
 }
 
 bool set_bitcoin_cash(bool value) {
+    std::cout << "set_bitcoin_cash(): " << is_bitcoin_cash_ << std::endl;
+
     is_bitcoin_cash_ = value;
 }
 
