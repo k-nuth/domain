@@ -21,7 +21,7 @@
 
 namespace libbitcoin {
 
-static bool is_bitcoin_cash_= false;
+/*static*/ bool is_bitcoin_cash_= false;
 
 static
 bool is_bitcoin_cash() {
