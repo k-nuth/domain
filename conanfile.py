@@ -25,7 +25,7 @@ def option_on_off(option):
 
 class BitprimcoreConan(ConanFile):
     name = "bitprim-core"
-    version = "0.1"
+    version = "0.2"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-core"
     description = "Bitcoin Cross-Platform C++ Development Toolkit"
@@ -73,7 +73,7 @@ class BitprimcoreConan(ConanFile):
     build_policy = "missing"
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-               ("secp256k1/0.1@bitprim/testing"))
+               ("secp256k1/0.2@bitprim/testing"))
 
     def build(self):
         cmake = CMake(self)
