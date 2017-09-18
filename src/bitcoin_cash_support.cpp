@@ -25,13 +25,10 @@ namespace libbitcoin {
 static bool is_bitcoin_cash_= false;
 
 bool is_bitcoin_cash() {
-    std::cout << "is_bitcoin_cash(): " << is_bitcoin_cash_ << std::endl;
     return is_bitcoin_cash_;
 }
 
 void set_bitcoin_cash(bool value) {
-    std::cout << "set_bitcoin_cash(): " << is_bitcoin_cash_ << std::endl;
-
     is_bitcoin_cash_ = value;
 }
 
