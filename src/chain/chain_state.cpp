@@ -287,7 +287,11 @@ typename chain_state::timestamps::const_iterator
 where(chain_state::timestamps const& times, const bool tip) {
 
     if (tip) {
-        return times.begin() + bitcoin_cash_retarget_blocks;
+		if (times.size() >= bitcoin_cash_retarget_blocks) {
+			return times.begin() + bitcoin_cash_retarget_blocks;
+		} else {
+			return times.begin();
+		}
     } else {
         return times.begin();
     }
@@ -296,11 +300,13 @@ where(chain_state::timestamps const& times, const bool tip) {
 uint32_t chain_state::median_time_past(const data& values, uint32_t, const bool tip /*= true*/)
 {
     // Create a copy for the in-place sort.
-    // auto times = values.timestamp.ordered;
 
-    timestamps times_subset(median_time_past_interval);
+	auto n = (std::min)(values.timestamp.ordered.size(), median_time_past_interval);
+
+	timestamps times_subset(n);
     auto where_starts = where(values.timestamp.ordered, tip);
-    std::copy_n(where_starts, median_time_past_interval, times_subset.begin());
+
+    std::copy_n(where_starts, n, times_subset.begin());
 
     // Sort the times by value to obtain the median.
     std::sort(times_subset.begin(), times_subset.end());
