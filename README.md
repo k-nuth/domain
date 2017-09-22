@@ -82,6 +82,7 @@ To see your Clang/LLVM  version:
 ```sh
 $ clang++ --version
 ```
+You may encounter a prompt to install the Xcode command line developer tools, in which case accept the prompt.
 ```
 Apple LLVM version 6.0 (clang-600.0.54) (based on LLVM 3.5svn)
 Target: x86_64-apple-darwin14.0.0
@@ -94,11 +95,7 @@ $ xcode-select --install
 
 #### Using Homebrew
 
-First install Homebrew. Installation requires [Ruby](https://www.ruby-lang.org/en) and [cURL](http://curl.haxx.se), which are pre-installed on OSX.
-```sh
-$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
-You may encounter a prompt to install the Xcode command line developer tools, in which case accept the prompt.
+First install [Homebrew](https://brew.sh). 
 
 Next install the [build system](http://wikipedia.org/wiki/GNU_build_system) (Automake minimum 1.14) and [wget](http://www.gnu.org/software/wget):
 ```sh

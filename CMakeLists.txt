@@ -295,6 +295,10 @@ set(bitprim_core_sources
         src/chain/output_point.cpp
         src/chain/point.cpp
         src/chain/point_iterator.cpp
+
+        src/chain/point_value.cpp
+        src/chain/points_value.cpp
+
         src/chain/script.cpp
         src/chain/transaction.cpp
 
@@ -420,7 +424,10 @@ set(bitprim_core_sources
         src/utility/istream_reader.cpp
         src/utility/monitor.cpp
         src/utility/ostream_writer.cpp
+        
         src/utility/png.cpp
+        src/utility/prioritized_mutex.cpp
+
         src/utility/random.cpp
         src/utility/scope_lock.cpp
         src/utility/sequencer.cpp
@@ -455,7 +462,10 @@ set(bitprim_core_sources
         src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp
         src/wallet/payment_address.cpp
+        
         src/wallet/qrcode.cpp
+        src/wallet/select_outputs.cpp
+
         src/wallet/select_outputs.cpp
         src/wallet/stealth_address.cpp
         src/wallet/stealth_receiver.cpp
@@ -802,7 +812,12 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/chain/output.hpp
     bitcoin/bitcoin/chain/output_point.hpp
     bitcoin/bitcoin/chain/point.hpp
+    
     bitcoin/bitcoin/chain/point_iterator.hpp
+
+    bitcoin/bitcoin/chain/point_value.hpp
+    bitcoin/bitcoin/chain/points_value.hpp
+
     bitcoin/bitcoin/chain/script.hpp
     bitcoin/bitcoin/chain/stealth.hpp
     bitcoin/bitcoin/chain/transaction.hpp
@@ -971,7 +986,10 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/notifier.hpp
     bitcoin/bitcoin/utility/ostream_writer.hpp
     bitcoin/bitcoin/utility/pending.hpp
+
     bitcoin/bitcoin/utility/png.hpp
+    bitcoin/bitcoin/utility/prioritized_mutex.hpp
+
     bitcoin/bitcoin/utility/random.hpp
     bitcoin/bitcoin/utility/reader.hpp
     bitcoin/bitcoin/utility/resubscriber.hpp
