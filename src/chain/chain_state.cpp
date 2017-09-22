@@ -328,7 +328,7 @@ where(chain_state::timestamps const& times, const bool tip) {
     }
 }
 
-uint32_t chain_state::median_time_past(const data& values, uint32_t, const bool tip /*= true*/)
+uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*= true*/)
 {
     // Create a copy for the in-place sort.
 
