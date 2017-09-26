@@ -73,7 +73,7 @@ class BitprimcoreConan(ConanFile):
     build_policy = "missing"
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-               ("secp256k1/0.2@bitprim/testing"))
+               ("secp256k1/0.2@bitprim/stable"))
 
     def build(self):
         cmake = CMake(self)
