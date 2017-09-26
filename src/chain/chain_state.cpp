@@ -315,7 +315,7 @@ size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks)
 }
 
 typename chain_state::timestamps::const_iterator 
-where(chain_state::timestamps const& times, const bool tip) {
+where(chain_state::timestamps const& times, bool tip) {
 
     if (tip) {
 		if (times.size() >= bitcoin_cash_retarget_blocks) {
@@ -332,10 +332,16 @@ uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*
 {
     // Create a copy for the in-place sort.
 
-	auto n = (std::min)(values.timestamp.ordered.size(), median_time_past_interval);
+	//auto n = (std::min)(values.timestamp.ordered.size(), median_time_past_interval);
+
+	//timestamps times_subset(n);
+ //   auto where_starts = where(values.timestamp.ordered, tip);
+
+	auto where_starts = where(values.timestamp.ordered, tip);
+	auto n = std::distance(where_starts, values.timestamp.ordered.end());
 
 	timestamps times_subset(n);
-    auto where_starts = where(values.timestamp.ordered, tip);
+
 
     std::copy_n(where_starts, n, times_subset.begin());
 

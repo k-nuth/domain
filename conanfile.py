@@ -126,5 +126,5 @@ class BitprimcoreConan(ConanFile):
         self.cpp_info.includedirs = ['include']
         self.cpp_info.libs = ["bitprim-core"]
 
-        if self.settings.os == "Linux":
+        if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
             self.cpp_info.libs.append("pthread")
