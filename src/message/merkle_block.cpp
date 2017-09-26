@@ -29,6 +29,8 @@
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
 #include <bitcoin/bitcoin/utility/ostream_writer.hpp>
 
+#include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
+
 namespace libbitcoin {
 namespace message {
 
@@ -139,7 +141,7 @@ bool merkle_block::from_data(uint32_t version, reader& source)
     const auto count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
-    if (count > max_block_size)
+    if (count > get_max_block_size(is_bitcoin_cash()))
         source.invalidate();
     else
         hashes_.reserve(count);
@@ -161,11 +163,12 @@ bool merkle_block::from_data(uint32_t version, reader& source)
 data_chunk merkle_block::to_data(uint32_t version) const
 {
     data_chunk data;
-    data.reserve(serialized_size(version));
+    const auto size = serialized_size(version);
+    data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == serialized_size(version));
+    BITCOIN_ASSERT(data.size() == size);
     return data;
 }
 

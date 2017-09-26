@@ -28,18 +28,18 @@ static bool all_valid(const chain::transaction::list& transactions)
 
     for (const auto& tx: transactions)
     {
-        valid &= tx.is_valid();
+        valid = valid && tx.is_valid();
 
         for (const auto& input: tx.inputs())
         {
-            valid &= input.is_valid();
-            valid &= input.script().is_valid();
+            valid = valid && input.is_valid();
+            valid = valid && input.script().is_valid();
         }
 
         for (const auto& output: tx.outputs())
         {
-            valid &= output.is_valid();
-            valid &= output.script().is_valid();
+            valid = valid && output.is_valid();
+            valid = valid && output.script().is_valid();
         }
     }
 
@@ -656,6 +656,13 @@ BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__partialy_distinct_not_a
     chain::block value;
     value.set_transactions({ { 1, 0, {}, {} }, { 2, 0, {}, {} }, { 1, 0, {}, {} } });
     BOOST_REQUIRE(!value.is_distinct_transaction_set());
+}
+
+BOOST_AUTO_TEST_CASE(validate_block__is_cash_pow_valid__true){
+    uint32_t old_bits = 402736949;
+    const chain::compact bits (old_bits);
+    uint256_t target (bits);
+    BOOST_REQUIRE_EQUAL(chain::compact(chain::chain_state::difficulty_adjustment_cash(target)).normal(), 402757890);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

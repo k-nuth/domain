@@ -25,7 +25,7 @@ def option_on_off(option):
 
 class BitprimcoreConan(ConanFile):
     name = "bitprim-core"
-    version = "0.1"
+    version = "0.2"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-core"
     description = "Bitcoin Cross-Platform C++ Development Toolkit"
@@ -43,7 +43,7 @@ class BitprimcoreConan(ConanFile):
                "with_png": [True, False],
                "with_litecoin": [True, False],
                "with_qrencode": [True, False],
-               "use_cpp11_abi": [True, False]
+               "not_use_cpp11_abi": [True, False]
     }
 
     default_options = "shared=False", \
@@ -54,7 +54,7 @@ class BitprimcoreConan(ConanFile):
         "with_png=False", \
         "with_litecoin=False", \
         "with_qrencode=False", \
-        "use_cpp11_abi=True"
+        "not_use_cpp11_abi=False"
 
 
 # option(USE_CONAN "Use Conan Build Tool." OFF)
@@ -73,7 +73,7 @@ class BitprimcoreConan(ConanFile):
     build_policy = "missing"
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-               ("secp256k1/0.1@bitprim/stable"))
+               ("secp256k1/0.2@bitprim/testing"))
 
     def build(self):
         cmake = CMake(self)
@@ -82,7 +82,9 @@ class BitprimcoreConan(ConanFile):
         cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
-        cmake.definitions["USE_CPP11_ABI"] = option_on_off(self.options.use_cpp11_abi)
+
+        # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
+
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
@@ -91,11 +93,18 @@ class BitprimcoreConan(ConanFile):
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
         
 
+        # if self.settings.compiler == "gcc":
+        #     if float(str(self.settings.compiler.version)) >= 5:
+        #         cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "1"
+        #     else:
+        #         cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
+
+        # if self.settings.compiler != "Visual Studio"
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
-                cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "1"
+                cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
             else:
-                cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
+                cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
 
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()

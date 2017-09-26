@@ -23,12 +23,14 @@
 #include <limits>
 #include <cfenv>
 #include <cmath>
+#include <iterator>
 #include <memory>
 #include <numeric>
 #include <type_traits>
 #include <utility>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/compact.hpp>
+#include <bitcoin/bitcoin/chain/input_point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
@@ -46,6 +48,8 @@
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
 #include <bitcoin/bitcoin/utility/ostream_writer.hpp>
+
+#include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -243,14 +247,14 @@ bool block::from_data(reader& source)
     const auto count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
-    if (count > max_block_size)
+    if (count > get_max_block_size(is_bitcoin_cash()))
         source.invalidate();
     else
         transactions_.resize(count);
 
     // Order is required.
     for (auto& tx: transactions_)
-        if (!tx.from_data(source))
+        if (!tx.from_data(source, true))
             break;
 
     if (!source)
@@ -279,11 +283,12 @@ bool block::is_valid() const
 data_chunk block::to_data() const
 {
     data_chunk data;
-    data.reserve(serialized_size());
+    const auto size = serialized_size();
+    data.reserve(size);
     data_sink ostream(data);
     to_data(ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == serialized_size());
+    BITCOIN_ASSERT(data.size() == size);
     return data;
 }
 
@@ -319,7 +324,7 @@ size_t block::serialized_size() const
 {
     const auto sum = [](size_t total, const transaction& tx)
     {
-        return safe_add(total, tx.serialized_size());
+        return safe_add(total, tx.serialized_size(true));
     };
 
     const auto& txs = transactions_;
@@ -486,8 +491,8 @@ uint256_t block::proof() const
 
 uint64_t block::subsidy(size_t height)
 {
-    auto subsidy = initial_block_reward_satoshi();
-    subsidy >>= (height / reward_interval);
+    auto subsidy = initial_block_subsidy_satoshi();
+    subsidy >>= (height / subsidy_interval);
     return subsidy;
 }
 
@@ -551,7 +556,7 @@ size_t block::total_inputs(bool with_coinbase) const
 }
 
 // True if there is another coinbase other than the first tx.
-// No txs or coinbases also returns true.
+// No txs or coinbases returns false.
 bool block::is_extra_coinbases() const
 {
     if (transactions_.empty())
@@ -566,12 +571,11 @@ bool block::is_extra_coinbases() const
     return std::any_of(txs.begin() + 1, txs.end(), value);
 }
 
-bool block::is_final(size_t height) const
+bool block::is_final(size_t height, uint32_t block_time) const
 {
-    const auto timestamp = header_.timestamp();
-    const auto value = [height, timestamp](const transaction& tx)
+    const auto value = [=](const transaction& tx)
     {
-        return tx.is_final(height, timestamp);
+        return tx.is_final(height, block_time);
     };
 
     const auto& txs = transactions_;
@@ -625,17 +629,46 @@ hash_digest block::generate_merkle_root() const
     return merkle.front();
 }
 
+size_t block::non_coinbase_input_count() const
+{
+    if (transactions_.empty())
+        return 0;
+
+    const auto counter = [](size_t sum, const transaction& tx)
+    {
+        return sum + tx.inputs().size();
+    };
+
+    const auto& txs = transactions_;
+    return std::accumulate(txs.begin() + 1, txs.end(), size_t(0), counter);
+}
+
+// This is an early check that is redundant with block pool accept checks.
 bool block::is_internal_double_spend() const
 {
-    // TODO: check all inputs for duplicate reference to an output.
-    // It is not necessary to confirm the output is within the block.
-    // This is an early check that is redundant with orphan pool accept checks.
-    return false;
+    if (transactions_.empty())
+        return false;
+
+    point::list outs;
+    outs.reserve(non_coinbase_input_count());
+    const auto& txs = transactions_;
+
+    // Merge the prevouts of all non-coinbase transactions into one set.
+    for (auto tx = txs.begin() + 1; tx != txs.end(); ++tx)
+    {
+        auto out = tx->previous_outputs();
+        std::move(out.begin(), out.end(), std::inserter(outs, outs.end()));
+    }
+
+    std::sort(outs.begin(), outs.end());
+    const auto distinct_end = std::unique(outs.begin(), outs.end());
+    const auto distinct = (distinct_end == outs.end());
+    return !distinct;
 }
 
 bool block::is_valid_merkle_root() const
 {
-    return (generate_merkle_root() == header_.merkle());
+    return generate_merkle_root() == header_.merkle();
 }
 
 // Overflow returns max_uint64.
@@ -724,7 +757,7 @@ code block::check() const
     if ((ec = header_.check()))
         return ec;
 
-    else if (serialized_size() > max_block_size)
+    else if (serialized_size() > get_max_block_size(is_bitcoin_cash()))
         return error::block_size_limit;
 
     else if (transactions_.empty())
@@ -736,11 +769,12 @@ code block::check() const
     else if (is_extra_coinbases())
         return error::extra_coinbases;
 
-    else if (!is_distinct_transaction_set())
-        return error::internal_duplicate;
+    // This is subset of is_internal_double_spend if collisions cannot happen.
+    ////else if (!is_distinct_transaction_set())
+    ////    return error::internal_duplicate;
 
     else if (is_internal_double_spend())
-        return error::internal_double_spend;
+        return error::block_internal_double_spend;
 
     else if (!is_valid_merkle_root())
         return error::merkle_mismatch;
@@ -750,7 +784,7 @@ code block::check() const
     // case they are ignored. This means that p2sh sigops are not counted here.
     // This is a preliminary check, the final count must come from connect().
     // Reenable once sigop caching is implemented, otherwise is deoptimization.
-    ////else if (signature_operations(false) > max_block_sigops)
+    ////else if (signature_operations(false) > get_max_block_sigops(is_bitcoin_cash()))
     ////    return error::block_legacy_sigop_limit;
 
     else
@@ -772,18 +806,15 @@ code block::accept(const chain_state& state, bool transactions) const
     const auto bip16 = state.is_enabled(rule_fork::bip16_rule);
     const auto bip34 = state.is_enabled(rule_fork::bip34_rule);
 
+    const auto block_time = state.is_enabled(rule_fork::bip113_rule) ?
+        state.median_time_past() : header_.timestamp();
+
     if ((ec = header_.accept(state)))
         return ec;
 
     else if (state.is_under_checkpoint())
         return error::success;
 
-    // TODO: relates timestamp to tx.locktime (pool cache min tx.timestamp).
-    // This recurses txs but is not applied via mempool (timestamp required).
-    else if (!is_final(state.height()))
-        return error::non_final_transaction;
-
-    // The coinbase tx is never seen/cached by the tx pool.
     else if (bip34 && !is_valid_coinbase_script(state.height()))
         return error::coinbase_height_mismatch;
 
@@ -791,9 +822,14 @@ code block::accept(const chain_state& state, bool transactions) const
     else if (!is_valid_coinbase_claim(state.height()))
         return error::coinbase_value_limit;
 
+    // TODO: relates median time past to tx.locktime (pool cache min tx.time).
+    else if (!is_final(state.height(), block_time))
+        return error::block_non_final;
+
+    // TODO: determine if performance benefit is worth excluding sigops here.
     // TODO: relates block limit to total of tx.sigops (pool cache tx.sigops).
     // This recomputes sigops to include p2sh from prevouts.
-    else if (transactions && (signature_operations(bip16) > max_block_sigops))
+    else if (transactions && (signature_operations(bip16) > get_max_block_sigops(is_bitcoin_cash())))
         return error::block_embedded_sigop_limit;
 
     else if (transactions)

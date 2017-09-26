@@ -25,15 +25,31 @@ project(bitprim-core
   VERSION 3.0.0
   LANGUAGES CXX C)
 
-if(USE_CPP11_ABI)
-  message("Using C++11 ABI")
-  add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-else()
-  message("Not using C++11 ABI")
-  add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+
+#if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+#  # using Clang
+#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#  # using GCC
+#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+#  # using Intel C++
+#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+#  # using Visual Studio C++
+#endif()
+#if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#  # using regular Clang or AppleClang
+#endif()
+
+message(CMAKE_CXX_COMPILER_ID)
+message(${CMAKE_CXX_COMPILER_ID})
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  if (NOT NOT_USE_CPP11_ABI)
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+  else()
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+  endif()
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
 endif()
-
-
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -279,6 +295,10 @@ set(bitprim_core_sources
         src/chain/output_point.cpp
         src/chain/point.cpp
         src/chain/point_iterator.cpp
+
+        src/chain/point_value.cpp
+        src/chain/points_value.cpp
+
         src/chain/script.cpp
         src/chain/transaction.cpp
 
@@ -304,6 +324,7 @@ set(bitprim_core_sources
         src/config/sodium.cpp
 
         src/error.cpp
+        src/bitcoin_cash_support.cpp
 
         src/formats/base_10.cpp
         src/formats/base_16.cpp
@@ -403,7 +424,10 @@ set(bitprim_core_sources
         src/utility/istream_reader.cpp
         src/utility/monitor.cpp
         src/utility/ostream_writer.cpp
+        
         src/utility/png.cpp
+        src/utility/prioritized_mutex.cpp
+
         src/utility/random.cpp
         src/utility/scope_lock.cpp
         src/utility/sequencer.cpp
@@ -438,7 +462,10 @@ set(bitprim_core_sources
         src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp
         src/wallet/payment_address.cpp
+        
         src/wallet/qrcode.cpp
+        src/wallet/select_outputs.cpp
+
         src/wallet/select_outputs.cpp
         src/wallet/stealth_address.cpp
         src/wallet/stealth_receiver.cpp
@@ -766,6 +793,7 @@ install(TARGETS bitprim-core EXPORT bitprim-core
 #)
 
 set(_bitprim_core_headers
+    bitcoin/bitcoin/bitcoin_cash_support.hpp
     bitcoin/bitcoin/compat.h
     bitcoin/bitcoin/compat.hpp
     bitcoin/bitcoin/constants.hpp
@@ -784,7 +812,12 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/chain/output.hpp
     bitcoin/bitcoin/chain/output_point.hpp
     bitcoin/bitcoin/chain/point.hpp
+    
     bitcoin/bitcoin/chain/point_iterator.hpp
+
+    bitcoin/bitcoin/chain/point_value.hpp
+    bitcoin/bitcoin/chain/points_value.hpp
+
     bitcoin/bitcoin/chain/script.hpp
     bitcoin/bitcoin/chain/stealth.hpp
     bitcoin/bitcoin/chain/transaction.hpp
@@ -953,7 +986,10 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/notifier.hpp
     bitcoin/bitcoin/utility/ostream_writer.hpp
     bitcoin/bitcoin/utility/pending.hpp
+
     bitcoin/bitcoin/utility/png.hpp
+    bitcoin/bitcoin/utility/prioritized_mutex.hpp
+
     bitcoin/bitcoin/utility/random.hpp
     bitcoin/bitcoin/utility/reader.hpp
     bitcoin/bitcoin/utility/resubscriber.hpp

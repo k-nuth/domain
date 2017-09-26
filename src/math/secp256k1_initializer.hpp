@@ -23,7 +23,6 @@
 #include <secp256k1.h>
 #include <bitcoin/bitcoin/define.hpp>
 
-
 namespace libbitcoin {
 
 /**
@@ -66,7 +65,7 @@ private:
  * Create and hold this class to initialize signing context on first use.
  */
 class BC_API secp256k1_signing
-    : public secp256k1_initializer
+  : public secp256k1_initializer
 {
 public:
     /**

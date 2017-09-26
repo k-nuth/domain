@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <istream>
 #include <string>
+#include <vector>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
@@ -110,6 +111,7 @@ public:
 
     /// The payment address extracted from this output as a standard script.
     wallet::payment_address address() const;
+    bool is_dust(uint64_t minimum_output_value) const;
 
     // Validation.
     //-----------------------------------------------------------------------------
