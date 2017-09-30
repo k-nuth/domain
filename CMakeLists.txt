@@ -877,7 +877,6 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/impl/utility/deserializer.ipp
     bitcoin/bitcoin/impl/utility/endian.ipp
     bitcoin/bitcoin/impl/utility/istream_reader.ipp
-    bitcoin/bitcoin/impl/utility/notifier.ipp
     bitcoin/bitcoin/impl/utility/ostream_writer.ipp
     bitcoin/bitcoin/impl/utility/pending.ipp    
     bitcoin/bitcoin/impl/utility/resubscriber.ipp
@@ -909,9 +908,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/math/crypto.hpp
     bitcoin/bitcoin/math/elliptic_curve.hpp
     bitcoin/bitcoin/math/hash.hpp
-    # bitcoin/bitcoin/math/hash_number.hpp
     bitcoin/bitcoin/math/limits.hpp
-    #bitcoin/bitcoin/math/script_number.hpp
     bitcoin/bitcoin/math/stealth.hpp
     bitcoin/bitcoin/math/uint256.hpp
     
@@ -983,7 +980,6 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/istream_reader.hpp
     bitcoin/bitcoin/utility/monitor.hpp
     bitcoin/bitcoin/utility/noncopyable.hpp
-    bitcoin/bitcoin/utility/notifier.hpp
     bitcoin/bitcoin/utility/ostream_writer.hpp
     bitcoin/bitcoin/utility/pending.hpp
 
@@ -1005,7 +1001,6 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/threadpool.hpp
     bitcoin/bitcoin/utility/timer.hpp
     bitcoin/bitcoin/utility/track.hpp
-    #bitcoin/bitcoin/utility/variable_uint_size.hpp
     bitcoin/bitcoin/utility/work.hpp
     bitcoin/bitcoin/utility/writer.hpp
     
