@@ -41,26 +41,25 @@ class BitprimcoreConan(ConanFile):
                "with_png": [True, False],
                "with_litecoin": [True, False],
                "with_qrencode": [True, False],
-               "not_use_cpp11_abi": [True, False]
     }
 
-    #    "with_tests": [True, False],
-    #    "with_examples": [True, False],
+    # "with_tests": [True, False],
+    # "with_examples": [True, False],
+    # "not_use_cpp11_abi": [True, False]
 
     default_options = "shared=False", \
         "fPIC=True", \
         "with_icu=False", \
         "with_png=False", \
         "with_litecoin=False", \
-        "with_qrencode=False", \
-        "not_use_cpp11_abi=False"
+        "with_qrencode=False"
 
     # "with_tests=False", \
     # "with_examples=False", \
+    # "not_use_cpp11_abi=False"
 
     with_tests = False
     with_examples = False
-
 
     generators = "cmake"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "include/*", "test/*"
@@ -79,25 +78,16 @@ class BitprimcoreConan(ConanFile):
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
 
         # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
-
         # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         # cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
         cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
         cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.with_examples)
-
 
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
         cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
         cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.with_litecoin)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
         
-
-        # if self.settings.compiler == "gcc":
-        #     if float(str(self.settings.compiler.version)) >= 5:
-        #         cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "1"
-        #     else:
-        #         cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
-
         # if self.settings.compiler != "Visual Studio"
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
