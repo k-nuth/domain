@@ -318,20 +318,24 @@ typename chain_state::timestamps::const_iterator
 timestamps_position(chain_state::timestamps const& times, bool tip) {
 
     if (tip) {
-		if (times.size() >= bitcoin_cash_retarget_blocks) {
-			return times.begin() + bitcoin_cash_retarget_blocks;
-		} else {
-			return times.begin();
-		}
+        if (times.size() >= bitcoin_cash_offset_tip)
+            return times.begin() + bitcoin_cash_offset_tip;
     } else {
-        return times.begin();
+        if (times.size() >= bitcoin_cash_offset_tip_minus_6)
+            return times.begin() + bitcoin_cash_offset_tip_minus_6;
     }
+
+    if (times.size() > 11) {
+        return times.begin() + (times.size() - 11);
+    }
+
+    return times.begin();
 }
 
 std::vector<typename chain_state::timestamps::value_type> 
 timestamps_subset(chain_state::timestamps const& times, bool tip) {
     auto at = timestamps_position(times, tip);
-	auto n = (std::min)((size_t)std::distance(at, times.end()), median_time_past_interval);
+    auto n = (std::min)((size_t)std::distance(at, times.end()), median_time_past_interval);
 
     std::vector<typename chain_state::timestamps::value_type> subset(n);
     std::copy_n(at, n, subset.begin());
@@ -370,11 +374,16 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks) {
 
     if (is_bitcoin_cash() && values.height > bitcoin_cash_activation_height) {
         auto last_time_span = median_time_past(values, 0, true);
-        auto six_time_span = median_time_past(values, 0, false);
+        if (last_time_span < 1508185211) {
+            auto six_time_span = median_time_past(values, 0, false);
+            // precondition: last_time_span >= six_time_span
+            if ((last_time_span - six_time_span) > (12 * 3600)) {
+                return work_required_adjust_cash(values);
+            }
+        } else {
+            // New algorithm
 
-        // precondition: last_time_span >= six_time_span
-        if ((last_time_span - six_time_span) > (12 * 3600)) {
-            return work_required_adjust_cash(values);
+
         }
     }
 
