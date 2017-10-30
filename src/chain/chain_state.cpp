@@ -260,7 +260,7 @@ size_t chain_state::bits_count(size_t height, uint32_t forks)
 {
     const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
     const auto easy_work = testnet && !is_retarget_height(height);
-    return easy_work ? std::min(height, retargeting_interval) : 1;
+    return easy_work ? std::min(height, retargeting_interval) : std::min(height, chain_state_timestamp_count);
 }
 
 size_t chain_state::version_count(size_t height, uint32_t forks)
@@ -355,6 +355,21 @@ uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*
     return subset.empty() ? 0 : subset[subset.size() / 2];
 }
 
+
+std::pair<uint32_t, uint32_t> select_medium_block ( std::vector<std::pair<uint32_t,uint32_t>> block_values) {
+    if (block_values[0].second > block_values[2].second ){
+        std::swap(block_values[0],block_values[2]);
+    }
+    if (block_values[0].second > block_values[1].second ){
+        std::swap(block_values[0],block_values[1]);
+    }
+    if (block_values[1].second > block_values[2].second ){
+        std::swap(block_values[1],block_values[2]);
+    }
+
+    return block_values[1];
+}
+
 // work_required
 //-----------------------------------------------------------------------------
 
@@ -382,8 +397,46 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks) {
             }
         } else {
             // New algorithm
+            // Precondition: timestamp have 146 elements
+            const auto bits_size = values.bits.ordered.size();
 
+            std::vector<std::pair<uint32_t,uint32_t>> first_block_data;
+            first_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 1], values.timestamp.ordered[145]));
+            first_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 2], values.timestamp.ordered[144]));
+            first_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 3], values.timestamp.ordered[143]));
+            auto first_block = select_medium_block (first_block_data);
+            auto first_block_pow = libbitcoin::chain::block::proof(first_block.first);
+//                          ... 140 141 142 143 144 145 146  = 146~144
+//            0 1 2 3 4 5 ..... 140 141 142 143 144 145 146  = 2 ~ 0
 
+            std::vector<std::pair<uint32_t,uint32_t>> last_block_data;
+            last_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 143], values.timestamp.ordered[2]));
+            last_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 144], values.timestamp.ordered[1]));
+            last_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 145], values.timestamp.ordered[0]));
+            auto last_block = select_medium_block (last_block_data);
+            auto last_block_pow = libbitcoin::chain::block::proof(last_block.first);
+
+            uint256_t work = last_block_pow - first_block_pow;
+            work *= target_spacing_seconds; //10 * 60
+
+            int64_t nActualTimespan = last_block.second - first_block.second;
+            if (nActualTimespan > 288 * target_spacing_seconds) {
+                nActualTimespan = 288 * target_spacing_seconds;
+            } else if (nActualTimespan < 72 * target_spacing_seconds) {
+                nActualTimespan = 72 * target_spacing_seconds;
+            }
+
+            work /= nActualTimespan;
+
+            auto nextTarget = (-1 * work) / work; //Compute target result
+
+            uint256_t pow_limit(compact{proof_of_work_limit});
+
+            if (nextTarget.compare(pow_limit) == 1){
+                return proof_of_work_limit;
+            }
+
+            return compact(nextTarget).normal();
         }
     }
 
