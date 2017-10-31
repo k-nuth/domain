@@ -356,7 +356,7 @@ uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*
 }
 
 
-std::pair<uint32_t, uint32_t> select_medium_block ( std::vector<std::pair<uint32_t,uint32_t>> block_values) {
+std::pair<size_t, uint32_t> select_medium_block ( std::vector<std::pair<size_t,uint32_t>> block_values) {
     if (block_values[0].second > block_values[2].second ){
         std::swap(block_values[0],block_values[2]);
     }
@@ -370,6 +370,46 @@ std::pair<uint32_t, uint32_t> select_medium_block ( std::vector<std::pair<uint32
     return block_values[1];
 }
 
+uint32_t chain_state::cash_difficulty_adjustment(const data& values){
+    // New algorithm
+    // Precondition: timestamp have 146 elements
+    const auto bits_size = values.bits.ordered.size();
+    std::vector<std::pair<size_t,uint32_t>> first_block_data;
+    first_block_data.push_back(std::make_pair(bits_size - 3, values.timestamp.ordered[144]));
+    first_block_data.push_back(std::make_pair(bits_size - 2, values.timestamp.ordered[145]));
+    first_block_data.push_back(std::make_pair(bits_size - 1, values.timestamp.ordered[146]));
+    auto first_block = select_medium_block (first_block_data);
+
+    std::vector<std::pair<size_t,uint32_t>> last_block_data;
+    last_block_data.push_back(std::make_pair(bits_size - 147, values.timestamp.ordered[0]));
+    last_block_data.push_back(std::make_pair(bits_size - 146, values.timestamp.ordered[1]));
+    last_block_data.push_back(std::make_pair(bits_size - 145, values.timestamp.ordered[2]));
+    auto last_block = select_medium_block (last_block_data);
+
+    uint256_t work = 0;
+    for (int i = last_block.first +1; i <= first_block.first; i++)
+        work += block::proof(values.bits.ordered[i]);
+
+    work *= target_spacing_seconds; //10 * 60
+
+    int64_t nActualTimespan = first_block.second - last_block.second;
+    if (nActualTimespan > 288 * target_spacing_seconds) {
+        nActualTimespan = 288 * target_spacing_seconds;
+    } else if (nActualTimespan < 72 * target_spacing_seconds) {
+        nActualTimespan = 72 * target_spacing_seconds;
+    }
+
+    work /= nActualTimespan;
+    auto nextTarget = (-1 * work) / work; //Compute target result
+    uint256_t pow_limit(compact{proof_of_work_limit});
+
+    if (nextTarget.compare(pow_limit) == 1){
+        return proof_of_work_limit;
+    }
+
+    return compact(nextTarget).normal();
+}
+
 // work_required
 //-----------------------------------------------------------------------------
 
@@ -378,66 +418,31 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks) {
     if (values.height == 0) {
         return{};
     }
+        
+    bool daa_active = false;
+    auto last_time_span = median_time_past(values, 0, true);
+    if ((last_time_span >= 1509405600) && (is_bitcoin_cash())){
+        daa_active = true;
+    }
 
-    if (is_retarget_height(values.height)) {
+    if (is_retarget_height(values.height) && !(daa_active)) {
         return work_required_retarget(values);
     }
 
     if (script::is_enabled(forks, rule_fork::easy_blocks)) {
-        return easy_work_required(values);
+        return easy_work_required(values, daa_active);
     }
 
     if (is_bitcoin_cash() && values.height > bitcoin_cash_activation_height) {
-        auto last_time_span = median_time_past(values, 0, true);
-        if (last_time_span < 1508185211) {
+        if (!daa_active) {
             auto six_time_span = median_time_past(values, 0, false);
             // precondition: last_time_span >= six_time_span
             if ((last_time_span - six_time_span) > (12 * 3600)) {
                 return work_required_adjust_cash(values);
             }
         } else {
-            // New algorithm
-            // Precondition: timestamp have 146 elements
-            const auto bits_size = values.bits.ordered.size();
-
-            std::vector<std::pair<uint32_t,uint32_t>> first_block_data;
-            first_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 1], values.timestamp.ordered[145]));
-            first_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 2], values.timestamp.ordered[144]));
-            first_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 3], values.timestamp.ordered[143]));
-            auto first_block = select_medium_block (first_block_data);
-            auto first_block_pow = libbitcoin::chain::block::proof(first_block.first);
-//                          ... 140 141 142 143 144 145 146  = 146~144
-//            0 1 2 3 4 5 ..... 140 141 142 143 144 145 146  = 2 ~ 0
-
-            std::vector<std::pair<uint32_t,uint32_t>> last_block_data;
-            last_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 143], values.timestamp.ordered[2]));
-            last_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 144], values.timestamp.ordered[1]));
-            last_block_data.push_back(std::make_pair(values.bits.ordered[bits_size - 145], values.timestamp.ordered[0]));
-            auto last_block = select_medium_block (last_block_data);
-            auto last_block_pow = libbitcoin::chain::block::proof(last_block.first);
-
-            uint256_t work = last_block_pow - first_block_pow;
-            work *= target_spacing_seconds; //10 * 60
-
-            int64_t nActualTimespan = last_block.second - first_block.second;
-            if (nActualTimespan > 288 * target_spacing_seconds) {
-                nActualTimespan = 288 * target_spacing_seconds;
-            } else if (nActualTimespan < 72 * target_spacing_seconds) {
-                nActualTimespan = 72 * target_spacing_seconds;
-            }
-
-            work /= nActualTimespan;
-
-            auto nextTarget = (-1 * work) / work; //Compute target result
-
-            uint256_t pow_limit(compact{proof_of_work_limit});
-
-            if (nextTarget.compare(pow_limit) == 1){
-                return proof_of_work_limit;
-            }
-
-            return compact(nextTarget).normal();
-        }
+            return cash_difficulty_adjustment(values);
+	}
     }
 
     return bits_high(values);
@@ -515,7 +520,7 @@ uint32_t chain_state::retarget_timespan(const data& values)
     return range_constrain(timespan, min_timespan, max_timespan);
 }
 
-uint32_t chain_state::easy_work_required(const data& values)
+uint32_t chain_state::easy_work_required(const data& values, bool daa_active)
 {
     BITCOIN_ASSERT(values.height != 0);
 
@@ -526,10 +531,13 @@ uint32_t chain_state::easy_work_required(const data& values)
     auto height = values.height;
     auto& bits = values.bits.ordered;
 
+    if(daa_active) 
+        return cash_difficulty_adjustment(values);
+    else
     // Reverse iterate the ordered-by-height list of header bits.
-    for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit)
-        if (is_retarget_or_non_limit(--height, *bit))
-            return *bit;
+        for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit)
+            if (is_retarget_or_non_limit(--height, *bit))
+                return *bit;
 
     // Since the set of heights is either a full retarget range or ends at
     // zero this is not reachable unless the data set is invalid.

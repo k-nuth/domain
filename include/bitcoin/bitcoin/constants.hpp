@@ -84,11 +84,11 @@ BC_CONSTEXPR size_t bitcoin_cash_retarget_blocks = 6;
 //BC_CONSTEXPR size_t chain_state_timestamp_count = median_time_past_interval + bitcoin_cash_retarget_blocks;
 
 // Blocks used to calculate the next difficulty
-BC_CONSTEXPR size_t new_bitcoin_cash_retarget_algorithm = 146;
+BC_CONSTEXPR size_t new_bitcoin_cash_retarget_algorithm = 147;
 BC_CONSTEXPR size_t chain_state_timestamp_count = new_bitcoin_cash_retarget_algorithm;
 
-BC_CONSTEXPR size_t bitcoin_cash_offset_tip = 135;
-BC_CONSTEXPR size_t bitcoin_cash_offset_tip_minus_6 = 129;
+BC_CONSTEXPR size_t bitcoin_cash_offset_tip = new_bitcoin_cash_retarget_algorithm - 11;
+BC_CONSTEXPR size_t bitcoin_cash_offset_tip_minus_6 = bitcoin_cash_offset_tip - 6;
 
 BC_CONSTEXPR size_t max_block_size = 1000000;
 BC_CONSTEXPR size_t max_block_size_cash = 8000000;
