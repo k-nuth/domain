@@ -421,7 +421,7 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks) {
         
     bool daa_active = false;
     auto last_time_span = median_time_past(values, 0, true);
-    if ((last_time_span >= 1509405600) && (is_bitcoin_cash())){
+    if ((last_time_span >= 1510600000) && (is_bitcoin_cash())){
         daa_active = true;
     }
 
