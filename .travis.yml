@@ -45,9 +45,6 @@ osx: &osx
 matrix:
    include:
       - <<: *linux
-        env: PUSH_TO_REPOS=true
-
-      - <<: *linux
         env: CONAN_GCC_VERSIONS=4.9 CONAN_DOCKER_IMAGE=lasote/conangcc49
 
       - <<: *linux
@@ -74,6 +71,10 @@ matrix:
         osx_image: xcode8.3
         env: CONAN_APPLE_CLANG_VERSIONS=8.1
 
+      # - <<: *linux
+      - <<: *osx
+        env: PUSH_TO_REPOS=true
+
 install:
   - cd ${TRAVIS_BUILD_DIR}
 
@@ -84,7 +85,7 @@ install:
     fi    
 
 script:
-  - pwd
+  # - pwd
   - git fetch --unshallow
   # - git rev-list --count --first-parent HEAD
   # - git rev-list --count HEAD
@@ -99,7 +100,7 @@ script:
       ./.travis/push_other_repo.sh
     else
       cd ${TRAVIS_BUILD_DIR}
-      pwd
+      # pwd
       chmod +x .travis/run.sh
       ./.travis/run.sh
     fi    
