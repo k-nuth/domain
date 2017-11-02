@@ -17,13 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# import os
+import os
 from conans import ConanFile, CMake
 
 def option_on_off(option):
     return "ON" if option else "OFF"
 
-class BitprimcoreConan(ConanFile):
+class BitprimCoreConan(ConanFile):
     name = "bitprim-core"
     version = "0.3"
     license = "http://www.boost.org/users/license.html"
@@ -69,7 +69,17 @@ class BitprimcoreConan(ConanFile):
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/testing"))
 
+    def configure(self):
+        print('-*-*-*-*-* FROM PYTHON 2 -*-*-*-*-*-*-*')
+        print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
+        print('-*-*-*-*-* FROM PYTHON 2 -*-*-*-*-*-*-*')
+        
+
     def build(self):
+        print('-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*')
+        print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
+        print('-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*')
+
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = option_on_off(True)
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
