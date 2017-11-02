@@ -81,6 +81,10 @@ script:
   # - cd
   - pwd
   - git rev-list --count --first-parent HEAD
+  - git rev-list --count HEAD
+  - git branch
+  - git status
+
 
   - OUTPUT="$(git rev-list --count --first-parent HEAD)"
   - echo "${OUTPUT}"
