@@ -36,4 +36,9 @@
 // #pragma message("BITPRIM_BUILD_NUMBER")
 // #pragma message(BITPRIM_BUILD_NUMBER)
 
+namespace libbitcoin {
+char const* version();
+} /*namespace libbitcoin*/
+ 
+
 #endif
