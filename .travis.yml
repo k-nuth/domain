@@ -77,7 +77,8 @@ matrix:
 install:
   - cd ${TRAVIS_BUILD_DIR}
 
-  - if [[ "${PUSH_TO_REPOS}" == "false" ]]; then
+  - |
+    if [[ "${PUSH_TO_REPOS}" == "false" ]]; then
       chmod +x .travis/install.sh
       ./.travis/install.sh
     fi    
@@ -96,8 +97,8 @@ script:
   - echo "${BITPRIM_BUILD_NUMBER}"
 
 
-
-  - if [[ "${PUSH_TO_REPOS}" == "true" ]]; then
+  - |
+    if [[ "${PUSH_TO_REPOS}" == "true" ]]; then
       git config --global user.email "travis@travis-ci.org"
       git config --global user.name "Travis CI"      
       mkdir temp
@@ -123,8 +124,8 @@ script:
       # git remote add origin-pages https://${GH_TOKEN}@github.com/MVSE-outreach/resources.git > /dev/null 2>&1
       # git push --quiet --set-upstream origin-pages gh-pages 
 
-      git remote add origin-commit https://${GH_TOKEN}@github.com/bitprim/bitprim-node-exe.git
-      git push --set-upstream origin-commit ${TRAVIS_BRANCH} 
+      git remote add origin-commit https://${GH_TOKEN}@github.com/bitprim/bitprim-node-exe.git > /dev/null 2>&1
+      git push --quiet --set-upstream origin-commit ${TRAVIS_BRANCH} 
 
 
     else
