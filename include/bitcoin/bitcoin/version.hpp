@@ -25,6 +25,11 @@
 
 #define LIBBITCOIN_VERSION "0.3.0"
 
+#ifdef BITPRIM_BUILD_NUMBER
+#define BITPRIM_CORE_VERSION BITPRIM_BUILD_NUMBER
+#else
+#define BITPRIM_CORE_VERSION "v0.0.0"
+#endif
 
 // #pragma message("LIBBITCOIN_VERSION")
 // #pragma message(LIBBITCOIN_VERSION)

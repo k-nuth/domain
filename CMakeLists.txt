@@ -331,6 +331,7 @@ set(bitprim_core_sources
 
         src/error.cpp
         src/bitcoin_cash_support.cpp
+        src/version.cpp
 
         src/formats/base_10.cpp
         src/formats/base_16.cpp
