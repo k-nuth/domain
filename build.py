@@ -18,7 +18,7 @@ if __name__ == "__main__":
         build_number = os.getenv('BITPRIM_BUILD_NUMBER', '-')
 
         print(env_vars)
-        env_vars.append({"BITPRIM_BUILD_NUMBER": build_number})
+        env_vars["BITPRIM_BUILD_NUMBER"] = build_number
         print(env_vars)
 
         if settings["build_type"] == "Release" \
