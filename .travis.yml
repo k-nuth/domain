@@ -84,14 +84,17 @@ script:
   - git rev-list --count HEAD
   - git branch
   - git status
-  - git describe
+  # - git describe
   - git fetch --unshallow
   - git rev-list --count --first-parent HEAD
   - git rev-list --count HEAD
   - git describe
 
 
-  - export BITPRIM_BUILD_NUMBER="$(git rev-list --count --first-parent HEAD)"
+  # - export BITPRIM_BUILD_NUMBER="$(git rev-list --count --first-parent HEAD)"
+  # - echo "${BITPRIM_BUILD_NUMBER}"
+
+  - export BITPRIM_BUILD_NUMBER="$(git describe)"
   - echo "${BITPRIM_BUILD_NUMBER}"
 
   - cd ${TRAVIS_BUILD_DIR}

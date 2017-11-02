@@ -69,15 +69,17 @@ class BitprimCoreConan(ConanFile):
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/testing"))
 
-    def configure(self):
-        print('-*-*-*-*-* FROM PYTHON 2 -*-*-*-*-*-*-*')
-        print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
-        print('-*-*-*-*-* FROM PYTHON 2 -*-*-*-*-*-*-*')
+    # def configure(self):
+    #     print('-*-*-*-*-* FROM PYTHON 2 -*-*-*-*-*-*-*')
+    #     print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
+    #     print('-*-*-*-*-* FROM PYTHON 2 -*-*-*-*-*-*-*')
         
 
     def build(self):
         print('-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*')
         print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
+        print(os.getenv('TRAVIS_COMMIT', '-'))
+        print(os.getenv('TRAVIS_BUILD_NUMBER', '15'))
         print('-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*')
 
         cmake = CMake(self)
