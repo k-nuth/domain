@@ -56,7 +56,7 @@ install:
 test_script:
 
   - cd
-  - git fetch --unshallow
+  # - git fetch --unshallow
   # - export BITPRIM_BUILD_NUMBER="$(git describe)"
   - for /f %%i in ('git describe') do set BITPRIM_BUILD_NUMBER=%%i
   - echo %BITPRIM_BUILD_NUMBER%
