@@ -81,6 +81,10 @@ script:
   # - cd
   - pwd
   - git rev-list --count --first-parent HEAD
+
+  - OUTPUT="$(git rev-list --count --first-parent HEAD)"
+  - echo "${OUTPUT}"
+
   - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/run.sh
   - ./.travis/run.sh
