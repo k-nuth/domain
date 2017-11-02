@@ -76,11 +76,14 @@ class BitprimCoreConan(ConanFile):
         
 
     def build(self):
-        print('-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*')
-        print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
-        print(os.getenv('TRAVIS_COMMIT', '-'))
-        print(os.getenv('TRAVIS_BUILD_NUMBER', '15'))
-        print('-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*')
+        # print('-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*')
+        # print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
+        # print(os.getenv('TRAVIS_COMMIT', '-'))
+        # print(os.getenv('TRAVIS_BUILD_NUMBER', '15'))
+
+        self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
+        self.output.warn("*** EnvVar BITPRIM_BUILD_NUMBER: %s" % (os.getenv('BITPRIM_BUILD_NUMBER', '-')))
+        self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
 
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = option_on_off(True)
@@ -106,6 +109,8 @@ class BitprimCoreConan(ConanFile):
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
             else:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
+
+        cmake.definitions["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
 
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()

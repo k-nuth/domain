@@ -77,19 +77,17 @@ install:
   - ./.travis/install.sh
 
 script:
-  - echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-  # - cd
-  - pwd
-  - git rev-list --count --first-parent HEAD
-  - git rev-list --count HEAD
-  - git branch
-  - git status
+  # - echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+  # - pwd
+  # - git rev-list --count --first-parent HEAD
+  # - git rev-list --count HEAD
+  # - git branch
+  # - git status
   # - git describe
   - git fetch --unshallow
-  - git rev-list --count --first-parent HEAD
-  - git rev-list --count HEAD
-  - git describe
-
+  # - git rev-list --count --first-parent HEAD
+  # - git rev-list --count HEAD
+  # - git describe
 
   # - export BITPRIM_BUILD_NUMBER="$(git rev-list --count --first-parent HEAD)"
   # - echo "${BITPRIM_BUILD_NUMBER}"

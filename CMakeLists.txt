@@ -123,6 +123,12 @@ endif()
 
 
 
+
+set(BITPRIM_BUILD_NUMBER "xxx" CACHE STRING "Specify the Bitprim Build Number.")
+message(${BITPRIM_BUILD_NUMBER})
+
+
+
 if (NOT NO_CONAN_AT_ALL)
   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
@@ -504,6 +510,8 @@ target_include_directories(bitprim-core PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC)
+target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"foo\\"")
+
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
