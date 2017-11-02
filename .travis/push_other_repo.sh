@@ -9,8 +9,8 @@ git config --global user.name "Bitprim CI"
 mkdir temp
 cd temp
 
-git clone https://github.com/bitprim/bitprim-node-exe.git --depth 1
-# git clone https://github.com/bitprim/bitprim-node-exe.git
+# git clone https://github.com/bitprim/bitprim-node-exe.git --depth 1
+git clone https://github.com/bitprim/bitprim-node-exe.git
 
 cd bitprim-node-exe
 echo "Travis branch: ${TRAVIS_BRANCH}"
