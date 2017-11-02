@@ -181,6 +181,8 @@ BC_CONSTEXPR uint32_t bip9_version_bit0 = 0x00000001;
 BC_CONSTEXPR uint32_t bip9_version_base = 0x20000000;
 
 BC_CONSTEXPR size_t bitcoin_cash_activation_height = 478558;
+//November 13 2017
+BC_CONSTEXPR uint32_t bitcoin_cash_daa_activation_time = 1510600000;
 
 #ifdef LITECOIN
 

@@ -135,6 +135,10 @@ uint256_t chain_state::difficulty_adjustment_cash(uint256_t target) {
     return target + (target >> 2);
 }
 
+bool is_cash_hf_enabled(const uint32_t median_time_past) {
+    return (median_time_past > bitcoin_cash_daa_activation_time);
+}
+
 // Statics.
 // activation
 //-----------------------------------------------------------------------------
@@ -253,6 +257,10 @@ chain_state::activations chain_state::activation(const data& values,
         result.minimum_version = first_version;
     }
 
+    if (is_bitcoin_cash() && is_cash_hf_enabled(median_time_past(values, 0)))
+    {
+        result.forks |= (rule_fork::cash_low_s_rule & forks);
+    }
     return result;
 }
 
@@ -421,7 +429,7 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks) {
         
     bool daa_active = false;
     auto last_time_span = median_time_past(values, 0, true);
-    if ((last_time_span >= 1510600000) && (is_bitcoin_cash())){
+    if ((last_time_span >= bitcoin_cash_daa_activation_time) && (is_bitcoin_cash())){
         daa_active = true;
     }
 
