@@ -1,9 +1,8 @@
 #!/bin/bash
 
 function replace_versions {
-    echo $1 #project name
-    echo $2 #build number
-
+    # echo $1 #project name
+    # echo $2 #build number
     if [ ! -f versions.txt ]; then
         echo "$1: $2" >> versions.txt
     else
@@ -22,7 +21,7 @@ set -e
 set -x
 
 git config --global user.email "ci@bitprim.org"
-git config --global user.name "Bitprim CI"      
+git config --global user.name "Bitprim CI"
 
 mkdir temp
 cd temp
@@ -33,19 +32,6 @@ git clone https://github.com/bitprim/bitprim-node-exe.git
 cd bitprim-node-exe
 echo "Travis branch: ${TRAVIS_BRANCH}"
 git checkout ${TRAVIS_BRANCH}
-
-# if [ ! -f versions.txt ]; then
-#     echo "bitprim-core: $BITPRIM_BUILD_NUMBER" >> versions.txt
-# else
-#     while read p; do
-#         if [[ $p == *"bitprim-core:"* ]]; then
-#             echo "bitprim-core: $BITPRIM_BUILD_NUMBER" >> versions.txt.t
-#         else
-#             echo $p >> versions.txt.t
-#         fi
-#     done <versions.txt
-#     mv versions.txt{.t,}
-# fi
 
 replace_versions bitprim-core $BITPRIM_BUILD_NUMBER
 

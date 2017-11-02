@@ -124,8 +124,8 @@ endif()
 
 
 
-set(BITPRIM_BUILD_NUMBER "xxx" CACHE STRING "Specify the Bitprim Build Number.")
-message(${BITPRIM_BUILD_NUMBER})
+set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
+# message(${BITPRIM_BUILD_NUMBER})
 
 
 
