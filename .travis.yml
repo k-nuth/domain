@@ -78,7 +78,8 @@ install:
 
 script:
   - echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-  - cd
+  # - cd
+  - pwd
   - git rev-list --count --first-parent HEAD
   - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/run.sh
