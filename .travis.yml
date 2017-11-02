@@ -84,6 +84,11 @@ script:
   - git rev-list --count HEAD
   - git branch
   - git status
+  - git describe
+  - git fetch --unshallow
+  - git rev-list --count --first-parent HEAD
+  - git rev-list --count HEAD
+  - git describe
 
 
   - OUTPUT="$(git rev-list --count --first-parent HEAD)"
