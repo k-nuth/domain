@@ -78,13 +78,10 @@ install:
   - cd ${TRAVIS_BUILD_DIR}
 
   - |
-    if [[ "${PUSH_TO_REPOS}" == "false" ]]; then
+    if [[ "${PUSH_TO_REPOS}" != "true" ]]; then
       chmod +x .travis/install.sh
       ./.travis/install.sh
     fi    
-
-  # - chmod +x .travis/install.sh
-  # - ./.travis/install.sh
 
 script:
   - pwd
@@ -96,50 +93,16 @@ script:
   - export BITPRIM_BUILD_NUMBER="$(git describe)"
   - echo "${BITPRIM_BUILD_NUMBER}"
 
-
   - |
     if [[ "${PUSH_TO_REPOS}" == "true" ]]; then
-      git config --global user.email "travis@travis-ci.org"
-      git config --global user.name "Travis CI"      
-      mkdir temp
-      cd temp
-
-      # git clone https://github.com/bitprim/bitprim-node-exe.git --depth 1
-      git clone https://github.com/bitprim/bitprim-node-exe.git
-      
-
-      cd bitprim-node-exe
-
-      echo "Travis branch: ${TRAVIS_BRANCH}"
-
-      # git checkout -b gh-pages
-      git checkout ${TRAVIS_BRANCH}
-  
-      echo "bitprim-core: $BITPRIM_BUILD_NUMBER" >> versions.txt
-      cat versions.txt
-
-      git add . versions.txt
-      git commit --message "Travis bitprim-core build: $BITPRIM_BUILD_NUMBER, $TRAVIS_BUILD_NUMBER"
-
-      # git remote add origin-pages https://${GH_TOKEN}@github.com/MVSE-outreach/resources.git > /dev/null 2>&1
-      # git push --quiet --set-upstream origin-pages gh-pages 
-
-      git remote add origin-commit https://${GH_TOKEN}@github.com/bitprim/bitprim-node-exe.git > /dev/null 2>&1
-      git push --quiet --set-upstream origin-commit ${TRAVIS_BRANCH} 
-
-
+      chmod +x .travis/push_other_repo.sh
+      ./.travis/push_other_repo.sh
     else
       cd ${TRAVIS_BUILD_DIR}
       pwd
       chmod +x .travis/run.sh
       ./.travis/run.sh
     fi    
-
-
-  # - cd ${TRAVIS_BUILD_DIR}
-  # - pwd
-  # - chmod +x .travis/run.sh
-  # - ./.travis/run.sh
 
 notifications:
   email: false
