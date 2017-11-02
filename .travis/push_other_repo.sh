@@ -1,5 +1,23 @@
 #!/bin/bash
 
+function replace_versions {
+    echo $1 #project name
+    echo $2 #build number
+
+    if [ ! -f versions.txt ]; then
+        echo "$1: $2" >> versions.txt
+    else
+        while read p; do
+            if [[ $p == *"$1:"* ]]; then
+                echo "$1: $2" >> versions.txt.t
+            else
+                echo $p >> versions.txt.t
+            fi
+        done <versions.txt
+        mv versions.txt{.t,}
+    fi
+}  
+
 set -e
 set -x
 
@@ -16,25 +34,20 @@ cd bitprim-node-exe
 echo "Travis branch: ${TRAVIS_BRANCH}"
 git checkout ${TRAVIS_BRANCH}
 
+# if [ ! -f versions.txt ]; then
+#     echo "bitprim-core: $BITPRIM_BUILD_NUMBER" >> versions.txt
+# else
+#     while read p; do
+#         if [[ $p == *"bitprim-core:"* ]]; then
+#             echo "bitprim-core: $BITPRIM_BUILD_NUMBER" >> versions.txt.t
+#         else
+#             echo $p >> versions.txt.t
+#         fi
+#     done <versions.txt
+#     mv versions.txt{.t,}
+# fi
 
-if [ ! -f versions.txt ]; then
-    echo "versions.txt not found!"
-    echo "bitprim-core: $BITPRIM_BUILD_NUMBER" >> versions.txt
-else
-    while read p; do
-        echo $p
-
-        # string='My long string'
-        if [[ $p == *"bitprim-core:"* ]]; then
-            # echo "It's there!"
-            echo "bitprim-core: $BITPRIM_BUILD_NUMBER" >> versions.txt.t
-        else
-            echo $p >> versions.txt.t
-        fi
-
-    done <versions.txt
-    mv versions.txt{.t,}
-fi
+replace_versions bitprim-core $BITPRIM_BUILD_NUMBER
 
 cat versions.txt
 git add . versions.txt
