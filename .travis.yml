@@ -91,8 +91,8 @@ script:
   - git describe
 
 
-  - OUTPUT="$(git rev-list --count --first-parent HEAD)"
-  - echo "${OUTPUT}"
+  - export BITPRIM_BUILD_NUMBER="$(git rev-list --count --first-parent HEAD)"
+  - echo "${BITPRIM_BUILD_NUMBER}"
 
   - cd ${TRAVIS_BUILD_DIR}
   - chmod +x .travis/run.sh

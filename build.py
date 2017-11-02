@@ -1,6 +1,11 @@
+import os
 from conan.packager import ConanMultiPackager
 
 if __name__ == "__main__":
+    print('-*-*-*-*-* FROM PYTHON -*-*-*-*-*-*-*')
+    print(os.getenv('BITPRIM_BUILD_NUMBER', '42'))
+    print('-*-*-*-*-* FROM PYTHON -*-*-*-*-*-*-*')
+
     builder = ConanMultiPackager(username="bitprim", channel="testing",
                                  remotes="https://api.bintray.com/conan/bitprim/bitprim",
                                  archs=["x86_64"])
