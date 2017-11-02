@@ -36,13 +36,6 @@ else
     mv versions.txt{.t,}
 fi
 
-
-
-
-
-
-
-
 cat versions.txt
 git add . versions.txt
 git commit --message "Travis bitprim-core build: $BITPRIM_BUILD_NUMBER, $TRAVIS_BUILD_NUMBER"
