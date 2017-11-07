@@ -135,6 +135,10 @@ uint256_t chain_state::difficulty_adjustment_cash(uint256_t target) {
     return target + (target >> 2);
 }
 
+bool is_cash_hf_enabled(const uint32_t median_time_past) {
+    return (median_time_past > bitcoin_cash_daa_activation_time);
+}
+
 // Statics.
 // activation
 //-----------------------------------------------------------------------------
@@ -253,6 +257,10 @@ chain_state::activations chain_state::activation(const data& values,
         result.minimum_version = first_version;
     }
 
+    if (is_bitcoin_cash() && is_cash_hf_enabled(median_time_past(values, 0)))
+    {
+        result.forks |= (rule_fork::cash_low_s_rule & forks);
+    }
     return result;
 }
 
@@ -260,7 +268,7 @@ size_t chain_state::bits_count(size_t height, uint32_t forks)
 {
     const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
     const auto easy_work = testnet && !is_retarget_height(height);
-    return easy_work ? std::min(height, retargeting_interval) : 1;
+    return easy_work ? std::min(height, retargeting_interval) : std::min(height, chain_state_timestamp_count);
 }
 
 size_t chain_state::version_count(size_t height, uint32_t forks)
@@ -318,20 +326,24 @@ typename chain_state::timestamps::const_iterator
 timestamps_position(chain_state::timestamps const& times, bool tip) {
 
     if (tip) {
-		if (times.size() >= bitcoin_cash_retarget_blocks) {
-			return times.begin() + bitcoin_cash_retarget_blocks;
-		} else {
-			return times.begin();
-		}
+        if (times.size() >= bitcoin_cash_offset_tip)
+            return times.begin() + bitcoin_cash_offset_tip;
     } else {
-        return times.begin();
+        if (times.size() >= bitcoin_cash_offset_tip_minus_6)
+            return times.begin() + bitcoin_cash_offset_tip_minus_6;
     }
+
+    if (times.size() > 11) {
+        return times.begin() + (times.size() - 11);
+    }
+
+    return times.begin();
 }
 
 std::vector<typename chain_state::timestamps::value_type> 
 timestamps_subset(chain_state::timestamps const& times, bool tip) {
     auto at = timestamps_position(times, tip);
-	auto n = (std::min)((size_t)std::distance(at, times.end()), median_time_past_interval);
+    auto n = (std::min)((size_t)std::distance(at, times.end()), median_time_past_interval);
 
     std::vector<typename chain_state::timestamps::value_type> subset(n);
     std::copy_n(at, n, subset.begin());
@@ -351,6 +363,61 @@ uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*
     return subset.empty() ? 0 : subset[subset.size() / 2];
 }
 
+
+std::pair<size_t, uint32_t> select_medium_block ( std::vector<std::pair<size_t,uint32_t>> block_values) {
+    if (block_values[0].second > block_values[2].second ){
+        std::swap(block_values[0],block_values[2]);
+    }
+    if (block_values[0].second > block_values[1].second ){
+        std::swap(block_values[0],block_values[1]);
+    }
+    if (block_values[1].second > block_values[2].second ){
+        std::swap(block_values[1],block_values[2]);
+    }
+
+    return block_values[1];
+}
+
+uint32_t chain_state::cash_difficulty_adjustment(const data& values){
+    // New algorithm
+    // Precondition: timestamp have 146 elements
+    const auto bits_size = values.bits.ordered.size();
+    std::vector<std::pair<size_t,uint32_t>> first_block_data;
+    first_block_data.push_back(std::make_pair(bits_size - 3, values.timestamp.ordered[144]));
+    first_block_data.push_back(std::make_pair(bits_size - 2, values.timestamp.ordered[145]));
+    first_block_data.push_back(std::make_pair(bits_size - 1, values.timestamp.ordered[146]));
+    auto first_block = select_medium_block (first_block_data);
+
+    std::vector<std::pair<size_t,uint32_t>> last_block_data;
+    last_block_data.push_back(std::make_pair(bits_size - 147, values.timestamp.ordered[0]));
+    last_block_data.push_back(std::make_pair(bits_size - 146, values.timestamp.ordered[1]));
+    last_block_data.push_back(std::make_pair(bits_size - 145, values.timestamp.ordered[2]));
+    auto last_block = select_medium_block (last_block_data);
+
+    uint256_t work = 0;
+    for (int i = last_block.first +1; i <= first_block.first; i++)
+        work += block::proof(values.bits.ordered[i]);
+
+    work *= target_spacing_seconds; //10 * 60
+
+    int64_t nActualTimespan = first_block.second - last_block.second;
+    if (nActualTimespan > 288 * target_spacing_seconds) {
+        nActualTimespan = 288 * target_spacing_seconds;
+    } else if (nActualTimespan < 72 * target_spacing_seconds) {
+        nActualTimespan = 72 * target_spacing_seconds;
+    }
+
+    work /= nActualTimespan;
+    auto nextTarget = (-1 * work) / work; //Compute target result
+    uint256_t pow_limit(compact{proof_of_work_limit});
+
+    if (nextTarget.compare(pow_limit) == 1){
+        return proof_of_work_limit;
+    }
+
+    return compact(nextTarget).normal();
+}
+
 // work_required
 //-----------------------------------------------------------------------------
 
@@ -359,23 +426,31 @@ uint32_t chain_state::work_required(const data& values, uint32_t forks) {
     if (values.height == 0) {
         return{};
     }
+        
+    bool daa_active = false;
+    auto last_time_span = median_time_past(values, 0, true);
+    if ((last_time_span >= bitcoin_cash_daa_activation_time) && (is_bitcoin_cash())){
+        daa_active = true;
+    }
 
-    if (is_retarget_height(values.height)) {
+    if (is_retarget_height(values.height) && !(daa_active)) {
         return work_required_retarget(values);
     }
 
     if (script::is_enabled(forks, rule_fork::easy_blocks)) {
-        return easy_work_required(values);
+        return easy_work_required(values, daa_active);
     }
 
     if (is_bitcoin_cash() && values.height > bitcoin_cash_activation_height) {
-        auto last_time_span = median_time_past(values, 0, true);
-        auto six_time_span = median_time_past(values, 0, false);
-
-        // precondition: last_time_span >= six_time_span
-        if ((last_time_span - six_time_span) > (12 * 3600)) {
-            return work_required_adjust_cash(values);
-        }
+        if (!daa_active) {
+            auto six_time_span = median_time_past(values, 0, false);
+            // precondition: last_time_span >= six_time_span
+            if ((last_time_span - six_time_span) > (12 * 3600)) {
+                return work_required_adjust_cash(values);
+            }
+        } else {
+            return cash_difficulty_adjustment(values);
+	}
     }
 
     return bits_high(values);
@@ -453,7 +528,7 @@ uint32_t chain_state::retarget_timespan(const data& values)
     return range_constrain(timespan, min_timespan, max_timespan);
 }
 
-uint32_t chain_state::easy_work_required(const data& values)
+uint32_t chain_state::easy_work_required(const data& values, bool daa_active)
 {
     BITCOIN_ASSERT(values.height != 0);
 
@@ -464,10 +539,13 @@ uint32_t chain_state::easy_work_required(const data& values)
     auto height = values.height;
     auto& bits = values.bits.ordered;
 
+    if(daa_active) 
+        return cash_difficulty_adjustment(values);
+    else
     // Reverse iterate the ordered-by-height list of header bits.
-    for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit)
-        if (is_retarget_or_non_limit(--height, *bit))
-            return *bit;
+        for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit)
+            if (is_retarget_or_non_limit(--height, *bit))
+                return *bit;
 
     // Since the set of heights is either a full retarget range or ends at
     // zero this is not reachable unless the data set is invalid.

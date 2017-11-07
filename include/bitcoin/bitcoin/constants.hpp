@@ -33,7 +33,8 @@ namespace libbitcoin {
 // This guards assumptions within the codebase.
 static_assert(sizeof(size_t) >= sizeof(uint32_t), "unsupported size_t");
 
-#define BC_USER_AGENT "/libbitcoin:" LIBBITCOIN_VERSION "/"
+// #define BC_USER_AGENT "/libbitcoin:" LIBBITCOIN_VERSION "/"
+#define BC_USER_AGENT "/bitprim:" LIBBITCOIN_VERSION "/"
 
 // Generic constants.
 //-----------------------------------------------------------------------------
@@ -81,7 +82,14 @@ BC_CONSTEXPR size_t max_coinbase_size = 100;
 
 BC_CONSTEXPR size_t median_time_past_interval = 11;
 BC_CONSTEXPR size_t bitcoin_cash_retarget_blocks = 6;
-BC_CONSTEXPR size_t chain_state_timestamp_count = median_time_past_interval + bitcoin_cash_retarget_blocks;
+//BC_CONSTEXPR size_t chain_state_timestamp_count = median_time_past_interval + bitcoin_cash_retarget_blocks;
+
+// Blocks used to calculate the next difficulty
+BC_CONSTEXPR size_t new_bitcoin_cash_retarget_algorithm = 147;
+BC_CONSTEXPR size_t chain_state_timestamp_count = new_bitcoin_cash_retarget_algorithm;
+
+BC_CONSTEXPR size_t bitcoin_cash_offset_tip = new_bitcoin_cash_retarget_algorithm - 11;
+BC_CONSTEXPR size_t bitcoin_cash_offset_tip_minus_6 = bitcoin_cash_offset_tip - 6;
 
 BC_CONSTEXPR size_t max_block_size = 1000000;
 BC_CONSTEXPR size_t max_block_size_cash = 8000000;
@@ -173,6 +181,8 @@ BC_CONSTEXPR uint32_t bip9_version_bit0 = 0x00000001;
 BC_CONSTEXPR uint32_t bip9_version_base = 0x20000000;
 
 BC_CONSTEXPR size_t bitcoin_cash_activation_height = 478558;
+//November 13 2017
+BC_CONSTEXPR uint32_t bitcoin_cash_daa_activation_time = 1510600000;
 
 #ifdef LITECOIN
 

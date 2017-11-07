@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-core
 #==============================================================================
 project(bitprim-core
-  VERSION 3.0.0
+  VERSION 0.3.0
   LANGUAGES CXX C)
 
 
@@ -39,8 +39,8 @@ project(bitprim-core
 #  # using regular Clang or AppleClang
 #endif()
 
-message(CMAKE_CXX_COMPILER_ID)
-message(${CMAKE_CXX_COMPILER_ID})
+# message(CMAKE_CXX_COMPILER_ID)
+# message(${CMAKE_CXX_COMPILER_ID})
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   if (NOT NOT_USE_CPP11_ABI)
@@ -120,6 +120,12 @@ if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
   message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
 endif()
+
+
+
+
+set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
+# message(${BITPRIM_BUILD_NUMBER})
 
 
 
@@ -325,6 +331,7 @@ set(bitprim_core_sources
 
         src/error.cpp
         src/bitcoin_cash_support.cpp
+        src/version.cpp
 
         src/formats/base_10.cpp
         src/formats/base_16.cpp
@@ -502,8 +509,9 @@ endif()
 target_include_directories(bitprim-core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-
+  
 target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC)
+target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 

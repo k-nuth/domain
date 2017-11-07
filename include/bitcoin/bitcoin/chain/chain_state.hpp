@@ -205,19 +205,18 @@ private:
     // easy blocks
 
     //TODO(bitprim):
-// <<<<<<< HEAD
+    
+    static uint32_t cash_difficulty_adjustment(const data& values);
     static uint32_t work_required_easy(const data& values);
     static uint32_t elapsed_time_limit(const chain_state::data& values);
     static bool is_retarget_or_non_limit(size_t height, uint32_t bits); 
     
     static uint32_t work_required_adjust_cash(const data& values);
 
-// =======
-    static uint32_t easy_work_required(const data& values);
+    static uint32_t easy_work_required(const data& values, bool daa_active);
     static uint32_t easy_time_limit(const chain_state::data& values);
     static size_t retarget_distance(size_t height);
-// >>>>>>> v3.3.0
-
+    
     // This is retained as an optimization for other constructions.
     // A similar height clone can be partially computed, reducing query cost.
     const data data_;
