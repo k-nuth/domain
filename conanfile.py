@@ -25,7 +25,7 @@ def option_on_off(option):
 
 class BitprimCoreConan(ConanFile):
     name = "bitprim-core"
-    version = "0.2"
+    version = "0.3"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-core"
     description = "Bitcoin Cross-Platform C++ Development Toolkit"
@@ -67,7 +67,7 @@ class BitprimCoreConan(ConanFile):
     build_policy = "missing"
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-               ("secp256k1/0.2@bitprim/stable"))
+               ("secp256k1/0.3@bitprim/stable"))
 
     def build(self):
         # self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
