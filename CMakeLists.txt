@@ -124,8 +124,8 @@ endif()
 
 
 
-set(BITPRIM_BUILD_NUMBER "xxx" CACHE STRING "Specify the Bitprim Build Number.")
-message(${BITPRIM_BUILD_NUMBER})
+set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
+# message(${BITPRIM_BUILD_NUMBER})
 
 
 
@@ -331,6 +331,7 @@ set(bitprim_core_sources
 
         src/error.cpp
         src/bitcoin_cash_support.cpp
+        src/version.cpp
 
         src/formats/base_10.cpp
         src/formats/base_16.cpp
