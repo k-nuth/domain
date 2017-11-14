@@ -165,6 +165,8 @@ public:
 
     static uint256_t difficulty_adjustment_cash(uint256_t);
 
+    uint32_t get_next_work_required();
+
 protected:
     struct activations
     {

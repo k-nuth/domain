@@ -847,5 +847,13 @@ bool chain_state::is_under_checkpoint() const
     return checkpoint::covered(data_.height, checkpoints_);
 }
 
+// Mining.
+//-----------------------------------------------------------------------------
+
+uint32_t chain_state::get_next_work_required()
+{
+    return work_required(to_pool(*this), this->enabled_forks());
+}
+
 } // namespace chain
 } // namespace libbitcoin
