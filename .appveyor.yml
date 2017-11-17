@@ -59,4 +59,5 @@ test_script:
   - for /f %%i in ('git describe') do set BITPRIM_BUILD_NUMBER=%%i
   - echo %BITPRIM_BUILD_NUMBER%
 
+  - conan remote add taocpp https://api.bintray.com/conan/tao-cpp/tao-cpp 
   - python build.py
