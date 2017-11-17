@@ -22,8 +22,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <tao/algorithm/selection.hpp>
-
 #include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
@@ -367,12 +365,48 @@ uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*
     return subset.empty() ? 0 : subset[subset.size() / 2];
 }
 
+// ------------------------------------------------------------------------------------------------------------
+// Note(fernando): This is a Non-Stable Non-Standard Median of Three Algorithm
+// See Footnote 2 of https://github.com/Bitcoin-UAHF/spec/blob/master/nov-13-hardfork-spec.md
+// Modified version of select_1_3 taken from https://github.com/tao-cpp/algorithm
+// ------------------------------------------------------------------------------------------------------------
+#define FN(body) -> decltype(body) {return body;}
+
+template <typename T, typename U, typename R>
+// requires(SameType<T, U> && Domain<R, T>)
+inline constexpr
+auto select_0_2(T&& a, U&& b, R r) FN(
+    r(b, a) ? std::forward<U>(b) : std::forward<T>(a)
+)
+
+template <typename T, typename U, typename V, typename R>
+// requires(SameType<T, U> && SameType<U, V> && Domain<R, T>)
+inline constexpr
+auto select_1_3_ac(T&& a, U&& b, V&& c, R r) FN(
+    // precondition: a <= c
+    r(b, a) ?
+          std::forward<T>(a)                                      // b, a, c 
+        : select_0_2(std::forward<U>(b), std::forward<V>(c), r)   // a is not the median
+)
+
+template <typename T, typename U, typename V, typename R>
+// requires(SameType<T, U> && SameType<U, V> && Domain<R, T>)
+inline constexpr
+auto select_1_3(T&& a, U&& b, V&& c, R r) FN(
+    r(c, a) ?
+          select_1_3_ac(std::forward<V>(c), std::forward<U>(b), std::forward<T>(a), r) 
+        : select_1_3_ac(std::forward<T>(a), std::forward<U>(b), std::forward<V>(c), r)
+)
+
+#undef FN
+// ------------------------------------------------------------------------------------------------------------
+
+
 // New algorithm
 uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
     // precondition: values.timestamp.size() >= 147
 
     using std::make_pair;
-    using tao::algorithm::select_1_3;
     using pair_t = std::pair<size_t, uint32_t>;
     
     auto const bits_size = values.bits.ordered.size();

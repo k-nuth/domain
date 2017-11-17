@@ -10,5 +10,4 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     pyenv activate conan
 fi
 
-conan remote add taocpp https://api.bintray.com/conan/tao-cpp/tao-cpp 
 python build.py
