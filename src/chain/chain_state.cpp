@@ -21,6 +21,9 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+
+#include <tao/algorithm/selection.hpp>
+
 #include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
@@ -34,6 +37,7 @@
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/unicode/unicode.hpp>
 #include <bitcoin/bitcoin/utility/timer.hpp>
+
 
 
 namespace libbitcoin {
@@ -363,40 +367,32 @@ uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*
     return subset.empty() ? 0 : subset[subset.size() / 2];
 }
 
+// New algorithm
+uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
+    // precondition: values.timestamp.size() >= 147
 
-std::pair<size_t, uint32_t> select_medium_block ( std::vector<std::pair<size_t,uint32_t>> block_values) {
-    if (block_values[0].second > block_values[2].second ){
-        std::swap(block_values[0],block_values[2]);
-    }
-    if (block_values[0].second > block_values[1].second ){
-        std::swap(block_values[0],block_values[1]);
-    }
-    if (block_values[1].second > block_values[2].second ){
-        std::swap(block_values[1],block_values[2]);
-    }
+    using std::make_pair;
+    using tao::algorithm::select_1_3;
+    using pair_t = std::pair<size_t, uint32_t>;
+    
+    auto const bits_size = values.bits.ordered.size();
 
-    return block_values[1];
-}
+    auto pair_cmp = [](pair_t const& a, pair_t const& b) { return a.second < b.second;};
 
-uint32_t chain_state::cash_difficulty_adjustment(const data& values){
-    // New algorithm
-    // Precondition: timestamp have 146 elements
-    const auto bits_size = values.bits.ordered.size();
-    std::vector<std::pair<size_t,uint32_t>> first_block_data;
-    first_block_data.push_back(std::make_pair(bits_size - 3, values.timestamp.ordered[144]));
-    first_block_data.push_back(std::make_pair(bits_size - 2, values.timestamp.ordered[145]));
-    first_block_data.push_back(std::make_pair(bits_size - 1, values.timestamp.ordered[146]));
-    auto first_block = select_medium_block (first_block_data);
-
-    std::vector<std::pair<size_t,uint32_t>> last_block_data;
-    last_block_data.push_back(std::make_pair(bits_size - 147, values.timestamp.ordered[0]));
-    last_block_data.push_back(std::make_pair(bits_size - 146, values.timestamp.ordered[1]));
-    last_block_data.push_back(std::make_pair(bits_size - 145, values.timestamp.ordered[2]));
-    auto last_block = select_medium_block (last_block_data);
+    auto first_block = select_1_3(make_pair(bits_size - 3, values.timestamp.ordered[144]), 
+                                  make_pair(bits_size - 2, values.timestamp.ordered[145]),
+                                  make_pair(bits_size - 1, values.timestamp.ordered[146]),
+                                  pair_cmp);
+    
+    auto last_block = select_1_3(make_pair(bits_size - 147, values.timestamp.ordered[0]), 
+                                 make_pair(bits_size - 146, values.timestamp.ordered[1]),
+                                 make_pair(bits_size - 145, values.timestamp.ordered[2]),
+                                 pair_cmp);
 
     uint256_t work = 0;
-    for (int i = last_block.first +1; i <= first_block.first; i++)
+    for (size_t i = last_block.first + 1; i <= first_block.first; ++i) {
         work += block::proof(values.bits.ordered[i]);
+    }
 
     work *= target_spacing_seconds; //10 * 60
 
@@ -411,7 +407,7 @@ uint32_t chain_state::cash_difficulty_adjustment(const data& values){
     auto nextTarget = (-1 * work) / work; //Compute target result
     uint256_t pow_limit(compact{proof_of_work_limit});
 
-    if (nextTarget.compare(pow_limit) == 1){
+    if (nextTarget.compare(pow_limit) == 1) {
         return proof_of_work_limit;
     }
 

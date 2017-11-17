@@ -67,6 +67,7 @@ class BitprimCoreConan(ConanFile):
     build_policy = "missing"
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
+                ("algorithm/0.1@fpelliccioni/stable"),
                ("secp256k1/0.3@bitprim/testing"))
 
     def build(self):

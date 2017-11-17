@@ -206,7 +206,7 @@ private:
 
     //TODO(bitprim):
     
-    static uint32_t cash_difficulty_adjustment(const data& values);
+    static uint32_t cash_difficulty_adjustment(data const& values);
     static uint32_t work_required_easy(const data& values);
     static uint32_t elapsed_time_limit(const chain_state::data& values);
     static bool is_retarget_or_non_limit(size_t height, uint32_t bits); 
