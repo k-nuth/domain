@@ -176,7 +176,7 @@ script:
 
 
   - |
-    if [[ "${PUSH_TO_REPOS}" != "true" ] && [ "${CHECK_FORMATTING}" != "true" ]]; then
+    if [[ "${PUSH_TO_REPOS}" != "true" && "${CHECK_FORMATTING}" != "true" ]]; then
       cd ${TRAVIS_BUILD_DIR}
       chmod +x .travis/run.sh
       ./.travis/run.sh
