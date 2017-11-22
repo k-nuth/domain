@@ -44,7 +44,6 @@ sudo apt-get  --yes install clang-format # || true
 
 wget https://bootstrap.pypa.io/get-pip.py --no-check-certificate
 sudo python3.6 get-pip.py
-export BITPRIM_PIP=pip3.6
 
 sudo pip3.6 install --upgrade pip
 sudo pip3.6 install --upgrade conan
@@ -52,7 +51,7 @@ sudo pip3.6 install --upgrade conan
 
 
 ###############################################################
-# Checks
+# pcregrep checks
 ###############################################################
 
 # For the moment, these checks are disabled
@@ -65,18 +64,24 @@ sudo pip3.6 install --upgrade conan
 # pcregrep --color='auto' -n "[\x80-\xFF]" ${hpps} ${cpps}
 # if [[ $? -ne 1 ]]; then exit 1; fi
 
+###############################################################
+# vera++ checks
+###############################################################
+
+# For the moment, these checks are disabled
+
 # F001: Source files should not use the '\r' (CR) character
 # L001: No trailing whitespace at the end of lines
 # L002: Don't use tab characters
 # find include -name \*\.hpp | vera++ --rule F001 --rule L001 --rule L002 --error
 # find include -name \*\.?pp | vera++ --rule F001 --rule L001 --rule L002 --error
 
+###############################################################
+# clang-tidy checks
+###############################################################
 
-
-sudo find / -name "run-clang-tidy.py"
+# sudo find / -name "run-clang-tidy.py"
 clang-tidy --version
-# /usr/local/Cellar/llvm/5.0.0/share/clang/run-clang-tidy.py -header-filter='.*' -checks='-*,modernize-use-override'
-
 
 cd ${TRAVIS_BUILD_DIR}
 
@@ -90,3 +95,6 @@ cd build
 conan install ..
 cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
+
+# /usr/local/Cellar/llvm/5.0.0/share/clang/run-clang-tidy.py -header-filter='.*' -checks='-*,modernize-use-override'
+/usr/lib/llvm-4.0/share/clang/run-clang-tidy.py -header-filter='.*' -checks='-*,modernize-use-override'
