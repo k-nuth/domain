@@ -5,6 +5,7 @@ Language:        Cpp
 # BasedOnStyle:  LLVM
 AccessModifierOffset: -2
 AlignAfterOpenBracket: DontAlign #Align
+AccessModifierOffset: -3
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignEscapedNewlinesLeft: false
@@ -27,24 +28,28 @@ AlwaysBreakTemplateDeclarations: true #false
 
 BinPackArguments: true
 BinPackParameters: true
+
+
+BreakBeforeBraces: Custom #Allman #Attach
+
 BraceWrapping:   
-  AfterClass:      false
-  AfterControlStatement: false
-  AfterEnum:       false
-  AfterFunction:   false
-  AfterNamespace:  false
-  AfterObjCDeclaration: false
-  AfterStruct:     false
-  AfterUnion:      false
-  BeforeCatch:     false
-  BeforeElse:      false
-  IndentBraces:    false
+  AfterClass:      true
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  false #true
+  AfterObjCDeclaration: true
+  AfterStruct:     true
+  AfterUnion:      true
+  BeforeCatch:     true
+  BeforeElse:      true
+  IndentBraces:    false #true
 
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Attach
+
 BreakBeforeTernaryOperators: true
 
-BreakConstructorInitializersBeforeComma: true #false
+BreakConstructorInitializersBeforeComma: false #true #false
 #BreakConstructorInitializers: BeforeComma
 
 BreakStringLiterals: true
@@ -56,7 +61,8 @@ CommentPragmas:  '^ IWYU pragma:'
 
 
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ConstructorInitializerIndentWidth: 4
+ConstructorInitializerIndentWidth: 2
+
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
@@ -75,7 +81,9 @@ IncludeCategories:
   - Regex:           '.*'
     Priority:        1
 IncludeIsMainRegex: '$'
-IndentCaseLabels: false
+
+IndentCaseLabels: true #false
+
 IndentWidth:     4
 IndentWrappedFunctionNames: false
 KeepEmptyLinesAtTheStartOfBlocks: true

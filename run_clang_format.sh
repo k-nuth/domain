@@ -23,15 +23,19 @@ cpps=$(find src -name \*\.cpp)
 
 for f in ${hpps}
 do
-  echo $f
-  diff -u <(cat ${f}) <(clang-format ${f})
+#   echo $f
+  diff -u <(cat ${f}) <(clang-format -style=file ${f})
 done
 
 for f in ${cpps}
 do
-  echo $f
-  diff -u <(cat ${f}) <(clang-format ${f})
+#   echo $f
+  diff -u <(cat ${f}) <(clang-format -style=file ${f})
 done
+
+
+
+# diff -u <(cat src/math/secp256k1_initializer.cpp) <(clang-format -style=file src/math/secp256k1_initializer.cpp)
 
 
 # diff -u <(cat ${cpps}) <(clang-format ${cpps})

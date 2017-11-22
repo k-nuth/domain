@@ -92,17 +92,16 @@ cpps=$(find src -name \*\.cpp)
 # clang-format checks
 ###############################################################
 
-
 for f in ${hpps}
 do
-  echo $f
-  diff -u <(cat ${f}) <(clang-format ${f})
+#   echo $f
+  diff -u <(cat ${f}) <(clang-format -style=file ${f})
 done
 
 for f in ${cpps}
 do
-  echo $f
-  diff -u <(cat ${f}) <(clang-format ${f})
+#   echo $f
+  diff -u <(cat ${f}) <(clang-format -style=file ${f})
 done
 
 
