@@ -24,7 +24,7 @@ branches:
 
 env:
    global:
-     - CONAN_REFERENCE: "bitprim-core/0.3"
+     - CONAN_REFERENCE: "bitprim-core/0.4"
      - CONAN_USERNAME: "bitprim"
      - CONAN_LOGIN_USERNAME: "bitprim-bintray"
      - CONAN_CHANNEL: "testing"
@@ -44,6 +44,10 @@ osx: &osx
 
 matrix:
    include:
+      - os: osx
+        osx_image: xcode9.1
+        env: CHECK_FORMATTING=true
+   
       - <<: *linux
         env: PUSH_TO_REPOS=true
 
@@ -77,6 +81,7 @@ matrix:
         osx_image: xcode8.3
         env: CONAN_APPLE_CLANG_VERSIONS=8.1
 
+
       # # - <<: *linux
       # - <<: *osx
       #   env: PUSH_TO_REPOS=true
@@ -90,8 +95,13 @@ install:
       ./.travis/install.sh
     fi    
 
+  - |
+    if [[ "${CHECK_FORMATTING}" == "true" ]]; then
+      brew upgrade pcre || brew install pcre || exit 1
+      brew upgrade vera++ || brew install vera++ || exit 1
+    fi
+
 script:
-  # - pwd
   - git fetch --unshallow
   # - git rev-list --count --first-parent HEAD
   # - git rev-list --count HEAD
@@ -100,13 +110,29 @@ script:
   - export BITPRIM_BUILD_NUMBER="$(git describe)"
   - echo "${BITPRIM_BUILD_NUMBER}"
 
+
+
+  - |
+    if [[ "${CHECK_FORMATTING}" == "true" ]]; then
+      # Find non-ASCII characters in headers
+      hpps=$(find include doc -name \*\.hpp)
+      cpps=$(find test example -name \*\.cpp)
+      pcregrep --color='auto' -n "[\x80-\xFF]" ${hpps} ${cpps}
+      if [[ $? -ne 1 ]]; then exit 1; fi
+      # F001: Source files should not use the '\r' (CR) character
+      # L001: No trailing whitespace at the end of lines
+      # L002: Don't use tab characters
+      # find include -name \*\.hpp | vera++ --rule F001 --rule L001 --rule L002 --error
+      find include -name \*\.?pp | vera++ --rule F001 --rule L001 --rule L002 --error
+    fi
+
+
   - |
     if [[ "${PUSH_TO_REPOS}" == "true" ]]; then
       chmod +x .travis/push_other_repo.sh
       ./.travis/push_other_repo.sh
     else
       cd ${TRAVIS_BUILD_DIR}
-      # pwd
       chmod +x .travis/run.sh
       ./.travis/run.sh
     fi    
