@@ -49,6 +49,8 @@ sudo pip3.6 install --upgrade pip
 sudo pip3.6 install --upgrade conan
 # sudo pip3.6 install --upgrade conan_package_tools
 
+conan user
+conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
 
 ###############################################################
 # pcregrep checks
@@ -76,18 +78,24 @@ sudo pip3.6 install --upgrade conan
 # find include -name \*\.hpp | vera++ --rule F001 --rule L001 --rule L002 --error
 # find include -name \*\.?pp | vera++ --rule F001 --rule L001 --rule L002 --error
 
+
+# sudo find / -name "run-clang-tidy.py"
+# clang-tidy --version
+
+
+###############################################################
+# clang-format checks
+###############################################################
+
+cd /home/conan/project
+
+diff -u <(cat src/*) <(clang-format src/*)
+diff -u <(cat include/*) <(clang-format include/*)
+
+
 ###############################################################
 # clang-tidy checks
 ###############################################################
-
-# sudo find / -name "run-clang-tidy.py"
-clang-tidy --version
-
-cd ${TRAVIS_BUILD_DIR}
-
-conan user
-conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
-cd /home/conan/project
 
 mkdir build
 cd build
