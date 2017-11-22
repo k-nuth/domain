@@ -45,8 +45,11 @@ osx: &osx
 
 matrix:
    include:
-      - os: osx
-        osx_image: xcode9.1
+      # - os: osx
+      #   osx_image: xcode9.1
+      #   env: CHECK_FORMATTING=true
+
+      - <<: *linux
         env: CHECK_FORMATTING=true
    
       - <<: *linux
@@ -98,8 +101,12 @@ install:
 
   - |
     if [[ "${CHECK_FORMATTING}" == "true" ]]; then
-      brew upgrade pcre || brew install pcre || exit 1
-      brew upgrade vera++ || brew install vera++ || exit 1
+      # brew upgrade pcre || brew install pcre || exit 1
+      # brew upgrade vera++ || brew install vera++ || exit 1
+      sudo apt-get update
+      sudo apt-get -y install vera++
+      sudo apt-get -y install pcregrep
+      sudo apt-get -y install clang-tidy
     fi
 
 script:
@@ -116,8 +123,11 @@ script:
   - |
     if [[ "${CHECK_FORMATTING}" == "true" ]]; then
       # Find non-ASCII characters in headers
-      hpps=$(find include doc -name \*\.hpp)
-      cpps=$(find test example -name \*\.cpp)
+      # hpps=$(find include doc -name \*\.hpp)
+      # cpps=$(find src test example -name \*\.cpp)
+      hpps=$(find include -name \*\.hpp)
+      cpps=$(find src -name \*\.cpp)
+
       pcregrep --color='auto' -n "[\x80-\xFF]" ${hpps} ${cpps}
       if [[ $? -ne 1 ]]; then exit 1; fi
       # F001: Source files should not use the '\r' (CR) character
