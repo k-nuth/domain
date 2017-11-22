@@ -52,6 +52,15 @@ sudo pip3.6 install --upgrade conan
 conan user
 conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
 
+
+
+cd /home/conan/project
+# hpps=$(find include doc -name \*\.hpp)
+# cpps=$(find src test example -name \*\.cpp)
+hpps=$(find include -name \*\.hpp)
+cpps=$(find src -name \*\.cpp)
+
+
 ###############################################################
 # pcregrep checks
 ###############################################################
@@ -59,10 +68,6 @@ conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
 # For the moment, these checks are disabled
 
 # # Find non-ASCII characters in headers
-# # hpps=$(find include doc -name \*\.hpp)
-# # cpps=$(find src test example -name \*\.cpp)
-# hpps=$(find include -name \*\.hpp)
-# cpps=$(find src -name \*\.cpp)
 # pcregrep --color='auto' -n "[\x80-\xFF]" ${hpps} ${cpps}
 # if [[ $? -ne 1 ]]; then exit 1; fi
 
@@ -87,10 +92,23 @@ conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
 # clang-format checks
 ###############################################################
 
-cd /home/conan/project
 
-diff -u <(cat src/*) <(clang-format src/*)
-diff -u <(cat include/*) <(clang-format include/*)
+for f in ${hpps}
+do
+  echo $f
+  diff -u <(cat ${f}) <(clang-format ${f})
+done
+
+for f in ${cpps}
+do
+  echo $f
+  diff -u <(cat ${f}) <(clang-format ${f})
+done
+
+
+# diff -u <(cat ${cpps}) <(clang-format ${cpps})
+# diff -u <(cat src/*) <(clang-format src/*)
+# diff -u <(cat include/*) <(clang-format include/*)
 
 
 ###############################################################
