@@ -107,6 +107,7 @@ install:
       sudo apt-get -y install vera++
       sudo apt-get -y install pcregrep
       sudo apt-get -y install clang-tidy
+      sudo apt-get -y install clang-format
     fi
 
 script:
@@ -142,11 +143,20 @@ script:
     if [[ "${PUSH_TO_REPOS}" == "true" ]]; then
       chmod +x .travis/push_other_repo.sh
       ./.travis/push_other_repo.sh
-    else
+    # else
+    #   cd ${TRAVIS_BUILD_DIR}
+    #   chmod +x .travis/run.sh
+    #   ./.travis/run.sh
+    fi    
+
+
+  - |
+    if [[ "${PUSH_TO_REPOS}" != "true" ] && [ "${CHECK_FORMATTING}" != "true" ]]; then
       cd ${TRAVIS_BUILD_DIR}
       chmod +x .travis/run.sh
       ./.travis/run.sh
     fi    
+
 
 notifications:
   email: false
