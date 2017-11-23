@@ -3,9 +3,10 @@
 ---
 Language:        Cpp
 # BasedOnStyle:  LLVM
-AccessModifierOffset: -2
+
+AccessModifierOffset: -4
+
 AlignAfterOpenBracket: DontAlign #Align
-AccessModifierOffset: -3
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignEscapedNewlinesLeft: false
@@ -30,20 +31,19 @@ BinPackArguments: true
 BinPackParameters: true
 
 
-BreakBeforeBraces: Custom #Allman #Attach
-
-BraceWrapping:   
-  AfterClass:      true
-  AfterControlStatement: true
-  AfterEnum:       true
-  AfterFunction:   true
-  AfterNamespace:  false #true
-  AfterObjCDeclaration: true
-  AfterStruct:     true
-  AfterUnion:      true
-  BeforeCatch:     true
-  BeforeElse:      true
-  IndentBraces:    false #true
+# BreakBeforeBraces: Custom #Allman #Attach
+# BraceWrapping:   
+#   AfterClass:      true
+#   AfterControlStatement: true
+#   AfterEnum:       true
+#   AfterFunction:   true
+#   AfterNamespace:  false #true
+#   AfterObjCDeclaration: true
+#   AfterStruct:     true
+#   AfterUnion:      true
+#   BeforeCatch:     true
+#   BeforeElse:      true
+#   IndentBraces:    false #true
 
 BreakBeforeBinaryOperators: None
 
@@ -54,7 +54,7 @@ BreakConstructorInitializersBeforeComma: false #true #false
 
 BreakStringLiterals: true
 
-ColumnLimit:     0 #80
+ColumnLimit:     120 #80
 CommentPragmas:  '^ IWYU pragma:'
 
 # CompactNamespaces: true  #fer
