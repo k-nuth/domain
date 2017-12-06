@@ -266,7 +266,7 @@ void output::invalidate_cache() const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-payment_address output::address() const
+payment_address output::address(bool testnet /* = false */) const
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -278,8 +278,13 @@ payment_address output::address() const
         mutex_.unlock_upgrade_and_lock();
 
         // TODO: limit this to output patterns.
-        address_ = std::make_shared<payment_address>(
-            payment_address::extract(script_));
+        if (testnet){
+            address_ = std::make_shared<payment_address>(
+                    payment_address::extract(script_, payment_address::testnet_p2kh, payment_address::testnet_p2sh));
+        } else {
+            address_ = std::make_shared<payment_address>(
+                    payment_address::extract(script_));
+        }
 
         mutex_.unlock_and_lock_upgrade();
         //---------------------------------------------------------------------
