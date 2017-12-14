@@ -26,6 +26,7 @@
 #include <numeric>
 #include <sstream>
 #include <utility>
+#include <boost/range/adaptor/reversed.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/error.hpp>
@@ -52,11 +53,7 @@ namespace libbitcoin {
 namespace chain {
 
 using namespace bc::machine;
-
-static const auto sighash_all = sighash_algorithm::all;
-static const auto sighash_none = sighash_algorithm::none;
-static const auto sighash_single = sighash_algorithm::single;
-static const auto anyone_flag = sighash_algorithm::anyone_can_pay;
+using namespace boost::adaptors;
 
 // bit.ly/2cPazSa
 static const auto one_hash = hash_literal(
@@ -471,8 +468,15 @@ const operation::list& script::operations() const
 
 inline sighash_algorithm to_sighash_enum(uint8_t sighash_type)
 {
-    return static_cast<sighash_algorithm>(
-        sighash_type & ~sighash_algorithm::anyone_can_pay);
+    switch (sighash_type & sighash_algorithm::mask)
+    {
+        case sighash_algorithm::single:
+            return sighash_algorithm::single;
+        case sighash_algorithm::none:
+            return sighash_algorithm::none;
+        default:
+            return sighash_algorithm::all;
+    }
 }
 
 inline uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value)
@@ -480,22 +484,18 @@ inline uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value)
     return to_sighash_enum(sighash_type) == value;
 }
 
-inline bool is_sighash_flag(uint8_t sighash_type, sighash_algorithm value)
-{
-    return (sighash_type & value) != 0;
-}
-
 static hash_digest sign_none(const transaction& tx, uint32_t input_index,
-    const script& script_code, uint8_t sighash_type, bool anyone)
+    const script& script_code, uint8_t sighash_type)
 {
     input::list ins;
     const auto& inputs = tx.inputs();
-    ins.reserve(anyone ? 1 : inputs.size());
+    const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+    ins.reserve(any ? 1 : inputs.size());
 
     BITCOIN_ASSERT(input_index < inputs.size());
     const auto& self = inputs[input_index];
 
-    if (anyone)
+    if (any)
     {
         // Retain only self.
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
@@ -517,16 +517,17 @@ static hash_digest sign_none(const transaction& tx, uint32_t input_index,
 }
 
 static hash_digest sign_single(const transaction& tx, uint32_t input_index,
-    const script& script_code, uint8_t sighash_type, bool anyone)
+    const script& script_code, uint8_t sighash_type)
 {
     input::list ins;
     const auto& inputs = tx.inputs();
-    ins.reserve(anyone ? 1 : inputs.size());
+    const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+    ins.reserve(any ? 1 : inputs.size());
 
     BITCOIN_ASSERT(input_index < inputs.size());
     const auto& self = inputs[input_index];
 
-    if (anyone)
+    if (any)
     {
         // Retain only self.
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
@@ -555,16 +556,17 @@ static hash_digest sign_single(const transaction& tx, uint32_t input_index,
 }
 
 static hash_digest sign_all(const transaction& tx, uint32_t input_index,
-    const script& script_code, uint8_t sighash_type, bool anyone)
+    const script& script_code, uint8_t sighash_type)
 {
     input::list ins;
     const auto& inputs = tx.inputs();
-    ins.reserve(anyone ? 1 : inputs.size());
+    const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+    ins.reserve(any ? 1 : inputs.size());
 
     BITCOIN_ASSERT(input_index < inputs.size());
     const auto& self = inputs[input_index];
 
-    if (anyone)
+    if (any)
     {
         // Retain only self.
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
@@ -599,14 +601,15 @@ static script strip_code_seperators(const script& script_code)
 }
 
 // static
+// Use bool for version && bip143.
 hash_digest script::generate_signature_hash(const transaction& tx,
     uint32_t input_index, const script& script_code, uint8_t sighash_type)
 {
-    const auto any = is_sighash_flag(sighash_type, anyone_flag);
-    const auto single = is_sighash_enum(sighash_type, sighash_single);
+    const auto sighash = to_sighash_enum(sighash_type);
 
     if (input_index >= tx.inputs().size() ||
-        (input_index >= tx.outputs().size() && single))
+        (input_index >= tx.outputs().size() &&
+            sighash == sighash_algorithm::single))
     {
         //*********************************************************************
         // CONSENSUS: wacky satoshi behavior we must perpetuate.
@@ -620,15 +623,15 @@ hash_digest script::generate_signature_hash(const transaction& tx,
     const auto stripped = strip_code_seperators(script_code);
 
     // The sighash serializations are isolated for clarity and optimization.
-    switch (to_sighash_enum(sighash_type))
+    switch (sighash)
     {
-        case sighash_none:
-            return sign_none(tx, input_index, stripped, sighash_type, any);
-        case sighash_single:
-            return sign_single(tx, input_index, stripped, sighash_type, any);
+        case sighash_algorithm::none:
+            return sign_none(tx, input_index, stripped, sighash_type);
+        case sighash_algorithm::single:
+            return sign_single(tx, input_index, stripped, sighash_type);
         default:
-        case sighash_all:
-            return sign_all(tx, input_index, stripped, sighash_type, any);
+        case sighash_algorithm::all:
+            return sign_all(tx, input_index, stripped, sighash_type);
     }
 }
 
@@ -1033,6 +1036,8 @@ size_t script::embedded_sigops(const script& prevout_script) const
 
 //*****************************************************************************
 // CONSENSUS: this is a pointless, broken, premature optimization attempt.
+// The comparison and erase are not limited to a single operation and so can
+// erase arbitrary upstream data from the script.
 //*****************************************************************************
 void script::find_and_delete_(const data_chunk& endorsement)
 {
@@ -1045,27 +1050,29 @@ void script::find_and_delete_(const data_chunk& endorsement)
     // Non-minimally-encoded target values will therefore not match.
     const auto value = operation(endorsement, false).to_data();
 
-    // No copying occurs below. If a match is found the remainder is shifted
-    // into its place (erase). No memory allocation is caused by the shift.
-
     operation op;
     data_source stream(bytes_);
     istream_reader source(stream);
-    auto begin = bytes_.begin();
+    std::vector<data_chunk::iterator> found;
 
-    // This test handles stream end and op deserialization failure.
-    while (!source.is_exhausted())
+    // The exhaustion test handles stream end and op deserialization failure.
+    for (auto it = bytes_.begin(); !source.is_exhausted();
+        it += op.serialized_size())
     {
-        // This is the 'broken' aspect of this method. The comparison and erase
-        // are not limited to a single operation and so can erase arbitrary
-        // upstream data from the script. Unfortunately that is now consensus.
-        while (starts_with(begin, bytes_.end(), value))
-            begin = bytes_.erase(begin, begin + value.size());
+        // Track all found values for later deletion.
+        for (; starts_with(it, bytes_.end(), value); it += value.size())
+        {
+            source.skip(value.size());
+            found.push_back(it);
+        }
 
-        // The source is not affected by changes upstream of its position.
+        // Read the next op code following last found value.
         op.from_data(source);
-        begin += op.serialized_size();
     }
+
+    // Delete any found values, reversed to prevent iterator invalidation.
+    for (const auto it: reverse(found))
+        bytes_.erase(it, it + value.size());
 }
 
 // Concurrent read/write is not supported, so no critical section.

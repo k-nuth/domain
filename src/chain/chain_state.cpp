@@ -383,7 +383,7 @@ template <typename T, typename U, typename V, typename R>
 // requires(SameType<T, U> && SameType<U, V> && Domain<R, T>)
 inline constexpr
 auto select_1_3_ac(T&& a, U&& b, V&& c, R r) FN(
-    // precondition: a <= c
+    // precondition: ! r(c, a)
     r(b, a) ?
           std::forward<T>(a)                                      // b, a, c 
         : select_0_2(std::forward<U>(b), std::forward<V>(c), r)   // a is not the median
@@ -875,6 +875,17 @@ bool chain_state::is_under_checkpoint() const
 {
     // This assumes that the checkpoints are sorted.
     return checkpoint::covered(data_.height, checkpoints_);
+}
+
+// Mining.
+//-----------------------------------------------------------------------------
+
+uint32_t chain_state::get_next_work_required(uint32_t time_now)
+{
+    auto values = this->data_;
+    values.timestamp.self = time_now;
+    return work_required(values, this->enabled_forks());
+
 }
 
 } // namespace chain

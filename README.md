@@ -1,12 +1,6 @@
-# Bitprim Core <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
+# Bitprim Core <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/bitprim/bitprim-core">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/bitprim/bitprim-core">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
 
-*Core Bitcoin functionality*
-
-| **master(linux/osx)** | **dev(linux/osx)**   | **master(windows)**   | **dev(windows)** |
-|:------:|:-:|:-:|:-:|
-| [![Build Status](https://travis-ci.org/bitprim/bitprim-core.svg)](https://travis-ci.org/bitprim/bitprim-core)       | [![Build StatusB](https://travis-ci.org/bitprim/bitprim-core.svg?branch=dev)](https://travis-ci.org/bitprim/bitprim-core?branch=dev)  | [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-core)  | [![Appveyor StatusB](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?branch=dev&svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-core?branch=dev)  |
-
-
+> Core functionality
 
 ## Installation
 
@@ -151,4 +145,18 @@ Bitprim is now installed in `/usr/local/`.
 ```
 TODO:Windows Install
 ```
+
+<!-- Links -->
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-core?svg=true&branch=dev
 [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
+[badge.Travis]: https://travis-ci.org/bitprim/bitprim-core.svg?branch=master
+[badge.version]: https://badge.fury.io/gh/bitprim%2Fbitprim-core.svg
+
+[CMake]: http://www.cmake.org
+[Doxygen]: http://www.doxygen.org
+[eRuby]: http://en.wikipedia.org/wiki/ERuby
+[Hana.docs]: http://boostorg.github.io/hana
+[Hana.wiki]: https://github.com/boostorg/hana/wiki
+[Homebrew formula]: https://github.com/Homebrew/homebrew-core/blob/master/Formula/hana.rb
+
+
