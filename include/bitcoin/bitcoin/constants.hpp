@@ -94,6 +94,10 @@ BC_CONSTEXPR size_t bitcoin_cash_offset_tip_minus_6 = bitcoin_cash_offset_tip - 
 BC_CONSTEXPR size_t max_block_size = 1000000;
 BC_CONSTEXPR size_t max_block_size_cash = 8000000;
 
+static const size_t one_mb_block = 1000000;
+static const size_t sigops_per_mb = 20000;
+
+
 BC_CONSTEXPR size_t coinbase_maturity = 100;
 // BC_CONSTEXPR size_t median_time_past_interval = 11;
 BC_CONSTEXPR size_t locktime_threshold = 500000000;
@@ -125,7 +129,11 @@ size_t get_max_block_sigops(bool bitcoin_cash) {
     return bitcoin_cash ? max_block_sigops_cash : max_block_sigops;
 }
 
-
+BC_CONSTFUNC
+size_t get_allowed_sigops(const size_t block_size)
+{
+    return (1 + ((block_size - 1) / one_mb_block)) * sigops_per_mb;
+}
 
 
 // Relative locktime constants.
