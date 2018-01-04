@@ -26,6 +26,10 @@ namespace libbitcoin {
 bool is_bitcoin_cash();
 void set_bitcoin_cash(bool value);
 
+std::string cashaddr_prefix();
+void set_cashaddr_prefix(std::string const& x);
+bool is_testnet(uint32_t identifier, bool bitcoin_cash);
+
 } /*namespace libbitcoin*/
 
 #endif /*LIBBITCOIN_CASH_SUPPORT_HPP*/

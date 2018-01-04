@@ -21,3 +21,4 @@
 #include "doctest.h"
 
 #include <bitcoin/bitcoin/wallet/cashaddr.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
