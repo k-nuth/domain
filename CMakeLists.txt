@@ -82,6 +82,7 @@ option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE proper
 # Implement --with-tests and declare WITH_TESTS.
 #------------------------------------------------------------------------------
 option(WITH_TESTS "Compile with unit tests." ON)
+option(WITH_TESTS_NEW "Compile with unit tests." OFF)
 
 # Implement --with-examples and declare WITH_EXAMPLES.
 #------------------------------------------------------------------------------
@@ -446,6 +447,7 @@ set(bitprim_core_sources
         src/utility/work.cpp
 
         src/wallet/bitcoin_uri.cpp
+        src/wallet/cashaddr.cpp
         src/wallet/dictionary.cpp
         src/wallet/ec_private.cpp
         src/wallet/ec_public.cpp
@@ -570,7 +572,7 @@ _group_sources(bitprim-core "${CMAKE_CURRENT_LIST_DIR}")
 # Tests
 #==============================================================================
 
-if (WITH_TESTS)
+if (WITH_TESTS OR WITH_TESTS_NEW)
   enable_testing()
 endif()
 
@@ -578,7 +580,7 @@ endif()
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
 
-add_executable(bitprim_core_test
+  add_executable(bitprim_core_test
         test/chain/block.cpp
         test/chain/header.cpp
         test/chain/input.cpp
@@ -677,8 +679,8 @@ add_executable(bitprim_core_test
         test/wallet/uri.cpp
         test/wallet/uri_reader.cpp)
 
-    target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
 
+    target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
 
 _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
@@ -771,6 +773,35 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
   if (WITH_QRENCODE)
     _add_tests(bitprim_core_test qrcode_tests)
   endif()
+endif()
+
+if (WITH_TESTS_NEW)
+
+  add_custom_target(tests ALL
+      COMMAND ${CMAKE_CTEST_COMMAND} -C Debug --output-on-failure -R "test.+"
+      COMMENT "Build and run all the unit tests.")
+
+  add_executable(bitprim_core_test_new
+          test_new/main.cpp
+  )
+
+    target_link_libraries(bitprim_core_test_new PUBLIC bitprim-core)
+
+_group_sources(bitprim_core_test_new "${CMAKE_CURRENT_LIST_DIR}/test_new")
+
+    add_test(NAME test.core.new_tests COMMAND bitprim_core_test_new)
+
+    add_dependencies(tests test.core.new_tests)
+
+#    add_test(
+#            NAME test.core.new_tests
+#            COMMAND ${target}
+#            --run_test=${_test_name}
+#            --show_progress=no
+#            --detect_memory_leak=0
+#            --report_level=no
+#            --build_info=yes)
+
 endif()
 
 # Examples
@@ -1013,6 +1044,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/writer.hpp
     
     bitcoin/bitcoin/wallet/bitcoin_uri.hpp
+    bitcoin/bitcoin/wallet/cashaddr.hpp
     bitcoin/bitcoin/wallet/dictionary.hpp
     bitcoin/bitcoin/wallet/ec_private.hpp
     bitcoin/bitcoin/wallet/ec_public.hpp
