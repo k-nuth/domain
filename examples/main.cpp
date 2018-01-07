@@ -22,35 +22,43 @@
 
 BC_USE_LIBBITCOIN_MAIN
 
-// Testing out our http://utf8everywhere.org implementation.
 int bc::main(int argc, char* argv[])
 {
-    // Windows utf8 everywhere demonstration.
-    set_utf8_stdio();
+    bc::wallet::payment_address const address1("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD"); // Legacy Address Format
+    bc::wallet::payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat
 
-    bc::cout << "output : acción.кошка.日本国" << std::endl;
-    bc::cerr << "error : acción.кошка.日本国" << std::endl;
-
-    bc::cout << "Enter text to input..." << std::endl;
-    std::string console;
-    bc::cin >> console;
-    bc::cout << "input[0]  : " << console << std::endl;
-
-    if (argc > 1)
-        bc::cout << "argv[1] : " << argv[1] << std::endl;
-
-#ifdef _MSC_VER
-    if (environ[0] != nullptr)
-        bc::cout << "environ[0] : " << environ[0] << std::endl;
-#endif
-
-    // Extracting Satoshi's words.
-    const auto block = bc::chain::block::genesis_mainnet();
-    const auto& tx = block.transactions().front();
-    const auto& input = tx.inputs().front();
-    const auto script = input.script().to_data(false);
-    std::string message(script.begin() + sizeof(uint64_t), script.end());
-    bc::cout << message << std::endl;
-
-    return EXIT_SUCCESS;
+    return 0;
 }
+
+//// Testing out our http://utf8everywhere.org implementation.
+//int bc::main(int argc, char* argv[])
+//{
+//    // Windows utf8 everywhere demonstration.
+//    set_utf8_stdio();
+//
+//    bc::cout << "output : acción.кошка.日本国" << std::endl;
+//    bc::cerr << "error : acción.кошка.日本国" << std::endl;
+//
+//    bc::cout << "Enter text to input..." << std::endl;
+//    std::string console;
+//    bc::cin >> console;
+//    bc::cout << "input[0]  : " << console << std::endl;
+//
+//    if (argc > 1)
+//        bc::cout << "argv[1] : " << argv[1] << std::endl;
+//
+//#ifdef _MSC_VER
+//    if (environ[0] != nullptr)
+//        bc::cout << "environ[0] : " << environ[0] << std::endl;
+//#endif
+//
+//    // Extracting Satoshi's words.
+//    const auto block = bc::chain::block::genesis_mainnet();
+//    const auto& tx = block.transactions().front();
+//    const auto& input = tx.inputs().front();
+//    const auto script = input.script().to_data(false);
+//    std::string message(script.begin() + sizeof(uint64_t), script.end());
+//    bc::cout << message << std::endl;
+//
+//    return EXIT_SUCCESS;
+//}

@@ -777,7 +777,7 @@ endif()
 
 if (WITH_TESTS_NEW)
 
-  add_custom_target(tests ALL
+  add_custom_target(testsfer ALL
       COMMAND ${CMAKE_CTEST_COMMAND} -C Debug --output-on-failure -R "test.+"
       COMMENT "Build and run all the unit tests.")
 
@@ -785,13 +785,13 @@ if (WITH_TESTS_NEW)
           test_new/main.cpp
   )
 
-    target_link_libraries(bitprim_core_test_new PUBLIC bitprim-core)
+  target_link_libraries(bitprim_core_test_new PUBLIC bitprim-core)
 
-_group_sources(bitprim_core_test_new "${CMAKE_CURRENT_LIST_DIR}/test_new")
+  # _group_sources(bitprim_core_test_new "${CMAKE_CURRENT_LIST_DIR}/test_new")
 
-    add_test(NAME test.core.new_tests COMMAND bitprim_core_test_new)
+  add_test(NAME test.new_tests COMMAND bitprim_core_test_new)
 
-    add_dependencies(tests test.core.new_tests)
+  add_dependencies(testsfer test.new_tests)
 
 #    add_test(
 #            NAME test.core.new_tests
