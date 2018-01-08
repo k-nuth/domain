@@ -133,12 +133,12 @@ bool ConvertBits(O &out, I it, I end) {
     return true;
 }
 
-// enum CashAddrType : uint8_t { PUBKEY_TYPE = 0, SCRIPT_TYPE = 1 };
+ enum CashAddrType : uint8_t { PUBKEY_TYPE = 0, SCRIPT_TYPE = 1 };
 
 // CashAddrContent DecodeCashAddrContent(std::string const& address) {
 payment_address payment_address::from_string_cashaddr(std::string const& address) {
     std::string prefix;
-    std::vector<uint8_t> payload;
+    data_chunk payload;
     std::tie(prefix, payload) = cashaddr::decode(address, cashaddr_prefix());
 
     if (prefix != cashaddr_prefix()) {
@@ -163,7 +163,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return payment_address();
     }
 
-    std::vector<uint8_t> data;
+    data_chunk data;
     data.reserve(payload.size() * 5 / 8);
     ConvertBits<5, 8, false>(data, std::begin(payload), std::end(payload));
 
@@ -174,7 +174,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return payment_address();
     }
 
-    // auto type = CashAddrType((version >> 3) & 0x1f);
+    auto type = CashAddrType((version >> 3) & 0x1f);
     uint32_t hash_size = 20 + 4 * (version & 0x03);
     if (version & 0x04) {
         hash_size *= 2;
@@ -185,9 +185,20 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return payment_address();
     }
 
+    //uint8_t version2;
+    //switch (type) {
+    //    case PUBKEY_TYPE:
+    //        version2 = 0x00;
+    //        break;
+    //    case SCRIPT_TYPE:
+    //        version2 = 0x05;
+    //        break;
+    //}
+
     payment decoded;
-    std::copy_n(std::begin(data), decoded.size(), std::begin(decoded));
-    return payment_address(decoded);
+    short_hash hash;
+    std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
+    return payment_address(hash, type == PUBKEY_TYPE ? 0x00 : 0x05);
     // // Pop the version.
     // data.erase(data.begin());
     // return {type, std::move(data)};
@@ -196,8 +207,12 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 payment_address payment_address::from_string(const std::string& address) {
     payment decoded;
     if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
-        // return payment_address();
-        return from_string_cashaddr(address);
+        
+        if (is_bitcoin_cash()) {
+            return from_string_cashaddr(address);
+        } else {
+            return payment_address();
+        }
     }
 
     return payment_address(decoded);
@@ -254,9 +269,69 @@ payment_address::operator const short_hash&() const
 // Serializer.
 // ----------------------------------------------------------------------------
 
-std::string payment_address::encoded() const
-{
+std::string payment_address::encoded() const {
     return encode_base58(wrap(version_, hash_));
+}
+
+
+// Convert the data part to a 5 bit representation.
+template <typename T>
+data_chunk pack_addr_data_(T const& id, uint8_t type) {
+    uint8_t version_byte(type << 3);
+    size_t size = id.size();
+    uint8_t encoded_size = 0;
+
+    switch (size * 8) {
+        case 160:
+            encoded_size = 0;
+            break;
+        case 192:
+            encoded_size = 1;
+            break;
+        case 224:
+            encoded_size = 2;
+            break;
+        case 256:
+            encoded_size = 3;
+            break;
+        case 320:
+            encoded_size = 4;
+            break;
+        case 384:
+            encoded_size = 5;
+            break;
+        case 448:
+            encoded_size = 6;
+            break;
+        case 512:
+            encoded_size = 7;
+            break;
+        default:
+            throw std::runtime_error("Error packing cashaddr: invalid address length");
+    }
+
+    version_byte |= encoded_size;
+    data_chunk data = { version_byte };
+    data.insert(data.end(), std::begin(id), std::end(id));
+
+    data_chunk converted;
+    // Reserve the number of bytes required for a 5-bit packed version of a
+    // hash, with version byte.  Add half a byte(4) so integer math provides
+    // the next multiple-of-5 that would fit all the data.
+    converted.reserve(((size + 1) * 8 + 4) / 5);
+    ConvertBits<8, 5, true>(converted, std::begin(data), std::end(data));
+
+    return converted;
+}
+
+std::string encode_cashaddr_(payment_address const& wallet) {
+    uint8_t const type = wallet.version() == 0x00 ? PUBKEY_TYPE : SCRIPT_TYPE;
+    data_chunk data = pack_addr_data_(wallet.hash(), type);
+    return cashaddr::encode(cashaddr_prefix(), data);
+}
+
+std::string payment_address::encoded_cashaddr() const {
+    return encode_cashaddr_(*this);
 }
 
 // Accessors.

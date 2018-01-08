@@ -24,8 +24,19 @@ BC_USE_LIBBITCOIN_MAIN
 
 int bc::main(int argc, char* argv[])
 {
-    bc::wallet::payment_address const address1("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD"); // Legacy Address Format
-    bc::wallet::payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat
+    bc::wallet::payment_address const address1("1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"); // Legacy Address Format
+    //bc::wallet::payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat Invalid
+    //bc::wallet::payment_address const address2("bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"); // CashAddrFormat
+    bc::wallet::payment_address const address2("bitcoincash:ppm2qsznhks23z7629mms6s4cwef74vcwvn0h829pq"); // CashAddrFormat
+
+
+
+    auto enccash1 = address1.encoded_cashaddr();
+    auto enccash2 = address2.encoded_cashaddr();
+
+    auto encleg1 = address1.encoded();
+    auto encleg2 = address2.encoded();
+
 
     return 0;
 }

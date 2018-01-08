@@ -83,6 +83,7 @@ public:
 
     /// Serializer.
     std::string encoded() const;
+    std::string encoded_cashaddr() const;
 
     /// Accessors.
     uint8_t version() const;
@@ -137,39 +138,3 @@ struct hash<bc::wallet::payment_address>
 } // namespace std
 
 #endif
-
-
-// Unit Tests ----------------------------------------------------
-#ifdef DOCTEST_LIBRARY_INCLUDED
-using namespace libbitcoin::wallet;
-using namespace std;
-
-
-TEST_CASE("[payment_address__construct__payment__valid_expected] payment_address__construct__payment__valid_expected") {
-
-
-    payment_address const address1("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD"); // Legacy Address Format
-    payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat
-
-
-
-
-
-
-    // // $ bx script-to-address "dup hash160 [18c0bd8d1818f1bf99cb1df2269c645318ef7b73] equalverify checksig"
-    // #define ADDRESS_SCRIPT "3CPSWnCGjkePffNyVptkv45Bx35SaAwm7d"
-    // // $ bx script-to-address "dup hash160 [18c0bd8d1818f1bf99cb1df2269c645318ef7b73] equalverify checksig" | bx base58-decode
-    // #define PAYMENT "0575566c599452b7bcb7f8cd4087bde9686fa9c52d8c2a7d90"
-
-
-
-    // payment pay;
-    // CHECK(decode_base16(pay, PAYMENT));
-    // payment_address const address(pay);
-    // CHECK(address);
-    // CHECK(address.encoded() == ADDRESS_SCRIPT);
-
-}
-
-#endif /*DOCTEST_LIBRARY_INCLUDED*/
-// Unit Tests ----------------------------------------------------
