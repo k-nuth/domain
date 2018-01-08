@@ -809,6 +809,8 @@ code block::accept(const chain_state& state, bool transactions) const
     const auto block_time = state.is_enabled(rule_fork::bip113_rule) ?
         state.median_time_past() : header_.timestamp();
 
+    size_t allowed_sigops = get_allowed_sigops(serialized_size());
+
     if ((ec = header_.accept(state)))
         return ec;
 
@@ -829,7 +831,8 @@ code block::accept(const chain_state& state, bool transactions) const
     // TODO: determine if performance benefit is worth excluding sigops here.
     // TODO: relates block limit to total of tx.sigops (pool cache tx.sigops).
     // This recomputes sigops to include p2sh from prevouts.
-    else if (transactions && (signature_operations(bip16) > get_max_block_sigops(is_bitcoin_cash())))
+    
+    else if (transactions && (signature_operations(bip16) > allowed_sigops))
         return error::block_embedded_sigop_limit;
 
     else if (transactions)

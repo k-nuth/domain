@@ -37,7 +37,7 @@
 namespace libbitcoin {
 namespace wallet {
 
-static BC_CONSTEXPR size_t payment_size = 1u + short_hash_size + checksum_size;
+static BC_CONSTEXPR size_t payment_size = 1u + short_hash_size + checksum_size; // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
 typedef byte_array<payment_size> payment;
 
 /// A class for working with non-stealth payment addresses.
@@ -83,6 +83,7 @@ public:
 
     /// Serializer.
     std::string encoded() const;
+    std::string encoded_cashaddr() const;
 
     /// Accessors.
     uint8_t version() const;
@@ -97,6 +98,7 @@ private:
 
     /// Factories.
     static payment_address from_string(const std::string& address);
+    static payment_address from_string_cashaddr(std::string const& address);
     static payment_address from_payment(const payment& decoded);
     static payment_address from_private(const ec_private& secret);
     static payment_address from_public(const ec_public& point, uint8_t version);

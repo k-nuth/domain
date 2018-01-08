@@ -25,7 +25,7 @@ def option_on_off(option):
 
 class BitprimCoreConan(ConanFile):
     name = "bitprim-core"
-    version = "0.4"
+    version = "0.5"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-core"
     description = "Bitcoin Cross-Platform C++ Development Toolkit"

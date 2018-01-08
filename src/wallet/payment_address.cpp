@@ -28,6 +28,8 @@
 #include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/wallet/ec_private.hpp>
 #include <bitcoin/bitcoin/wallet/ec_public.hpp>
+#include <bitcoin/bitcoin/wallet/cashaddr.hpp>
+#include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 
 namespace libbitcoin {
 namespace wallet {
@@ -102,11 +104,116 @@ bool payment_address::is_address(data_slice decoded)
 // Factories.
 // ----------------------------------------------------------------------------
 
-payment_address payment_address::from_string(const std::string& address)
-{
-    payment decoded;
-    if (!decode_base58(decoded, address) || !is_address(decoded))
+template <int frombits, int tobits, bool pad, typename O, typename I>
+bool ConvertBits(O &out, I it, I end) {
+    size_t acc = 0;
+    size_t bits = 0;
+    constexpr size_t maxv = (1 << tobits) - 1;
+    constexpr size_t max_acc = (1 << (frombits + tobits - 1)) - 1;
+    while (it != end) {
+        acc = ((acc << frombits) | *it) & max_acc;
+        bits += frombits;
+        while (bits >= tobits) {
+            bits -= tobits;
+            out.push_back((acc >> bits) & maxv);
+        }
+        ++it;
+    }
+
+    // We have remaining bits to encode but do not pad.
+    if (!pad && bits) {
+        return false;
+    }
+
+    // We have remaining bits to encode so we do pad.
+    if (pad && bits) {
+        out.push_back((acc << (tobits - bits)) & maxv);
+    }
+
+    return true;
+}
+
+ enum CashAddrType : uint8_t { PUBKEY_TYPE = 0, SCRIPT_TYPE = 1 };
+
+// CashAddrContent DecodeCashAddrContent(std::string const& address) {
+payment_address payment_address::from_string_cashaddr(std::string const& address) {
+    std::string prefix;
+    data_chunk payload;
+    std::tie(prefix, payload) = cashaddr::decode(address, cashaddr_prefix());
+
+    if (prefix != cashaddr_prefix()) {
         return payment_address();
+    }
+
+    if (payload.empty()) {
+        return payment_address();
+    }
+
+    // Check that the padding is zero.
+    size_t extrabits = payload.size() * 5 % 8;
+    if (extrabits >= 5) {
+        // We have more padding than allowed.
+        return payment_address();
+    }
+
+    uint8_t last = payload.back();
+    uint8_t mask = (1 << extrabits) - 1;
+    if (last & mask) {
+        // We have non zero bits as padding.
+        return payment_address();
+    }
+
+    data_chunk data;
+    data.reserve(payload.size() * 5 / 8);
+    ConvertBits<5, 8, false>(data, std::begin(payload), std::end(payload));
+
+    // Decode type and size from the version.
+    uint8_t version = data[0];
+    if (version & 0x80) {
+        // First bit is reserved.
+        return payment_address();
+    }
+
+    auto type = CashAddrType((version >> 3) & 0x1f);
+    uint32_t hash_size = 20 + 4 * (version & 0x03);
+    if (version & 0x04) {
+        hash_size *= 2;
+    }
+
+    // Check that we decoded the exact number of bytes we expected.
+    if (data.size() != hash_size + 1) {
+        return payment_address();
+    }
+
+    //uint8_t version2;
+    //switch (type) {
+    //    case PUBKEY_TYPE:
+    //        version2 = 0x00;
+    //        break;
+    //    case SCRIPT_TYPE:
+    //        version2 = 0x05;
+    //        break;
+    //}
+
+    payment decoded;
+    short_hash hash;
+    std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
+    return payment_address(hash, type == PUBKEY_TYPE ? 0x00 : 0x05);
+    // // Pop the version.
+    // data.erase(data.begin());
+    // return {type, std::move(data)};
+}
+
+payment_address payment_address::from_string(const std::string& address) {
+    payment decoded;
+    if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
+        
+        if (is_bitcoin_cash()) {
+            return from_string_cashaddr(address);
+        } else {
+            return payment_address();
+        }
+    }
 
     return payment_address(decoded);
 }
@@ -162,9 +269,69 @@ payment_address::operator const short_hash&() const
 // Serializer.
 // ----------------------------------------------------------------------------
 
-std::string payment_address::encoded() const
-{
+std::string payment_address::encoded() const {
     return encode_base58(wrap(version_, hash_));
+}
+
+
+// Convert the data part to a 5 bit representation.
+template <typename T>
+data_chunk pack_addr_data_(T const& id, uint8_t type) {
+    uint8_t version_byte(type << 3);
+    size_t size = id.size();
+    uint8_t encoded_size = 0;
+
+    switch (size * 8) {
+        case 160:
+            encoded_size = 0;
+            break;
+        case 192:
+            encoded_size = 1;
+            break;
+        case 224:
+            encoded_size = 2;
+            break;
+        case 256:
+            encoded_size = 3;
+            break;
+        case 320:
+            encoded_size = 4;
+            break;
+        case 384:
+            encoded_size = 5;
+            break;
+        case 448:
+            encoded_size = 6;
+            break;
+        case 512:
+            encoded_size = 7;
+            break;
+        default:
+            throw std::runtime_error("Error packing cashaddr: invalid address length");
+    }
+
+    version_byte |= encoded_size;
+    data_chunk data = { version_byte };
+    data.insert(data.end(), std::begin(id), std::end(id));
+
+    data_chunk converted;
+    // Reserve the number of bytes required for a 5-bit packed version of a
+    // hash, with version byte.  Add half a byte(4) so integer math provides
+    // the next multiple-of-5 that would fit all the data.
+    converted.reserve(((size + 1) * 8 + 4) / 5);
+    ConvertBits<8, 5, true>(converted, std::begin(data), std::end(data));
+
+    return converted;
+}
+
+std::string encode_cashaddr_(payment_address const& wallet) {
+    uint8_t const type = wallet.version() == 0x00 ? PUBKEY_TYPE : SCRIPT_TYPE;
+    data_chunk data = pack_addr_data_(wallet.hash(), type);
+    return cashaddr::encode(cashaddr_prefix(), data);
+}
+
+std::string payment_address::encoded_cashaddr() const {
+    return encode_cashaddr_(*this);
 }
 
 // Accessors.
