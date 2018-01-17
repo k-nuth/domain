@@ -22,7 +22,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/compact.hpp>
@@ -33,6 +32,7 @@
 #include <bitcoin/bitcoin/math/limits.hpp>
 #include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/bitcoin/unicode/unicode.hpp>
 #include <bitcoin/bitcoin/utility/timer.hpp>
 
