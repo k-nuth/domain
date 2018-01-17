@@ -204,7 +204,7 @@ chain_state::activations chain_state::activation(const data& values,
     }
 
 
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
     if (bip34_ice)
     {
         result.forks |= (rule_fork::bip34_rule & forks);
@@ -501,7 +501,7 @@ uint32_t chain_state::work_required_retarget(const data& values)
 {
     const compact bits(bits_high(values));
     
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
     uint256_t target(bits);
     static const uint256_t pow_limit("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     // hash_number retarget_new;
@@ -531,7 +531,7 @@ uint32_t chain_state::work_required_retarget(const data& values)
     return target > pow_limit ? proof_of_work_limit : compact(target).normal();
 
 
-#else //LITECOIN
+#else //BITPRIM_LITECOIN
     BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
 	static const uint256_t pow_limit(compact{ proof_of_work_limit });    
 
@@ -541,7 +541,7 @@ uint32_t chain_state::work_required_retarget(const data& values)
 
     // The proof_of_work_limit constant is pre-normalized.
     return target > pow_limit ? proof_of_work_limit : compact(target).normal();
-#endif //LITECOIN
+#endif //BITPRIM_LITECOIN
 }
 
 // Get the bounded total time spanning the highest 2016 blocks.

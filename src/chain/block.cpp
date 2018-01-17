@@ -57,7 +57,7 @@ namespace chain {
 using namespace bc::config;
 using namespace bc::machine;
 
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
 //Litecoin mainnet genesis block
 static const std::string encoded_mainnet_genesis_block =
     "01000000" //version
@@ -99,7 +99,7 @@ static const std::string encoded_testnet_genesis_block =
     "43" //pk_script length
     "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac" //pk_script
     "00000000"; //locktime
-#else //LITECOIN
+#else //BITPRIM_LITECOIN
 
 static const std::string encoded_mainnet_genesis_block =
     "01000000"
@@ -140,7 +140,7 @@ static const std::string encoded_testnet_genesis_block =
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000";
-#endif //LITECOIN
+#endif //BITPRIM_LITECOIN
 
 // Constructors.
 //-----------------------------------------------------------------------------

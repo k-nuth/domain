@@ -49,7 +49,7 @@ void set_cashaddr_prefix(std::string const& x) {
 }
 
 bool is_testnet(uint32_t identifier, bool bitcoin_cash) {
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
     return identifier == 0xf1c8d2fdu //4056470269u; //Litecoin Testnet Netmagic
 #else
     if (bitcoin_cash) {
@@ -57,7 +57,7 @@ bool is_testnet(uint32_t identifier, bool bitcoin_cash) {
     } else {
         return identifier == 0x0709110bu;  //Bitcoin Testnet Netmagic
     }
-#endif //LITECOIN
+#endif //BITPRIM_LITECOIN
 }
 
 } /*namespace libbitcoin*/

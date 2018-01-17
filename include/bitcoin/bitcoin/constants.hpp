@@ -103,15 +103,15 @@ BC_CONSTEXPR size_t coinbase_maturity = 100;
 BC_CONSTEXPR size_t locktime_threshold = 500000000;
 // BC_CONSTEXPR size_t max_block_size = 1000000;
 
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
 //0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1e0fffff;
-#else // LITECOIN
+#else // BITPRIM_LITECOIN
 BC_CONSTEXPR size_t max_work_bits = 0x1d00ffff;
 // This may not be flexible, keep internal.
 //0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1d00ffff;
-#endif // LITECOIN
+#endif // BITPRIM_LITECOIN
 
 // Derived.
 BC_CONSTEXPR size_t max_sigops_factor = 50;
@@ -150,13 +150,13 @@ BC_CONSTEXPR uint32_t relative_locktime_time_locked = 0x00400000;
 
 BC_CONSTEXPR uint32_t retargeting_factor = 4;
 
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 15;
 BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15;
-#else //LITECOIN
+#else //BITPRIM_LITECOIN
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 60;
 BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60;
-#endif //LITECOIN
+#endif //BITPRIM_LITECOIN
 BC_CONSTEXPR uint32_t timestamp_future_seconds = 2 * 60 * 60;  //TODO(bitprim): New on v3.3.0 merge (September 2017), see how this affects Litecoin
 
 BC_CONSTEXPR uint32_t easy_spacing_factor = 2;
@@ -192,7 +192,7 @@ BC_CONSTEXPR size_t bitcoin_cash_activation_height = 478558;
 //November 13 2017
 BC_CONSTEXPR uint32_t bitcoin_cash_daa_activation_time = 1510600000;
 
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
 
 // Mainnet activation parameters (bip34-style activations).
 BC_CONSTEXPR size_t mainnet_active = 750;
@@ -247,7 +247,7 @@ static const config::checkpoint testnet_allow_collisions_checkpoint
 };
 
 
-#else //LITECOIN
+#else //BITPRIM_LITECOIN
 // Mainnet activation parameters (bip34-style activations).
 BC_CONSTEXPR size_t mainnet_active = 750;
 BC_CONSTEXPR size_t mainnet_enforce = 950;
@@ -298,7 +298,7 @@ static const config::checkpoint testnet_bip34_active_checkpoint
 {
     "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111
 };
-#endif //LITECOIN
+#endif //BITPRIM_LITECOIN
 
 // These cannot be reactivated in a future branch due to window expiration.
 static const config::checkpoint mainnet_bip9_bit0_active_checkpoint
@@ -359,13 +359,13 @@ BC_CONSTFUNC uint64_t initial_block_subsidy_satoshi()
     return bitcoin_to_satoshi(initial_block_subsidy_bitcoin);
 }
 
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
 // BC_CONSTEXPR uint64_t reward_interval = 840000;
 BC_CONSTEXPR uint64_t subsidy_interval = 840000;
-#else
+#else //BITPRIM_LITECOIN
 // BC_CONSTEXPR uint64_t reward_interval = 210000;
 BC_CONSTEXPR uint64_t subsidy_interval = 210000;
-#endif
+#endif //BITPRIM_LITECOIN
 BC_CONSTEXPR uint64_t recursive_money = 0x02540be3f5;
 BC_CONSTFUNC uint64_t max_money()
 {

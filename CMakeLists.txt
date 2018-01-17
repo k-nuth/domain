@@ -109,7 +109,7 @@ endif()
 option(WITH_LITECOIN "Compile with Litecoin support." OFF)
 if (WITH_LITECOIN)
   add_definitions(-DWITH_LITECOIN)
-  add_definitions(-DLITECOIN)
+  add_definitions(-DBITPRIM_LITECOIN)
 endif()
 
 
