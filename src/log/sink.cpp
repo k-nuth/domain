@@ -43,7 +43,7 @@ using namespace boost::log::sinks;
 using namespace boost::log::sinks::file;
 using namespace boost::posix_time;
 
-#define TIME_FORMAT "%H:%M:%S.%f"
+#define TIME_FORMAT "%Y-%m-%dT%H:%M:%S.%f"
 #define TIME_STAMP attributes::timestamp.get_name()
 #define TIME_FORMATTER format_date_time<ptime, char>(TIME_STAMP, TIME_FORMAT)
 #define SEVERITY_FORMATTER attributes::severity
