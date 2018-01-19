@@ -109,7 +109,7 @@ endif()
 option(WITH_LITECOIN "Compile with Litecoin support." OFF)
 if (WITH_LITECOIN)
   add_definitions(-DWITH_LITECOIN)
-  add_definitions(-DLITECOIN)
+  add_definitions(-DBITPRIM_LITECOIN)
 endif()
 
 
@@ -331,7 +331,7 @@ set(bitprim_core_sources
         src/config/sodium.cpp
 
         src/error.cpp
-        src/bitcoin_cash_support.cpp
+        src/multi_crypto_support.cpp
         src/version.cpp
 
         src/formats/base_10.cpp
@@ -832,7 +832,7 @@ install(TARGETS bitprim-core EXPORT bitprim-core
 #)
 
 set(_bitprim_core_headers
-    bitcoin/bitcoin/bitcoin_cash_support.hpp
+    bitcoin/bitcoin/multi_crypto_support.hpp
     bitcoin/bitcoin/compat.h
     bitcoin/bitcoin/compat.hpp
     bitcoin/bitcoin/constants.hpp

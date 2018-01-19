@@ -39,6 +39,7 @@
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/bitcoin/utility/collection.hpp>
 #include <bitcoin/bitcoin/utility/container_sink.hpp>
 #include <bitcoin/bitcoin/utility/container_source.hpp>
@@ -46,7 +47,6 @@
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
 #include <bitcoin/bitcoin/utility/ostream_writer.hpp>
 
-#include <bitcoin/bitcoin/bitcoin_cash_support.hpp>
 
 namespace libbitcoin {
 namespace chain {
