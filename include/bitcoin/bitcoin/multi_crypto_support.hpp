@@ -19,6 +19,7 @@
 #ifndef LIBBITCOIN_MULTI_CRYPTO_SUPPORT_HPP_
 #define LIBBITCOIN_MULTI_CRYPTO_SUPPORT_HPP_
 
+#include <string>
 #include <bitcoin/bitcoin/config/settings.hpp>
 
 namespace libbitcoin {
