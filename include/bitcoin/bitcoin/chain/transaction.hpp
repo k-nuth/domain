@@ -81,9 +81,9 @@ public:
     transaction(transaction&& other, hash_digest&& hash);
     transaction(const transaction& other, const hash_digest& hash);
 
-    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs);
+    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs,  uint32_t cached_sigops=0);
     transaction(uint32_t version, uint32_t locktime, const ins& inputs,
-        const outs& outputs);
+        const outs& outputs, uint32_t cached_sigops=0);
 
     // Operators.
     //-----------------------------------------------------------------------------
@@ -102,23 +102,23 @@ public:
     static transaction factory_from_data(std::istream& stream, bool wire=true);
     static transaction factory_from_data(reader& source, bool wire=true);
 
-    bool from_data(const data_chunk& data, bool wire=true);
-    bool from_data(std::istream& stream, bool wire=true);
-    bool from_data(reader& source, bool wire=true);
+    bool from_data(const data_chunk& data, bool wire=true, bool unconfirmed=false);
+    bool from_data(std::istream& stream, bool wire=true, bool unconfirmed=false);
+    bool from_data(reader& source, bool wire=true, bool unconfirmed=false);
 
     bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire=true) const;
-    void to_data(std::ostream& stream, bool wire=true) const;
-    void to_data(writer& sink, bool wire=true) const;
+    data_chunk to_data(bool wire=true, bool unconfirmed=false) const;
+    void to_data(std::ostream& stream, bool wire=true, bool unconfirmed=false) const;
+    void to_data(writer& sink, bool wire=true, bool unconfirmed=false) const;
 
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    size_t serialized_size(bool wire=true) const;
+    size_t serialized_size(bool wire=true, bool unconfirmed=false) const;
 
     uint32_t version() const;
     void set_version(uint32_t value);
@@ -179,6 +179,9 @@ public:
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
+    
+    //Only accesible for unconfirmed txs    
+    uint32_t cached_sigops_;
 
 protected:
     void reset();
