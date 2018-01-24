@@ -83,6 +83,7 @@ void parser::load_environment_variables(variables_map& variables,
     store(environment, variables);
 }
 
+//TODO(fernando): replace int return type with an appropriate enum or "try_bool" or something
 //1 success, 0 default, -1 non-existing file
 int parser::load_configuration_variables(variables_map& variables,
     const std::string& option_name)
@@ -93,20 +94,22 @@ int parser::load_configuration_variables(variables_map& variables,
     // If the existence test errors out we pretend there's no file :/.
     error_code code;
 
-    if (!config_path.empty() && exists(config_path, code))
-    {
-        const auto& path = config_path.string();
-        bc::ifstream file(path);
+    if (!config_path.empty()) {
+        if (exists(config_path, code)) {
+            const auto& path = config_path.string();
+            bc::ifstream file(path);
 
-        if (!file.good())
-        {
-            BOOST_THROW_EXCEPTION(reading_file(path.c_str()));
+            if ( ! file.good()) {
+                BOOST_THROW_EXCEPTION(reading_file(path.c_str()));
+            }
+
+            const auto config = parse_config_file(file, config_settings);
+            store(config, variables);
+            return 1;
+        } else {
+            return -1;
         }
-
-        const auto config = parse_config_file(file, config_settings);
-        store(config, variables);
-        return 1;
-    } else if(!config_path.empty() && !exists(config_path, code)) return -1;
+    }
 
     // Loading from an empty stream causes the defaults to populate.
     std::stringstream stream;
