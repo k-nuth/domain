@@ -15,8 +15,7 @@ if __name__ == "__main__":
     filtered_builds = []
     for settings, options, env_vars, build_requires in builder.builds:
         if settings["build_type"] == "Release" \
-                and not options["bitprim-core:shared"] \
-                and (not "compiler.runtime" in settings or not settings["compiler.runtime"] == "MT"):
+                and not options["bitprim-core:shared"]:
 
             # print(env_vars)
             env_vars["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
