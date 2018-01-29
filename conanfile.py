@@ -68,8 +68,8 @@ class BitprimCoreConan(ConanFile):
                ("secp256k1/0.3@bitprim/testing"))
 
     def package_id(self):
-        self.info.output.with_tests = "ANY"
-        self.info.output.with_examples = "ANY"
+        self.info.options.with_tests = "ANY"
+        self.info.options.with_examples = "ANY"
 
     def build(self):
         # self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
