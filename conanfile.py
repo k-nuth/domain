@@ -34,17 +34,15 @@ class BitprimCoreConan(ConanFile):
     # options = {"shared": [True, False]}
     # default_options = "shared=False"
 
-
     options = {"shared": [True, False],
                "fPIC": [True, False],
                "with_icu": [True, False],
                "with_png": [True, False],
                "with_litecoin": [True, False],
                "with_qrencode": [True, False],
+               "with_tests": [True, False],
+               "with_examples": [True, False],
     }
-
-    # "with_tests": [True, False],
-    # "with_examples": [True, False],
     # "not_use_cpp11_abi": [True, False]
 
     default_options = "shared=False", \
@@ -52,14 +50,14 @@ class BitprimCoreConan(ConanFile):
         "with_icu=False", \
         "with_png=False", \
         "with_litecoin=False", \
-        "with_qrencode=False"
+        "with_qrencode=False", \
+        "with_tests=False", \
+        "with_examples=False"
 
-    # "with_tests=False", \
-    # "with_examples=False", \
     # "not_use_cpp11_abi=False"
 
-    with_tests = False
-    with_examples = False
+    # with_tests = False
+    # with_examples = False
 
     generators = "cmake"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "include/*", "test/*"
@@ -68,6 +66,10 @@ class BitprimCoreConan(ConanFile):
 
     requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/testing"))
+
+    def package_id(self):
+        self.info.output.with_tests = "ANY"
+        self.info.output.with_examples = "ANY"
 
     def build(self):
         # self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
@@ -82,10 +84,10 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
 
         # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
-        # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        # cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
-        cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
-        cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.with_examples)
+        cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
+        cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
+        # cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
+        # cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.with_examples)
 
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
         cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
