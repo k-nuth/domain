@@ -51,7 +51,7 @@ class BitprimCoreConan(ConanFile):
         "with_litecoin=False", \
         "with_qrencode=True", \
         "with_tests=True", \
-        "with_examples=True"
+        "with_examples=False"
 
 
     generators = "cmake"
