@@ -81,9 +81,9 @@ public:
     transaction(transaction&& other, hash_digest&& hash);
     transaction(const transaction& other, const hash_digest& hash);
 
-    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs,  uint32_t cached_sigops=0);
+    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs,  uint32_t cached_sigops=0, uint64_t cached_fees=0, bool cached_is_standard=false);
     transaction(uint32_t version, uint32_t locktime, const ins& inputs,
-        const outs& outputs, uint32_t cached_sigops=0);
+        const outs& outputs, uint32_t cached_sigops=0, uint64_t cached_fees=0, bool cached_is_standard=false);
 
     // Operators.
     //-----------------------------------------------------------------------------
@@ -182,6 +182,10 @@ public:
     
     //Only accesible for unconfirmed txs    
     uint32_t cached_sigops_;
+    bool cached_is_standard_;
+    uint64_t cached_fees_;
+
+    bool is_standard() const;
 
 protected:
     void reset();
