@@ -114,37 +114,41 @@ transaction::transaction(const transaction& other)
 
 transaction::transaction(transaction&& other, hash_digest&& hash)
   : transaction(other.version_, other.locktime_, std::move(other.inputs_),
-        std::move(other.outputs_), std::move(other.cached_sigops_))
+        std::move(other.outputs_), std::move(other.cached_sigops_), std::move(other.cached_fees_), std::move(other.cached_is_standard_))
 {
     hash_ = std::make_shared<hash_digest>(std::move(hash));
     validation = std::move(other.validation);
 }
 
 transaction::transaction(const transaction& other, const hash_digest& hash)
-  : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_, other.cached_sigops_)
+  : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_, other.cached_sigops_, other.cached_fees_, other.cached_is_standard_)
 {
     hash_ = std::make_shared<hash_digest>(hash);
     validation = other.validation;
 }
 
 transaction::transaction(uint32_t version, uint32_t locktime,
-    const input::list& inputs, const output::list& outputs, uint32_t cached_sigops)
+    const input::list& inputs, const output::list& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
   : version_(version),
     locktime_(locktime),
     inputs_(inputs),
     outputs_(outputs),
     cached_sigops_(cached_sigops),
+    cached_fees_(fees),
+    cached_is_standard_(is_standard),
     validation{}
 {
 }
 
 transaction::transaction(uint32_t version, uint32_t locktime,
-    input::list&& inputs, output::list&& outputs, uint32_t cached_sigops)
+    input::list&& inputs, output::list&& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
   : version_(version),
     locktime_(locktime),
     inputs_(std::move(inputs)),
     outputs_(std::move(outputs)),
     cached_sigops_(cached_sigops),
+    cached_fees_(fees),
+    cached_is_standard_(is_standard),
     validation{}
 {
 }
@@ -253,7 +257,10 @@ bool transaction::from_data(reader& source, bool wire, bool unconfirmed)
         {
             const auto sigops = source.read_variable_little_endian();
             cached_sigops_ = static_cast<uint32_t>(sigops);
-            //std::cout << "unconfirmed read " << cached_sigops_ << std::endl;
+            const auto fees = source.read_variable_little_endian();
+            cached_fees_ = static_cast<uint64_t>(fees);
+            const auto is_standard = source.read_byte();
+            cached_is_standard_ = static_cast<bool>(is_standard);
         }
 
     }
@@ -331,8 +338,9 @@ void transaction::to_data(writer& sink, bool wire, bool unconfirmed) const
         sink.write_variable_little_endian(version_);
         if(unconfirmed)
         {
-            //std::cout << " signature_operations() " << signature_operations() << std::endl;
-            sink.write_variable_little_endian(signature_operations());   
+            sink.write_variable_little_endian(signature_operations());
+            sink.write_variable_little_endian(fees());
+            sink.write_byte(is_standard());
         }
     }
 
@@ -361,7 +369,7 @@ size_t transaction::serialized_size(bool wire, bool unconfirmed) const
         + message::variable_uint_size(outputs_.size())
         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins)
         + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs)
-        + ((!wire && unconfirmed) ? message::variable_uint_size(locktime_) : 0);
+        + ((!wire && unconfirmed) ? message::variable_uint_size(cached_sigops_) + message::variable_uint_size(cached_fees_) + sizeof(uint8_t)  : 0);
 }
 
 // Accessors.
@@ -906,6 +914,23 @@ code transaction::connect(const chain_state& state) const
             return ec;
 
     return error::success;
+}
+
+bool transaction::is_standard() const
+{
+    for (auto const& in : inputs()) {
+        if ( in.script().pattern() == libbitcoin::machine::script_pattern::non_standard){
+            return false;
+        }
+    }
+
+    for (auto const& out : outputs()) {
+        if ( out.script().pattern() == libbitcoin::machine::script_pattern::non_standard){
+            return false;
+        }
+    }
+
+    return true;
 }
 
 } // namespace chain
