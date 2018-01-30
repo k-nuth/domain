@@ -43,41 +43,41 @@ class BitprimCoreConan(ConanFile):
                "with_tests": [True, False],
                "with_examples": [True, False]
     }
-    # "not_use_cpp11_abi": [True, False]
 
     default_options = "shared=False", \
         "fPIC=True", \
-        "with_icu=False", \
-        "with_png=False", \
+        "with_icu=True", \
+        "with_png=True", \
         "with_litecoin=False", \
-        "with_qrencode=False", \
-        "with_tests=False", \
-        "with_examples=False"
+        "with_qrencode=True", \
+        "with_tests=True", \
+        "with_examples=True"
 
-    # "not_use_cpp11_abi=False"
-
-    # with_tests = False
-    # with_examples = False
 
     generators = "cmake"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "include/*", "test/*"
     package_files = "build/lbitprim-core.a"
     build_policy = "missing"
 
-    # requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
-    #            ("secp256k1/0.3@bitprim/testing"))
-
     requires = (("boost/1.66.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/testing"))
+
+    def requirements(self):
+        if self.options.with_png:
+            self.requires("libpng/1.6.34@bitprim/stable")
+            
+        if self.options.with_qrencode:
+            self.requires("libqrencode/4.0.0@bitprim/stable")
 
     def package_id(self):
         self.info.options.with_tests = "ANY"
         self.info.options.with_examples = "ANY"
 
     def build(self):
-        # self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
-        # self.output.warn("*** EnvVar BITPRIM_BUILD_NUMBER: %s" % (os.getenv('BITPRIM_BUILD_NUMBER', '-')))
-        # self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
+        for dep in self.deps_cpp_info.deps:
+            # self.output.warn(self.deps_cpp_info["MyLib"].libdirs)
+            print(dep)
+            print(self.options[dep])
 
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = option_on_off(True)
@@ -86,11 +86,8 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
 
-        # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
-        # cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
-        # cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.with_examples)
 
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
         cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
@@ -127,3 +124,7 @@ class BitprimCoreConan(ConanFile):
 
         if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
             self.cpp_info.libs.append("pthread")
+
+        if self.settings.os == "Windows" or self.settings.compiler == "gcc": # MinGW
+            self.cpp_info.libs.append("ws2_32")
+            self.cpp_info.libs.append("wsock32")

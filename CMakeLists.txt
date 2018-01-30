@@ -123,12 +123,8 @@ if (WITH_QRENCODE)
 endif()
 
 
-
-
 set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 # message(${BITPRIM_BUILD_NUMBER})
-
-
 
 if (NOT NO_CONAN_AT_ALL)
   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
@@ -174,13 +170,15 @@ find_package(Threads REQUIRED)  #TODO(fernando): manage with conan
 # Require png of at least version 1.6.25 and output ${png_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (WITH_PNG)
-  find_package(PNG 1.6.25 REQUIRED) #TODO(fernando): manage with conan
+    if (NO_CONAN_AT_ALL)
+        find_package(PNG 1.6.25 REQUIRED)
 
-  add_library(png INTERFACE IMPORTED)
-  set_target_properties(png PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
-    INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
-    INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
+        add_library(png INTERFACE IMPORTED)
+        set_target_properties(png PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
+            INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
+            INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
+    endif(NO_CONAN_AT_ALL)
 endif()
 
 
@@ -512,8 +510,8 @@ target_include_directories(bitprim-core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
   
-target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC)
-target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
+target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
@@ -545,14 +543,18 @@ else()
   )
 endif()
 
-target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
 
-if (MINGW) #(WIN32)
-    target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
+if (NO_CONAN_AT_ALL)
+    if (MINGW) #(WIN32)
+        target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
+    endif()
 endif()
 
 if (WITH_PNG)
-  target_link_libraries(bitprim-core PUBLIC png)  #TODO(fernando): manage with Conan
+    if (NO_CONAN_AT_ALL)
+        target_link_libraries(bitprim-core PUBLIC png)
+    endif (NO_CONAN_AT_ALL)
 endif()
 
 if (WITH_LITECOIN)
