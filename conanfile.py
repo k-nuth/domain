@@ -41,7 +41,7 @@ class BitprimCoreConan(ConanFile):
                "with_litecoin": [True, False],
                "with_qrencode": [True, False],
                "with_tests": [True, False],
-               "with_examples": [True, False],
+               "with_examples": [True, False]
     }
     # "not_use_cpp11_abi": [True, False]
 
@@ -64,7 +64,10 @@ class BitprimCoreConan(ConanFile):
     package_files = "build/lbitprim-core.a"
     build_policy = "missing"
 
-    requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
+    # requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
+    #            ("secp256k1/0.3@bitprim/testing"))
+
+    requires = (("boost/1.66.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/testing"))
 
     def package_id(self):
