@@ -94,7 +94,7 @@ option(WITH_EXAMPLES "Compile with examples." OFF)
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
 if (WITH_ICU)
   add_definitions(-DWITH_ICU -DBOOST_HAS_ICU)
-  message(FATAL_ERROR "WITH_ICU not yet implemented")
+#   message(FATAL_ERROR "WITH_ICU not yet implemented")
 endif()
 
 # Implement --with-png and output ${png}.
@@ -119,7 +119,7 @@ endif()
 option(WITH_QRENCODE "Compile with QREncode." OFF)
 if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
-  message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
+#   message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
 endif()
 
 
