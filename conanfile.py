@@ -98,6 +98,11 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.with_litecoin)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
         
+        self.output.info("------------------------------------------------------")
+        self.output.info(self.settings.compiler)
+        self.output.info(self.settings.compiler.libcxx)
+        self.output.info("------------------------------------------------------")
+
         # if self.settings.compiler != "Visual Studio"
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
