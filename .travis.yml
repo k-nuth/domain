@@ -73,6 +73,9 @@ matrix:
       - <<: *linux
         env: CONAN_CLANG_VERSIONS=4.0 CONAN_DOCKER_IMAGE=lasote/conanclang40
 
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=5.0 CONAN_DOCKER_IMAGE=lasote/conanclang50
+
       - <<: *osx
         osx_image: xcode7.3
         env: CONAN_APPLE_CLANG_VERSIONS=7.3
@@ -111,6 +114,7 @@ script:
   - export BITPRIM_BUILD_NUMBER="$(git describe)"
   - echo "${BITPRIM_BUILD_NUMBER}"
 
+  #TODO(fernando): Use lasote/conanclang50 for checking formating and other clang-tools related
   - |
     if [[ "${CHECK_FORMATTING}" == "true" ]]; then
       cd ${TRAVIS_BUILD_DIR}
