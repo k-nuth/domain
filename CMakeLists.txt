@@ -124,14 +124,16 @@ set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 
 
 message( STATUS "1 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
+message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
+message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
     include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+else()
+    message( STATUS "bitprimbuildinfo doent exists")
 endif()
 
 
-# message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
-# message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
 
 # get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
 # foreach( d ${DirDefs} )
