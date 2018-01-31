@@ -47,12 +47,12 @@ class BitprimCoreConan(ConanFile):
         "with_png=True", \
         "with_litecoin=False", \
         "with_qrencode=True", \
-        "with_tests=True", \
+        "with_tests=False", \
         "with_examples=False"
 
 
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*"
+    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*", "examples/*"
     package_files = "build/lbitprim-core.a"
     build_policy = "missing"
 
@@ -98,7 +98,10 @@ class BitprimCoreConan(ConanFile):
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = option_on_off(True)
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
-        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
+        
+        # cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
+        cmake.verbose = False
+
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
 
@@ -110,6 +113,10 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.with_litecoin)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
         
+
+        if self.settings.compiler != "Visual Studio":
+            cmake.definitions["CONAN_CXX_FLAGS"] += " -Wno-deprecated-declarations"
+
         # self.output.info("------------------------------------------------------")
         # self.output.info(self.settings.compiler)
         # self.output.info(self.settings.compiler.libcxx)
@@ -136,6 +143,10 @@ class BitprimCoreConan(ConanFile):
 
         cmake.definitions["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
         cmake.configure(source_dir=self.source_folder)
+
+        # self.output.info("CONAN_CXX_FLAGS: %s" % (cmake.definitions["CONAN_CXX_FLAGS"], ))
+        # self.output.info("cmake.command_line: %s" % (cmake.command_line, ))
+
         cmake.build()
 
     def imports(self):

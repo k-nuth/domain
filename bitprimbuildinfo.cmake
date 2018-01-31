@@ -12,6 +12,11 @@
 # message( STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID} )
 # message( STATUS "NOT_USE_CPP11_ABI: " ${NOT_USE_CPP11_ABI} )
 
+
+message( STATUS "CONAN_CXX_FLAGS: " ${CONAN_CXX_FLAGS} )
+message( STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
+
+
 if (NOT NO_CONAN_AT_ALL)
     if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
         include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
@@ -35,3 +40,7 @@ if (NOT NO_CONAN_AT_ALL)
         message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
     endif()
 endif()
+
+message( STATUS "CONAN_CXX_FLAGS: " ${CONAN_CXX_FLAGS} )
+message( STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
+

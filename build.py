@@ -14,14 +14,18 @@ if __name__ == "__main__":
 
     filtered_builds = []
     for settings, options, env_vars, build_requires in builder.builds:
-        if settings["build_type"] == "Release" \
-                and not options["bitprim-core:shared"]:
+        if settings["build_type"] == "Release" and not options["bitprim-core:shared"]:
 
             # print(env_vars)
             env_vars["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
             # print(env_vars)
 
+            if os.getenv('BITPRIM_RUN_TESTS', 'false') == 'true':
+                options["bitprim-core:with_tests"] = "True"
+                options["bitprim-core:with_examples"] = "True"
+
             filtered_builds.append([settings, options, env_vars, build_requires])
+
 
     builder.builds = filtered_builds
     builder.run()
