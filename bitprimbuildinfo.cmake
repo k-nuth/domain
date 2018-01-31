@@ -9,6 +9,7 @@
 # message( STATUS "--------------------------------------------"  )
 
 message( STATUS "2 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
+message( STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID} )
 
 
 if (NOT NO_CONAN_AT_ALL)
@@ -19,7 +20,7 @@ if (NOT NO_CONAN_AT_ALL)
         remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
         remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 
-        if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
             if (NOT NOT_USE_CPP11_ABI)
                 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
             else()
