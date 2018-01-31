@@ -105,13 +105,27 @@ class BitprimCoreConan(ConanFile):
 
         # if self.settings.compiler != "Visual Studio"
         if self.settings.compiler == "gcc":
+            self.output.info("1")
             if float(str(self.settings.compiler.version)) >= 5:
+                self.output.info("2")
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
             else:
+                self.output.info("3")
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
         elif self.settings.compiler == "clang":
+            self.output.info("4")
             if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+                self.output.info("5")
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
+
+        if self.settings.compiler == "clang":
+            self.output.info("compiler is clang")
+
+        if str(self.settings.compiler.libcxx) == "libstdc++":
+            self.output.info("libcxx is libstdc++")
+
+        if str(self.settings.compiler.libcxx) == "libstdc++11":
+            self.output.info("libcxx is libstdc++11")
 
         cmake.definitions["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
         cmake.configure(source_dir=self.source_folder)
