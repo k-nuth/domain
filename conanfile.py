@@ -59,12 +59,24 @@ class BitprimCoreConan(ConanFile):
     requires = (("boost/1.66.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/testing"))
 
+    @property
+    def msvc_mt_build(self):
+        return "MT" in str(self.settings.compiler.runtime)
+
     def requirements(self):
         if self.options.with_png:
             self.requires("libpng/1.6.34@bitprim/stable")
             
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@bitprim/stable")
+
+    def config_options(self):
+        self.output.info('def config_options(self):')
+        if self.settings.compiler == "Visual Studio":
+            self.options.remove("fPIC")
+
+            if self.options.shared and self.msvc_mt_build:
+                self.options.remove("shared")
 
     def package_id(self):
         self.info.options.with_tests = "ANY"
