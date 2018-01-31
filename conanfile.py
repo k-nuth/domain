@@ -79,10 +79,12 @@ class BitprimCoreConan(ConanFile):
             print(dep)
             print(self.options[dep])
 
+            # self.options["boost"]
+
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = option_on_off(True)
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
-        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
+        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(True)
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
 

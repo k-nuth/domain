@@ -48,7 +48,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "
   else()
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
   endif()
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
+  # set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
+  # set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
+  
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -94,7 +96,9 @@ option(WITH_EXAMPLES "Compile with examples." OFF)
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
 if (WITH_ICU)
   add_definitions(-DWITH_ICU -DBOOST_HAS_ICU)
-#   message(FATAL_ERROR "WITH_ICU not yet implemented")
+  if (NO_CONAN_AT_ALL)
+    message(FATAL_ERROR "WITH_ICU not yet implemented")
+  endif (NO_CONAN_AT_ALL)
 endif()
 
 # Implement --with-png and output ${png}.
@@ -119,17 +123,52 @@ endif()
 option(WITH_QRENCODE "Compile with QREncode." OFF)
 if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
-#   message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
+
+  if (NO_CONAN_AT_ALL)
+    message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
+  endif (NO_CONAN_AT_ALL)
 endif()
 
 
 set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 # message(${BITPRIM_BUILD_NUMBER})
 
+
+get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+foreach( d ${DirDefs} )
+    message( STATUS "Found Define: " ${d} )
+endforeach()
+message( STATUS "DirDefs: " ${DirDefs} )
+
+remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+
+get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+foreach( d ${DirDefs} )
+    message( STATUS "Found Define: " ${d} )
+endforeach()
+message( STATUS "DirDefs: " ${DirDefs} )
+
+
 if (NOT NO_CONAN_AT_ALL)
   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
       conan_basic_setup()
+
+      get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+      foreach( d ${DirDefs} )
+        message( STATUS "Found Define: " ${d} )
+      endforeach()
+      message( STATUS "DirDefs: " ${DirDefs} )
+  
+      remove_definitions(-D_GLIBCXX_USE_CXX11_ABI)
+
+      get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+      foreach( d ${DirDefs} )
+        message( STATUS "Found Define: " ${d} )
+      endforeach()
+      message( STATUS "DirDefs: " ${DirDefs} )
+
   else()
       message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
   endif()
@@ -545,11 +584,11 @@ endif()
 
 target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
 
-if (NO_CONAN_AT_ALL)
+# if (NO_CONAN_AT_ALL)
     if (MINGW) #(WIN32)
         target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
     endif()
-endif()
+# endif()
 
 if (WITH_PNG)
     if (NO_CONAN_AT_ALL)
