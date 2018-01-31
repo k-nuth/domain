@@ -123,9 +123,9 @@ set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 
 
 
-message( STATUS "1 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
-message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
-message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
+# message( STATUS "1 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
+# message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
+# message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
     include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
@@ -542,14 +542,17 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 
 
 if (WITH_LITECOIN)
-  target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+  target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR}) #TODO(fernando): manage with Conan????
 endif()
 
 target_include_directories(bitprim-core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
   
-target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+if (NOT ENABLE_SHARED)
+    target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+endif()
+
 target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})

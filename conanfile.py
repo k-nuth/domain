@@ -86,7 +86,7 @@ class BitprimCoreConan(ConanFile):
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = option_on_off(True)
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
-        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(True)
+        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
 
@@ -105,17 +105,12 @@ class BitprimCoreConan(ConanFile):
 
         # if self.settings.compiler != "Visual Studio"
         if self.settings.compiler == "gcc":
-            # self.output.info("1")
             if float(str(self.settings.compiler.version)) >= 5:
-                # self.output.info("2")
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
             else:
-                # self.output.info("3")
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
         elif self.settings.compiler == "clang":
-            # self.output.info("4")
             if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
-                # self.output.info("5")
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
 
         # if self.settings.compiler == "clang":
@@ -151,6 +146,11 @@ class BitprimCoreConan(ConanFile):
         if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
             self.cpp_info.libs.append("pthread")
 
-        if self.settings.os == "Windows" or self.settings.compiler == "gcc": # MinGW
+        if self.settings.os == "Windows" and self.settings.compiler == "gcc": # MinGW
             self.cpp_info.libs.append("ws2_32")
             self.cpp_info.libs.append("wsock32")
+
+        if not self.options.shared:
+            self.cpp_info.defines.append("BC_STATIC")
+
+

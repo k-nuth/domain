@@ -1,0 +1,111 @@
+[settings]
+    arch=x86_64
+    build_type=Release
+    compiler=gcc
+    compiler.libcxx=libstdc++
+    compiler.version=7
+    os=Linux
+
+[requires]
+    bitprim-core/0.7
+
+[options]
+
+
+[full_settings]
+    arch=x86_64
+    build_type=Release
+    compiler=gcc
+    compiler.libcxx=libstdc++
+    compiler.version=7
+    os=Linux
+
+[full_requires]
+    bitprim-core/0.7@bitprim/testing:ba87eb3565cc2783fd70fe0bbb8c3a65c05edf7c
+    boost/1.66.0@bitprim/stable:d6f16005d05234c852d615645a3f2b9d0060a317
+    bzip2/1.0.6@bitprim/stable:d50a0d523d98c15bb147b18fa7d203887c38be8b
+    gmp/6.1.2@bitprim/stable:dbf8734f38cbc9f5f15ed1d55a6a8879224a4518
+    icu/60.2@bitprim/stable:67e059014d5c95c40d41fcd6ce5651b5059c824c
+    libiconv/1.15@bitprim/stable:d50a0d523d98c15bb147b18fa7d203887c38be8b
+    libpng/1.6.34@bitprim/stable:b781af3f476d0aa5070a0a35b544db7a3c193cc8
+    libqrencode/4.0.0@bitprim/stable:be5ca4f4939d2d5b6a0aecb4d32c4fceb011a87c
+    secp256k1/0.3@bitprim/testing:04ec35da46fd31570bc694d501a7d071c82753ac
+    zlib/1.2.11@bitprim/stable:6ae331b72e7e265ca2a3d1d8246faf73aa030238
+
+[full_options]
+    bitprim-core:fPIC=True
+    bitprim-core:shared=False
+    bitprim-core:with_examples=False
+    bitprim-core:with_icu=True
+    bitprim-core:with_litecoin=False
+    bitprim-core:with_png=True
+    bitprim-core:with_qrencode=True
+    bitprim-core:with_tests=True
+    boost:fPIC=True
+    boost:header_only=False
+    boost:shared=False
+    boost:without_atomic=False
+    boost:without_chrono=False
+    boost:without_container=True
+    boost:without_context=True
+    boost:without_coroutine=True
+    boost:without_date_time=False
+    boost:without_exception=False
+    boost:without_fiber=True
+    boost:without_filesystem=False
+    boost:without_graph=True
+    boost:without_graph_parallel=True
+    boost:without_iostreams=False
+    boost:without_locale=False
+    boost:without_log=False
+    boost:without_math=True
+    boost:without_mpi=True
+    boost:without_program_options=False
+    boost:without_python=True
+    boost:without_random=False
+    boost:without_regex=False
+    boost:without_serialization=True
+    boost:without_signals=True
+    boost:without_stacktrace=True
+    boost:without_system=False
+    boost:without_test=False
+    boost:without_thread=False
+    boost:without_timer=False
+    boost:without_type_erasure=True
+    boost:without_wave=True
+    bzip2:fPIC=True
+    bzip2:shared=False
+    gmp:disable-fft=False
+    gmp:disable_assembly=False
+    gmp:enable-assert=False
+    gmp:enable_cxx=True
+    gmp:enable_fat=False
+    gmp:microarchitecture=haswell
+    gmp:shared=False
+    icu:data_packaging=archive
+    icu:shared=False
+    icu:silent=True
+    icu:with_unit_tests=False
+    libiconv:fPIC=True
+    libiconv:shared=False
+    libpng:fPIC=True
+    libpng:shared=False
+    libqrencode:shared=False
+    secp256k1:enable_benchmark=False
+    secp256k1:enable_ecmult_static_precomputation=False
+    secp256k1:enable_endomorphism=False
+    secp256k1:enable_experimental=False
+    secp256k1:enable_module_ecdh=False
+    secp256k1:enable_module_recovery=True
+    secp256k1:enable_module_schnorr=False
+    secp256k1:enable_openssl_tests=False
+    secp256k1:enable_tests=False
+    secp256k1:fPIC=True
+    secp256k1:shared=False
+    zlib:shared=False
+
+[recipe_hash]
+
+
+[env]
+

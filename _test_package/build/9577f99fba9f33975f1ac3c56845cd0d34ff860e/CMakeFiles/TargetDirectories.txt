@@ -1,0 +1,3 @@
+/home/fernando/dev/bitprim-core/test_package/build/9577f99fba9f33975f1ac3c56845cd0d34ff860e/CMakeFiles/rebuild_cache.dir
+/home/fernando/dev/bitprim-core/test_package/build/9577f99fba9f33975f1ac3c56845cd0d34ff860e/CMakeFiles/example.dir
+/home/fernando/dev/bitprim-core/test_package/build/9577f99fba9f33975f1ac3c56845cd0d34ff860e/CMakeFiles/edit_cache.dir
