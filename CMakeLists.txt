@@ -42,16 +42,6 @@ project(bitprim-core
 # message(CMAKE_CXX_COMPILER_ID)
 # message(${CMAKE_CXX_COMPILER_ID})
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  if (NOT NOT_USE_CPP11_ABI)
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-  else()
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-  endif()
-  # set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
-  # set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
-  
-endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -116,8 +106,6 @@ if (WITH_LITECOIN)
   add_definitions(-DBITPRIM_LITECOIN)
 endif()
 
-
-
 # Implement --with-qrencode and output ${qrencode}.
 #------------------------------------------------------------------------------
 option(WITH_QRENCODE "Compile with QREncode." OFF)
@@ -134,45 +122,55 @@ set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 # message(${BITPRIM_BUILD_NUMBER})
 
 
-get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-foreach( d ${DirDefs} )
-    message( STATUS "Found Define: " ${d} )
-endforeach()
-message( STATUS "DirDefs: " ${DirDefs} )
 
-remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+message( STATUS "1 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
 
-get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-foreach( d ${DirDefs} )
-    message( STATUS "Found Define: " ${d} )
-endforeach()
-message( STATUS "DirDefs: " ${DirDefs} )
-
-
-if (NOT NO_CONAN_AT_ALL)
-  if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-      include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-      conan_basic_setup()
-
-      get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-      foreach( d ${DirDefs} )
-        message( STATUS "Found Define: " ${d} )
-      endforeach()
-      message( STATUS "DirDefs: " ${DirDefs} )
-  
-      remove_definitions(-D_GLIBCXX_USE_CXX11_ABI)
-
-      get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-      foreach( d ${DirDefs} )
-        message( STATUS "Found Define: " ${d} )
-      endforeach()
-      message( STATUS "DirDefs: " ${DirDefs} )
-
-  else()
-      message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
-  endif()
+if(EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
 endif()
+
+
+# message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
+# message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
+
+# get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+# foreach( d ${DirDefs} )
+#     message( STATUS "Found Define: " ${d} )
+# endforeach()
+# message( STATUS "DirDefs: " ${DirDefs} )
+
+# remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+# remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+
+# get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+# foreach( d ${DirDefs} )
+#     message( STATUS "Found Define: " ${d} )
+# endforeach()
+# message( STATUS "DirDefs: " ${DirDefs} )
+
+# if (NOT NO_CONAN_AT_ALL)
+#   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#       conan_basic_setup()
+
+#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+#       foreach( d ${DirDefs} )
+#         message( STATUS "Found Define: " ${d} )
+#       endforeach()
+#       message( STATUS "DirDefs: " ${DirDefs} )
+  
+#       remove_definitions(-D_GLIBCXX_USE_CXX11_ABI)
+
+#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+#       foreach( d ${DirDefs} )
+#         message( STATUS "Found Define: " ${d} )
+#       endforeach()
+#       message( STATUS "DirDefs: " ${DirDefs} )
+
+#   else()
+#       message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
+#   endif()
+# endif()
 
 
 set(Boost_DEBUG ON)

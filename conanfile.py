@@ -31,9 +31,6 @@ class BitprimCoreConan(ConanFile):
     description = "Bitcoin Cross-Platform C++ Development Toolkit"
     settings = "os", "compiler", "build_type", "arch"
 
-    # options = {"shared": [True, False]}
-    # default_options = "shared=False"
-
     options = {"shared": [True, False],
                "fPIC": [True, False],
                "with_icu": [True, False],
@@ -73,6 +70,11 @@ class BitprimCoreConan(ConanFile):
         self.info.options.with_tests = "ANY"
         self.info.options.with_examples = "ANY"
 
+        #For Bitprim Packages libstdc++ and libstdc++11 are the same
+        if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
+            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+                self.info.settings.compiler.libcxx = "ANY"
+
     def build(self):
         for dep in self.deps_cpp_info.deps:
             # self.output.warn(self.deps_cpp_info["MyLib"].libdirs)
@@ -101,6 +103,9 @@ class BitprimCoreConan(ConanFile):
             if float(str(self.settings.compiler.version)) >= 5:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
             else:
+                cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
+        elif self.settings.compiler == "clang":
+            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
 
         cmake.definitions["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
