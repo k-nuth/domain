@@ -52,7 +52,7 @@ class BitprimCoreConan(ConanFile):
 
 
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "include/*", "test/*"
+    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*"
     package_files = "build/lbitprim-core.a"
     build_policy = "missing"
 
