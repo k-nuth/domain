@@ -78,7 +78,7 @@ class BitprimCoreConan(ConanFile):
         if self.options.shared and self.msvc_mt_build:
             return False
         else:
-            self.options.shared
+            return self.options.shared
 
     def requirements(self):
         if self.options.with_png:
