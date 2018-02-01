@@ -43,10 +43,10 @@ class BitprimCoreConan(ConanFile):
 
     default_options = "shared=False", \
         "fPIC=True", \
-        "with_icu=True", \
-        "with_png=True", \
+        "with_icu=False", \
+        "with_png=False", \
         "with_litecoin=False", \
-        "with_qrencode=True", \
+        "with_qrencode=False", \
         "with_tests=False", \
         "with_examples=False"
 
@@ -56,12 +56,29 @@ class BitprimCoreConan(ConanFile):
     package_files = "build/lbitprim-core.a"
     build_policy = "missing"
 
+    # requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
+    #            ("secp256k1/0.3@bitprim/testing"))
+
     requires = (("boost/1.66.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/testing"))
 
     @property
     def msvc_mt_build(self):
         return "MT" in str(self.settings.compiler.runtime)
+
+    @property
+    def fPIC_enabled(self):
+        if self.settings.compiler == "Visual Studio":
+            return False
+        else:
+            return self.options.fPIC
+
+    @property
+    def is_shared(self):
+        if self.options.shared and self.msvc_mt_build:
+            return False
+        else:
+            self.options.shared
 
     def requirements(self):
         if self.options.with_png:
@@ -100,10 +117,10 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
         
         # cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
-        cmake.verbose = False
+        cmake.verbose = True
 
-        cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
-        cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
+        cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
+        cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
 
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
@@ -115,7 +132,8 @@ class BitprimCoreConan(ConanFile):
         
 
         if self.settings.compiler != "Visual Studio":
-            cmake.definitions["CONAN_CXX_FLAGS"] += " -Wno-deprecated-declarations"
+            # cmake.definitions["CONAN_CXX_FLAGS"] += " -Wno-deprecated-declarations"
+            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " -Wno-deprecated-declarations"
 
         # self.output.info("------------------------------------------------------")
         # self.output.info(self.settings.compiler)
@@ -173,7 +191,7 @@ class BitprimCoreConan(ConanFile):
             self.cpp_info.libs.append("ws2_32")
             self.cpp_info.libs.append("wsock32")
 
-        if not self.options.shared:
+        if not self.is_shared:
             self.cpp_info.defines.append("BC_STATIC")
 
 
