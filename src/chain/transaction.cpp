@@ -255,9 +255,9 @@ bool transaction::from_data(reader& source, bool wire, bool unconfirmed)
         version_ = static_cast<uint32_t>(version);
         if(unconfirmed)
         {
-            const auto sigops = source.read_variable_little_endian();
+            const auto sigops = source.read_4_bytes_little_endian();
             cached_sigops_ = static_cast<uint32_t>(sigops);
-            const auto fees = source.read_variable_little_endian();
+            const auto fees = source.read_8_bytes_little_endian();
             cached_fees_ = static_cast<uint64_t>(fees);
             const auto is_standard = source.read_byte();
             cached_is_standard_ = static_cast<bool>(is_standard);
@@ -338,8 +338,8 @@ void transaction::to_data(writer& sink, bool wire, bool unconfirmed) const
         sink.write_variable_little_endian(version_);
         if(unconfirmed)
         {
-            sink.write_variable_little_endian(signature_operations());
-            sink.write_variable_little_endian(fees());
+            sink.write_4_bytes_little_endian(signature_operations());
+            sink.write_8_bytes_little_endian(fees());
             sink.write_byte(is_standard());
         }
     }
@@ -369,7 +369,7 @@ size_t transaction::serialized_size(bool wire, bool unconfirmed) const
         + message::variable_uint_size(outputs_.size())
         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins)
         + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs)
-        + ((!wire && unconfirmed) ? message::variable_uint_size(cached_sigops_) + message::variable_uint_size(cached_fees_) + sizeof(uint8_t)  : 0);
+        + ((!wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t)  : 0);
 }
 
 // Accessors.
