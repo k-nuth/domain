@@ -117,7 +117,7 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
         
         # cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
-        cmake.verbose = True
+        cmake.verbose = False
 
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
@@ -134,6 +134,10 @@ class BitprimCoreConan(ConanFile):
         if self.settings.compiler != "Visual Studio":
             # cmake.definitions["CONAN_CXX_FLAGS"] += " -Wno-deprecated-declarations"
             cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " -Wno-deprecated-declarations"
+
+        if self.settings.compiler == "Visual Studio":
+            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " /DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE"
+
 
         # self.output.info("------------------------------------------------------")
         # self.output.info(self.settings.compiler)
