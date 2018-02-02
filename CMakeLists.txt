@@ -127,7 +127,7 @@ set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 # message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
 # message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
 
-if(EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+if (EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
     include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
 else()
     message( STATUS "bitprimbuildinfo doent exists")
@@ -723,6 +723,35 @@ if (WITH_TESTS)
         test/wallet/uri.cpp
         test/wallet/uri_reader.cpp)
 
+# Simplified Test Project for testing Packaging purposes
+
+  # add_executable(bitprim_core_test
+  # test/main.cpp
+  # # test/math/big_number.cpp
+  # # test/math/big_number.hppcompact
+  # test/math/checksum.cpp
+  # test/math/elliptic_curve.cpp
+  # test/math/hash.cpp
+  # test/math/hash.hpp
+  # # test/math/hash_number.cpp
+  # test/math/limits.cpp
+  # # test/math/script_number.cpp
+  # # test/math/script_number.hpp
+  # test/math/stealth.cpp
+  # test/wallet/bitcoin_uri.cpp
+  # test/wallet/ec_private.cpp
+  # test/wallet/ec_public.cpp
+  # test/wallet/encrypted_keys.cpp
+  # test/wallet/hd_private.cpp
+  # test/wallet/hd_public.cpp
+  # test/wallet/message.cpp
+  # test/wallet/mnemonic.cpp
+  # test/wallet/mnemonic.hpp
+  # test/wallet/payment_address.cpp
+  # test/wallet/qrcode.cpp
+  # test/wallet/stealth_address.cpp
+  # test/wallet/uri.cpp
+  # test/wallet/uri_reader.cpp)
 
     target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
 

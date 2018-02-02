@@ -21,6 +21,7 @@ branches:
   only:
     - master
     - dev
+    - /^v\d+\.\d+\.\d+$/
 
 build: false
 
@@ -42,7 +43,7 @@ environment:
           CONAN_VISUAL_VERSIONS: 14
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 15
-          BITPRIM_RUN_TESTS=true
+          BITPRIM_RUN_TESTS: true
           VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
           
 
