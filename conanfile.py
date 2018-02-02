@@ -43,10 +43,10 @@ class BitprimCoreConan(ConanFile):
 
     default_options = "shared=False", \
         "fPIC=True", \
-        "with_icu=False", \
-        "with_png=False", \
+        "with_icu=True", \
+        "with_png=True", \
         "with_litecoin=False", \
-        "with_qrencode=False", \
+        "with_qrencode=True", \
         "with_tests=False", \
         "with_examples=False"
 
@@ -170,6 +170,11 @@ class BitprimCoreConan(ConanFile):
         # self.output.info("cmake.command_line: %s" % (cmake.command_line, ))
 
         cmake.build()
+
+        #TODO(fernando): Cmake Tests and Visual Studio doesn't work
+        if self.options.with_tests:
+            cmake.test()
+            # cmake.test(target="tests")
 
     def imports(self):
         self.copy("*.h", "", "include")
