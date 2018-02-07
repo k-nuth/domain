@@ -117,7 +117,7 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
         
         # cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
-        cmake.verbose = False
+        cmake.verbose = True
 
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
