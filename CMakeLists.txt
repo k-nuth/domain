@@ -637,6 +637,9 @@ if (WITH_TESTS)
         # test/chain/script/operation.cpp
         # test/chain/script/script.cpp
         # test/chain/script/script.hpp
+
+        test/chain/script.cpp
+
         test/chain/transaction.cpp
         test/config/authority.cpp
         test/config/base58.cpp
@@ -666,6 +669,7 @@ if (WITH_TESTS)
         test/message/alert.cpp
         test/message/alert_payload.cpp
         # test/message/block_message.cpp
+        test/message/block.cpp
         test/message/block_transactions.cpp
         test/message/compact_block.cpp
         test/message/fee_filter.cpp
@@ -693,6 +697,7 @@ if (WITH_TESTS)
         # test/message/send_compact_blocks.cpp
         test/message/send_headers.cpp
         # test/message/transaction_message.cpp
+        test/message/transaction.cpp
         test/message/verack.cpp
         test/message/version.cpp
         test/unicode/unicode.cpp
@@ -771,8 +776,8 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     base58_tests
     binary_tests
     bitcoin_uri_tests
-    block_tests
-    block_message_tests
+    chain_block_tests
+    message_block_tests
     block_transactions_tests
     checkpoint_tests
     checksum_tests
@@ -794,11 +799,11 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     get_blocks_tests
     get_data_tests
     get_headers_tests
-    hash_number_tests
+    # hash_number_tests
     hash_tests
     hd_private_tests
     hd_public_tests
-    header_tests
+    chain_header_tests
     headers_tests
     heading_tests
     input_tests
@@ -820,17 +825,17 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     printer_tests
     random_tests
     reject_tests
-    script_number_tests
+    # script_number_tests
     script_tests
-    send_compact_blocks_tests
+    # send_compact_blocks_tests
     send_headers_tests
     serializer_tests
     stealth_address_tests
     stealth_tests
     stream_tests
     thread_tests
-    transaction_tests
-    transaction_message_tests
+    chain_transaction_tests
+    message_transaction_tests
     unicode_istream_tests
     unicode_ostream_tests
     unicode_tests
