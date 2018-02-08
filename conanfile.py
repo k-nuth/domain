@@ -33,22 +33,24 @@ class BitprimCoreConan(ConanFile):
 
     options = {"shared": [True, False],
                "fPIC": [True, False],
-               "with_icu": [True, False],
-               "with_png": [True, False],
                "with_litecoin": [True, False],
+               "with_icu": [True, False],
                "with_qrencode": [True, False],
                "with_tests": [True, False],
                "with_examples": [True, False]
     }
 
+            #    "with_png": [True, False],
+
     default_options = "shared=False", \
         "fPIC=True", \
-        "with_icu=True", \
-        "with_png=True", \
         "with_litecoin=False", \
-        "with_qrencode=True", \
+        "with_icu=False", \
+        "with_qrencode=False", \
         "with_tests=False", \
         "with_examples=False"
+
+        # "with_png=False", \
 
 
     generators = "cmake"
@@ -81,8 +83,8 @@ class BitprimCoreConan(ConanFile):
             return self.options.shared
 
     def requirements(self):
-        if self.options.with_png:
-            self.requires("libpng/1.6.34@bitprim/stable")
+        # if self.options.with_png:
+        #     self.requires("libpng/1.6.34@bitprim/stable")
             
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@bitprim/stable")
@@ -125,10 +127,12 @@ class BitprimCoreConan(ConanFile):
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
 
-        cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
-        cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
         cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.with_litecoin)
+
+        cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
+        # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
+        cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
         
 
         if self.settings.compiler != "Visual Studio":
