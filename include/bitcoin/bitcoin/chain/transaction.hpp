@@ -140,6 +140,10 @@ public:
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
+    uint64_t cached_fees() const;
+    uint32_t cached_sigops() const;
+    bool cached_is_standard() const;
+
     hash_digest hash() const;
     hash_digest hash(uint32_t sighash_type) const;
 
@@ -179,11 +183,6 @@ public:
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
-    
-    //Only accesible for unconfirmed txs    
-    uint32_t cached_sigops_;
-    bool cached_is_standard_;
-    uint64_t cached_fees_;
 
     bool is_standard() const;
 
@@ -197,6 +196,16 @@ private:
     uint32_t locktime_;
     input::list inputs_;
     output::list outputs_;
+
+    // TODO: (refactor to transaction_result)
+    // this 3 variables should be stored in transaction_unconfired database when the store
+    // function is called. This values will be in the transaction_result object before
+    // creating the transaction object
+
+    //Only accesible for unconfirmed txs
+    uint64_t cached_fees_;
+    uint32_t cached_sigops_;
+    bool cached_is_standard_;
 
     // These share a mutex as they are not expected to conflict.
     mutable boost::optional<uint64_t> total_input_value_;
