@@ -48,11 +48,16 @@
 #include <bitcoin/bitcoin/config/endpoint.hpp>
 #include <bitcoin/bitcoin/config/hash160.hpp>
 #include <bitcoin/bitcoin/config/hash256.hpp>
+#include <bitcoin/bitcoin/config/header.hpp>
+#include <bitcoin/bitcoin/config/input.hpp>
+#include <bitcoin/bitcoin/config/output.hpp>
 #include <bitcoin/bitcoin/config/parameter.hpp>
 #include <bitcoin/bitcoin/config/parser.hpp>
+#include <bitcoin/bitcoin/config/point.hpp>
 #include <bitcoin/bitcoin/config/printer.hpp>
 #include <bitcoin/bitcoin/config/settings.hpp>
 #include <bitcoin/bitcoin/config/sodium.hpp>
+#include <bitcoin/bitcoin/config/transaction.hpp>
 #include <bitcoin/bitcoin/formats/base_10.hpp>
 #include <bitcoin/bitcoin/formats/base_16.hpp>
 #include <bitcoin/bitcoin/formats/base_58.hpp>
