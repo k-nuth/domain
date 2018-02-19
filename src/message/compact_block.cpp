@@ -39,6 +39,7 @@ const uint32_t compact_block::version_maximum = version::level::bip152;
 compact_block compact_block::factory_from_data(uint32_t version,
     const data_chunk& data)
 {
+    std::cout << "compact_block::factory_from_data\n";
     compact_block instance;
     instance.from_data(version, data);
     return instance;
@@ -47,6 +48,7 @@ compact_block compact_block::factory_from_data(uint32_t version,
 compact_block compact_block::factory_from_data(uint32_t version,
     std::istream& stream)
 {
+    std::cout << "compact_block::factory_from_data 2\n";
     compact_block instance;
     instance.from_data(version, stream);
     return instance;
@@ -55,6 +57,8 @@ compact_block compact_block::factory_from_data(uint32_t version,
 compact_block compact_block::factory_from_data(uint32_t version,
     reader& source)
 {
+    std::cout << "compact_block::factory_from_data 3\n";
+
     compact_block instance;
     instance.from_data(version, source);
     return instance;
@@ -63,6 +67,8 @@ compact_block compact_block::factory_from_data(uint32_t version,
 compact_block::compact_block()
   : header_(), nonce_(0), short_ids_(), transactions_()
 {
+    std::cout << "compact_block::compact_block\n";
+
 }
 
 compact_block::compact_block(const chain::header& header, uint64_t nonce,
@@ -73,6 +79,8 @@ compact_block::compact_block(const chain::header& header, uint64_t nonce,
     short_ids_(short_ids),
     transactions_(transactions)
 {
+    std::cout << "compact_block::compact_block 2\n";
+
 }
 
 compact_block::compact_block(chain::header&& header, uint64_t nonce,
@@ -82,27 +90,37 @@ compact_block::compact_block(chain::header&& header, uint64_t nonce,
     short_ids_(std::move(short_ids)),
     transactions_(std::move(transactions))
 {
+    std::cout << "compact_block::compact_block 3\n";
+
 }
 
 compact_block::compact_block(const compact_block& other)
   : compact_block(other.header_, other.nonce_, other.short_ids_,
       other.transactions_)
 {
+    std::cout << "compact_block::compact_block 4\n";
+
 }
 
 compact_block::compact_block(compact_block&& other)
   : compact_block(std::move(other.header_), other.nonce_,
       std::move(other.short_ids_), std::move(other.transactions_))
 {
+    std::cout << "compact_block::compact_block 5\n";
+
 }
 
 bool compact_block::is_valid() const
 {
+    std::cout << "compact_block::is_valid\n";
+
     return header_.is_valid() && !short_ids_.empty() && !transactions_.empty();
 }
 
 void compact_block::reset()
 {
+    std::cout << "compact_block::reset\n";
+
     header_ = chain::header{};
     nonce_ = 0;
     short_ids_.clear();
@@ -113,18 +131,24 @@ void compact_block::reset()
 
 bool compact_block::from_data(uint32_t version, const data_chunk& data)
 {
+    std::cout << "compact_block::from_data\n";
+
     data_source istream(data);
     return from_data(version, istream);
 }
 
 bool compact_block::from_data(uint32_t version, std::istream& stream)
 {
+    std::cout << "compact_block::from_data 2\n";
+
     istream_reader source(stream);
     return from_data(version, source);
 }
 
 bool compact_block::from_data(uint32_t version, reader& source)
 {
+    std::cout << "compact_block::from_data 3\n";
+
     reset();
 
     if (!header_.from_data(source))
@@ -167,6 +191,8 @@ bool compact_block::from_data(uint32_t version, reader& source)
 
 data_chunk compact_block::to_data(uint32_t version) const
 {
+    std::cout << "compact_block::to_data\n";
+
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -179,12 +205,16 @@ data_chunk compact_block::to_data(uint32_t version) const
 
 void compact_block::to_data(uint32_t version, std::ostream& stream) const
 {
+    std::cout << "compact_block::to_data 2\n";
+
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
 void compact_block::to_data(uint32_t version, writer& sink) const
 {
+    std::cout << "compact_block::to_data 3\n";
+
     header_.to_data(sink);
     sink.write_8_bytes_little_endian(nonce_);
     sink.write_variable_little_endian(short_ids_.size());
@@ -200,6 +230,8 @@ void compact_block::to_data(uint32_t version, writer& sink) const
 
 size_t compact_block::serialized_size(uint32_t version) const
 {
+    std::cout << "compact_block::serialized_size\n";
+
     auto size = chain::header::satoshi_fixed_size() +
         message::variable_uint_size(short_ids_.size()) +
         (short_ids_.size() * 6u) +
@@ -213,41 +245,54 @@ size_t compact_block::serialized_size(uint32_t version) const
 
 chain::header& compact_block::header()
 {
+    std::cout << "compact_block::header\n";
+
     return header_;
 }
 
 const chain::header& compact_block::header() const
 {
+    std::cout << "compact_block::header 2\n";
+
     return header_;
 }
 
 void compact_block::set_header(const chain::header& value)
 {
+    std::cout << "compact_block::set_header\n";
+
     header_ = value;
 }
 
 void compact_block::set_header(chain::header&& value)
 {
+    std::cout << "compact_block::set_header 2\n";
+
     header_ = std::move(value);
 }
 
 uint64_t compact_block::nonce() const
 {
+    std::cout << "compact_block::nonce\n";
+
     return nonce_;
 }
 
 void compact_block::set_nonce(uint64_t value)
 {
+    std::cout << "compact_block::set_nonce\n";
     nonce_ = value;
 }
 
 compact_block::short_id_list& compact_block::short_ids()
 {
+    std::cout << "compact_block::short_ids\n";
     return short_ids_;
 }
 
 const compact_block::short_id_list& compact_block::short_ids() const
 {
+    std::cout << "compact_block::short_ids 2\n";
     return short_ids_;
 }
 
