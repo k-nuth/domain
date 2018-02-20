@@ -21,17 +21,6 @@
 
 #include <cstdint>
 
-// #include <cstddef>
-// #include <string>
-// #include <vector>
-// #include <boost/functional/hash_fwd.hpp>
-// #include <boost/multiprecision/cpp_int.hpp>
-// #include <bitcoin/bitcoin/compat.hpp>
-// #include <bitcoin/bitcoin/define.hpp>
-// #include <bitcoin/bitcoin/utility/data.hpp>
-// #include <bitcoin/bitcoin/utility/endian.hpp>
-
-
 #include <bitcoin/bitcoin/math/uint256.hpp>
 
 namespace libbitcoin {
@@ -85,7 +74,7 @@ public:
  *      .write(val.GetUint64(3))
  *      .finalize()
  */
-uint64_t sip_Hash_uint256(uint64_t k0, uint64_t k1, uint256_t const& val);
+uint64_t sip_hash_uint256(uint64_t k0, uint64_t k1, uint256_t const& val);
 uint64_t sip_hash_uint256_extra(uint64_t k0, uint64_t k1, uint256_t const& val, uint32_t extra);
 
 } // namespace libbitcoin

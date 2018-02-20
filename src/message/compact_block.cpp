@@ -347,5 +347,34 @@ bool compact_block::operator!=(const compact_block& other) const
     return !(*this == other);
 }
 
+void to_data_header_nonce(compact_block const& block, writer& sink) {
+    block.header().to_data(sink);
+    sink.write_8_bytes_little_endian(block.nonce());
+}
+
+void to_data_header_nonce(compact_block const& block, std::ostream& stream) {
+    ostream_writer sink(stream);
+    to_data_header_nonce(block, sink);
+}
+
+data_chunk to_data_header_nonce(compact_block const& block) {
+    //std::cout << "compact_block::to_data\n";
+
+    data_chunk data;
+    auto size = chain::header::satoshi_fixed_size() + sizeof(block.nonce());
+
+    data.reserve(size);
+    data_sink ostream(data);
+    to_data_header_nonce(block, ostream);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return data;
+}
+
+hash_digest hash(compact_block const& block) {
+    return sha256_hash(to_data_header_nonce(block));
+}
+
+
 } // namespace message
 } // namespace libbitcoin

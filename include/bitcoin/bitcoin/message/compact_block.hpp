@@ -102,6 +102,15 @@ private:
     prefilled_transaction::list transactions_;
 };
 
+
+void to_data_header_nonce(compact_block const& block, writer& sink);
+
+void to_data_header_nonce(compact_block const& block, std::ostream& stream);
+
+data_chunk to_data_header_nonce(compact_block const& block);
+
+hash_digest hash(compact_block const& block);
+
 } // namespace message
 } // namespace libbitcoin
 
