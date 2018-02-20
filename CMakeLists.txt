@@ -390,6 +390,7 @@ set(bitprim_core_sources
         src/math/hash.cpp
         src/math/secp256k1_initializer.cpp
         src/math/secp256k1_initializer.hpp
+        src/math/sip_hash.cpp
         src/math/stealth.cpp
         src/math/external/aes256.h
         src/math/external/crypto_scrypt.h
