@@ -38,6 +38,15 @@ namespace libbitcoin {
 
 using uint256_t = boost::multiprecision::uint256_t;
 
+template <size_t i>
+uint64_t get_uint64(uint256_t const& x) {
+    auto const* ptr = reinterpret_cast<uint8_t const*>(x.backend().limbs()) + i * sizeof(uint64_t);
+    
+    return ((uint64_t)ptr[0]) | ((uint64_t)ptr[1]) << 8 |
+            ((uint64_t)ptr[2]) << 16 | ((uint64_t)ptr[3]) << 24 |
+            ((uint64_t)ptr[4]) << 32 | ((uint64_t)ptr[5]) << 40 |
+            ((uint64_t)ptr[6]) << 48 | ((uint64_t)ptr[7]) << 56;
+}
 
 /** SipHash-2-4 */
 class sip_hasher {
