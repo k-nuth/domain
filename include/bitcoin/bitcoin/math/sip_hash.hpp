@@ -21,15 +21,29 @@
 
 #include <cstdint>
 
-#include <bitcoin/bitcoin/math/uint256.hpp>
+#include <bitcoin/bitcoin/math/hash.hpp>
+//#include <bitcoin/bitcoin/math/uint256.hpp>
 
 namespace libbitcoin {
 
-using uint256_t = boost::multiprecision::uint256_t;
+//using uint256_t = boost::multiprecision::uint256_t;
+//
+//template <size_t i>
+//uint64_t get_uint64(uint256_t const& x) {
+//    auto const* ptr = reinterpret_cast<uint8_t const*>(x.backend().limbs()) + i * sizeof(uint64_t);
+//    
+//    return ((uint64_t)ptr[0]) | ((uint64_t)ptr[1]) << 8 |
+//            ((uint64_t)ptr[2]) << 16 | ((uint64_t)ptr[3]) << 24 |
+//            ((uint64_t)ptr[4]) << 32 | ((uint64_t)ptr[5]) << 40 |
+//            ((uint64_t)ptr[6]) << 48 | ((uint64_t)ptr[7]) << 56;
+//}
+
 
 template <size_t i>
-uint64_t get_uint64(uint256_t const& x) {
-    auto const* ptr = reinterpret_cast<uint8_t const*>(x.backend().limbs()) + i * sizeof(uint64_t);
+uint64_t get_uint64(hash_digest const& x) {
+    //precondition: 0 <= i < sizeof(hash_digest) / sizeof(uint64_t)
+
+    auto const* ptr = x.data() + i * sizeof(uint64_t);
     
     return ((uint64_t)ptr[0]) | ((uint64_t)ptr[1]) << 8 |
             ((uint64_t)ptr[2]) << 16 | ((uint64_t)ptr[3]) << 24 |
@@ -74,8 +88,11 @@ public:
  *      .write(val.GetUint64(3))
  *      .finalize()
  */
-uint64_t sip_hash_uint256(uint64_t k0, uint64_t k1, uint256_t const& val);
-uint64_t sip_hash_uint256_extra(uint64_t k0, uint64_t k1, uint256_t const& val, uint32_t extra);
+//uint64_t sip_hash_uint256(uint64_t k0, uint64_t k1, uint256_t const& val);
+//uint64_t sip_hash_uint256_extra(uint64_t k0, uint64_t k1, uint256_t const& val, uint32_t extra);
+
+uint64_t sip_hash_uint256(uint64_t k0, uint64_t k1, hash_digest const& val);
+uint64_t sip_hash_uint256_extra(uint64_t k0, uint64_t k1, hash_digest const& val, uint32_t extra);
 
 } // namespace libbitcoin
 

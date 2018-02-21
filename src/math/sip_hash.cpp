@@ -123,7 +123,7 @@ uint64_t sip_hasher::finalize() const {
     return v0 ^ v1 ^ v2 ^ v3;
 }
 
-uint64_t sip_hash_uint256(uint64_t k0, uint64_t k1, uint256_t const& val) {
+uint64_t sip_hash_uint256(uint64_t k0, uint64_t k1, hash_digest const& val) {
     /* Specialized implementation for efficiency */
     uint64_t d = get_uint64<0>(val);
 
@@ -162,7 +162,7 @@ uint64_t sip_hash_uint256(uint64_t k0, uint64_t k1, uint256_t const& val) {
     return v0 ^ v1 ^ v2 ^ v3;
 }
 
-uint64_t sip_hash_uint256_extra(uint64_t k0, uint64_t k1, uint256_t const& val, uint32_t extra) {
+uint64_t sip_hash_uint256_extra(uint64_t k0, uint64_t k1, hash_digest const& val, uint32_t extra) {
     /* Specialized implementation for efficiency */
     uint64_t d = get_uint64<0>(val);
 

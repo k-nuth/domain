@@ -45,7 +45,8 @@ typedef byte_array<half_hash_size> half_hash;
 typedef byte_array<quarter_hash_size> quarter_hash;
 typedef byte_array<long_hash_size> long_hash;
 typedef byte_array<short_hash_size> short_hash;
-typedef byte_array<mini_hash_size> mini_hash;
+//typedef byte_array<mini_hash_size> mini_hash;
+typedef uint64_t mini_hash;
 
 // Lists of common bitcoin hashes.
 typedef std::vector<hash_digest> hash_list;
@@ -100,12 +101,15 @@ BC_CONSTEXPR short_hash null_short_hash
     }
 };
 
+/*
 BC_CONSTEXPR mini_hash null_mini_hash
 {
     {
         0, 0, 0, 0, 0, 0
     }
 };
+*/
+BC_CONSTEXPR mini_hash null_mini_hash = 0;
 
 inline uint256_t to_uint256(const hash_digest& hash)
 {
