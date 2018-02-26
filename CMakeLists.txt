@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-core
 #==============================================================================
 project(bitprim-core
-  VERSION 0.6.0
+  VERSION 0.7.0
   LANGUAGES CXX C)
 
 
@@ -42,14 +42,6 @@ project(bitprim-core
 # message(CMAKE_CXX_COMPILER_ID)
 # message(${CMAKE_CXX_COMPILER_ID})
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  if (NOT NOT_USE_CPP11_ABI)
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-  else()
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-  endif()
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
-endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -94,7 +86,9 @@ option(WITH_EXAMPLES "Compile with examples." OFF)
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
 if (WITH_ICU)
   add_definitions(-DWITH_ICU -DBOOST_HAS_ICU)
-  message(FATAL_ERROR "WITH_ICU not yet implemented")
+  if (NO_CONAN_AT_ALL)
+    message(FATAL_ERROR "WITH_ICU not yet implemented")
+  endif (NO_CONAN_AT_ALL)
 endif()
 
 # Implement --with-png and output ${png}.
@@ -109,20 +103,19 @@ endif()
 option(WITH_LITECOIN "Compile with Litecoin support." OFF)
 if (WITH_LITECOIN)
   add_definitions(-DWITH_LITECOIN)
-  add_definitions(-DLITECOIN)
+  add_definitions(-DBITPRIM_LITECOIN)
 endif()
-
-
 
 # Implement --with-qrencode and output ${qrencode}.
 #------------------------------------------------------------------------------
 option(WITH_QRENCODE "Compile with QREncode." OFF)
 if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
-  message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
+
+  if (NO_CONAN_AT_ALL)
+    message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
+  endif (NO_CONAN_AT_ALL)
 endif()
-
-
 
 
 set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
@@ -130,14 +123,56 @@ set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 
 
 
-if (NOT NO_CONAN_AT_ALL)
-  if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-      include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-      conan_basic_setup()
-  else()
-      message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
-  endif()
+# message( STATUS "1 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
+# message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
+# message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
+
+if (EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+else()
+    message( STATUS "bitprimbuildinfo doent exists")
 endif()
+
+
+
+# get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+# foreach( d ${DirDefs} )
+#     message( STATUS "Found Define: " ${d} )
+# endforeach()
+# message( STATUS "DirDefs: " ${DirDefs} )
+
+# remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+# remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+
+# get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+# foreach( d ${DirDefs} )
+#     message( STATUS "Found Define: " ${d} )
+# endforeach()
+# message( STATUS "DirDefs: " ${DirDefs} )
+
+# if (NOT NO_CONAN_AT_ALL)
+#   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#       conan_basic_setup()
+
+#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+#       foreach( d ${DirDefs} )
+#         message( STATUS "Found Define: " ${d} )
+#       endforeach()
+#       message( STATUS "DirDefs: " ${DirDefs} )
+  
+#       remove_definitions(-D_GLIBCXX_USE_CXX11_ABI)
+
+#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+#       foreach( d ${DirDefs} )
+#         message( STATUS "Found Define: " ${d} )
+#       endforeach()
+#       message( STATUS "DirDefs: " ${DirDefs} )
+
+#   else()
+#       message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
+#   endif()
+# endif()
 
 
 set(Boost_DEBUG ON)
@@ -174,13 +209,15 @@ find_package(Threads REQUIRED)  #TODO(fernando): manage with conan
 # Require png of at least version 1.6.25 and output ${png_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (WITH_PNG)
-  find_package(PNG 1.6.25 REQUIRED) #TODO(fernando): manage with conan
+    if (NO_CONAN_AT_ALL)
+        find_package(PNG 1.6.25 REQUIRED)
 
-  add_library(png INTERFACE IMPORTED)
-  set_target_properties(png PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
-    INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
-    INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
+        add_library(png INTERFACE IMPORTED)
+        set_target_properties(png PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
+            INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
+            INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
+    endif(NO_CONAN_AT_ALL)
 endif()
 
 
@@ -331,7 +368,7 @@ set(bitprim_core_sources
         src/config/sodium.cpp
 
         src/error.cpp
-        src/bitcoin_cash_support.cpp
+        src/multi_crypto_support.cpp
         src/version.cpp
 
         src/formats/base_10.cpp
@@ -505,15 +542,18 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 
 
 if (WITH_LITECOIN)
-  target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+  target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR}) #TODO(fernando): manage with Conan????
 endif()
 
 target_include_directories(bitprim-core PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
   
-target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC)
-target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
+if (NOT ENABLE_SHARED)
+    target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+endif()
+
+target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
@@ -545,14 +585,18 @@ else()
   )
 endif()
 
-target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
 
-if (MINGW) #(WIN32)
-    target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
-endif()
+# if (NO_CONAN_AT_ALL)
+    if (MINGW) #(WIN32)
+        target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
+    endif()
+# endif()
 
 if (WITH_PNG)
-  target_link_libraries(bitprim-core PUBLIC png)  #TODO(fernando): manage with Conan
+    if (NO_CONAN_AT_ALL)
+        target_link_libraries(bitprim-core PUBLIC png)
+    endif (NO_CONAN_AT_ALL)
 endif()
 
 if (WITH_LITECOIN)
@@ -593,6 +637,9 @@ if (WITH_TESTS)
         # test/chain/script/operation.cpp
         # test/chain/script/script.cpp
         # test/chain/script/script.hpp
+
+        test/chain/script.cpp
+
         test/chain/transaction.cpp
         test/config/authority.cpp
         test/config/base58.cpp
@@ -622,6 +669,7 @@ if (WITH_TESTS)
         test/message/alert.cpp
         test/message/alert_payload.cpp
         # test/message/block_message.cpp
+        test/message/block.cpp
         test/message/block_transactions.cpp
         test/message/compact_block.cpp
         test/message/fee_filter.cpp
@@ -649,6 +697,7 @@ if (WITH_TESTS)
         # test/message/send_compact_blocks.cpp
         test/message/send_headers.cpp
         # test/message/transaction_message.cpp
+        test/message/transaction.cpp
         test/message/verack.cpp
         test/message/version.cpp
         test/unicode/unicode.cpp
@@ -679,6 +728,35 @@ if (WITH_TESTS)
         test/wallet/uri.cpp
         test/wallet/uri_reader.cpp)
 
+# Simplified Test Project for testing Packaging purposes
+
+  # add_executable(bitprim_core_test
+  # test/main.cpp
+  # # test/math/big_number.cpp
+  # # test/math/big_number.hppcompact
+  # test/math/checksum.cpp
+  # test/math/elliptic_curve.cpp
+  # test/math/hash.cpp
+  # test/math/hash.hpp
+  # # test/math/hash_number.cpp
+  # test/math/limits.cpp
+  # # test/math/script_number.cpp
+  # # test/math/script_number.hpp
+  # test/math/stealth.cpp
+  # test/wallet/bitcoin_uri.cpp
+  # test/wallet/ec_private.cpp
+  # test/wallet/ec_public.cpp
+  # test/wallet/encrypted_keys.cpp
+  # test/wallet/hd_private.cpp
+  # test/wallet/hd_public.cpp
+  # test/wallet/message.cpp
+  # test/wallet/mnemonic.cpp
+  # test/wallet/mnemonic.hpp
+  # test/wallet/payment_address.cpp
+  # test/wallet/qrcode.cpp
+  # test/wallet/stealth_address.cpp
+  # test/wallet/uri.cpp
+  # test/wallet/uri_reader.cpp)
 
     target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
 
@@ -698,8 +776,8 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     base58_tests
     binary_tests
     bitcoin_uri_tests
-    block_tests
-    block_message_tests
+    chain_block_tests
+    message_block_tests
     block_transactions_tests
     checkpoint_tests
     checksum_tests
@@ -721,11 +799,11 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     get_blocks_tests
     get_data_tests
     get_headers_tests
-    hash_number_tests
+    # hash_number_tests
     hash_tests
     hd_private_tests
     hd_public_tests
-    header_tests
+    chain_header_tests
     headers_tests
     heading_tests
     input_tests
@@ -747,17 +825,17 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     printer_tests
     random_tests
     reject_tests
-    script_number_tests
+    # script_number_tests
     script_tests
-    send_compact_blocks_tests
+    # send_compact_blocks_tests
     send_headers_tests
     serializer_tests
     stealth_address_tests
     stealth_tests
     stream_tests
     thread_tests
-    transaction_tests
-    transaction_message_tests
+    chain_transaction_tests
+    message_transaction_tests
     unicode_istream_tests
     unicode_ostream_tests
     unicode_tests
@@ -832,7 +910,7 @@ install(TARGETS bitprim-core EXPORT bitprim-core
 #)
 
 set(_bitprim_core_headers
-    bitcoin/bitcoin/bitcoin_cash_support.hpp
+    bitcoin/bitcoin/multi_crypto_support.hpp
     bitcoin/bitcoin/compat.h
     bitcoin/bitcoin/compat.hpp
     bitcoin/bitcoin/constants.hpp

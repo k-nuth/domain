@@ -113,14 +113,43 @@ bool png::write_png(std::istream& in, uint32_t size, uint32_t dots_per_inch,
         if (info_ptr == nullptr)
             return false;
 
-        png_color raw_palette;
-        auto palette = &raw_palette;
+//        png_color raw_palette;
+//        auto palette = &raw_palette;
+//        palette[0].red = foreground.red;
+//        palette[0].green = foreground.green;
+//        palette[0].blue = foreground.blue;
+//        palette[1].red = background.red;
+//        palette[1].green = background.green;
+//        palette[1].blue = background.blue;
+
+
+        png_color palette[2];
         palette[0].red = foreground.red;
         palette[0].green = foreground.green;
         palette[0].blue = foreground.blue;
         palette[1].red = background.red;
         palette[1].green = background.green;
         palette[1].blue = background.blue;
+
+//        static const png_color C4Colors[] =
+//            {
+//                {0,0,0},
+//                {155,0,0},
+//                {0,155,0},
+//                {0,0,155},
+//                {155,155,0},
+//                {155,0,155},
+//                {0,155,155},
+//                {155,155,155},
+//                {55,55,55},
+//                {255,0,0},
+//                {0,255,0},
+//                {0,0,255},
+//                {255,255,0},
+//                {255,0,255},
+//                {0,255,255},
+//                {255,255,255}
+//            };
 
         png_byte alpha_values[2];
         alpha_values[0] = foreground.alpha;

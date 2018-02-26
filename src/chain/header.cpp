@@ -416,12 +416,11 @@ hash_digest header::hash() const
     return hash;
 }
 
-#ifdef LITECOIN
-hash_digest header::litecoin_proof_of_work_hash() const
-{
+#ifdef BITPRIM_LITECOIN
+hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
-#endif //LITECOIN
+#endif //BITPRIM_LITECOIN
 
 // Validation helpers.
 //-----------------------------------------------------------------------------
@@ -455,11 +454,11 @@ bool header::is_valid_proof_of_work() const
         return false;
 
     // Ensure actual work is at least claimed amount (smaller is more work).
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
     return to_uint256(litecoin_proof_of_work_hash()) <= target;
-#else //LITECOIN
+#else //BITPRIM_LITECOIN
     return to_uint256(hash()) <= target;
-#endif //LITECOIN
+#endif //BITPRIM_LITECOIN
 }
 
 // Validation.

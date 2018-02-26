@@ -25,7 +25,7 @@ branches:
 
 env:
    global:
-     - CONAN_REFERENCE: "bitprim-core/0.6"
+     - CONAN_REFERENCE: "bitprim-core/0.7"
      - CONAN_USERNAME: "bitprim"
      - CONAN_LOGIN_USERNAME: "bitprim-bintray"
      - CONAN_CHANNEL: "stable"
@@ -60,13 +60,15 @@ matrix:
         env: CONAN_GCC_VERSIONS=4.9 CONAN_DOCKER_IMAGE=lasote/conangcc49
 
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=lasote/conangcc54
+        env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=lasote/conangcc5
 
       - <<: *linux
         env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=lasote/conangcc63
+            #  BITPRIM_RUN_TESTS=true
 
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=lasote/conangcc72
+        env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=lasote/conangcc7
+             BITPRIM_RUN_TESTS=true
 
       - <<: *linux
         env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=lasote/conanclang39
@@ -74,17 +76,19 @@ matrix:
       - <<: *linux
         env: CONAN_CLANG_VERSIONS=4.0 CONAN_DOCKER_IMAGE=lasote/conanclang40
 
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=5.0 CONAN_DOCKER_IMAGE=lasote/conanclang50
+
       - <<: *osx
         osx_image: xcode7.3
         env: CONAN_APPLE_CLANG_VERSIONS=7.3
-
-      # - <<: *osx
-      #   osx_image: xcode8.2
-      #   env: CONAN_APPLE_CLANG_VERSIONS=8.0
-
       - <<: *osx
         osx_image: xcode8.3
         env: CONAN_APPLE_CLANG_VERSIONS=8.1
+      - <<: *osx
+        osx_image: xcode9
+        env: CONAN_APPLE_CLANG_VERSIONS=9.0
+             BITPRIM_RUN_TESTS=true
 
 
       # # - <<: *linux
@@ -111,6 +115,7 @@ script:
   - export BITPRIM_BUILD_NUMBER="$(git describe)"
   - echo "${BITPRIM_BUILD_NUMBER}"
 
+  #TODO(fernando): Use lasote/conanclang50 for checking formating and other clang-tools related
   - |
     if [[ "${CHECK_FORMATTING}" == "true" ]]; then
       cd ${TRAVIS_BUILD_DIR}

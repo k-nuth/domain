@@ -75,9 +75,9 @@ public:
         no_blocks_start = 32000,
 
         // This preceded the BIP system.
-#ifdef LITECOIN
+#ifdef BITPRIM_LITECOIN
         headers = 70002,
-#else
+#else 
         headers = 31800,
 #endif
 

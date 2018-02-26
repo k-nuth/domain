@@ -25,83 +25,160 @@ def option_on_off(option):
 
 class BitprimCoreConan(ConanFile):
     name = "bitprim-core"
-    version = "0.6"
+    version = "0.7"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-core"
     description = "Bitcoin Cross-Platform C++ Development Toolkit"
     settings = "os", "compiler", "build_type", "arch"
 
-    # options = {"shared": [True, False]}
-    # default_options = "shared=False"
-
-
     options = {"shared": [True, False],
                "fPIC": [True, False],
-               "with_icu": [True, False],
-               "with_png": [True, False],
                "with_litecoin": [True, False],
+               "with_icu": [True, False],
                "with_qrencode": [True, False],
+               "with_tests": [True, False],
+               "with_examples": [True, False]
     }
 
-    # "with_tests": [True, False],
-    # "with_examples": [True, False],
-    # "not_use_cpp11_abi": [True, False]
+            #    "with_png": [True, False],
 
     default_options = "shared=False", \
         "fPIC=True", \
-        "with_icu=False", \
-        "with_png=False", \
         "with_litecoin=False", \
-        "with_qrencode=False"
+        "with_icu=False", \
+        "with_qrencode=False", \
+        "with_tests=False", \
+        "with_examples=False"
 
-    # "with_tests=False", \
-    # "with_examples=False", \
-    # "not_use_cpp11_abi=False"
+        # "with_png=False", \
 
-    with_tests = False
-    with_examples = False
 
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "include/*", "test/*"
+    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*", "examples/*"
     package_files = "build/lbitprim-core.a"
     build_policy = "missing"
 
-    requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-               ("secp256k1/0.3@bitprim/stable"))
+    # requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
+    #            ("secp256k1/0.3@bitprim/testing"))
+
+    requires = (("boost/1.66.0@bitprim/stable"),
+               ("secp256k1/0.3@bitprim/testing"))
+
+    @property
+    def msvc_mt_build(self):
+        return "MT" in str(self.settings.compiler.runtime)
+
+    @property
+    def fPIC_enabled(self):
+        if self.settings.compiler == "Visual Studio":
+            return False
+        else:
+            return self.options.fPIC
+
+    @property
+    def is_shared(self):
+        if self.options.shared and self.msvc_mt_build:
+            return False
+        else:
+            return self.options.shared
+
+    def requirements(self):
+        # if self.options.with_png:
+        #     self.requires("libpng/1.6.34@bitprim/stable")
+            
+        if self.options.with_qrencode:
+            self.requires("libqrencode/4.0.0@bitprim/stable")
+
+    def config_options(self):
+        self.output.info('def config_options(self):')
+        if self.settings.compiler == "Visual Studio":
+            self.options.remove("fPIC")
+
+            if self.options.shared and self.msvc_mt_build:
+                self.options.remove("shared")
+
+    def package_id(self):
+        self.info.options.with_tests = "ANY"
+        self.info.options.with_examples = "ANY"
+
+        #For Bitprim Packages libstdc++ and libstdc++11 are the same
+        if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
+            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+                self.info.settings.compiler.libcxx = "ANY"
 
     def build(self):
-        # self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
-        # self.output.warn("*** EnvVar BITPRIM_BUILD_NUMBER: %s" % (os.getenv('BITPRIM_BUILD_NUMBER', '-')))
-        # self.output.warn("-*-*-*-*-* FROM PYTHON 3 -*-*-*-*-*-*-*")
+        for dep in self.deps_cpp_info.deps:
+            # self.output.warn(self.deps_cpp_info["MyLib"].libdirs)
+            print(dep)
+            print(self.options[dep])
+
+            # self.options["boost"]
 
         cmake = CMake(self)
         cmake.definitions["USE_CONAN"] = option_on_off(True)
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
-        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
-        cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
-        cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
+        
+        # cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
+        cmake.verbose = True
 
-        # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
-        # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        # cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
-        cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
-        cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.with_examples)
+        cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
+        cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
+
+        cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
+        cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
+
+        cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.with_litecoin)
 
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
-        cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
-        cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.with_litecoin)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
+        # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
+        cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
         
+
+        if self.settings.compiler != "Visual Studio":
+            # cmake.definitions["CONAN_CXX_FLAGS"] += " -Wno-deprecated-declarations"
+            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " -Wno-deprecated-declarations"
+
+        if self.settings.compiler == "Visual Studio":
+            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " /DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE"
+
+
+        # self.output.info("------------------------------------------------------")
+        # self.output.info(self.settings.compiler)
+        # self.output.info(self.settings.compiler.libcxx)
+        # self.output.info("------------------------------------------------------")
+
         # if self.settings.compiler != "Visual Studio"
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
             else:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
+        elif self.settings.compiler == "clang":
+            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+                cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
+
+        # if self.settings.compiler == "clang":
+        #     self.output.info("compiler is clang")
+
+        # if str(self.settings.compiler.libcxx) == "libstdc++":
+        #     self.output.info("libcxx is libstdc++")
+
+        # if str(self.settings.compiler.libcxx) == "libstdc++11":
+        #     self.output.info("libcxx is libstdc++11")
 
         cmake.definitions["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
         cmake.configure(source_dir=self.source_folder)
+
+        # self.output.info("CONAN_CXX_FLAGS: %s" % (cmake.definitions["CONAN_CXX_FLAGS"], ))
+        # self.output.info("cmake.command_line: %s" % (cmake.command_line, ))
+
         cmake.build()
+
+        #TODO(fernando): Cmake Tests and Visual Studio doesn't work
+        if self.options.with_tests:
+            cmake.test()
+            # cmake.test(target="tests")
 
     def imports(self):
         self.copy("*.h", "", "include")
@@ -122,3 +199,12 @@ class BitprimCoreConan(ConanFile):
 
         if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
             self.cpp_info.libs.append("pthread")
+
+        if self.settings.os == "Windows" and self.settings.compiler == "gcc": # MinGW
+            self.cpp_info.libs.append("ws2_32")
+            self.cpp_info.libs.append("wsock32")
+
+        if not self.is_shared:
+            self.cpp_info.defines.append("BC_STATIC")
+
+
