@@ -163,9 +163,14 @@ bool compact_block::from_data(uint32_t version, reader& source)
     else
         short_ids_.reserve(count);
 
+    //todo:move to function
     // Order is required.
-    for (size_t id = 0; id < count && source; ++id)
-        short_ids_.push_back(source.read_mini_hash());
+    for (size_t id = 0; id < count && source; ++id) {
+        uint32_t lsb = source.read_4_bytes_little_endian();
+        uint16_t msb = source.read_2_bytes_little_endian();
+        short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
+        //short_ids_.push_back(source.read_mini_hash());
+    }
 
     count = source.read_size_little_endian();
 
@@ -219,8 +224,13 @@ void compact_block::to_data(uint32_t version, writer& sink) const
     sink.write_8_bytes_little_endian(nonce_);
     sink.write_variable_little_endian(short_ids_.size());
 
-    for (const auto& element: short_ids_)
-        sink.write_mini_hash(element);
+    for (const auto& element: short_ids_) {
+        //sink.write_mini_hash(element);
+        uint32_t lsb = element & 0xffffffff;
+        uint16_t msb = (element >> 32) & 0xffff;
+        sink.write_4_bytes_little_endian(lsb);
+        sink.write_2_bytes_little_endian(msb);
+    }
 
     sink.write_variable_little_endian(transactions_.size());
 

@@ -115,8 +115,9 @@ bool block_transactions::from_data(uint32_t version,
 
 bool block_transactions::from_data(uint32_t version, reader& source)
 {
+    //std::cout << "bool block_transactions::from_data(uint32_t version, reader& source) \n";
     reset();
-
+    
     block_hash_ = source.read_hash();
     const auto count = source.read_size_little_endian();
 

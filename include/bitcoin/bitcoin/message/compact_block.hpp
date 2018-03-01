@@ -36,8 +36,10 @@ public:
     typedef std::shared_ptr<compact_block> ptr;
     typedef std::shared_ptr<const compact_block> const_ptr;
 
-    typedef mini_hash short_id;
-    typedef mini_hash_list short_id_list;
+    //typedef mini_hash short_id;
+    //typedef mini_hash_list short_id_list;
+    using short_id = uint64_t;
+    using short_id_list = std::vector<short_id>;
 
     static compact_block factory_from_data(uint32_t version,
         const data_chunk& data);

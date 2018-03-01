@@ -118,6 +118,7 @@ typedef message::type::const_ptr_list_const_ptr type##_const_ptr_list_const_ptr
 // HACK: declare these in bc namespace to reduce length.
 DECLARE_MESSAGE_POINTER_TYPES(address);
 DECLARE_MESSAGE_POINTER_TYPES(block);
+DECLARE_MESSAGE_POINTER_TYPES(block_transactions);
 DECLARE_MESSAGE_POINTER_TYPES(compact_block);
 DECLARE_MESSAGE_POINTER_TYPES(get_address);
 DECLARE_MESSAGE_POINTER_TYPES(fee_filter);
