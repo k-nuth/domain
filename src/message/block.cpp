@@ -27,6 +27,8 @@
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
+#include <bitcoin/bitcoin/utility/container_sink.hpp>
+#include <bitcoin/bitcoin/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -158,6 +160,34 @@ bool block::operator==(const block& other) const
 bool block::operator!=(const block& other) const
 {
     return !(*this == other);
+}
+
+
+void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
+    block.header().to_data(sink);
+    sink.write_8_bytes_little_endian(nonce);
+}
+
+void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream) {
+    ostream_writer sink(stream);
+    to_data_header_nonce(block, nonce, sink);
+}
+
+data_chunk to_data_header_nonce(block const& block, uint64_t nonce) {
+   
+    data_chunk data;
+    auto size = chain::header::satoshi_fixed_size() + sizeof(nonce);
+
+    data.reserve(size);
+    data_sink ostream(data);
+    to_data_header_nonce(block,nonce, ostream);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return data;
+}
+
+hash_digest hash(block const& block, uint64_t nonce) {
+    return sha256_hash(to_data_header_nonce(block,nonce));
 }
 
 } // namespace message
