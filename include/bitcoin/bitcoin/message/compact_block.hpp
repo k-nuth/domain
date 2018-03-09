@@ -22,6 +22,7 @@
 #include <istream>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
+#include <bitcoin/bitcoin/message/block.hpp>
 #include <bitcoin/bitcoin/message/prefilled_transaction.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
@@ -47,6 +48,8 @@ public:
         std::istream& stream);
     static compact_block factory_from_data(uint32_t version,
         reader& source);
+
+    static compact_block factory_from_block(message::block const& block);
 
     compact_block();
     compact_block(const chain::header& header, uint64_t nonce,
@@ -79,6 +82,9 @@ public:
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);
     bool from_data(uint32_t version, reader& source);
+    
+    bool from_block(message::block const& block);
+    
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, std::ostream& stream) const;
     void to_data(uint32_t version, writer& sink) const;

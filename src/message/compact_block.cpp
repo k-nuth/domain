@@ -27,6 +27,8 @@
 #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/bitcoin/utility/istream_reader.hpp>
 #include <bitcoin/bitcoin/utility/ostream_writer.hpp>
+#include <bitcoin/bitcoin/utility/random.hpp>
+#include <bitcoin/bitcoin/math/sip_hash.hpp>
 
 
 namespace libbitcoin {
@@ -61,6 +63,12 @@ compact_block compact_block::factory_from_data(uint32_t version,
 
     compact_block instance;
     instance.from_data(version, source);
+    return instance;
+}
+
+compact_block compact_block::factory_from_block(message::block const& blk) {
+    compact_block instance;
+    instance.from_block(blk);
     return instance;
 }
 
@@ -128,6 +136,36 @@ void compact_block::reset()
     transactions_.clear();
     transactions_.shrink_to_fit();
 }
+
+
+ bool compact_block::from_block(message::block const& block) {
+ 
+    reset();
+
+    header_ = std::move(block.header());
+    nonce_ = pseudo_random(1, max_uint64);
+
+    prefilled_transaction::list prefilled_list {
+        prefilled_transaction{0, block.transactions()[0]}
+    };
+
+    auto header_hash = hash(block, nonce_);
+            
+    auto k0 = from_little_endian_unsafe<uint64_t>(header_hash.begin());
+    auto k1 = from_little_endian_unsafe<uint64_t>(header_hash.begin() + sizeof(uint64_t));
+
+    compact_block::short_id_list short_ids_list;
+    short_ids_list.reserve(block.transactions().size() - 1);
+    for (size_t i = 1; i < block.transactions().size(); ++i) {
+        uint64_t shortid = sip_hash_uint256(k0, k1, block.transactions()[i].hash()) & uint64_t(0xffffffffffff); 
+        short_ids_list.push_back(shortid);
+    }
+            
+    short_ids_ = std::move(short_ids_list);
+    transactions_ = std::move(prefilled_list);
+
+    return true;
+ }
 
 bool compact_block::from_data(uint32_t version, const data_chunk& data)
 {
