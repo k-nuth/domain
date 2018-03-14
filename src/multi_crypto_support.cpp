@@ -29,73 +29,83 @@ namespace {
 
 static config::currency currency_ = config::currency::none;
 static config::settings network_ = config::settings::none;
-// static bool is_bitcoin_cash_= false;
+
+#ifdef BITPRIM_CURRENCY_BCH
 static std::string cashaddr_prefix_ = "bitcoincash";
+#endif // BITPRIM_CURRENCY_BCH
 
 } // namespace anonymous
 
-
-void set_currency(config::currency x) {
-#ifndef BITPRIM_LITECOIN
-    currency_ = x;
-#endif //BITPRIM_LITECOIN
-}
-
 config::currency get_currency() {
-#ifdef BITPRIM_LITECOIN
+#ifdef BITPRIM_CURRENCY_LTC
     return config::currency::litecoin;
+#elif defined(BITPRIM_CURRENCY_BCH)
+    return config::currency::bitcoin_cash;
 #else
-    return currency_;
-#endif //BITPRIM_LITECOIN
+    return config::currency::bitcoin;
+#endif //BITPRIM_CURRENCY_LTC
 }
 
+// void set_network(config::settings x) {
+//     network_ = x;
+// }
 
-void set_network(config::settings x) {
-    network_ = x;
-}
+// void set_network(uint32_t identifier) {
+// #ifdef BITPRIM_CURRENCY_LTC
+//     switch(identifier) {
+//         case netmagic::ltc_mainnet: set_network(config::settings::mainnet); break;
+//         case netmagic::ltc_testnet: set_network(config::settings::testnet); break;
+//         case netmagic::ltc_regtest: set_network(config::settings::regtest); break;
+//         default: set_network(config::settings::none);
+//     }
+// #elif defined(BITPRIM_CURRENCY_BCH)
+//     switch(identifier) {
+//         case netmagic::bch_mainnet: set_network(config::settings::mainnet); break;
+//         case netmagic::bch_testnet: set_network(config::settings::testnet); break;
+//         case netmagic::bch_regtest: set_network(config::settings::regtest); break;
+//         default: set_network(config::settings::none);
+//     }
+// #else
+//     switch(identifier) {
+//         case netmagic::btc_mainnet: set_network(config::settings::mainnet); break;
+//         case netmagic::btc_testnet: set_network(config::settings::testnet); break;
+//         case netmagic::btc_regtest: set_network(config::settings::regtest); break;
+//         default: set_network(config::settings::none);
+//     }
+// #endif //BITPRIM_CURRENCY_LTC
+// }
 
-void set_network(uint32_t identifier, bool bitcoin_cash) {
-#ifdef BITPRIM_LITECOIN
-    switch(identifier) {
-        case netmagic::ltc_mainnet: set_network(config::settings::mainnet); break;
-        case netmagic::ltc_testnet: set_network(config::settings::testnet); break;
-        case netmagic::ltc_regtest: set_network(config::settings::regtest); break;
-        default: set_network(config::settings::none);
+// config::settings get_network() {
+//     return network_;
+// }
+
+
+config::settings get_network(uint32_t identifier) {
+#ifdef BITPRIM_CURRENCY_LTC
+    switch (identifier) {
+        case netmagic::ltc_mainnet: return config::settings::mainnet;
+        case netmagic::ltc_testnet: return config::settings::testnet;
+        case netmagic::ltc_regtest: return config::settings::regtest;
+        default: return config::settings::none;
+    }
+#elif defined(BITPRIM_CURRENCY_BCH)
+    switch (identifier) {
+        case netmagic::bch_mainnet: return config::settings::mainnet;
+        case netmagic::bch_testnet: return config::settings::testnet;
+        case netmagic::bch_regtest: return config::settings::regtest;
+        default: return config::settings::none;
     }
 #else
-    if (bitcoin_cash) {
-        switch(identifier) {
-            case netmagic::bch_mainnet: set_network(config::settings::mainnet); break;
-            case netmagic::bch_testnet: set_network(config::settings::testnet); break;
-            case netmagic::bch_regtest: set_network(config::settings::regtest); break;
-            default: set_network(config::settings::none);
-        }
-    } else {
-        switch(identifier) {
-            case netmagic::btc_mainnet: set_network(config::settings::mainnet); break;
-            case netmagic::btc_testnet: set_network(config::settings::testnet); break;
-            case netmagic::btc_regtest: set_network(config::settings::regtest); break;
-            default: set_network(config::settings::none);
-        }
+    switch (identifier) {
+        case netmagic::btc_mainnet: return config::settings::mainnet;
+        case netmagic::btc_testnet: return config::settings::testnet;
+        case netmagic::btc_regtest: return config::settings::regtest;
+        default: return config::settings::none;
     }
-#endif //BITPRIM_LITECOIN
+#endif //BITPRIM_CURRENCY_LTC
 }
 
-config::settings get_network() {
-    return network_;
-}
-
-
-bool is_bitcoin_cash() {
-    // return is_bitcoin_cash_;
-    return get_currency() == config::currency::bitcoin_cash;
-}
-
-void set_bitcoin_cash(bool value) {
-    // is_bitcoin_cash_ = value;
-    set_currency(config::currency::bitcoin_cash);
-}
-
+#ifdef BITPRIM_CURRENCY_BCH
 std::string cashaddr_prefix() {
     return cashaddr_prefix_;
 }
@@ -103,18 +113,20 @@ std::string cashaddr_prefix() {
 void set_cashaddr_prefix(std::string const& x) {
     cashaddr_prefix_ = x;
 }
+#endif //BITPRIM_CURRENCY_BCH
 
-bool is_testnet(uint32_t identifier, bool bitcoin_cash) {
-#ifdef BITPRIM_LITECOIN
-    return identifier == 0xf1c8d2fdu //4056470269u; //Litecoin Testnet Netmagic
-#else
-    if (bitcoin_cash) {
-        return identifier == 0xf4f3e5f4u;  //Bitcoin Cash Testnet Netmagic
-    } else {
-        return identifier == 0x0709110bu;  //Bitcoin Testnet Netmagic
-    }
-#endif //BITPRIM_LITECOIN
-}
+
+// bool is_testnet(uint32_t identifier, bool bitcoin_cash) {
+// #ifdef BITPRIM_CURRENCY_LTC
+//     return identifier == 0xf1c8d2fdu //4056470269u; //Litecoin Testnet Netmagic
+// #else
+//     if (bitcoin_cash) {
+//         return identifier == 0xf4f3e5f4u;  //Bitcoin Cash Testnet Netmagic
+//     } else {
+//         return identifier == 0x0709110bu;  //Bitcoin Testnet Netmagic
+//     }
+// #endif //BITPRIM_CURRENCY_LTC
+// }
 
 } /*namespace libbitcoin*/
 
