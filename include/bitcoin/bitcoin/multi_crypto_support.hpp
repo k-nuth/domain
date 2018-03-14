@@ -49,22 +49,17 @@ enum class currency {
 
 } // namespace config
 
-
-
-void set_currency(config::currency x);
 config::currency get_currency();
 
-void set_network(config::settings x);
-void set_network(uint32_t identifier, bool bitcoin_cash);
-config::settings get_network();
+// void set_network(config::settings x);
+// void set_network(uint32_t identifier);
+// config::settings get_network();
+config::settings get_network(uint32_t identifier);
 
-bool is_bitcoin_cash();                 //TODO(fernando): deprecated, use get_currency() instead
-void set_bitcoin_cash(bool value);      //TODO(fernando): deprecated, use set_currency() instead
-
-bool is_testnet(uint32_t identifier, bool bitcoin_cash);        //TODO(fernando): deprecated, use get_network() instead
-
+#ifdef BITPRIM_CURRENCY_BCH
 std::string cashaddr_prefix();
 void set_cashaddr_prefix(std::string const& x);
+#endif //BITPRIM_CURRENCY_BCH
 
 } /*namespace libbitcoin*/
 
