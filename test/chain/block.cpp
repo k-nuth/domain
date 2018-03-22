@@ -48,11 +48,6 @@ static bool all_valid(const chain::transaction::list& transactions)
 
 BOOST_AUTO_TEST_SUITE(chain_block_tests)
 
-BOOST_AUTO_TEST_CASE(block__proof1__genesis_mainnet__expected)
-{
-    BOOST_REQUIRE_EQUAL(chain::block::proof(0x1d00ffff), 0x0000000100010001);
-}
-
 BOOST_AUTO_TEST_CASE(block__proof2__genesis_mainnet__expected)
 {
     const auto block = chain::block::genesis_mainnet();
@@ -658,12 +653,15 @@ BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__partialy_distinct_not_a
     BOOST_REQUIRE(!value.is_distinct_transaction_set());
 }
 
+#ifdef BITPRIM_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(validate_block__is_cash_pow_valid__true){
     uint32_t old_bits = 402736949;
     const chain::compact bits (old_bits);
     uint256_t target (bits);
     BOOST_REQUIRE_EQUAL(chain::compact(chain::chain_state::difficulty_adjustment_cash(target)).normal(), 402757890);
 }
+#endif //BITPRIM_CURRENCY_BCH
+
 
 BOOST_AUTO_TEST_SUITE_END()
 

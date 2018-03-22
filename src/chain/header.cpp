@@ -416,11 +416,40 @@ hash_digest header::hash() const
     return hash;
 }
 
-#ifdef BITPRIM_LITECOIN
+#ifdef BITPRIM_CURRENCY_LTC
 hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
-#endif //BITPRIM_LITECOIN
+#endif //BITPRIM_CURRENCY_LTC
+
+uint256_t header::proof(uint32_t bits)
+{
+    const auto header_bits = compact(bits);
+
+    if (header_bits.is_overflowed())
+        return 0;
+
+    uint256_t target(header_bits);
+
+    //*************************************************************************
+    // CONSENSUS: satoshi will throw division by zero in the case where the
+    // target is (2^256)-1 as the overflow will result in a zero divisor.
+    // While actually achieving this work is improbable, this method operates
+    // on user data method and therefore must be guarded.
+    //*************************************************************************
+    const auto divisor = target + 1;
+
+    // We need to compute 2**256 / (target + 1), but we can't represent 2**256
+    // as it's too large for uint256. However as 2**256 is at least as large as
+    // target + 1, it is equal to ((2**256 - target - 1) / (target + 1)) + 1, or
+    // (~target / (target + 1)) + 1.
+    return (divisor == 0) ? 0 : (~target / divisor) + 1;
+}
+
+uint256_t header::proof() const
+{
+    return proof(bits());
+}
 
 // Validation helpers.
 //-----------------------------------------------------------------------------
@@ -454,11 +483,11 @@ bool header::is_valid_proof_of_work() const
         return false;
 
     // Ensure actual work is at least claimed amount (smaller is more work).
-#ifdef BITPRIM_LITECOIN
+#ifdef BITPRIM_CURRENCY_LTC
     return to_uint256(litecoin_proof_of_work_hash()) <= target;
-#else //BITPRIM_LITECOIN
+#else //BITPRIM_CURRENCY_LTC
     return to_uint256(hash()) <= target;
-#endif //BITPRIM_LITECOIN
+#endif //BITPRIM_CURRENCY_LTC
 }
 
 // Validation.
