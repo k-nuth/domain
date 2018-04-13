@@ -29,6 +29,12 @@
 namespace libbitcoin {
 namespace message {
 
+#ifdef BITPRIM_CURRENCY_BCH
+constexpr size_t max_index = max_uint32;
+#else 
+constexpr size_t max_index = max_uint16;
+#endif
+
 prefilled_transaction prefilled_transaction::factory_from_data(
     uint32_t version, const data_chunk& data)
 {
@@ -54,9 +60,8 @@ prefilled_transaction prefilled_transaction::factory_from_data(
 }
 
 prefilled_transaction::prefilled_transaction()
-  : index_(max_uint16), transaction_()
-{
-}
+    : index_(max_index), transaction_()
+{}
 
 prefilled_transaction::prefilled_transaction(uint64_t index,
     const chain::transaction& tx)
@@ -83,12 +88,12 @@ prefilled_transaction::prefilled_transaction(prefilled_transaction&& other)
 
 bool prefilled_transaction::is_valid() const
 {
-    return (index_ < max_uint16) && transaction_.is_valid();
+    return (index_ < max_index) && transaction_.is_valid();
 }
 
 void prefilled_transaction::reset()
 {
-    index_ = max_uint16;
+    index_ = max_index;
     transaction_ = chain::transaction{};
 }
 
