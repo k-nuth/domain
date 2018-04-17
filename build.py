@@ -16,16 +16,6 @@ def get_channel():
     return get_content('conan_channel')
 
 def get_conan_vars():
-    # CONAN_REFERENCE: "bitprim-core/0.7"
-    # CONAN_USERNAME: "bitprim"
-    # CONAN_LOGIN_USERNAME: "bitprim-bintray"
-    # CONAN_CHANNEL: "experimental"
-    # CONAN_UPLOAD: "https://api.bintray.com/conan/bitprim/bitprim"
-
-    # username = os.getenv("CONAN_USERNAME", get_username_from_ci() or "bitprim")
-    # channel = os.getenv("CONAN_CHANNEL", get_channel_from_ci())
-    # version = os.getenv("CONAN_VERSION", get_version())
-    
     login_username = os.getenv("CONAN_LOGIN_USERNAME", "bitprim-bintray")
     username = os.getenv("CONAN_USERNAME", "bitprim")
     channel = os.getenv("CONAN_CHANNEL", get_channel())
@@ -98,16 +88,7 @@ def get_builder(args=None):
     return builder, name
 
 if __name__ == "__main__":
-    # print('-*-*-*-*-* FROM PYTHON -*-*-*-*-*-*-*')
-    # print(os.getenv('BITPRIM_BUILD_NUMBER', '-'))
-    # print('-*-*-*-*-* FROM PYTHON -*-*-*-*-*-*-*')
-
-    # builder = ConanMultiPackager(username="bitprim", channel="testing",
-    #                              remotes="https://api.bintray.com/conan/bitprim/bitprim",
-    #                              archs=["x86_64"])
-
     builder, name = get_builder()
-
     builder.add_common_builds(shared_option_name="%s:shared" % name)
 
     filtered_builds = []
