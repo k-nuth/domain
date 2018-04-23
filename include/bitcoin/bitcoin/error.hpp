@@ -261,8 +261,8 @@ enum error_code_t
     operation_failed_26,
     operation_failed_27,
     operation_failed_28,
-    operation_failed_29
-
+    operation_failed_29,
+    operation_failed_30
 };
 
 enum error_condition_t
