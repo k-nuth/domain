@@ -356,7 +356,6 @@ size_t chain_state::uahf_height(size_t height, uint32_t forks) {
 
     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
 
-    //TODO(fernando): > or >= ??
     return height >= activation_height ? activation_height : map::unrequested;
 }
 
@@ -376,7 +375,6 @@ bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
 
     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
 
-    //TODO(fernando): > or >= ??
     return height >= activation_height;
 }
 
