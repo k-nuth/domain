@@ -64,6 +64,7 @@ enum rule_fork : uint32_t {
     cash_low_s_rule = 1u << 15,
     cash_monolith_opcodes = 1u << 16,
     cash_replay_protection = 1u << 17,
+    cash_verify_flags_script_enable_sighash_forkid = 1U << 18,
 #endif //BITPRIM_CURRENCY_BCH
 
 
