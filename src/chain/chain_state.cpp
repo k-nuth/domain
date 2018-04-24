@@ -267,6 +267,10 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     //     result.forks |= (rule_fork::cash_low_s_rule & forks);
     // }
 
+    if (is_uahf_enabled(values.height, forks)) {
+        result.forks |= (rule_fork::cash_verify_flags_script_enable_sighash_forkid & forks);
+    }
+
     if (is_daa_enabled(values.height, forks)) {
         result.forks |= (rule_fork::cash_low_s_rule & forks);
     }
@@ -352,8 +356,7 @@ size_t chain_state::uahf_height(size_t height, uint32_t forks) {
 
     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
 
-    //TODO(fernando): > or >= ??
-    return height > activation_height ? activation_height : map::unrequested;
+    return height >= activation_height ? activation_height : map::unrequested;
 }
 
 inline 
@@ -372,8 +375,7 @@ bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
 
     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
 
-    //TODO(fernando): > or >= ??
-    return height > activation_height;
+    return height >= activation_height;
 }
 
 inline 
