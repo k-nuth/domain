@@ -230,7 +230,41 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         { error::op_check_sequence_verify4, "op_check_sequence_verify4" },
         { error::op_check_sequence_verify5, "op_check_sequence_verify5" },
         { error::op_check_sequence_verify6, "op_check_sequence_verify6" },
-        { error::op_check_sequence_verify7, "op_check_sequence_verify7" }
+        { error::op_check_sequence_verify7, "op_check_sequence_verify7" },
+
+        { error::operation_failed_0, "operation failed 0" },
+        { error::operation_failed_1, "operation failed 1" },
+        { error::operation_failed_2, "operation failed 2" },
+        { error::operation_failed_3, "operation failed 3" },
+        { error::operation_failed_4, "operation failed 4" },
+        { error::operation_failed_5, "operation failed 5" },
+        { error::operation_failed_6, "operation failed 6" },
+        { error::operation_failed_7, "operation failed 7" },
+        { error::operation_failed_8, "operation failed 8" },
+        { error::operation_failed_9, "operation failed 9" },
+
+        { error::operation_failed_10, "operation failed 10" },
+        { error::operation_failed_11, "operation failed 11" },
+        { error::operation_failed_12, "operation failed 12" },
+        { error::operation_failed_13, "operation failed 13" },
+        { error::operation_failed_14, "operation failed 14" },
+        { error::operation_failed_15, "operation failed 15" },
+        { error::operation_failed_16, "operation failed 16" },
+        { error::operation_failed_17, "operation failed 17" },
+        { error::operation_failed_18, "operation failed 18" },
+        { error::operation_failed_19, "operation failed 19" },
+
+        { error::operation_failed_20, "operation failed 20" },
+        { error::operation_failed_21, "operation failed 21" },
+        { error::operation_failed_22, "operation failed 22" },
+        { error::operation_failed_23, "operation failed 23" },
+        { error::operation_failed_24, "operation failed 24" },
+        { error::operation_failed_25, "operation failed 25" },
+        { error::operation_failed_26, "operation failed 26" },
+        { error::operation_failed_27, "operation failed 27" },
+        { error::operation_failed_28, "operation failed 28" },
+        { error::operation_failed_29, "operation failed 29" },
+        { error::operation_failed_30, "operation failed 30" }
     };
 
     const auto message = messages.find(ev);

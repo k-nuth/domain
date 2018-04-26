@@ -88,16 +88,7 @@ def get_builder(args=None):
     return builder, name
 
 if __name__ == "__main__":
-    # print('-*-*-*-*-* FROM PYTHON -*-*-*-*-*-*-*')
-    # print(os.getenv('BITPRIM_BUILD_NUMBER', '-'))
-    # print('-*-*-*-*-* FROM PYTHON -*-*-*-*-*-*-*')
-
-    # builder = ConanMultiPackager(username="bitprim", channel="testing",
-    #                              remotes="https://api.bintray.com/conan/bitprim/bitprim",
-    #                              archs=["x86_64"])
-
     builder, name = get_builder()
-
     builder.add_common_builds(shared_option_name="%s:shared" % name)
 
     filtered_builds = []

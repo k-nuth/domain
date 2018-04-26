@@ -228,7 +228,41 @@ enum error_code_t
     op_check_sequence_verify4,
     op_check_sequence_verify5,
     op_check_sequence_verify6,
-    op_check_sequence_verify7
+    op_check_sequence_verify7,
+
+    operation_failed_0,
+    operation_failed_1,
+    operation_failed_2,
+    operation_failed_3,
+    operation_failed_4,
+    operation_failed_5,
+    operation_failed_6,
+    operation_failed_7,
+    operation_failed_8,
+    operation_failed_9,
+
+    operation_failed_10,
+    operation_failed_11,
+    operation_failed_12,
+    operation_failed_13,
+    operation_failed_14,
+    operation_failed_15,
+    operation_failed_16,
+    operation_failed_17,
+    operation_failed_18,
+    operation_failed_19,
+
+    operation_failed_20,
+    operation_failed_21,
+    operation_failed_22,
+    operation_failed_23,
+    operation_failed_24,
+    operation_failed_25,
+    operation_failed_26,
+    operation_failed_27,
+    operation_failed_28,
+    operation_failed_29,
+    operation_failed_30
 };
 
 enum error_condition_t
