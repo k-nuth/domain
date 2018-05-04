@@ -80,6 +80,9 @@ public:
 
         /// mainnet: 419328, testnet: 770112 (or map::unrequested)
         size_t bip9_bit0_height;
+
+        /// mainnet: 481824, testnet: 834624 (or map::unrequested)
+        size_t bip9_bit1_height;
     };
 
     /// Values used to populate chain state at the target height.
@@ -95,6 +98,9 @@ public:
 
         /// Hash of the bip9_bit0 block or null_hash if unrequested.
         hash_digest bip9_bit0_hash;
+
+        /// Hash of the bip9_bit1 block or null_hash if unrequested.
+        hash_digest bip9_bit1_hash;
 
         /// Values must be ordered by height with high (block - 1) last.
         struct {
@@ -204,6 +210,10 @@ private:
     static size_t bits_count(size_t height, uint32_t forks);
     static size_t version_count(size_t height, uint32_t forks);
     static size_t timestamp_count(size_t height, uint32_t forks);
+    static size_t retarget_height(size_t height, uint32_t forks);
+    static size_t collision_height(size_t height, uint32_t forks);
+    static size_t bip9_bit0_height(size_t height, uint32_t forks);
+    static size_t bip9_bit1_height(size_t height, uint32_t forks);
 
     // TODO(bitprim): make function private again. Moved to public in the litecoin merge
     static 

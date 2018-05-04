@@ -109,13 +109,20 @@ BC_CONSTEXPR size_t locktime_threshold = 500000000;
 
 #ifdef BITPRIM_CURRENCY_LTC
 //0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1e0fffff;
+BC_CONSTEXPR uint32_t retarget_proof_of_work_limit = 0x1e0fffff; 
+BC_CONSTEXPR uint32_t no_retarget_proof_of_work_limit = 0x207fffff; // TODO: merge version3. check the no_retarget value for LTC 
 #else // BITPRIM_CURRENCY_LTC
 BC_CONSTEXPR size_t max_work_bits = 0x1d00ffff;
+BC_CONSTEXPR uint32_t retarget_proof_of_work_limit = 0x1d00ffff;
+BC_CONSTEXPR uint32_t no_retarget_proof_of_work_limit = 0x207fffff;
 // This may not be flexible, keep internal.
 //0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-BC_CONSTEXPR uint32_t proof_of_work_limit = 0x1d00ffff;
 #endif // BITPRIM_CURRENCY_LTC
+
+BC_CONSTFUNC uint32_t work_limit(bool retarget=true)
+{
+    return retarget ? retarget_proof_of_work_limit : no_retarget_proof_of_work_limit;
+}
 
 // Derived.
 BC_CONSTEXPR size_t max_sigops_factor = 50;
@@ -187,6 +194,7 @@ BC_CONSTEXPR uint32_t easy_spacing_factor = 2;
 BC_CONSTEXPR uint32_t easy_spacing_seconds = easy_spacing_factor * target_spacing_seconds;
 
 
+
 // The upper and lower bounds for the retargeting timespan.
 BC_CONSTEXPR uint32_t min_timespan = target_timespan_seconds / retargeting_factor;
 BC_CONSTEXPR uint32_t max_timespan = target_timespan_seconds * retargeting_factor;
@@ -203,7 +211,8 @@ BC_CONSTEXPR size_t first_version = 1;
 BC_CONSTEXPR size_t bip34_version = 2;
 BC_CONSTEXPR size_t bip66_version = 3;
 BC_CONSTEXPR size_t bip65_version = 4;
-BC_CONSTEXPR uint32_t bip9_version_bit0 = 0x00000001;
+BC_CONSTEXPR uint32_t bip9_version_bit0 = 1u << 0;
+BC_CONSTEXPR uint32_t bip9_version_bit1 = 1u << 1;
 BC_CONSTEXPR uint32_t bip9_version_base = 0x20000000;
 
 #ifdef BITPRIM_CURRENCY_BCH
@@ -293,9 +302,14 @@ BC_CONSTEXPR size_t testnet_bip65_freeze = 581885;
 BC_CONSTEXPR size_t testnet_bip66_freeze = 330776;
 BC_CONSTEXPR size_t testnet_bip34_freeze = 21111;
 
+// Regtest (arbitrary) frozen activation heights (frozen_activations).
+BC_CONSTEXPR size_t regtest_bip65_freeze = 1351;
+BC_CONSTEXPR size_t regtest_bip66_freeze = 1251;
+BC_CONSTEXPR size_t regtest_bip34_freeze = 0;
+
 // Block 514 is the first testnet block after date-based activation.
-// Block 173805 is the first mainnet block after date-based activation.
-BC_CONSTEXPR uint32_t bip16_activation_time = 0x4f779a80;
+// Block 166832 is the first mainnet block after date-based activation.
+BC_CONSTEXPR uint32_t bip16_activation_time = 0x4f3af580;
 
 // Block 170060 was mined with an invalid p2sh (code shipped late).
 // bitcointalk.org/index.php?topic=63165.msg788832#msg788832
@@ -320,6 +334,11 @@ static const config::checkpoint mainnet_bip34_active_checkpoint {
 static const config::checkpoint testnet_bip34_active_checkpoint {
     "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111
 };
+static const config::checkpoint regtest_bip34_active_checkpoint
+{
+    // Since bip90 assumes a historical bip34 activation block, use genesis.
+    "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0
+};
 
 #endif //BITPRIM_CURRENCY_LTC
 
@@ -330,6 +349,26 @@ static const config::checkpoint mainnet_bip9_bit0_active_checkpoint {
 
 static const config::checkpoint testnet_bip9_bit0_active_checkpoint {
     "00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb", 770112
+};
+static const config::checkpoint regtest_bip9_bit0_active_checkpoint
+{
+    // The activation window is fixed and closed, so assume genesis activation.
+    "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0
+};
+
+// These cannot be reactivated in a future branch due to window expiration.
+static const config::checkpoint mainnet_bip9_bit1_active_checkpoint
+{
+    "0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893", 481824
+};
+static const config::checkpoint testnet_bip9_bit1_active_checkpoint
+{
+    "00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca", 834624
+};
+static const config::checkpoint regtest_bip9_bit1_active_checkpoint
+{
+    // The activation window is fixed and closed, so assume genesis activation.
+    "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0
 };
 
 
@@ -383,6 +422,21 @@ BC_CONSTEXPR uint8_t varint_eight_bytes = 0xff;
 // String padding sentinel.
 BC_CONSTEXPR uint8_t string_terminator = 0x00;
 
+// Witness serialization values (bip141).
+//-----------------------------------------------------------------------------
+
+BC_CONSTEXPR uint8_t witness_marker = 0x00;
+BC_CONSTEXPR uint8_t witness_flag = 0x01;
+BC_CONSTEXPR uint32_t witness_head = 0xaa21a9ed;
+BC_CONSTEXPR size_t fast_sigops_factor = 4;
+BC_CONSTEXPR size_t max_fast_sigops = fast_sigops_factor * max_block_sigops;
+BC_CONSTEXPR size_t light_weight_factor = 4;
+BC_CONSTEXPR size_t max_block_weight = light_weight_factor * max_block_size;
+BC_CONSTEXPR size_t base_size_contribution = 3;
+BC_CONSTEXPR size_t total_size_contribution = 1;
+BC_CONSTEXPR size_t min_witness_program = 2;
+BC_CONSTEXPR size_t max_witness_program = 40;
+
 // Currency unit constants (uint64_t).
 //-----------------------------------------------------------------------------
 
@@ -407,21 +461,28 @@ uint64_t initial_block_subsidy_satoshi() {
 
 #ifdef BITPRIM_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 840000;
-BC_CONSTEXPR uint64_t subsidy_interval = 840000;
+BC_CONSTEXPR uint64_t retarget_subsidy_interval = 840000;
+BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150; // TODO: merge version3. check the no_retarget value for LTC 
 #else //BITPRIM_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 210000;
-BC_CONSTEXPR uint64_t subsidy_interval = 210000;
+BC_CONSTEXPR uint64_t retarget_subsidy_interval = 210000;
+BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150;
 #endif //BITPRIM_CURRENCY_LTC
 
 BC_CONSTEXPR uint64_t recursive_money = 0x02540be3f5;
 
-BC_CONSTFUNC inline 
-uint64_t max_money() {
+BC_CONSTFUNC uint64_t subsidy_interval(bool retarget=true)
+{
+    return retarget ? retarget_subsidy_interval : no_retarget_subsidy_interval;
+}
+
+BC_CONSTFUNC uint64_t max_money(bool retarget=true)
+{
     ////// Optimize out the derivation of recursive_money.
     ////BITCOIN_ASSERT(recursive_money == max_money_recursive(
     ////    initial_block_subsidy_satoshi()));
 
-    return subsidy_interval * recursive_money;
+    return recursive_money * subsidy_interval(retarget);
 }
 
 } // namespace libbitcoin

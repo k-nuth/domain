@@ -283,6 +283,15 @@ BOOST_AUTO_TEST_CASE(block__genesis__testnet__valid_structure)
     BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
+BOOST_AUTO_TEST_CASE(block__genesis__regtest__valid_structure)
+{
+    const auto genesis = bc::chain::block::genesis_regtest();
+    BOOST_REQUIRE(genesis.is_valid());
+    BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
+    BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
+}
+
+
 BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success)
 {
     const auto genesis = bc::chain::block::genesis_mainnet();
@@ -662,6 +671,56 @@ BOOST_AUTO_TEST_CASE(validate_block__is_cash_pow_valid__true){
 }
 #endif //BITPRIM_CURRENCY_BCH
 
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(block_is_forward_reference_tests)
+
+BOOST_AUTO_TEST_CASE(block__is_forward_reference__no_transactions__false)
+{
+    chain::block value;
+    BOOST_REQUIRE(!value.is_forward_reference());
+}
+
+BOOST_AUTO_TEST_CASE(block__is_forward_reference__multiple_empty_transactions__false)
+{
+    chain::block value;
+    value.set_transactions({ { 1, 0, {}, {} }, { 2, 0, {}, {} } });
+    BOOST_REQUIRE(!value.is_forward_reference());
+}
+
+BOOST_AUTO_TEST_CASE(block__is_forward_reference__backward_reference__false)
+{
+    chain::block value;
+    chain::transaction before{ 2, 0, {}, {} };
+    chain::transaction after{ 1, 0, { { { before.hash(), 0 }, {}, 0 } }, {} };
+    value.set_transactions({ before, after });
+    BOOST_REQUIRE(!value.is_forward_reference());
+}
+
+BOOST_AUTO_TEST_CASE(block__is_forward_reference__duplicate_transactions__false)
+{
+    chain::block value;
+    value.set_transactions({ { 1, 0, {}, {} }, { 1, 0, {}, {} } });
+    BOOST_REQUIRE(!value.is_forward_reference());
+}
+
+BOOST_AUTO_TEST_CASE(block__is_forward_reference__coinbase_and_multiple_empty_transactions__false)
+{
+    chain::block value;
+    chain::transaction coinbase{ 1, 0, { { { null_hash, chain::point::null_index }, {}, 0 } }, {} };
+    value.set_transactions({ coinbase, { 2, 0, {}, {} }, { 3, 0, {}, {} } });
+    BOOST_REQUIRE(!value.is_forward_reference());
+}
+
+BOOST_AUTO_TEST_CASE(block__is_forward_reference__forward_reference__true)
+{
+    chain::block value;
+    chain::transaction after{ 2, 0, {}, {} };
+    chain::transaction before{ 1, 0, { { { after.hash(), 0 }, {}, 0 } }, {} };
+    value.set_transactions({ before, after });
+    BOOST_REQUIRE(value.is_forward_reference());
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

@@ -102,6 +102,7 @@ enum error_code_t
     extra_coinbases = 29,
     internal_duplicate = 49,
     block_internal_double_spend = 15,
+    forward_reference = 79,
     merkle_mismatch = 31,
     block_legacy_sigop_limit = 30,
 
@@ -110,6 +111,8 @@ enum error_code_t
     coinbase_height_mismatch = 37,
     coinbase_value_limit = 41,
     block_embedded_sigop_limit = 52,
+    invalid_witness_commitment = 25,
+    block_weight_limit = 82,
 
     // check transaction
     empty_transaction = 20,
@@ -131,6 +134,7 @@ enum error_code_t
     spend_exceeds_value = 40,
     transaction_embedded_sigop_limit = 55,
     sequence_locked = 78,
+    transaction_weight_limit = 83,
 
     // connect input
     invalid_script = 39,
@@ -143,6 +147,9 @@ enum error_code_t
     invalid_signature_encoding = 62,
     invalid_signature_lax_encoding = 63,
     incorrect_signature = 64,
+    unexpected_witness = 77,
+    invalid_witness = 80,
+    dirty_witness = 81,
     stack_false = 65,
 
     // op eval
@@ -263,6 +270,8 @@ enum error_code_t
     operation_failed_28,
     operation_failed_29,
     operation_failed_30
+    // Added out of order (bip147).
+    op_check_multisig_verify8
 };
 
 enum error_condition_t
