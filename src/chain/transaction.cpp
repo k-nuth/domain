@@ -58,6 +58,10 @@ using namespace bc::machine;
 template<class Source, class Put>
 bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
+
     auto result = true;
     const auto count = source.read_size_little_endian();
 
@@ -83,6 +87,9 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness)
 template<class Sink, class Put>
 void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     sink.write_variable_little_endian(puts.size());
 
     const auto serialize = [&](const Put& put)
@@ -224,6 +231,10 @@ bool transaction::operator!=(const transaction& other) const
 transaction transaction::factory_from_data(const data_chunk& data, bool wire,
     bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
+
     transaction instance;
     instance.from_data(data, wire, witness);
     return instance;
@@ -233,7 +244,9 @@ transaction transaction::factory_from_data(const data_chunk& data, bool wire,
 transaction transaction::factory_from_data(std::istream& stream, bool wire,
     bool witness)
 {
-
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     transaction instance;
     instance.from_data(stream, wire, witness);
     return instance;
@@ -243,6 +256,9 @@ transaction transaction::factory_from_data(std::istream& stream, bool wire,
 transaction transaction::factory_from_data(reader& source, bool wire,
     bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     transaction instance;
     instance.from_data(source, wire, witness);
     return instance;
@@ -251,18 +267,27 @@ transaction transaction::factory_from_data(reader& source, bool wire,
 
 bool transaction::from_data(const data_chunk& data, bool wire, bool witness, bool unconfirmed)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     data_source istream(data);
     return from_data(istream, wire, witness, unconfirmed);
 }
 
 bool transaction::from_data(std::istream& stream, bool wire, bool witness, bool unconfirmed)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     istream_reader source(stream);
     return from_data(source, wire, witness, unconfirmed);
 }
 // Witness is not used by outputs, just for template normalization.
 bool transaction::from_data(reader& source, bool wire, bool witness, bool unconfirmed)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     reset();
 
     if (wire)
@@ -359,6 +384,9 @@ bool transaction::is_valid() const
 // If no inputs are witness programs then witness hash is tx hash (bip141).
 data_chunk transaction::to_data(bool wire, bool witness, bool unconfirmed) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     // Witness handling must be disabled for non-segregated txs.
     witness &= is_segregated();
 
@@ -378,6 +406,9 @@ data_chunk transaction::to_data(bool wire, bool witness, bool unconfirmed) const
 
 void transaction::to_data(std::ostream& stream, bool wire, bool witness, bool unconfirmed) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     // Witness handling must be disabled for non-segregated txs.
     witness &= is_segregated();
 
@@ -437,6 +468,9 @@ void transaction::to_data(writer& sink, bool wire, bool witness, bool unconfirme
 
 size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     // The witness parameter must be set to false for non-segregated txs.
     witness &= is_segregated();
 
@@ -583,6 +617,9 @@ void transaction::invalidate_cache() const
 
 hash_digest transaction::hash(bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     // Witness hashing must be disabled for non-segregated txs.
     witness &= is_segregated();
 
@@ -881,13 +918,20 @@ size_t transaction::signature_operations() const
 {
     const auto state = validation.state;
     const auto bip16 = state->is_enabled(rule_fork::bip16_rule);
+#ifdef BITPRIM_CURRENCY_BCH
+    const auto bip141 = = false; // No segwit
+#else
     const auto bip141 = state->is_enabled(rule_fork::bip141_rule);
+#endif
     return state ? signature_operations(bip16, bip141) : max_size_t;
 }
 
 // Returns max_size_t in case of overflow.
 size_t transaction::signature_operations(bool bip16, bool bip141) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    bip141 = false; // No segwit
+#endif
     const auto in = [bip16, bip141](size_t total, const input& input)
     {
         // This includes BIP16 p2sh additional sigops if prevout is cached.
@@ -1117,11 +1161,15 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const
     const auto bip16 = state.is_enabled(rule_fork::bip16_rule);
     const auto bip30 = state.is_enabled(rule_fork::bip30_rule);
     const auto bip68 = state.is_enabled(rule_fork::bip68_rule);
+#ifdef BITPRIM_CURRENCY_BCH
+    const auto bip141 = false; // No segwit
+#else
     const auto bip141 = state.is_enabled(rule_fork::bip141_rule);
+#endif
     const auto revert_bip30 = state.is_enabled(rule_fork::allow_collisions);
 
     // bip141 discounts segwit sigops by increasing limit and legacy weight.
-    const auto max_sigops = bip141 ? max_fast_sigops : max_block_sigops;
+    const auto max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
 
     if (transaction_pool && state.is_under_checkpoint())
         return error::premature_validation;
@@ -1161,7 +1209,7 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const
         return error::sequence_locked;
 
     // This recomputes sigops to include p2sh from prevouts if bip16 is true.
-    else if (transaction_pool && signature_operations(bip16, bip141) > get_max_block_sigops())
+    else if (transaction_pool && signature_operations(bip16, bip141) > max_sigops)
         return error::transaction_embedded_sigop_limit;
 
     // This causes second serialized_size(true, false) computation (uncached).

@@ -278,7 +278,7 @@ void output::invalidate_cache() const
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 }
-payment_address output::address(bool testnet = false) const{
+payment_address output::address(bool testnet /*= false*/) const{
     if (testnet){
         return address(wallet::payment_address::testnet_p2kh, wallet::payment_address::testnet_p2sh);
     } else {
@@ -323,6 +323,9 @@ payment_address::list output::addresses(uint8_t p2kh_version,
 
 size_t output::signature_operations(bool bip141) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    bip141 = false; // No segwit
+#endif
     // Penalize quadratic signature operations (bip141).
     const auto sigops_factor = bip141 ? fast_sigops_factor : 1u;
 

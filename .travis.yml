@@ -88,9 +88,6 @@ matrix:
       # - <<: *osx
       #   env: PUSH_TO_REPOS=true
 
-    # Update homebrew.
-    - if [[ $OSX   && $CLANG             ]]; then brew update; fi
-
 install:
   - cd ${TRAVIS_BUILD_DIR}
 

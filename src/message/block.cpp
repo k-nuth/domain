@@ -93,6 +93,7 @@ block::block(const chain::header& header,
 }
 
 // Witness is always deserialized if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 bool block::from_data(uint32_t, const data_chunk& data)
 {
@@ -110,6 +111,7 @@ bool block::from_data(uint32_t, reader& source)
 }
 
 // Witness is always serialized if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 data_chunk block::to_data(uint32_t) const
 {
@@ -127,6 +129,7 @@ void block::to_data(uint32_t, writer& sink) const
 }
 
 // Witness size is always counted if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 size_t block::serialized_size(uint32_t) const
 {

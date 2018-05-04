@@ -96,6 +96,7 @@ transaction::transaction(uint32_t version, uint32_t locktime,
 }
 
 // Witness is always deserialized if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 bool transaction::from_data(uint32_t, const data_chunk& data)
 {
@@ -113,6 +114,7 @@ bool transaction::from_data(uint32_t, reader& source)
 }
 
 // Witness is always serialized if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 data_chunk transaction::to_data(uint32_t) const
 {
@@ -130,6 +132,7 @@ void transaction::to_data(uint32_t, writer& sink) const
 }
 
 // Witness size is always counted if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 size_t transaction::serialized_size(uint32_t) const
 {

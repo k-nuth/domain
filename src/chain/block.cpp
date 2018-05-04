@@ -226,6 +226,9 @@ bool block::operator!=(const block& other) const
 // static
 block block::factory_from_data(const data_chunk& data, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     block instance;
     instance.from_data(data, witness);
     return instance;
@@ -234,6 +237,9 @@ block block::factory_from_data(const data_chunk& data, bool witness)
 // static
 block block::factory_from_data(std::istream& stream, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     block instance;
     instance.from_data(stream, witness);
     return instance;
@@ -242,6 +248,9 @@ block block::factory_from_data(std::istream& stream, bool witness)
 // static
 block block::factory_from_data(reader& source, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     block instance;
     instance.from_data(source, witness);
     return instance;
@@ -249,12 +258,18 @@ block block::factory_from_data(reader& source, bool witness)
 
 bool block::from_data(const data_chunk& data, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     data_source istream(data);
     return from_data(istream, witness);
 }
 
 bool block::from_data(std::istream& stream, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     istream_reader source(stream);
     return from_data(source, witness);
 }
@@ -262,6 +277,9 @@ bool block::from_data(std::istream& stream, bool witness)
 // Full block deserialization is always canonical encoding.
 bool block::from_data(reader& source, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     validation.start_deserialize = asio::steady_clock::now();
     reset();
 
@@ -310,6 +328,9 @@ bool block::is_valid() const
 
 data_chunk block::to_data(bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     data_chunk data;
     const auto size = serialized_size(witness);
     data.reserve(size);
@@ -322,6 +343,9 @@ data_chunk block::to_data(bool witness) const
 
 void block::to_data(std::ostream& stream, bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     ostream_writer sink(stream);
     to_data(sink, witness);
 }
@@ -329,6 +353,9 @@ void block::to_data(std::ostream& stream, bool witness) const
 // Full block serialization is always canonical encoding.
 void block::to_data(writer& sink, bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     header_.to_data(sink, true);
     sink.write_size_little_endian(transactions_.size());
     const auto to = [&sink, witness](const transaction& tx)
@@ -341,6 +368,9 @@ void block::to_data(writer& sink, bool witness) const
 
 hash_list block::to_hashes(bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     hash_list out;
     out.reserve(transactions_.size());
     const auto to_hash = [&out, witness](const transaction& tx)
@@ -359,6 +389,9 @@ hash_list block::to_hashes(bool witness) const
 // Full block serialization is always canonical encoding.
 size_t block::serialized_size(bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     size_t value;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -588,13 +621,20 @@ size_t block::signature_operations() const
 {
     const auto state = validation.state;
     const auto bip16 = state->is_enabled(rule_fork::bip16_rule);
+#ifdef BITPRIM_CURRENCY_BCH
+    const auto bip141 = false; // No segwit
+#else
     const auto bip141 = state->is_enabled(rule_fork::bip141_rule);
+#endif
     return state ? signature_operations(bip16, bip141) : max_size_t;
 }
 
 // Returns max_size_t in case of overflow.
 size_t block::signature_operations(bool bip16, bool bip141) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    bip141 = false; // No segwit
+#endif
     const auto value = [bip16, bip141](size_t total, const transaction& tx)
     {
         return ceiling_add(total, tx.signature_operations(bip16, bip141));
@@ -691,6 +731,9 @@ bool block::is_distinct_transaction_set() const
 
 hash_digest block::generate_merkle_root(bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     if (transactions_.empty())
         return null_hash;
 
@@ -824,6 +867,9 @@ bool block::is_valid_coinbase_script(size_t height) const
 
 bool block::is_valid_witness_commitment() const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#endif
     if (transactions_.empty() || transactions_.front().inputs().empty())
         return false;
 
@@ -843,6 +889,9 @@ bool block::is_valid_witness_commitment() const
 
 bool block::is_segregated() const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#endif
     bool value;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -976,9 +1025,13 @@ code block::accept(chain_state const& state, bool transactions) const
     const auto bip16 = state.is_enabled(rule_fork::bip16_rule);
     const auto bip34 = state.is_enabled(rule_fork::bip34_rule);
     const auto bip113 = state.is_enabled(rule_fork::bip113_rule);
+#ifdef BITPRIM_CURRENCY_BCH
+    const auto bip141 = false; // No segwit
+#else
     const auto bip141 = state.is_enabled(rule_fork::bip141_rule);
+#endif
 
-    const auto max_sigops = bip141 ? max_fast_sigops : max_block_sigops;
+    const auto max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
     const auto block_time = bip113 ? state.median_time_past() :
         header_.timestamp();
 
@@ -997,6 +1050,7 @@ code block::accept(chain_state const& state, bool transactions) const
         return error::success;
 
     // TODO: relates height to total of tx.size(true) (pool cache).
+    // NOTE: for BCH bit141 is set as false
     else if (bip141 && weight() > max_block_weight)
         return error::block_weight_limit;
 
@@ -1012,12 +1066,14 @@ code block::accept(chain_state const& state, bool transactions) const
         return error::block_non_final;
 
     // TODO: relates height to tx.hash(true) (pool cache).
+    // NOTE: for BCH bit141 is set as false
     else if (bip141 && !is_valid_witness_commitment())
         return error::invalid_witness_commitment;
 
     // TODO: determine if performance benefit is worth excluding sigops here.
     // TODO: relates block limit to total of tx.sigops (pool cache tx.sigops).
     // This recomputes sigops to include p2sh from prevouts.
+    // NOTE: for BCH bit141 is set as false
     else if (transactions && (signature_operations(bip16, bip141) > allowed_sigops))
         return error::block_embedded_sigop_limit;
 

@@ -145,6 +145,9 @@ bool input::operator!=(const input& other) const
 
 input input::factory_from_data(const data_chunk& data, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     input instance;
     instance.from_data(data, wire, witness);
     return instance;
@@ -152,6 +155,9 @@ input input::factory_from_data(const data_chunk& data, bool wire, bool witness)
 
 input input::factory_from_data(std::istream& stream, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     input instance;
     instance.from_data(stream, wire, witness);
     return instance;
@@ -159,6 +165,9 @@ input input::factory_from_data(std::istream& stream, bool wire, bool witness)
 
 input input::factory_from_data(reader& source, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     input instance;
     instance.from_data(source, wire, witness);
     return instance;
@@ -166,18 +175,27 @@ input input::factory_from_data(reader& source, bool wire, bool witness)
 
 bool input::from_data(const data_chunk& data, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     data_source istream(data);
     return from_data(istream, wire, witness);
 }
 
 bool input::from_data(std::istream& stream, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     istream_reader source(stream);
     return from_data(source, wire, witness);
 }
 
 bool input::from_data(reader& source, bool wire, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
 
@@ -220,6 +238,9 @@ bool input::is_valid() const
 
 data_chunk input::to_data(bool wire, bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     data_chunk data;
     const auto size = serialized_size(wire, witness);
     data.reserve(size);
@@ -232,12 +253,18 @@ data_chunk input::to_data(bool wire, bool witness) const
 
 void input::to_data(std::ostream& stream, bool wire, bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     ostream_writer sink(stream);
     to_data(sink, wire, witness);
 }
 
 void input::to_data(writer& sink, bool wire, bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
 
@@ -256,6 +283,9 @@ void input::to_data(writer& sink, bool wire, bool witness) const
 
 size_t input::serialized_size(bool wire, bool witness) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
 
@@ -443,6 +473,9 @@ bool input::is_locked(size_t block_height, uint32_t median_time_past) const
 // This cannot overflow because each total is limited by max ops.
 size_t input::signature_operations(bool bip16, bool bip141) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    bip141 = false; // No segwit
+#endif
     chain::script witness, embedded;
     const auto& prevout = previous_output_.validation.cache.script();
     ////BITCOIN_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");

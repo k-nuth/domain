@@ -117,6 +117,9 @@ inline bool bip9_bit0_active(size_t height, bool mainnet, bool testnet)
 inline bool bip9_bit1_active(const hash_digest& hash, bool mainnet,
     bool testnet)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#endif
     const auto regtest = !mainnet && !testnet;
     return
         (mainnet && hash == mainnet_bip9_bit1_active_checkpoint.hash()) ||
@@ -126,6 +129,9 @@ inline bool bip9_bit1_active(const hash_digest& hash, bool mainnet,
 
 inline bool bip9_bit1_active(size_t height, bool mainnet, bool testnet)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#endif
     const auto regtest = !mainnet && !testnet;
     return
         (mainnet && height == mainnet_bip9_bit1_active_checkpoint.height()) ||
@@ -300,12 +306,14 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     {
         result.forks |= (rule_fork::bip9_bit0_group & forks);
     }
-
+#ifndef BITPRIM_CURRENCY_BCH
+    // Activate the segwit rules only if not bch
     // bip9_bit1 forks are enforced above the bip9_bit1 checkpoint.
     if (bip9_bit1_active(values.bip9_bit1_hash, mainnet, testnet))
     {
         result.forks |= (rule_fork::bip9_bit1_group & forks);
     }
+#endif
 
     // version 4/3/2 enforced based on 95% of preceding 1000 mainnet blocks.
     if (bip65_ice || is_enforced(count_4, mainnet))
@@ -423,6 +431,9 @@ size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks)
 
 size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    return map::unrequested;
+#endif
     const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
 
     const auto activation_height = testnet ?
@@ -676,6 +687,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     return bits_high(values);
 }
 
+
 #ifdef BITPRIM_CURRENCY_BCH
 uint32_t chain_state::work_required_adjust_cash(data const& values) {
     const compact bits(bits_high(values));
@@ -685,6 +697,7 @@ uint32_t chain_state::work_required_adjust_cash(data const& values) {
     return target > pow_limit ? proof_of_work_limit : compact(target).normal();
 }
 #endif //BITPRIM_CURRENCY_BCH
+
 
 // [CalculateNextWorkRequired]
 uint32_t chain_state::work_required_retarget(data const& values) {
@@ -721,10 +734,8 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
 
 #else //BITPRIM_CURRENCY_LTC
-    // static const uint256_t pow_limit(compact{ proof_of_work_limit }); // Renamed merge version 3.4
     static const uint256_t pow_limit(compact{ retarget_proof_of_work_limit });
     BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
-	
 
     uint256_t target(bits);
     target *= retarget_timespan(values);
@@ -733,7 +744,6 @@ uint32_t chain_state::work_required_retarget(data const& values) {
     // The proof_of_work_limit constant is pre-normalized.
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 #endif //BITPRIM_CURRENCY_LTC
-
 }
 
 // Get the bounded total time spanning the highest 2016 blocks.
@@ -970,9 +980,11 @@ chain_state::data chain_state::to_block(const chain_state& pool,
     if (bip9_bit0_active(data.height, mainnet, testnet))
         data.bip9_bit0_hash = data.hash;
 
+#ifndef BITPRIM_CURRENCY_BCH
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet))
         data.bip9_bit1_hash = data.hash;
+#endif
 
     return data;
 }
@@ -1025,9 +1037,11 @@ chain_state::data chain_state::to_header(const chain_state& parent,
     if (bip9_bit0_active(data.height, mainnet, testnet))
         data.bip9_bit0_hash = data.hash;
 
+#ifndef BITPRIM_CURRENCY_BCH
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet))
         data.bip9_bit1_hash = data.hash;
+#endif
 
     return data;
 }

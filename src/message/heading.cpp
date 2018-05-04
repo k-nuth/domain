@@ -49,12 +49,13 @@ size_t heading::maximum_size()
 // with witness-enabled block size (4,000,000).
 size_t heading::maximum_payload_size(uint32_t, bool witness)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
 /*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */
-
-//    return max_payload_size;
 
     return witness ? max_block_weight : max_payload_size;
 }

@@ -462,7 +462,7 @@ uint64_t initial_block_subsidy_satoshi() {
 #ifdef BITPRIM_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 840000;
 BC_CONSTEXPR uint64_t retarget_subsidy_interval = 840000;
-BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150; // TODO: merge version3. check the no_retarget value for LTC 
+BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150; // TODO: merge version3. check the no_retarget (regtest) value for LTC 
 #else //BITPRIM_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 210000;
 BC_CONSTEXPR uint64_t retarget_subsidy_interval = 210000;

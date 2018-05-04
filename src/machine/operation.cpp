@@ -84,7 +84,7 @@ bool operation::from_data(reader& source)
     // The max_script_size and max_push_data_size constants limit
     // evaluation, but not all scripts evaluate, so use max_block_size
     // to guard memory allocation here.
-    if (size > max_block_size)
+    if (size > get_max_block_size()) //TODO: bitprim max_block_size changed to get_max_block_size (check space for BCH)
         source.invalidate();
     else
         data_ = source.read_bytes(size);
