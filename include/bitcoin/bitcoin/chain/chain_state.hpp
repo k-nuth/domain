@@ -210,10 +210,6 @@ private:
     static size_t bits_count(size_t height, uint32_t forks);
     static size_t version_count(size_t height, uint32_t forks);
     static size_t timestamp_count(size_t height, uint32_t forks);
-    static size_t retarget_height(size_t height, uint32_t forks);
-    static size_t collision_height(size_t height, uint32_t forks);
-    static size_t bip9_bit0_height(size_t height, uint32_t forks);
-    static size_t bip9_bit1_height(size_t height, uint32_t forks);
 
     // TODO(bitprim): make function private again. Moved to public in the litecoin merge
     static 
@@ -224,6 +220,9 @@ private:
     
     static 
     size_t bip9_bit0_height(size_t height, uint32_t forks);
+
+    static
+    size_t bip9_bit1_height(size_t height, uint32_t forks);
 
     static 
     size_t uahf_height(size_t height, uint32_t forks);

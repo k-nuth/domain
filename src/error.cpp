@@ -272,7 +272,7 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         { error::operation_failed_27, "operation failed 27" },
         { error::operation_failed_28, "operation failed 28" },
         { error::operation_failed_29, "operation failed 29" },
-        { error::operation_failed_30, "operation failed 30" }
+        { error::operation_failed_30, "operation failed 30" },
         // Added out of order (bip147).
         { error::op_check_multisig_verify8, "op_check_multisig_verify8" },
     };

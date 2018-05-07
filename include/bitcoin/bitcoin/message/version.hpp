@@ -110,7 +110,7 @@ public:
 
         // Independent of network protocol level.
         // The node is capable of responding to witness inventory requests.
-        node_witness = (1u << 3)
+        node_witness = (1u << 3),
 
 #ifdef BITPRIM_CURRENCY_BCH
         node_network_cash = (1 << 5) //TODO(bitprim): check what happens with node_network (or node_network_cash)

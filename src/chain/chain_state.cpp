@@ -612,10 +612,10 @@ uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
 
     work /= nActualTimespan;
     auto nextTarget = (-1 * work) / work; //Compute target result
-    uint256_t pow_limit(compact{proof_of_work_limit});
+    uint256_t pow_limit(compact{retarget_proof_of_work_limit});
 
     if (nextTarget.compare(pow_limit) == 1) {
-        return proof_of_work_limit;
+        return retarget_proof_of_work_limit;
     }
 
     return compact(nextTarget).normal();
@@ -693,8 +693,8 @@ uint32_t chain_state::work_required_adjust_cash(data const& values) {
     const compact bits(bits_high(values));
     uint256_t target(bits);
     target = difficulty_adjustment_cash(target); //target += (target >> 2);
-    static const uint256_t pow_limit(compact{ proof_of_work_limit });
-    return target > pow_limit ? proof_of_work_limit : compact(target).normal();
+    static const uint256_t pow_limit(compact{ retarget_proof_of_work_limit });
+    return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 }
 #endif //BITPRIM_CURRENCY_BCH
 
@@ -777,9 +777,12 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
 #endif //BITPRIM_CURRENCY_BCH
     } else {
     // Reverse iterate the ordered-by-height list of header bits.
-    for (auto bit: reverse(bits))
-        if (is_retarget_or_non_limit(--height, bit))
-            return bit;
+        for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit) {
+            if (is_retarget_or_non_limit(--height, *bit)) {
+                return *bit;
+            }
+        }
+    }
 
     // Since the set of heights is either a full retarget range or ends at
     // zero this is not reachable unless the data set is invalid.

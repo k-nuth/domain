@@ -348,7 +348,6 @@ bool transaction::from_data(reader& source, bool wire, bool witness, bool unconf
 
     if (!source)
         reset();
-    }
 
     return source;
 }
@@ -919,7 +918,7 @@ size_t transaction::signature_operations() const
     const auto state = validation.state;
     const auto bip16 = state->is_enabled(rule_fork::bip16_rule);
 #ifdef BITPRIM_CURRENCY_BCH
-    const auto bip141 = = false; // No segwit
+    const auto bip141 = false; // No segwit
 #else
     const auto bip141 = state->is_enabled(rule_fork::bip141_rule);
 #endif
