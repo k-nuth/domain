@@ -116,19 +116,19 @@ bool transaction::from_data(uint32_t, reader& source)
 // Witness is always serialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-data_chunk transaction::to_data(uint32_t) const
+data_chunk transaction::to_data(uint32_t, bool witness) const
 {
-    return chain::transaction::to_data(true, true);
+    return chain::transaction::to_data(true, witness);
 }
 
-void transaction::to_data(uint32_t, std::ostream& stream) const
+void transaction::to_data(uint32_t, std::ostream& stream, bool witness) const
 {
-    chain::transaction::to_data(stream, true, true);
+    chain::transaction::to_data(stream, true, witness);
 }
 
-void transaction::to_data(uint32_t, writer& sink) const
+void transaction::to_data(uint32_t, writer& sink, bool witness) const
 {
-    chain::transaction::to_data(sink, true, true);
+    chain::transaction::to_data(sink, true, witness);
 }
 
 // Witness size is always counted if present.
