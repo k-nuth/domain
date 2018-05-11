@@ -345,22 +345,19 @@ BOOST_AUTO_TEST_CASE(heading__maximum_size__always__matches_satoshi_fixed_size)
     BOOST_REQUIRE_EQUAL(heading::satoshi_fixed_size(), heading::maximum_size());
 }
 
-// TODO(bitprim): This test is broken for networks bigger than 4Mbs
-//BOOST_AUTO_TEST_CASE(heading__maximum_payload_size__always__matches_expected)
-//{
-//    size_t expected = 3u + (sizeof(uint32_t) + hash_size) * 50000u;
-//    BOOST_REQUIRE_EQUAL(expected, heading::maximum_payload_size(0u));
-//}
 
-BOOST_AUTO_TEST_CASE(heading__maximum_payload_size__non_witness__matches_expected)
-{
-    static const size_t expected = 3u + (sizeof(uint32_t) + hash_size) * 50000u;
-    BOOST_REQUIRE_EQUAL(expected, heading::maximum_payload_size(0u, false));
-}
+#ifndef BITPRIM_CURRENCY_BCH
+// TODO(bitprim): This test is broken for networks bigger than 4Mbs
+//BOOST_AUTO_TEST_CASE(heading__maximum_payload_size__non_witness__matches_expected)
+//{
+//    static const size_t expected = 3u + (sizeof(uint32_t) + hash_size) * 50000u;
+//    BOOST_REQUIRE_EQUAL(expected, heading::maximum_payload_size(0u, false));
+//}
 
 BOOST_AUTO_TEST_CASE(heading__maximum_payload_size__witness__matches_expected)
 {
     BOOST_REQUIRE_EQUAL(max_block_weight, heading::maximum_payload_size(0u, true));
 }
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()

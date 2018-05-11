@@ -812,6 +812,8 @@ BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid)
     BOOST_REQUIRE_EQUAL(result.value(), error::success);
 }
 
+#ifndef BITPRIM_CURRENCY_BCH
+// SEGWIT TESTS
 BOOST_AUTO_TEST_CASE(script__native__block_481824_tx__valid)
 {
     //// DEBUG [blockchain] Verify failed [481824] : stack false
@@ -1147,5 +1149,5 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_no_find_and_delete_tx__valid)
     result0 = script::verify(tx, 0, rule_fork::bip16_rule | rule_fork::bip141_rule);
     BOOST_REQUIRE_EQUAL(result0.value(), error::incorrect_signature);
 }
-
+#endif
 BOOST_AUTO_TEST_SUITE_END()
