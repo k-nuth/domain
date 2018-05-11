@@ -86,7 +86,7 @@ class BitprimCoreConan(ConanFile):
     build_policy = "missing"
 
     requires = (("boost/1.66.0@bitprim/stable"),
-               ("secp256k1/0.3@bitprim/%s" % get_channel()))
+               ("secp256k1/0.3@bitprim/stable"))
 
     @property
     def msvc_mt_build(self):
