@@ -18,6 +18,7 @@
  */
 #include <bitcoin/bitcoin/chain/output.hpp>
 
+#include <algorithm>
 #include <cstdint>
 #include <sstream>
 #include <bitcoin/bitcoin/constants.hpp>
@@ -42,30 +43,51 @@ const uint32_t output::validation::not_spent = max_uint32;
 //-----------------------------------------------------------------------------
 
 output::output()
-  : value_(not_found), validation{}
+  : value_(not_found),
+    script_{},
+    validation{}
 {
 }
 
 output::output(output&& other)
-  : output(other.value_, std::move(other.script_))
+  : addresses_(other.addresses_cache()),
+    value_(other.value_),
+    script_(std::move(other.script_)),
+    validation(other.validation)
 {
-    validation = std::move(other.validation);
 }
 
 output::output(const output& other)
-  : output(other.value_, other.script_)
+  : addresses_(other.addresses_cache()),
+    value_(other.value_),
+    script_(other.script_),
+    validation(other.validation)
 {
-    validation = other.validation;
 }
 
 output::output(uint64_t value, chain::script&& script)
-  : value_(value), script_(std::move(script)), validation{}
+  : value_(value),
+    script_(std::move(script)),
+    validation{}
 {
 }
 
 output::output(uint64_t value, const chain::script& script)
-  : value_(value), script_(script), validation{}
+  : value_(value),
+    script_(script),
+    validation{}
 {
+}
+
+// Private cache access for copy/move construction.
+output::addresses_ptr output::addresses_cache() const
+{
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    shared_lock lock(mutex_);
+
+    return addresses_;
+    ///////////////////////////////////////////////////////////////////////////
 }
 
 // Operators.
@@ -73,6 +95,7 @@ output::output(uint64_t value, const chain::script& script)
 
 output& output::operator=(output&& other)
 {
+    addresses_ = other.addresses_cache();
     value_ = other.value_;
     script_ = std::move(other.script_);
     validation = std::move(other.validation);
@@ -81,6 +104,7 @@ output& output::operator=(output&& other)
 
 output& output::operator=(const output& other)
 {
+    addresses_ = other.addresses_cache();
     value_ = other.value_;
     script_ = other.script_;
     validation = other.validation;
@@ -133,7 +157,7 @@ bool output::from_data(std::istream& stream, bool wire)
     return from_data(source, wire);
 }
 
-bool output::from_data(reader& source, bool wire)
+bool output::from_data(reader& source, bool wire, bool)
 {
     reset();
 
@@ -183,7 +207,7 @@ void output::to_data(std::ostream& stream, bool wire) const
     to_data(sink, wire);
 }
 
-void output::to_data(writer& sink, bool wire) const
+void output::to_data(writer& sink, bool wire, bool) const
 {
     if (!wire)
     {
@@ -240,12 +264,6 @@ void output::set_script(chain::script&& value)
     invalidate_cache();
 }
 
-bool output::is_dust(uint64_t minimum_value) const
-{
-    // If provably unspendable it does not expand the unspent output set.
-    return value_ < minimum_value && !script_.is_unspendable();
-}
-
 // protected
 void output::invalidate_cache() const
 {
@@ -253,11 +271,11 @@ void output::invalidate_cache() const
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (address_)
+    if (addresses_)
     {
         mutex_.unlock_upgrade_and_lock();
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        address_.reset();
+        addresses_.reset();
         //---------------------------------------------------------------------
         mutex_.unlock_and_lock_upgrade();
     }
@@ -265,44 +283,78 @@ void output::invalidate_cache() const
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 }
+payment_address output::address(bool testnet /*= false*/) const{
+    if (testnet){
+        return address(wallet::payment_address::testnet_p2kh, wallet::payment_address::testnet_p2sh);
+    } else {
+        return address(wallet::payment_address::mainnet_p2kh, wallet::payment_address::mainnet_p2sh);
+    }
+}
 
-payment_address output::address(bool testnet /* = false */) const
+payment_address output::address(uint8_t p2kh_version,
+    uint8_t p2sh_version) const
+{
+    const auto value = addresses(p2kh_version, p2sh_version);
+    return value.empty() ? payment_address{} : value.front();
+}
+
+payment_address::list output::addresses(uint8_t p2kh_version,
+    uint8_t p2sh_version) const
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (!address_)
+    if (!addresses_)
     {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
-
-        // TODO: limit this to output patterns.
-        if (testnet){
-            address_ = std::make_shared<payment_address>(
-                    payment_address::extract(script_, payment_address::testnet_p2kh, payment_address::testnet_p2sh));
-        } else {
-            address_ = std::make_shared<payment_address>(
-                    payment_address::extract(script_));
-        }
-
+        addresses_ = std::make_shared<payment_address::list>(
+            payment_address::extract_output(script_, p2kh_version,
+                p2sh_version));
         mutex_.unlock_and_lock_upgrade();
         //---------------------------------------------------------------------
     }
 
-    const auto address = *address_;
+    const auto addresses = *addresses_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 
-    return address;
+    return addresses;
 }
 
 // Validation helpers.
 //-----------------------------------------------------------------------------
 
-size_t output::signature_operations() const
+size_t output::signature_operations(bool bip141) const
 {
-    return script_.sigops(false);
+#ifdef BITPRIM_CURRENCY_BCH
+    bip141 = false; // No segwit
+#endif
+    // Penalize quadratic signature operations (bip141).
+    const auto sigops_factor = bip141 ? fast_sigops_factor : 1u;
+
+    // Count heavy sigops in the output script.
+    return script_.sigops(false) * sigops_factor;
+}
+
+bool output::is_dust(uint64_t minimum_value) const
+{
+    // If provably unspendable it does not expand the unspent output set.
+    return value_ < minimum_value && !script_.is_unspendable();
+}
+
+bool output::extract_committed_hash(hash_digest& out) const
+{
+    const auto& ops = script_.operations();
+
+    if (!script::is_commitment_pattern(ops))
+        return false;
+
+    // The four byte offset for the witness commitment hash (bip141).
+    const auto start = ops[1].data().begin() + sizeof(witness_head);
+    std::copy_n(start, hash_size, out.begin());
+    return true;
 }
 
 } // namespace chain
