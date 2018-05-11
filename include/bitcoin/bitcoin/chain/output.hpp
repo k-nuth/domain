@@ -102,6 +102,8 @@ public:
     uint64_t value() const;
     void set_value(uint64_t value);
 
+    // Deprecated (unsafe).
+    chain::script& script();
     const chain::script& script() const;
     void set_script(const chain::script& value);
     void set_script(chain::script&& value);

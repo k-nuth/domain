@@ -242,6 +242,11 @@ void output::set_value(uint64_t value)
     value_ = value;
 }
 
+chain::script& output::script()
+{
+    return script_;
+}
+
 const chain::script& output::script() const
 {
     return script_;
