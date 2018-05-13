@@ -418,6 +418,9 @@ void transaction::to_data(std::ostream& stream, bool wire, bool witness, bool un
 // Witness is not used by outputs, just for template normalization.
 void transaction::to_data(writer& sink, bool wire, bool witness, bool unconfirmed) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     if (wire)
     {
         // Witness handling must be disabled for non-segregated txs.
@@ -1055,6 +1058,9 @@ bool transaction::is_mature(size_t height) const
 
 bool transaction::is_segregated() const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#endif
     bool value;
 
     ///////////////////////////////////////////////////////////////////////////
