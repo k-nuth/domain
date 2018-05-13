@@ -195,9 +195,10 @@ bool input::from_data(reader& source, bool wire, bool witness)
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
-#endif
+#else
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
+#endif
 
     reset();
 
@@ -264,9 +265,10 @@ void input::to_data(writer& sink, bool wire, bool witness) const
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
-#endif
+#else
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
+#endif
 
     previous_output_.to_data(sink, wire);
     script_.to_data(sink, true);
@@ -285,9 +287,10 @@ size_t input::serialized_size(bool wire, bool witness) const
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
-#endif
+#else
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
+#endif
 
     // Witness size added in both contexts despite that tx writes wire witness.
     // Prefix is written for both wire and store/other contexts.
