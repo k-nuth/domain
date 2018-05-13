@@ -295,10 +295,13 @@ bool transaction::from_data(reader& source, bool wire, bool witness, bool unconf
         // Wire (satoshi protocol) deserialization.
         version_ = source.read_4_bytes_little_endian();
         read(source, inputs_, wire, witness);
-
+#ifdef BITPRIM_CURRENCY_BCH
+        const auto marker = false;
+#else
         // Detect witness as no inputs (marker) and expected flag (bip144).
         const auto marker = inputs_.size() == witness_marker &&
             source.peek_byte() == witness_flag;
+#endif
 
         // This is always enabled so caller should validate with is_segregated.
         if (marker)
@@ -418,6 +421,9 @@ void transaction::to_data(std::ostream& stream, bool wire, bool witness, bool un
 // Witness is not used by outputs, just for template normalization.
 void transaction::to_data(writer& sink, bool wire, bool witness, bool unconfirmed) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    witness = false;
+#endif
     if (wire)
     {
         // Witness handling must be disabled for non-segregated txs.
@@ -916,13 +922,11 @@ bool transaction::is_overspent() const
 size_t transaction::signature_operations() const
 {
     const auto state = validation.state;
-    const auto bip16 = state->is_enabled(rule_fork::bip16_rule);
 #ifdef BITPRIM_CURRENCY_BCH
-    const auto bip141 = false; // No segwit
+    return state ? signature_operations(state->is_enabled(rule_fork::bip16_rule), false) : max_size_t;
 #else
-    const auto bip141 = state->is_enabled(rule_fork::bip141_rule);
+    return state ? signature_operations(state->is_enabled(rule_fork::bip16_rule), state->is_enabled(rule_fork::bip141_rule)) : max_size_t;
 #endif
-    return state ? signature_operations(bip16, bip141) : max_size_t;
 }
 
 // Returns max_size_t in case of overflow.
@@ -1055,6 +1059,9 @@ bool transaction::is_mature(size_t height) const
 
 bool transaction::is_segregated() const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#endif
     bool value;
 
     ///////////////////////////////////////////////////////////////////////////
