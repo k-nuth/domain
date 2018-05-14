@@ -295,10 +295,13 @@ bool transaction::from_data(reader& source, bool wire, bool witness, bool unconf
         // Wire (satoshi protocol) deserialization.
         version_ = source.read_4_bytes_little_endian();
         read(source, inputs_, wire, witness);
-
+#ifdef BITPRIM_CURRENCY_BCH
+        const auto marker = false;
+#else
         // Detect witness as no inputs (marker) and expected flag (bip144).
         const auto marker = inputs_.size() == witness_marker &&
             source.peek_byte() == witness_flag;
+#endif
 
         // This is always enabled so caller should validate with is_segregated.
         if (marker)
