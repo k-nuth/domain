@@ -919,13 +919,11 @@ bool transaction::is_overspent() const
 size_t transaction::signature_operations() const
 {
     const auto state = validation.state;
-    const auto bip16 = state->is_enabled(rule_fork::bip16_rule);
 #ifdef BITPRIM_CURRENCY_BCH
-    const auto bip141 = false; // No segwit
+    return state ? signature_operations(state->is_enabled(rule_fork::bip16_rule), false) : max_size_t;
 #else
-    const auto bip141 = state->is_enabled(rule_fork::bip141_rule);
+    return state ? signature_operations(state->is_enabled(rule_fork::bip16_rule), state->is_enabled(rule_fork::bip141_rule)) : max_size_t;
 #endif
-    return state ? signature_operations(bip16, bip141) : max_size_t;
 }
 
 // Returns max_size_t in case of overflow.
