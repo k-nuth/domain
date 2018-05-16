@@ -41,6 +41,9 @@ public:
 
     enum level: uint32_t
     {
+        // compact blocks protocol FIX
+        bip152_fix = 70015, //TODO(fernando): See how to name this, because there is no BIP for that...
+
         // compact blocks protocol
         bip152 = 70014,
 
@@ -85,7 +88,7 @@ public:
         minimum = 31402,
 
         // We support at most this internally (bound to settings default).
-        maximum = bip133,
+        maximum = bip152,  //TODO(fernando): Point to 70015 when is available.
 
         // Used to generate canonical size required by consensus checks.
         canonical = 0

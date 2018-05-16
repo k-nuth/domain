@@ -100,12 +100,14 @@ BC_CONSTEXPR short_hash null_short_hash
     }
 };
 
+
 BC_CONSTEXPR mini_hash null_mini_hash
 {
     {
         0, 0, 0, 0, 0, 0
     }
 };
+
 
 inline uint256_t to_uint256(const hash_digest& hash)
 {

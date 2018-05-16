@@ -22,6 +22,7 @@
 #include <istream>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
+#include <bitcoin/bitcoin/message/block.hpp>
 #include <bitcoin/bitcoin/message/prefilled_transaction.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
@@ -36,8 +37,10 @@ public:
     typedef std::shared_ptr<compact_block> ptr;
     typedef std::shared_ptr<const compact_block> const_ptr;
 
-    typedef mini_hash short_id;
-    typedef mini_hash_list short_id_list;
+    //typedef mini_hash short_id;
+    //typedef mini_hash_list short_id_list;
+    using short_id = uint64_t;
+    using short_id_list = std::vector<short_id>;
 
     static compact_block factory_from_data(uint32_t version,
         const data_chunk& data);
@@ -45,6 +48,8 @@ public:
         std::istream& stream);
     static compact_block factory_from_data(uint32_t version,
         reader& source);
+
+    static compact_block factory_from_block(message::block const& block);
 
     compact_block();
     compact_block(const chain::header& header, uint64_t nonce,
@@ -77,6 +82,9 @@ public:
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, std::istream& stream);
     bool from_data(uint32_t version, reader& source);
+    
+    bool from_block(message::block const& block);
+    
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, std::ostream& stream) const;
     void to_data(uint32_t version, writer& sink) const;
@@ -101,6 +109,15 @@ private:
     short_id_list short_ids_;
     prefilled_transaction::list transactions_;
 };
+
+
+void to_data_header_nonce(compact_block const& block, writer& sink);
+
+void to_data_header_nonce(compact_block const& block, std::ostream& stream);
+
+data_chunk to_data_header_nonce(compact_block const& block);
+
+hash_digest hash(compact_block const& block);
 
 } // namespace message
 } // namespace libbitcoin
