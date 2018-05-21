@@ -114,10 +114,15 @@ bool prefilled_transaction::from_data(uint32_t version,
 bool prefilled_transaction::from_data(uint32_t version,
     reader& source)
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    bool witness = false;
+#else
+    bool witness = true;
+#endif
     reset();
 
     index_ = source.read_variable_little_endian();
-    transaction_.from_data(source, true);
+    transaction_.from_data(source, true, witness);
 
     if (!source)
         reset();
@@ -148,6 +153,7 @@ void prefilled_transaction::to_data(uint32_t version,
     writer& sink) const
 {
     sink.write_variable_little_endian(index_);
+    //TODO: witness?
     transaction_.to_data(sink);
 }
 

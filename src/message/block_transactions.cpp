@@ -126,10 +126,15 @@ bool block_transactions::from_data(uint32_t version, reader& source)
         source.invalidate();
     else
         transactions_.resize(count);
+#ifdef BITPRIM_CURRENCY_BCH
+    bool witness = false;
+#else
+    bool witness = true;
+#endif
 
     // Order is required.
     for (auto& tx: transactions_)
-        if ( ! tx.from_data(source, true))
+        if ( ! tx.from_data(source, true, witness))
             break;
 
     if (version < block_transactions::version_minimum)
@@ -166,6 +171,7 @@ void block_transactions::to_data(uint32_t version, writer& sink) const
     sink.write_variable_little_endian(transactions_.size());
 
     for (const auto& element: transactions_)
+        //TODO witness?
         element.to_data(sink);
 }
 
