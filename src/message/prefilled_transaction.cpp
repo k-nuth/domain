@@ -163,8 +163,9 @@ void prefilled_transaction::to_data(uint32_t version,
 
 size_t prefilled_transaction::serialized_size(uint32_t version) const
 {
+    // TODO: serialize size should use witness for ! BCH
     return message::variable_uint_size(index_) +
-        transaction_.serialized_size(true,true,true,true);
+        transaction_.serialized_size(true);
 }
 
 uint64_t prefilled_transaction::index() const
