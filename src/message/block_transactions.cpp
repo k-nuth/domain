@@ -170,9 +170,14 @@ void block_transactions::to_data(uint32_t version, writer& sink) const
     sink.write_hash(block_hash_);
     sink.write_variable_little_endian(transactions_.size());
 
-    for (const auto& element: transactions_)
-        //TODO witness?
-        element.to_data(sink);
+#ifdef BITPRIM_CURRENCY_BCH
+    bool witness = false;
+#else
+    bool witness = true;
+#endif
+    for (const auto& element: transactions_) {
+        element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
+    }
 }
 
 size_t block_transactions::serialized_size(uint32_t version) const
