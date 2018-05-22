@@ -29,6 +29,13 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_1__always__invalid)
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
+uint64_t convert_to_uint64t (std::string const & rawdata) {
+    uint64_t value;
+    std::istringstream iss(rawdata);
+    iss >> value;
+    return value;
+}
+
 BOOST_AUTO_TEST_CASE(compact_block__constructor_2__always__equals_params)
 {
     const chain::header header(10u,
@@ -39,11 +46,12 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_2__always__equals_params)
         68644u);
 
     uint64_t nonce = 453245u;
+
     const message::compact_block::short_id_list& short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -72,10 +80,10 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_3__always__equals_params)
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
     message::compact_block::short_id_list dup_short_ids = short_ids;
 
@@ -107,10 +115,10 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_4__always__equals_params)
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -141,10 +149,10 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_5__always__equals_params)
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -289,10 +297,10 @@ BOOST_AUTO_TEST_CASE(compact_block__header_accessor_1__always__returns_initializ
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -316,10 +324,10 @@ BOOST_AUTO_TEST_CASE(compact_block__header_accessor_2__always__returns_initializ
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -374,10 +382,10 @@ BOOST_AUTO_TEST_CASE(compact_block__nonce_accessor__always__returns_initialized_
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -411,10 +419,10 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_1__always__returns_initia
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -438,10 +446,10 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_2__always__returns_initia
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -457,10 +465,10 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_2__always__returns_initia
 BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_1__roundtrip__success)
 {
     const message::compact_block::short_id_list value = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     message::compact_block instance;
@@ -472,10 +480,10 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_1__roundtrip__success)
 BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_2__roundtrip__success)
 {
     const message::compact_block::short_id_list value = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
     message::compact_block::short_id_list dup(value);
 
@@ -496,10 +504,10 @@ BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_1__always__returns_ini
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -523,10 +531,10 @@ BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_2__always__returns_ini
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -579,10 +587,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_assign_equals__always__matches_equi
 
     uint64_t nonce = 453245u;
     const message::compact_block::short_id_list short_ids = {
-        base16_literal("aaaaaaaaaaaa"),
-        base16_literal("bbbbbbbbbbbb"),
-        base16_literal("0f0f0f0f0f0f"),
-        base16_literal("f0f0f0f0f0f0")
+        convert_to_uint64t("aaaaaaaaaaaa"),
+        convert_to_uint64t("bbbbbbbbbbbb"),
+        convert_to_uint64t("0f0f0f0f0f0f"),
+        convert_to_uint64t("f0f0f0f0f0f0")
     };
 
     const message::prefilled_transaction::list transactions = {
@@ -614,10 +622,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_equals__duplicates__returns
             68644u),
         12334u,
         {
-            base16_literal("aaaaaaaaaaaa"),
-            base16_literal("bbbbbbbbbbbb"),
-            base16_literal("0f0f0f0f0f0f"),
-            base16_literal("f0f0f0f0f0f0")
+            convert_to_uint64t("aaaaaaaaaaaa"),
+            convert_to_uint64t("bbbbbbbbbbbb"),
+            convert_to_uint64t("0f0f0f0f0f0f"),
+            convert_to_uint64t("f0f0f0f0f0f0")
         },
         {
             message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
@@ -640,10 +648,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_equals__differs__returns_fa
             68644u),
         12334u,
         {
-            base16_literal("aaaaaaaaaaaa"),
-            base16_literal("bbbbbbbbbbbb"),
-            base16_literal("0f0f0f0f0f0f"),
-            base16_literal("f0f0f0f0f0f0")
+            convert_to_uint64t("aaaaaaaaaaaa"),
+            convert_to_uint64t("bbbbbbbbbbbb"),
+            convert_to_uint64t("0f0f0f0f0f0f"),
+            convert_to_uint64t("f0f0f0f0f0f0")
         },
         {
             message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
@@ -666,10 +674,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_not_equals__duplicates__ret
             68644u),
         12334u,
         {
-            base16_literal("aaaaaaaaaaaa"),
-            base16_literal("bbbbbbbbbbbb"),
-            base16_literal("0f0f0f0f0f0f"),
-            base16_literal("f0f0f0f0f0f0")
+            convert_to_uint64t("aaaaaaaaaaaa"),
+            convert_to_uint64t("bbbbbbbbbbbb"),
+            convert_to_uint64t("0f0f0f0f0f0f"),
+            convert_to_uint64t("f0f0f0f0f0f0")
         },
         {
             message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
@@ -692,10 +700,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_not_equals__differs__return
             68644u),
         12334u,
         {
-            base16_literal("aaaaaaaaaaaa"),
-            base16_literal("bbbbbbbbbbbb"),
-            base16_literal("0f0f0f0f0f0f"),
-            base16_literal("f0f0f0f0f0f0")
+            convert_to_uint64t("aaaaaaaaaaaa"),
+            convert_to_uint64t("bbbbbbbbbbbb"),
+            convert_to_uint64t("0f0f0f0f0f0f"),
+            convert_to_uint64t("f0f0f0f0f0f0")
         },
         {
             message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
