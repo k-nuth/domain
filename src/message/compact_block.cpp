@@ -139,6 +139,11 @@ void compact_block::reset()
 
 
  bool compact_block::from_block(message::block const& block) {
+#ifdef BITPRIM_CURRENCY_BCH
+     bool witness = false;
+#else
+     bool witness = true;
+#endif
  
     reset();
 
@@ -157,7 +162,7 @@ void compact_block::reset()
     compact_block::short_id_list short_ids_list;
     short_ids_list.reserve(block.transactions().size() - 1);
     for (size_t i = 1; i < block.transactions().size(); ++i) {
-        uint64_t shortid = sip_hash_uint256(k0, k1, block.transactions()[i].hash()) & uint64_t(0xffffffffffff); 
+        uint64_t shortid = sip_hash_uint256(k0, k1, block.transactions()[i].hash(witness)) & uint64_t(0xffffffffffff);
         short_ids_list.push_back(shortid);
     }
             
@@ -218,6 +223,7 @@ bool compact_block::from_data(uint32_t version, reader& source)
     else
         transactions_.resize(count);
 
+    // NOTE: Witness flag is controlled by prefilled tx
     // Order is required.
     for (auto& tx : transactions_)
         if (!tx.from_data(version, source))
@@ -272,6 +278,7 @@ void compact_block::to_data(uint32_t version, writer& sink) const
 
     sink.write_variable_little_endian(transactions_.size());
 
+    // NOTE: Witness flag is controlled by prefilled tx
     for (const auto& element: transactions_)
         element.to_data(version, sink);
 }
@@ -285,6 +292,7 @@ size_t compact_block::serialized_size(uint32_t version) const
         (short_ids_.size() * 6u) +
         message::variable_uint_size(transactions_.size()) + 8u;
 
+    // NOTE: Witness flag is controlled by prefilled tx
     for (const auto& tx: transactions_)
         size += tx.serialized_size(version);
 
