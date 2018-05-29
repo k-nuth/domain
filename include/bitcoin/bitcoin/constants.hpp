@@ -242,6 +242,11 @@ BC_CONSTEXPR size_t testnet_active = 51;
 BC_CONSTEXPR size_t testnet_enforce = 75;
 BC_CONSTEXPR size_t testnet_sample = 100;
 
+// Regtest (arbitrary) frozen activation heights (frozen_activations).
+BC_CONSTEXPR size_t regtest_bip65_freeze = 1351;
+BC_CONSTEXPR size_t regtest_bip66_freeze = 1251;
+BC_CONSTEXPR size_t regtest_bip34_freeze = 100000000;
+
 // Mainnet frozen activation heights (frozen_activations).
 BC_CONSTEXPR size_t mainnet_bip65_freeze = MAX_UINT32; //Not Active
 BC_CONSTEXPR size_t mainnet_bip66_freeze = MAX_UINT32; //Not Active
@@ -250,7 +255,7 @@ BC_CONSTEXPR size_t mainnet_bip34_freeze = 710000;
 // Testnet frozen activation heights (frozen_activations).
 BC_CONSTEXPR size_t testnet_bip65_freeze = MAX_UINT32; //Not Active
 BC_CONSTEXPR size_t testnet_bip66_freeze = MAX_UINT32; //Not Active
-BC_CONSTEXPR size_t testnet_bip34_freeze = 21111; //Always Active
+BC_CONSTEXPR size_t testnet_bip34_freeze = 76; //Always Active
 
 // Block 514 is the first testnet block after date-based activation.
 // Block 173805 is the first mainnet block after date-based activation.
@@ -273,12 +278,17 @@ static const config::checkpoint mainnet_bip30_exception_checkpoint2 {
 };
 
 // Hard fork to stop checking unspent duplicates above fixed bip34 activation.
-static const config::checkpoint mainnet_allow_collisions_checkpoint {
+static const config::checkpoint mainnet_bip34_active_checkpoint {
     "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 710000
 };
 
-static const config::checkpoint testnet_allow_collisions_checkpoint {
-    "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111
+static const config::checkpoint testnet_bip34_active_checkpoint {
+    "8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573", 76
+};
+
+static const config::checkpoint regtest_bip34_active_checkpoint
+{
+    "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 100000000
 };
 
 #else //BITPRIM_CURRENCY_LTC

@@ -110,6 +110,10 @@ class BitprimCoreConan(ConanFile):
         # if self.options.with_png:
         #     self.requires("libpng/1.6.34@bitprim/stable")
             
+        if self.options.currency == "LTC":
+             self.requires("OpenSSL/1.0.2l@conan/stable")
+            
+
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@bitprim/stable")
 

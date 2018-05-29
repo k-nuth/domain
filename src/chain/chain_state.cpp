@@ -644,8 +644,11 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     bool const daa_active = false;
 #endif //BITPRIM_CURRENCY_BCH
 
+    std::cout << "height: "<< values.height <<" is retarget " << is_retarget_height(values.height) << std::endl;
     if (is_retarget_height(values.height) && !(daa_active)) {
-        return work_required_retarget(values);
+        auto ret = work_required_retarget(values);
+        std::cout << "retarget " << ret << std::endl;
+        return ret;
     }
 
     if (script::is_enabled(forks, rule_fork::easy_blocks)) {
@@ -730,7 +733,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
     // return target > pow_limit ? pow_limit.compact() : target.compact();
 
-    return target > pow_limit ? proof_of_work_limit : compact(target).normal();
+    return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 
 
 #else //BITPRIM_CURRENCY_LTC
@@ -815,9 +818,14 @@ bool chain_state::is_retarget_height(size_t height) {
     return retarget_distance(height) == 0;
 }
 
+
 // Determine the number of blocks back to the closest retarget height.
 size_t chain_state::retarget_distance(size_t height) {
+#ifdef BITPRIM_CURRENCY_LTC
+    return height +1 % retargeting_interval;
+#else
     return height % retargeting_interval;
+#endif
 }
 
 // Publics.
