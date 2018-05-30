@@ -542,7 +542,7 @@ if (${CURRENCY} STREQUAL "BCH")
 endif()
 
 
-#if (WITH_LITECOIN)
+# if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
     set(bitprim_core_sources ${bitprim_core_sources}         
       src/math/external/scrypt.cpp
