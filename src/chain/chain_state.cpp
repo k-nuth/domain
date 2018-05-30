@@ -644,11 +644,8 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     bool const daa_active = false;
 #endif //BITPRIM_CURRENCY_BCH
 
-    std::cout << "height: "<< values.height <<" is retarget " << is_retarget_height(values.height) << std::endl;
     if (is_retarget_height(values.height) && !(daa_active)) {
-        auto ret = work_required_retarget(values);
-        std::cout << "retarget " << ret << std::endl;
-        return ret;
+        return work_required_retarget(values);
     }
 
     if (script::is_enabled(forks, rule_fork::easy_blocks)) {

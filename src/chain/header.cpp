@@ -504,7 +504,6 @@ code header::check(bool retarget) const
 
 code header::accept(const chain_state& state) const
 {
-    std::cout << "bits " << bits_ << std::endl;
     if (bits_ != state.work_required())
         return error::incorrect_proof_of_work;
 
