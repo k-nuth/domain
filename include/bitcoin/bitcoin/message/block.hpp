@@ -31,6 +31,7 @@
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
 
+
 namespace libbitcoin {
 namespace message {
 
@@ -84,6 +85,15 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 };
+
+
+void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink);
+
+void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream);
+
+data_chunk to_data_header_nonce(block const& block, uint64_t nonce);
+
+hash_digest hash(block const& block, uint64_t nonce);
 
 } // namespace message
 } // namespace libbitcoin

@@ -115,8 +115,9 @@ bool block_transactions::from_data(uint32_t version,
 
 bool block_transactions::from_data(uint32_t version, reader& source)
 {
+    //std::cout << "bool block_transactions::from_data(uint32_t version, reader& source) \n";
     reset();
-
+    
     block_hash_ = source.read_hash();
     const auto count = source.read_size_little_endian();
 
@@ -125,10 +126,15 @@ bool block_transactions::from_data(uint32_t version, reader& source)
         source.invalidate();
     else
         transactions_.resize(count);
+#ifdef BITPRIM_CURRENCY_BCH
+    bool witness = false;
+#else
+    bool witness = true;
+#endif
 
     // Order is required.
     for (auto& tx: transactions_)
-        if ( ! tx.from_data(source, true))
+        if ( ! tx.from_data(source, true, witness))
             break;
 
     if (version < block_transactions::version_minimum)
@@ -164,16 +170,28 @@ void block_transactions::to_data(uint32_t version, writer& sink) const
     sink.write_hash(block_hash_);
     sink.write_variable_little_endian(transactions_.size());
 
-    for (const auto& element: transactions_)
-        element.to_data(sink);
+#ifdef BITPRIM_CURRENCY_BCH
+    bool witness = false;
+#else
+    bool witness = true;
+#endif
+    for (const auto& element: transactions_) {
+        element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
+    }
 }
 
 size_t block_transactions::serialized_size(uint32_t version) const
 {
+#ifdef BITPRIM_CURRENCY_BCH
+    bool witness = false;
+#else
+    bool witness = true;
+#endif
+
     auto size = hash_size + message::variable_uint_size(transactions_.size());
 
     for (const auto& element: transactions_)
-        size += element.serialized_size(true);
+        size += element.serialized_size(/*wire*/ true, witness, /*unconfirmed*/ false);
 
     return size;
 }
