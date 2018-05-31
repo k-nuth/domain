@@ -49,6 +49,7 @@ public:
     typedef input::list ins;
     typedef output::list outs;
     typedef std::vector<transaction> list;
+    typedef std::shared_ptr<hash_digest> hash_ptr;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation
@@ -98,27 +99,27 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static transaction factory_from_data(const data_chunk& data, bool wire=true);
-    static transaction factory_from_data(std::istream& stream, bool wire=true);
-    static transaction factory_from_data(reader& source, bool wire=true);
+    static transaction factory_from_data(const data_chunk& data, bool wire=true, bool witness=false);
+    static transaction factory_from_data(std::istream& stream, bool wire=true, bool witness=false);
+    static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
 
-    bool from_data(const data_chunk& data, bool wire=true, bool unconfirmed=false);
-    bool from_data(std::istream& stream, bool wire=true, bool unconfirmed=false);
-    bool from_data(reader& source, bool wire=true, bool unconfirmed=false);
+    bool from_data(const data_chunk& data, bool wire=true, bool witness=false, bool unconfirmed=false);
+    bool from_data(std::istream& stream, bool wire=true, bool witness=false, bool unconfirmed=false);
+    bool from_data(reader& source, bool wire=true, bool witness=false, bool unconfirmed=false);
 
     bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire=true, bool unconfirmed=false) const;
-    void to_data(std::ostream& stream, bool wire=true, bool unconfirmed=false) const;
-    void to_data(writer& sink, bool wire=true, bool unconfirmed=false) const;
+    data_chunk to_data(bool wire=true, bool witness=false, bool unconfirmed=false) const;
+    void to_data(std::ostream& stream, bool wire=true, bool witness=false, bool unconfirmed=false) const;
+    void to_data(writer& sink, bool wire=true, bool witness=false, bool unconfirmed=false) const;
 
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    size_t serialized_size(bool wire=true, bool unconfirmed=false) const;
+    size_t serialized_size(bool wire=true, bool witness=false, bool unconfirmed=false) const;
 
     uint32_t version() const;
     void set_version(uint32_t value);
@@ -144,8 +145,16 @@ public:
     uint32_t cached_sigops() const;
     bool cached_is_standard() const;
 
-    hash_digest hash() const;
-    hash_digest hash(uint32_t sighash_type) const;
+    hash_digest outputs_hash() const;
+    hash_digest inpoints_hash() const;
+    hash_digest sequences_hash() const;
+    hash_digest hash(bool witness=false) const;
+
+    // Utilities.
+    //-------------------------------------------------------------------------
+
+    /// Clear witness from all inputs (does not change default hash).
+    void strip_witness();
 
     void recompute_hash();
 
@@ -159,7 +168,8 @@ public:
     uint64_t total_input_value() const;
     uint64_t total_output_value() const;
     size_t signature_operations() const;
-    size_t signature_operations(bool bip16_active) const;
+    size_t signature_operations(bool bip16, bool bip141) const;
+    size_t weight() const;
 
     bool is_coinbase() const;
     bool is_null_non_coinbase() const;
@@ -173,8 +183,9 @@ public:
     bool is_final(size_t block_height, uint32_t block_time) const;
     bool is_locked(size_t block_height, uint32_t median_time_past) const;
     bool is_locktime_conflict() const;
+    bool is_segregated() const;
 
-    code check(bool transaction_pool=true) const;
+    code check(bool transaction_pool=true, bool retarget=true) const;
     code accept(bool transaction_pool=true) const;
     code accept(const chain_state& state, bool transaction_pool=true) const;
     code connect() const;
@@ -208,9 +219,18 @@ private:
     bool cached_is_standard_;
 
     // These share a mutex as they are not expected to conflict.
+    // These share a mutex as they are not expected to contend.
+    mutable hash_ptr hash_;
+    mutable hash_ptr witness_hash_;
+    mutable hash_ptr outputs_hash_;
+    mutable hash_ptr inpoints_hash_;
+    mutable hash_ptr sequences_hash_;
+    mutable upgrade_mutex hash_mutex_;
+
+    // These share a mutex as they are not expected to contend.
     mutable boost::optional<uint64_t> total_input_value_;
     mutable boost::optional<uint64_t> total_output_value_;
-    mutable std::shared_ptr<hash_digest> hash_;
+    mutable boost::optional<bool> segregated_;
     mutable upgrade_mutex mutex_;
 };
 

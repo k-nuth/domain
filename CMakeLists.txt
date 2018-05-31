@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-core
 #==============================================================================
 project(bitprim-core
-  VERSION 0.9.1
+  VERSION 0.10.0
   LANGUAGES CXX C)
 
 
@@ -361,6 +361,7 @@ set(bitprim_core_sources
 
         src/chain/script.cpp
         src/chain/transaction.cpp
+        src/chain/witness.cpp
 
         src/machine/interpreter.cpp
         src/machine/number.cpp
@@ -406,6 +407,7 @@ set(bitprim_core_sources
         src/math/hash.cpp
         src/math/secp256k1_initializer.cpp
         src/math/secp256k1_initializer.hpp
+        src/math/sip_hash.cpp
         src/math/stealth.cpp
         src/math/external/aes256.h
         src/math/external/crypto_scrypt.h
@@ -489,7 +491,7 @@ set(bitprim_core_sources
         src/utility/png.cpp
         src/utility/prioritized_mutex.cpp
 
-        src/utility/random.cpp
+        src/utility/pseudo_random.cpp
         src/utility/scope_lock.cpp
         src/utility/sequencer.cpp
         src/utility/sequential_lock.cpp
@@ -729,7 +731,7 @@ if (WITH_TESTS)
         test/utility/data.cpp
         test/utility/endian.cpp
         test/utility/png.cpp
-        test/utility/random.cpp
+        test/utility/pseudo_random.cpp
         test/utility/serializer.cpp
         test/utility/stream.cpp
         test/utility/thread.cpp
@@ -844,7 +846,7 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     pong_tests
     prefilled_transaction_tests
     printer_tests
-    random_tests
+    pseudo_random_tests
     reject_tests
     # script_number_tests
     script_tests
@@ -959,6 +961,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/chain/script.hpp
     bitcoin/bitcoin/chain/stealth.hpp
     bitcoin/bitcoin/chain/transaction.hpp
+    bitcoin/bitcoin/chain/witness.hpp
 
     bitcoin/bitcoin/machine/interpreter.hpp
     bitcoin/bitcoin/machine/number.hpp    
@@ -968,6 +971,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/machine/rule_fork.hpp
     bitcoin/bitcoin/machine/script_pattern.hpp
     bitcoin/bitcoin/machine/sighash_algorithm.hpp
+    bitcoin/bitcoin/machine/script_version.hpp
 
     bitcoin/bitcoin/config/authority.hpp
     bitcoin/bitcoin/config/base16.hpp
@@ -1124,7 +1128,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/utility/png.hpp
     bitcoin/bitcoin/utility/prioritized_mutex.hpp
 
-    bitcoin/bitcoin/utility/random.hpp
+    bitcoin/bitcoin/utility/pseudo_random.hpp
     bitcoin/bitcoin/utility/reader.hpp
     bitcoin/bitcoin/utility/resubscriber.hpp
     bitcoin/bitcoin/utility/scope_lock.hpp

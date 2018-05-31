@@ -8,7 +8,7 @@
 #define LIBBITCOIN_BITCOIN_HPP
 
 /**
- * API Users: Include only this header. Direct use of other headers is fragile 
+ * API Users: Include only this header. Direct use of other headers is fragile
  * and unsupported as header organization is subject to change.
  *
  * Maintainers: Do not include this header internal to this library.
@@ -37,6 +37,7 @@
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/stealth.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
+#include <bitcoin/bitcoin/chain/witness.hpp>
 #include <bitcoin/bitcoin/config/authority.hpp>
 #include <bitcoin/bitcoin/config/base16.hpp>
 #include <bitcoin/bitcoin/config/base2.hpp>
@@ -81,6 +82,7 @@
 #include <bitcoin/bitcoin/machine/program.hpp>
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/machine/script_pattern.hpp>
+#include <bitcoin/bitcoin/machine/script_version.hpp>
 #include <bitcoin/bitcoin/machine/sighash_algorithm.hpp>
 #include <bitcoin/bitcoin/math/checksum.hpp>
 #include <bitcoin/bitcoin/math/crypto.hpp>
@@ -159,7 +161,7 @@
 #include <bitcoin/bitcoin/utility/pending.hpp>
 #include <bitcoin/bitcoin/utility/png.hpp>
 #include <bitcoin/bitcoin/utility/prioritized_mutex.hpp>
-#include <bitcoin/bitcoin/utility/random.hpp>
+#include <bitcoin/bitcoin/utility/pseudo_random.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
 #include <bitcoin/bitcoin/utility/resubscriber.hpp>
 #include <bitcoin/bitcoin/utility/scope_lock.hpp>

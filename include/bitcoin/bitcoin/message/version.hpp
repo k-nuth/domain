@@ -41,6 +41,9 @@ public:
 
     enum level: uint32_t
     {
+        // compact blocks protocol FIX
+        bip152_fix = 70015, //TODO(fernando): See how to name this, because there is no BIP for that...
+
         // compact blocks protocol
         bip152 = 70014,
 
@@ -50,7 +53,7 @@ public:
         // send_headers
         bip130 = 70012,
 
-        // bloom_filters service bit
+        // node_bloom service bit
         bip111 = 70011,
 
         // node_utxo service bit (draft)
@@ -85,7 +88,7 @@ public:
         minimum = 31402,
 
         // We support at most this internally (bound to settings default).
-        maximum = bip133,
+        maximum = bip152,  //TODO(fernando): Point to 70015 when is available.
 
         // Used to generate canonical size required by consensus checks.
         canonical = 0
@@ -93,19 +96,24 @@ public:
 
     enum service: uint64_t
     {
-        // The network exposes no services.
+        // The node exposes no services.
         none = 0,
 
-        // The network is capable of serving the block chain (full node).
-        node_network = (1 << 0),
+        // The node is capable of serving the block chain (full node).
+        node_network = (1u << 0),
 
         // Requires version.value >= level::bip64 (BIP64 is draft only).
-        // The network is capable of responding to the getutxo protocol request.
-        node_utxo = (1 << 1),
+        // The node is capable of responding to the getutxo protocol request.
+        node_utxo = (1u << 1),
 
         // Requires version.value >= level::bip111
-        // The network is capable and willing to handle bloom-filtered connections.
-        bloom_filters = (1 << 2),
+
+        // The node is capable and willing to handle bloom-filtered connections.
+        node_bloom = (1u << 2),
+
+        // Independent of network protocol level.
+        // The node is capable of responding to witness inventory requests.
+        node_witness = (1u << 3),
 
 #ifdef BITPRIM_CURRENCY_BCH
         node_network_cash = (1 << 5) //TODO(bitprim): check what happens with node_network (or node_network_cash)

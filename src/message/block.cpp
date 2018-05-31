@@ -27,6 +27,8 @@
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/utility/data.hpp>
 #include <bitcoin/bitcoin/utility/reader.hpp>
+#include <bitcoin/bitcoin/utility/container_sink.hpp>
+#include <bitcoin/bitcoin/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -92,39 +94,48 @@ block::block(const chain::header& header,
 {
 }
 
+// Witness is always deserialized if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
+
 bool block::from_data(uint32_t, const data_chunk& data)
 {
-    return chain::block::from_data(data);
+    return chain::block::from_data(data, true);
 }
 
 bool block::from_data(uint32_t, std::istream& stream)
 {
-    return chain::block::from_data(stream);
+    return chain::block::from_data(stream, true);
 }
 
 bool block::from_data(uint32_t, reader& source)
 {
-    return chain::block::from_data(source);
+    return chain::block::from_data(source, true);
 }
+
+// Witness is always serialized if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 data_chunk block::to_data(uint32_t) const
 {
-    return chain::block::to_data();
+    return chain::block::to_data(true);
 }
 
 void block::to_data(uint32_t, std::ostream& stream) const
 {
-    chain::block::to_data(stream);
+    chain::block::to_data(stream, true);
 }
 
 void block::to_data(uint32_t, writer& sink) const
 {
-    chain::block::to_data(sink);
+    chain::block::to_data(sink, true);
 }
+
+// Witness size is always counted if present.
+// NOTE: Witness on bch is dissabled on the chain::block class
 
 size_t block::serialized_size(uint32_t) const
 {
-    return chain::block::serialized_size();
+    return chain::block::serialized_size(true);
 }
 
 block& block::operator=(chain::block&& other)
@@ -158,6 +169,34 @@ bool block::operator==(const block& other) const
 bool block::operator!=(const block& other) const
 {
     return !(*this == other);
+}
+
+
+void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
+    block.header().to_data(sink);
+    sink.write_8_bytes_little_endian(nonce);
+}
+
+void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream) {
+    ostream_writer sink(stream);
+    to_data_header_nonce(block, nonce, sink);
+}
+
+data_chunk to_data_header_nonce(block const& block, uint64_t nonce) {
+   
+    data_chunk data;
+    auto size = chain::header::satoshi_fixed_size() + sizeof(nonce);
+
+    data.reserve(size);
+    data_sink ostream(data);
+    to_data_header_nonce(block,nonce, ostream);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return data;
+}
+
+hash_digest hash(block const& block, uint64_t nonce) {
+    return sha256_hash(to_data_header_nonce(block,nonce));
 }
 
 } // namespace message
