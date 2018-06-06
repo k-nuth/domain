@@ -730,7 +730,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
     // return target > pow_limit ? pow_limit.compact() : target.compact();
 
-    return target > pow_limit ? proof_of_work_limit : compact(target).normal();
+    return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 
 
 #else //BITPRIM_CURRENCY_LTC
@@ -814,6 +814,7 @@ bool chain_state::is_retarget_or_non_limit(size_t height, uint32_t bits) {
 bool chain_state::is_retarget_height(size_t height) {
     return retarget_distance(height) == 0;
 }
+
 
 // Determine the number of blocks back to the closest retarget height.
 size_t chain_state::retarget_distance(size_t height) {
@@ -918,8 +919,17 @@ chain_state::data chain_state::to_pool(const chain_state& top)
 
     // Regtest does not perform retargeting.
     // If promoting from retarget height, move that timestamp into retarget.
-    if (retarget && is_retarget_height(height - 1u))
+    if (retarget && is_retarget_height(height - 1u)){
+        // The first block after a retarget saves the "retarget block" timestamp for future validations
+#ifdef BITPRIM_CURRENCY_LTC
+        // LTC retarget function is like BTC/BCH but uses the index -1.
+        // data.timestamps.orderder.back() = current block timestamp = data.timestamp.self (this is used for BTC)
+        // data.timestamps.orderder.at(size-2) = retarget block timestamp
+        data.timestamp.retarget = data.timestamp.ordered.at(data.timestamp.ordered.size() - 2);
+#else
         data.timestamp.retarget = data.timestamp.self;
+#endif
+    }
 
     // Replace previous block state with tx pool chain state for next height.
     // Only height and version used by tx pool, others promotable or unused.
