@@ -47,6 +47,12 @@ enum sighash_algorithm : uint32_t
     /// included in the signature, and can be updated.
     single = 0x03,
 
+#ifdef BITPRIM_CURRENCY_BCH
+    all_forkid = all | 0x40,
+    none_forkid = none | 0x40,
+    single_forkid = single | 0x40,
+#endif
+
     /// The above types can be modified with this flag, creating three new
     /// combined types.
     anyone_can_pay = 0x80,
