@@ -88,7 +88,7 @@ public:
         minimum = 31402,
 
         // We support at most this internally (bound to settings default).
-        maximum = bip152,  //TODO(fernando): Point to 70015 when is available.
+        maximum = bip152_fix,
 
         // Used to generate canonical size required by consensus checks.
         canonical = 0
