@@ -757,9 +757,15 @@ hash_digest script::generate_version_0_signature_hash(const transaction& tx,
     // Flags derived from the signature hash byte.
     const auto sighash = to_sighash_enum(sighash_type);
     const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+#ifdef BITPRIM_CURRENCY_BCH
+    const auto single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::all_forkid);
+    const auto none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::all_forkid);
+    const auto all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::all_forkid);
+#else
     const auto single = (sighash == sighash_algorithm::single);
     const auto none = (sighash == sighash_algorithm::none);
     const auto all = (sighash == sighash_algorithm::all);
+#endif
 
     // 1. transaction version (4-byte little endian).
     sink.write_little_endian(tx.version());
