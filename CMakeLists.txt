@@ -19,9 +19,9 @@
 
 cmake_minimum_required(VERSION 3.4)
 
-# bitprim-core
+# bitprim-domain
 #==============================================================================
-project(bitprim-core
+project(bitprim-domain
   VERSION 0.11.0
   LANGUAGES CXX C)
 
@@ -338,7 +338,7 @@ endif()
 # Build
 #==============================================================================
 
-# src/bitprim-core.la => ${libdir}
+# src/bitprim-domain.la => ${libdir}
 #------------------------------------------------------------------------------
 set(MODE STATIC)
 if (ENABLE_SHARED)
@@ -550,50 +550,50 @@ if (${CURRENCY} STREQUAL "LTC")
       src/math/external/scrypt-sse2.cpp)
 endif()
 
-add_library(bitprim-core ${MODE} ${bitprim_core_sources})
+add_library(bitprim-domain ${MODE} ${bitprim_core_sources})
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
-    set_property(TARGET bitprim-core PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET bitprim-domain PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
 
 
 
-#set_target_properties(bitprim-core PROPERTIES CXX_VISIBILITY_PRESET hidden)
-#set_target_properties(bitprim-core PROPERTIES CXX_VISIBILITY_PRESET internal)
+#set_target_properties(bitprim-domain PROPERTIES CXX_VISIBILITY_PRESET hidden)
+#set_target_properties(bitprim-domain PROPERTIES CXX_VISIBILITY_PRESET internal)
 
 #-fvisibility=default|internal|hidden|protected
 
-# add_library(bitprim-core ${MODE}
+# add_library(bitprim-domain ${MODE}
 #        src/wallet/uri.cpp)
 
-target_include_directories(bitprim-core PUBLIC
+target_include_directories(bitprim-domain PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
   
 if (NOT ENABLE_SHARED)
-    target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+    target_compile_definitions(bitprim-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
-target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(bitprim-domain PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
 
-target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+target_include_directories(bitprim-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
 # if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
-  target_include_directories(bitprim-core SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+  target_include_directories(bitprim-domain SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
 endif()
 
 if (NOT NO_CONAN_AT_ALL)
-  target_link_libraries(bitprim-core PUBLIC ${CONAN_LIBS})
+  target_link_libraries(bitprim-domain PUBLIC ${CONAN_LIBS})
 else()
   if (MSVC)
-    target_link_libraries(bitprim-core PUBLIC
+    target_link_libraries(bitprim-domain PUBLIC
       ${Boost_ATOMIC_LIBRARY}
       ${Boost_LOG_SETUP_LIBRARY}
     )
   endif()
 
-  target_link_libraries(bitprim-core PUBLIC
+  target_link_libraries(bitprim-domain PUBLIC
     ${Boost_CHRONO_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
@@ -607,23 +607,23 @@ else()
   )
 endif()
 
-target_link_libraries(bitprim-core PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
+target_link_libraries(bitprim-domain PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
 
 # if (NO_CONAN_AT_ALL)
     if (MINGW) #(WIN32)
-        target_link_libraries(bitprim-core PUBLIC ws2_32 wsock32)
+        target_link_libraries(bitprim-domain PUBLIC ws2_32 wsock32)
     endif()
 # endif()
 
 if (WITH_PNG)
     if (NO_CONAN_AT_ALL)
-        target_link_libraries(bitprim-core PUBLIC png)
+        target_link_libraries(bitprim-domain PUBLIC png)
     endif (NO_CONAN_AT_ALL)
 endif()
 
 # if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
-  target_link_libraries(bitprim-core PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
+  target_link_libraries(bitprim-domain PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
 
   # OPENSSL_CRYPTO_LIBRARY
   # OPENSSL_SSL_LIBRARY
@@ -631,10 +631,10 @@ if (${CURRENCY} STREQUAL "LTC")
 endif()
 
 if (NOT USE_CONAN)
-  target_link_libraries(bitprim-core PUBLIC secp256k1)
+  target_link_libraries(bitprim-domain PUBLIC secp256k1)
 endif()
 
-_group_sources(bitprim-core "${CMAKE_CURRENT_LIST_DIR}")
+_group_sources(bitprim-domain "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
@@ -781,7 +781,7 @@ if (WITH_TESTS)
   # test/wallet/uri.cpp
   # test/wallet/uri_reader.cpp)
 
-    target_link_libraries(bitprim_core_test PUBLIC bitprim-core)
+    target_link_libraries(bitprim_core_test PUBLIC bitprim-domain)
 
 _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
@@ -886,7 +886,7 @@ if (WITH_TESTS_NEW)
           test_new/main.cpp
   )
 
-  target_link_libraries(bitprim_core_test_new PUBLIC bitprim-core)
+  target_link_libraries(bitprim_core_test_new PUBLIC bitprim-domain)
 
   # _group_sources(bitprim_core_test_new "${CMAKE_CURRENT_LIST_DIR}/test_new")
 
@@ -914,21 +914,21 @@ if (WITH_EXAMPLES)
     examples/main.cpp)
 
 
-  target_link_libraries(bitprim_core_examples PUBLIC bitprim-core)
+  target_link_libraries(bitprim_core_examples PUBLIC bitprim-domain)
 
   _group_sources(bitprim_core_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
 endif()
 
 # Install
 #==============================================================================
-install(TARGETS bitprim-core EXPORT bitprim-core
+install(TARGETS bitprim-domain EXPORT bitprim-domain
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
 )
 
-#install(EXPORT bitprim-coreTargets
+#install(EXPORT bitprim-domainTargets
 #
 #)
 
@@ -1182,9 +1182,9 @@ endforeach()
 #==============================================================================
 include(CMakePackageConfigHelpers)
 
-export(EXPORT bitprim-core
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreTargets.cmake")
-export(PACKAGE bitprim-core)
+export(EXPORT bitprim-domain
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainTargets.cmake")
+export(PACKAGE bitprim-domain)
 
 if (UNIX)
   set(_config_package_location "lib/cmake")
@@ -1192,21 +1192,21 @@ elseif (WIN32)
   set(_config_package_location "cmake")
 endif()
 
-install(EXPORT bitprim-core
-  FILE bitprim-coreTargets.cmake
+install(EXPORT bitprim-domain
+  FILE bitprim-domainTargets.cmake
   DESTINATION ${_config_package_location})
 
-configure_file(bitprim-coreConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfig.cmake"
+configure_file(bitprim-domainConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfig.cmake"
   @ONLY)
 
 write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(
   FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-coreConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfigVersion.cmake"
   DESTINATION ${_config_package_location})

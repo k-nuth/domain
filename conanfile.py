@@ -41,10 +41,10 @@ def get_conan_req_version():
 
 
 class BitprimCoreConan(ConanFile):
-    name = "bitprim-core"
+    name = "bitprim-domain"
     version = get_version()
     license = "http://www.boost.org/users/license.html"
-    url = "https://github.com/bitprim/bitprim-core"
+    url = "https://github.com/bitprim/bitprim-domain"
     description = "Bitcoin Cross-Platform C++ Development Toolkit"
     settings = "os", "compiler", "build_type", "arch"
 
@@ -77,8 +77,8 @@ class BitprimCoreConan(ConanFile):
 
     generators = "cmake"
     exports = "conan_channel", "conan_version", "conan_req_version"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-coreConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*", "examples/*"
-    package_files = "build/lbitprim-core.a"
+    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-domainConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*", "examples/*"
+    package_files = "build/lbitprim-domain.a"
     build_policy = "missing"
 
     requires = (("boost/1.66.0@bitprim/stable"),
@@ -225,7 +225,7 @@ class BitprimCoreConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["bitprim-core"]
+        self.cpp_info.libs = ["bitprim-domain"]
 
         if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
             self.cpp_info.libs.append("pthread")

@@ -6,7 +6,7 @@
 get_filename_component(BITPRIM_CORE_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 set(BITPRIM_CORE_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 
-include("${BITPRIM_CORE_CMAKE_DIR}/bitprim-coreTargets.cmake")
-set(BITPRIM_CORE_LIBRARIES bitprim-core)
+include("${BITPRIM_CORE_CMAKE_DIR}/bitprim-domainTargets.cmake")
+set(BITPRIM_CORE_LIBRARIES bitprim-domain)
 
 find_package(secp256k1 0.0.01 REQUIRED)

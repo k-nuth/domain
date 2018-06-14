@@ -53,11 +53,11 @@ cd bitprim-node-exe
 echo "Travis branch: ${TRAVIS_BRANCH}"
 git checkout ${TRAVIS_BRANCH}
 
-replace_versions bitprim-core $BITPRIM_BUILD_NUMBER
+replace_versions bitprim-domain $BITPRIM_BUILD_NUMBER
 
 cat versions.txt
 git add . versions.txt
-git commit --message "Travis bitprim-core build: $BITPRIM_BUILD_NUMBER, $TRAVIS_BUILD_NUMBER" || true
+git commit --message "Travis bitprim-domain build: $BITPRIM_BUILD_NUMBER, $TRAVIS_BUILD_NUMBER" || true
 git remote add origin-commit https://${GH_TOKEN}@github.com/bitprim/bitprim-node-exe.git > /dev/null 2>&1
 git push --quiet --set-upstream origin-commit ${TRAVIS_BRANCH}  || true
 
@@ -73,11 +73,11 @@ cd bitprim-node-cint
 echo "Travis branch: ${TRAVIS_BRANCH}"
 git checkout ${TRAVIS_BRANCH}
 
-replace_versions bitprim-core $BITPRIM_BUILD_NUMBER
+replace_versions bitprim-domain $BITPRIM_BUILD_NUMBER
 
 cat versions.txt
 git add . versions.txt
-git commit --message "Travis bitprim-core build: $BITPRIM_BUILD_NUMBER, $TRAVIS_BUILD_NUMBER" || true
+git commit --message "Travis bitprim-domain build: $BITPRIM_BUILD_NUMBER, $TRAVIS_BUILD_NUMBER" || true
 git remote add origin-commit https://${GH_TOKEN}@github.com/bitprim/bitprim-node-cint.git > /dev/null 2>&1
 git push --quiet --set-upstream origin-commit ${TRAVIS_BRANCH} || true
 
