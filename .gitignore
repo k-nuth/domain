@@ -1,0 +1,77 @@
+.deps
+.libs
+*.la
+*.lo
+*.o
+*.pyc
+Makefile
+Makefile.in
+libbitcoin.pc
+
+bin
+obj
+.*.swp
+*~
+/*.kdev4
+/.cproject
+/.project
+/.settings
+/nbproject
+
+/aclocal.m4
+/autom4te.cache
+/build-aux
+/config.*
+/configure
+/libtool
+.dirstamp
+libbitcoin_1.0.10-1_amd64.deb
+
+/examples/accept
+/examples/balance
+/examples/connect
+/examples/determ
+/examples/display-last
+/examples/fullnode
+/examples/initchain
+/examples/priv
+/examples/proto
+/examples/satoshiwords
+/examples/txrad
+/examples/uri
+/examples/error.log
+/examples/debug.log
+
+/build
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/.vs/sha256_tests/v14/.suo
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/sha256_tests.filters
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/main.obj
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/main_simd.obj
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256.obj
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.Build.CppClean.log
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.log
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/vc140.idb
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/vc140.pdb
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/zeroize.obj
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.tlog/CL.command.1.tlog
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.tlog/CL.read.1.tlog
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.tlog/CL.write.1.tlog
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.tlog/link.command.1.tlog
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.tlog/link.read.1.tlog
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.tlog/link.write.1.tlog
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/sha256_tests/x64/Debug/sha256_tests.tlog/sha256_tests.lastbuildstate
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/x64/Debug/sha256_tests.exe
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/x64/Debug/sha256_tests.ilk
+test/miscellaneous_fernando_tests/sha256 stuff/sha256_tests/x64/Debug/sha256_tests.pdb
+
+
+.idea/
+cmake-build-debug/
+cmake-build-release/
+CMakeSettings.json
+/.vs/bitprim-core/v15
+/.vs
+
+.vscode/
+
+check_files.py
