@@ -24,7 +24,7 @@
 #include <iostream>
 #include <bitcoin/bitcoin/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 #ifdef WITH_QRENCODE
 #include <qrencode.h>

@@ -26,7 +26,7 @@
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
 #include <bitcoin/bitcoin/machine/script_version.hpp>
-#include <bitcoin/bitcoin/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
 namespace machine {

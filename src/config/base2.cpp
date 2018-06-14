@@ -23,7 +23,7 @@
 #include <string>
 #include <boost/program_options.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/utility/binary.hpp>
+#include <bitcoin/infrastructure/utility/binary.hpp>
 
 namespace libbitcoin {
 namespace config {

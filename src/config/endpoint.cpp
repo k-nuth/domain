@@ -19,9 +19,9 @@
 #include <bitcoin/bitcoin/config/endpoint.hpp>
 
 //#ifdef __MINGW32__
-//  #include <bitcoin/bitcoin/utility/byteswap.h>
+//  #include <bitcoin/infrastructure/utility/byteswap.h>
 //#else
-  #include <bitcoin/bitcoin/utility/asio.hpp>
+  #include <bitcoin/infrastructure/utility/asio.hpp>
 //#endif
 
 #include <cstdint>

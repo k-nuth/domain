@@ -19,8 +19,8 @@
 #ifndef LIBBITCOIN_BASE_58_IPP
 #define LIBBITCOIN_BASE_58_IPP
 
-#include <bitcoin/bitcoin/utility/assert.hpp>
-#include <bitcoin/bitcoin/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/assert.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
 

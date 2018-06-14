@@ -24,7 +24,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <boost/throw_exception.hpp>
-#include <bitcoin/bitcoin/unicode/ifstream.hpp>
+#include <bitcoin/infrastructure/unicode/ifstream.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 
 #include <iostream>

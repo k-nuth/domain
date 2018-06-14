@@ -27,6 +27,7 @@
 #include <bitcoin/bitcoin/math/hash.hpp>
 #include <bitcoin/bitcoin/message/network_address.hpp>
 #include <bitcoin/bitcoin/version.hpp>
+#include <bitcoin/infrastructure/constants.hpp>
 
 namespace libbitcoin {
 
@@ -38,16 +39,17 @@ static_assert(sizeof(size_t) >= sizeof(uint32_t), "unsupported size_t");
 // Generic constants.
 //-----------------------------------------------------------------------------
 
-BC_CONSTEXPR int64_t min_int64 = MIN_INT64;
-BC_CONSTEXPR int64_t max_int64 = MAX_INT64;
-BC_CONSTEXPR int32_t min_int32 = MIN_INT32;
-BC_CONSTEXPR int32_t max_int32 = MAX_INT32;
-BC_CONSTEXPR uint64_t max_uint64 = MAX_UINT64;
-BC_CONSTEXPR uint32_t max_uint32 = MAX_UINT32;
-BC_CONSTEXPR uint16_t max_uint16 = MAX_UINT16;
-BC_CONSTEXPR uint8_t max_uint8 = MAX_UINT8;
-BC_CONSTEXPR uint64_t max_size_t = BC_MAX_SIZE;
-BC_CONSTEXPR uint8_t byte_bits = 8;
+// Defined <bitcoin/infrastructure/constants.hpp>
+// BC_CONSTEXPR int64_t min_int64 = MIN_INT64;
+// BC_CONSTEXPR int64_t max_int64 = MAX_INT64;
+// BC_CONSTEXPR int32_t min_int32 = MIN_INT32;
+// BC_CONSTEXPR int32_t max_int32 = MAX_INT32;
+// BC_CONSTEXPR uint64_t max_uint64 = MAX_UINT64;
+// BC_CONSTEXPR uint32_t max_uint32 = MAX_UINT32;
+// BC_CONSTEXPR uint16_t max_uint16 = MAX_UINT16;
+// BC_CONSTEXPR uint8_t max_uint8 = MAX_UINT8;
+// BC_CONSTEXPR uint64_t max_size_t = BC_MAX_SIZE;
+// BC_CONSTEXPR uint8_t byte_bits = 8;
 
 // Consensus sentinels.
 //-----------------------------------------------------------------------------
@@ -424,13 +426,14 @@ BC_CONSTEXPR size_t max_payload_size = 33554432;
 // Effective limit given a 32 bit chain height boundary: 10 + log2(2^32) + 1.
 BC_CONSTEXPR size_t max_locator = 43;
 
-// Variable integer prefix sentinels.
-BC_CONSTEXPR uint8_t varint_two_bytes = 0xfd;
-BC_CONSTEXPR uint8_t varint_four_bytes = 0xfe;
-BC_CONSTEXPR uint8_t varint_eight_bytes = 0xff;
+// Defined <bitcoin/infrastructure/constants.hpp>
+// // Variable integer prefix sentinels.
+// BC_CONSTEXPR uint8_t varint_two_bytes = 0xfd;
+// BC_CONSTEXPR uint8_t varint_four_bytes = 0xfe;
+// BC_CONSTEXPR uint8_t varint_eight_bytes = 0xff;
 
-// String padding sentinel.
-BC_CONSTEXPR uint8_t string_terminator = 0x00;
+// // String padding sentinel.
+// BC_CONSTEXPR uint8_t string_terminator = 0x00;
 
 // Witness serialization values (bip141).
 //-----------------------------------------------------------------------------

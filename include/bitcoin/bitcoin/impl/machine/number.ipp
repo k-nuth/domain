@@ -24,8 +24,8 @@
 #include <stdexcept>
 #include <bitcoin/bitcoin/compat.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/math/limits.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
+#include <bitcoin/infrastructure/utility/assert.hpp>
 
 namespace libbitcoin {
 namespace machine {

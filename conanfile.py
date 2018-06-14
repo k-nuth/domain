@@ -36,6 +36,9 @@ def get_version():
 def get_channel():
     return get_content('conan_channel')
 
+def get_user():
+    return get_content('conan_user')
+
 def get_conan_req_version():
     return get_content('conan_req_version')
 
@@ -76,13 +79,14 @@ class BitprimCoreConan(ConanFile):
         # "with_png=False", \
 
     generators = "cmake"
-    exports = "conan_channel", "conan_version", "conan_req_version"
+    exports = "conan_channel", "conan_version", "conan_req_version", "conan_user"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-domainConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*", "examples/*"
     package_files = "build/lbitprim-domain.a"
     build_policy = "missing"
 
     requires = (("boost/1.66.0@bitprim/stable"),
-               ("secp256k1/0.3@bitprim/stable"))
+               ("secp256k1/0.3@bitprim/stable"),
+               ("bitprim-infrastructure/0.11.0@%s/%s" % (get_user(), get_channel())))
 
     @property
     def msvc_mt_build(self):
@@ -108,7 +112,6 @@ class BitprimCoreConan(ConanFile):
             
         if self.options.currency == "LTC":
              self.requires("OpenSSL/1.0.2l@conan/stable")
-            
 
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@bitprim/stable")
@@ -131,11 +134,10 @@ class BitprimCoreConan(ConanFile):
                 self.info.settings.compiler.libcxx = "ANY"
 
     def build(self):
-        for dep in self.deps_cpp_info.deps:
+        # for dep in self.deps_cpp_info.deps:
             # self.output.warn(self.deps_cpp_info["MyLib"].libdirs)
-            print(dep)
-            print(self.options[dep])
-
+            # print(dep)
+            # print(self.options[dep])
             # self.options["boost"]
 
         cmake = CMake(self)
@@ -150,12 +152,6 @@ class BitprimCoreConan(ConanFile):
 
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
-
-        # cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.with_litecoin)
-
-        # cmake.definitions["WITH_LTC"] = option_on_off(self.options.currency == 'LTC')
-        # cmake.definitions["WITH_BTC"] = option_on_off(self.options.currency == 'LTC')
-        # cmake.definitions["WITH_LITECOIN"] = option_on_off(self.options.currency == 'LTC')
 
         cmake.definitions["CURRENCY"] = self.options.currency
 

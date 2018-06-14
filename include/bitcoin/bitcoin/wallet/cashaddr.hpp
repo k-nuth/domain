@@ -29,7 +29,7 @@
 #include <utility>
 #include <vector>
 
-#include <bitcoin/bitcoin/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin { namespace wallet { namespace cashaddr {
 

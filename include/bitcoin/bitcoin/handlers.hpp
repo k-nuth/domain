@@ -20,7 +20,7 @@
 #define LIBBITCOIN_HANDLERS_HPP
 
 #include <functional>
-#include <bitcoin/bitcoin/error.hpp>
+#include <bitcoin/infrastructure/error.hpp>
 
 namespace libbitcoin {
 

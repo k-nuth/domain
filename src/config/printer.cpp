@@ -27,9 +27,9 @@
 #include <boost/program_options.hpp>
 #include <bitcoin/bitcoin/config/parameter.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
-#include <bitcoin/bitcoin/utility/collection.hpp>
-#include <bitcoin/bitcoin/utility/string.hpp>
+#include <bitcoin/infrastructure/utility/assert.hpp>
+#include <bitcoin/infrastructure/utility/collection.hpp>
+#include <bitcoin/infrastructure/utility/string.hpp>
 
 // We built this because po::options_description.print() sucks.
 
@@ -109,7 +109,7 @@ std::vector<std::string> printer::columnize(const std::string& paragraph,
     {
         if (!fragment.empty() && (word.length() + fragment.length() < width))
         {
-            fragment += BC_SENTENCE_DELIMITER + word;
+            fragment += BI_SENTENCE_DELIMITER + word;
             continue;
         }
 

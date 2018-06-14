@@ -20,7 +20,7 @@ def get_user():
 
 def get_conan_vars():
     login_username = os.getenv("CONAN_LOGIN_USERNAME", "bitprim-bintray")
-    username = os.getenv("CONAN_USERNAME", "bitprim")
+    username = os.getenv("CONAN_USERNAME", get_user())
     channel = os.getenv("CONAN_CHANNEL", get_channel())
     version = os.getenv("CONAN_VERSION", get_version())
     return login_username, username, channel, version

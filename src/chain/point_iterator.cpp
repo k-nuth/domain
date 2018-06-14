@@ -26,9 +26,9 @@
 #include <utility>
 #include <bitcoin/bitcoin/chain/point.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
-////#include <bitcoin/bitcoin/utility/endian.hpp>
-#include <bitcoin/bitcoin/math/limits.hpp>
+#include <bitcoin/infrastructure/utility/assert.hpp>
+////#include <bitcoin/infrastructure/utility/endian.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 
 namespace libbitcoin {
 namespace chain {

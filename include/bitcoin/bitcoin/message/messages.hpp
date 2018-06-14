@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstddef>
-#include <bitcoin/bitcoin/math/limits.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/bitcoin/message/address.hpp>
 #include <bitcoin/bitcoin/message/alert.hpp>
 #include <bitcoin/bitcoin/message/alert_payload.hpp>
@@ -54,8 +54,8 @@
 #include <bitcoin/bitcoin/message/transaction.hpp>
 #include <bitcoin/bitcoin/message/verack.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/bitcoin/utility/container_sink.hpp>
-#include <bitcoin/bitcoin/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 // Minimum current libbitcoin protocol version:     31402
 // Minimum current satoshi client protocol version: 31800

@@ -22,11 +22,11 @@
 #include <cstdint>
 #include <boost/locale.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/unicode/unicode.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
-#include <bitcoin/bitcoin/utility/binary.hpp>
-#include <bitcoin/bitcoin/utility/collection.hpp>
-#include <bitcoin/bitcoin/utility/string.hpp>
+#include <bitcoin/infrastructure/unicode/unicode.hpp>
+#include <bitcoin/infrastructure/utility/assert.hpp>
+#include <bitcoin/infrastructure/utility/binary.hpp>
+#include <bitcoin/infrastructure/utility/collection.hpp>
+#include <bitcoin/infrastructure/utility/string.hpp>
 #include <bitcoin/bitcoin/wallet/dictionary.hpp>
 #include "../math/external/pkcs5_pbkdf2.h"
 

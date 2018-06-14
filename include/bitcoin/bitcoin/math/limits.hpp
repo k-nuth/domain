@@ -23,7 +23,7 @@
 #include <stdexcept>
 #include <limits>
 #include <bitcoin/bitcoin/compat.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
+#include <bitcoin/infrastructure/utility/assert.hpp>
 
 namespace libbitcoin {
 

@@ -30,12 +30,12 @@
 #include <bitcoin/bitcoin/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/math/limits.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/bitcoin/unicode/unicode.hpp>
-#include <bitcoin/bitcoin/utility/timer.hpp>
+#include <bitcoin/infrastructure/unicode/unicode.hpp>
+#include <bitcoin/infrastructure/utility/timer.hpp>
 
 
 

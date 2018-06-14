@@ -394,13 +394,6 @@ set(bitprim_core_sources
         src/formats/base_64.cpp
         src/formats/base_85.cpp
 
-        src/log/file_collector.cpp
-        src/log/file_collector_repository.cpp
-        src/log/file_counter_formatter.cpp
-        src/log/sink.cpp
-        src/log/statsd_sink.cpp
-        src/log/udp_client_sink.cpp
-
         src/math/checksum.cpp
         src/math/crypto.cpp
         src/math/elliptic_curve.cpp
@@ -470,39 +463,7 @@ set(bitprim_core_sources
         src/message/verack.cpp
         src/message/version.cpp
         
-        src/unicode/console_streambuf.cpp
-        src/unicode/ifstream.cpp
-        src/unicode/ofstream.cpp
-        src/unicode/unicode.cpp
-        src/unicode/unicode_istream.cpp
-        src/unicode/unicode_ostream.cpp
-        src/unicode/unicode_streambuf.cpp
-        
-        src/utility/binary.cpp
-        src/utility/conditional_lock.cpp
-        src/utility/deadline.cpp
-        src/utility/dispatcher.cpp
-        src/utility/flush_lock.cpp
-        src/utility/interprocess_lock.cpp
-        src/utility/istream_reader.cpp
-        src/utility/monitor.cpp
-        src/utility/ostream_writer.cpp
-        
-        src/utility/png.cpp
-        src/utility/prioritized_mutex.cpp
-
-        src/utility/pseudo_random.cpp
-        src/utility/scope_lock.cpp
-        src/utility/sequencer.cpp
-        src/utility/sequential_lock.cpp
-        src/utility/socket.cpp
-        src/utility/string.cpp
-        src/utility/thread.cpp
-        src/utility/threadpool.cpp
-        src/utility/work.cpp
-
         src/wallet/bitcoin_uri.cpp
-        
 
         src/wallet/dictionary.cpp
         src/wallet/ec_private.cpp
@@ -684,7 +645,7 @@ if (WITH_TESTS)
         test/math/hash.cpp
         test/math/hash.hpp
         # test/math/hash_number.cpp
-        test/math/limits.cpp
+        # test/math/limits.cpp
         # test/math/script_number.cpp
         # test/math/script_number.hpp
         test/math/stealth.cpp
@@ -723,19 +684,6 @@ if (WITH_TESTS)
         test/message/transaction.cpp
         test/message/verack.cpp
         test/message/version.cpp
-        test/unicode/unicode.cpp
-        test/unicode/unicode_istream.cpp
-        test/unicode/unicode_ostream.cpp
-        test/utility/binary.cpp
-        test/utility/collection.cpp
-        test/utility/data.cpp
-        test/utility/endian.cpp
-        test/utility/png.cpp
-        test/utility/pseudo_random.cpp
-        test/utility/serializer.cpp
-        test/utility/stream.cpp
-        test/utility/thread.cpp
-        # test/utility/variable_uint_size.cpp
         test/wallet/bitcoin_uri.cpp
         test/wallet/ec_private.cpp
         test/wallet/ec_public.cpp
@@ -938,7 +886,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/compat.hpp
     bitcoin/bitcoin/constants.hpp
     bitcoin/bitcoin/define.hpp
-    bitcoin/bitcoin/error.hpp
+    # bitcoin/bitcoin/error.hpp
     bitcoin/bitcoin/handlers.hpp
     bitcoin/bitcoin/version.hpp
 
@@ -1002,49 +950,10 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/impl/math/checksum.ipp
     bitcoin/bitcoin/impl/math/hash.ipp
 
-    bitcoin/bitcoin/impl/log/features/counter.ipp
-    bitcoin/bitcoin/impl/log/features/gauge.ipp
-    bitcoin/bitcoin/impl/log/features/metric.ipp
-    bitcoin/bitcoin/impl/log/features/rate.ipp
-    bitcoin/bitcoin/impl/log/features/timer.ipp
-
     bitcoin/bitcoin/impl/machine/interpreter.ipp
     bitcoin/bitcoin/impl/machine/number.ipp
     bitcoin/bitcoin/impl/machine/operation.ipp
     bitcoin/bitcoin/impl/machine/program.ipp
-
-    bitcoin/bitcoin/impl/utility/array_slice.ipp
-    bitcoin/bitcoin/impl/utility/collection.ipp
-    bitcoin/bitcoin/impl/utility/data.ipp
-    bitcoin/bitcoin/impl/utility/deserializer.ipp
-    bitcoin/bitcoin/impl/utility/endian.ipp
-    bitcoin/bitcoin/impl/utility/istream_reader.ipp
-    bitcoin/bitcoin/impl/utility/ostream_writer.ipp
-    bitcoin/bitcoin/impl/utility/pending.ipp    
-    bitcoin/bitcoin/impl/utility/resubscriber.ipp
-    bitcoin/bitcoin/impl/utility/serializer.ipp
-    bitcoin/bitcoin/impl/utility/subscriber.ipp
-    bitcoin/bitcoin/impl/utility/track.ipp
-
-    bitcoin/bitcoin/log/attributes.hpp
-    bitcoin/bitcoin/log/file_char_traits.hpp
-    bitcoin/bitcoin/log/file_collector.hpp
-    bitcoin/bitcoin/log/file_collector_repository.hpp
-    bitcoin/bitcoin/log/file_counter_formatter.hpp
-    bitcoin/bitcoin/log/rotable_file.hpp    
-    bitcoin/bitcoin/log/severity.hpp
-    bitcoin/bitcoin/log/sink.hpp
-    bitcoin/bitcoin/log/source.hpp
-    bitcoin/bitcoin/log/statsd_sink.hpp
-    bitcoin/bitcoin/log/statsd_source.hpp
-    bitcoin/bitcoin/log/udp_client_sink.hpp
-
-    bitcoin/bitcoin/log/features/counter.hpp
-    bitcoin/bitcoin/log/features/gauge.hpp
-    bitcoin/bitcoin/log/features/metric.hpp
-    bitcoin/bitcoin/log/features/rate.hpp
-    bitcoin/bitcoin/log/features/timer.hpp
-
 
     bitcoin/bitcoin/math/checksum.hpp
     bitcoin/bitcoin/math/crypto.hpp
@@ -1089,67 +998,8 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/message/verack.hpp
     bitcoin/bitcoin/message/version.hpp
 
-    bitcoin/bitcoin/unicode/console_streambuf.hpp
-    bitcoin/bitcoin/unicode/file_lock.hpp
-    bitcoin/bitcoin/unicode/ifstream.hpp
-    bitcoin/bitcoin/unicode/ofstream.hpp
-    bitcoin/bitcoin/unicode/unicode.hpp
-    bitcoin/bitcoin/unicode/unicode_istream.hpp
-    bitcoin/bitcoin/unicode/unicode_ostream.hpp
-    bitcoin/bitcoin/unicode/unicode_streambuf.hpp
-
-    bitcoin/bitcoin/utility/array_slice.hpp
-    bitcoin/bitcoin/utility/asio.hpp
-    bitcoin/bitcoin/utility/assert.hpp
-    bitcoin/bitcoin/utility/atomic.hpp
-    bitcoin/bitcoin/utility/binary.hpp
-    bitcoin/bitcoin/utility/collection.hpp
-    bitcoin/bitcoin/utility/color.hpp
-    bitcoin/bitcoin/utility/conditional_lock.hpp
-    bitcoin/bitcoin/utility/container_sink.hpp
-    bitcoin/bitcoin/utility/container_source.hpp
-    bitcoin/bitcoin/utility/data.hpp
-    bitcoin/bitcoin/utility/deadline.hpp
-    bitcoin/bitcoin/utility/decorator.hpp
-    bitcoin/bitcoin/utility/delegates.hpp
-    bitcoin/bitcoin/utility/deserializer.hpp
-    bitcoin/bitcoin/utility/dispatcher.hpp
-    bitcoin/bitcoin/utility/enable_shared_from_base.hpp
-    bitcoin/bitcoin/utility/endian.hpp
-    bitcoin/bitcoin/utility/exceptions.hpp
-    bitcoin/bitcoin/utility/flush_lock.hpp
-    bitcoin/bitcoin/utility/interprocess_lock.hpp
-    bitcoin/bitcoin/utility/istream_reader.hpp
-    bitcoin/bitcoin/utility/monitor.hpp
-    bitcoin/bitcoin/utility/noncopyable.hpp
-    bitcoin/bitcoin/utility/ostream_writer.hpp
-    bitcoin/bitcoin/utility/pending.hpp
-
-    bitcoin/bitcoin/utility/png.hpp
-    bitcoin/bitcoin/utility/prioritized_mutex.hpp
-
-    bitcoin/bitcoin/utility/pseudo_random.hpp
-    bitcoin/bitcoin/utility/reader.hpp
-    bitcoin/bitcoin/utility/resubscriber.hpp
-    bitcoin/bitcoin/utility/scope_lock.hpp
-    bitcoin/bitcoin/utility/sequencer.hpp
-    bitcoin/bitcoin/utility/sequential_lock.hpp
-    bitcoin/bitcoin/utility/serializer.hpp
-    bitcoin/bitcoin/utility/socket.hpp    
-    bitcoin/bitcoin/utility/string.hpp
-    bitcoin/bitcoin/utility/subscriber.hpp
-    bitcoin/bitcoin/utility/synchronizer.hpp
-    bitcoin/bitcoin/utility/thread.hpp
-    bitcoin/bitcoin/utility/threadpool.hpp
-    bitcoin/bitcoin/utility/timer.hpp
-    bitcoin/bitcoin/utility/track.hpp
-    bitcoin/bitcoin/utility/work.hpp
-    bitcoin/bitcoin/utility/writer.hpp
-    
     bitcoin/bitcoin/wallet/bitcoin_uri.hpp
-    
     bitcoin/bitcoin/wallet/cashaddr.hpp
-
     bitcoin/bitcoin/wallet/dictionary.hpp
     bitcoin/bitcoin/wallet/ec_private.hpp
     bitcoin/bitcoin/wallet/ec_public.hpp

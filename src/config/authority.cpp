@@ -26,9 +26,9 @@
 #include <boost/program_options.hpp>
 #include <boost/regex.hpp>
 #include <bitcoin/bitcoin/formats/base_16.hpp>
-#include <bitcoin/bitcoin/utility/asio.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
-#include <bitcoin/bitcoin/utility/string.hpp>
+#include <bitcoin/infrastructure/utility/asio.hpp>
+#include <bitcoin/infrastructure/utility/assert.hpp>
+#include <bitcoin/infrastructure/utility/string.hpp>
 
 namespace libbitcoin {
 namespace config {

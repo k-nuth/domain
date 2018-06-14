@@ -19,7 +19,7 @@
 #include <bitcoin/bitcoin/config/directory.hpp>
 
 #include <string>
-#include <bitcoin/bitcoin/unicode/unicode.hpp>
+#include <bitcoin/infrastructure/unicode/unicode.hpp>
 
 #ifdef _MSC_VER
     #include <shlobj.h>
