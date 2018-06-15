@@ -356,7 +356,7 @@ static const config::checkpoint regtest_bip34_active_checkpoint
 
 // These cannot be reactivated in a future branch due to window expiration.
 static const config::checkpoint mainnet_bip9_bit0_active_checkpoint {
-    "0474db5be9c96aa782f87820ad26048fa2470ba1fd393625b10c39cf09aee5ba",  1201535
+    "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b",  1201535
 };
 static const config::checkpoint testnet_bip9_bit0_active_checkpoint {
     "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0", 0
@@ -369,7 +369,7 @@ static const config::checkpoint regtest_bip9_bit0_active_checkpoint
 // These cannot be reactivated in a future branch due to window expiration.
 static const config::checkpoint mainnet_bip9_bit1_active_checkpoint
 {
-    "0474db5be9c96aa782f87820ad26048fa2470ba1fd393625b10c39cf09aee5ba",  1201535
+    "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b",  1201535
 };
 static const config::checkpoint testnet_bip9_bit1_active_checkpoint
 {
