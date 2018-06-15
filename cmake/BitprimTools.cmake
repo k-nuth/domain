@@ -76,7 +76,7 @@ function(_group_sources target sources_dir)
         endif()
     endforeach()
 
-    set_target_properties(${target} PROPERTIES FOLDER "core")
+    set_target_properties(${target} PROPERTIES FOLDER "domain")
 endfunction()
 
 
@@ -93,7 +93,7 @@ function(_add_tests target)
 
     foreach (_test_name ${ARGN})
         add_test(
-                NAME test.core.${_test_name}
+                NAME test.domain.${_test_name}
                 COMMAND ${target}
                 --run_test=${_test_name}
                 --show_progress=no

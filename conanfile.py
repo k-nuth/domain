@@ -43,7 +43,7 @@ def get_conan_req_version():
     return get_content('conan_req_version')
 
 
-class BitprimCoreConan(ConanFile):
+class BitprimDomainConan(ConanFile):
     name = "bitprim-domain"
     version = get_version()
     license = "http://www.boost.org/users/license.html"

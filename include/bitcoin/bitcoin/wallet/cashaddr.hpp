@@ -21,8 +21,8 @@
 
 // Cashaddr is an address format inspired by bech32.
 
-#ifndef BITPRIM_CORE_WALLET_CASHADDR_HPP_
-#define BITPRIM_CORE_WALLET_CASHADDR_HPP_
+#ifndef BITPRIM_DOMAIN_WALLET_CASHADDR_HPP_
+#define BITPRIM_DOMAIN_WALLET_CASHADDR_HPP_
 
 #include <cstdint>
 #include <string>
@@ -45,7 +45,7 @@ std::pair<std::string, data_chunk> decode(std::string const& str, std::string co
 
 }}} // namespace libbitcoin::wallet::cashaddr 
 
-#endif /* BITPRIM_CORE_WALLET_CASHADDR_HPP_ */
+#endif /* BITPRIM_DOMAIN_WALLET_CASHADDR_HPP_ */
 
 
 // Unit Tests ----------------------------------------------------

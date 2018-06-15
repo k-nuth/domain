@@ -26,9 +26,9 @@
 #define LIBBITCOIN_VERSION "0.11.0"
 
 #ifdef BITPRIM_BUILD_NUMBER
-#define BITPRIM_CORE_VERSION BITPRIM_BUILD_NUMBER
+#define BITPRIM_DOMAIN_VERSION BITPRIM_BUILD_NUMBER
 #else
-#define BITPRIM_CORE_VERSION "v0.0.0"
+#define BITPRIM_DOMAIN_VERSION "v0.0.0"
 #endif
 
 // #pragma message("LIBBITCOIN_VERSION")
@@ -36,9 +36,10 @@
 // #pragma message("BITPRIM_BUILD_NUMBER")
 // #pragma message(BITPRIM_BUILD_NUMBER)
 
-namespace libbitcoin {
+namespace libbitcoin { namespace domain {
+     
 char const* version();
-} /*namespace libbitcoin*/
- 
 
+}} /*namespace libbitcoin::domain*/
+ 
 #endif

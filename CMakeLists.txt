@@ -345,7 +345,7 @@ if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-set(bitprim_core_sources 
+set(bitprim_domain_sources 
         src/chain/block.cpp
         src/chain/chain_state.cpp
         src/chain/compact.cpp
@@ -499,19 +499,19 @@ set(bitprim_core_sources
         src/wallet/uri.cpp)
 
 if (${CURRENCY} STREQUAL "BCH")
-    set(bitprim_core_sources ${bitprim_core_sources}         
+    set(bitprim_domain_sources ${bitprim_domain_sources}         
       src/wallet/cashaddr.cpp)
 endif()
 
 
 # if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
-    set(bitprim_core_sources ${bitprim_core_sources}         
+    set(bitprim_domain_sources ${bitprim_domain_sources}         
       src/math/external/scrypt.cpp
       src/math/external/scrypt-sse2.cpp)
 endif()
 
-add_library(bitprim-domain ${MODE} ${bitprim_core_sources})
+add_library(bitprim-domain ${MODE} ${bitprim_domain_sources})
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
     set_property(TARGET bitprim-domain PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -604,11 +604,11 @@ if (WITH_TESTS OR WITH_TESTS_NEW)
   enable_testing()
 endif()
 
-# local: test/bitprim_core_test
+# local: test/bitprim_domain_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
 
-  add_executable(bitprim_core_test
+  add_executable(bitprim_domain_test
         test/chain/block.cpp
         test/chain/header.cpp
         test/chain/input.cpp
@@ -701,7 +701,7 @@ if (WITH_TESTS)
 
 # Simplified Test Project for testing Packaging purposes
 
-  # add_executable(bitprim_core_test
+  # add_executable(bitprim_domain_test
   # test/main.cpp
   # # test/math/big_number.cpp
   # # test/math/big_number.hppcompact
@@ -729,12 +729,12 @@ if (WITH_TESTS)
   # test/wallet/uri.cpp
   # test/wallet/uri_reader.cpp)
 
-    target_link_libraries(bitprim_core_test PUBLIC bitprim-domain)
+    target_link_libraries(bitprim_domain_test PUBLIC bitprim-domain)
 
-_group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
+_group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
 #    TODO: Fer: chequear si hay nuevos tests en los makefiles (no Cmake)
-  _add_tests(bitprim_core_test
+  _add_tests(bitprim_domain_test
     address_tests
     alert_payload_tests
     alert_tests
@@ -745,21 +745,21 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     base_64_tests
     base_85_tests
     base58_tests
-    binary_tests
+    # binary_tests
     bitcoin_uri_tests
     chain_block_tests
     message_block_tests
     block_transactions_tests
     checkpoint_tests
     checksum_tests
-    collection_tests
+    # collection_tests
     compact_block_tests
-    data_tests
+    # data_tests
     ec_private_tests
     # ec_public_tests # no test cases
     elliptic_curve_tests
     encrypted_tests
-    endian_tests
+    # endian_tests
     endpoint_tests
     fee_filter_tests
     filter_add_tests
@@ -794,33 +794,33 @@ _group_sources(bitprim_core_test "${CMAKE_CURRENT_LIST_DIR}/test")
     pong_tests
     prefilled_transaction_tests
     printer_tests
-    pseudo_random_tests
+    # pseudo_random_tests
     reject_tests
     # script_number_tests
     script_tests
     # send_compact_blocks_tests
     send_headers_tests
-    serializer_tests
+    # serializer_tests
     stealth_address_tests
     stealth_tests
-    stream_tests
-    thread_tests
+    # stream_tests
+    # thread_tests
     chain_transaction_tests
     message_transaction_tests
-    unicode_istream_tests
-    unicode_ostream_tests
-    unicode_tests
+    # unicode_istream_tests
+    # unicode_ostream_tests
+    # unicode_tests
     uri_reader_tests
     uri_tests
     verack_tests
     version_tests)
 
   if (WITH_PNG)
-    _add_tests(bitprim_core_test png_tests)
+    _add_tests(bitprim_domain_test png_tests)
   endif()
 
   if (WITH_QRENCODE)
-    _add_tests(bitprim_core_test qrcode_tests)
+    _add_tests(bitprim_domain_test qrcode_tests)
   endif()
 endif()
 
@@ -830,20 +830,20 @@ if (WITH_TESTS_NEW)
       COMMAND ${CMAKE_CTEST_COMMAND} -C Debug --output-on-failure -R "test.+"
       COMMENT "Build and run all the unit tests.")
 
-  add_executable(bitprim_core_test_new
+  add_executable(bitprim_domain_test_new
           test_new/main.cpp
   )
 
-  target_link_libraries(bitprim_core_test_new PUBLIC bitprim-domain)
+  target_link_libraries(bitprim_domain_test_new PUBLIC bitprim-domain)
 
-  # _group_sources(bitprim_core_test_new "${CMAKE_CURRENT_LIST_DIR}/test_new")
+  # _group_sources(bitprim_domain_test_new "${CMAKE_CURRENT_LIST_DIR}/test_new")
 
-  add_test(NAME test.new_tests COMMAND bitprim_core_test_new)
+  add_test(NAME test.new_tests COMMAND bitprim_domain_test_new)
 
   add_dependencies(testsfer test.new_tests)
 
 #    add_test(
-#            NAME test.core.new_tests
+#            NAME test.domain.new_tests
 #            COMMAND ${target}
 #            --run_test=${_test_name}
 #            --show_progress=no
@@ -855,16 +855,16 @@ endif()
 
 # Examples
 #==============================================================================
-# local: examples/bitprim_core_examples
+# local: examples/bitprim_domain_examples
 #------------------------------------------------------------------------------
 if (WITH_EXAMPLES)
-  add_executable(bitprim_core_examples
+  add_executable(bitprim_domain_examples
     examples/main.cpp)
 
 
-  target_link_libraries(bitprim_core_examples PUBLIC bitprim-domain)
+  target_link_libraries(bitprim_domain_examples PUBLIC bitprim-domain)
 
-  _group_sources(bitprim_core_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
+  _group_sources(bitprim_domain_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
 endif()
 
 # Install
@@ -880,7 +880,7 @@ install(TARGETS bitprim-domain EXPORT bitprim-domain
 #
 #)
 
-set(_bitprim_core_headers
+set(_bitprim_domain_headers
     bitcoin/bitcoin/multi_crypto_support.hpp
     bitcoin/bitcoin/compat.h
     bitcoin/bitcoin/compat.hpp
@@ -1023,7 +1023,7 @@ set(_bitprim_core_headers
     bitcoin/bitcoin.hpp
     )
 
-foreach (_header ${_bitprim_core_headers})
+foreach (_header ${_bitprim_domain_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")
 endforeach()
