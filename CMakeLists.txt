@@ -355,78 +355,76 @@ set(bitprim_domain_sources
         src/chain/output_point.cpp
         src/chain/point.cpp
         src/chain/point_iterator.cpp
-
         src/chain/point_value.cpp
         src/chain/points_value.cpp
-
         src/chain/script.cpp
         src/chain/transaction.cpp
         src/chain/witness.cpp
 
         src/machine/interpreter.cpp
-        src/machine/number.cpp
-        src/machine/opcode.cpp
-        src/machine/operation.cpp
+        # src/machine/number.cpp
+        # src/machine/opcode.cpp
+        # src/machine/operation.cpp
         src/machine/program.cpp
 
-        src/config/authority.cpp
-        src/config/base16.cpp
-        src/config/base2.cpp
-        src/config/base58.cpp
-        src/config/base64.cpp
-        src/config/checkpoint.cpp
-        src/config/directory.cpp
-        src/config/endpoint.cpp
-        src/config/hash160.cpp
-        src/config/hash256.cpp
-        src/config/parameter.cpp
-        src/config/parser.cpp
-        src/config/printer.cpp
-        src/config/sodium.cpp
+        # src/config/authority.cpp
+        # src/config/base16.cpp
+        # src/config/base2.cpp
+        # src/config/base58.cpp
+        # src/config/base64.cpp
+        # src/config/checkpoint.cpp
+        # src/config/directory.cpp
+        # src/config/endpoint.cpp
+        # src/config/hash160.cpp
+        # src/config/hash256.cpp
+        # src/config/parameter.cpp
+        # src/config/parser.cpp
+        # src/config/printer.cpp
+        # src/config/sodium.cpp
 
         src/error.cpp
         src/multi_crypto_support.cpp
         src/version.cpp
 
-        src/formats/base_10.cpp
-        src/formats/base_16.cpp
-        src/formats/base_58.cpp
-        src/formats/base_64.cpp
-        src/formats/base_85.cpp
+        # src/formats/base_10.cpp
+        # src/formats/base_16.cpp
+        # src/formats/base_58.cpp
+        # src/formats/base_64.cpp
+        # src/formats/base_85.cpp
 
-        src/math/checksum.cpp
-        src/math/crypto.cpp
-        src/math/elliptic_curve.cpp
-        src/math/hash.cpp
-        src/math/secp256k1_initializer.cpp
-        src/math/secp256k1_initializer.hpp
-        src/math/sip_hash.cpp
+        # src/math/checksum.cpp
+        # src/math/crypto.cpp
+        # src/math/elliptic_curve.cpp
+        # src/math/hash.cpp
+        # src/math/secp256k1_initializer.cpp
+        # src/math/secp256k1_initializer.hpp
+        # src/math/sip_hash.cpp
         src/math/stealth.cpp
-        src/math/external/aes256.h
-        src/math/external/crypto_scrypt.h
-        src/math/external/hmac_sha256.h
-        src/math/external/hmac_sha512.h
-        src/math/external/lax_der_parsing.h
-        src/math/external/pbkdf2_sha256.h
-        src/math/external/pkcs5_pbkdf2.h
-        src/math/external/ripemd160.h
-        src/math/external/scrypt.h
-        src/math/external/sha1.h
-        src/math/external/sha256.h
-        src/math/external/sha512.h
-        src/math/external/zeroize.h
-        src/math/external/aes256.c
-        src/math/external/crypto_scrypt.c
-        src/math/external/hmac_sha256.c
-        src/math/external/hmac_sha512.c
-        src/math/external/lax_der_parsing.c
-        src/math/external/pbkdf2_sha256.c
-        src/math/external/pkcs5_pbkdf2.c
-        src/math/external/ripemd160.c
-        src/math/external/sha1.c
-        src/math/external/sha256.c
-        src/math/external/sha512.c
-        src/math/external/zeroize.c
+        # src/math/external/aes256.h
+        # src/math/external/crypto_scrypt.h
+        # src/math/external/hmac_sha256.h
+        # src/math/external/hmac_sha512.h
+        # src/math/external/lax_der_parsing.h
+        # src/math/external/pbkdf2_sha256.h
+        # src/math/external/pkcs5_pbkdf2.h
+        # src/math/external/ripemd160.h
+        # src/math/external/scrypt.h
+        # src/math/external/sha1.h
+        # src/math/external/sha256.h
+        # src/math/external/sha512.h
+        # src/math/external/zeroize.h
+        # src/math/external/aes256.c
+        # src/math/external/crypto_scrypt.c
+        # src/math/external/hmac_sha256.c
+        # src/math/external/hmac_sha512.c
+        # src/math/external/lax_der_parsing.c
+        # src/math/external/pbkdf2_sha256.c
+        # src/math/external/pkcs5_pbkdf2.c
+        # src/math/external/ripemd160.c
+        # src/math/external/sha1.c
+        # src/math/external/sha256.c
+        # src/math/external/sha512.c
+        # src/math/external/zeroize.c
 
         src/message/address.cpp
         src/message/alert.cpp
@@ -450,8 +448,8 @@ set(bitprim_domain_sources
         src/message/inventory_vector.cpp
         src/message/memory_pool.cpp
         src/message/merkle_block.cpp
-        src/message/messages.cpp
-        src/message/network_address.cpp
+        # src/message/messages.cpp
+        # src/message/network_address.cpp
         src/message/not_found.cpp
         src/message/ping.cpp
         src/message/pong.cpp
@@ -464,23 +462,22 @@ set(bitprim_domain_sources
         src/message/version.cpp
         
         src/wallet/bitcoin_uri.cpp
-
-        src/wallet/dictionary.cpp
+        # src/wallet/dictionary.cpp
         src/wallet/ec_private.cpp
         src/wallet/ec_public.cpp
         src/wallet/ek_private.cpp
         src/wallet/ek_public.cpp
         src/wallet/ek_token.cpp
         src/wallet/encrypted_keys.cpp
-        src/wallet/hd_private.cpp
-        src/wallet/hd_public.cpp
+        # src/wallet/hd_private.cpp
+        # src/wallet/hd_public.cpp
         src/wallet/message.cpp
-        src/wallet/mini_keys.cpp
-        src/wallet/mnemonic.cpp
-        src/wallet/parse_encrypted_keys/parse_encrypted_key.hpp
-        src/wallet/parse_encrypted_keys/parse_encrypted_key.ipp
-        src/wallet/parse_encrypted_keys/parse_encrypted_prefix.hpp
-        src/wallet/parse_encrypted_keys/parse_encrypted_prefix.ipp
+        # src/wallet/mini_keys.cpp
+        # src/wallet/mnemonic.cpp
+        # src/wallet/parse_encrypted_keys/parse_encrypted_key.hpp
+        # src/wallet/parse_encrypted_keys/parse_encrypted_key.ipp
+        # src/wallet/parse_encrypted_keys/parse_encrypted_prefix.hpp
+        # src/wallet/parse_encrypted_keys/parse_encrypted_prefix.ipp
         src/wallet/parse_encrypted_keys/parse_encrypted_private.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_private.hpp
         src/wallet/parse_encrypted_keys/parse_encrypted_public.cpp
@@ -488,15 +485,13 @@ set(bitprim_domain_sources
         src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp
         src/wallet/payment_address.cpp
-        
-        src/wallet/qrcode.cpp
-        src/wallet/select_outputs.cpp
-
+        # src/wallet/qrcode.cpp
         src/wallet/select_outputs.cpp
         src/wallet/stealth_address.cpp
         src/wallet/stealth_receiver.cpp
         src/wallet/stealth_sender.cpp
-        src/wallet/uri.cpp)
+        # src/wallet/uri.cpp
+      )
 
 if (${CURRENCY} STREQUAL "BCH")
     set(bitprim_domain_sources ${bitprim_domain_sources}         
@@ -959,7 +954,7 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/math/crypto.hpp
     bitcoin/bitcoin/math/elliptic_curve.hpp
     bitcoin/bitcoin/math/hash.hpp
-    bitcoin/bitcoin/math/limits.hpp
+    # bitcoin/bitcoin/math/limits.hpp
     bitcoin/bitcoin/math/stealth.hpp
     bitcoin/bitcoin/math/uint256.hpp
     

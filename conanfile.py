@@ -60,11 +60,9 @@ class BitprimDomainConan(ConanFile):
                "with_qrencode": [True, False],
                "with_tests": [True, False],
                "with_examples": [True, False],
-            #    "currency": "ANY" #["BCH", "BTC", "LTC", ...]
                "currency": ['BCH', 'BTC', 'LTC']
     }
 
-        # "with_litecoin": [True, False],
     #    "with_png": [True, False],
 
     default_options = "shared=False", \
@@ -75,7 +73,6 @@ class BitprimDomainConan(ConanFile):
         "with_examples=False", \
         "currency=BCH"
 
-        # "with_litecoin=False", \
         # "with_png=False", \
 
     generators = "cmake"
@@ -86,7 +83,8 @@ class BitprimDomainConan(ConanFile):
 
     requires = (("boost/1.66.0@bitprim/stable"),
                ("secp256k1/0.3@bitprim/stable"),
-               ("bitprim-infrastructure/0.11.0@%s/%s" % (get_user(), get_channel())))
+               ("bitprim-infrastructure/0.11.0@%s/%s" % (get_user(), get_channel())),
+               ("bitprim-crypto/0.11.0@%s/%s" % (get_user(), get_channel())))
 
     @property
     def msvc_mt_build(self):
