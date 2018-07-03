@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Bitprim developers (see AUTHORS)
+# Copyright (c) 2017-2018 Bitprim developers (see AUTHORS)
 #
 # This file is part of Bitprim.
 #
@@ -22,8 +22,9 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-core
 #==============================================================================
 project(bitprim-core
-  VERSION 0.11.0
+  VERSION 0
   LANGUAGES CXX C)
+  # VERSION 0.11.0
 
 
 #if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -120,6 +121,15 @@ endif()
 
 set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 # message(${BITPRIM_BUILD_NUMBER})
+set(BITPRIM_PROJECT_VERSION "-" CACHE STRING "Specify the Bitprim Project Version.")
+# message(${BITPRIM_PROJECT_VERSION})
+
+
+set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
+message( STATUS "Bitprim: Compiling for ${MICROARCHITECTURE}")
+# add_definitions(-DBITPRIM_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DBITPRIM_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+
 
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
@@ -128,8 +138,6 @@ if (${CURRENCY} STREQUAL "BCH")
 elseif (${CURRENCY} STREQUAL "BTC")
   add_definitions(-DBITPRIM_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
-  # add_definitions(-DWITH_LITECOIN)
-  # add_definitions(-DBITPRIM_LITECOIN)
   add_definitions(-DBITPRIM_CURRENCY_LTC)
 else()
   message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
@@ -142,11 +150,12 @@ message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
 # message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
 # message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
 
-if (EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
 else()
     message( STATUS "bitprimbuildinfo doent exists")
 endif()
+
 
 
 
@@ -164,30 +173,6 @@ endif()
 #     message( STATUS "Found Define: " ${d} )
 # endforeach()
 # message( STATUS "DirDefs: " ${DirDefs} )
-
-# if (NOT NO_CONAN_AT_ALL)
-#   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#       conan_basic_setup()
-
-#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-#       foreach( d ${DirDefs} )
-#         message( STATUS "Found Define: " ${d} )
-#       endforeach()
-#       message( STATUS "DirDefs: " ${DirDefs} )
-  
-#       remove_definitions(-D_GLIBCXX_USE_CXX11_ABI)
-
-#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-#       foreach( d ${DirDefs} )
-#         message( STATUS "Found Define: " ${d} )
-#       endforeach()
-#       message( STATUS "DirDefs: " ${DirDefs} )
-
-#   else()
-#       message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
-#   endif()
-# endif()
 
 
 set(Boost_DEBUG ON)
@@ -254,19 +239,19 @@ endif()
 
 
 if (NOT USE_CONAN)
-# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+# Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
-    find_package(secp256k1 0.0.01 REQUIRED) 
+    find_package(secp256k1 0 REQUIRED) 
   endif()
 endif()
 
 
-if (UNIX)
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
-elseif (WIN32)
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
-endif()
+#if (UNIX)
+#  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
+#elseif (WIN32)
+#  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
+#endif()
 
 # Set flags.
 #==============================================================================
@@ -274,8 +259,11 @@ include(CheckCXXCompilerFlag)
 
 # Including common functions
 #------------------------------------------------------------------------------
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
+
 include(BitprimTools)
+
 
 
 # Warn on all stuff.
@@ -575,6 +563,8 @@ if (NOT ENABLE_SHARED)
 endif()
 
 target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_PROJECT_VERSION="\\"${BITPRIM_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+
 
 target_include_directories(bitprim-core SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
