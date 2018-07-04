@@ -119,8 +119,6 @@ if (WITH_QRENCODE)
 endif()
 
 
-set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
-# message(${BITPRIM_BUILD_NUMBER})
 set(BITPRIM_PROJECT_VERSION "-" CACHE STRING "Specify the Bitprim Project Version.")
 # message(${BITPRIM_PROJECT_VERSION})
 
@@ -146,10 +144,8 @@ endif()
 message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
 
 
-# message( STATUS "1 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
-# message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
-# message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
-
+# Conan infrastructure
+#==============================================================================
 if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
     include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
 else()
@@ -179,7 +175,7 @@ set(Boost_DEBUG ON)
 
 # Check dependencies.
 #==============================================================================
-
+#------------------------------------------------------------------------------
 if (NO_CONAN_AT_ALL)
   # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
   #------------------------------------------------------------------------------
@@ -247,23 +243,15 @@ if (NOT USE_CONAN)
 endif()
 
 
-#if (UNIX)
-#  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
-#elseif (WIN32)
-#  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
-#endif()
-
 # Set flags.
 #==============================================================================
 include(CheckCXXCompilerFlag)
 
 # Including common functions
 #------------------------------------------------------------------------------
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
 
 include(BitprimTools)
-
 
 
 # Warn on all stuff.
@@ -562,7 +550,6 @@ if (NOT ENABLE_SHARED)
     target_compile_definitions(bitprim-core PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
-target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
 target_compile_definitions(bitprim-core PUBLIC -DBITPRIM_PROJECT_VERSION="\\"${BITPRIM_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
 
 
@@ -611,7 +598,6 @@ if (WITH_PNG)
     endif (NO_CONAN_AT_ALL)
 endif()
 
-# if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
   target_link_libraries(bitprim-core PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
 
