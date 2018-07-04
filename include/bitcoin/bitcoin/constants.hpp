@@ -155,7 +155,8 @@ size_t get_max_block_sigops() {
 #endif //BITPRIM_CURRENCY_BCH
 }
 
-// BC_CONSTEXPR size_t one_million_bytes_block = 1000000;
+BC_CONSTEXPR size_t one_million_bytes_block = 1000000;
+BC_CONSTEXPR size_t coinbase_reserved_size = 20000;
 BC_CONSTEXPR size_t sigops_per_million_bytes = 20000;
 
 BC_CONSTFUNC inline
