@@ -360,6 +360,16 @@ set(bitprim_core_sources
         src/config/printer.cpp
         src/config/sodium.cpp
 
+        src/config/header.cpp
+        src/config/input.cpp
+        src/config/output.cpp
+        src/config/point.cpp
+        src/config/transaction.cpp
+        src/config/script.cpp
+        src/config/ec_private.cpp
+        src/config/endorsement.cpp
+        src/utility/property_tree.cpp
+
         src/error.cpp
         src/multi_crypto_support.cpp
         src/version.cpp
@@ -965,13 +975,24 @@ set(_bitprim_core_headers
     bitcoin/bitcoin/config/settings.hpp
     bitcoin/bitcoin/config/sodium.hpp
 
+    bitcoin/bitcoin/config/header.hpp
+    bitcoin/bitcoin/config/input.hpp
+    bitcoin/bitcoin/config/output.hpp
+    bitcoin/bitcoin/config/transaction.hpp
+    bitcoin/bitcoin/config/script.hpp
+    bitcoin/bitcoin/config/ec_private.hpp
+    bitcoin/bitcoin/config/endorsement.hpp
+    bitcoin/bitcoin/utility/property_tree.hpp
+    bitcoin/bitcoin/impl/utility/property_tree.ipp
+    bitcoin/bitcoin/utility/string.hpp
+    bitcoin/bitcoin/impl/utility/string.ipp
+    
     bitcoin/bitcoin/formats/base_10.hpp
     bitcoin/bitcoin/formats/base_16.hpp
     bitcoin/bitcoin/formats/base_58.hpp
     bitcoin/bitcoin/formats/base_64.hpp
     bitcoin/bitcoin/formats/base_85.hpp
 
-    
     bitcoin/bitcoin/impl/formats/base_16.ipp
     bitcoin/bitcoin/impl/formats/base_58.ipp
    
