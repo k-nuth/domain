@@ -46,6 +46,8 @@
 #include <bitcoin/bitcoin/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/config/directory.hpp>
 #include <bitcoin/bitcoin/config/endpoint.hpp>
+#include <bitcoin/bitcoin/config/ec_private.hpp>
+#include <bitcoin/bitcoin/config/endorsement.hpp>
 #include <bitcoin/bitcoin/config/hash160.hpp>
 #include <bitcoin/bitcoin/config/hash256.hpp>
 #include <bitcoin/bitcoin/config/header.hpp>
