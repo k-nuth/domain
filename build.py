@@ -8,9 +8,32 @@ def filter_marchs_tests(name, builds):
     for b in builds:
         print(b)
         for settings, options, env_vars, build_requires, reference in b:
+            print(options)
             if options["%s:microarchitecture" % name] != "x86-64":
                 options["%s:with_tests" % name] = "False"
                 options["%s:with_examples" % name] = "False"
+
+
+[
+    {'compiler.version': '15', 
+     'arch': 'x86_64', 
+     'build_type': 'Release', 
+     'compiler.runtime': 'MT', 
+     'compiler': 'Visual Studio'
+     }, 
+     {'bitprim-core:with_examples': 'True', 
+      'bitprim-core:with_tests': 'True', 
+      'bitprim-core:shared': False, 
+      'bitprim-core:microarchitecture': 'x86-64', 
+      'bitprim-core:currency': 'BCH'
+     }, 
+     {'BITPRIM_CONAN_CHANNEL': 'prerelease', 
+      'BITPRIM_FULL_BUILD': '1', 
+      'BITPRIM_CONAN_VERSION': '0.11.0', 
+      'BITPRIM_BRANCH': 'release-0.11.0'
+     }, 
+     {}
+]
 
             # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
 
