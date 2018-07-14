@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
             if os.getenv('BITPRIM_RUN_TESTS', 'false') == 'true':
                 options["%s:with_tests" % name] = "True"
-                options["%s:with_examples" % name] = "True"
+                options["%s:with_examples" % name] = "False"
 
             if full_build:
                 marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
