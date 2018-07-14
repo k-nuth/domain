@@ -6,7 +6,7 @@ from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid
 
 def filter_marchs_tests(name, builds):
     for b in builds:
-        for settings, options, env_vars, build_requires, reference in b.items:
+        for settings, options, env_vars, build_requires, reference in b:
             if options["%s:microarchitecture" % name] != "x86-64":
                 options["%s:with_tests" % name] = "False"
                 options["%s:with_examples" % name] = "False"
