@@ -4,55 +4,14 @@ import cpuid
 import platform
 from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid_exts
 
-def filter_marchs_tests(name, builds):
+def filter_marchs_tests(name, builds, test_options):
     for b in builds:
-        print(b)
         options = b[1]
-        print(options)
         if options["%s:microarchitecture" % name] != "x86-64":
-            options["%s:with_tests" % name] = "False"
-            options["%s:with_examples" % name] = "False"
-
-
-        # for arr in b:
-        #     print(arr)
-        #     options = b[1]
-        #     print(options)
-        #     if options["%s:microarchitecture" % name] != "x86-64":
-        #         options["%s:with_tests" % name] = "False"
-        #         options["%s:with_examples" % name] = "False"
-
-
-# [
-#     {'compiler.version': '15', 
-#      'arch': 'x86_64', 
-#      'build_type': 'Release', 
-#      'compiler.runtime': 'MT', 
-#      'compiler': 'Visual Studio'
-#      }, 
-#      {'bitprim-core:with_examples': 'True', 
-#       'bitprim-core:with_tests': 'True', 
-#       'bitprim-core:shared': False, 
-#       'bitprim-core:microarchitecture': 'x86-64', 
-#       'bitprim-core:currency': 'BCH'
-#      }, 
-#      {'BITPRIM_CONAN_CHANNEL': 'prerelease', 
-#       'BITPRIM_FULL_BUILD': '1', 
-#       'BITPRIM_CONAN_VERSION': '0.11.0', 
-#       'BITPRIM_BRANCH': 'release-0.11.0'
-#      }, 
-#      {}
-# ]
-
-            # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
-
-    # microarchs = list(set(microarchs))
-
-    # for ma in microarchs:
-    #     opts_copy = copy.deepcopy(options)
-    #     opts_copy[opt_name] = ma
-    #     filtered_builds.append([settings, opts_copy, env_vars, build_requires])
-
+            # options["%s:with_tests" % name] = "False"
+            # options["%s:with_examples" % name] = "False"
+            for to in test_options:
+                options[to] = "False"
 
 if __name__ == "__main__":
 
@@ -69,16 +28,6 @@ if __name__ == "__main__":
                 and not options["%s:shared" % name]:
 
             copy_env_vars(env_vars)
-
-            # if os.getenv('BITPRIM_RUN_TESTS', 'false') == 'true':
-            #     options["%s:with_tests" % name] = "True"
-            #     options["%s:with_examples" % name] = "True"
-            #     marchs = ["x86-64"]
-            # else:
-            #     if full_build:
-            #         marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
-            #     else:
-            #         marchs = ["x86-64"]
 
             if os.getenv('BITPRIM_RUN_TESTS', 'false') == 'true':
                 options["%s:with_tests" % name] = "True"
@@ -101,7 +50,7 @@ if __name__ == "__main__":
             handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_btc, env_vars, build_requires)
             # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_ltc, env_vars, build_requires)
 
-            filter_marchs_tests(name, filtered_builds)
+            filter_marchs_tests(name, filtered_builds, ["%s:with_tests" % name, "%s:with_examples" % name])
 
     builder.builds = filtered_builds
     builder.run()
