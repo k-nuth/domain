@@ -26,12 +26,7 @@ if __name__ == "__main__":
                 marchs = ["x86-64"]
             else:
                 if full_build:
-                    # marchs = ["x86-64", ''.join(cpuid.cpu_microarchitecture()), "haswell", "skylake", "skylake-avx512"]
-                    # marchs = [''.join(cpuid.cpu_microarchitecture()), 'znver1', 'silvermont', 'westmere', 'goldmont', 'btver1', 'icelake-client', 'btver2', 'skylake', 'nano', 'haswell', 'nano-1000', 'broadwell', 'bdver1', 'bdver3', 'bdver2', 'bdver4', 'core2', 'k8', 'amdfam10', 'icelake-server', 'bonnell', 'cannonlake', 'k8-sse3', 'goldmont-plus', 'nano-x4', 'nehalem', 'ivybridge', 'eden-x4', 'x86-64', 'nano-3000', 'knl', 'knm', 'penryn', 'eden-x2', 'sandybridge', 'nano-2000', 'tremont', 'skylake-avx512', 'nano-x2']
-                    # marchs = marchs_compiler_list(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])))
-                    # marchs.append(''.join(cpuid.cpu_microarchitecture()))
-
-                    marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), [''.join(cpuid.cpu_microarchitecture()), 'x86-64', 'sandybridge', 'ivybridge', 'haswell', 'skylake', 'skylake-avx512'])
+                    marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'sandybridge', 'haswell', 'skylake'])
                 else:
                     marchs = ["x86-64"]
 
