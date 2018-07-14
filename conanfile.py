@@ -57,7 +57,7 @@ class BitprimCoreConan(BitprimConanFile):
         "currency=BCH", \
         "microarchitecture=_DUMMY_",  \
         "fix_march=False", \
-        "verbose=True"
+        "verbose=False"
 
         # "with_litecoin=False", \
         # "with_png=False", \
