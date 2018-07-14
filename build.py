@@ -26,17 +26,22 @@ if __name__ == "__main__":
             else:
                 marchs = ["x86-64"]
 
-            opts_bch = copy.deepcopy(options)
-            opts_btc = copy.deepcopy(options)
-            # opts_ltc = copy.deepcopy(options)
+            ci_currency = os.getenv('BITPRIM_CI_CURRENCY', None)
+            if ci_currency is None:
+                opts_bch = copy.deepcopy(options)
+                opts_btc = copy.deepcopy(options)
+                # opts_ltc = copy.deepcopy(options)
 
-            opts_bch["%s:currency" % name] = "BCH"
-            opts_btc["%s:currency" % name] = "BTC"
-            # opts_ltc["%s:currency" % name] = "LTC"
+                opts_bch["%s:currency" % name] = "BCH"
+                opts_btc["%s:currency" % name] = "BTC"
+                # opts_ltc["%s:currency" % name] = "LTC"
 
-            handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
-            handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_btc, env_vars, build_requires)
-            # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_ltc, env_vars, build_requires)
+                handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
+                handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_btc, env_vars, build_requires)
+                # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_ltc, env_vars, build_requires)
+            else:
+                options["*:currency"] = ci_currency
+                handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, options, env_vars, build_requires)
 
             filter_marchs_tests(name, filtered_builds, ["%s:with_tests" % name, "%s:with_examples" % name])
 
