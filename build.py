@@ -2,7 +2,7 @@ import copy
 import os
 import cpuid
 import platform
-from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid_exts
+from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
 
 if __name__ == "__main__":
     full_build = os.getenv('BITPRIM_FULL_BUILD', '0') == '1'
