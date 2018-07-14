@@ -4,20 +4,8 @@ import cpuid
 import platform
 from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid_exts
 
-def filter_marchs_tests(name, builds, test_options):
-    for b in builds:
-        options = b[1]
-        if options["%s:microarchitecture" % name] != "x86-64":
-            # options["%s:with_tests" % name] = "False"
-            # options["%s:with_examples" % name] = "False"
-            for to in test_options:
-                options[to] = "False"
-
 if __name__ == "__main__":
-
     full_build = os.getenv('BITPRIM_FULL_BUILD', '0') == '1'
-    # full_build = True
-
     builder, name = get_builder()
     builder.add_common_builds(shared_option_name="%s:shared" % name)
 
