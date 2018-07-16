@@ -54,11 +54,29 @@ test_script:
   # - git fetch --unshallow
 
   - ps: |
-      $a = python ci_utils/set_envvars_and_files.py
-      Write-Host $a
-      Invoke-Expression $a
+      If ($env:WAIT_FOR_DEPS -ne 1) {
+        $a = python ci_utils/set_envvars_and_files.py
+        Write-Host $a
+        Invoke-Expression $a
+      }
+  - ps: |
+      If ($env:WAIT_FOR_DEPS -eq 1) {
+        conan user
+        conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
+        echo "waiting for secp256k1/0.X@bitprim/prerelease ..."
+        conan search secp256k1/0.X@bitprim/prerelease -r bitprim_temp > $null
+        while($env:lastExitCode -eq 1) {
+          Write-Host "."
+          Start-Sleep -s 10
+          conan search secp256k1/0.X@bitprim/prerelease -r bitprim_temp > $null
+        }
+        Write-Host "secp256k1/0.X@bitprim/prerelease found"
+      }
+      Else {
+        python build.py
+      }
 
-  - python build.py
+
 
 for:
   -
@@ -77,6 +95,13 @@ for:
         - /(release|hotfix).+/    #Just releases
     environment:
       matrix:
+        - WAIT_FOR_DEPS: 1
+          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_VISUAL_RUNTIMES: MT
+          # BITPRIM_RUN_TESTS: true
+          BITPRIM_CI_CURRENCY: BCH
+          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 15
           CONAN_VISUAL_RUNTIMES: MT
