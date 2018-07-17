@@ -167,7 +167,6 @@ jobs:
            BITPRIM_RUN_TESTS=true
            BITPRIM_CI_CURRENCY=BCH
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
-
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -188,6 +187,17 @@ jobs:
       services:
         - docker
       env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=lasote/conangcc6
+           BITPRIM_CI_CURRENCY=BCH
+      if: branch =~ /^(release|hotfix).+$/    #Just releases
+    - stage: build and upload binaries
+      os: linux
+      sudo: required
+      language: python
+      python: "3.6"
+      services:
+        - docker
+      env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=lasote/conangcc6
+           BITPRIM_CI_CURRENCY=BTC
       if: branch =~ /^(release|hotfix).+$/    #Just releases
 
     - stage: build and upload binaries
