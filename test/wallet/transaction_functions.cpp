@@ -20,7 +20,6 @@
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/wallet/ec_public.hpp>
 #include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
-#include <bitcoin/bitcoin/config/script.hpp>
 
 using namespace bc;
 using namespace bc::wallet;
