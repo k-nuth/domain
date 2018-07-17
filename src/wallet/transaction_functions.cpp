@@ -18,8 +18,8 @@
  */
 
 #include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
-#include <bitcoin/bitcoin.hpp>
 
+#include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/config/output.hpp>
 #include <bitcoin/bitcoin/config/input.hpp>
 #include <bitcoin/bitcoin/config/ec_private.hpp>
@@ -29,7 +29,7 @@ namespace libbitcoin {
 namespace wallet {
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/tx-encode.cpp
-static bool push_scripts(std::vector<libbitcoin::chain::output>& outputs,
+static bool push_scripts(chain::output::list& outputs,
                          libbitcoin::config::output const& output, uint8_t script_version) {
   static constexpr uint64_t no_amount = 0;
 
@@ -63,12 +63,14 @@ static bool push_scripts(std::vector<libbitcoin::chain::output>& outputs,
 }
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/tx-encode.cpp
-std::pair<error::error_code_t, chain::transaction> tx_encode(std::vector<chain::input_point> const& outputs_to_spend,
-                                                             std::vector<std::pair<payment_address,uint64_t>> const& destiny_and_amount,
-                                                             std::vector<libbitcoin::chain::output> const& extra_outputs /*= {}*/,
+std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point::list const& outputs_to_spend,
+                                                             raw_output_list const& destiny_and_amount,
+                                                             chain::output::list const& extra_outputs /*= {}*/,
                                                              uint32_t locktime /*= 0*/,
                                                              uint32_t tx_version /*= 1*/,
                                                              uint8_t script_version /*= 5*/) {
+
+
 
   libbitcoin::chain::transaction tx;
   tx.set_version(tx_version);
@@ -95,6 +97,15 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(std::vector<chain::
   }
 
   return {error::error_code_t::success, tx};
+}
+
+inline
+std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point::list const& outputs_to_spend,
+                                                             raw_output_list const& destiny_and_amount,
+                                                             uint32_t locktime /*= 0*/,
+                                                             uint32_t tx_version /*= 1*/,
+                                                             uint8_t script_version /*= 5*/) {
+  return tx_encode(outputs_to_spend, destiny_and_amount, chain::output::list{}, locktime, tx_version, script_version);
 }
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/input-sign.cpp

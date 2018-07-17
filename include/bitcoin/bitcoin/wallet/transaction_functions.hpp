@@ -22,17 +22,28 @@
 #define BITPRIM_TRANSACTION_FUNCTIONS_HPP
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <bitcoin/bitcoin.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
+
+using raw_output = std::pair<payment_address, uint64_t>;
+using raw_output_list = std::vector<raw_output>;
+
 BC_API std::pair<error::error_code_t,
-                 chain::transaction> tx_encode(std::vector<chain::input_point> const &outputs_to_spend,
-                                               std::vector<std::pair<payment_address,
-                                                                     uint64_t>> const &destiny_and_amount,
-                                               std::vector<libbitcoin::chain::output> const& extra_outputs = {},
+                 chain::transaction> tx_encode(chain::input_point::list const& outputs_to_spend,
+                                               raw_output_list const& destiny_and_amount,
+                                               std::vector<libbitcoin::chain::output> const& extra_outputs,
+                                               uint32_t locktime = 0,
+                                               uint32_t tx_version = 1,
+                                               uint8_t script_version = 5);
+
+BC_API std::pair<error::error_code_t,
+                 chain::transaction> tx_encode(chain::input_point::list const& outputs_to_spend,
+                                               raw_output_list const& destiny_and_amount,
                                                uint32_t locktime = 0,
                                                uint32_t tx_version = 1,
                                                uint8_t script_version = 5);
