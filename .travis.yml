@@ -66,11 +66,11 @@ install:
 script:
   - git fetch --unshallow
   - git fetch origin master:master
-  - git tag
-  - git describe
+  # - git tag
+  # - git describe
   # - git describe origin
-  - git describe master
-  - python ci_utils/print_version.py
+  # - git describe master
+  # - python ci_utils/print_version.py
 
   # #TODO(fernando): Use lasote/conanclang50 for checking formating and other clang-tools related
   # - |
