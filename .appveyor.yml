@@ -54,6 +54,7 @@ test_script:
   # - git fetch --unshallow
   - git tag
   - git describe
+  - git describe master
   - python ci_utils/print_version.py
 
 

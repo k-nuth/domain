@@ -67,6 +67,7 @@ script:
   - git fetch --unshallow
   - git tag
   - git describe
+  - git describe master
   - python ci_utils/print_version.py
 
   # #TODO(fernando): Use lasote/conanclang50 for checking formating and other clang-tools related
