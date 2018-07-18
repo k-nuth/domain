@@ -52,7 +52,7 @@ test_script:
   # - git submodule update --remote
   - git submodule update
   # - git fetch --unshallow
-  - git fetch origin master
+  - git fetch origin master:master
   - git tag
   - git describe
   # - git describe master

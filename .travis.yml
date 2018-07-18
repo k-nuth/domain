@@ -65,7 +65,7 @@ install:
 
 script:
   - git fetch --unshallow
-  - git fetch origin master
+  - git fetch origin master:master
   - git tag
   - git describe
   - git describe origin
