@@ -65,6 +65,9 @@ install:
 
 script:
   - git fetch --unshallow
+  - git tag
+  - git describe
+  - python ci_utils/print_version.py
 
   # #TODO(fernando): Use lasote/conanclang50 for checking formating and other clang-tools related
   # - |
@@ -81,7 +84,6 @@ script:
   - |
     if [[ "${CHECK_FORMATTING}" != "true" ]]; then
       echo ${CONAN_STABLE_BRANCH_PATTERN}
-      python ci_utils/print_version.py
       cd ${TRAVIS_BUILD_DIR}
       chmod +x ci_utils/.travis/run.sh
       ./ci_utils/.travis/run.sh
