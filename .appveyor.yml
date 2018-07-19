@@ -52,6 +52,13 @@ test_script:
   # - git submodule update --remote
   - git submodule update
   # - git fetch --unshallow
+  - git fetch origin master:master
+  # - git tag
+  # - git describe
+  # - git describe master
+  # - git describe origin
+  # - python ci_utils/print_version.py
+
 
   - ps: |
       If ($env:WAIT_FOR_DEPS -ne 1) {
