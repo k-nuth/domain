@@ -111,7 +111,7 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
 std::pair<error::error_code_t, data_chunk> input_signature_old(libbitcoin::ec_secret const& private_key,
                                                                chain::script const& output_script,
                                                                chain::transaction const& tx,
-                                                               int index,
+                                                               uint32_t index,
                                                                uint8_t sign_type /*= 0x01*/,
                                                                bool anyone_can_pay /*= false*/) {
 
@@ -119,13 +119,12 @@ std::pair<error::error_code_t, data_chunk> input_signature_old(libbitcoin::ec_se
     return {error::error_code_t::input_index_out_of_range, {}};
   }
 
-  uint8_t hash_type = (libbitcoin::machine::sighash_algorithm) sign_type;
   if (anyone_can_pay) {
-    hash_type |= libbitcoin::machine::sighash_algorithm::anyone_can_pay;
+    sign_type |= libbitcoin::machine::sighash_algorithm::anyone_can_pay;
   }
 
   libbitcoin::endorsement endorse;
-  if (!libbitcoin::chain::script::create_endorsement(endorse, private_key, output_script, tx, index, hash_type)) {
+  if (!libbitcoin::chain::script::create_endorsement(endorse, private_key, output_script, tx, index, sign_type)) {
     return {error::error_code_t::input_sign_failed, {}};
   }
   return {error::error_code_t::success, endorse};
@@ -136,7 +135,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_btc(libbitcoin::ec_se
                                                                chain::script const& output_script,
                                                                chain::transaction const& tx,
                                                                uint64_t amount,
-                                                               int index,
+                                                               uint32_t index,
                                                                uint8_t sign_type /*= 0x01*/,
                                                                bool anyone_can_pay /*= false*/) {
 
@@ -144,9 +143,8 @@ std::pair<error::error_code_t, data_chunk> input_signature_btc(libbitcoin::ec_se
     return {error::error_code_t::input_index_out_of_range, {}};
   }
 
-  uint8_t hash_type = (libbitcoin::machine::sighash_algorithm) sign_type;
   if (anyone_can_pay) {
-    hash_type |= libbitcoin::machine::sighash_algorithm::anyone_can_pay;
+    sign_type |= libbitcoin::machine::sighash_algorithm::anyone_can_pay;
   }
 
   libbitcoin::endorsement endorse;
@@ -156,7 +154,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_btc(libbitcoin::ec_se
                                                      output_script,
                                                      tx,
                                                      index,
-                                                     hash_type,
+                                                     sign_type,
                                                      libbitcoin::chain::script::script_version::zero,
                                                      amount)) {
     return {error::error_code_t::input_sign_failed, {}};
@@ -169,7 +167,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_bch(libbitcoin::ec_se
                                                                chain::script const& output_script,
                                                                chain::transaction const& tx,
                                                                uint64_t amount,
-                                                               int index,
+                                                               uint32_t index,
                                                                uint8_t sign_type /*= 0x01*/,
                                                                bool anyone_can_pay /*= false*/) {
 
@@ -181,14 +179,14 @@ std::pair<error::error_code_t, data_chunk> input_signature_bch(libbitcoin::ec_se
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/input-set.cpp
 std::pair<error::error_code_t, chain::transaction> input_set(chain::script const& script,
-                                                             chain::transaction const& raw_tx, int index /*= 0*/) {
+                                                             chain::transaction const& raw_tx, uint32_t index /*= 0*/) {
+
+  if (index >= raw_tx.inputs().size()) {
+    return {error::error_code_t::input_index_out_of_range, {}};
+  }
 
   // Clone so we keep arguments const.
   chain::transaction tx_out(raw_tx);
-
-  if (index >= tx_out.inputs().size()) {
-    return {error::error_code_t::input_index_out_of_range, {}};
-  }
 
   tx_out.inputs()[index].set_script(script);
 
@@ -199,10 +197,9 @@ std::pair<error::error_code_t, chain::transaction> input_set(chain::script const
 // Using the signature and public key it generates the script
 std::pair<error::error_code_t, chain::transaction> input_set(data_chunk const& signature,
                                                              wallet::ec_public const& public_key,
-                                                             chain::transaction const& raw_tx, int index /*= 0*/) {
+                                                             chain::transaction const& raw_tx, uint32_t index /*= 0*/) {
 
-  const auto &script =
-      libbitcoin::config::script("[" + libbitcoin::encode_base16(signature) + "] [" + public_key.encoded() + "]");
+  libbitcoin::config::script script ("[" + libbitcoin::encode_base16(signature) + "] [" + public_key.encoded() + "]");
   return input_set(script, raw_tx, index);
 }
 
