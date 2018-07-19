@@ -99,7 +99,6 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
   return {error::error_code_t::success, tx};
 }
 
-inline
 std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point::list const& outputs_to_spend,
                                                              raw_output_list const& destiny_and_amount,
                                                              uint32_t locktime /*= 0*/,
