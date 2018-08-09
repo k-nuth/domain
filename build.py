@@ -27,7 +27,7 @@ if __name__ == "__main__":
                 marchs = ["x86-64"]
 
             ci_currency = os.getenv('BITPRIM_CI_CURRENCY', None)
-            with_keoken = os.getenv('BITPRIM_WITH_KEOKEN', 'false') == 'true':
+            with_keoken = os.getenv('BITPRIM_WITH_KEOKEN', 'false') == 'true'
 
             if ci_currency is None:
                 opts_bch = copy.deepcopy(options)
