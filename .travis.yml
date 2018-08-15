@@ -84,7 +84,9 @@ script:
 
   #   fi
 
-  # - conan info . --only None
+  - conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
+  - conan info . --only None
+  - conan remote remove bitprim
   - |
     if [[ "${CHECK_FORMATTING}" != "true" ]]; then
       echo ${CONAN_STABLE_BRANCH_PATTERN}
