@@ -80,7 +80,7 @@ class BitprimCoreConan(BitprimConanFile):
 
     def requirements(self):
         self.requires("boost/1.66.0@bitprim/stable")
-        # self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         # if self.options.with_png:
         #     self.requires("libpng/1.6.34@bitprim/stable")
@@ -91,7 +91,7 @@ class BitprimCoreConan(BitprimConanFile):
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@bitprim/stable")
 
-        self.bitprim_requires(["secp256k1/0.X@%s/%s"])
+        # self.bitprim_requires(["secp256k1/0.X@%s/%s"])
 
     def config_options(self):
         if self.settings.arch != "x86_64":
