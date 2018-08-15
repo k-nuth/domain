@@ -84,7 +84,7 @@ script:
 
   #   fi
 
-  - conan info . --only None
+  # - conan info . --only None
   - |
     if [[ "${CHECK_FORMATTING}" != "true" ]]; then
       echo ${CONAN_STABLE_BRANCH_PATTERN}
