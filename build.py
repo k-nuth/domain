@@ -5,6 +5,11 @@ import platform
 from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
 
 if __name__ == "__main__":
+    # conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
+    # conan info . --only None
+    # python ci_utils/process_conan_reqs.py
+    # conan remote remove bitprim
+
     full_build = os.getenv('BITPRIM_FULL_BUILD', '0') == '1'
     builder, name = get_builder()
     builder.add_common_builds(shared_option_name="%s:shared" % name)
