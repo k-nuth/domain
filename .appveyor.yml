@@ -69,6 +69,7 @@ test_script:
         conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
         # conan info . --only None
         python ci_utils/process_conan_reqs.py
+        conan remote remove bitprim
       }
   - ps: |
       If ($env:WAIT_FOR_DEPS -eq 1) {
