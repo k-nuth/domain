@@ -104,77 +104,77 @@ for:
         - /(release|hotfix).+/    #Just releases
     environment:
       matrix:
-        - WAIT_FOR_DEPS: 1
-          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          CONAN_VISUAL_RUNTIMES: MT
-          # BITPRIM_RUN_TESTS: true
-          BITPRIM_CI_CURRENCY: BCH
-          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          CONAN_VISUAL_RUNTIMES: MT
-          BITPRIM_CI_CURRENCY: BCH
-          BITPRIM_WITH_KEOKEN: true
-          BITPRIM_RUN_TESTS: true
-          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          CONAN_VISUAL_RUNTIMES: MT
-          BITPRIM_CI_CURRENCY: BCH
-          BITPRIM_WITH_KEOKEN: false
-          BITPRIM_RUN_TESTS: true
-          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          CONAN_VISUAL_RUNTIMES: MT
-          BITPRIM_CI_CURRENCY: BTC
-          BITPRIM_RUN_TESTS: true
-          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          CONAN_VISUAL_RUNTIMES: MD
-          BITPRIM_CI_CURRENCY: BCH
-          BITPRIM_WITH_KEOKEN: true
-          BITPRIM_RUN_TESTS: true
-          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          CONAN_VISUAL_RUNTIMES: MD
-          BITPRIM_CI_CURRENCY: BCH
-          BITPRIM_WITH_KEOKEN: false
-          BITPRIM_RUN_TESTS: true
-          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          CONAN_VISUAL_RUNTIMES: MD
-          BITPRIM_CI_CURRENCY: BTC
-          BITPRIM_RUN_TESTS: true
-          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-
-
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-        #   CONAN_VISUAL_VERSIONS: 14
+        # - WAIT_FOR_DEPS: 1
+        #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        #   CONAN_VISUAL_VERSIONS: 15
+        #   CONAN_VISUAL_RUNTIMES: MT
+        #   # BITPRIM_RUN_TESTS: true
         #   BITPRIM_CI_CURRENCY: BCH
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-        #   CONAN_VISUAL_VERSIONS: 14
-        #   BITPRIM_CI_CURRENCY: BTC
-        # - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
+        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_VISUAL_RUNTIMES: MT
           BITPRIM_CI_CURRENCY: BCH
           BITPRIM_WITH_KEOKEN: true
-        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-          BITPRIM_CI_CURRENCY: BCH
-          BITPRIM_WITH_KEOKEN: false
-        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-          BITPRIM_CI_CURRENCY: BTC
+          BITPRIM_RUN_TESTS: true
+          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        #   CONAN_VISUAL_VERSIONS: 15
+        #   CONAN_VISUAL_RUNTIMES: MT
+        #   BITPRIM_CI_CURRENCY: BCH
+        #   BITPRIM_WITH_KEOKEN: false
+        #   BITPRIM_RUN_TESTS: true
+        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        #   CONAN_VISUAL_VERSIONS: 15
+        #   CONAN_VISUAL_RUNTIMES: MT
+        #   BITPRIM_CI_CURRENCY: BTC
+        #   BITPRIM_RUN_TESTS: true
+        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+
+        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        #   CONAN_VISUAL_VERSIONS: 15
+        #   CONAN_VISUAL_RUNTIMES: MD
+        #   BITPRIM_CI_CURRENCY: BCH
+        #   BITPRIM_WITH_KEOKEN: true
+        #   BITPRIM_RUN_TESTS: true
+        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        #   CONAN_VISUAL_VERSIONS: 15
+        #   CONAN_VISUAL_RUNTIMES: MD
+        #   BITPRIM_CI_CURRENCY: BCH
+        #   BITPRIM_WITH_KEOKEN: false
+        #   BITPRIM_RUN_TESTS: true
+        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        #   CONAN_VISUAL_VERSIONS: 15
+        #   CONAN_VISUAL_RUNTIMES: MD
+        #   BITPRIM_CI_CURRENCY: BTC
+        #   BITPRIM_RUN_TESTS: true
+        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
 
 
-        # - MINGW_CONFIGURATIONS: "6@x86_64@seh@posix"
-        # - MINGW_CONFIGURATIONS: "5@x86_64@seh@posix"
+
+        # # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+        # #   CONAN_VISUAL_VERSIONS: 14
+        # #   BITPRIM_CI_CURRENCY: BCH
+        # # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+        # #   CONAN_VISUAL_VERSIONS: 14
+        # #   BITPRIM_CI_CURRENCY: BTC
+        # # - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
+        # - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
+        #   BITPRIM_CI_CURRENCY: BCH
+        #   BITPRIM_WITH_KEOKEN: true
+        # - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
+        #   BITPRIM_CI_CURRENCY: BCH
+        #   BITPRIM_WITH_KEOKEN: false
+        # - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
+        #   BITPRIM_CI_CURRENCY: BTC
+
+
+        # # - MINGW_CONFIGURATIONS: "6@x86_64@seh@posix"
+        # # - MINGW_CONFIGURATIONS: "5@x86_64@seh@posix"
   -
     branches:
       only:

@@ -22,7 +22,8 @@ if __name__ == "__main__":
                 options["%s:with_examples" % name] = "False"
 
             if full_build:
-                marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
+                # marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
+                marchs = ["x86-64"]
             else:
                 marchs = ["x86-64"]
 
