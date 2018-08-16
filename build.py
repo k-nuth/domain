@@ -5,11 +5,6 @@ import platform
 from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
 
 if __name__ == "__main__":
-    # conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
-    # conan info . --only None
-    # python ci_utils/process_conan_reqs.py
-    # conan remote remove bitprim
-
     full_build = os.getenv('BITPRIM_FULL_BUILD', '0') == '1'
     builder, name = get_builder()
     builder.add_common_builds(shared_option_name="%s:shared" % name)
@@ -27,8 +22,8 @@ if __name__ == "__main__":
                 options["%s:with_examples" % name] = "False"
 
             if full_build:
-                # marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
-                marchs = ["x86-64"]
+                marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
+                # marchs = ["x86-64"]
             else:
                 marchs = ["x86-64"]
 
