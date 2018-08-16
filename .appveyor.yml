@@ -67,7 +67,7 @@ test_script:
         Write-Host $a
         Invoke-Expression $a
         conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
-        # conan info . --only None
+        conan info . --only None
         python ci_utils/process_conan_reqs.py
         conan remote remove bitprim
       }
