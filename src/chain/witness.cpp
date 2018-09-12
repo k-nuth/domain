@@ -31,7 +31,7 @@
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
-#include <bitcoin/bitcoin/machine/script_pattern.hpp>
+#include <bitcoin/infrastructure/machine/script_pattern.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/collection.hpp>

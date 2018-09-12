@@ -31,17 +31,17 @@
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
 #include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/bitcoin/formats/base_16.hpp>
-#include <bitcoin/bitcoin/math/elliptic_curve.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/infrastructure/formats/base_16.hpp>
+#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/machine/script_pattern.hpp>
-#include <bitcoin/bitcoin/machine/script_version.hpp>
-#include <bitcoin/bitcoin/machine/sighash_algorithm.hpp>
+#include <bitcoin/infrastructure/machine/rule_fork.hpp>
+#include <bitcoin/infrastructure/machine/script_pattern.hpp>
+#include <bitcoin/infrastructure/machine/script_version.hpp>
+#include <bitcoin/infrastructure/machine/sighash_algorithm.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
@@ -758,9 +758,9 @@ hash_digest script::generate_version_0_signature_hash(const transaction& tx,
     const auto sighash = to_sighash_enum(sighash_type);
     const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 #ifdef BITPRIM_CURRENCY_BCH
-    const auto single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::all_forkid);
-    const auto none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::all_forkid);
-    const auto all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::all_forkid);
+    const auto single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
+    const auto none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
+    const auto all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::cash_forkid_all);
 #else
     const auto single = (sighash == sighash_algorithm::single);
     const auto none = (sighash == sighash_algorithm::none);

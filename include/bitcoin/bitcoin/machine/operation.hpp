@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_MACHINE_OPERATION_HPP
-#define LIBBITCOIN_MACHINE_OPERATION_HPP
+#ifndef LIBBITCOIN_INFRASTUCTURE_MACHINE_OPERATION_HPP
+#define LIBBITCOIN_INFRASTUCTURE_MACHINE_OPERATION_HPP
 
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
 #include <vector>
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/script_pattern.hpp>
+#include <bitcoin/infrastructure/define.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
+#include <bitcoin/infrastructure/machine/script_pattern.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
@@ -33,7 +33,7 @@
 namespace libbitcoin {
 namespace machine {
 
-class BC_API operation
+class BI_API operation
 {
 public:
     typedef std::vector<operation> list;
@@ -156,6 +156,6 @@ private:
 } // namespace machine
 } // namespace libbitcoin
 
-#include <bitcoin/bitcoin/impl/machine/operation.ipp>
+#include <bitcoin/infrastructure/impl/machine/operation.ipp>
 
 #endif

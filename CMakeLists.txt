@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Bitprim developers (see AUTHORS)
+# Copyright (c) 2017-2018 Bitprim developers (see AUTHORS)
 #
 # This file is part of Bitprim.
 #
@@ -22,8 +22,9 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-domain
 #==============================================================================
 project(bitprim-domain
-  VERSION 0.11.0
+  VERSION 0
   LANGUAGES CXX C)
+  # VERSION 0.11.0
 
 
 #if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -81,6 +82,14 @@ option(WITH_TESTS_NEW "Compile with unit tests." OFF)
 option(WITH_EXAMPLES "Compile with examples." OFF)
 
 
+# Implement --with-keoken and declare WITH_KEOKEN.
+#------------------------------------------------------------------------------
+option(WITH_KEOKEN "Keoken enabled." OFF)
+if (WITH_KEOKEN)
+  message(STATUS "Bitprim: Keoken enabled")
+  add_definitions(-DWITH_KEOKEN)
+endif()
+
 # Implement --with-icu and define BOOST_HAS_ICU and output ${icu}.
 #------------------------------------------------------------------------------
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
@@ -98,14 +107,6 @@ if (WITH_PNG)
   add_definitions(-DWITH_PNG)
 endif()
 
-# Implement --with-litecoin.
-#------------------------------------------------------------------------------
-# option(WITH_LITECOIN "Compile with Litecoin support." OFF)
-# if (WITH_LITECOIN)
-#   add_definitions(-DWITH_LITECOIN)
-#   add_definitions(-DBITPRIM_LITECOIN)
-# endif()
-
 # Implement --with-qrencode and output ${qrencode}.
 #------------------------------------------------------------------------------
 option(WITH_QRENCODE "Compile with QREncode." OFF)
@@ -118,8 +119,24 @@ if (WITH_QRENCODE)
 endif()
 
 
-set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
-# message(${BITPRIM_BUILD_NUMBER})
+# Implement --JUST_BITPRIM_SOURCES for linting.
+#------------------------------------------------------------------------------
+option(JUST_BITPRIM_SOURCES "Just Bitprim source code to be linted." OFF)
+if (JUST_BITPRIM_SOURCES)
+  message(STATUS "Bitprim: Just Bitprim source code to be linted: enabled")
+endif()
+
+
+
+set(BITPRIM_PROJECT_VERSION "-" CACHE STRING "Specify the Bitprim Project Version.")
+# message(${BITPRIM_PROJECT_VERSION})
+message( STATUS "Bitprim: Compiling version ${BITPRIM_PROJECT_VERSION}")
+
+set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
+message( STATUS "Bitprim: Compiling for ${MICROARCHITECTURE}")
+# add_definitions(-DBITPRIM_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DBITPRIM_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+
 
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
@@ -128,8 +145,6 @@ if (${CURRENCY} STREQUAL "BCH")
 elseif (${CURRENCY} STREQUAL "BTC")
   add_definitions(-DBITPRIM_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
-  # add_definitions(-DWITH_LITECOIN)
-  # add_definitions(-DBITPRIM_LITECOIN)
   add_definitions(-DBITPRIM_CURRENCY_LTC)
 else()
   message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
@@ -138,15 +153,14 @@ endif()
 message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
 
 
-# message( STATUS "1 NO_CONAN_AT_ALL: " ${NO_CONAN_AT_ALL} )
-# message( STATUS "CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR} )
-# message( STATUS "CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR} )
-
-if (EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+# Conan infrastructure
+#==============================================================================
+if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
 else()
     message( STATUS "bitprimbuildinfo doent exists")
 endif()
+
 
 
 
@@ -165,36 +179,12 @@ endif()
 # endforeach()
 # message( STATUS "DirDefs: " ${DirDefs} )
 
-# if (NOT NO_CONAN_AT_ALL)
-#   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#       conan_basic_setup()
-
-#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-#       foreach( d ${DirDefs} )
-#         message( STATUS "Found Define: " ${d} )
-#       endforeach()
-#       message( STATUS "DirDefs: " ${DirDefs} )
-  
-#       remove_definitions(-D_GLIBCXX_USE_CXX11_ABI)
-
-#       get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-#       foreach( d ${DirDefs} )
-#         message( STATUS "Found Define: " ${d} )
-#       endforeach()
-#       message( STATUS "DirDefs: " ${DirDefs} )
-
-#   else()
-#       message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
-#   endif()
-# endif()
-
 
 set(Boost_DEBUG ON)
 
 # Check dependencies.
 #==============================================================================
-
+#------------------------------------------------------------------------------
 if (NO_CONAN_AT_ALL)
   # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
   #------------------------------------------------------------------------------
@@ -254,19 +244,13 @@ endif()
 
 
 if (NOT USE_CONAN)
-# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+# Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
-    find_package(secp256k1 0.0.01 REQUIRED) 
+    find_package(secp256k1 0 REQUIRED) 
   endif()
 endif()
 
-
-if (UNIX)
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
-elseif (WIN32)
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
-endif()
 
 # Set flags.
 #==============================================================================
@@ -274,7 +258,8 @@ include(CheckCXXCompilerFlag)
 
 # Including common functions
 #------------------------------------------------------------------------------
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
+
 include(BitprimTools)
 
 
@@ -345,7 +330,7 @@ if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-set(bitprim_domain_sources 
+set(bitprim_domain_sources_just_libbitcoin
         src/chain/block.cpp
         src/chain/chain_state.cpp
         src/chain/compact.cpp
@@ -364,7 +349,7 @@ set(bitprim_domain_sources
         src/machine/interpreter.cpp
         # src/machine/number.cpp
         # src/machine/opcode.cpp
-        # src/machine/operation.cpp
+        src/machine/operation.cpp
         src/machine/program.cpp
 
         # src/config/authority.cpp
@@ -381,6 +366,18 @@ set(bitprim_domain_sources
         # src/config/parser.cpp
         # src/config/printer.cpp
         # src/config/sodium.cpp
+
+        src/config/header.cpp
+        src/config/input.cpp
+        src/config/output.cpp
+        src/config/point.cpp
+        src/config/transaction.cpp
+        src/config/script.cpp
+        src/config/ec_private.cpp
+        src/config/endorsement.cpp
+        
+        src/utility/property_tree.cpp
+        src/utility/socket.cpp
 
         src/error.cpp
         src/multi_crypto_support.cpp
@@ -487,24 +484,52 @@ set(bitprim_domain_sources
         src/wallet/payment_address.cpp
         # src/wallet/qrcode.cpp
         src/wallet/select_outputs.cpp
+        src/wallet/select_outputs.cpp
         src/wallet/stealth_address.cpp
         src/wallet/stealth_receiver.cpp
         src/wallet/stealth_sender.cpp
         # src/wallet/uri.cpp
-      )
+        src/wallet/transaction_functions.cpp
+)
+
+set(bitprim_domain_sources_just_bitprim
+)
 
 if (${CURRENCY} STREQUAL "BCH")
-    set(bitprim_domain_sources ${bitprim_domain_sources}         
+    set(bitprim_domain_sources_just_bitprim 
+      ${bitprim_domain_sources_just_bitprim}
       src/wallet/cashaddr.cpp)
 endif()
 
-
-# if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
-    set(bitprim_domain_sources ${bitprim_domain_sources}         
+    set(bitprim_domain_sources_just_bitprim 
+      ${bitprim_domain_sources_just_bitprim}         
       src/math/external/scrypt.cpp
       src/math/external/scrypt-sse2.cpp)
 endif()
+
+if (WITH_KEOKEN)
+  set(bitprim_domain_sources_just_bitprim 
+    ${bitprim_domain_sources_just_bitprim}
+    src/bitprim/keoken/transaction_extractor.cpp
+    src/bitprim/keoken/entities/asset.cpp
+    src/bitprim/keoken/message/base.cpp
+    src/bitprim/keoken/message/create_asset.cpp
+    src/bitprim/keoken/message/send_tokens.cpp
+    src/bitprim/keoken/wallet/create_transanction.cpp
+  )
+endif()
+
+if (NOT JUST_BITPRIM_SOURCES)
+  set(bitprim_domain_sources 
+    ${bitprim_domain_sources_just_libbitcoin}
+  )
+endif()
+
+set(bitprim_domain_sources 
+  ${bitprim_domain_sources}   
+  ${bitprim_domain_sources_just_bitprim}         
+)
 
 add_library(bitprim-domain ${MODE} ${bitprim_domain_sources})
 
@@ -530,7 +555,8 @@ if (NOT ENABLE_SHARED)
     target_compile_definitions(bitprim-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
-target_compile_definitions(bitprim-domain PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(bitprim-domain PUBLIC -DBITPRIM_PROJECT_VERSION="${BITPRIM_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
+
 
 target_include_directories(bitprim-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
@@ -577,7 +603,6 @@ if (WITH_PNG)
     endif (NO_CONAN_AT_ALL)
 endif()
 
-# if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
   target_link_libraries(bitprim-domain PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
 
@@ -613,25 +638,28 @@ if (WITH_TESTS)
         test/chain/point_iterator.cpp
         test/chain/satoshi_words.cpp
         # test/chain/machine/opcode.cpp      #TODO: check the new test sources to be added after the Feb2017 merge
-        # test/chain/script/operation.cpp
+        test/chain/script/operation.cpp
         # test/chain/script/script.cpp
         # test/chain/script/script.hpp
 
         test/chain/script.cpp
 
         test/chain/transaction.cpp
-        test/config/authority.cpp
-        test/config/base58.cpp
-        test/config/checkpoint.cpp
-        test/config/endpoint.cpp
-        test/config/hash256.cpp
-        test/config/parameter.cpp
-        test/config/printer.cpp
-        test/formats/base_10.cpp
-        test/formats/base_16.cpp
-        test/formats/base_58.cpp
-        test/formats/base_64.cpp
-        test/formats/base_85.cpp
+
+        # test/config/authority.cpp
+        # test/config/base58.cpp
+        # test/config/checkpoint.cpp
+        # test/config/endpoint.cpp
+        # test/config/hash256.cpp
+        # test/config/parameter.cpp
+        # test/config/printer.cpp
+
+        # test/formats/base_10.cpp
+        # test/formats/base_16.cpp
+        # test/formats/base_58.cpp
+        # test/formats/base_64.cpp
+        # test/formats/base_85.cpp
+
         test/main.cpp
         # test/math/big_number.cpp
         # test/math/big_number.hppcompact
@@ -667,7 +695,7 @@ if (WITH_TESTS)
         test/message/inventory_vector.cpp
         test/message/memory_pool.cpp
         test/message/merkle_block.cpp
-        test/message/network_address.cpp
+        # test/message/network_address.cpp
         test/message/not_found.cpp
         test/message/ping.cpp
         test/message/pong.cpp
@@ -692,7 +720,10 @@ if (WITH_TESTS)
         test/wallet/qrcode.cpp
         test/wallet/stealth_address.cpp
         test/wallet/uri.cpp
-        test/wallet/uri_reader.cpp)
+        test/wallet/uri_reader.cpp
+        test/wallet/transaction_functions.cpp
+    )
+
 
 # Simplified Test Project for testing Packaging purposes
 
@@ -779,7 +810,7 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
     merkle_block_tests
     message_tests
     mnemonic_tests
-    network_address_tests
+    # network_address_tests
     not_found_tests
     output_tests
     parameter_tests
@@ -808,7 +839,9 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
     uri_reader_tests
     uri_tests
     verack_tests
-    version_tests)
+    version_tests
+    transaction_functions_tests
+  )
 
   if (WITH_PNG)
     _add_tests(bitprim_domain_test png_tests)
@@ -820,33 +853,17 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
 endif()
 
 if (WITH_TESTS_NEW)
+  if (WITH_KEOKEN)
+    add_executable(bitprim_domain_test_new
+            test_new/main.cpp
+            test_new/create_transaction.cpp
+    )
+    target_link_libraries(bitprim_domain_test_new PUBLIC bitprim-domain)
 
-  add_custom_target(testsfer ALL
-      COMMAND ${CMAKE_CTEST_COMMAND} -C Debug --output-on-failure -R "test.+"
-      COMMENT "Build and run all the unit tests.")
-
-  add_executable(bitprim_domain_test_new
-          test_new/main.cpp
-  )
-
-  target_link_libraries(bitprim_domain_test_new PUBLIC bitprim-domain)
-
-  # _group_sources(bitprim_domain_test_new "${CMAKE_CURRENT_LIST_DIR}/test_new")
-
-  add_test(NAME test.new_tests COMMAND bitprim_domain_test_new)
-
-  add_dependencies(testsfer test.new_tests)
-
-#    add_test(
-#            NAME test.domain.new_tests
-#            COMMAND ${target}
-#            --run_test=${_test_name}
-#            --show_progress=no
-#            --detect_memory_leak=0
-#            --report_level=no
-#            --build_info=yes)
-
+    add_test(NAME bitprim_domain_test_new COMMAND bitprim_domain_test_new)
+  endif()
 endif()
+
 
 # Examples
 #==============================================================================
@@ -855,7 +872,6 @@ endif()
 if (WITH_EXAMPLES)
   add_executable(bitprim_domain_examples
     examples/main.cpp)
-
 
   target_link_libraries(bitprim_domain_examples PUBLIC bitprim-domain)
 
@@ -895,12 +911,9 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/chain/output.hpp
     bitcoin/bitcoin/chain/output_point.hpp
     bitcoin/bitcoin/chain/point.hpp
-    
     bitcoin/bitcoin/chain/point_iterator.hpp
-
     bitcoin/bitcoin/chain/point_value.hpp
     bitcoin/bitcoin/chain/points_value.hpp
-
     bitcoin/bitcoin/chain/script.hpp
     bitcoin/bitcoin/chain/stealth.hpp
     bitcoin/bitcoin/chain/transaction.hpp
@@ -916,31 +929,44 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/machine/sighash_algorithm.hpp
     bitcoin/bitcoin/machine/script_version.hpp
 
-    bitcoin/bitcoin/config/authority.hpp
-    bitcoin/bitcoin/config/base16.hpp
-    bitcoin/bitcoin/config/base2.hpp
-    bitcoin/bitcoin/config/base58.hpp
-    bitcoin/bitcoin/config/base64.hpp
-    bitcoin/bitcoin/config/checkpoint.hpp
-    bitcoin/bitcoin/config/directory.hpp
-    bitcoin/bitcoin/config/endpoint.hpp
-    bitcoin/bitcoin/config/hash160.hpp
-    bitcoin/bitcoin/config/hash256.hpp
-    bitcoin/bitcoin/config/parameter.hpp
-    bitcoin/bitcoin/config/parser.hpp
-    bitcoin/bitcoin/config/printer.hpp
-    bitcoin/bitcoin/config/settings.hpp
-    bitcoin/bitcoin/config/sodium.hpp
+    # bitcoin/bitcoin/config/authority.hpp
+    # bitcoin/bitcoin/config/base16.hpp
+    # bitcoin/bitcoin/config/base2.hpp
+    # bitcoin/bitcoin/config/base58.hpp
+    # bitcoin/bitcoin/config/base64.hpp
+    # bitcoin/bitcoin/config/checkpoint.hpp
+    # bitcoin/bitcoin/config/directory.hpp
+    # bitcoin/bitcoin/config/endpoint.hpp
+    # bitcoin/bitcoin/config/hash160.hpp
+    # bitcoin/bitcoin/config/hash256.hpp
+    # bitcoin/bitcoin/config/parameter.hpp
+    # bitcoin/bitcoin/config/parser.hpp
+    # bitcoin/bitcoin/config/printer.hpp
+    # bitcoin/bitcoin/config/settings.hpp
+    # bitcoin/bitcoin/config/sodium.hpp
 
-    bitcoin/bitcoin/formats/base_10.hpp
-    bitcoin/bitcoin/formats/base_16.hpp
-    bitcoin/bitcoin/formats/base_58.hpp
-    bitcoin/bitcoin/formats/base_64.hpp
-    bitcoin/bitcoin/formats/base_85.hpp
-
+    # bitcoin/bitcoin/config/header.hpp
+    # bitcoin/bitcoin/config/input.hpp
+    # bitcoin/bitcoin/config/output.hpp
+    # bitcoin/bitcoin/config/transaction.hpp
+    # bitcoin/bitcoin/config/script.hpp
+    # bitcoin/bitcoin/config/ec_private.hpp
+    # bitcoin/bitcoin/config/endorsement.hpp
     
-    bitcoin/bitcoin/impl/formats/base_16.ipp
-    bitcoin/bitcoin/impl/formats/base_58.ipp
+    bitcoin/bitcoin/utility/property_tree.hpp
+    bitcoin/bitcoin/impl/utility/property_tree.ipp
+    # bitcoin/bitcoin/utility/string.hpp
+    # bitcoin/bitcoin/impl/utility/string.ipp
+    bitcoin/bitcoin/utility/socket.hpp
+    
+    # bitcoin/bitcoin/formats/base_10.hpp
+    # bitcoin/bitcoin/formats/base_16.hpp
+    # bitcoin/bitcoin/formats/base_58.hpp
+    # bitcoin/bitcoin/formats/base_64.hpp
+    # bitcoin/bitcoin/formats/base_85.hpp
+
+    # bitcoin/bitcoin/impl/formats/base_16.ipp
+    # bitcoin/bitcoin/impl/formats/base_58.ipp
    
     bitcoin/bitcoin/impl/math/checksum.ipp
     bitcoin/bitcoin/impl/math/hash.ipp
@@ -953,7 +979,7 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/math/checksum.hpp
     bitcoin/bitcoin/math/crypto.hpp
     bitcoin/bitcoin/math/elliptic_curve.hpp
-    bitcoin/bitcoin/math/hash.hpp
+    # bitcoin/bitcoin/math/hash.hpp
     # bitcoin/bitcoin/math/limits.hpp
     bitcoin/bitcoin/math/stealth.hpp
     bitcoin/bitcoin/math/uint256.hpp
@@ -981,7 +1007,7 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/message/memory_pool.hpp
     bitcoin/bitcoin/message/merkle_block.hpp
     bitcoin/bitcoin/message/messages.hpp
-    bitcoin/bitcoin/message/network_address.hpp
+    # bitcoin/bitcoin/message/network_address.hpp
     bitcoin/bitcoin/message/not_found.hpp
     bitcoin/bitcoin/message/ping.hpp
     bitcoin/bitcoin/message/pong.hpp
@@ -1015,6 +1041,7 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/wallet/stealth_sender.hpp
     bitcoin/bitcoin/wallet/uri.hpp
     bitcoin/bitcoin/wallet/uri_reader.hpp
+    bitcoin/bitcoin/wallet/transaction_functions.hpp
     bitcoin/bitcoin.hpp
     )
 

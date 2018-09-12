@@ -25,7 +25,7 @@
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
-#include <bitcoin/bitcoin/machine/script_version.hpp>
+#include <bitcoin/infrastructure/machine/script_version.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {

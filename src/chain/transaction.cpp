@@ -34,11 +34,11 @@
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/infrastructure/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/utility/collection.hpp>

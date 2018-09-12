@@ -19,7 +19,7 @@
 #include <bitcoin/bitcoin/chain/compact.hpp>
 
 #include <cstdint>
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 
 namespace libbitcoin {

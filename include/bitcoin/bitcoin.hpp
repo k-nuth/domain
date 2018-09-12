@@ -38,26 +38,37 @@
 #include <bitcoin/bitcoin/chain/stealth.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
-#include <bitcoin/bitcoin/config/authority.hpp>
-#include <bitcoin/bitcoin/config/base16.hpp>
-#include <bitcoin/bitcoin/config/base2.hpp>
-#include <bitcoin/bitcoin/config/base58.hpp>
-#include <bitcoin/bitcoin/config/base64.hpp>
-#include <bitcoin/bitcoin/config/checkpoint.hpp>
-#include <bitcoin/bitcoin/config/directory.hpp>
-#include <bitcoin/bitcoin/config/endpoint.hpp>
-#include <bitcoin/bitcoin/config/hash160.hpp>
-#include <bitcoin/bitcoin/config/hash256.hpp>
-#include <bitcoin/bitcoin/config/parameter.hpp>
-#include <bitcoin/bitcoin/config/parser.hpp>
-#include <bitcoin/bitcoin/config/printer.hpp>
-#include <bitcoin/bitcoin/config/settings.hpp>
-#include <bitcoin/bitcoin/config/sodium.hpp>
-#include <bitcoin/bitcoin/formats/base_10.hpp>
-#include <bitcoin/bitcoin/formats/base_16.hpp>
-#include <bitcoin/bitcoin/formats/base_58.hpp>
-#include <bitcoin/bitcoin/formats/base_64.hpp>
-#include <bitcoin/bitcoin/formats/base_85.hpp>
+
+// #include <bitcoin/bitcoin/config/authority.hpp>
+// #include <bitcoin/infrastructure/config/base16.hpp>
+// #include <bitcoin/bitcoin/config/base2.hpp>
+// #include <bitcoin/bitcoin/config/base58.hpp>
+// #include <bitcoin/bitcoin/config/base64.hpp>
+// #include <bitcoin/infrastructure/config/checkpoint.hpp>
+// #include <bitcoin/bitcoin/config/directory.hpp>
+// #include <bitcoin/bitcoin/config/endpoint.hpp>
+// #include <bitcoin/bitcoin/config/ec_private.hpp>
+// #include <bitcoin/bitcoin/config/endorsement.hpp>
+// #include <bitcoin/infrastructure/config/hash160.hpp>
+// #include <bitcoin/infrastructure/config/hash256.hpp>
+// #include <bitcoin/bitcoin/config/header.hpp>
+// #include <bitcoin/bitcoin/config/input.hpp>
+// #include <bitcoin/bitcoin/config/output.hpp>
+// #include <bitcoin/bitcoin/config/parameter.hpp>
+// #include <bitcoin/bitcoin/config/parser.hpp>
+// #include <bitcoin/bitcoin/config/point.hpp>
+// #include <bitcoin/bitcoin/config/printer.hpp>
+// #include <bitcoin/bitcoin/config/script.hpp>
+// #include <bitcoin/bitcoin/config/settings.hpp>
+// #include <bitcoin/bitcoin/config/sodium.hpp>
+// #include <bitcoin/bitcoin/config/transaction.hpp>
+
+// #include <bitcoin/bitcoin/formats/base_10.hpp>
+// #include <bitcoin/infrastructure/formats/base_16.hpp>
+// #include <bitcoin/bitcoin/formats/base_58.hpp>
+// #include <bitcoin/bitcoin/formats/base_64.hpp>
+// #include <bitcoin/bitcoin/formats/base_85.hpp>
+
 // #include <bitcoin/bitcoin/log/attributes.hpp>
 // #include <bitcoin/bitcoin/log/file_char_traits.hpp>
 // #include <bitcoin/bitcoin/log/file_collector.hpp>
@@ -76,21 +87,21 @@
 // #include <bitcoin/bitcoin/log/features/rate.hpp>
 // #include <bitcoin/bitcoin/log/features/timer.hpp>
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
-#include <bitcoin/bitcoin/machine/number.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/infrastructure/machine/number.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/machine/script_pattern.hpp>
-#include <bitcoin/bitcoin/machine/script_version.hpp>
-#include <bitcoin/bitcoin/machine/sighash_algorithm.hpp>
-#include <bitcoin/bitcoin/math/checksum.hpp>
-#include <bitcoin/bitcoin/math/crypto.hpp>
-#include <bitcoin/bitcoin/math/elliptic_curve.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
-// #include <bitcoin/bitcoin/math/limits.hpp>
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/bitcoin/math/uint256.hpp>
+#include <bitcoin/infrastructure/machine/rule_fork.hpp>
+#include <bitcoin/infrastructure/machine/script_pattern.hpp>
+#include <bitcoin/infrastructure/machine/script_version.hpp>
+#include <bitcoin/infrastructure/machine/sighash_algorithm.hpp>
+#include <bitcoin/infrastructure/math/checksum.hpp>
+#include <bitcoin/infrastructure/math/crypto.hpp>
+#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
+// #include <bitcoin/infrastructure/math/hash.hpp>
+// #include <bitcoin/infrastructure/math/limits.hpp>
+#include <bitcoin/infrastructure/math/stealth.hpp>
+#include <bitcoin/infrastructure/math/uint256.hpp>
 #include <bitcoin/bitcoin/message/address.hpp>
 #include <bitcoin/bitcoin/message/alert.hpp>
 #include <bitcoin/bitcoin/message/alert_payload.hpp>
@@ -114,7 +125,7 @@
 #include <bitcoin/bitcoin/message/memory_pool.hpp>
 #include <bitcoin/bitcoin/message/merkle_block.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
-#include <bitcoin/bitcoin/message/network_address.hpp>
+// #include <bitcoin/bitcoin/message/network_address.hpp>
 #include <bitcoin/bitcoin/message/not_found.hpp>
 #include <bitcoin/bitcoin/message/ping.hpp>
 #include <bitcoin/bitcoin/message/pong.hpp>
@@ -178,6 +189,9 @@
 // #include <bitcoin/infrastructure/utility/track.hpp>
 // #include <bitcoin/infrastructure/utility/work.hpp>
 // #include <bitcoin/infrastructure/utility/writer.hpp>
+
+#include <bitcoin/bitcoin/utility/socket.hpp>
+
 #include <bitcoin/bitcoin/wallet/bitcoin_uri.hpp>
 #include <bitcoin/bitcoin/wallet/dictionary.hpp>
 #include <bitcoin/bitcoin/wallet/ec_private.hpp>

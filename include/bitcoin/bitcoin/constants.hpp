@@ -22,10 +22,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <bitcoin/bitcoin/compat.hpp>
-#include <bitcoin/bitcoin/config/checkpoint.hpp>
+#include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/message/network_address.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/message/network_address.hpp>
 #include <bitcoin/bitcoin/version.hpp>
 #include <bitcoin/infrastructure/constants.hpp>
 
@@ -34,7 +34,7 @@ namespace libbitcoin {
 // This guards assumptions within the codebase.
 static_assert(sizeof(size_t) >= sizeof(uint32_t), "unsupported size_t");
 
-#define BC_USER_AGENT "/bitprim:" LIBBITCOIN_VERSION "/"
+// #define BC_USER_AGENT "/bitprim:" LIBBITCOIN_VERSION "/"
 
 // Generic constants.
 //-----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ BC_CONSTEXPR uint64_t sighash_null_value = max_uint64;
 BC_CONSTEXPR size_t max_counted_ops = 201;
 BC_CONSTEXPR size_t max_stack_size = 1000;
 BC_CONSTEXPR size_t max_script_size = 10000;
-BC_CONSTEXPR size_t max_push_data_size = 520;
+// BC_CONSTEXPR size_t max_push_data_size = 520;
 BC_CONSTEXPR size_t max_script_public_keys = 20;
 BC_CONSTEXPR size_t multisig_default_sigops = 20;
 BC_CONSTEXPR size_t max_number_size = 4;
@@ -157,7 +157,8 @@ size_t get_max_block_sigops() {
 #endif //BITPRIM_CURRENCY_BCH
 }
 
-// BC_CONSTEXPR size_t one_million_bytes_block = 1000000;
+BC_CONSTEXPR size_t one_million_bytes_block = 1000000;
+BC_CONSTEXPR size_t coinbase_reserved_size = 20000;
 BC_CONSTEXPR size_t sigops_per_million_bytes = 20000;
 
 BC_CONSTFUNC inline
@@ -354,11 +355,41 @@ static const config::checkpoint regtest_bip34_active_checkpoint
 
 #endif //BITPRIM_CURRENCY_LTC
 
+#ifdef BITPRIM_CURRENCY_LTC
+
+// These cannot be reactivated in a future branch due to window expiration.
+static const config::checkpoint mainnet_bip9_bit0_active_checkpoint {
+    "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b",  1201535
+};
+static const config::checkpoint testnet_bip9_bit0_active_checkpoint {
+    "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0", 0
+};
+static const config::checkpoint regtest_bip9_bit0_active_checkpoint
+{
+    // The activation window is fixed and closed, so assume genesis activation.
+    "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0
+};
+// These cannot be reactivated in a future branch due to window expiration.
+static const config::checkpoint mainnet_bip9_bit1_active_checkpoint
+{
+    "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b",  1201535
+};
+static const config::checkpoint testnet_bip9_bit1_active_checkpoint
+{
+    "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0", 0
+};
+static const config::checkpoint regtest_bip9_bit1_active_checkpoint
+{
+    // The activation window is fixed and closed, so assume genesis activation.
+    "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0
+};
+
+#else
+
 // These cannot be reactivated in a future branch due to window expiration.
 static const config::checkpoint mainnet_bip9_bit0_active_checkpoint {
     "000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5", 419328
 };
-
 static const config::checkpoint testnet_bip9_bit0_active_checkpoint {
     "00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb", 770112
 };
@@ -367,7 +398,6 @@ static const config::checkpoint regtest_bip9_bit0_active_checkpoint
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0
 };
-
 // These cannot be reactivated in a future branch due to window expiration.
 static const config::checkpoint mainnet_bip9_bit1_active_checkpoint
 {
@@ -382,6 +412,8 @@ static const config::checkpoint regtest_bip9_bit1_active_checkpoint
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0
 };
+
+#endif
 
 
 #ifdef BITPRIM_CURRENCY_BCH
@@ -422,6 +454,15 @@ BC_CONSTEXPR size_t max_get_data = 50000;
 BC_CONSTEXPR size_t max_inventory = 50000;
 
 BC_CONSTEXPR size_t max_payload_size = 33554432;
+/**
+ * The minimum safe length of a seed in bits (multiple of 8).
+ */
+BC_CONSTEXPR size_t minimum_seed_bits = 128;
+
+/**
+ * The minimum safe length of a seed in bytes (16).
+ */
+BC_CONSTEXPR size_t minimum_seed_size = minimum_seed_bits / byte_bits;
 
 // Effective limit given a 32 bit chain height boundary: 10 + log2(2^32) + 1.
 BC_CONSTEXPR size_t max_locator = 43;

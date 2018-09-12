@@ -20,7 +20,7 @@
 
 #include <algorithm>
 #include <initializer_list>
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>

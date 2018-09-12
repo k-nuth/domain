@@ -25,9 +25,9 @@
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/number.hpp>
+#include <bitcoin/infrastructure/machine/number.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/script_version.hpp>
+#include <bitcoin/infrastructure/machine/script_version.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 

@@ -18,7 +18,7 @@
  */
 #include <bitcoin/bitcoin/message/get_headers.hpp>
 
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 
 namespace libbitcoin {

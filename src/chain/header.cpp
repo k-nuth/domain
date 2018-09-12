@@ -25,7 +25,7 @@
 #include <bitcoin/bitcoin/chain/compact.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>

@@ -28,7 +28,7 @@
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 #include <bitcoin/infrastructure/utility/pseudo_random.hpp>
-#include <bitcoin/bitcoin/math/sip_hash.hpp>
+#include <bitcoin/infrastructure/math/sip_hash.hpp>
 
 
 namespace libbitcoin {

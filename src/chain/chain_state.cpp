@@ -27,12 +27,12 @@
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/compact.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/config/checkpoint.hpp>
+#include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
+#include <bitcoin/infrastructure/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/unicode/unicode.hpp>
 #include <bitcoin/infrastructure/utility/timer.hpp>
@@ -461,6 +461,13 @@ size_t chain_state::uahf_height(size_t height, uint32_t forks) {
 inline 
 size_t chain_state::daa_height(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
+    const auto mainnet = retarget && !testnet;
+
+    if (!mainnet && !testnet) {
+        // Regtest activate at block 0
+        return true;
+    }
 
     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
 
@@ -471,6 +478,13 @@ size_t chain_state::daa_height(size_t height, uint32_t forks) {
 inline 
 bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
+    const auto mainnet = retarget && !testnet;
+
+    if (!mainnet && !testnet) {
+        // Regtest activate at block 0
+        return true;
+    }
 
     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
 
@@ -480,6 +494,13 @@ bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
 inline 
 bool chain_state::is_daa_enabled(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
+    const auto mainnet = retarget && !testnet;
+
+    if (!mainnet && !testnet) {
+        // Regtest activate at block 0
+        return true;
+    }
 
     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
 

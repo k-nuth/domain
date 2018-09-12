@@ -20,7 +20,7 @@
 
 #include <cstdint>
 #include <cstddef>
-#include <bitcoin/bitcoin/math/checksum.hpp>
+#include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
 #include "parse_encrypted_prefix.hpp"

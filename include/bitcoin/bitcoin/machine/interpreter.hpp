@@ -22,7 +22,7 @@
 #include <cstdint>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>

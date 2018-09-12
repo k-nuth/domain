@@ -44,7 +44,9 @@
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/bitcoin/message/memory_pool.hpp>
 #include <bitcoin/bitcoin/message/merkle_block.hpp>
-#include <bitcoin/bitcoin/message/network_address.hpp>
+
+#include <bitcoin/infrastructure/message/network_address.hpp>
+
 #include <bitcoin/bitcoin/message/not_found.hpp>
 #include <bitcoin/bitcoin/message/ping.hpp>
 #include <bitcoin/bitcoin/message/pong.hpp>
