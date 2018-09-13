@@ -369,7 +369,7 @@ set(bitprim_domain_sources_just_libbitcoin
         src/version.cpp
 
         src/math/stealth.cpp
-        # src/math/external/scrypt.h
+        src/math/external/scrypt.h
 
         src/message/address.cpp
         src/message/alert.cpp
@@ -452,6 +452,7 @@ set(bitprim_domain_sources_just_bitprim
 if (${CURRENCY} STREQUAL "LTC")
     set(bitprim_domain_sources_just_bitprim 
       ${bitprim_domain_sources_just_bitprim}         
+      src/math/hash.cpp
       src/math/external/scrypt.cpp
       src/math/external/scrypt-sse2.cpp)
 endif()
