@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_INFRASTUCTURE_STEALTH_HPP
-#define LIBBITCOIN_INFRASTUCTURE_STEALTH_HPP
+#ifndef LIBBITCOIN_MATH_STEALTH_HPP
+#define LIBBITCOIN_MATH_STEALTH_HPP
 
 #include <cstdint>
-#include <bitcoin/infrastructure/chain/script.hpp>
+#include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/infrastructure/define.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
@@ -73,4 +73,4 @@ BI_API bool uncover_stealth(ec_secret& out_stealth,
 
 } // namespace libbitcoin
 
-#endif
+#endif //LIBBITCOIN_MATH_STEALTH_HPP

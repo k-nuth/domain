@@ -24,7 +24,7 @@
 #include <string>
 #include <utility>
 #include <boost/program_options.hpp>
-#include <bitcoin/bitcoin/formats/base_58.hpp>
+#include <bitcoin/infrastructure/formats/base_58.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
@@ -33,7 +33,7 @@
 #include <bitcoin/bitcoin/wallet/ec_public.hpp>
 
 #ifdef BITPRIM_CURRENCY_BCH
-#include <bitcoin/bitcoin/wallet/cashaddr.hpp>
+#include <bitcoin/infrastructure/wallet/cashaddr.hpp>
 #endif //BITPRIM_CURRENCY_BCH
 
 

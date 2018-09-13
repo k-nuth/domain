@@ -352,21 +352,6 @@ set(bitprim_domain_sources_just_libbitcoin
         src/machine/operation.cpp
         src/machine/program.cpp
 
-        # src/config/authority.cpp
-        # src/config/base16.cpp
-        # src/config/base2.cpp
-        # src/config/base58.cpp
-        # src/config/base64.cpp
-        # src/config/checkpoint.cpp
-        # src/config/directory.cpp
-        # src/config/endpoint.cpp
-        # src/config/hash160.cpp
-        # src/config/hash256.cpp
-        # src/config/parameter.cpp
-        # src/config/parser.cpp
-        # src/config/printer.cpp
-        # src/config/sodium.cpp
-
         src/config/header.cpp
         src/config/input.cpp
         src/config/output.cpp
@@ -377,51 +362,14 @@ set(bitprim_domain_sources_just_libbitcoin
         src/config/endorsement.cpp
         
         src/utility/property_tree.cpp
-        src/utility/socket.cpp
+        # src/utility/socket.cpp
 
-        src/error.cpp
+        # src/error.cpp
         src/multi_crypto_support.cpp
         src/version.cpp
 
-        # src/formats/base_10.cpp
-        # src/formats/base_16.cpp
-        # src/formats/base_58.cpp
-        # src/formats/base_64.cpp
-        # src/formats/base_85.cpp
-
-        # src/math/checksum.cpp
-        # src/math/crypto.cpp
-        # src/math/elliptic_curve.cpp
-        # src/math/hash.cpp
-        # src/math/secp256k1_initializer.cpp
-        # src/math/secp256k1_initializer.hpp
-        # src/math/sip_hash.cpp
         src/math/stealth.cpp
-        # src/math/external/aes256.h
-        # src/math/external/crypto_scrypt.h
-        # src/math/external/hmac_sha256.h
-        # src/math/external/hmac_sha512.h
-        # src/math/external/lax_der_parsing.h
-        # src/math/external/pbkdf2_sha256.h
-        # src/math/external/pkcs5_pbkdf2.h
-        # src/math/external/ripemd160.h
         # src/math/external/scrypt.h
-        # src/math/external/sha1.h
-        # src/math/external/sha256.h
-        # src/math/external/sha512.h
-        # src/math/external/zeroize.h
-        # src/math/external/aes256.c
-        # src/math/external/crypto_scrypt.c
-        # src/math/external/hmac_sha256.c
-        # src/math/external/hmac_sha512.c
-        # src/math/external/lax_der_parsing.c
-        # src/math/external/pbkdf2_sha256.c
-        # src/math/external/pkcs5_pbkdf2.c
-        # src/math/external/ripemd160.c
-        # src/math/external/sha1.c
-        # src/math/external/sha256.c
-        # src/math/external/sha512.c
-        # src/math/external/zeroize.c
 
         src/message/address.cpp
         src/message/alert.cpp
@@ -471,10 +419,10 @@ set(bitprim_domain_sources_just_libbitcoin
         src/wallet/message.cpp
         # src/wallet/mini_keys.cpp
         # src/wallet/mnemonic.cpp
-        # src/wallet/parse_encrypted_keys/parse_encrypted_key.hpp
-        # src/wallet/parse_encrypted_keys/parse_encrypted_key.ipp
-        # src/wallet/parse_encrypted_keys/parse_encrypted_prefix.hpp
-        # src/wallet/parse_encrypted_keys/parse_encrypted_prefix.ipp
+        src/wallet/parse_encrypted_keys/parse_encrypted_key.hpp
+        src/wallet/parse_encrypted_keys/parse_encrypted_key.ipp
+        src/wallet/parse_encrypted_keys/parse_encrypted_prefix.hpp
+        src/wallet/parse_encrypted_keys/parse_encrypted_prefix.ipp
         src/wallet/parse_encrypted_keys/parse_encrypted_private.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_private.hpp
         src/wallet/parse_encrypted_keys/parse_encrypted_public.cpp
@@ -489,17 +437,17 @@ set(bitprim_domain_sources_just_libbitcoin
         src/wallet/stealth_receiver.cpp
         src/wallet/stealth_sender.cpp
         # src/wallet/uri.cpp
-        src/wallet/transaction_functions.cpp
 )
 
 set(bitprim_domain_sources_just_bitprim
+    src/wallet/transaction_functions.cpp
 )
 
-if (${CURRENCY} STREQUAL "BCH")
-    set(bitprim_domain_sources_just_bitprim 
-      ${bitprim_domain_sources_just_bitprim}
-      src/wallet/cashaddr.cpp)
-endif()
+# if (${CURRENCY} STREQUAL "BCH")
+#     set(bitprim_domain_sources_just_bitprim 
+#       ${bitprim_domain_sources_just_bitprim}
+#       src/wallet/cashaddr.cpp)
+# endif()
 
 if (${CURRENCY} STREQUAL "LTC")
     set(bitprim_domain_sources_just_bitprim 
@@ -638,40 +586,28 @@ if (WITH_TESTS)
         test/chain/point_iterator.cpp
         test/chain/satoshi_words.cpp
         # test/chain/machine/opcode.cpp      #TODO: check the new test sources to be added after the Feb2017 merge
-        test/chain/script/operation.cpp
         # test/chain/script/script.cpp
         # test/chain/script/script.hpp
-
         test/chain/script.cpp
-
         test/chain/transaction.cpp
 
-        # test/config/authority.cpp
-        # test/config/base58.cpp
-        # test/config/checkpoint.cpp
-        # test/config/endpoint.cpp
-        # test/config/hash256.cpp
-        # test/config/parameter.cpp
-        # test/config/printer.cpp
-
-        # test/formats/base_10.cpp
-        # test/formats/base_16.cpp
-        # test/formats/base_58.cpp
-        # test/formats/base_64.cpp
-        # test/formats/base_85.cpp
 
         test/main.cpp
+        
+        test/machine/operation.cpp
+
         # test/math/big_number.cpp
         # test/math/big_number.hppcompact
-        test/math/checksum.cpp
-        test/math/elliptic_curve.cpp
-        test/math/hash.cpp
-        test/math/hash.hpp
+        # test/math/checksum.cpp
+        # test/math/elliptic_curve.cpp
+        # test/math/hash.cpp
+        # test/math/hash.hpp
         # test/math/hash_number.cpp
-        # test/math/limits.cpp
+        test/math/limits.cpp
         # test/math/script_number.cpp
         # test/math/script_number.hpp
         test/math/stealth.cpp
+
         test/message/address.cpp
         test/message/alert.cpp
         test/message/alert_payload.cpp
@@ -707,53 +643,23 @@ if (WITH_TESTS)
         test/message/transaction.cpp
         test/message/verack.cpp
         test/message/version.cpp
+
         test/wallet/bitcoin_uri.cpp
         test/wallet/ec_private.cpp
         test/wallet/ec_public.cpp
         test/wallet/encrypted_keys.cpp
-        test/wallet/hd_private.cpp
-        test/wallet/hd_public.cpp
+        # test/wallet/hd_private.cpp
+        # test/wallet/hd_public.cpp
         test/wallet/message.cpp
-        test/wallet/mnemonic.cpp
-        test/wallet/mnemonic.hpp
+        # test/wallet/mnemonic.cpp
+        # test/wallet/mnemonic.hpp
         test/wallet/payment_address.cpp
-        test/wallet/qrcode.cpp
+        # test/wallet/qrcode.cpp
         test/wallet/stealth_address.cpp
-        test/wallet/uri.cpp
+        # test/wallet/uri.cpp
         test/wallet/uri_reader.cpp
         test/wallet/transaction_functions.cpp
     )
-
-
-# Simplified Test Project for testing Packaging purposes
-
-  # add_executable(bitprim_domain_test
-  # test/main.cpp
-  # # test/math/big_number.cpp
-  # # test/math/big_number.hppcompact
-  # test/math/checksum.cpp
-  # test/math/elliptic_curve.cpp
-  # test/math/hash.cpp
-  # test/math/hash.hpp
-  # # test/math/hash_number.cpp
-  # test/math/limits.cpp
-  # # test/math/script_number.cpp
-  # # test/math/script_number.hpp
-  # test/math/stealth.cpp
-  # test/wallet/bitcoin_uri.cpp
-  # test/wallet/ec_private.cpp
-  # test/wallet/ec_public.cpp
-  # test/wallet/encrypted_keys.cpp
-  # test/wallet/hd_private.cpp
-  # test/wallet/hd_public.cpp
-  # test/wallet/message.cpp
-  # test/wallet/mnemonic.cpp
-  # test/wallet/mnemonic.hpp
-  # test/wallet/payment_address.cpp
-  # test/wallet/qrcode.cpp
-  # test/wallet/stealth_address.cpp
-  # test/wallet/uri.cpp
-  # test/wallet/uri_reader.cpp)
 
     target_link_libraries(bitprim_domain_test PUBLIC bitprim-domain)
 
@@ -764,29 +670,18 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
     address_tests
     alert_payload_tests
     alert_tests
-    authority_tests
-    base_10_tests
-    base_16_tests
-    base_58_tests
-    base_64_tests
-    base_85_tests
-    base58_tests
     # binary_tests
     bitcoin_uri_tests
     chain_block_tests
     message_block_tests
     block_transactions_tests
-    checkpoint_tests
-    checksum_tests
     # collection_tests
     compact_block_tests
     # data_tests
     ec_private_tests
     # ec_public_tests # no test cases
-    elliptic_curve_tests
     encrypted_tests
     # endian_tests
-    endpoint_tests
     fee_filter_tests
     filter_add_tests
     filter_clear_tests
@@ -797,9 +692,6 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
     get_data_tests
     get_headers_tests
     # hash_number_tests
-    hash_tests
-    hd_private_tests
-    hd_public_tests
     chain_header_tests
     headers_tests
     heading_tests
@@ -809,17 +701,14 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
     memory_pool_tests
     merkle_block_tests
     message_tests
-    mnemonic_tests
     # network_address_tests
     not_found_tests
     output_tests
-    parameter_tests
     payment_address_tests
     ping_tests
     point_tests
     pong_tests
     prefilled_transaction_tests
-    printer_tests
     # pseudo_random_tests
     reject_tests
     # script_number_tests
@@ -837,7 +726,6 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
     # unicode_ostream_tests
     # unicode_tests
     uri_reader_tests
-    uri_tests
     verack_tests
     version_tests
     transaction_functions_tests
@@ -955,34 +843,24 @@ set(_bitprim_domain_headers
     
     bitcoin/bitcoin/utility/property_tree.hpp
     bitcoin/bitcoin/impl/utility/property_tree.ipp
-    # bitcoin/bitcoin/utility/string.hpp
-    # bitcoin/bitcoin/impl/utility/string.ipp
-    bitcoin/bitcoin/utility/socket.hpp
+    # bitcoin/bitcoin/utility/socket.hpp
     
-    # bitcoin/bitcoin/formats/base_10.hpp
-    # bitcoin/bitcoin/formats/base_16.hpp
-    # bitcoin/bitcoin/formats/base_58.hpp
-    # bitcoin/bitcoin/formats/base_64.hpp
-    # bitcoin/bitcoin/formats/base_85.hpp
-
-    # bitcoin/bitcoin/impl/formats/base_16.ipp
-    # bitcoin/bitcoin/impl/formats/base_58.ipp
-   
-    bitcoin/bitcoin/impl/math/checksum.ipp
-    bitcoin/bitcoin/impl/math/hash.ipp
+  
+    # bitcoin/bitcoin/impl/math/checksum.ipp
+    # bitcoin/bitcoin/impl/math/hash.ipp
 
     bitcoin/bitcoin/impl/machine/interpreter.ipp
     bitcoin/bitcoin/impl/machine/number.ipp
     bitcoin/bitcoin/impl/machine/operation.ipp
     bitcoin/bitcoin/impl/machine/program.ipp
 
-    bitcoin/bitcoin/math/checksum.hpp
-    bitcoin/bitcoin/math/crypto.hpp
-    bitcoin/bitcoin/math/elliptic_curve.hpp
+    # bitcoin/bitcoin/math/checksum.hpp
+    # bitcoin/bitcoin/math/crypto.hpp
+    # bitcoin/bitcoin/math/elliptic_curve.hpp
     # bitcoin/bitcoin/math/hash.hpp
-    # bitcoin/bitcoin/math/limits.hpp
+    bitcoin/bitcoin/math/limits.hpp
     bitcoin/bitcoin/math/stealth.hpp
-    bitcoin/bitcoin/math/uint256.hpp
+    # bitcoin/bitcoin/math/uint256.hpp
     
     bitcoin/bitcoin/message/address.hpp
     bitcoin/bitcoin/message/alert.hpp
@@ -1020,8 +898,8 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/message/version.hpp
 
     bitcoin/bitcoin/wallet/bitcoin_uri.hpp
-    bitcoin/bitcoin/wallet/cashaddr.hpp
-    bitcoin/bitcoin/wallet/dictionary.hpp
+    # bitcoin/bitcoin/wallet/cashaddr.hpp
+    # bitcoin/bitcoin/wallet/dictionary.hpp
     bitcoin/bitcoin/wallet/ec_private.hpp
     bitcoin/bitcoin/wallet/ec_public.hpp
     bitcoin/bitcoin/wallet/ek_private.hpp
@@ -1039,7 +917,7 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin/wallet/stealth_address.hpp
     bitcoin/bitcoin/wallet/stealth_receiver.hpp
     bitcoin/bitcoin/wallet/stealth_sender.hpp
-    bitcoin/bitcoin/wallet/uri.hpp
+    # bitcoin/bitcoin/wallet/uri.hpp
     bitcoin/bitcoin/wallet/uri_reader.hpp
     bitcoin/bitcoin/wallet/transaction_functions.hpp
     bitcoin/bitcoin.hpp

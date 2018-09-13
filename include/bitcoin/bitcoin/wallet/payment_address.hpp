@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 #include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/compat.hpp>
+#include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>

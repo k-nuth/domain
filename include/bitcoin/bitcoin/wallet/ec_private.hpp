@@ -22,7 +22,7 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <bitcoin/bitcoin/compat.hpp>
+#include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>

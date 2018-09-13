@@ -20,7 +20,7 @@
 #define LIBBITCOIN_WALLET_MESSAGE_HPP
 
 #include <string>
-#include <bitcoin/bitcoin/compat.hpp>
+#include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>

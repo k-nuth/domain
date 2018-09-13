@@ -14,12 +14,12 @@
  * Maintainers: Do not include this header internal to this library.
  */
 
-#include <bitcoin/bitcoin/compat.h>
-#include <bitcoin/bitcoin/compat.hpp>
+// #include <bitcoin/bitcoin/compat.h>
+// #include <bitcoin/bitcoin/compat.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 // #include <bitcoin/bitcoin/error.hpp>
-#include <bitcoin/bitcoin/handlers.hpp>
+// #include <bitcoin/bitcoin/handlers.hpp>
 #include <bitcoin/bitcoin/version.hpp>
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
@@ -100,7 +100,7 @@
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 // #include <bitcoin/infrastructure/math/hash.hpp>
 // #include <bitcoin/infrastructure/math/limits.hpp>
-#include <bitcoin/infrastructure/math/stealth.hpp>
+#include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/math/uint256.hpp>
 #include <bitcoin/bitcoin/message/address.hpp>
 #include <bitcoin/bitcoin/message/alert.hpp>
@@ -190,28 +190,28 @@
 // #include <bitcoin/infrastructure/utility/work.hpp>
 // #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitcoin/bitcoin/utility/socket.hpp>
+// #include <bitcoin/bitcoin/utility/socket.hpp>
 
 #include <bitcoin/bitcoin/wallet/bitcoin_uri.hpp>
-#include <bitcoin/bitcoin/wallet/dictionary.hpp>
+// #include <bitcoin/bitcoin/wallet/dictionary.hpp>
 #include <bitcoin/bitcoin/wallet/ec_private.hpp>
 #include <bitcoin/bitcoin/wallet/ec_public.hpp>
 #include <bitcoin/bitcoin/wallet/ek_private.hpp>
 #include <bitcoin/bitcoin/wallet/ek_public.hpp>
 #include <bitcoin/bitcoin/wallet/ek_token.hpp>
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
-#include <bitcoin/bitcoin/wallet/hd_private.hpp>
-#include <bitcoin/bitcoin/wallet/hd_public.hpp>
+// #include <bitcoin/bitcoin/wallet/hd_private.hpp>
+// #include <bitcoin/bitcoin/wallet/hd_public.hpp>
 #include <bitcoin/bitcoin/wallet/message.hpp>
-#include <bitcoin/bitcoin/wallet/mini_keys.hpp>
-#include <bitcoin/bitcoin/wallet/mnemonic.hpp>
+// #include <bitcoin/bitcoin/wallet/mini_keys.hpp>
+// #include <bitcoin/bitcoin/wallet/mnemonic.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/bitcoin/wallet/qrcode.hpp>
+// #include <bitcoin/bitcoin/wallet/qrcode.hpp>
 #include <bitcoin/bitcoin/wallet/select_outputs.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_address.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_receiver.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_sender.hpp>
-#include <bitcoin/bitcoin/wallet/uri.hpp>
+// #include <bitcoin/bitcoin/wallet/uri.hpp>
 #include <bitcoin/bitcoin/wallet/uri_reader.hpp>
 
 #include <bitcoin/infrastructure.hpp>

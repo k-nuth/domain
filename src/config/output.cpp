@@ -26,7 +26,7 @@
 #include <bitcoin/bitcoin/config/point.hpp>
 #include <bitcoin/bitcoin/config/script.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/math/stealth.hpp>
+#include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/utility/string.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_address.hpp>
 

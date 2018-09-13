@@ -22,11 +22,11 @@
 #include <cstdint>
 #include <iostream>
 #include <boost/program_options.hpp>
-#include <bitcoin/bitcoin/formats/base_58.hpp>
+#include <bitcoin/infrastructure/formats/base_58.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/math/stealth.hpp>
+#include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/binary.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>

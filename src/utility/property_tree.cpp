@@ -31,7 +31,7 @@
 #include <bitcoin/bitcoin/config/input.hpp>
 #include <bitcoin/bitcoin/config/output.hpp>
 #include <bitcoin/bitcoin/config/transaction.hpp>
-#include <bitcoin/infrastructure/math/stealth.hpp>
+#include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/utility/collection.hpp>
 
 
