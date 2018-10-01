@@ -42,6 +42,8 @@ class BitprimDomainConan(BitprimConanFile):
                "fix_march": [True, False],
                "verbose": [True, False],
                "keoken": [True, False],
+               "cxxflags": "ANY",
+               "cflags": "ANY",
     }
 
     #    "with_png": [True, False],
@@ -56,7 +58,10 @@ class BitprimDomainConan(BitprimConanFile):
         "microarchitecture=_DUMMY_",  \
         "fix_march=False", \
         "verbose=False", \
-        "keoken=False"
+        "keoken=False", \
+        "cxxflags=_DUMMY_", \
+        "cflags=_DUMMY_"
+
 
         # "with_png=False", \
 
@@ -129,6 +134,8 @@ class BitprimDomainConan(BitprimConanFile):
         self.info.options.with_examples = "ANY"
         self.info.options.verbose = "ANY"
         self.info.options.fix_march = "ANY"
+        self.info.options.cxxflags = "ANY"
+        self.info.options.cflags = "ANY"
 
         #For Bitprim Packages libstdc++ and libstdc++11 are the same
         if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
@@ -166,6 +173,12 @@ class BitprimDomainConan(BitprimConanFile):
 
         if self.settings.compiler == "Visual Studio":
             cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " /DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE"
+
+        if self.options.cxxflags != "_DUMMY_":
+            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " " + str(self.options.cxxflags)
+        if self.options.cflags != "_DUMMY_":
+            cmake.definitions["CONAN_C_FLAGS"] = cmake.definitions.get("CONAN_C_FLAGS", "") + " " + str(self.options.cflags)
+
 
         cmake.definitions["MICROARCHITECTURE"] = self.options.microarchitecture
         cmake.definitions["BITPRIM_PROJECT_VERSION"] = self.version
