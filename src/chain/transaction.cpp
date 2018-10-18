@@ -27,7 +27,9 @@
 #include <sstream>
 #include <utility>
 #include <vector>
+
 #include <boost/optional.hpp>
+
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
@@ -56,12 +58,7 @@ using namespace bc::machine;
 
 // Read a length-prefixed collection of inputs or outputs from the source.
 template<class Source, class Put>
-bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
-
+bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
     auto result = true;
     const auto count = source.read_size_little_endian();
 
@@ -71,9 +68,8 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness)
     else
         puts.resize(count);
 
-    const auto deserialize = [&](Put& put)
-    {
-        result = result && put.from_data(source, wire, witness);
+    const auto deserialize = [&](Put& put) {
+        result = result && put.from_data(source, wire, witness_val(witness));
 #ifndef NDBEUG
         put.script().operations();
 #endif
@@ -85,26 +81,20 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness)
 
 // Write a length-prefixed collection of inputs or outputs to the sink.
 template<class Sink, class Put>
-void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
     sink.write_variable_little_endian(puts.size());
 
-    const auto serialize = [&](const Put& put)
-    {
-        put.to_data(sink, wire, witness);
+    const auto serialize = [&](const Put& put) {
+        put.to_data(sink, wire, witness_val(witness));
     };
 
     std::for_each(puts.begin(), puts.end(), serialize);
 }
 
 // Input list must be pre-populated as it determines witness count.
-inline void read_witnesses(reader& source, input::list& inputs)
-{
-    const auto deserialize = [&](input& input)
-    {
+inline 
+void read_witnesses(reader& source, input::list& inputs) {
+    const auto deserialize = [&](input& input) {
         input.witness().from_data(source, true);
     };
 
@@ -112,10 +102,9 @@ inline void read_witnesses(reader& source, input::list& inputs)
 }
 
 // Witness count is not written as it is inferred from input count.
-inline void write_witnesses(writer& sink, const input::list& inputs)
-{
-    const auto serialize = [&sink](const input& input)
-    {
+inline 
+void write_witnesses(writer& sink, const input::list& inputs) {
+    const auto serialize = [&sink](const input& input) {
         input.witness().to_data(sink, true);
     };
 
@@ -126,71 +115,63 @@ inline void write_witnesses(writer& sink, const input::list& inputs)
 //-----------------------------------------------------------------------------
 
 transaction::transaction()
-  : version_(0), locktime_(0), validation{}
-{
-}
+    : version_(0), locktime_(0), validation{}
+{}
 
 transaction::transaction(transaction&& other)
-  : transaction(other.version_, other.locktime_, std::move(other.inputs_),
-      std::move(other.outputs_))
+    : transaction(other.version_, other.locktime_, std::move(other.inputs_), std::move(other.outputs_))
 {
     // TODO: implement safe private accessor for conditional cache transfer.
     validation = std::move(other.validation);
 }
 
 transaction::transaction(const transaction& other)
-  : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_)
+    : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_)
 {
     // TODO: implement safe private accessor for conditional cache transfer.
     validation = other.validation;
 }
 
 transaction::transaction(transaction&& other, hash_digest&& hash)
-  : transaction(other.version_, other.locktime_, std::move(other.inputs_),
-        std::move(other.outputs_), other.cached_sigops_, other.cached_fees_, other.cached_is_standard_)
+    : transaction(other.version_, other.locktime_, std::move(other.inputs_), std::move(other.outputs_), other.cached_sigops_, other.cached_fees_, other.cached_is_standard_)
 {
     hash_ = std::make_shared<hash_digest>(std::move(hash));
     validation = std::move(other.validation);
 }
 
 transaction::transaction(const transaction& other, const hash_digest& hash)
-  : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_, other.cached_sigops_, other.cached_fees_, other.cached_is_standard_)
+    : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_, other.cached_sigops_, other.cached_fees_, other.cached_is_standard_)
 {
     hash_ = std::make_shared<hash_digest>(hash);
     validation = other.validation;
 }
 
-transaction::transaction(uint32_t version, uint32_t locktime,
-    const input::list& inputs, const output::list& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
-  : version_(version),
-    locktime_(locktime),
-    inputs_(inputs),
-    outputs_(outputs),
-    cached_fees_(fees),
-    cached_sigops_(cached_sigops),
-    cached_is_standard_(is_standard),
-    validation{}
-{
-}
+transaction::transaction(uint32_t version, uint32_t locktime, const input::list& inputs, const output::list& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
+    : version_(version)
+    , locktime_(locktime)
+    , inputs_(inputs)
+    , outputs_(outputs)
+    , cached_fees_(fees)
+    , cached_sigops_(cached_sigops)
+    , cached_is_standard_(is_standard)
+    , validation{}
+{}
 
-transaction::transaction(uint32_t version, uint32_t locktime,
-    input::list&& inputs, output::list&& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
-  : version_(version),
-    locktime_(locktime),
-    inputs_(std::move(inputs)),
-    outputs_(std::move(outputs)),
-    cached_fees_(fees),
-    cached_sigops_(cached_sigops),
-    cached_is_standard_(is_standard),
-    validation{}
-{
-}
+transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
+    : version_(version)
+    , locktime_(locktime)
+    , inputs_(std::move(inputs))
+    , outputs_(std::move(outputs))
+    , cached_fees_(fees)
+    , cached_sigops_(cached_sigops)
+    , cached_is_standard_(is_standard)
+    , validation{}
+{}
 
 // Operators.
 //-----------------------------------------------------------------------------
 
-transaction& transaction::operator=(transaction&& other)
-{
+transaction& transaction::operator=(transaction&& other) {
     // TODO: implement safe private accessor for conditional cache transfer.
     version_ = other.version_;
     locktime_ = other.locktime_;
@@ -201,8 +182,7 @@ transaction& transaction::operator=(transaction&& other)
 }
 
 // TODO: eliminate blockchain transaction copies and then delete this.
-transaction& transaction::operator=(const transaction& other)
-{
+transaction& transaction::operator=(const transaction& other) {
     version_ = other.version_;
     locktime_ = other.locktime_;
     inputs_ = other.inputs_;
@@ -211,16 +191,14 @@ transaction& transaction::operator=(const transaction& other)
     return *this;
 }
 
-bool transaction::operator==(const transaction& other) const
-{
+bool transaction::operator==(const transaction& other) const {
     return (version_ == other.version_)
         && (locktime_ == other.locktime_)
         && (inputs_ == other.inputs_)
         && (outputs_ == other.outputs_);
 }
 
-bool transaction::operator!=(const transaction& other) const
-{
+bool transaction::operator!=(const transaction& other) const {
     return !(*this == other);
 }
 
@@ -228,70 +206,41 @@ bool transaction::operator!=(const transaction& other) const
 //-----------------------------------------------------------------------------
 
 // static
-transaction transaction::factory_from_data(const data_chunk& data, bool wire,
-    bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
-
+transaction transaction::factory_from_data(const data_chunk& data, bool wire, bool witness) {
     transaction instance;
     instance.from_data(data, wire, witness);
     return instance;
 }
 
 // static
-transaction transaction::factory_from_data(std::istream& stream, bool wire,
-    bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+transaction transaction::factory_from_data(std::istream& stream, bool wire, bool witness) {
     transaction instance;
     instance.from_data(stream, wire, witness);
     return instance;
 }
 
 // static
-transaction transaction::factory_from_data(reader& source, bool wire,
-    bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+transaction transaction::factory_from_data(reader& source, bool wire, bool witness) {
     transaction instance;
     instance.from_data(source, wire, witness);
     return instance;
 }
 
-
-bool transaction::from_data(const data_chunk& data, bool wire, bool witness, bool unconfirmed)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+bool transaction::from_data(const data_chunk& data, bool wire, bool witness, bool unconfirmed) {
     data_source istream(data);
     return from_data(istream, wire, witness, unconfirmed);
 }
 
-bool transaction::from_data(std::istream& stream, bool wire, bool witness, bool unconfirmed)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+bool transaction::from_data(std::istream& stream, bool wire, bool witness, bool unconfirmed) {
     istream_reader source(stream);
     return from_data(source, wire, witness, unconfirmed);
 }
+
 // Witness is not used by outputs, just for template normalization.
-bool transaction::from_data(reader& source, bool wire, bool witness, bool unconfirmed)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+bool transaction::from_data(reader& source, bool wire, bool witness, bool unconfirmed) {
     reset();
 
-    if (wire)
-    {
+    if (wire) {
         // Wire (satoshi protocol) deserialization.
         version_ = source.read_4_bytes_little_endian();
         read(source, inputs_, wire, witness);
@@ -304,23 +253,18 @@ bool transaction::from_data(reader& source, bool wire, bool witness, bool unconf
 #endif
 
         // This is always enabled so caller should validate with is_segregated.
-        if (marker)
-        {
+        if (marker) {
             // Skip over the peeked witness flag.
             source.skip(1);
             read(source, inputs_, wire, witness);
             read(source, outputs_, wire, witness);
             read_witnesses(source, inputs_);
-        }
-        else
-        {
+        } else {
             read(source, outputs_, wire, witness);
         }
 
         locktime_ = source.read_4_bytes_little_endian();
-    }
-    else
-    {
+    } else {
         // Database (outputs forward) serialization.
         // Witness data is managed internal to inputs.
         read(source, outputs_, wire, witness);
@@ -333,8 +277,8 @@ bool transaction::from_data(reader& source, bool wire, bool witness, bool unconf
 
         locktime_ = static_cast<uint32_t>(locktime);
         version_ = static_cast<uint32_t>(version);
-        if(unconfirmed)
-        {
+
+        if (unconfirmed) {
             const auto sigops = source.read_4_bytes_little_endian();
             cached_sigops_ = static_cast<uint32_t>(sigops);
             const auto fees = source.read_8_bytes_little_endian();
@@ -342,7 +286,6 @@ bool transaction::from_data(reader& source, bool wire, bool witness, bool unconf
             const auto is_standard = source.read_byte();
             cached_is_standard_ = static_cast<bool>(is_standard);
         }
-
     }
 
     // TODO: optimize by having reader skip witness data.
@@ -356,8 +299,7 @@ bool transaction::from_data(reader& source, bool wire, bool witness, bool unconf
 }
 
 // protected
-void transaction::reset()
-{
+void transaction::reset() {
     version_ = 0;
     locktime_ = 0;
     inputs_.clear();
@@ -373,10 +315,8 @@ void transaction::reset()
     total_output_value_ = boost::none;
 }
 
-bool transaction::is_valid() const
-{
-    return (version_ != 0) || (locktime_ != 0) || !inputs_.empty() ||
-        !outputs_.empty();
+bool transaction::is_valid() const {
+    return (version_ != 0) || (locktime_ != 0) || !inputs_.empty() || !outputs_.empty();
 }
 
 // Serialization.
@@ -384,11 +324,7 @@ bool transaction::is_valid() const
 
 // Transactions with empty witnesses always use old serialization (bip144).
 // If no inputs are witness programs then witness hash is tx hash (bip141).
-data_chunk transaction::to_data(bool wire, bool witness, bool unconfirmed) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+data_chunk transaction::to_data(bool wire, bool witness, bool unconfirmed) const {
     // Witness handling must be disabled for non-segregated txs.
     witness &= is_segregated();
 
@@ -406,11 +342,7 @@ data_chunk transaction::to_data(bool wire, bool witness, bool unconfirmed) const
     return data;
 }
 
-void transaction::to_data(std::ostream& stream, bool wire, bool witness, bool unconfirmed) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+void transaction::to_data(std::ostream& stream, bool wire, bool witness, bool unconfirmed) const {
     // Witness handling must be disabled for non-segregated txs.
     witness &= is_segregated();
 
@@ -419,75 +351,55 @@ void transaction::to_data(std::ostream& stream, bool wire, bool witness, bool un
 }
 
 // Witness is not used by outputs, just for template normalization.
-void transaction::to_data(writer& sink, bool wire, bool witness, bool unconfirmed) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
-    if (wire)
-    {
+void transaction::to_data(writer& sink, bool wire, bool witness, bool unconfirmed) const {
+    if (wire) {
         // Witness handling must be disabled for non-segregated txs.
         witness &= is_segregated();
 
         // Wire (satoshi protocol) serialization.
         sink.write_4_bytes_little_endian(version_);
 
-        if (witness)
-        {
+        if (witness) {
             sink.write_byte(witness_marker);
             sink.write_byte(witness_flag);
             write(sink, inputs_, wire, witness);
             write(sink, outputs_, wire, witness);
             write_witnesses(sink, inputs_);
-        }
-        else
-        {
+        } else {
             write(sink, inputs_, wire, witness);
             write(sink, outputs_, wire, witness);
         }
 
         sink.write_4_bytes_little_endian(locktime_);
-    }
-    else
-    {
+    } else {
         // Database (outputs forward) serialization.
         // Witness data is managed internal to inputs.
         write(sink, outputs_, wire, witness);
         write(sink, inputs_, wire, witness);
         sink.write_variable_little_endian(locktime_);
         sink.write_variable_little_endian(version_);
-        if(unconfirmed)
-        {
+        if (unconfirmed) {
             sink.write_4_bytes_little_endian(signature_operations());
             sink.write_8_bytes_little_endian(fees());
             sink.write_byte(is_standard());
         }
     }
-
-
-
 }
 
 // Size.
 //-----------------------------------------------------------------------------
 
-size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) const {
     // The witness parameter must be set to false for non-segregated txs.
     witness &= is_segregated();
 
     // Returns space for the witness although not serialized by input.
     // Returns witness space if specified even if input not segregated.
-    const auto ins = [wire, witness](size_t size, const input& input)
-    {
+    const auto ins = [wire, witness](size_t size, const input& input) {
         return size + input.serialized_size(wire, witness);
     };
 
-    const auto outs = [wire](size_t size, const output& output)
-    {
+    const auto outs = [wire](size_t size, const output& output) {
         return size + output.serialized_size(wire);
     };
 
@@ -506,40 +418,33 @@ size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) c
 // Accessors.
 //-----------------------------------------------------------------------------
 
-uint32_t transaction::version() const
-{
+uint32_t transaction::version() const {
     return version_;
 }
 
-void transaction::set_version(uint32_t value)
-{
+void transaction::set_version(uint32_t value) {
     version_ = value;
     invalidate_cache();
 }
 
-uint32_t transaction::locktime() const
-{
+uint32_t transaction::locktime() const {
     return locktime_;
 }
 
-void transaction::set_locktime(uint32_t value)
-{
+void transaction::set_locktime(uint32_t value) {
     locktime_ = value;
     invalidate_cache();
 }
 
-input::list& transaction::inputs()
-{
+input::list& transaction::inputs() {
     return inputs_;
 }
 
-const input::list& transaction::inputs() const
-{
+const input::list& transaction::inputs() const {
     return inputs_;
 }
 
-void transaction::set_inputs(const input::list& value)
-{
+void transaction::set_inputs(const input::list& value) {
     inputs_ = value;
     invalidate_cache();
     inpoints_hash_.reset();
@@ -548,51 +453,43 @@ void transaction::set_inputs(const input::list& value)
     total_input_value_ = boost::none;
 }
 
-void transaction::set_inputs(input::list&& value)
-{
+void transaction::set_inputs(input::list&& value) {
     inputs_ = std::move(value);
     invalidate_cache();
     segregated_ = boost::none;
     total_input_value_ = boost::none;
 }
 
-output::list& transaction::outputs()
-{
+output::list& transaction::outputs() {
     return outputs_;
 }
 
-const output::list& transaction::outputs() const
-{
+const output::list& transaction::outputs() const {
     return outputs_;
 }
 
-void transaction::set_outputs(const output::list& value)
-{
+void transaction::set_outputs(const output::list& value) {
     outputs_ = value;
     invalidate_cache();
     outputs_hash_.reset();
     total_output_value_ = boost::none;
 }
 
-void transaction::set_outputs(output::list&& value)
-{
+void transaction::set_outputs(output::list&& value) {
     outputs_ = std::move(value);
     invalidate_cache();
     total_output_value_ = boost::none;
 }
 
-uint64_t transaction::cached_fees() const
-{
+uint64_t transaction::cached_fees() const {
     return cached_fees_;
 }
 
-uint32_t transaction::cached_sigops() const
-{
+uint32_t transaction::cached_sigops() const {
     return cached_sigops_;
 }
 
-bool transaction::cached_is_standard() const
-{
+bool transaction::cached_is_standard() const {
     return cached_is_standard_;
 }
 
@@ -600,14 +497,12 @@ bool transaction::cached_is_standard() const
 //-----------------------------------------------------------------------------
 
 // protected
-void transaction::invalidate_cache() const
-{
+void transaction::invalidate_cache() const {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if (hash_ || witness_hash_)
-    {
+    if (hash_ || witness_hash_) {
         hash_mutex_.unlock_upgrade_and_lock();
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_.reset();
@@ -620,11 +515,7 @@ void transaction::invalidate_cache() const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-hash_digest transaction::hash(bool witness) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
+hash_digest transaction::hash(bool witness) const {
     // Witness hashing must be disabled for non-segregated txs.
     witness &= is_segregated();
 
@@ -632,10 +523,8 @@ hash_digest transaction::hash(bool witness) const
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if (witness)
-    {
-        if (!witness_hash_)
-        {
+    if (witness) {
+        if (!witness_hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock();
 
@@ -646,11 +535,8 @@ hash_digest transaction::hash(bool witness) const
             hash_mutex_.unlock_and_lock_upgrade();
             //-----------------------------------------------------------------
         }
-    }
-    else
-    {
-        if (!hash_)
-        {
+    } else {
+        if (!hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock();
             hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data(true)));
@@ -666,14 +552,12 @@ hash_digest transaction::hash(bool witness) const
     return hash;
 }
 
-hash_digest transaction::outputs_hash() const
-{
+hash_digest transaction::outputs_hash() const {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if (!outputs_hash_)
-    {
+    if (!outputs_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
         outputs_hash_ = std::make_shared<hash_digest>(
