@@ -31,29 +31,26 @@ const std::string memory_pool::command = "mempool";
 const uint32_t memory_pool::version_minimum = version::level::bip35;
 const uint32_t memory_pool::version_maximum = version::level::maximum;
 
-memory_pool memory_pool::factory_from_data(uint32_t version,
-    const data_chunk& data)
+memory_pool memory_pool::factory_from_data(uint32_t version, const data_chunk& data)
 {
     memory_pool instance;
     instance.from_data(version, data);
     return instance;
 }
 
-memory_pool memory_pool::factory_from_data(uint32_t version,
-    std::istream& stream)
+memory_pool memory_pool::factory_from_data(uint32_t version, data_source& stream)
 {
     memory_pool instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-memory_pool memory_pool::factory_from_data(uint32_t version,
-    reader& source)
-{
-    memory_pool instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//memory_pool memory_pool::factory_from_data(uint32_t version, reader& source)
+//{
+//    memory_pool instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 // This is a default instance so is invalid.
 // The only way to make this valid is to deserialize it :/.
@@ -95,27 +92,27 @@ bool memory_pool::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool memory_pool::from_data(uint32_t version, std::istream& stream)
+bool memory_pool::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool memory_pool::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    // Initialize as valid from deserialization.
-    insufficient_version_ = false;
-
-    if (version < memory_pool::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool memory_pool::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    // Initialize as valid from deserialization.
+//    insufficient_version_ = false;
+//
+//    if (version < memory_pool::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk memory_pool::to_data(uint32_t version) const
 {
@@ -129,15 +126,15 @@ data_chunk memory_pool::to_data(uint32_t version) const
     return data;
 }
 
-void memory_pool::to_data(uint32_t version, std::ostream& stream) const
+void memory_pool::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void memory_pool::to_data(uint32_t version, writer& sink) const
-{
-}
+//void memory_pool::to_data(uint32_t version, writer& sink) const
+//{
+//}
 
 size_t memory_pool::serialized_size(uint32_t version) const
 {
