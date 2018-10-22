@@ -25,11 +25,11 @@
 
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -37,18 +37,16 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API filter_load
-{
-public:
+class BC_API filter_load {
+   public:
     typedef std::shared_ptr<filter_load> ptr;
     typedef std::shared_ptr<const filter_load> const_ptr;
 
     static filter_load factory_from_data(uint32_t version, const data_chunk& data);
     static filter_load factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static filter_load factory_from_data(uint32_t version, R& source)
-    {
+    static filter_load factory_from_data(uint32_t version, R& source) {
         filter_load instance;
         instance.from_data(version, source);
         return instance;
@@ -57,10 +55,8 @@ public:
     //static filter_load factory_from_data(uint32_t version, reader& source);
 
     filter_load();
-    filter_load(const data_chunk& filter, uint32_t hash_functions,
-        uint32_t tweak, uint8_t flags);
-    filter_load(data_chunk&& filter, uint32_t hash_functions,
-        uint32_t tweak, uint8_t flags);
+    filter_load(const data_chunk& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
+    filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
     filter_load(const filter_load& other);
     filter_load(filter_load&& other);
 
@@ -80,43 +76,41 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         const auto size = source.read_size_little_endian();
-    
+
         if (size > max_filter_load)
             source.invalidate();
         else
             filter_ = source.read_bytes(size);
-    
+
         hash_functions_ = source.read_4_bytes_little_endian();
-    
+
         if (hash_functions_ > max_filter_functions)
             source.invalidate();
-    
+
         tweak_ = source.read_4_bytes_little_endian();
         flags_ = source.read_byte();
-    
+
         if (version < filter_load::version_minimum)
             source.invalidate();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(filter_.size());
         sink.write_bytes(filter_);
         sink.write_4_bytes_little_endian(hash_functions_);
@@ -140,14 +134,14 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-private:
+   private:
     data_chunk filter_;
     uint32_t hash_functions_;
     uint32_t tweak_;
     uint8_t flags_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

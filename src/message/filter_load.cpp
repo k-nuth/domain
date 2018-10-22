@@ -18,13 +18,13 @@
  */
 #include <bitcoin/bitcoin/message/filter_load.hpp>
 
-#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
@@ -34,15 +34,13 @@ const std::string filter_load::command = "filterload";
 const uint32_t filter_load::version_minimum = version::level::bip37;
 const uint32_t filter_load::version_maximum = version::level::maximum;
 
-filter_load filter_load::factory_from_data(uint32_t version, const data_chunk& data)
-{
+filter_load filter_load::factory_from_data(uint32_t version, const data_chunk& data) {
     filter_load instance;
     instance.from_data(version, data);
     return instance;
 }
 
-filter_load filter_load::factory_from_data(uint32_t version, data_source& stream)
-{
+filter_load filter_load::factory_from_data(uint32_t version, data_source& stream) {
     filter_load instance;
     instance.from_data(version, stream);
     return instance;
@@ -56,46 +54,30 @@ filter_load filter_load::factory_from_data(uint32_t version, data_source& stream
 //}
 
 filter_load::filter_load()
-  : filter_(), hash_functions_(0), tweak_(0), flags_(0x00)
-{
+    : filter_(), hash_functions_(0), tweak_(0), flags_(0x00) {
 }
 
-filter_load::filter_load(const data_chunk& filter, uint32_t hash_functions,
-    uint32_t tweak, uint8_t flags)
-  : filter_(filter), hash_functions_(hash_functions), tweak_(tweak),
-    flags_(flags)
-{
+filter_load::filter_load(const data_chunk& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
+    : filter_(filter), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }
 
-filter_load::filter_load(data_chunk&& filter, uint32_t hash_functions,
-    uint32_t tweak, uint8_t flags)
-  : filter_(std::move(filter)), hash_functions_(hash_functions), tweak_(tweak),
-    flags_(flags)
-{
+filter_load::filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
+    : filter_(std::move(filter)), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }
 
 filter_load::filter_load(const filter_load& other)
-  : filter_load(other.filter_, other.hash_functions_,
-      other.tweak_, other.flags_)
-{
+    : filter_load(other.filter_, other.hash_functions_, other.tweak_, other.flags_) {
 }
 
 filter_load::filter_load(filter_load&& other)
-  : filter_load(std::move(other.filter_), other.hash_functions_, other.tweak_,
-      other.flags_)
-{
+    : filter_load(std::move(other.filter_), other.hash_functions_, other.tweak_, other.flags_) {
 }
 
-bool filter_load::is_valid() const
-{
-    return !filter_.empty()
-        || (hash_functions_ != 0)
-        || (tweak_ != 0)
-        || (flags_ != 0x00);
+bool filter_load::is_valid() const {
+    return !filter_.empty() || (hash_functions_ != 0) || (tweak_ != 0) || (flags_ != 0x00);
 }
 
-void filter_load::reset()
-{
+void filter_load::reset() {
     filter_.clear();
     filter_.shrink_to_fit();
     hash_functions_ = 0;
@@ -103,14 +85,12 @@ void filter_load::reset()
     flags_ = 0x00;
 }
 
-bool filter_load::from_data(uint32_t version, const data_chunk& data)
-{
+bool filter_load::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool filter_load::from_data(uint32_t version, data_source& stream)
-{
+bool filter_load::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -143,8 +123,7 @@ bool filter_load::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk filter_load::to_data(uint32_t version) const
-{
+data_chunk filter_load::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -155,8 +134,7 @@ data_chunk filter_load::to_data(uint32_t version) const
     return data;
 }
 
-void filter_load::to_data(uint32_t version, data_sink& stream) const
-{
+void filter_load::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -170,64 +148,52 @@ void filter_load::to_data(uint32_t version, data_sink& stream) const
 //    sink.write_byte(flags_);
 //}
 
-size_t filter_load::serialized_size(uint32_t version) const
-{
+size_t filter_load::serialized_size(uint32_t version) const {
     return 1u + 4u + 4u + message::variable_uint_size(filter_.size()) +
-        filter_.size();
+           filter_.size();
 }
 
-data_chunk& filter_load::filter()
-{
+data_chunk& filter_load::filter() {
     return filter_;
 }
 
-const data_chunk& filter_load::filter() const
-{
+const data_chunk& filter_load::filter() const {
     return filter_;
 }
 
-void filter_load::set_filter(const data_chunk& value)
-{
+void filter_load::set_filter(const data_chunk& value) {
     filter_ = value;
 }
 
-void filter_load::set_filter(data_chunk&& value)
-{
+void filter_load::set_filter(data_chunk&& value) {
     filter_ = std::move(value);
 }
 
-uint32_t filter_load::hash_functions() const
-{
+uint32_t filter_load::hash_functions() const {
     return hash_functions_;
 }
 
-void filter_load::set_hash_functions(uint32_t value)
-{
+void filter_load::set_hash_functions(uint32_t value) {
     hash_functions_ = value;
 }
 
-uint32_t filter_load::tweak() const
-{
+uint32_t filter_load::tweak() const {
     return tweak_;
 }
 
-void filter_load::set_tweak(uint32_t value)
-{
+void filter_load::set_tweak(uint32_t value) {
     tweak_ = value;
 }
 
-uint8_t filter_load::flags() const
-{
+uint8_t filter_load::flags() const {
     return flags_;
 }
 
-void filter_load::set_flags(uint8_t value)
-{
+void filter_load::set_flags(uint8_t value) {
     flags_ = value;
 }
 
-filter_load& filter_load::operator=(filter_load&& other)
-{
+filter_load& filter_load::operator=(filter_load&& other) {
     filter_ = std::move(other.filter_);
     hash_functions_ = other.hash_functions_;
     tweak_ = other.tweak_;
@@ -235,18 +201,13 @@ filter_load& filter_load::operator=(filter_load&& other)
     return *this;
 }
 
-bool filter_load::operator==(const filter_load& other) const
-{
-    return (filter_ == other.filter_)
-        && (hash_functions_ == other.hash_functions_)
-        && (tweak_ == other.tweak_)
-        && (flags_ == other.flags_);
+bool filter_load::operator==(const filter_load& other) const {
+    return (filter_ == other.filter_) && (hash_functions_ == other.hash_functions_) && (tweak_ == other.tweak_) && (flags_ == other.flags_);
 }
 
-bool filter_load::operator!=(const filter_load& other) const
-{
+bool filter_load::operator!=(const filter_load& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
