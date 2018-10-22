@@ -22,8 +22,14 @@
 #include <istream>
 #include <memory>
 #include <string>
+
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/get_blocks.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -35,11 +41,18 @@ public:
     typedef std::shared_ptr<get_headers> ptr;
     typedef std::shared_ptr<const get_headers> const_ptr;
 
-    static get_headers factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static get_headers factory_from_data(uint32_t version,
-        std::istream& stream);
-    static get_headers factory_from_data(uint32_t version, reader& source);
+    static get_headers factory_from_data(uint32_t version, const data_chunk& data);
+    static get_headers factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static get_headers factory_from_data(uint32_t version, R& source)
+    {
+        get_headers instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static get_headers factory_from_data(uint32_t version, reader& source);
 
     get_headers();
     get_headers(const hash_list& start, const hash_digest& stop);
@@ -47,9 +60,25 @@ public:
     get_headers(const get_headers& other);
     get_headers(get_headers&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data) override;
-    bool from_data(uint32_t version, std::istream& stream) override;
-    bool from_data(uint32_t version, reader& source) override;
+    bool from_data(uint32_t version, const data_chunk& data); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_source& stream); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source) /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    {
+        if (!get_blocks::from_data(version, source))
+            return false;
+    
+        if (version < get_headers::version_minimum)
+            source.invalidate();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source) override;
 
     // This class is move assignable but not copy assignable.
     get_headers& operator=(get_headers&& other);

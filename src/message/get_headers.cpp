@@ -28,29 +28,26 @@ const std::string get_headers::command = "getheaders";
 const uint32_t get_headers::version_minimum = version::level::headers;
 const uint32_t get_headers::version_maximum = version::level::maximum;
 
-get_headers get_headers::factory_from_data(uint32_t version,
-    const data_chunk& data)
+get_headers get_headers::factory_from_data(uint32_t version, const data_chunk& data)
 {
     get_headers instance;
     instance.from_data(version, data);
     return instance;
 }
 
-get_headers get_headers::factory_from_data(uint32_t version,
-    std::istream& stream)
+get_headers get_headers::factory_from_data(uint32_t version, data_source& stream)
 {
     get_headers instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-get_headers get_headers::factory_from_data(uint32_t version,
-    reader& source)
-{
-    get_headers instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//get_headers get_headers::factory_from_data(uint32_t version, reader& source)
+//{
+//    get_headers instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 get_headers::get_headers()
   : get_blocks()
@@ -82,24 +79,24 @@ bool get_headers::from_data(uint32_t version, const data_chunk& data)
     return get_blocks::from_data(version, data);
 }
 
-bool get_headers::from_data(uint32_t version, std::istream& stream)
+bool get_headers::from_data(uint32_t version, data_source& stream)
 {
     return get_blocks::from_data(version, stream);
 }
 
-bool get_headers::from_data(uint32_t version, reader& source)
-{
-    if (!get_blocks::from_data(version, source))
-        return false;
-
-    if (version < get_headers::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool get_headers::from_data(uint32_t version, reader& source)
+//{
+//    if (!get_blocks::from_data(version, source))
+//        return false;
+//
+//    if (version < get_headers::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 get_headers& get_headers::operator=(get_headers&& other)
 {
