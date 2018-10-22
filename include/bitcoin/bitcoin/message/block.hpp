@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <istream>
 #include <memory>
+
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
@@ -30,7 +31,11 @@
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -47,8 +52,17 @@ public:
     typedef std::shared_ptr<const const_ptr_list> const_ptr_list_const_ptr;
 
     static block factory_from_data(uint32_t version, const data_chunk& data);
-    static block factory_from_data(uint32_t version, std::istream& stream);
-    static block factory_from_data(uint32_t version, reader& source);
+    static block factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static block factory_from_data(uint32_t version, R& source)
+    {
+        block instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static block factory_from_data(uint32_t version, reader& source);
 
     block();
 
@@ -62,11 +76,25 @@ public:
     block(const chain::header& header, const chain::transaction::list& transactions);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        return chain::block::from_data(source, true);
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        chain::block::to_data(sink, true);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     size_t serialized_size(uint32_t version) const;
 
     block& operator=(chain::block&& other);
@@ -87,9 +115,17 @@ public:
 };
 
 
-void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink);
 
-void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream);
+//TODO(fernando): check this family of functions: to_data_header_nonce
+template <typename W>
+void to_data_header_nonce(block const& block, uint64_t nonce, W& sink) {
+    block.header().to_data(sink);
+    sink.write_8_bytes_little_endian(nonce);
+}
+// void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink);
+
+// void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream);
+void to_data_header_nonce(block const& block, uint64_t nonce, data_sink& stream);
 
 data_chunk to_data_header_nonce(block const& block, uint64_t nonce);
 
