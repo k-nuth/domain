@@ -18,10 +18,11 @@
  */
 #include <bitcoin/bitcoin/message/header.hpp>
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <utility>
+
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
@@ -38,15 +39,13 @@ const std::string header::command = "headers";
 const uint32_t header::version_minimum = version::level::minimum;
 const uint32_t header::version_maximum = version::level::maximum;
 
-header header::factory_from_data(uint32_t version, const data_chunk& data)
-{
+header header::factory_from_data(uint32_t version, const data_chunk& data) {
     header instance;
     instance.from_data(version, data);
     return instance;
 }
 
-header header::factory_from_data(uint32_t version, data_source& stream)
-{
+header header::factory_from_data(uint32_t version, data_source& stream) {
     header instance;
     instance.from_data(version, stream);
     return instance;
@@ -59,61 +58,56 @@ header header::factory_from_data(uint32_t version, data_source& stream)
 //    return instance;
 //}
 
-size_t header::satoshi_fixed_size(uint32_t version)
-{
+size_t header::satoshi_fixed_size(uint32_t version) {
     const auto canonical = (version == version::level::canonical);
     return chain::header::satoshi_fixed_size() +
-        (canonical ? 0 : message::variable_uint_size(0));
+           (canonical ? 0 : message::variable_uint_size(0));
 }
 
 header::header()
-  : chain::header()
-{
+    : chain::header() {
 }
 
 header::header(uint32_t version,
-    const hash_digest& previous_block_hash, const hash_digest& merkle,
-    uint32_t timestamp, uint32_t bits, uint32_t nonce)
-  : chain::header(version, previous_block_hash, merkle, timestamp, bits, nonce)
-{
+               const hash_digest& previous_block_hash,
+               const hash_digest& merkle,
+               uint32_t timestamp,
+               uint32_t bits,
+               uint32_t nonce)
+    : chain::header(version, previous_block_hash, merkle, timestamp, bits, nonce) {
 }
 
 header::header(uint32_t version,
-    hash_digest&& previous_block_hash, hash_digest&& merkle,
-    uint32_t timestamp, uint32_t bits, uint32_t nonce)
-  : chain::header(version, std::move(previous_block_hash), std::move(merkle),
-      timestamp, bits, nonce)
-{
+               hash_digest&& previous_block_hash,
+               hash_digest&& merkle,
+               uint32_t timestamp,
+               uint32_t bits,
+               uint32_t nonce)
+    : chain::header(version, std::move(previous_block_hash), std::move(merkle), timestamp, bits, nonce) {
 }
 
 header::header(const chain::header& other)
-  : chain::header(other)
-{
+    : chain::header(other) {
 }
 
 header::header(chain::header&& other)
-  : chain::header(std::move(other))
-{
+    : chain::header(std::move(other)) {
 }
 
 header::header(const header& other)
-  : chain::header(other)
-{
+    : chain::header(other) {
 }
 
 header::header(header&& other)
-  : chain::header(std::move(other))
-{
+    : chain::header(std::move(other)) {
 }
 
-bool header::from_data(uint32_t version, const data_chunk& data)
-{
+bool header::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool header::from_data(uint32_t version, data_source& stream)
-{
+bool header::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -134,8 +128,7 @@ bool header::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk header::to_data(uint32_t version) const
-{
+data_chunk header::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -146,8 +139,7 @@ data_chunk header::to_data(uint32_t version) const
     return data;
 }
 
-void header::to_data(uint32_t version, data_sink& stream) const
-{
+void header::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -160,53 +152,44 @@ void header::to_data(uint32_t version, data_sink& stream) const
 //        sink.write_variable_little_endian(0);
 //}
 
-void header::reset()
-{
+void header::reset() {
     chain::header::reset();
 }
 
-size_t header::serialized_size(uint32_t version) const
-{
+size_t header::serialized_size(uint32_t version) const {
     return satoshi_fixed_size(version);
 }
 
-header& header::operator=(chain::header&& other)
-{
+header& header::operator=(chain::header&& other) {
     chain::header::operator=(std::move(other));
     return *this;
 }
 
-header& header::operator=(header&& other)
-{
+header& header::operator=(header&& other) {
     chain::header::operator=(std::move(other));
     return *this;
 }
 
-header& header::operator=(const header& other)
-{
+header& header::operator=(const header& other) {
     chain::header::operator=(other);
     return *this;
 }
 
-bool header::operator==(const chain::header& other) const
-{
+bool header::operator==(const chain::header& other) const {
     return chain::header::operator==(other);
 }
 
-bool header::operator!=(const chain::header& other) const
-{
+bool header::operator!=(const chain::header& other) const {
     return chain::header::operator!=(other);
 }
 
-bool header::operator==(const header& other) const
-{
+bool header::operator==(const header& other) const {
     return chain::header::operator==(other);
 }
 
-bool header::operator!=(const header& other) const
-{
+bool header::operator!=(const header& other) const {
     return chain::header::operator!=(other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

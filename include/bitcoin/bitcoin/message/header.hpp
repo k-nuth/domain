@@ -19,18 +19,18 @@
 #ifndef LIBBITCOIN_MESSAGE_HEADER_MESSAGE_HPP
 #define LIBBITCOIN_MESSAGE_HEADER_MESSAGE_HPP
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <memory>
 
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/reader.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -39,9 +39,8 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API header
-  : public chain::header
-{
-public:
+    : public chain::header {
+   public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
     typedef std::shared_ptr<const header> const_ptr;
@@ -50,10 +49,9 @@ public:
 
     static header factory_from_data(uint32_t version, const data_chunk& data);
     static header factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static header factory_from_data(uint32_t version, R& source)
-    {
+    static header factory_from_data(uint32_t version, R& source) {
         header instance;
         instance.from_data(version, source);
         return instance;
@@ -63,12 +61,8 @@ public:
     static size_t satoshi_fixed_size(uint32_t version);
 
     header();
-    header(uint32_t version, const hash_digest& previous_block_hash,
-        const hash_digest& merkle, uint32_t timestamp, uint32_t bits,
-        uint32_t nonce);
-    header(uint32_t version, hash_digest&& previous_block_hash,
-        hash_digest&& merkle, uint32_t timestamp, uint32_t bits,
-        uint32_t nonce);
+    header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
+    header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(const chain::header& other);
     header(chain::header&& other);
     header(const header& other);
@@ -76,33 +70,31 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         if (!chain::header::from_data(source))
             return false;
-    
+
         // The header message must trail a zero byte (yes, it's stoopid).
         // bitcoin.org/en/developer-reference#headers
         if (version != version::level::canonical && source.read_byte() != 0x00)
             source.invalidate();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         chain::header::to_data(sink);
-    
+
         if (version != version::level::canonical)
             sink.write_variable_little_endian(0);
     }
@@ -128,7 +120,7 @@ public:
     static const uint32_t version_maximum;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
