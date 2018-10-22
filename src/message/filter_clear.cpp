@@ -31,15 +31,13 @@ const std::string filter_clear::command = "filterclear";
 const uint32_t filter_clear::version_minimum = version::level::bip37;
 const uint32_t filter_clear::version_maximum = version::level::maximum;
 
-filter_clear filter_clear::factory_from_data(uint32_t version, const data_chunk& data)
-{
+filter_clear filter_clear::factory_from_data(uint32_t version, const data_chunk& data) {
     filter_clear instance;
     instance.from_data(version, data);
     return instance;
 }
 
-filter_clear filter_clear::factory_from_data(uint32_t version, data_source& stream)
-{
+filter_clear filter_clear::factory_from_data(uint32_t version, data_source& stream) {
     filter_clear instance;
     instance.from_data(version, stream);
     return instance;
@@ -55,46 +53,37 @@ filter_clear filter_clear::factory_from_data(uint32_t version, data_source& stre
 // This is a default instance so is invalid.
 // The only way to make this valid is to deserialize it :/.
 filter_clear::filter_clear()
-  : insufficient_version_(true)
-{
+    : insufficient_version_(true) {
 }
 
 // protected
 filter_clear::filter_clear(bool insufficient_version)
-  : insufficient_version_(insufficient_version)
-{
+    : insufficient_version_(insufficient_version) {
 }
 
 filter_clear::filter_clear(const filter_clear& other)
-  : filter_clear(other.insufficient_version_)
-{
+    : filter_clear(other.insufficient_version_) {
 }
 
 filter_clear::filter_clear(filter_clear&& other)
-  : filter_clear(other.insufficient_version_)
-{
+    : filter_clear(other.insufficient_version_) {
 }
 
-
-bool filter_clear::is_valid() const
-{
+bool filter_clear::is_valid() const {
     return !insufficient_version_;
 }
 
 // This is again a default instance so is invalid.
-void filter_clear::reset()
-{
+void filter_clear::reset() {
     insufficient_version_ = true;
 }
 
-bool filter_clear::from_data(uint32_t version, const data_chunk& data)
-{
+bool filter_clear::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool filter_clear::from_data(uint32_t version, data_source& stream)
-{
+bool filter_clear::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -115,8 +104,7 @@ bool filter_clear::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk filter_clear::to_data(uint32_t version) const
-{
+data_chunk filter_clear::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -127,8 +115,7 @@ data_chunk filter_clear::to_data(uint32_t version) const
     return data;
 }
 
-void filter_clear::to_data(uint32_t version, data_sink& stream) const
-{
+void filter_clear::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -137,15 +124,13 @@ void filter_clear::to_data(uint32_t version, data_sink& stream) const
 //{
 //}
 
-size_t filter_clear::serialized_size(uint32_t version) const
-{
+size_t filter_clear::serialized_size(uint32_t version) const {
     return filter_clear::satoshi_fixed_size(version);
 }
 
-size_t filter_clear::satoshi_fixed_size(uint32_t version)
-{
+size_t filter_clear::satoshi_fixed_size(uint32_t version) {
     return 0;
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
