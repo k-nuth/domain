@@ -235,7 +235,7 @@ block block::factory_from_data(const data_chunk& data, bool witness)
 }
 
 // static
-block block::factory_from_data(std::istream& stream, bool witness)
+block block::factory_from_data(data_source& stream, bool witness)
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
@@ -246,15 +246,15 @@ block block::factory_from_data(std::istream& stream, bool witness)
 }
 
 // static
-block block::factory_from_data(reader& source, bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
-    block instance;
-    instance.from_data(source, witness);
-    return instance;
-}
+//block block::factory_from_data(reader& source, bool witness)
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    witness = false;
+//#endif
+//    block instance;
+//    instance.from_data(source, witness);
+//    return instance;
+//}
 
 bool block::from_data(const data_chunk& data, bool witness)
 {
@@ -265,50 +265,50 @@ bool block::from_data(const data_chunk& data, bool witness)
     return from_data(istream, witness);
 }
 
-bool block::from_data(std::istream& stream, bool witness)
+bool block::from_data(data_source& stream, bool witness)
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
 #endif
-    istream_reader source(stream);
-    return from_data(source, witness);
+    istream_reader stream_r(stream);
+    return from_data(stream_r, witness);
 }
 
 // Full block deserialization is always canonical encoding.
-bool block::from_data(reader& source, bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
-    validation.start_deserialize = asio::steady_clock::now();
-    reset();
-
-    if (!header_.from_data(source, true))
-        return false;
-
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
-        source.invalidate();
-    else
-        transactions_.resize(count);
-
-    // Order is required, explicit loop allows early termination.
-    for (auto& tx: transactions_)
-        if (!tx.from_data(source, true, witness))
-            break;
-
-    // TODO: optimize by having reader skip witness data.
-    if (!witness)
-        strip_witness();
-
-    if (!source)
-        reset();
-
-    validation.end_deserialize = asio::steady_clock::now();
-    return source;
-}
+//bool block::from_data(reader& source, bool witness)
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    witness = false;
+//#endif
+//    validation.start_deserialize = asio::steady_clock::now();
+//    reset();
+//
+//    if (!header_.from_data(source, true))
+//        return false;
+//
+//    const auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > get_max_block_size())
+//        source.invalidate();
+//    else
+//        transactions_.resize(count);
+//
+//    // Order is required, explicit loop allows early termination.
+//    for (auto& tx: transactions_)
+//        if (!tx.from_data(source, true, witness))
+//            break;
+//
+//    // TODO: optimize by having reader skip witness data.
+//    if (!witness)
+//        strip_witness();
+//
+//    if (!source)
+//        reset();
+//
+//    validation.end_deserialize = asio::steady_clock::now();
+//    return source;
+//}
 
 // private
 void block::reset()
@@ -341,30 +341,30 @@ data_chunk block::to_data(bool witness) const
     return data;
 }
 
-void block::to_data(std::ostream& stream, bool witness) const
+void block::to_data(data_sink& stream, bool witness) const
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
 #endif
-    ostream_writer sink(stream);
-    to_data(sink, witness);
+    ostream_writer sink_w(stream);
+    to_data(sink_w, witness);
 }
 
 // Full block serialization is always canonical encoding.
-void block::to_data(writer& sink, bool witness) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
-    header_.to_data(sink, true);
-    sink.write_size_little_endian(transactions_.size());
-    const auto to = [&sink, witness](const transaction& tx)
-    {
-        tx.to_data(sink, true, witness);
-    };
-
-    std::for_each(transactions_.begin(), transactions_.end(), to);
-}
+//void block::to_data(writer& sink, bool witness) const
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    witness = false;
+//#endif
+//    header_.to_data(sink, true);
+//    sink.write_size_little_endian(transactions_.size());
+//    const auto to = [&sink, witness](const transaction& tx)
+//    {
+//        tx.to_data(sink, true, witness);
+//    };
+//
+//    std::for_each(transactions_.begin(), transactions_.end(), to);
+//}
 
 hash_list block::to_hashes(bool witness) const
 {
