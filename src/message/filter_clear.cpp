@@ -31,29 +31,26 @@ const std::string filter_clear::command = "filterclear";
 const uint32_t filter_clear::version_minimum = version::level::bip37;
 const uint32_t filter_clear::version_maximum = version::level::maximum;
 
-filter_clear filter_clear::factory_from_data(uint32_t version,
-    const data_chunk& data)
+filter_clear filter_clear::factory_from_data(uint32_t version, const data_chunk& data)
 {
     filter_clear instance;
     instance.from_data(version, data);
     return instance;
 }
 
-filter_clear filter_clear::factory_from_data(uint32_t version,
-    std::istream& stream)
+filter_clear filter_clear::factory_from_data(uint32_t version, data_source& stream)
 {
     filter_clear instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-filter_clear filter_clear::factory_from_data(uint32_t version,
-    reader& source)
-{
-    filter_clear instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//filter_clear filter_clear::factory_from_data(uint32_t version, reader& source)
+//{
+//    filter_clear instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 // This is a default instance so is invalid.
 // The only way to make this valid is to deserialize it :/.
@@ -96,27 +93,27 @@ bool filter_clear::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool filter_clear::from_data(uint32_t version, std::istream& stream)
+bool filter_clear::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool filter_clear::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    // Initialize as valid from deserialization.
-    insufficient_version_ = false;
-
-    if (version < filter_clear::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool filter_clear::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    // Initialize as valid from deserialization.
+//    insufficient_version_ = false;
+//
+//    if (version < filter_clear::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk filter_clear::to_data(uint32_t version) const
 {
@@ -130,15 +127,15 @@ data_chunk filter_clear::to_data(uint32_t version) const
     return data;
 }
 
-void filter_clear::to_data(uint32_t version, std::ostream& stream) const
+void filter_clear::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void filter_clear::to_data(uint32_t version, writer& sink) const
-{
-}
+//void filter_clear::to_data(uint32_t version, writer& sink) const
+//{
+//}
 
 size_t filter_clear::serialized_size(uint32_t version) const
 {
