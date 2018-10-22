@@ -26,6 +26,8 @@
 #include <bitcoin/bitcoin/chain/point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -92,8 +94,17 @@ public:
     //-------------------------------------------------------------------------
 
     static output_point factory_from_data(const data_chunk& data, bool wire=true);
-    static output_point factory_from_data(std::istream& stream, bool wire=true);
-    static output_point factory_from_data(reader& source, bool wire=true);
+    static output_point factory_from_data(data_source& stream, bool wire=true);
+    // static output_point factory_from_data(reader& source, bool wire=true);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static
+    output_point factory_from_data(R& source, bool wire) {
+        output_point instance;
+        instance.from_data(source, wire);
+        return instance;
+    }
+
 
     // Validation.
     //-------------------------------------------------------------------------

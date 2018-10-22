@@ -126,19 +126,19 @@ output_point output_point::factory_from_data(const data_chunk& data, bool wire)
     return instance;
 }
 
-output_point output_point::factory_from_data(std::istream& stream, bool wire)
+output_point output_point::factory_from_data(data_source& stream, bool wire)
 {
     output_point instance;
     instance.from_data(stream, wire);
     return instance;
 }
 
-output_point output_point::factory_from_data(reader& source, bool wire)
-{
-    output_point instance;
-    instance.from_data(source, wire);
-    return instance;
-}
+// output_point output_point::factory_from_data(reader& source, bool wire)
+// {
+//     output_point instance;
+//     instance.from_data(source, wire);
+//     return instance;
+// }
 
 // Validation.
 //-----------------------------------------------------------------------------
