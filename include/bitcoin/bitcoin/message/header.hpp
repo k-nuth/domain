@@ -116,8 +116,8 @@ class BC_API header
     bool operator!=(const header& other) const;
 
     static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 };
 
 }  // namespace message
