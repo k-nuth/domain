@@ -21,14 +21,14 @@
 
 #include <istream>
 
-#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -36,18 +36,16 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API prefilled_transaction
-{
-public:
+class BC_API prefilled_transaction {
+   public:
     typedef std::vector<prefilled_transaction> list;
     typedef std::shared_ptr<const prefilled_transaction> const_ptr;
 
     static prefilled_transaction factory_from_data(uint32_t version, const data_chunk& data);
     static prefilled_transaction factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static prefilled_transaction factory_from_data(uint32_t version, R& source)
-    {
+    static prefilled_transaction factory_from_data(uint32_t version, R& source) {
         prefilled_transaction instance;
         instance.from_data(version, source);
         return instance;
@@ -71,39 +69,37 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
-    #ifdef BITPRIM_CURRENCY_BCH
+    bool from_data(uint32_t version, R& source) {
+#ifdef BITPRIM_CURRENCY_BCH
         bool witness = false;
-    #else
+#else
         bool witness = true;
-    #endif
+#endif
         reset();
-    
+
         index_ = source.read_variable_little_endian();
         transaction_.from_data(source, true, witness);
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(index_);
-    #ifdef BITPRIM_CURRENCY_BCH
+#ifdef BITPRIM_CURRENCY_BCH
         bool witness = false;
-    #else
+#else
         bool witness = true;
-    #endif
+#endif
         transaction_.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
     }
 
@@ -118,12 +114,12 @@ public:
     bool operator==(const prefilled_transaction& other) const;
     bool operator!=(const prefilled_transaction& other) const;
 
-private:
+   private:
     uint64_t index_;
     chain::transaction transaction_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
