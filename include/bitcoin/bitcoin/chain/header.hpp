@@ -22,31 +22,29 @@
 #include <cstddef>
 #include <cstdint>
 #include <istream>
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
 
-
 namespace libbitcoin {
 namespace chain {
 
-class BC_API header
-{
-public:
+class BC_API header {
+   public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
     typedef std::shared_ptr<const header> const_ptr;
@@ -54,8 +52,7 @@ public:
     typedef std::vector<const_ptr> const_ptr_list;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation
-    {
+    struct validation {
         size_t height = 0;
         uint32_t median_time_past = 0;
     };
@@ -71,11 +68,8 @@ public:
     header(header&& other, hash_digest&& hash);
     header(const header& other, const hash_digest& hash);
 
-    header(uint32_t version, const hash_digest& previous_block_hash,
-        const hash_digest& merkle, uint32_t timestamp, uint32_t bits,
-        uint32_t nonce);
-    header(uint32_t version, hash_digest&& previous_block_hash,
-        hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
+    header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
+    header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
     // Operators.
     //-----------------------------------------------------------------------------
@@ -90,13 +84,12 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static header factory_from_data(const data_chunk& data, bool wire=true);
+    static header factory_from_data(const data_chunk& data, bool wire = true);
     // static header factory_from_data(data_source& stream, bool wire=true);
-    static header factory_from_data(data_source& stream, bool wire=true);
+    static header factory_from_data(data_source& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static header factory_from_data(R& source, bool wire=true)
-    {
+    static header factory_from_data(R& source, bool wire = true) {
         header instance;
         instance.from_data(source, wire);
         return instance;
@@ -104,30 +97,29 @@ public:
 
     //static header factory_from_data(reader& source, bool wire=true);
 
-    bool from_data(const data_chunk& data, bool wire=true);
+    bool from_data(const data_chunk& data, bool wire = true);
 
     //TODO(fernando): check what happend when replacing std::istream to data_source
     // bool from_data(data_source& stream, bool wire=true);
-    bool from_data(data_source& stream, bool wire=true);
-    
+    bool from_data(data_source& stream, bool wire = true);
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire=true)
-    {
+    bool from_data(R& source, bool wire = true) {
         ////reset();
-    
+
         version_ = source.read_4_bytes_little_endian();
         previous_block_hash_ = source.read_hash();
         merkle_ = source.read_hash();
         timestamp_ = source.read_4_bytes_little_endian();
         bits_ = source.read_4_bytes_little_endian();
         nonce_ = source.read_4_bytes_little_endian();
-    
+
         if (!wire)
             validation.median_time_past = source.read_4_bytes_little_endian();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -138,20 +130,19 @@ public:
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire=true) const;
+    data_chunk to_data(bool wire = true) const;
     // void to_data(data_sink& stream, bool wire=true) const;
-    void to_data(data_sink& stream, bool wire=true) const;
-    
+    void to_data(data_sink& stream, bool wire = true) const;
+
     template <Writer W>
-    void to_data(W& sink, bool wire=true) const
-    {
+    void to_data(W& sink, bool wire = true) const {
         sink.write_4_bytes_little_endian(version_);
         sink.write_hash(previous_block_hash_);
         sink.write_hash(merkle_);
         sink.write_4_bytes_little_endian(timestamp_);
         sink.write_4_bytes_little_endian(bits_);
         sink.write_4_bytes_little_endian(nonce_);
-    
+
         if (!wire)
             sink.write_4_bytes_little_endian(validation.median_time_past);
     }
@@ -164,7 +155,7 @@ public:
     uint256_t proof() const;
 
     static size_t satoshi_fixed_size();
-    size_t serialized_size(bool wire=true) const;
+    size_t serialized_size(bool wire = true) const;
 
     uint32_t version() const;
     void set_version(uint32_t value);
@@ -196,28 +187,28 @@ public:
 
 #ifdef BITPRIM_CURRENCY_LTC
     hash_digest litecoin_proof_of_work_hash() const;
-#endif //BITPRIM_CURRENCY_LTC
+#endif  //BITPRIM_CURRENCY_LTC
 
     // Validation.
     //-----------------------------------------------------------------------------
 
     bool is_valid_timestamp() const;
-    bool is_valid_proof_of_work(bool retarget=true) const;
+    bool is_valid_proof_of_work(bool retarget = true) const;
 
-    code check(bool retarget=false) const;
+    code check(bool retarget = false) const;
     code accept(const chain_state& state) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-protected:
+   protected:
     // So that block may call reset from its own.
     friend class block;
 
     void reset();
     void invalidate_cache() const;
 
-private:
+   private:
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
 
@@ -229,8 +220,8 @@ private:
     uint32_t nonce_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 //#include <bitprim/concepts_undef.hpp>
 
