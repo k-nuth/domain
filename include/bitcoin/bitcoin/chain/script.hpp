@@ -29,18 +29,18 @@
 
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
+#include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/machine/rule_fork.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>
 #include <bitcoin/infrastructure/machine/script_version.hpp>
+#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -51,9 +51,8 @@ namespace chain {
 class transaction;
 class witness;
 
-class BC_API script
-{
-public:
+class BC_API script {
+   public:
     typedef machine::operation operation;
     typedef machine::rule_fork rule_fork;
     typedef machine::script_pattern script_pattern;
@@ -88,10 +87,9 @@ public:
 
     static script factory_from_data(const data_chunk& encoded, bool prefix);
     static script factory_from_data(data_source& stream, bool prefix);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static script factory_from_data(R& source, bool prefix)
-    {
+    static script factory_from_data(R& source, bool prefix) {
         script instance;
         instance.from_data(source, prefix);
         return instance;
@@ -104,35 +102,31 @@ public:
     bool from_data(data_source& stream, bool prefix);
 
     template <typename R
-            // , typename = std::enable_if_t< ! std::is_same<R, data_chunk>::value>
-            >
-    bool from_data(R& source, bool prefix)
-    {
-        static_assert( ! std::is_same<R, data_chunk>::value, "");
+              // , typename = std::enable_if_t< ! std::is_same<R, data_chunk>::value>
+              >
+    bool from_data(R& source, bool prefix) {
+        static_assert(!std::is_same<R, data_chunk>::value, "");
         // static_assert(   std::is_same<R, data_chunk>::value, "");
 
         reset();
         valid_ = true;
-    
-        if (prefix)
-        {
+
+        if (prefix) {
             const auto size = source.read_size_little_endian();
-    
+
             // The max_script_size constant limits evaluation, but not all scripts
             // evaluate, so use max_block_size to guard memory allocation here.
             if (size > get_max_block_size())
                 source.invalidate();
             else
                 bytes_ = source.read_bytes(size);
-        }
-        else
-        {
+        } else {
             bytes_ = source.read_bytes();
         }
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -154,14 +148,13 @@ public:
 
     data_chunk to_data(bool prefix) const;
     void to_data(data_sink& stream, bool prefix) const;
-    
+
     template <Writer W>
-    void to_data(W& sink, bool prefix) const
-    {
+    void to_data(W& sink, bool prefix) const {
         // TODO: optimize by always storing the prefixed serialization.
         if (prefix)
             sink.write_variable_little_endian(serialized_size(false));
-    
+
         sink.write_bytes(bytes_);
     }
 
@@ -191,21 +184,22 @@ public:
     //-------------------------------------------------------------------------
 
     static hash_digest generate_signature_hash(const transaction& tx,
-        uint32_t input_index, const script& script_code, uint8_t sighash_type,
-        script_version version=script_version::unversioned,
-        uint64_t value=max_uint64);
+                                               uint32_t input_index,
+                                               const script& script_code,
+                                               uint8_t sighash_type,
+                                               script_version version = script_version::unversioned,
+                                               uint64_t value = max_uint64);
 
     static bool check_signature(const ec_signature& signature,
-        uint8_t sighash_type, const data_chunk& public_key,
-        const script& script_code, const transaction& tx, uint32_t input_index,
-        script_version version=script_version::unversioned,
-        uint64_t value=max_uint64);
+                                uint8_t sighash_type,
+                                const data_chunk& public_key,
+                                const script& script_code,
+                                const transaction& tx,
+                                uint32_t input_index,
+                                script_version version = script_version::unversioned,
+                                uint64_t value = max_uint64);
 
-    static bool create_endorsement(endorsement& out, const ec_secret& secret,
-        const script& prevout_script, const transaction& tx,
-        uint32_t input_index, uint8_t sighash_type,
-        script_version version=script_version::unversioned,
-        uint64_t value=max_uint64);
+    static bool create_endorsement(endorsement& out, const ec_secret& secret, const script& prevout_script, const transaction& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
@@ -216,8 +210,7 @@ public:
     static hash_digest to_sequences(const transaction& tx);
 
     /// Determine if the fork is enabled in the active forks set.
-    static bool is_enabled(uint32_t active_forks, rule_fork fork)
-    {
+    static bool is_enabled(uint32_t active_forks, rule_fork fork) {
         return (fork & active_forks) != 0;
     }
 
@@ -248,9 +241,9 @@ public:
     static operation::list to_pay_key_hash_pattern(const short_hash& hash);
     static operation::list to_pay_script_hash_pattern(const short_hash& hash);
     static operation::list to_pay_multisig_pattern(uint8_t signatures,
-        const point_list& points);
+                                                   const point_list& points);
     static operation::list to_pay_multisig_pattern(uint8_t signatures,
-        const data_stack& points);
+                                                   const data_stack& points);
 
     // Utilities (non-static).
     //-------------------------------------------------------------------------
@@ -273,12 +266,9 @@ public:
     static code verify(const transaction& tx, uint32_t input, uint32_t forks);
 
     // TODO: move back to private.
-    static code verify(const transaction& tx, uint32_t input_index,
-        uint32_t forks, const script& input_script,
-        const witness& input_witness, const script& prevout_script,
-        uint64_t value);
+    static code verify(const transaction& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value);
 
-protected:
+   protected:
     // So that input and output may call reset from their own.
     friend class input;
     friend class output;
@@ -287,15 +277,19 @@ protected:
     bool is_pay_to_witness(uint32_t forks) const;
     bool is_pay_to_script_hash(uint32_t forks) const;
 
-private:
+   private:
     static size_t serialized_size(const operation::list& ops);
     static data_chunk operations_to_data(const operation::list& ops);
     static hash_digest generate_unversioned_signature_hash(
-        const transaction& tx, uint32_t input_index,
-        const script& script_code, uint8_t sighash_type);
-    static hash_digest generate_version_0_signature_hash(const transaction& tx,
-        uint32_t input_index, const script& script_code, uint64_t value,
+        const transaction& tx,
+        uint32_t input_index,
+        const script& script_code,
         uint8_t sighash_type);
+    static hash_digest generate_version_0_signature_hash(const transaction& tx,
+                                                         uint32_t input_index,
+                                                         const script& script_code,
+                                                         uint64_t value,
+                                                         uint8_t sighash_type);
 
     void find_and_delete_(const data_chunk& endorsement);
 
@@ -308,8 +302,8 @@ private:
     mutable upgrade_mutex mutex_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 //#include <bitprim/concepts_undef.hpp>
 
