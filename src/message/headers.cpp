@@ -40,29 +40,26 @@ const std::string headers::command = "headers";
 const uint32_t headers::version_minimum = version::level::headers;
 const uint32_t headers::version_maximum = version::level::maximum;
 
-headers headers::factory_from_data(uint32_t version,
-    const data_chunk& data)
+headers headers::factory_from_data(uint32_t version, const data_chunk& data)
 {
     headers instance;
     instance.from_data(version, data);
     return instance;
 }
 
-headers headers::factory_from_data(uint32_t version,
-    std::istream& stream)
+headers headers::factory_from_data(uint32_t version, data_source& stream)
 {
     headers instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-headers headers::factory_from_data(uint32_t version,
-    reader& source)
-{
-    headers instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//headers headers::factory_from_data(uint32_t version, reader& source)
+//{
+//    headers instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 headers::headers()
   : elements_()
@@ -112,37 +109,37 @@ bool headers::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool headers::from_data(uint32_t version, std::istream& stream)
+bool headers::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool headers::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > max_get_headers)
-        source.invalidate();
-    else
-        elements_.resize(count);
-
-    // Order is required.
-    for (auto& element: elements_)
-        if (!element.from_data(version, source))
-            break;
-
-    if (version < headers::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool headers::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    const auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > max_get_headers)
+//        source.invalidate();
+//    else
+//        elements_.resize(count);
+//
+//    // Order is required.
+//    for (auto& element: elements_)
+//        if (!element.from_data(version, source))
+//            break;
+//
+//    if (version < headers::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk headers::to_data(uint32_t version) const
 {
@@ -156,19 +153,19 @@ data_chunk headers::to_data(uint32_t version) const
     return data;
 }
 
-void headers::to_data(uint32_t version, std::ostream& stream) const
+void headers::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void headers::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_variable_little_endian(elements_.size());
-
-    for (const auto& element: elements_)
-        element.to_data(version, sink);
-}
+//void headers::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_variable_little_endian(elements_.size());
+//
+//    for (const auto& element: elements_)
+//        element.to_data(version, sink_w);
+//}
 
 bool headers::is_sequential() const
 {
