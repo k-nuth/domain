@@ -31,29 +31,26 @@ const std::string get_address::command = "getaddr";
 const uint32_t get_address::version_minimum = version::level::minimum;
 const uint32_t get_address::version_maximum = version::level::maximum;
 
-get_address get_address::factory_from_data(uint32_t version,
-    const data_chunk& data)
+get_address get_address::factory_from_data(uint32_t version, const data_chunk& data)
 {
     get_address instance;
     instance.from_data(version, data);
     return instance;
 }
 
-get_address get_address::factory_from_data(uint32_t version,
-    std::istream& stream)
+get_address get_address::factory_from_data(uint32_t version, data_source& stream)
 {
     get_address instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-get_address get_address::factory_from_data(uint32_t version,
-    reader& source)
-{
-    get_address instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//get_address get_address::factory_from_data(uint32_t version, reader& source)
+//{
+//    get_address instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 get_address::get_address()
 {
@@ -74,17 +71,17 @@ bool get_address::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool get_address::from_data(uint32_t version, std::istream& stream)
+bool get_address::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool get_address::from_data(uint32_t version, reader& source)
-{
-    reset();
-    return source;
-}
+//bool get_address::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//    return source;
+//}
 
 data_chunk get_address::to_data(uint32_t version) const
 {
@@ -98,15 +95,15 @@ data_chunk get_address::to_data(uint32_t version) const
     return data;
 }
 
-void get_address::to_data(uint32_t version, std::ostream& stream) const
+void get_address::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void get_address::to_data(uint32_t version, writer& sink) const
-{
-}
+//void get_address::to_data(uint32_t version, writer& sink) const
+//{
+//}
 
 size_t get_address::serialized_size(uint32_t version) const
 {
