@@ -75,8 +75,8 @@ class BC_API verack {
     size_t serialized_size(uint32_t version) const;
 
     static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 };
 
 }  // namespace message

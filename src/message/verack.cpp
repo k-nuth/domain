@@ -28,8 +28,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string verack::command = "verack";
-const uint32_t verack::version_minimum = version::level::minimum;
-const uint32_t verack::version_maximum = version::level::maximum;
+uint32_t const verack::version_minimum = version::level::minimum;
+uint32_t const verack::version_maximum = version::level::maximum;
 
 verack verack::factory_from_data(uint32_t version, const data_chunk& data) {
     verack instance;
