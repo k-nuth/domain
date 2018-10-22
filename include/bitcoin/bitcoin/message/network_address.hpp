@@ -78,11 +78,11 @@
 
 //     bool from_data(uint32_t version, const data_chunk& data,
 //         bool with_timestamp);
-//     bool from_data(uint32_t version, std::istream& stream,
+//     bool from_data(uint32_t version, data_source& stream,
 //         bool with_timestamp);
 //     bool from_data(uint32_t version, reader& source, bool with_timestamp);
 //     data_chunk to_data(uint32_t version, bool with_timestamp) const;
-//     void to_data(uint32_t version, std::ostream& stream,
+//     void to_data(uint32_t version, data_sink& stream,
 //         bool with_timestamp) const;
 //     void to_data(uint32_t version, writer& sink, bool with_timestamp) const;
 //     bool is_valid() const;
