@@ -31,8 +31,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string filter_load::command = "filterload";
-const uint32_t filter_load::version_minimum = version::level::bip37;
-const uint32_t filter_load::version_maximum = version::level::maximum;
+uint32_t const filter_load::version_minimum = version::level::bip37;
+uint32_t const filter_load::version_maximum = version::level::maximum;
 
 filter_load filter_load::factory_from_data(uint32_t version, const data_chunk& data) {
     filter_load instance;
