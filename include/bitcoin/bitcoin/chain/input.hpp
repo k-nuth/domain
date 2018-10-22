@@ -29,13 +29,13 @@
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -43,9 +43,8 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API input
-{
-public:
+class BC_API input {
+   public:
     typedef std::vector<input> list;
 
     // Constructors.
@@ -56,15 +55,11 @@ public:
     input(input&& other);
     input(const input& other);
 
-    input(output_point&& previous_output, chain::script&& script,
-        uint32_t sequence);
-    input(const output_point& previous_output, const chain::script& script,
-        uint32_t sequence);
+    input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
+    input(const output_point& previous_output, const chain::script& script, uint32_t sequence);
 
-    input(output_point&& previous_output, chain::script&& script,
-        chain::witness&& witness, uint32_t sequence);
-    input(const output_point& previous_output, const chain::script& script,
-        const chain::witness& witness, uint32_t sequence);
+    input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
+    input(const output_point& previous_output, const chain::script& script, const chain::witness& witness, uint32_t sequence);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -78,12 +73,11 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static input factory_from_data(const data_chunk& data, bool wire=true, bool witness=false);
-    static input factory_from_data(data_source& stream, bool wire=true, bool witness=false);
-    
+    static input factory_from_data(const data_chunk& data, bool wire = true, bool witness = false);
+    static input factory_from_data(data_source& stream, bool wire = true, bool witness = false);
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static input factory_from_data(R& source, bool wire=true, bool witness=false)
-    {
+    static input factory_from_data(R& source, bool wire = true, bool witness = false) {
 #ifdef BITPRIM_CURRENCY_BCH
         witness = false;
 #endif
@@ -94,35 +88,34 @@ public:
 
     //static input factory_from_data(reader& source, bool wire=true, bool witness=false);
 
-    bool from_data(const data_chunk& data, bool wire=true, bool witness=false);
-    bool from_data(data_source& stream, bool wire=true, bool witness=false);
-    
+    bool from_data(const data_chunk& data, bool wire = true, bool witness = false);
+    bool from_data(data_source& stream, bool wire = true, bool witness = false);
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire=true, bool witness=false)
-    {
-    #ifdef BITPRIM_CURRENCY_BCH
+    bool from_data(R& source, bool wire = true, bool witness = false) {
+#ifdef BITPRIM_CURRENCY_BCH
         witness = false;
-    #else
+#else
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
-    #endif
-    
+#endif
+
         reset();
-    
+
         if (!previous_output_.from_data(source, wire))
             return false;
-    
+
         script_.from_data(source, true);
-    
+
         // Transaction from_data handles the discontiguous wire witness decoding.
         if (witness && !wire)
             witness_.from_data(source, true);
-    
+
         sequence_ = source.read_4_bytes_little_endian();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -133,26 +126,25 @@ public:
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire=true, bool witness=false) const;
-    void to_data(data_sink& stream, bool wire=true, bool witness=false) const;
-    
+    data_chunk to_data(bool wire = true, bool witness = false) const;
+    void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
+
     template <Writer W>
-    void to_data(W& sink, bool wire=true, bool witness=false) const
-    {
-    #ifdef BITPRIM_CURRENCY_BCH
+    void to_data(W& sink, bool wire = true, bool witness = false) const {
+#ifdef BITPRIM_CURRENCY_BCH
         witness = false;
-    #else
+#else
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
-    #endif
-    
+#endif
+
         previous_output_.to_data(sink, wire);
         script_.to_data(sink, true);
-    
+
         // Transaction to_data handles the discontiguous wire witness encoding.
         if (witness && !wire)
             witness_.to_data(sink, true);
-    
+
         sink.write_4_bytes_little_endian(sequence_);
     }
 
@@ -162,7 +154,7 @@ public:
     //-------------------------------------------------------------------------
 
     /// This accounts for wire witness, but does not read or write it.
-    size_t serialized_size(bool wire=true, bool witness=false) const;
+    size_t serialized_size(bool wire = true, bool witness = false) const;
 
     output_point& previous_output();
     const output_point& previous_output() const;
@@ -208,13 +200,13 @@ public:
     bool extract_reserved_hash(hash_digest& out) const;
     bool extract_embedded_script(chain::script& out) const;
     bool extract_witness_script(chain::script& out,
-        const chain::script& prevout) const;
+                                const chain::script& prevout) const;
 
-protected:
+   protected:
     void reset();
     void invalidate_cache() const;
 
-private:
+   private:
     typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
 
     addresses_ptr addresses_cache() const;
@@ -228,8 +220,8 @@ private:
     uint32_t sequence_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 //#include <bitprim/concepts_undef.hpp>
 
