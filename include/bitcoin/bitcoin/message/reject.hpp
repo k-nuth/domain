@@ -27,10 +27,10 @@
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/message/block.hpp>
 #include <bitcoin/bitcoin/message/transaction.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
-#include <bitcoin/infrastructure/utility/writer.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
+#include <bitcoin/infrastructure/utility/reader.hpp>
+#include <bitcoin/infrastructure/utility/writer.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -38,11 +38,9 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API reject
-{
-public:
-    enum class reason_code: uint8_t
-    {
+class BC_API reject {
+   public:
+    enum class reason_code : uint8_t {
         /// The reason code is not defined.
         undefined = 0x00,
 
@@ -78,10 +76,9 @@ public:
 
     static reject factory_from_data(uint32_t version, const data_chunk& data);
     static reject factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static reject factory_from_data(uint32_t version, R& source)
-    {
+    static reject factory_from_data(uint32_t version, R& source) {
         reject instance;
         instance.from_data(version, source);
         return instance;
@@ -91,14 +88,11 @@ public:
 
     reject();
 
-    reject(reason_code code, const std::string& message,
-        const std::string& reason);
+    reject(reason_code code, const std::string& message, const std::string& reason);
     reject(reason_code code, std::string&& message, std::string&& reason);
 
-    reject(reason_code code, const std::string& message,
-        const std::string& reason, const hash_digest& data);
-    reject(reason_code code, std::string&& message, std::string&& reason,
-        hash_digest&& data);
+    reject(reason_code code, const std::string& message, const std::string& reason, const hash_digest& data);
+    reject(reason_code code, std::string&& message, std::string&& reason, hash_digest&& data);
 
     reject(const reject& other);
     reject(reject&& other);
@@ -123,50 +117,46 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         message_ = source.read_string();
         code_ = reason_from_byte(source.read_byte());
         reason_ = source.read_string();
-    
+
         if ((message_ == block::command) ||
-            (message_ == transaction::command))
-        {
+            (message_ == transaction::command)) {
             // Some nodes do not follow the documented convention of supplying hash
             // for tx and block rejects. Use this to prevent error on empty stream.
             const auto bytes = source.read_bytes();
-    
+
             if (bytes.size() == hash_size)
-                build_array(data_, { bytes });
+                build_array(data_, {bytes});
         }
-    
+
         if (version < reject::version_minimum)
             source.invalidate();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         sink.write_string(message_);
         sink.write_byte(reason_to_byte(code_));
         sink.write_string(reason_);
-    
+
         if ((message_ == block::command) ||
-            (message_ == transaction::command))
-        {
+            (message_ == transaction::command)) {
             sink.write_hash(data_);
         }
     }
@@ -187,7 +177,7 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-private:
+   private:
     static reason_code reason_from_byte(uint8_t byte);
     static uint8_t reason_to_byte(reason_code value);
 
@@ -197,7 +187,7 @@ private:
     hash_digest data_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
