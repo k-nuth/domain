@@ -31,28 +31,26 @@ const std::string fee_filter::command = "feefilter";
 const uint32_t fee_filter::version_minimum = version::level::bip133;
 const uint32_t fee_filter::version_maximum = version::level::bip133;
 
-fee_filter fee_filter::factory_from_data(uint32_t version,
-    const data_chunk& data)
+fee_filter fee_filter::factory_from_data(uint32_t version, const data_chunk& data)
 {
     fee_filter instance;
     instance.from_data(version, data);
     return instance;
 }
 
-fee_filter fee_filter::factory_from_data(uint32_t version,
-    std::istream& stream)
+fee_filter fee_filter::factory_from_data(uint32_t version, data_source& stream)
 {
     fee_filter instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-fee_filter fee_filter::factory_from_data(uint32_t version, reader& source)
-{
-    fee_filter instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//fee_filter fee_filter::factory_from_data(uint32_t version, reader& source)
+//{
+//    fee_filter instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 size_t fee_filter::satoshi_fixed_size(uint32_t version)
 {
@@ -93,29 +91,29 @@ bool fee_filter::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool fee_filter::from_data(uint32_t version, std::istream& stream)
+bool fee_filter::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool fee_filter::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    // Initialize as valid from deserialization.
-    insufficient_version_ = false;
-
-    minimum_fee_ = source.read_8_bytes_little_endian();
-
-    if (version < fee_filter::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool fee_filter::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    // Initialize as valid from deserialization.
+//    insufficient_version_ = false;
+//
+//    minimum_fee_ = source.read_8_bytes_little_endian();
+//
+//    if (version < fee_filter::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk fee_filter::to_data(uint32_t version) const
 {
@@ -129,16 +127,16 @@ data_chunk fee_filter::to_data(uint32_t version) const
     return data;
 }
 
-void fee_filter::to_data(uint32_t version, std::ostream& stream) const
+void fee_filter::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void fee_filter::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_8_bytes_little_endian(minimum_fee_);
-}
+//void fee_filter::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_8_bytes_little_endian(minimum_fee_);
+//}
 
 bool fee_filter::is_valid() const
 {
