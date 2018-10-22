@@ -20,17 +20,17 @@
 #define LIBBITCOIN_MESSAGE_GET_DATA_HPP
 
 #include <initializer_list>
-#include <memory>
 #include <istream>
+#include <memory>
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -39,18 +39,16 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API get_data
-  : public inventory
-{
-public:
+    : public inventory {
+   public:
     typedef std::shared_ptr<get_data> ptr;
     typedef std::shared_ptr<const get_data> const_ptr;
 
     static get_data factory_from_data(uint32_t version, const data_chunk& data);
     static get_data factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static get_data factory_from_data(uint32_t version, R& source)
-    {
+    static get_data factory_from_data(uint32_t version, R& source) {
         get_data instance;
         instance.from_data(version, source);
         return instance;
@@ -66,22 +64,21 @@ public:
     get_data(const get_data& other);
     get_data(get_data&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_source& stream); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    
-    
+    bool from_data(uint32_t version, const data_chunk& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     {
         if (!inventory::from_data(version, source))
             return false;
-    
+
         if (version < get_data::version_minimum)
             source.invalidate();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -102,7 +99,7 @@ public:
     static const uint32_t version_maximum;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
