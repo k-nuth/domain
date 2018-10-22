@@ -23,11 +23,17 @@
 #include <memory>
 #include <istream>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -39,10 +45,18 @@ public:
     typedef std::shared_ptr<get_data> ptr;
     typedef std::shared_ptr<const get_data> const_ptr;
 
-    static get_data factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static get_data factory_from_data(uint32_t version, std::istream& stream);
-    static get_data factory_from_data(uint32_t version, reader& source);
+    static get_data factory_from_data(uint32_t version, const data_chunk& data);
+    static get_data factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static get_data factory_from_data(uint32_t version, R& source)
+    {
+        get_data instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static get_data factory_from_data(uint32_t version, reader& source);
 
     get_data();
     get_data(const inventory_vector::list& list);
@@ -52,9 +66,26 @@ public:
     get_data(const get_data& other);
     get_data(get_data&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data) override;
-    bool from_data(uint32_t version, std::istream& stream) override;
-    bool from_data(uint32_t version, reader& source) override;
+    bool from_data(uint32_t version, const data_chunk& data); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_source& stream); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source) /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    {
+        if (!inventory::from_data(version, source))
+            return false;
+    
+        if (version < get_data::version_minimum)
+            source.invalidate();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source) override;
 
     /// Convert message types to witness types.
     void to_witness();
