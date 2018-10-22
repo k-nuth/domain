@@ -30,29 +30,26 @@ const std::string not_found::command = "notfound";
 const uint32_t not_found::version_minimum = version::level::bip37;
 const uint32_t not_found::version_maximum = version::level::maximum;
 
-not_found not_found::factory_from_data(uint32_t version,
-    const data_chunk& data)
+not_found not_found::factory_from_data(uint32_t version, const data_chunk& data)
 {
     not_found instance;
     instance.from_data(version, data);
     return instance;
 }
 
-not_found not_found::factory_from_data(uint32_t version,
-    std::istream& stream)
+not_found not_found::factory_from_data(uint32_t version, data_source& stream)
 {
     not_found instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-not_found not_found::factory_from_data(uint32_t version,
-    reader& source)
-{
-    not_found instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//not_found not_found::factory_from_data(uint32_t version, reader& source)
+//{
+//    not_found instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 not_found::not_found()
   : inventory()
@@ -94,24 +91,24 @@ bool not_found::from_data(uint32_t version, const data_chunk& data)
     return inventory::from_data(version, data);
 }
 
-bool not_found::from_data(uint32_t version, std::istream& stream)
+bool not_found::from_data(uint32_t version, data_source& stream)
 {
     return inventory::from_data(version, stream);
 }
 
-bool not_found::from_data(uint32_t version, reader& source)
-{
-    if (!inventory::from_data(version, source))
-        return false;
-
-    if (version < not_found::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool not_found::from_data(uint32_t version, reader& source)
+//{
+//    if (!inventory::from_data(version, source))
+//        return false;
+//
+//    if (version < not_found::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 not_found& not_found::operator=(not_found&& other)
 {
