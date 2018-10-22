@@ -33,8 +33,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string get_block_transactions::command = "getblocktxn";
-const uint32_t get_block_transactions::version_minimum = version::level::bip152;
-const uint32_t get_block_transactions::version_maximum = version::level::bip152;
+uint32_t const get_block_transactions::version_minimum = version::level::bip152;
+uint32_t const get_block_transactions::version_maximum = version::level::bip152;
 
 get_block_transactions get_block_transactions::factory_from_data(uint32_t version, const data_chunk& data) {
     get_block_transactions instance;
