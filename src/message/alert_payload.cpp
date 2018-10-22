@@ -41,29 +41,26 @@ const ec_uncompressed alert_payload::satoshi_public_key
     }
 };
 
-alert_payload alert_payload::factory_from_data(uint32_t version,
-    const data_chunk& data)
+alert_payload alert_payload::factory_from_data(uint32_t version, const data_chunk& data)
 {
     alert_payload instance;
     instance.from_data(version, data);
     return instance;
 }
 
-alert_payload alert_payload::factory_from_data(uint32_t version,
-    std::istream& stream)
+alert_payload alert_payload::factory_from_data(uint32_t version, data_source& stream)
 {
     alert_payload instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-alert_payload alert_payload::factory_from_data(uint32_t version,
-    reader& source)
-{
-    alert_payload instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//alert_payload alert_payload::factory_from_data(uint32_t version, reader& source)
+//{
+//    alert_payload instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 alert_payload::alert_payload()
   : version_(0),
@@ -218,43 +215,43 @@ bool alert_payload::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool alert_payload::from_data(uint32_t version, std::istream& stream)
+bool alert_payload::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool alert_payload::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    this->version_ = source.read_4_bytes_little_endian();
-    relay_until_ = source.read_8_bytes_little_endian();
-    expiration_ = source.read_8_bytes_little_endian();
-    id_ = source.read_4_bytes_little_endian();
-    cancel_ = source.read_4_bytes_little_endian();
-    set_cancel_.reserve(source.read_size_little_endian());
-
-    for (size_t i = 0; i < set_cancel_.capacity() && source; i++)
-        set_cancel_.push_back(source.read_4_bytes_little_endian());
-
-    min_version_ = source.read_4_bytes_little_endian();
-    max_version_ = source.read_4_bytes_little_endian();
-    set_sub_version_.reserve(source.read_size_little_endian());
-
-    for (size_t i = 0; i < set_sub_version_.capacity() && source; i++)
-        set_sub_version_.push_back(source.read_string());
-
-    priority_ = source.read_4_bytes_little_endian();
-    comment_ = source.read_string();
-    status_bar_ = source.read_string();
-    reserved_ = source.read_string();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool alert_payload::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    this->version_ = source.read_4_bytes_little_endian();
+//    relay_until_ = source.read_8_bytes_little_endian();
+//    expiration_ = source.read_8_bytes_little_endian();
+//    id_ = source.read_4_bytes_little_endian();
+//    cancel_ = source.read_4_bytes_little_endian();
+//    set_cancel_.reserve(source.read_size_little_endian());
+//
+//    for (size_t i = 0; i < set_cancel_.capacity() && source; i++)
+//        set_cancel_.push_back(source.read_4_bytes_little_endian());
+//
+//    min_version_ = source.read_4_bytes_little_endian();
+//    max_version_ = source.read_4_bytes_little_endian();
+//    set_sub_version_.reserve(source.read_size_little_endian());
+//
+//    for (size_t i = 0; i < set_sub_version_.capacity() && source; i++)
+//        set_sub_version_.push_back(source.read_string());
+//
+//    priority_ = source.read_4_bytes_little_endian();
+//    comment_ = source.read_string();
+//    status_bar_ = source.read_string();
+//    reserved_ = source.read_string();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk alert_payload::to_data(uint32_t version) const
 {
@@ -268,36 +265,36 @@ data_chunk alert_payload::to_data(uint32_t version) const
     return data;
 }
 
-void alert_payload::to_data(uint32_t version, std::ostream& stream) const
+void alert_payload::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void alert_payload::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_4_bytes_little_endian(this->version_);
-    sink.write_8_bytes_little_endian(relay_until_);
-    sink.write_8_bytes_little_endian(expiration_);
-    sink.write_4_bytes_little_endian(id_);
-    sink.write_4_bytes_little_endian(cancel_);
-    sink.write_variable_little_endian(set_cancel_.size());
-
-    for (const auto& entry: set_cancel_)
-        sink.write_4_bytes_little_endian(entry);
-
-    sink.write_4_bytes_little_endian(min_version_);
-    sink.write_4_bytes_little_endian(max_version_);
-    sink.write_variable_little_endian(set_sub_version_.size());
-
-    for (const auto& entry: set_sub_version_)
-        sink.write_string(entry);
-
-    sink.write_4_bytes_little_endian(priority_);
-    sink.write_string(comment_);
-    sink.write_string(status_bar_);
-    sink.write_string(reserved_);
-}
+//void alert_payload::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_4_bytes_little_endian(this->version_);
+//    sink.write_8_bytes_little_endian(relay_until_);
+//    sink.write_8_bytes_little_endian(expiration_);
+//    sink.write_4_bytes_little_endian(id_);
+//    sink.write_4_bytes_little_endian(cancel_);
+//    sink.write_variable_little_endian(set_cancel_.size());
+//
+//    for (const auto& entry: set_cancel_)
+//        sink.write_4_bytes_little_endian(entry);
+//
+//    sink.write_4_bytes_little_endian(min_version_);
+//    sink.write_4_bytes_little_endian(max_version_);
+//    sink.write_variable_little_endian(set_sub_version_.size());
+//
+//    for (const auto& entry: set_sub_version_)
+//        sink.write_string(entry);
+//
+//    sink.write_4_bytes_little_endian(priority_);
+//    sink.write_string(comment_);
+//    sink.write_string(status_bar_);
+//    sink.write_string(reserved_);
+//}
 
 size_t alert_payload::serialized_size(uint32_t version) const
 {

@@ -21,11 +21,17 @@
 
 #include <istream>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -33,12 +39,18 @@ namespace message {
 class BC_API alert_payload
 {
 public:
-    static alert_payload factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static alert_payload factory_from_data(uint32_t version,
-        std::istream& stream);
-    static alert_payload factory_from_data(uint32_t version,
-        reader& source);
+    static alert_payload factory_from_data(uint32_t version, const data_chunk& data);
+    static alert_payload factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static alert_payload factory_from_data(uint32_t version, R& source)
+    {
+        alert_payload instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static alert_payload factory_from_data(uint32_t version, reader& source);
 
     alert_payload();
     alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration,
@@ -106,11 +118,72 @@ public:
     void set_reserved(std::string&& value);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        this->version_ = source.read_4_bytes_little_endian();
+        relay_until_ = source.read_8_bytes_little_endian();
+        expiration_ = source.read_8_bytes_little_endian();
+        id_ = source.read_4_bytes_little_endian();
+        cancel_ = source.read_4_bytes_little_endian();
+        set_cancel_.reserve(source.read_size_little_endian());
+    
+        for (size_t i = 0; i < set_cancel_.capacity() && source; i++)
+            set_cancel_.push_back(source.read_4_bytes_little_endian());
+    
+        min_version_ = source.read_4_bytes_little_endian();
+        max_version_ = source.read_4_bytes_little_endian();
+        set_sub_version_.reserve(source.read_size_little_endian());
+    
+        for (size_t i = 0; i < set_sub_version_.capacity() && source; i++)
+            set_sub_version_.push_back(source.read_string());
+    
+        priority_ = source.read_4_bytes_little_endian();
+        comment_ = source.read_string();
+        status_bar_ = source.read_string();
+        reserved_ = source.read_string();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_4_bytes_little_endian(this->version_);
+        sink.write_8_bytes_little_endian(relay_until_);
+        sink.write_8_bytes_little_endian(expiration_);
+        sink.write_4_bytes_little_endian(id_);
+        sink.write_4_bytes_little_endian(cancel_);
+        sink.write_variable_little_endian(set_cancel_.size());
+    
+        for (const auto& entry: set_cancel_)
+            sink.write_4_bytes_little_endian(entry);
+    
+        sink.write_4_bytes_little_endian(min_version_);
+        sink.write_4_bytes_little_endian(max_version_);
+        sink.write_variable_little_endian(set_sub_version_.size());
+    
+        for (const auto& entry: set_sub_version_)
+            sink.write_string(entry);
+    
+        sink.write_4_bytes_little_endian(priority_);
+        sink.write_string(comment_);
+        sink.write_string(status_bar_);
+        sink.write_string(reserved_);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
