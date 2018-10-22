@@ -111,8 +111,8 @@ class BC_API filter_add {
     bool operator!=(const filter_add& other) const;
 
     static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
    private:
     data_chunk data_;
