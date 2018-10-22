@@ -26,12 +26,12 @@
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -39,9 +39,8 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API witness
-{
-public:
+class BC_API witness {
+   public:
     typedef machine::operation operation;
     typedef data_stack::const_iterator iterator;
 
@@ -75,10 +74,9 @@ public:
 
     static witness factory_from_data(const data_chunk& encoded, bool prefix);
     static witness factory_from_data(data_source& stream, bool prefix);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static witness factory_from_data(R& source, bool prefix)
-    {
+    static witness factory_from_data(R& source, bool prefix) {
         witness instance;
         instance.from_data(source, prefix);
         return instance;
@@ -89,47 +87,41 @@ public:
     /// Deserialization invalidates the iterator.
     bool from_data(const data_chunk& encoded, bool prefix);
     bool from_data(data_source& stream, bool prefix);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool prefix)
-    {
+    bool from_data(R& source, bool prefix) {
         reset();
         valid_ = true;
-    
-        const auto read_element = [](R& source)
-        {
+
+        const auto read_element = [](R& source) {
             // Tokens encoded as variable integer prefixed byte array (bip144).
             const auto size = source.read_size_little_endian();
-    
+
             // The max_script_size and max_push_data_size constants limit
             // evaluation, but not all stacks evaluate, so use max_block_weight
             // to guard memory allocation here.
-            if (size > max_block_weight)
-            {
+            if (size > max_block_weight) {
                 source.invalidate();
                 return data_chunk{};
             }
-    
+
             return source.read_bytes(size);
         };
-    
+
         // TODO: optimize store serialization to avoid loop, reading data directly.
-        if (prefix)
-        {
+        if (prefix) {
             // Witness prefix is an element count, not byte length (unlike script).
             // On wire each witness is prefixed with number of elements (bip144).
             for (auto count = source.read_size_little_endian(); count > 0; --count)
-                 stack_.push_back(read_element(source));
-        }
-        else
-        {
+                stack_.push_back(read_element(source));
+        } else {
             while (!source.is_exhausted())
                 stack_.push_back(read_element(source));
         }
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -143,21 +135,19 @@ public:
 
     data_chunk to_data(bool prefix) const;
     void to_data(data_sink& stream, bool prefix) const;
-    
+
     template <Writer W>
-    void to_data(W& sink, bool prefix) const
-    {
+    void to_data(W& sink, bool prefix) const {
         // Witness prefix is an element count, not byte length (unlike script).
         if (prefix)
             sink.write_size_little_endian(stack_.size());
-    
-        const auto serialize = [&sink](const data_chunk& element)
-        {
+
+        const auto serialize = [&sink](const data_chunk& element) {
             // Tokens encoded as variable integer prefixed byte array (bip144).
             sink.write_size_little_endian(element.size());
             sink.write_bytes(element);
         };
-    
+
         // TODO: optimize store serialization to avoid loop, writing data directly.
         std::for_each(stack_.begin(), stack_.end(), serialize);
     }
@@ -191,23 +181,21 @@ public:
     static bool is_reserved_pattern(const data_stack& stack);
 
     bool extract_sigop_script(script& out_script,
-        const script& program_script) const;
-    bool extract_embedded_script(script& out_script, data_stack& out_stack,
-        const script& program_script) const;
+                              const script& program_script) const;
+    bool extract_embedded_script(script& out_script, data_stack& out_stack, const script& program_script) const;
 
     // Validation.
     //-------------------------------------------------------------------------
 
-    code verify(const transaction& tx, uint32_t input_index, uint32_t forks,
-        const script& program_script, uint64_t value) const;
+    code verify(const transaction& tx, uint32_t input_index, uint32_t forks, const script& program_script, uint64_t value) const;
 
-protected:
+   protected:
     // So that input may call reset from its own.
     friend class input;
 
     void reset();
 
-private:
+   private:
     static size_t serialized_size(const data_stack& stack);
     static operation::list to_pay_key_hash(data_chunk&& program);
 
@@ -215,8 +203,8 @@ private:
     data_stack stack_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 //#include <bitprim/concepts_undef.hpp>
 
