@@ -36,8 +36,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string inventory::command = "inv";
-const uint32_t inventory::version_minimum = version::level::minimum;
-const uint32_t inventory::version_maximum = version::level::maximum;
+uint32_t const inventory::version_minimum = version::level::minimum;
+uint32_t const inventory::version_maximum = version::level::maximum;
 
 inventory inventory::factory_from_data(uint32_t version, const data_chunk& data) {
     inventory instance;

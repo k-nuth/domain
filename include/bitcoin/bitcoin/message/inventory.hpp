@@ -131,8 +131,8 @@ class BC_API inventory {
     bool operator!=(const inventory& other) const;
 
     static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
    private:
     inventory_vector::list inventories_;
