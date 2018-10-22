@@ -63,29 +63,26 @@ std::string inventory_vector::to_string(type_id inventory_type)
     }
 }
 
-inventory_vector inventory_vector::factory_from_data(uint32_t version,
-    const data_chunk& data)
+inventory_vector inventory_vector::factory_from_data(uint32_t version, const data_chunk& data)
 {
     inventory_vector instance;
     instance.from_data(version, data);
     return instance;
 }
 
-inventory_vector inventory_vector::factory_from_data(uint32_t version,
-    std::istream& stream)
+inventory_vector inventory_vector::factory_from_data(uint32_t version, data_source& stream)
 {
     inventory_vector instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-inventory_vector inventory_vector::factory_from_data(uint32_t version,
-    reader& source)
-{
-    inventory_vector instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//inventory_vector inventory_vector::factory_from_data(uint32_t version, reader& source)
+//{
+//    inventory_vector instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 inventory_vector::inventory_vector()
   : inventory_vector(type_id::error, null_hash)
@@ -129,34 +126,31 @@ void inventory_vector::to_witness()
         type_ = to_type(to_number(type_) | to_number(type_id::witness));
 }
 
-bool inventory_vector::from_data(uint32_t version,
-    const data_chunk& data)
+bool inventory_vector::from_data(uint32_t version, const data_chunk& data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool inventory_vector::from_data(uint32_t version,
-    std::istream& stream)
+bool inventory_vector::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool inventory_vector::from_data(uint32_t version,
-    reader& source)
-{
-    reset();
-
-    const auto raw_type = source.read_4_bytes_little_endian();
-    type_ = inventory_vector::to_type(raw_type);
-    hash_ = source.read_hash();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool inventory_vector::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    const auto raw_type = source.read_4_bytes_little_endian();
+//    type_ = inventory_vector::to_type(raw_type);
+//    hash_ = source.read_hash();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk inventory_vector::to_data(uint32_t version) const
 {
@@ -170,20 +164,18 @@ data_chunk inventory_vector::to_data(uint32_t version) const
     return data;
 }
 
-void inventory_vector::to_data(uint32_t version,
-    std::ostream& stream) const
+void inventory_vector::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void inventory_vector::to_data(uint32_t version,
-    writer& sink) const
-{
-    const auto raw_type = inventory_vector::to_number(type_);
-    sink.write_4_bytes_little_endian(raw_type);
-    sink.write_hash(hash_);
-}
+//void inventory_vector::to_data(uint32_t version, writer& sink) const
+//{
+//    const auto raw_type = inventory_vector::to_number(type_);
+//    sink.write_4_bytes_little_endian(raw_type);
+//    sink.write_hash(hash_);
+//}
 
 size_t inventory_vector::serialized_size(uint32_t version) const
 {

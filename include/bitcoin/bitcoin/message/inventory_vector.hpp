@@ -22,11 +22,17 @@
 #include <cstdint>
 #include <istream>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -53,12 +59,18 @@ public:
     static uint32_t to_number(type_id type);
     static std::string to_string(type_id type);
 
-    static inventory_vector factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static inventory_vector factory_from_data(uint32_t version,
-        std::istream& stream);
-    static inventory_vector factory_from_data(uint32_t version,
-        reader& source);
+    static inventory_vector factory_from_data(uint32_t version, const data_chunk& data);
+    static inventory_vector factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static inventory_vector factory_from_data(uint32_t version, R& source)
+    {
+        inventory_vector instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static inventory_vector factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
     inventory_vector();
@@ -79,11 +91,36 @@ public:
     bool is_transaction_type() const;
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        const auto raw_type = source.read_4_bytes_little_endian();
+        type_ = inventory_vector::to_type(raw_type);
+        hash_ = source.read_hash();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        const auto raw_type = inventory_vector::to_number(type_);
+        sink.write_4_bytes_little_endian(raw_type);
+        sink.write_hash(hash_);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     void to_witness();
