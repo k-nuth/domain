@@ -38,8 +38,7 @@ const std::string compact_block::command = "cmpctblock";
 const uint32_t compact_block::version_minimum = version::level::bip152;
 const uint32_t compact_block::version_maximum = version::level::bip152;
 
-compact_block compact_block::factory_from_data(uint32_t version,
-    const data_chunk& data)
+compact_block compact_block::factory_from_data(uint32_t version, const data_chunk& data)
 {
     //std::cout << "compact_block::factory_from_data\n";
     compact_block instance;
@@ -47,8 +46,7 @@ compact_block compact_block::factory_from_data(uint32_t version,
     return instance;
 }
 
-compact_block compact_block::factory_from_data(uint32_t version,
-    std::istream& stream)
+compact_block compact_block::factory_from_data(uint32_t version, data_source& stream)
 {
     //std::cout << "compact_block::factory_from_data 2\n";
     compact_block instance;
@@ -56,15 +54,14 @@ compact_block compact_block::factory_from_data(uint32_t version,
     return instance;
 }
 
-compact_block compact_block::factory_from_data(uint32_t version,
-    reader& source)
-{
-    //std::cout << "compact_block::factory_from_data 3\n";
-
-    compact_block instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//compact_block compact_block::factory_from_data(uint32_t version, reader& source)
+//{
+//    //std::cout << "compact_block::factory_from_data 3\n";
+//
+//    compact_block instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 compact_block compact_block::factory_from_block(message::block const& blk) {
     compact_block instance;
@@ -180,63 +177,63 @@ bool compact_block::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool compact_block::from_data(uint32_t version, std::istream& stream)
+bool compact_block::from_data(uint32_t version, data_source& stream)
 {
     //std::cout << "compact_block::from_data 2\n";
 
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool compact_block::from_data(uint32_t version, reader& source)
-{
-    //std::cout << "compact_block::from_data 3\n";
-
-    reset();
-
-    if (!header_.from_data(source))
-        return false;
-
-    nonce_ = source.read_8_bytes_little_endian();
-    auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
-        source.invalidate();
-    else
-        short_ids_.reserve(count);
-
-    //todo:move to function
-    // Order is required.
-    for (size_t id = 0; id < count && source; ++id) {
-        uint32_t lsb = source.read_4_bytes_little_endian();
-        uint16_t msb = source.read_2_bytes_little_endian();
-        short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
-        //short_ids_.push_back(source.read_mini_hash());
-    }
-
-    count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
-        source.invalidate();
-    else
-        transactions_.resize(count);
-
-    // NOTE: Witness flag is controlled by prefilled tx
-    // Order is required.
-    for (auto& tx : transactions_)
-        if (!tx.from_data(version, source))
-            break;
-
-    if (version < compact_block::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool compact_block::from_data(uint32_t version, reader& source)
+//{
+//    //std::cout << "compact_block::from_data 3\n";
+//
+//    reset();
+//
+//    if (!header_.from_data(source))
+//        return false;
+//
+//    nonce_ = source.read_8_bytes_little_endian();
+//    auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > get_max_block_size())
+//        source.invalidate();
+//    else
+//        short_ids_.reserve(count);
+//
+//    //todo:move to function
+//    // Order is required.
+//    for (size_t id = 0; id < count && source; ++id) {
+//        uint32_t lsb = source.read_4_bytes_little_endian();
+//        uint16_t msb = source.read_2_bytes_little_endian();
+//        short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
+//        //short_ids_.push_back(source.read_mini_hash());
+//    }
+//
+//    count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > get_max_block_size())
+//        source.invalidate();
+//    else
+//        transactions_.resize(count);
+//
+//    // NOTE: Witness flag is controlled by prefilled tx
+//    // Order is required.
+//    for (auto& tx : transactions_)
+//        if (!tx.from_data(version, source))
+//            break;
+//
+//    if (version < compact_block::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk compact_block::to_data(uint32_t version) const
 {
@@ -252,36 +249,36 @@ data_chunk compact_block::to_data(uint32_t version) const
     return data;
 }
 
-void compact_block::to_data(uint32_t version, std::ostream& stream) const
+void compact_block::to_data(uint32_t version, data_sink& stream) const
 {
     //std::cout << "compact_block::to_data 2\n";
 
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void compact_block::to_data(uint32_t version, writer& sink) const
-{
-    //std::cout << "compact_block::to_data 3\n";
-
-    header_.to_data(sink);
-    sink.write_8_bytes_little_endian(nonce_);
-    sink.write_variable_little_endian(short_ids_.size());
-
-    for (const auto& element: short_ids_) {
-        //sink.write_mini_hash(element);
-        uint32_t lsb = element & 0xffffffff;
-        uint16_t msb = (element >> 32) & 0xffff;
-        sink.write_4_bytes_little_endian(lsb);
-        sink.write_2_bytes_little_endian(msb);
-    }
-
-    sink.write_variable_little_endian(transactions_.size());
-
-    // NOTE: Witness flag is controlled by prefilled tx
-    for (const auto& element: transactions_)
-        element.to_data(version, sink);
-}
+//void compact_block::to_data(uint32_t version, writer& sink) const
+//{
+//    //std::cout << "compact_block::to_data 3\n";
+//
+//    header_.to_data(sink);
+//    sink.write_8_bytes_little_endian(nonce_);
+//    sink.write_variable_little_endian(short_ids_.size());
+//
+//    for (const auto& element: short_ids_) {
+//        //sink.write_mini_hash(element);
+//        uint32_t lsb = element & 0xffffffff;
+//        uint16_t msb = (element >> 32) & 0xffff;
+//        sink.write_4_bytes_little_endian(lsb);
+//        sink.write_2_bytes_little_endian(msb);
+//    }
+//
+//    sink.write_variable_little_endian(transactions_.size());
+//
+//    // NOTE: Witness flag is controlled by prefilled tx
+//    for (const auto& element: transactions_)
+//        element.to_data(version, sink_w);
+//}
 
 size_t compact_block::serialized_size(uint32_t version) const
 {
@@ -403,14 +400,15 @@ bool compact_block::operator!=(const compact_block& other) const
     return !(*this == other);
 }
 
-void to_data_header_nonce(compact_block const& block, writer& sink) {
-    block.header().to_data(sink);
-    sink.write_8_bytes_little_endian(block.nonce());
-}
+// void to_data_header_nonce(compact_block const& block, writer& sink) {
+//     block.header().to_data(sink);
+//     sink.write_8_bytes_little_endian(block.nonce());
+// }
 
-void to_data_header_nonce(compact_block const& block, std::ostream& stream) {
-    ostream_writer sink(stream);
-    to_data_header_nonce(block, sink);
+// void to_data_header_nonce(compact_block const& block, std::ostream& stream) {
+void to_data_header_nonce(compact_block const& block, data_sink& stream) {
+    ostream_writer sink_w(stream);
+    to_data_header_nonce(block, sink_w);
 }
 
 data_chunk to_data_header_nonce(compact_block const& block) {
