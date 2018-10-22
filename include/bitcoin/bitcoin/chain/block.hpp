@@ -36,12 +36,12 @@
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/asio.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -49,15 +49,13 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API block
-{
-public:
+class BC_API block {
+   public:
     typedef std::vector<block> list;
     typedef std::vector<size_t> indexes;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation
-    {
+    struct validation {
         uint64_t originator = 0;
         code error = error::not_found;
         chain_state::ptr state = nullptr;
@@ -102,12 +100,11 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static block factory_from_data(const data_chunk& data, bool witness=false);
-    static block factory_from_data(data_source& stream, bool witness=false);
-    
+    static block factory_from_data(const data_chunk& data, bool witness = false);
+    static block factory_from_data(data_source& stream, bool witness = false);
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static block factory_from_data(R& source, bool witness=false)
-    {
+    static block factory_from_data(R& source, bool witness = false) {
 #ifdef BITPRIM_CURRENCY_BCH
         witness = false;
 #endif
@@ -118,41 +115,40 @@ public:
 
     //static block factory_from_data(reader& source, bool witness=false);
 
-    bool from_data(const data_chunk& data, bool witness=false);
-    bool from_data(data_source& stream, bool witness=false);
-    
+    bool from_data(const data_chunk& data, bool witness = false);
+    bool from_data(data_source& stream, bool witness = false);
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool witness=false)
-    {
-    #ifdef BITPRIM_CURRENCY_BCH
+    bool from_data(R& source, bool witness = false) {
+#ifdef BITPRIM_CURRENCY_BCH
         witness = false;
-    #endif
+#endif
         validation.start_deserialize = asio::steady_clock::now();
         reset();
-    
+
         if (!header_.from_data(source, true))
             return false;
-    
+
         const auto count = source.read_size_little_endian();
-    
+
         // Guard against potential for arbitary memory allocation.
         if (count > get_max_block_size())
             source.invalidate();
         else
             transactions_.resize(count);
-    
+
         // Order is required, explicit loop allows early termination.
-        for (auto& tx: transactions_)
+        for (auto& tx : transactions_)
             if (!tx.from_data(source, true, witness))
                 break;
-    
+
         // TODO: optimize by having reader skip witness data.
         if (!witness)
             strip_witness();
-    
+
         if (!source)
             reset();
-    
+
         validation.end_deserialize = asio::steady_clock::now();
         return source;
     }
@@ -164,32 +160,30 @@ public:
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool witness=false) const;
-    void to_data(data_sink& stream, bool witness=false) const;
-    
+    data_chunk to_data(bool witness = false) const;
+    void to_data(data_sink& stream, bool witness = false) const;
+
     template <Writer W>
-    void to_data(W& sink, bool witness=false) const
-    {
-    #ifdef BITPRIM_CURRENCY_BCH
+    void to_data(W& sink, bool witness = false) const {
+#ifdef BITPRIM_CURRENCY_BCH
         witness = false;
-    #endif
+#endif
         header_.to_data(sink, true);
         sink.write_size_little_endian(transactions_.size());
-        const auto to = [&sink, witness](const transaction& tx)
-        {
+        const auto to = [&sink, witness](const transaction& tx) {
             tx.to_data(sink, true, witness);
         };
-    
+
         std::for_each(transactions_.begin(), transactions_.end(), to);
     }
 
     //void to_data(writer& sink, bool witness=false) const;
-    hash_list to_hashes(bool witness=false) const;
+    hash_list to_hashes(bool witness = false) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    size_t serialized_size(bool witness=false) const;
+    size_t serialized_size(bool witness = false) const;
 
     // deprecated (unsafe)
     chain::header& header();
@@ -222,17 +216,17 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
-    static uint64_t subsidy(size_t height, bool retarget=true);
+    static uint64_t subsidy(size_t height, bool retarget = true);
     static uint256_t proof(uint32_t bits);
 
     uint64_t fees() const;
     uint64_t claim() const;
     uint64_t reward(size_t height) const;
     uint256_t proof() const;
-    hash_digest generate_merkle_root(bool witness=false) const;
+    hash_digest generate_merkle_root(bool witness = false) const;
     size_t signature_operations() const;
     size_t signature_operations(bool bip16, bool bip141) const;
-    size_t total_inputs(bool with_coinbase=true) const;
+    size_t total_inputs(bool with_coinbase = true) const;
     size_t weight() const;
 
     bool is_extra_coinbases() const;
@@ -248,8 +242,8 @@ public:
 
     code check() const;
     code check_transactions() const;
-    code accept(bool transactions=true) const;
-    code accept(const chain_state& state, bool transactions=true) const;
+    code accept(bool transactions = true) const;
+    code accept(const chain_state& state, bool transactions = true) const;
     code accept_transactions(const chain_state& state) const;
     code connect() const;
     code connect(const chain_state& state) const;
@@ -258,11 +252,11 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-protected:
+   protected:
     void reset();
     size_t non_coinbase_input_count() const;
 
-private:
+   private:
     chain::header header_;
     transaction::list transactions_;
 
@@ -274,8 +268,8 @@ private:
     mutable upgrade_mutex mutex_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 //#include <bitprim/concepts_undef.hpp>
 
