@@ -19,8 +19,8 @@
 #ifndef LIBBITCOIN_MESSAGE_BLOCK_HPP
 #define LIBBITCOIN_MESSAGE_BLOCK_HPP
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <memory>
 
@@ -29,10 +29,10 @@
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/reader.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -41,9 +41,8 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API block
-  : public chain::block
-{
-public:
+    : public chain::block {
+   public:
     typedef std::shared_ptr<block> ptr;
     typedef std::shared_ptr<const block> const_ptr;
     typedef std::vector<ptr> ptr_list;
@@ -53,10 +52,9 @@ public:
 
     static block factory_from_data(uint32_t version, const data_chunk& data);
     static block factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static block factory_from_data(uint32_t version, R& source)
-    {
+    static block factory_from_data(uint32_t version, R& source) {
         block instance;
         instance.from_data(version, source);
         return instance;
@@ -77,20 +75,18 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         return chain::block::from_data(source, true);
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         chain::block::to_data(sink, true);
     }
 
@@ -114,8 +110,6 @@ public:
     static const uint32_t version_maximum;
 };
 
-
-
 //TODO(fernando): check this family of functions: to_data_header_nonce
 template <typename W>
 void to_data_header_nonce(block const& block, uint64_t nonce, W& sink) {
@@ -131,7 +125,7 @@ data_chunk to_data_header_nonce(block const& block, uint64_t nonce);
 
 hash_digest hash(block const& block, uint64_t nonce);
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

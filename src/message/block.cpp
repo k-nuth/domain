@@ -18,17 +18,18 @@
  */
 #include <bitcoin/bitcoin/message/block.hpp>
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <utility>
-#include <bitcoin/bitcoin/message/version.hpp>
+
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
+#include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <bitcoin/infrastructure/utility/reader.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -37,15 +38,13 @@ const std::string block::command = "block";
 const uint32_t block::version_minimum = version::level::minimum;
 const uint32_t block::version_maximum = version::level::maximum;
 
-block block::factory_from_data(uint32_t version, const data_chunk& data)
-{
+block block::factory_from_data(uint32_t version, const data_chunk& data) {
     block instance;
     instance.from_data(version, data);
     return instance;
 }
 
-block block::factory_from_data(uint32_t version, data_source& stream)
-{
+block block::factory_from_data(uint32_t version, data_source& stream) {
     block instance;
     instance.from_data(version, stream);
     return instance;
@@ -59,51 +58,42 @@ block block::factory_from_data(uint32_t version, data_source& stream)
 //}
 
 block::block()
-  : chain::block()
-{
+    : chain::block() {
 }
 
 block::block(block&& other)
-  : chain::block(std::move(other))
-{
+    : chain::block(std::move(other)) {
 }
 
 block::block(const block& other)
-  : chain::block(other)
-{
+    : chain::block(other) {
 }
 
 block::block(chain::block&& other)
-  : chain::block(std::move(other))
-{
+    : chain::block(std::move(other)) {
 }
 
 block::block(const chain::block& other)
-  : chain::block(other)
-{
+    : chain::block(other) {
 }
 
 block::block(chain::header&& header, chain::transaction::list&& transactions)
-  : chain::block(std::move(header), std::move(transactions))
-{
+    : chain::block(std::move(header), std::move(transactions)) {
 }
 
 block::block(const chain::header& header,
-    const chain::transaction::list& transactions)
-  : chain::block(header, transactions)
-{
+             const chain::transaction::list& transactions)
+    : chain::block(header, transactions) {
 }
 
 // Witness is always deserialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-bool block::from_data(uint32_t version, const data_chunk& data)
-{
+bool block::from_data(uint32_t version, const data_chunk& data) {
     return chain::block::from_data(data, true);
 }
 
-bool block::from_data(uint32_t version, data_source& stream)
-{
+bool block::from_data(uint32_t version, data_source& stream) {
     return chain::block::from_data(stream, true);
 }
 
@@ -115,13 +105,11 @@ bool block::from_data(uint32_t version, data_source& stream)
 // Witness is always serialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-data_chunk block::to_data(uint32_t) const
-{
+data_chunk block::to_data(uint32_t) const {
     return chain::block::to_data(true);
 }
 
-void block::to_data(uint32_t version, data_sink& stream) const
-{
+void block::to_data(uint32_t version, data_sink& stream) const {
     chain::block::to_data(stream, true);
 }
 
@@ -133,41 +121,34 @@ void block::to_data(uint32_t version, data_sink& stream) const
 // Witness size is always counted if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-size_t block::serialized_size(uint32_t) const
-{
+size_t block::serialized_size(uint32_t) const {
     return chain::block::serialized_size(true);
 }
 
-block& block::operator=(chain::block&& other)
-{
+block& block::operator=(chain::block&& other) {
     reset();
     chain::block::operator=(std::move(other));
     return *this;
 }
 
-block& block::operator=(block&& other)
-{
+block& block::operator=(block&& other) {
     chain::block::operator=(std::move(other));
     return *this;
 }
 
-bool block::operator==(const chain::block& other) const
-{
+bool block::operator==(const chain::block& other) const {
     return chain::block::operator==(other);
 }
 
-bool block::operator!=(const chain::block& other) const
-{
+bool block::operator!=(const chain::block& other) const {
     return chain::block::operator!=(other);
 }
 
-bool block::operator==(const block& other) const
-{
+bool block::operator==(const block& other) const {
     return chain::block::operator==(other);
 }
 
-bool block::operator!=(const block& other) const
-{
+bool block::operator!=(const block& other) const {
     return !(*this == other);
 }
 
@@ -199,5 +180,5 @@ hash_digest hash(block const& block, uint64_t nonce) {
     return sha256_hash(to_data_header_nonce(block, nonce));
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
