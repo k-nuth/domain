@@ -42,10 +42,10 @@ hash_digest hash_message(data_slice message)
 
     data_chunk data;
     data_sink ostream(data);
-    ostream_writer sink(ostream);
-    sink.write_string(prefix);
-    sink.write_variable_little_endian(message.size());
-    sink.write_bytes(message.begin(), message.size());
+    ostream_writer sink_w(ostream);
+    sink_w.write_string(prefix);
+    sink_w.write_variable_little_endian(message.size());
+    sink_w.write_bytes(message.begin(), message.size());
     ostream.flush();
     return bitcoin_hash(data);
 }
