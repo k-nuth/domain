@@ -34,8 +34,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string merkle_block::command = "merkleblock";
-const uint32_t merkle_block::version_minimum = version::level::bip37;
-const uint32_t merkle_block::version_maximum = version::level::maximum;
+uint32_t const merkle_block::version_minimum = version::level::bip37;
+uint32_t const merkle_block::version_maximum = version::level::maximum;
 
 merkle_block merkle_block::factory_from_data(uint32_t version, const data_chunk& data) {
     merkle_block instance;
