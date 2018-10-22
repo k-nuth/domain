@@ -25,10 +25,13 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include <boost/optional.hpp>
+
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
@@ -37,6 +40,11 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -95,12 +103,61 @@ public:
     //-------------------------------------------------------------------------
 
     static block factory_from_data(const data_chunk& data, bool witness=false);
-    static block factory_from_data(std::istream& stream, bool witness=false);
-    static block factory_from_data(reader& source, bool witness=false);
+    static block factory_from_data(data_source& stream, bool witness=false);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static block factory_from_data(R& source, bool witness=false)
+    {
+#ifdef BITPRIM_CURRENCY_BCH
+        witness = false;
+#endif
+        block instance;
+        instance.from_data(source, witness);
+        return instance;
+    }
+
+    //static block factory_from_data(reader& source, bool witness=false);
 
     bool from_data(const data_chunk& data, bool witness=false);
-    bool from_data(std::istream& stream, bool witness=false);
-    bool from_data(reader& source, bool witness=false);
+    bool from_data(data_source& stream, bool witness=false);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool witness=false)
+    {
+    #ifdef BITPRIM_CURRENCY_BCH
+        witness = false;
+    #endif
+        validation.start_deserialize = asio::steady_clock::now();
+        reset();
+    
+        if (!header_.from_data(source, true))
+            return false;
+    
+        const auto count = source.read_size_little_endian();
+    
+        // Guard against potential for arbitary memory allocation.
+        if (count > get_max_block_size())
+            source.invalidate();
+        else
+            transactions_.resize(count);
+    
+        // Order is required, explicit loop allows early termination.
+        for (auto& tx: transactions_)
+            if (!tx.from_data(source, true, witness))
+                break;
+    
+        // TODO: optimize by having reader skip witness data.
+        if (!witness)
+            strip_witness();
+    
+        if (!source)
+            reset();
+    
+        validation.end_deserialize = asio::steady_clock::now();
+        return source;
+    }
+
+    //bool from_data(reader& source, bool witness=false);
 
     bool is_valid() const;
 
@@ -108,8 +165,25 @@ public:
     //-------------------------------------------------------------------------
 
     data_chunk to_data(bool witness=false) const;
-    void to_data(std::ostream& stream, bool witness=false) const;
-    void to_data(writer& sink, bool witness=false) const;
+    void to_data(data_sink& stream, bool witness=false) const;
+    
+    template <Writer W>
+    void to_data(W& sink, bool witness=false) const
+    {
+    #ifdef BITPRIM_CURRENCY_BCH
+        witness = false;
+    #endif
+        header_.to_data(sink, true);
+        sink.write_size_little_endian(transactions_.size());
+        const auto to = [&sink, witness](const transaction& tx)
+        {
+            tx.to_data(sink, true, witness);
+        };
+    
+        std::for_each(transactions_.begin(), transactions_.end(), to);
+    }
+
+    //void to_data(writer& sink, bool witness=false) const;
     hash_list to_hashes(bool witness=false) const;
 
     // Properties (size, accessors, cache).
@@ -202,5 +276,7 @@ private:
 
 } // namespace chain
 } // namespace libbitcoin
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif
