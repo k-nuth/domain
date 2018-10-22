@@ -28,13 +28,13 @@
 
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -42,20 +42,17 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API inventory
-{
-public:
+class BC_API inventory {
+   public:
     typedef std::shared_ptr<inventory> ptr;
     typedef std::shared_ptr<const inventory> const_ptr;
     typedef inventory_vector::type_id type_id;
 
     static inventory factory_from_data(uint32_t version, const data_chunk& data);
     static inventory factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static 
-    inventory factory_from_data(uint32_t version, R& source)
-    {
+    static inventory factory_from_data(uint32_t version, R& source) {
         inventory instance;
         instance.from_data(version, source);
         return instance;
@@ -76,47 +73,45 @@ public:
     void set_inventories(const inventory_vector::list& value);
     void set_inventories(inventory_vector::list&& value);
 
-    /*virtual*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, const data_chunk& data);
-    
-    /*virtual*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+
+    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    /*virtual*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, R& source)
-    {
+    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         const auto count = source.read_size_little_endian();
-    
+
         // Guard against potential for arbitary memory allocation.
         if (count > max_inventory)
             source.invalidate();
         else
             inventories_.resize(count);
-    
+
         // Order is required.
-        for (auto& inventory: inventories_)
+        for (auto& inventory : inventories_)
             if (!inventory.from_data(version, source))
                 break;
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(inventories_.size());
-    
-        for (const auto& inventory: inventories_)
+
+        for (const auto& inventory : inventories_)
             inventory.to_data(version, sink);
     }
 
@@ -139,11 +134,11 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-private:
+   private:
     inventory_vector::list inventories_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
