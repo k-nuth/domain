@@ -18,12 +18,12 @@
  */
 #include <bitcoin/bitcoin/message/address.hpp>
 
-#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
@@ -33,15 +33,13 @@ const std::string address::command = "addr";
 const uint32_t address::version_minimum = version::level::minimum;
 const uint32_t address::version_maximum = version::level::maximum;
 
-address address::factory_from_data(uint32_t version, const data_chunk& data)
-{
+address address::factory_from_data(uint32_t version, const data_chunk& data) {
     address instance;
     instance.from_data(version, data);
     return instance;
 }
 
-address address::factory_from_data(uint32_t version, data_source& stream)
-{
+address address::factory_from_data(uint32_t version, data_source& stream) {
     address instance;
     instance.from_data(version, stream);
     return instance;
@@ -55,49 +53,40 @@ address address::factory_from_data(uint32_t version, data_source& stream)
 //}
 
 address::address()
-  : addresses_()
-{
+    : addresses_() {
 }
 
 address::address(const network_address::list& addresses)
-  : addresses_(addresses)
-{
+    : addresses_(addresses) {
 }
 
 address::address(network_address::list&& addresses)
-  : addresses_(std::move(addresses))
-{
+    : addresses_(std::move(addresses)) {
 }
 
 address::address(const address& other)
-  : address(other.addresses_)
-{
+    : address(other.addresses_) {
 }
 
 address::address(address&& other)
-  : address(std::move(other.addresses_))
-{
+    : address(std::move(other.addresses_)) {
 }
 
-bool address::is_valid() const
-{
+bool address::is_valid() const {
     return !addresses_.empty();
 }
 
-void address::reset()
-{
+void address::reset() {
     addresses_.clear();
     addresses_.shrink_to_fit();
 }
 
-bool address::from_data(uint32_t version, const data_chunk& data)
-{
+bool address::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool address::from_data(uint32_t version, data_source& stream)
-{
+bool address::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -124,8 +113,7 @@ bool address::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk address::to_data(uint32_t version) const
-{
+data_chunk address::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -136,8 +124,7 @@ data_chunk address::to_data(uint32_t version) const
     return data;
 }
 
-void address::to_data(uint32_t version, data_sink& stream) const
-{
+void address::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -150,47 +137,39 @@ void address::to_data(uint32_t version, data_sink& stream) const
 //        net_address.to_data(version, sink, true);
 //}
 
-size_t address::serialized_size(uint32_t version) const
-{
+size_t address::serialized_size(uint32_t version) const {
     return message::variable_uint_size(addresses_.size()) +
-        (addresses_.size() * network_address::satoshi_fixed_size(version, true));
+           (addresses_.size() * network_address::satoshi_fixed_size(version, true));
 }
 
-network_address::list& address::addresses()
-{
+network_address::list& address::addresses() {
     return addresses_;
 }
 
-const network_address::list& address::addresses() const
-{
+const network_address::list& address::addresses() const {
     return addresses_;
 }
 
-void address::set_addresses(const network_address::list& value)
-{
+void address::set_addresses(const network_address::list& value) {
     addresses_ = value;
 }
 
-void address::set_addresses(network_address::list&& value)
-{
+void address::set_addresses(network_address::list&& value) {
     addresses_ = std::move(value);
 }
 
-address& address::operator=(address&& other)
-{
+address& address::operator=(address&& other) {
     addresses_ = std::move(other.addresses_);
     return *this;
 }
 
-bool address::operator==(const address& other) const
-{
+bool address::operator==(const address& other) const {
     return (addresses_ == other.addresses_);
 }
 
-bool address::operator!=(const address& other) const
-{
+bool address::operator!=(const address& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
