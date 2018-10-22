@@ -41,19 +41,19 @@ alert alert::factory_from_data(uint32_t version, const data_chunk& data)
     return instance;
 }
 
-alert alert::factory_from_data(uint32_t version, std::istream& stream)
+alert alert::factory_from_data(uint32_t version, data_source& stream)
 {
     alert instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-alert alert::factory_from_data(uint32_t version, reader& source)
-{
-    alert instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//alert alert::factory_from_data(uint32_t version, reader& source)
+//{
+//    alert instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 alert::alert()
   : payload_(), signature_()
@@ -99,24 +99,24 @@ bool alert::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool alert::from_data(uint32_t version, std::istream& stream)
+bool alert::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool alert::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    payload_ = source.read_bytes(source.read_size_little_endian());
-    signature_ = source.read_bytes(source.read_size_little_endian());
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool alert::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    payload_ = source.read_bytes(source.read_size_little_endian());
+//    signature_ = source.read_bytes(source.read_size_little_endian());
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk alert::to_data(uint32_t version) const
 {
@@ -130,19 +130,21 @@ data_chunk alert::to_data(uint32_t version) const
     return data;
 }
 
-void alert::to_data(uint32_t version, std::ostream& stream) const
+void alert::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void alert::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_variable_little_endian(payload_.size());
-    sink.write_bytes(payload_);
-    sink.write_variable_little_endian(signature_.size());
-    sink.write_bytes(signature_);
-}
+
+
+//void alert::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_variable_little_endian(payload_.size());
+//    sink.write_bytes(payload_);
+//    sink.write_variable_little_endian(signature_.size());
+//    sink.write_bytes(signature_);
+//}
 
 size_t alert::serialized_size(uint32_t version) const
 {
