@@ -112,8 +112,8 @@ class BC_API send_compact {
     bool operator!=(const send_compact& other) const;
 
     static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
    private:
     bool high_bandwidth_mode_;
