@@ -91,7 +91,7 @@ using namespace bc::machine;
 // }
 
 // Input list must be pre-populated as it determines witness count.
-// inline 
+// inline
 // void read_witnesses(reader& source, input::list& inputs) {
 //     const auto deserialize = [&](input& input) {
 //         input.witness().from_data(source, true);
