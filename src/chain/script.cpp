@@ -98,7 +98,8 @@ script::script(data_chunk&& encoded, bool prefix)
 {
     if (prefix)
     {
-        valid_ = from_data(encoded, prefix);
+        valid_ = from_data(static_cast<data_chunk const&>(encoded), prefix);
+        // valid_ = from_data(encoded, prefix);
         return;
     }
 
@@ -158,7 +159,7 @@ script script::factory_from_data(const data_chunk& encoded, bool prefix)
 }
 
 // static
-script script::factory_from_data(std::istream& stream, bool prefix)
+script script::factory_from_data(data_source& stream, bool prefix)
 {
     script instance;
     instance.from_data(stream, prefix);
@@ -166,12 +167,12 @@ script script::factory_from_data(std::istream& stream, bool prefix)
 }
 
 // static
-script script::factory_from_data(reader& source, bool prefix)
-{
-    script instance;
-    instance.from_data(source, prefix);
-    return instance;
-}
+//script script::factory_from_data(reader& source, bool prefix)
+//{
+//    script instance;
+//    instance.from_data(source, prefix);
+//    return instance;
+//}
 
 bool script::from_data(const data_chunk& encoded, bool prefix)
 {
@@ -179,39 +180,39 @@ bool script::from_data(const data_chunk& encoded, bool prefix)
     return from_data(istream, prefix);
 }
 
-bool script::from_data(std::istream& stream, bool prefix)
+bool script::from_data(data_source& stream, bool prefix)
 {
-    istream_reader source(stream);
-    return from_data(source, prefix);
+    istream_reader stream_r(stream);
+    return from_data(stream_r, prefix);
 }
 
 // Concurrent read/write is not supported, so no critical section.
-bool script::from_data(reader& source, bool prefix)
-{
-    reset();
-    valid_ = true;
-
-    if (prefix)
-    {
-        const auto size = source.read_size_little_endian();
-
-        // The max_script_size constant limits evaluation, but not all scripts
-        // evaluate, so use max_block_size to guard memory allocation here.
-        if (size > get_max_block_size())
-            source.invalidate();
-        else
-            bytes_ = source.read_bytes(size);
-    }
-    else
-    {
-        bytes_ = source.read_bytes();
-    }
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool script::from_data(reader& source, bool prefix)
+//{
+//    reset();
+//    valid_ = true;
+//
+//    if (prefix)
+//    {
+//        const auto size = source.read_size_little_endian();
+//
+//        // The max_script_size constant limits evaluation, but not all scripts
+//        // evaluate, so use max_block_size to guard memory allocation here.
+//        if (size > get_max_block_size())
+//            source.invalidate();
+//        else
+//            bytes_ = source.read_bytes(size);
+//    }
+//    else
+//    {
+//        bytes_ = source.read_bytes();
+//    }
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 // Concurrent read/write is not supported, so no critical section.
 bool script::from_string(const std::string& mnemonic)
@@ -321,20 +322,20 @@ data_chunk script::to_data(bool prefix) const
     return data;
 }
 
-void script::to_data(std::ostream& stream, bool prefix) const
+void script::to_data(data_sink& stream, bool prefix) const
 {
-    ostream_writer sink(stream);
-    to_data(sink, prefix);
+    ostream_writer sink_w(stream);
+    to_data(sink_w, prefix);
 }
 
-void script::to_data(writer& sink, bool prefix) const
-{
-    // TODO: optimize by always storing the prefixed serialization.
-    if (prefix)
-        sink.write_variable_little_endian(serialized_size(false));
-
-    sink.write_bytes(bytes_);
-}
+//void script::to_data(writer& sink, bool prefix) const
+//{
+//    // TODO: optimize by always storing the prefixed serialization.
+//    if (prefix)
+//        sink.write_variable_little_endian(serialized_size(false));
+//
+//    sink.write_bytes(bytes_);
+//}
 
 std::string script::to_string(uint32_t active_forks) const
 {
@@ -428,7 +429,7 @@ const operation::list& script::operations() const
 
     operation op;
     data_source istream(bytes_);
-    istream_reader source(istream);
+    istream_reader stream_r(istream);
     const auto size = bytes_.size();
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -447,9 +448,9 @@ const operation::list& script::operations() const
     // If an op fails it is pushed to operations and the loop terminates.
     // To validate the ops the caller must test the last op.is_valid(), or may
     // text script.is_valid_operations(), which is done in script validation.
-    while (!source.is_exhausted())
+    while (!stream_r.is_exhausted())
     {
-        op.from_data(source);
+        op.from_data(stream_r);
         operations_.push_back(std::move(op));
     }
 
@@ -662,11 +663,11 @@ hash_digest script::to_outputs(const transaction& tx)
     data_chunk data;
     data.reserve(size);
     data_sink ostream(data);
-    ostream_writer sink(ostream);
+    ostream_writer sink_w(ostream);
 
     const auto write = [&](const output& output)
     {
-        output.to_data(sink, true);
+        output.to_data(sink_w, true);
     };
 
     std::for_each(outs.begin(), outs.end(), write);
@@ -687,11 +688,11 @@ hash_digest script::to_inpoints(const transaction& tx)
     data_chunk data;
     data.reserve(size);
     data_sink ostream(data);
-    ostream_writer sink(ostream);
+    ostream_writer sink_w(ostream);
 
     const auto write = [&](const input& input)
     {
-        input.previous_output().to_data(sink);
+        input.previous_output().to_data(sink_w);
     };
 
     std::for_each(ins.begin(), ins.end(), write);
@@ -712,11 +713,11 @@ hash_digest script::to_sequences(const transaction& tx)
     data_chunk data;
     data.reserve(size);
     data_sink ostream(data);
-    ostream_writer sink(ostream);
+    ostream_writer sink_w(ostream);
 
     const auto write = [&](const input& input)
     {
-        sink.write_4_bytes_little_endian(input.sequence());
+        sink_w.write_4_bytes_little_endian(input.sequence());
     };
 
     std::for_each(ins.begin(), ins.end(), write);
@@ -752,7 +753,7 @@ hash_digest script::generate_version_0_signature_hash(const transaction& tx,
     data_chunk data;
     data.reserve(size);
     data_sink ostream(data);
-    ostream_writer sink(ostream);
+    ostream_writer sink_w(ostream);
 
     // Flags derived from the signature hash byte.
     const auto sighash = to_sighash_enum(sighash_type);
@@ -768,36 +769,36 @@ hash_digest script::generate_version_0_signature_hash(const transaction& tx,
 #endif
 
     // 1. transaction version (4-byte little endian).
-    sink.write_little_endian(tx.version());
+    sink_w.write_little_endian(tx.version());
 
     // 2. inpoints hash (32-byte hash).
-    sink.write_hash(!any ? tx.inpoints_hash() : null_hash);
+    sink_w.write_hash(!any ? tx.inpoints_hash() : null_hash);
 
     // 3. sequences hash (32-byte hash).
-    sink.write_hash(!any && all ? tx.sequences_hash() : null_hash);
+    sink_w.write_hash(!any && all ? tx.sequences_hash() : null_hash);
 
     // 4. outpoint (32-byte hash + 4-byte little endian).
-    input.previous_output().to_data(sink);
+    input.previous_output().to_data(sink_w);
 
     // 5. script of the input (with prefix).
-    script_code.to_data(sink, true);
+    script_code.to_data(sink_w, true);
 
     // 6. value of the output spent by this input (8-byte little endian).
-    sink.write_little_endian(value);
+    sink_w.write_little_endian(value);
 
     // 7. sequence of the input (4-byte little endian).
-    sink.write_little_endian(input.sequence());
+    sink_w.write_little_endian(input.sequence());
 
     // 8. outputs hash (32-byte hash).
-    sink.write_hash(all ? tx.outputs_hash() :
+    sink_w.write_hash(all ? tx.outputs_hash() :
         (single && input_index < tx.outputs().size() ?
             bitcoin_hash(tx.outputs()[input_index].to_data()) : null_hash));
 
     // 9. transaction locktime (4-byte little endian).
-    sink.write_little_endian(tx.locktime());
+    sink_w.write_little_endian(tx.locktime());
 
     // 10. sighash type of the signature (4-byte [not 1] little endian).
-    sink.write_4_bytes_little_endian(sighash_type);
+    sink_w.write_4_bytes_little_endian(sighash_type);
 
     ostream.flush();
     BITCOIN_ASSERT(data.size() == size);
@@ -1303,22 +1304,22 @@ void script::find_and_delete_(const data_chunk& endorsement)
 
     operation op;
     data_source stream(bytes_);
-    istream_reader source(stream);
+    istream_reader stream_r(stream);
     std::vector<data_chunk::iterator> found;
 
     // The exhaustion test handles stream end and op deserialization failure.
-    for (auto it = bytes_.begin(); !source.is_exhausted();
-        it += source ? op.serialized_size() : 0)
+    for (auto it = bytes_.begin(); !stream_r.is_exhausted();
+        it += stream_r ? op.serialized_size() : 0)
     {
         // Track all found values for later deletion.
         for (; starts_with(it, bytes_.end(), value); it += value.size())
         {
-            source.skip(value.size());
+            stream_r.skip(value.size());
             found.push_back(it);
         }
 
         // Read the next op code following last found value.
-        op.from_data(source);
+        op.from_data(stream_r);
     }
 
     // Delete any found values, reversed to prevent iterator invalidation.

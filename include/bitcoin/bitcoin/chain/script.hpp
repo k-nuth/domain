@@ -24,6 +24,9 @@
 #include <istream>
 #include <memory>
 #include <string>
+
+#include <type_traits>
+
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
@@ -36,6 +39,11 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -79,13 +87,56 @@ public:
     //-------------------------------------------------------------------------
 
     static script factory_from_data(const data_chunk& encoded, bool prefix);
-    static script factory_from_data(std::istream& stream, bool prefix);
-    static script factory_from_data(reader& source, bool prefix);
+    static script factory_from_data(data_source& stream, bool prefix);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static script factory_from_data(R& source, bool prefix)
+    {
+        script instance;
+        instance.from_data(source, prefix);
+        return instance;
+    }
+
+    //static script factory_from_data(reader& source, bool prefix);
 
     /// Deserialization invalidates the iterator.
     bool from_data(const data_chunk& encoded, bool prefix);
-    bool from_data(std::istream& stream, bool prefix);
-    bool from_data(reader& source, bool prefix);
+    bool from_data(data_source& stream, bool prefix);
+
+    template <typename R
+            // , typename = std::enable_if_t< ! std::is_same<R, data_chunk>::value>
+            >
+    bool from_data(R& source, bool prefix)
+    {
+        static_assert( ! std::is_same<R, data_chunk>::value, "");
+        // static_assert(   std::is_same<R, data_chunk>::value, "");
+
+        reset();
+        valid_ = true;
+    
+        if (prefix)
+        {
+            const auto size = source.read_size_little_endian();
+    
+            // The max_script_size constant limits evaluation, but not all scripts
+            // evaluate, so use max_block_size to guard memory allocation here.
+            if (size > get_max_block_size())
+                source.invalidate();
+            else
+                bytes_ = source.read_bytes(size);
+        }
+        else
+        {
+            bytes_ = source.read_bytes();
+        }
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(reader& source, bool prefix);
 
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list&& ops);
@@ -102,8 +153,19 @@ public:
     //-------------------------------------------------------------------------
 
     data_chunk to_data(bool prefix) const;
-    void to_data(std::ostream& stream, bool prefix) const;
-    void to_data(writer& sink, bool prefix) const;
+    void to_data(data_sink& stream, bool prefix) const;
+    
+    template <Writer W>
+    void to_data(W& sink, bool prefix) const
+    {
+        // TODO: optimize by always storing the prefixed serialization.
+        if (prefix)
+            sink.write_variable_little_endian(serialized_size(false));
+    
+        sink.write_bytes(bytes_);
+    }
+
+    //void to_data(writer& sink, bool prefix) const;
 
     std::string to_string(uint32_t active_forks) const;
 
@@ -248,5 +310,7 @@ private:
 
 } // namespace chain
 } // namespace libbitcoin
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif
