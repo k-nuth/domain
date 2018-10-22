@@ -143,9 +143,14 @@ inline bool bip34(size_t height, bool frozen, bool mainnet, bool testnet)
 {
     const auto regtest = !mainnet && !testnet;
     return frozen &&
-        ((mainnet && height >= mainnet_bip34_freeze) ||
-         (testnet && height >= testnet_bip34_freeze) ||
-         (regtest && height >= regtest_bip34_freeze));
+        (    (mainnet && height >= mainnet_bip34_freeze) 
+          || (testnet && height >= testnet_bip34_freeze) 
+          || (regtest 
+#ifdef BITPRIM_CURRENCY_LTC          
+                && height >= regtest_bip34_freeze
+#endif
+             )
+        );
 }
 
 inline bool bip66(size_t height, bool frozen, bool mainnet, bool testnet)
