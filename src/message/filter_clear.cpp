@@ -28,8 +28,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string filter_clear::command = "filterclear";
-const uint32_t filter_clear::version_minimum = version::level::bip37;
-const uint32_t filter_clear::version_maximum = version::level::maximum;
+uint32_t const filter_clear::version_minimum = version::level::bip37;
+uint32_t const filter_clear::version_maximum = version::level::maximum;
 
 filter_clear filter_clear::factory_from_data(uint32_t version, const data_chunk& data) {
     filter_clear instance;
