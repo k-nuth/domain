@@ -23,7 +23,7 @@
 #include <initializer_list>
 #include <istream>
 #include <utility>
-#include <bitcoin/infrastructure/utility/limits.hpp>
+
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
@@ -31,6 +31,7 @@
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
@@ -40,15 +41,13 @@ const std::string headers::command = "headers";
 const uint32_t headers::version_minimum = version::level::headers;
 const uint32_t headers::version_maximum = version::level::maximum;
 
-headers headers::factory_from_data(uint32_t version, const data_chunk& data)
-{
+headers headers::factory_from_data(uint32_t version, const data_chunk& data) {
     headers instance;
     instance.from_data(version, data);
     return instance;
 }
 
-headers headers::factory_from_data(uint32_t version, data_source& stream)
-{
+headers headers::factory_from_data(uint32_t version, data_source& stream) {
     headers instance;
     instance.from_data(version, stream);
     return instance;
@@ -62,55 +61,45 @@ headers headers::factory_from_data(uint32_t version, data_source& stream)
 //}
 
 headers::headers()
-  : elements_()
-{
+    : elements_() {
 }
 
 // Uses headers copy assignment.
 headers::headers(const header::list& values)
-  : elements_(values)
-{
+    : elements_(values) {
 }
 
 headers::headers(header::list&& values)
-  : elements_(std::move(values))
-{
+    : elements_(std::move(values)) {
 }
 
 headers::headers(const std::initializer_list<header>& values)
-  : elements_(values)
-{
+    : elements_(values) {
 }
 
 headers::headers(const headers& other)
-  : headers(other.elements_)
-{
+    : headers(other.elements_) {
 }
 
 headers::headers(headers&& other)
-  : headers(std::move(other.elements_))
-{
+    : headers(std::move(other.elements_)) {
 }
 
-bool headers::is_valid() const
-{
+bool headers::is_valid() const {
     return !elements_.empty();
 }
 
-void headers::reset()
-{
+void headers::reset() {
     elements_.clear();
     elements_.shrink_to_fit();
 }
 
-bool headers::from_data(uint32_t version, const data_chunk& data)
-{
+bool headers::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool headers::from_data(uint32_t version, data_source& stream)
-{
+bool headers::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -141,8 +130,7 @@ bool headers::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk headers::to_data(uint32_t version) const
-{
+data_chunk headers::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -153,8 +141,7 @@ data_chunk headers::to_data(uint32_t version) const
     return data;
 }
 
-void headers::to_data(uint32_t version, data_sink& stream) const
-{
+void headers::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -167,15 +154,13 @@ void headers::to_data(uint32_t version, data_sink& stream) const
 //        element.to_data(version, sink_w);
 //}
 
-bool headers::is_sequential() const
-{
+bool headers::is_sequential() const {
     if (elements_.empty())
         return true;
 
     auto previous = elements_.front().hash();
 
-    for (auto it = elements_.begin() + 1; it != elements_.end(); ++it)
-    {
+    for (auto it = elements_.begin() + 1; it != elements_.end(); ++it) {
         if (it->previous_block_hash() != previous)
             return false;
 
@@ -185,12 +170,10 @@ bool headers::is_sequential() const
     return true;
 }
 
-void headers::to_hashes(hash_list& out) const
-{
+void headers::to_hashes(hash_list& out) const {
     out.clear();
     out.reserve(elements_.size());
-    const auto map = [&out](const header& header)
-    {
+    const auto map = [&out](const header& header) {
         out.push_back(header.hash());
     };
 
@@ -198,59 +181,49 @@ void headers::to_hashes(hash_list& out) const
 }
 
 void headers::to_inventory(inventory_vector::list& out,
-    inventory::type_id type) const
-{
+                           inventory::type_id type) const {
     out.clear();
     out.reserve(elements_.size());
-    const auto map = [&out, type](const header& header)
-    {
+    const auto map = [&out, type](const header& header) {
         out.emplace_back(type, header.hash());
     };
 
     std::for_each(elements_.begin(), elements_.end(), map);
 }
 
-size_t headers::serialized_size(uint32_t version) const
-{
+size_t headers::serialized_size(uint32_t version) const {
     return message::variable_uint_size(elements_.size()) +
-        (elements_.size() * header::satoshi_fixed_size(version));
+           (elements_.size() * header::satoshi_fixed_size(version));
 }
 
-header::list& headers::elements()
-{
+header::list& headers::elements() {
     return elements_;
 }
 
-const header::list& headers::elements() const
-{
+const header::list& headers::elements() const {
     return elements_;
 }
 
-void headers::set_elements(const header::list& values)
-{
+void headers::set_elements(const header::list& values) {
     elements_ = values;
 }
 
-void headers::set_elements(header::list&& values)
-{
+void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
 }
 
-headers& headers::operator=(headers&& other)
-{
+headers& headers::operator=(headers&& other) {
     elements_ = std::move(other.elements_);
     return *this;
 }
 
-bool headers::operator==(const headers& other) const
-{
+bool headers::operator==(const headers& other) const {
     return (elements_ == other.elements_);
 }
 
-bool headers::operator!=(const headers& other) const
-{
+bool headers::operator!=(const headers& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
