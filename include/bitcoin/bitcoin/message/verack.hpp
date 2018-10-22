@@ -24,11 +24,11 @@
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -37,18 +37,16 @@ namespace libbitcoin {
 namespace message {
 
 // The checksum is ignored by the verack command.
-class BC_API verack
-{
-public:
+class BC_API verack {
+   public:
     typedef std::shared_ptr<verack> ptr;
     typedef std::shared_ptr<const verack> const_ptr;
 
     static verack factory_from_data(uint32_t version, const data_chunk& data);
     static verack factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static verack factory_from_data(uint32_t version, R& source)
-    {
+    static verack factory_from_data(uint32_t version, R& source) {
         verack instance;
         instance.from_data(version, source);
         return instance;
@@ -61,10 +59,9 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
         return source;
     }
@@ -82,7 +79,7 @@ public:
     static const uint32_t version_maximum;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

@@ -31,15 +31,13 @@ const std::string verack::command = "verack";
 const uint32_t verack::version_minimum = version::level::minimum;
 const uint32_t verack::version_maximum = version::level::maximum;
 
-verack verack::factory_from_data(uint32_t version, const data_chunk& data)
-{
+verack verack::factory_from_data(uint32_t version, const data_chunk& data) {
     verack instance;
     instance.from_data(version, data);
     return instance;
 }
 
-verack verack::factory_from_data(uint32_t version, data_source& stream)
-{
+verack verack::factory_from_data(uint32_t version, data_source& stream) {
     verack instance;
     instance.from_data(version, stream);
     return instance;
@@ -52,27 +50,22 @@ verack verack::factory_from_data(uint32_t version, data_source& stream)
 //    return instance;
 //}
 
-verack::verack()
-{
+verack::verack() {
 }
 
-bool verack::is_valid() const
-{
+bool verack::is_valid() const {
     return true;
 }
 
-void verack::reset()
-{
+void verack::reset() {
 }
 
-bool verack::from_data(uint32_t version, const data_chunk& data)
-{
+bool verack::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool verack::from_data(uint32_t version, data_source& stream)
-{
+bool verack::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -83,8 +76,7 @@ bool verack::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk verack::to_data(uint32_t version) const
-{
+data_chunk verack::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -95,20 +87,16 @@ data_chunk verack::to_data(uint32_t version) const
     return data;
 }
 
-void verack::to_data(uint32_t version, data_sink& stream) const
-{
+void verack::to_data(uint32_t version, data_sink& stream) const {
 }
 
-size_t verack::serialized_size(uint32_t version) const
-{
+size_t verack::serialized_size(uint32_t version) const {
     return verack::satoshi_fixed_size(version);
 }
 
-
-size_t verack::satoshi_fixed_size(uint32_t version)
-{
+size_t verack::satoshi_fixed_size(uint32_t version) {
     return 0;
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
