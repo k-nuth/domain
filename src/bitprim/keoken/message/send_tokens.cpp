@@ -66,7 +66,7 @@ send_tokens send_tokens::factory_from_data(data_chunk const& data) {
 }
 
 // static
-send_tokens send_tokens::factory_from_data(std::istream& stream) {
+send_tokens send_tokens::factory_from_data(data_source& stream) {
     send_tokens instance;       //NOLINT
     instance.from_data(stream);
     return instance;
@@ -84,9 +84,9 @@ bool send_tokens::from_data(data_chunk const& data) {
     return from_data(istream);
 }
 
-bool send_tokens::from_data(std::istream& stream) {
-    istream_reader source(stream);
-    return from_data(source);
+bool send_tokens::from_data(data_source& stream) {
+    istream_reader stream_r(stream);
+    return from_data(stream_r);
 }
 
 //Note: from_data and to_data are not longer simetrical.
@@ -114,9 +114,9 @@ data_chunk send_tokens::to_data() const {
     return data;
 }
 
-void send_tokens::to_data(std::ostream& stream) const {
-    ostream_writer sink(stream);
-    to_data(sink);
+void send_tokens::to_data(data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(sink_w);
 }
 
 //Note: from_data and to_data are not longer simetrical.
