@@ -30,8 +30,8 @@ namespace message {
 
 const std::string version::command = "version";
 //const bounds message::version::version = { level::minimum, level::maximum };
-const uint32_t message::version::version_minimum = level::minimum;
-const uint32_t message::version::version_maximum = level::maximum;
+uint32_t const message::version::version_minimum = level::minimum;
+uint32_t const message::version::version_maximum = level::maximum;
 
 version version::factory_from_data(uint32_t version, const data_chunk& data) {
     message::version instance;
