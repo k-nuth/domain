@@ -35,29 +35,26 @@ constexpr size_t max_index = max_uint32;
 constexpr size_t max_index = max_uint16;
 #endif
 
-prefilled_transaction prefilled_transaction::factory_from_data(
-    uint32_t version, const data_chunk& data)
+prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, const data_chunk& data)
 {
     prefilled_transaction instance;
     instance.from_data(version, data);
     return instance;
 }
 
-prefilled_transaction prefilled_transaction::factory_from_data(
-    uint32_t version, std::istream& stream)
+prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, data_source& stream)
 {
     prefilled_transaction instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-prefilled_transaction prefilled_transaction::factory_from_data(
-    uint32_t version, reader& source)
-{
-    prefilled_transaction instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, reader& source)
+//{
+//    prefilled_transaction instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 prefilled_transaction::prefilled_transaction()
     : index_(max_index), transaction_()
@@ -97,38 +94,35 @@ void prefilled_transaction::reset()
     transaction_ = chain::transaction{};
 }
 
-bool prefilled_transaction::from_data(uint32_t version,
-    const data_chunk& data)
+bool prefilled_transaction::from_data(uint32_t version, const data_chunk& data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool prefilled_transaction::from_data(uint32_t version,
-    std::istream& stream)
+bool prefilled_transaction::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool prefilled_transaction::from_data(uint32_t version,
-    reader& source)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-    reset();
-
-    index_ = source.read_variable_little_endian();
-    transaction_.from_data(source, true, witness);
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool prefilled_transaction::from_data(uint32_t version, reader& source)
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    bool witness = false;
+//#else
+//    bool witness = true;
+//#endif
+//    reset();
+//
+//    index_ = source.read_variable_little_endian();
+//    transaction_.from_data(source, true, witness);
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk prefilled_transaction::to_data(uint32_t version) const
 {
@@ -142,24 +136,22 @@ data_chunk prefilled_transaction::to_data(uint32_t version) const
     return data;
 }
 
-void prefilled_transaction::to_data(uint32_t version,
-    std::ostream& stream) const
+void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void prefilled_transaction::to_data(uint32_t version,
-    writer& sink) const
-{
-    sink.write_variable_little_endian(index_);
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-    transaction_.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
-}
+//void prefilled_transaction::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_variable_little_endian(index_);
+//#ifdef BITPRIM_CURRENCY_BCH
+//    bool witness = false;
+//#else
+//    bool witness = true;
+//#endif
+//    transaction_.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
+//}
 
 size_t prefilled_transaction::serialized_size(uint32_t version) const
 {
