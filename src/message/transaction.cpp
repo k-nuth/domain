@@ -20,6 +20,7 @@
 
 #include <istream>
 #include <utility>
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -33,15 +34,13 @@ const std::string transaction::command = "tx";
 const uint32_t transaction::version_minimum = version::level::minimum;
 const uint32_t transaction::version_maximum = version::level::maximum;
 
-transaction transaction::factory_from_data(uint32_t version, const data_chunk& data)
-{
+transaction transaction::factory_from_data(uint32_t version, const data_chunk& data) {
     transaction instance;
     instance.from_data(version, data);
     return instance;
 }
 
-transaction transaction::factory_from_data(uint32_t version, data_source& stream)
-{
+transaction transaction::factory_from_data(uint32_t version, data_source& stream) {
     transaction instance;
     instance.from_data(version, stream);
     return instance;
@@ -55,53 +54,41 @@ transaction transaction::factory_from_data(uint32_t version, data_source& stream
 //}
 
 transaction::transaction()
-  : chain::transaction()
-{
+    : chain::transaction() {
 }
 
 transaction::transaction(transaction&& other)
-  : chain::transaction(std::move(other))
-{
+    : chain::transaction(std::move(other)) {
 }
 
 transaction::transaction(const transaction& other)
-  : chain::transaction(other)
-{
+    : chain::transaction(other) {
 }
 
 transaction::transaction(chain::transaction&& other)
-  : chain::transaction(std::move(other))
-{
+    : chain::transaction(std::move(other)) {
 }
 
 transaction::transaction(const chain::transaction& other)
-  : chain::transaction(other)
-{
+    : chain::transaction(other) {
 }
 
-transaction::transaction(uint32_t version, uint32_t locktime,
-    chain::input::list&& inputs, chain::output::list&& outputs)
-  : chain::transaction(version, locktime, std::move(inputs),
-        std::move(outputs))
-{
+transaction::transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs)
+    : chain::transaction(version, locktime, std::move(inputs), std::move(outputs)) {
 }
 
-transaction::transaction(uint32_t version, uint32_t locktime,
-    const chain::input::list& inputs, const chain::output::list& outputs)
-  : chain::transaction(version, locktime, inputs, outputs)
-{
+transaction::transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs)
+    : chain::transaction(version, locktime, inputs, outputs) {
 }
 
 // Witness is always deserialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-bool transaction::from_data(uint32_t version, const data_chunk& data)
-{
+bool transaction::from_data(uint32_t version, const data_chunk& data) {
     return chain::transaction::from_data(data, true, true);
 }
 
-bool transaction::from_data(uint32_t version, data_source& stream)
-{
+bool transaction::from_data(uint32_t version, data_source& stream) {
     return chain::transaction::from_data(stream, true, true);
 }
 
@@ -113,13 +100,11 @@ bool transaction::from_data(uint32_t version, data_source& stream)
 // Witness is always serialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-data_chunk transaction::to_data(uint32_t version, bool witness) const
-{
+data_chunk transaction::to_data(uint32_t version, bool witness) const {
     return chain::transaction::to_data(true, witness);
 }
 
-void transaction::to_data(uint32_t version, data_sink& stream, bool witness) const
-{
+void transaction::to_data(uint32_t version, data_sink& stream, bool witness) const {
     chain::transaction::to_data(stream, true, witness);
 }
 
@@ -131,43 +116,36 @@ void transaction::to_data(uint32_t version, data_sink& stream, bool witness) con
 // Witness size is always counted if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-size_t transaction::serialized_size(uint32_t) const
-{
+size_t transaction::serialized_size(uint32_t) const {
     return chain::transaction::serialized_size(true, true);
 }
 
-transaction& transaction::operator=(chain::transaction&& other)
-{
+transaction& transaction::operator=(chain::transaction&& other) {
     reset();
     chain::transaction::operator=(std::move(other));
     return *this;
 }
 
-transaction& transaction::operator=(transaction&& other)
-{
+transaction& transaction::operator=(transaction&& other) {
     chain::transaction::operator=(std::move(other));
     return *this;
 }
 
-bool transaction::operator==(const chain::transaction& other) const
-{
+bool transaction::operator==(const chain::transaction& other) const {
     return chain::transaction::operator==(other);
 }
 
-bool transaction::operator!=(const chain::transaction& other) const
-{
+bool transaction::operator!=(const chain::transaction& other) const {
     return chain::transaction::operator!=(other);
 }
 
-bool transaction::operator==(const transaction& other) const
-{
+bool transaction::operator==(const transaction& other) const {
     return chain::transaction::operator==(other);
 }
 
-bool transaction::operator!=(const transaction& other) const
-{
+bool transaction::operator!=(const transaction& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

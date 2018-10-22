@@ -19,20 +19,20 @@
 #ifndef LIBBITCOIN_MESSAGE_TRANSACTION_HPP
 #define LIBBITCOIN_MESSAGE_TRANSACTION_HPP
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <memory>
 
-#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/reader.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -41,9 +41,8 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API transaction
-  : public chain::transaction
-{
-public:
+    : public chain::transaction {
+   public:
     typedef std::shared_ptr<transaction> ptr;
     typedef std::shared_ptr<const transaction> const_ptr;
     typedef std::vector<ptr> ptr_list;
@@ -53,10 +52,9 @@ public:
 
     static transaction factory_from_data(uint32_t version, const data_chunk& data);
     static transaction factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static transaction factory_from_data(uint32_t version, R& source)
-    {
+    static transaction factory_from_data(uint32_t version, R& source) {
         transaction instance;
         instance.from_data(version, source);
         return instance;
@@ -72,27 +70,23 @@ public:
     transaction(const transaction& other);
     transaction(const chain::transaction& other);
 
-    transaction(uint32_t version, uint32_t locktime,
-        chain::input::list&& inputs, chain::output::list&& outputs);
-    transaction(uint32_t version, uint32_t locktime,
-        const chain::input::list& inputs, const chain::output::list& outputs);
+    transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs);
+    transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs);
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         return chain::transaction::from_data(source, true, true);
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version, bool witness = true) const;
     void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink, bool witness = true) const
-    {
+    void to_data(uint32_t version, W& sink, bool witness = true) const {
         chain::transaction::to_data(sink, true, witness);
     }
 
@@ -116,7 +110,7 @@ public:
     static const uint32_t version_maximum;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
