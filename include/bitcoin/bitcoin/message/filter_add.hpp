@@ -22,10 +22,17 @@
 #include <istream>
 #include <memory>
 #include <string>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -36,11 +43,18 @@ public:
     typedef std::shared_ptr<filter_add> ptr;
     typedef std::shared_ptr<const filter_add> const_ptr;
 
-    static filter_add factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static filter_add factory_from_data(uint32_t version,
-        std::istream& stream);
-    static filter_add factory_from_data(uint32_t version, reader& source);
+    static filter_add factory_from_data(uint32_t version, const data_chunk& data);
+    static filter_add factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static filter_add factory_from_data(uint32_t version, R& source)
+    {
+        filter_add instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static filter_add factory_from_data(uint32_t version, reader& source);
 
     filter_add();
     filter_add(const data_chunk& data);
@@ -54,11 +68,41 @@ public:
     void set_data(data_chunk&& value);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        const auto size = source.read_size_little_endian();
+    
+        if (size > max_filter_add)
+            source.invalidate();
+        else
+            data_ = source.read_bytes(size);
+    
+        if (version < filter_add::version_minimum)
+            source.invalidate();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_variable_little_endian(data_.size());
+        sink.write_bytes(data_);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;

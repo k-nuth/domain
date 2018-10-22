@@ -34,29 +34,26 @@ const std::string filter_add::command = "filteradd";
 const uint32_t filter_add::version_minimum = version::level::bip37;
 const uint32_t filter_add::version_maximum = version::level::maximum;
 
-filter_add filter_add::factory_from_data(uint32_t version,
-    const data_chunk& data)
+filter_add filter_add::factory_from_data(uint32_t version, const data_chunk& data)
 {
     filter_add instance;
     instance.from_data(version, data);
     return instance;
 }
 
-filter_add filter_add::factory_from_data(uint32_t version,
-    std::istream& stream)
+filter_add filter_add::factory_from_data(uint32_t version, data_source& stream)
 {
     filter_add instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-filter_add filter_add::factory_from_data(uint32_t version,
-    reader& source)
-{
-    filter_add instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//filter_add filter_add::factory_from_data(uint32_t version, reader& source)
+//{
+//    filter_add instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 filter_add::filter_add()
   : data_()
@@ -100,31 +97,31 @@ bool filter_add::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool filter_add::from_data(uint32_t version, std::istream& stream)
+bool filter_add::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool filter_add::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    const auto size = source.read_size_little_endian();
-
-    if (size > max_filter_add)
-        source.invalidate();
-    else
-        data_ = source.read_bytes(size);
-
-    if (version < filter_add::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool filter_add::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    const auto size = source.read_size_little_endian();
+//
+//    if (size > max_filter_add)
+//        source.invalidate();
+//    else
+//        data_ = source.read_bytes(size);
+//
+//    if (version < filter_add::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk filter_add::to_data(uint32_t version) const
 {
@@ -138,17 +135,17 @@ data_chunk filter_add::to_data(uint32_t version) const
     return data;
 }
 
-void filter_add::to_data(uint32_t version, std::ostream& stream) const
+void filter_add::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void filter_add::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_variable_little_endian(data_.size());
-    sink.write_bytes(data_);
-}
+//void filter_add::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_variable_little_endian(data_.size());
+//    sink.write_bytes(data_);
+//}
 
 size_t filter_add::serialized_size(uint32_t version) const
 {
