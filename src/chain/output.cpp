@@ -131,19 +131,19 @@ output output::factory_from_data(const data_chunk& data, bool wire)
     return instance;
 }
 
-output output::factory_from_data(std::istream& stream, bool wire)
+output output::factory_from_data(data_source& stream, bool wire)
 {
     output instance;
     instance.from_data(stream, wire);
     return instance;
 }
 
-output output::factory_from_data(reader& source, bool wire)
-{
-    output instance;
-    instance.from_data(source, wire);
-    return instance;
-}
+//output output::factory_from_data(reader& source, bool wire)
+//{
+//    output instance;
+//    instance.from_data(source, wire);
+//    return instance;
+//}
 
 bool output::from_data(const data_chunk& data, bool wire)
 {
@@ -151,27 +151,27 @@ bool output::from_data(const data_chunk& data, bool wire)
     return from_data(istream, wire);
 }
 
-bool output::from_data(std::istream& stream, bool wire)
+bool output::from_data(data_source& stream, bool wire)
 {
-    istream_reader source(stream);
-    return from_data(source, wire);
+    istream_reader stream_r(stream);
+    return from_data(stream_r, wire);
 }
 
-bool output::from_data(reader& source, bool wire, bool)
-{
-    reset();
-
-    if (!wire)
-        validation.spender_height = source.read_4_bytes_little_endian();
-
-    value_ = source.read_8_bytes_little_endian();
-    script_.from_data(source, true);
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool output::from_data(reader& source, bool wire, bool)
+//{
+//    reset();
+//
+//    if (!wire)
+//        validation.spender_height = source.read_4_bytes_little_endian();
+//
+//    value_ = source.read_8_bytes_little_endian();
+//    script_.from_data(source, true);
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 // protected
 void output::reset()
@@ -201,23 +201,23 @@ data_chunk output::to_data(bool wire) const
     return data;
 }
 
-void output::to_data(std::ostream& stream, bool wire) const
+void output::to_data(data_sink& stream, bool wire) const
 {
-    ostream_writer sink(stream);
-    to_data(sink, wire);
+    ostream_writer sink_w(stream);
+    to_data(sink_w, wire);
 }
 
-void output::to_data(writer& sink, bool wire, bool) const
-{
-    if (!wire)
-    {
-        auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
-        sink.write_4_bytes_little_endian(height32);
-    }
-
-    sink.write_8_bytes_little_endian(value_);
-    script_.to_data(sink, true);
-}
+//void output::to_data(writer& sink, bool wire, bool) const
+//{
+//    if (!wire)
+//    {
+//        auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
+//        sink.write_4_bytes_little_endian(height32);
+//    }
+//
+//    sink.write_8_bytes_little_endian(value_);
+//    script_.to_data(sink, true);
+//}
 
 // Size.
 //-----------------------------------------------------------------------------

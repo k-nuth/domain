@@ -25,12 +25,18 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -78,12 +84,39 @@ public:
     //-------------------------------------------------------------------------
 
     static output factory_from_data(const data_chunk& data, bool wire=true);
-    static output factory_from_data(std::istream& stream, bool wire=true);
-    static output factory_from_data(reader& source, bool wire=true);
+    static output factory_from_data(data_source& stream, bool wire=true);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static output factory_from_data(R& source, bool wire=true)
+    {
+        output instance;
+        instance.from_data(source, wire);
+        return instance;
+    }
+
+    //static output factory_from_data(reader& source, bool wire=true);
 
     bool from_data(const data_chunk& data, bool wire=true);
-    bool from_data(std::istream& stream, bool wire=true);
-    bool from_data(reader& source, bool wire=true, bool unused=false);
+    bool from_data(data_source& stream, bool wire=true);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool wire=true, bool unused=false)
+    {
+        reset();
+    
+        if (!wire)
+            validation.spender_height = source.read_4_bytes_little_endian();
+    
+        value_ = source.read_8_bytes_little_endian();
+        script_.from_data(source, true);
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(reader& source, bool wire=true, bool unused=false);
 
     bool is_valid() const;
 
@@ -91,8 +124,22 @@ public:
     //-------------------------------------------------------------------------
 
     data_chunk to_data(bool wire=true) const;
-    void to_data(std::ostream& stream, bool wire=true) const;
-    void to_data(writer& sink, bool wire=true, bool unused=false) const;
+    void to_data(data_sink& stream, bool wire=true) const;
+    
+    template <Writer W>
+    void to_data(W& sink, bool wire=true, bool unused=false) const
+    {
+        if (!wire)
+        {
+            auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
+            sink.write_4_bytes_little_endian(height32);
+        }
+    
+        sink.write_8_bytes_little_endian(value_);
+        script_.to_data(sink, true);
+    }
+
+    //void to_data(writer& sink, bool wire=true, bool unused=false) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -147,5 +194,7 @@ private:
 
 } // namespace chain
 } // namespace libbitcoin
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif
