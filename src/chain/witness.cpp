@@ -77,7 +77,8 @@ witness::witness(data_stack&& stack)
 
 witness::witness(data_chunk&& encoded, bool prefix)
 {
-    from_data(encoded, prefix);
+    from_data(static_cast<data_chunk const&>(encoded), prefix);
+    // from_data(encoded, prefix);
 }
 
 witness::witness(const data_chunk& encoded, bool prefix)
@@ -125,7 +126,7 @@ witness witness::factory_from_data(const data_chunk& encoded, bool prefix)
 }
 
 // static
-witness witness::factory_from_data(std::istream& stream, bool prefix)
+witness witness::factory_from_data(data_source& stream, bool prefix)
 {
     witness instance;
     instance.from_data(stream, prefix);
@@ -133,12 +134,12 @@ witness witness::factory_from_data(std::istream& stream, bool prefix)
 }
 
 // static
-witness witness::factory_from_data(reader& source, bool prefix)
-{
-    witness instance;
-    instance.from_data(source, prefix);
-    return instance;
-}
+//witness witness::factory_from_data(reader& source, bool prefix)
+//{
+//    witness instance;
+//    instance.from_data(source, prefix);
+//    return instance;
+//}
 
 bool witness::from_data(const data_chunk& encoded, bool prefix)
 {
@@ -146,54 +147,54 @@ bool witness::from_data(const data_chunk& encoded, bool prefix)
     return from_data(istream, prefix);
 }
 
-bool witness::from_data(std::istream& stream, bool prefix)
+bool witness::from_data(data_source& stream, bool prefix)
 {
-    istream_reader source(stream);
-    return from_data(source, prefix);
+    istream_reader stream_r(stream);
+    return from_data(stream_r, prefix);
 }
 
 // Prefixed data assumed valid here though caller may confirm with is_valid.
-bool witness::from_data(reader& source, bool prefix)
-{
-    reset();
-    valid_ = true;
-
-    const auto read_element = [](reader& source)
-    {
-        // Tokens encoded as variable integer prefixed byte array (bip144).
-        const auto size = source.read_size_little_endian();
-
-        // The max_script_size and max_push_data_size constants limit
-        // evaluation, but not all stacks evaluate, so use max_block_weight
-        // to guard memory allocation here.
-        if (size > max_block_weight)
-        {
-            source.invalidate();
-            return data_chunk{};
-        }
-
-        return source.read_bytes(size);
-    };
-
-    // TODO: optimize store serialization to avoid loop, reading data directly.
-    if (prefix)
-    {
-        // Witness prefix is an element count, not byte length (unlike script).
-        // On wire each witness is prefixed with number of elements (bip144).
-        for (auto count = source.read_size_little_endian(); count > 0; --count)
-             stack_.push_back(read_element(source));
-    }
-    else
-    {
-        while (!source.is_exhausted())
-            stack_.push_back(read_element(source));
-    }
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool witness::from_data(reader& source, bool prefix)
+//{
+//    reset();
+//    valid_ = true;
+//
+//    const auto read_element = [](reader& source)
+//    {
+//        // Tokens encoded as variable integer prefixed byte array (bip144).
+//        const auto size = source.read_size_little_endian();
+//
+//        // The max_script_size and max_push_data_size constants limit
+//        // evaluation, but not all stacks evaluate, so use max_block_weight
+//        // to guard memory allocation here.
+//        if (size > max_block_weight)
+//        {
+//            source.invalidate();
+//            return data_chunk{};
+//        }
+//
+//        return source.read_bytes(size);
+//    };
+//
+//    // TODO: optimize store serialization to avoid loop, reading data directly.
+//    if (prefix)
+//    {
+//        // Witness prefix is an element count, not byte length (unlike script).
+//        // On wire each witness is prefixed with number of elements (bip144).
+//        for (auto count = source.read_size_little_endian(); count > 0; --count)
+//             stack_.push_back(read_element(source));
+//    }
+//    else
+//    {
+//        while (!source.is_exhausted())
+//            stack_.push_back(read_element(source));
+//    }
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 // private/static
 size_t witness::serialized_size(const data_stack& stack)
@@ -237,28 +238,28 @@ data_chunk witness::to_data(bool prefix) const
     return data;
 }
 
-void witness::to_data(std::ostream& stream, bool prefix) const
+void witness::to_data(data_sink& stream, bool prefix) const
 {
-    ostream_writer sink(stream);
-    to_data(sink, prefix);
+    ostream_writer sink_w(stream);
+    to_data(sink_w, prefix);
 }
 
-void witness::to_data(writer& sink, bool prefix) const
-{
-    // Witness prefix is an element count, not byte length (unlike script).
-    if (prefix)
-        sink.write_size_little_endian(stack_.size());
-
-    const auto serialize = [&sink](const data_chunk& element)
-    {
-        // Tokens encoded as variable integer prefixed byte array (bip144).
-        sink.write_size_little_endian(element.size());
-        sink.write_bytes(element);
-    };
-
-    // TODO: optimize store serialization to avoid loop, writing data directly.
-    std::for_each(stack_.begin(), stack_.end(), serialize);
-}
+//void witness::to_data(writer& sink, bool prefix) const
+//{
+//    // Witness prefix is an element count, not byte length (unlike script).
+//    if (prefix)
+//        sink.write_size_little_endian(stack_.size());
+//
+//    const auto serialize = [&sink](const data_chunk& element)
+//    {
+//        // Tokens encoded as variable integer prefixed byte array (bip144).
+//        sink.write_size_little_endian(element.size());
+//        sink.write_bytes(element);
+//    };
+//
+//    // TODO: optimize store serialization to avoid loop, writing data directly.
+//    std::for_each(stack_.begin(), stack_.end(), serialize);
+//}
 
 std::string witness::to_string() const
 {
