@@ -25,11 +25,14 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include <boost/optional.hpp>
+
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/chain/point.hpp>
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
@@ -39,9 +42,74 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
+
+namespace detail {
+// Read a length-prefixed collection of inputs or outputs from the source.
+template <class Source, class Put>
+bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
+    auto result = true;
+    const auto count = source.read_size_little_endian();
+
+    // Guard against potential for arbitary memory allocation.
+    if (count > get_max_block_size())
+        source.invalidate();
+    else
+        puts.resize(count);
+
+    const auto deserialize = [&](Put& put) {
+        result = result && put.from_data(source, wire, witness_val(witness));
+#ifndef NDBEUG
+        put.script().operations();
+#endif
+    };
+
+    std::for_each(puts.begin(), puts.end(), deserialize);
+    return result;
+}
+
+// Write a length-prefixed collection of inputs or outputs to the sink.
+template <class Sink, class Put>
+void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
+    sink.write_variable_little_endian(puts.size());
+
+    const auto serialize = [&](const Put& put) {
+        put.to_data(sink, wire, witness_val(witness));
+    };
+
+    std::for_each(puts.begin(), puts.end(), serialize);
+}
+
+// Input list must be pre-populated as it determines witness count.
+template <Reader R, BITPRIM_IS_READER(R)>
+inline 
+void read_witnesses(R& source, input::list& inputs) {
+    const auto deserialize = [&](input& input) {
+        input.witness().from_data(source, true);
+    };
+
+    std::for_each(inputs.begin(), inputs.end(), deserialize);
+}
+
+// Witness count is not written as it is inferred from input count.
+template <typename W>
+inline
+void write_witnesses(W& sink, const input::list& inputs) {
+    const auto serialize = [&sink](const input& input) {
+        input.witness().to_data(sink, true);
+    };
+
+    std::for_each(inputs.begin(), inputs.end(), serialize);
+}
+} // namespace detail
+
 
 class BC_API transaction
 {
@@ -100,21 +168,131 @@ public:
     //-----------------------------------------------------------------------------
 
     static transaction factory_from_data(const data_chunk& data, bool wire=true, bool witness=false);
-    static transaction factory_from_data(std::istream& stream, bool wire=true, bool witness=false);
-    static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
+    static transaction factory_from_data(data_source& stream, bool wire=true, bool witness=false);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static 
+    transaction factory_from_data(R& source, bool wire=true, bool witness=false) {
+        transaction instance;
+        instance.from_data(source, wire, witness_val(witness));
+        return instance;
+    }
+
+    //static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
 
     bool from_data(const data_chunk& data, bool wire=true, bool witness=false, bool unconfirmed=false);
-    bool from_data(std::istream& stream, bool wire=true, bool witness=false, bool unconfirmed=false);
-    bool from_data(reader& source, bool wire=true, bool witness=false, bool unconfirmed=false);
+    bool from_data(data_source& stream, bool wire=true, bool witness=false, bool unconfirmed=false);
+    
+    // Witness is not used by outputs, just for template normalization.
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool wire=true, bool witness=false, bool unconfirmed=false) {
+        reset();
+    
+        if (wire) {
+            // Wire (satoshi protocol) deserialization.
+            version_ = source.read_4_bytes_little_endian();
+            detail::read(source, inputs_, wire, witness_val(witness));
+#ifdef BITPRIM_CURRENCY_BCH
+            const auto marker = false;
+#else
+            // Detect witness as no inputs (marker) and expected flag (bip144).
+            const auto marker = inputs_.size() == witness_marker && source.peek_byte() == witness_flag;
+#endif
+    
+            // This is always enabled so caller should validate with is_segregated.
+            if (marker) {
+                // Skip over the peeked witness flag.
+                source.skip(1);
+                detail::read(source, inputs_, wire, witness_val(witness));
+                detail::read(source, outputs_, wire, witness_val(witness));
+                detail::read_witnesses(source, inputs_);
+            } else {
+                detail::read(source, outputs_, wire, witness_val(witness));
+            }
+    
+            locktime_ = source.read_4_bytes_little_endian();
+        } else {
+            // Database (outputs forward) serialization.
+            // Witness data is managed internal to inputs.
+            detail::read(source, outputs_, wire, witness_val(witness));
+            detail::read(source, inputs_, wire, witness_val(witness));
+            const auto locktime = source.read_variable_little_endian();
+            const auto version = source.read_variable_little_endian();
+    
+            if (locktime > max_uint32 || version > max_uint32)
+                source.invalidate();
+    
+            locktime_ = static_cast<uint32_t>(locktime);
+            version_ = static_cast<uint32_t>(version);
+    
+            if (unconfirmed) {
+                const auto sigops = source.read_4_bytes_little_endian();
+                cached_sigops_ = static_cast<uint32_t>(sigops);
+                const auto fees = source.read_8_bytes_little_endian();
+                cached_fees_ = static_cast<uint64_t>(fees);
+                const auto is_standard = source.read_byte();
+                cached_is_standard_ = static_cast<bool>(is_standard);
+            }
+        }
+    
+        // TODO: optimize by having reader skip witness data.
+        if (!witness_val(witness))
+            strip_witness();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
 
+    //bool from_data(reader& source, bool wire=true, bool witness=false, bool unconfirmed=false);
+  
     bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
 
     data_chunk to_data(bool wire=true, bool witness=false, bool unconfirmed=false) const;
-    void to_data(std::ostream& stream, bool wire=true, bool witness=false, bool unconfirmed=false) const;
-    void to_data(writer& sink, bool wire=true, bool witness=false, bool unconfirmed=false) const;
+    void to_data(data_sink& stream, bool wire=true, bool witness=false, bool unconfirmed=false) const;
+
+    // Witness is not used by outputs, just for template normalization.
+    template <Writer W>
+    void to_data(W& sink, bool wire=true, bool witness=false, bool unconfirmed=false) const {
+        if (wire) {
+            // Witness handling must be disabled for non-segregated txs.
+            witness &= is_segregated();
+    
+            // Wire (satoshi protocol) serialization.
+            sink.write_4_bytes_little_endian(version_);
+    
+            if (witness_val(witness)) {
+                sink.write_byte(witness_marker);
+                sink.write_byte(witness_flag);
+                detail::write(sink, inputs_, wire, witness_val(witness));
+                detail::write(sink, outputs_, wire, witness_val(witness));
+                detail::write_witnesses(sink, inputs_);
+            } else {
+                detail::write(sink, inputs_, wire, witness_val(witness));
+                detail::write(sink, outputs_, wire, witness_val(witness));
+            }
+    
+            sink.write_4_bytes_little_endian(locktime_);
+        } else {
+            // Database (outputs forward) serialization.
+            // Witness data is managed internal to inputs.
+            detail::write(sink, outputs_, wire, witness_val(witness));
+            detail::write(sink, inputs_, wire, witness_val(witness));
+            sink.write_variable_little_endian(locktime_);
+            sink.write_variable_little_endian(version_);
+            if (unconfirmed) {
+                sink.write_4_bytes_little_endian(signature_operations());
+                sink.write_8_bytes_little_endian(fees());
+                sink.write_byte(is_standard());
+            }
+        }
+    }
+
+    //void to_data(writer& sink, bool wire=true, bool witness=false, bool unconfirmed=false) const;
 
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
@@ -236,5 +414,7 @@ private:
 
 } // namespace chain
 } // namespace libbitcoin
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif
