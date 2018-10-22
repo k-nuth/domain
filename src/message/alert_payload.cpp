@@ -29,27 +29,21 @@ namespace libbitcoin {
 namespace message {
 
 // Libbitcon doesn't use this.
-const ec_uncompressed alert_payload::satoshi_public_key
-{
-    {
-        0x04, 0xfc, 0x97, 0x02, 0x84, 0x78, 0x40, 0xaa, 0xf1, 0x95, 0xde,
-        0x84, 0x42, 0xeb, 0xec, 0xed, 0xf5, 0xb0, 0x95, 0xcd, 0xbb, 0x9b,
-        0xc7, 0x16, 0xbd, 0xa9, 0x11, 0x09, 0x71, 0xb2, 0x8a, 0x49, 0xe0,
-        0xea, 0xd8, 0x56, 0x4f, 0xf0, 0xdb, 0x22, 0x20, 0x9e, 0x03, 0x74,
-        0x78, 0x2c, 0x09, 0x3b, 0xb8, 0x99, 0x69, 0x2d, 0x52, 0x4e, 0x9d,
-        0x6a, 0x69, 0x56, 0xe7, 0xc5, 0xec, 0xbc, 0xd6, 0x82, 0x84
-    }
-};
+const ec_uncompressed alert_payload::satoshi_public_key{
+    {0x04, 0xfc, 0x97, 0x02, 0x84, 0x78, 0x40, 0xaa, 0xf1, 0x95, 0xde,
+     0x84, 0x42, 0xeb, 0xec, 0xed, 0xf5, 0xb0, 0x95, 0xcd, 0xbb, 0x9b,
+     0xc7, 0x16, 0xbd, 0xa9, 0x11, 0x09, 0x71, 0xb2, 0x8a, 0x49, 0xe0,
+     0xea, 0xd8, 0x56, 0x4f, 0xf0, 0xdb, 0x22, 0x20, 0x9e, 0x03, 0x74,
+     0x78, 0x2c, 0x09, 0x3b, 0xb8, 0x99, 0x69, 0x2d, 0x52, 0x4e, 0x9d,
+     0x6a, 0x69, 0x56, 0xe7, 0xc5, 0xec, 0xbc, 0xd6, 0x82, 0x84}};
 
-alert_payload alert_payload::factory_from_data(uint32_t version, const data_chunk& data)
-{
+alert_payload alert_payload::factory_from_data(uint32_t version, const data_chunk& data) {
     alert_payload instance;
     instance.from_data(version, data);
     return instance;
 }
 
-alert_payload alert_payload::factory_from_data(uint32_t version, data_source& stream)
-{
+alert_payload alert_payload::factory_from_data(uint32_t version, data_source& stream) {
     alert_payload instance;
     instance.from_data(version, stream);
     return instance;
@@ -63,15 +57,14 @@ alert_payload alert_payload::factory_from_data(uint32_t version, data_source& st
 //}
 
 alert_payload::alert_payload()
-  : version_(0),
-    relay_until_(0),
-    expiration_(0),
-    id_(0),
-    cancel_(0),
-    min_version_(0),
-    max_version_(0),
-    priority_(0)
-{
+    : version_(0),
+      relay_until_(0),
+      expiration_(0),
+      id_(0),
+      cancel_(0),
+      min_version_(0),
+      max_version_(0),
+      priority_(0) {
 }
 
 alert_payload::alert_payload(
@@ -88,20 +81,19 @@ alert_payload::alert_payload(
     const std::string& comment,
     const std::string& status_bar,
     const std::string& reserved)
-  : version_(version),
-    relay_until_(relay_until),
-    expiration_(expiration),
-    id_(id),
-    cancel_(cancel),
-    set_cancel_(set_cancel),
-    min_version_(min_version),
-    max_version_(max_version),
-    set_sub_version_(set_sub_version),
-    priority_(priority),
-    comment_(comment),
-    status_bar_(status_bar),
-    reserved_(reserved)
-{
+    : version_(version),
+      relay_until_(relay_until),
+      expiration_(expiration),
+      id_(id),
+      cancel_(cancel),
+      set_cancel_(set_cancel),
+      min_version_(min_version),
+      max_version_(max_version),
+      set_sub_version_(set_sub_version),
+      priority_(priority),
+      comment_(comment),
+      status_bar_(status_bar),
+      reserved_(reserved) {
 }
 
 alert_payload::alert_payload(
@@ -118,77 +110,60 @@ alert_payload::alert_payload(
     std::string&& comment,
     std::string&& status_bar,
     std::string&& reserved)
-  : version_(version),
-    relay_until_(relay_until),
-    expiration_(expiration),
-    id_(id),
-    cancel_(cancel),
-    set_cancel_(std::move(set_cancel)),
-    min_version_(min_version),
-    max_version_(max_version),
-    set_sub_version_(std::move(set_sub_version)),
-    priority_(priority),
-    comment_(std::move(comment)),
-    status_bar_(std::move(status_bar)),
-    reserved_(std::move(reserved))
-{
+    : version_(version),
+      relay_until_(relay_until),
+      expiration_(expiration),
+      id_(id),
+      cancel_(cancel),
+      set_cancel_(std::move(set_cancel)),
+      min_version_(min_version),
+      max_version_(max_version),
+      set_sub_version_(std::move(set_sub_version)),
+      priority_(priority),
+      comment_(std::move(comment)),
+      status_bar_(std::move(status_bar)),
+      reserved_(std::move(reserved)) {
 }
 
 alert_payload::alert_payload(const alert_payload& other)
-  : alert_payload(
-        other.version_,
-        other.relay_until_,
-        other.expiration_,
-        other.id_,
-        other.cancel_,
-        other.set_cancel_,
-        other.min_version_,
-        other.max_version_,
-        other.set_sub_version_,
-        other.priority_,
-        other.comment_,
-        other.status_bar_,
-        other.reserved_)
-{
+    : alert_payload(
+          other.version_,
+          other.relay_until_,
+          other.expiration_,
+          other.id_,
+          other.cancel_,
+          other.set_cancel_,
+          other.min_version_,
+          other.max_version_,
+          other.set_sub_version_,
+          other.priority_,
+          other.comment_,
+          other.status_bar_,
+          other.reserved_) {
 }
 
 alert_payload::alert_payload(alert_payload&& other)
-  : alert_payload(
-        other.version_,
-        other.relay_until_,
-        other.expiration_,
-        other.id_,
-        other.cancel_,
-        std::move(other.set_cancel_),
-        other.min_version_,
-        other.max_version_,
-        std::move(other.set_sub_version_),
-        other.priority_,
-        std::move(other.comment_),
-        std::move(other.status_bar_),
-        std::move(other.reserved_))
-{
+    : alert_payload(
+          other.version_,
+          other.relay_until_,
+          other.expiration_,
+          other.id_,
+          other.cancel_,
+          std::move(other.set_cancel_),
+          other.min_version_,
+          other.max_version_,
+          std::move(other.set_sub_version_),
+          other.priority_,
+          std::move(other.comment_),
+          std::move(other.status_bar_),
+          std::move(other.reserved_)) {
 }
 
-bool alert_payload::is_valid() const
-{
-    return (version_ != 0)
-        || (relay_until_ != 0)
-        || (expiration_ != 0)
-        || (id_ != 0)
-        || (cancel_ != 0)
-        || !set_cancel_.empty()
-        || (min_version_ != 0)
-        || (max_version_ != 0)
-        || !set_sub_version_.empty()
-        || (priority_ != 0)
-        || !comment_.empty()
-        || !status_bar_.empty()
-        || !reserved_.empty();
+bool alert_payload::is_valid() const {
+    return (version_ != 0) || (relay_until_ != 0) || (expiration_ != 0) || (id_ != 0) || (cancel_ != 0) || !set_cancel_.empty() || (min_version_ != 0) || (max_version_ != 0) || !set_sub_version_.empty() || (priority_ != 0) || !comment_.empty() || !status_bar_.empty() || !reserved_.empty();
 }
 
-void alert_payload::reset()
-{
+void alert_payload::reset() {
     version_ = 0;
     relay_until_ = 0;
     expiration_ = 0;
@@ -209,14 +184,12 @@ void alert_payload::reset()
     reserved_.shrink_to_fit();
 }
 
-bool alert_payload::from_data(uint32_t version, const data_chunk& data)
-{
+bool alert_payload::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool alert_payload::from_data(uint32_t version, data_source& stream)
-{
+bool alert_payload::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -253,8 +226,7 @@ bool alert_payload::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk alert_payload::to_data(uint32_t version) const
-{
+data_chunk alert_payload::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -265,8 +237,7 @@ data_chunk alert_payload::to_data(uint32_t version) const
     return data;
 }
 
-void alert_payload::to_data(uint32_t version, data_sink& stream) const
-{
+void alert_payload::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -296,14 +267,13 @@ void alert_payload::to_data(uint32_t version, data_sink& stream) const
 //    sink.write_string(reserved_);
 //}
 
-size_t alert_payload::serialized_size(uint32_t version) const
-{
+size_t alert_payload::serialized_size(uint32_t version) const {
     size_t size = 40u +
-        message::variable_uint_size(comment_.size()) + comment_.size() +
-        message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
-        message::variable_uint_size(reserved_.size()) + reserved_.size() +
-        message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
-        message::variable_uint_size(set_sub_version_.size());
+                  message::variable_uint_size(comment_.size()) + comment_.size() +
+                  message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
+                  message::variable_uint_size(reserved_.size()) + reserved_.size() +
+                  message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
+                  message::variable_uint_size(set_sub_version_.size());
 
     for (const auto& sub_version : set_sub_version_)
         size += message::variable_uint_size(sub_version.size()) + sub_version.size();
@@ -311,188 +281,151 @@ size_t alert_payload::serialized_size(uint32_t version) const
     return size;
 }
 
-uint32_t alert_payload::version() const
-{
+uint32_t alert_payload::version() const {
     return version_;
 }
 
-void alert_payload::set_version(uint32_t value)
-{
+void alert_payload::set_version(uint32_t value) {
     version_ = value;
 }
 
-uint64_t alert_payload::relay_until() const
-{
+uint64_t alert_payload::relay_until() const {
     return relay_until_;
 }
 
-void alert_payload::set_relay_until(uint64_t value)
-{
+void alert_payload::set_relay_until(uint64_t value) {
     relay_until_ = value;
 }
 
-uint64_t alert_payload::expiration() const
-{
+uint64_t alert_payload::expiration() const {
     return expiration_;
 }
 
-void alert_payload::set_expiration(uint64_t value)
-{
+void alert_payload::set_expiration(uint64_t value) {
     expiration_ = value;
 }
 
-uint32_t alert_payload::id() const
-{
+uint32_t alert_payload::id() const {
     return id_;
 }
 
-void alert_payload::set_id(uint32_t value)
-{
+void alert_payload::set_id(uint32_t value) {
     id_ = value;
 }
 
-uint32_t alert_payload::cancel() const
-{
+uint32_t alert_payload::cancel() const {
     return cancel_;
 }
 
-void alert_payload::set_cancel(uint32_t value)
-{
+void alert_payload::set_cancel(uint32_t value) {
     cancel_ = value;
 }
 
-std::vector<uint32_t>& alert_payload::set_cancel()
-{
+std::vector<uint32_t>& alert_payload::set_cancel() {
     return set_cancel_;
 }
 
-const std::vector<uint32_t>& alert_payload::set_cancel() const
-{
+const std::vector<uint32_t>& alert_payload::set_cancel() const {
     return set_cancel_;
 }
 
-void alert_payload::set_set_cancel(const std::vector<uint32_t>& value)
-{
+void alert_payload::set_set_cancel(const std::vector<uint32_t>& value) {
     set_cancel_ = value;
 }
 
-void alert_payload::set_set_cancel(std::vector<uint32_t>&& value)
-{
+void alert_payload::set_set_cancel(std::vector<uint32_t>&& value) {
     set_cancel_ = std::move(value);
 }
 
-uint32_t alert_payload::min_version() const
-{
+uint32_t alert_payload::min_version() const {
     return min_version_;
 }
 
-void alert_payload::set_min_version(uint32_t value)
-{
+void alert_payload::set_min_version(uint32_t value) {
     min_version_ = value;
 }
 
-uint32_t alert_payload::max_version() const
-{
+uint32_t alert_payload::max_version() const {
     return max_version_;
 }
 
-void alert_payload::set_max_version(uint32_t value)
-{
+void alert_payload::set_max_version(uint32_t value) {
     max_version_ = value;
 }
 
-std::vector<std::string>& alert_payload::set_sub_version()
-{
+std::vector<std::string>& alert_payload::set_sub_version() {
     return set_sub_version_;
 }
 
-const std::vector<std::string>& alert_payload::set_sub_version() const
-{
+const std::vector<std::string>& alert_payload::set_sub_version() const {
     return set_sub_version_;
 }
 
-void alert_payload::set_set_sub_version(const std::vector<std::string>& value)
-{
+void alert_payload::set_set_sub_version(const std::vector<std::string>& value) {
     set_sub_version_ = value;
 }
 
-void alert_payload::set_set_sub_version(std::vector<std::string>&& value)
-{
+void alert_payload::set_set_sub_version(std::vector<std::string>&& value) {
     set_sub_version_ = std::move(value);
 }
 
-uint32_t alert_payload::priority() const
-{
+uint32_t alert_payload::priority() const {
     return priority_;
 }
 
-void alert_payload::set_priority(uint32_t value)
-{
+void alert_payload::set_priority(uint32_t value) {
     priority_ = value;
 }
 
-std::string& alert_payload::comment()
-{
+std::string& alert_payload::comment() {
     return comment_;
 }
 
-const std::string& alert_payload::comment() const
-{
+const std::string& alert_payload::comment() const {
     return comment_;
 }
 
-void alert_payload::set_comment(const std::string& value)
-{
+void alert_payload::set_comment(const std::string& value) {
     comment_ = value;
 }
 
-void alert_payload::set_comment(std::string&& value)
-{
+void alert_payload::set_comment(std::string&& value) {
     comment_ = std::move(value);
 }
 
-std::string& alert_payload::status_bar()
-{
+std::string& alert_payload::status_bar() {
     return status_bar_;
 }
 
-const std::string& alert_payload::status_bar() const
-{
+const std::string& alert_payload::status_bar() const {
     return status_bar_;
 }
 
-void alert_payload::set_status_bar(const std::string& value)
-{
+void alert_payload::set_status_bar(const std::string& value) {
     status_bar_ = value;
 }
 
-void alert_payload::set_status_bar(std::string&& value)
-{
+void alert_payload::set_status_bar(std::string&& value) {
     status_bar_ = std::move(value);
 }
 
-std::string& alert_payload::reserved()
-{
+std::string& alert_payload::reserved() {
     return reserved_;
 }
 
-const std::string& alert_payload::reserved() const
-{
+const std::string& alert_payload::reserved() const {
     return reserved_;
 }
 
-void alert_payload::set_reserved(const std::string& value)
-{
+void alert_payload::set_reserved(const std::string& value) {
     reserved_ = value;
 }
 
-void alert_payload::set_reserved(std::string&& value)
-{
+void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
 }
 
-alert_payload& alert_payload::operator=(alert_payload&& other)
-{
+alert_payload& alert_payload::operator=(alert_payload&& other) {
     version_ = other.version_;
     relay_until_ = other.relay_until_;
     expiration_ = other.expiration_;
@@ -509,27 +442,13 @@ alert_payload& alert_payload::operator=(alert_payload&& other)
     return *this;
 }
 
-bool alert_payload::operator==(const alert_payload& other) const
-{
-    return (version_ == other.version_)
-        && (relay_until_ == other.relay_until_)
-        && (expiration_ == other.expiration_)
-        && (id_ == other.id_)
-        && (cancel_ == other.cancel_)
-        && (set_cancel_ == other.set_cancel_)
-        && (min_version_ == other.min_version_)
-        && (max_version_ == other.max_version_)
-        && (set_sub_version_ == other.set_sub_version_)
-        && (priority_ == other.priority_)
-        && (comment_ == other.comment_)
-        && (status_bar_ == other.status_bar_)
-        && (reserved_ == other.reserved_);
+bool alert_payload::operator==(const alert_payload& other) const {
+    return (version_ == other.version_) && (relay_until_ == other.relay_until_) && (expiration_ == other.expiration_) && (id_ == other.id_) && (cancel_ == other.cancel_) && (set_cancel_ == other.set_cancel_) && (min_version_ == other.min_version_) && (max_version_ == other.max_version_) && (set_sub_version_ == other.set_sub_version_) && (priority_ == other.priority_) && (comment_ == other.comment_) && (status_bar_ == other.status_bar_) && (reserved_ == other.reserved_);
 }
 
-bool alert_payload::operator!=(const alert_payload& other) const
-{
+bool alert_payload::operator!=(const alert_payload& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
