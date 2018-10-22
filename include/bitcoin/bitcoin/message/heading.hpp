@@ -19,8 +19,8 @@
 #ifndef LIBBITCOIN_MESSAGE_HEADING_HPP
 #define LIBBITCOIN_MESSAGE_HEADING_HPP
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <string>
 
@@ -29,11 +29,11 @@
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -41,8 +41,7 @@
 namespace libbitcoin {
 namespace message {
 
-enum class message_type
-{
+enum class message_type {
     unknown,
     address,
     alert,
@@ -73,18 +72,16 @@ enum class message_type
     version
 };
 
-class BC_API heading
-{
-public:
+class BC_API heading {
+   public:
     static size_t maximum_size();
     static size_t maximum_payload_size(uint32_t version, bool witness);
     static size_t satoshi_fixed_size();
     static heading factory_from_data(const data_chunk& data);
     static heading factory_from_data(data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static heading factory_from_data(R& source)
-    {
+    static heading factory_from_data(R& source) {
         heading instance;
         instance.from_data(source);
         return instance;
@@ -93,10 +90,8 @@ public:
     //static heading factory_from_data(reader& source);
 
     heading();
-    heading(uint32_t magic, const std::string& command, uint32_t payload_size,
-        uint32_t checksum);
-    heading(uint32_t magic, std::string&& command, uint32_t payload_size,
-        uint32_t checksum);
+    heading(uint32_t magic, const std::string& command, uint32_t payload_size, uint32_t checksum);
+    heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum);
     heading(const heading& other);
     heading(heading&& other);
 
@@ -118,29 +113,27 @@ public:
 
     bool from_data(const data_chunk& data);
     bool from_data(data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source)
-    {
+    bool from_data(R& source) {
         reset();
         magic_ = source.read_4_bytes_little_endian();
         command_ = source.read_string(command_size);
         payload_size_ = source.read_4_bytes_little_endian();
         checksum_ = source.read_4_bytes_little_endian();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(reader& source);
     data_chunk to_data() const;
     void to_data(data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(W& sink) const
-    {
+    void to_data(W& sink) const {
         sink.write_4_bytes_little_endian(magic_);
         sink.write_string(command_, command_size);
         sink.write_4_bytes_little_endian(payload_size_);
@@ -158,14 +151,14 @@ public:
     bool operator==(const heading& other) const;
     bool operator!=(const heading& other) const;
 
-private:
+   private:
     uint32_t magic_;
     std::string command_;
     uint32_t payload_size_;
     uint32_t checksum_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

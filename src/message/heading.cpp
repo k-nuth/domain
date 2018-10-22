@@ -29,8 +29,7 @@
 namespace libbitcoin {
 namespace message {
 
-size_t heading::maximum_size()
-{
+size_t heading::maximum_size() {
     // This assumes that the heading doesn't shrink in size.
     return satoshi_fixed_size();
 }
@@ -47,12 +46,11 @@ size_t heading::maximum_size()
 // Post-Witness:
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
-size_t heading::maximum_payload_size(uint32_t, bool witness)
-{
+size_t heading::maximum_payload_size(uint32_t, bool witness) {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
 #endif
-/*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
+    /*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */
@@ -60,21 +58,18 @@ size_t heading::maximum_payload_size(uint32_t, bool witness)
     return witness ? max_block_weight : max_payload_size;
 }
 
-size_t heading::satoshi_fixed_size()
-{
+size_t heading::satoshi_fixed_size() {
     return sizeof(uint32_t) + command_size + sizeof(uint32_t) +
-        sizeof(uint32_t);
+           sizeof(uint32_t);
 }
 
-heading heading::factory_from_data(const data_chunk& data)
-{
+heading heading::factory_from_data(const data_chunk& data) {
     heading instance;
     instance.from_data(data);
     return instance;
 }
 
-heading heading::factory_from_data(data_source& stream)
-{
+heading heading::factory_from_data(data_source& stream) {
     heading instance;
     instance.from_data(stream);
     return instance;
@@ -88,45 +83,30 @@ heading heading::factory_from_data(data_source& stream)
 //}
 
 heading::heading()
-  : magic_(0), command_(), payload_size_(0), checksum_(0)
-{
+    : magic_(0), command_(), payload_size_(0), checksum_(0) {
 }
 
-heading::heading(uint32_t magic, const std::string& command,
-    uint32_t payload_size, uint32_t checksum)
-  : magic_(magic), command_(command), payload_size_(payload_size),
-    checksum_(checksum)
-{
+heading::heading(uint32_t magic, const std::string& command, uint32_t payload_size, uint32_t checksum)
+    : magic_(magic), command_(command), payload_size_(payload_size), checksum_(checksum) {
 }
 
-heading::heading(uint32_t magic, std::string&& command, uint32_t payload_size,
-    uint32_t checksum)
-  : magic_(magic), command_(std::move(command)), payload_size_(payload_size),
-    checksum_(checksum)
-{
+heading::heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum)
+    : magic_(magic), command_(std::move(command)), payload_size_(payload_size), checksum_(checksum) {
 }
 
 heading::heading(const heading& other)
-  : heading(other.magic_, other.command_, other.payload_size_, other.checksum_)
-{
+    : heading(other.magic_, other.command_, other.payload_size_, other.checksum_) {
 }
 
 heading::heading(heading&& other)
-  : heading(other.magic_, std::move(other.command_), other.payload_size_,
-      other.checksum_)
-{
+    : heading(other.magic_, std::move(other.command_), other.payload_size_, other.checksum_) {
 }
 
-bool heading::is_valid() const
-{
-    return (magic_ != 0)
-        || (payload_size_ != 0)
-        || (checksum_ != 0)
-        || !command_.empty();
+bool heading::is_valid() const {
+    return (magic_ != 0) || (payload_size_ != 0) || (checksum_ != 0) || !command_.empty();
 }
 
-void heading::reset()
-{
+void heading::reset() {
     magic_ = 0;
     command_.clear();
     command_.shrink_to_fit();
@@ -134,14 +114,12 @@ void heading::reset()
     checksum_ = 0;
 }
 
-bool heading::from_data(const data_chunk& data)
-{
+bool heading::from_data(const data_chunk& data) {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool heading::from_data(data_source& stream)
-{
+bool heading::from_data(data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(stream_r);
 }
@@ -160,8 +138,7 @@ bool heading::from_data(data_source& stream)
 //    return source;
 //}
 
-data_chunk heading::to_data() const
-{
+data_chunk heading::to_data() const {
     data_chunk data;
     const auto size = satoshi_fixed_size();
     data.reserve(size);
@@ -172,8 +149,7 @@ data_chunk heading::to_data() const
     return data;
 }
 
-void heading::to_data(data_sink& stream) const
-{
+void heading::to_data(data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(sink_w);
 }
@@ -186,8 +162,7 @@ void heading::to_data(data_sink& stream) const
 //    sink.write_4_bytes_little_endian(checksum_);
 //}
 
-message_type heading::type() const
-{
+message_type heading::type() const {
     // TODO: convert to static map.
     if (command_ == address::command)
         return message_type::address;
@@ -247,58 +222,47 @@ message_type heading::type() const
     return message_type::unknown;
 }
 
-uint32_t heading::magic() const
-{
+uint32_t heading::magic() const {
     return magic_;
 }
 
-void heading::set_magic(uint32_t value)
-{
+void heading::set_magic(uint32_t value) {
     magic_ = value;
 }
 
-std::string& heading::command()
-{
+std::string& heading::command() {
     return command_;
 }
 
-const std::string& heading::command() const
-{
+const std::string& heading::command() const {
     return command_;
 }
 
-void heading::set_command(const std::string& value)
-{
+void heading::set_command(const std::string& value) {
     command_ = value;
 }
 
-void heading::set_command(std::string&& value)
-{
+void heading::set_command(std::string&& value) {
     command_ = std::move(value);
 }
 
-uint32_t heading::payload_size() const
-{
+uint32_t heading::payload_size() const {
     return payload_size_;
 }
 
-void heading::set_payload_size(uint32_t value)
-{
+void heading::set_payload_size(uint32_t value) {
     payload_size_ = value;
 }
 
-uint32_t heading::checksum() const
-{
+uint32_t heading::checksum() const {
     return checksum_;
 }
 
-void heading::set_checksum(uint32_t value)
-{
+void heading::set_checksum(uint32_t value) {
     checksum_ = value;
 }
 
-heading& heading::operator=(heading&& other)
-{
+heading& heading::operator=(heading&& other) {
     magic_ = other.magic_;
     command_ = std::move(other.command_);
     payload_size_ = other.payload_size_;
@@ -306,18 +270,13 @@ heading& heading::operator=(heading&& other)
     return *this;
 }
 
-bool heading::operator==(const heading& other) const
-{
-    return (magic_ == other.magic_)
-        && (command_ == other.command_)
-        && (payload_size_ == other.payload_size_)
-        && (checksum_ == other.checksum_);
+bool heading::operator==(const heading& other) const {
+    return (magic_ == other.magic_) && (command_ == other.command_) && (payload_size_ == other.payload_size_) && (checksum_ == other.checksum_);
 }
 
-bool heading::operator!=(const heading& other) const
-{
+bool heading::operator!=(const heading& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
