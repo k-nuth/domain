@@ -45,19 +45,19 @@ header header::factory_from_data(uint32_t version, const data_chunk& data)
     return instance;
 }
 
-header header::factory_from_data(uint32_t version, std::istream& stream)
+header header::factory_from_data(uint32_t version, data_source& stream)
 {
     header instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-header header::factory_from_data(uint32_t version, reader& source)
-{
-    header instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//header header::factory_from_data(uint32_t version, reader& source)
+//{
+//    header instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 size_t header::satoshi_fixed_size(uint32_t version)
 {
@@ -112,27 +112,27 @@ bool header::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool header::from_data(uint32_t version, std::istream& stream)
+bool header::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool header::from_data(uint32_t version, reader& source)
-{
-    if (!chain::header::from_data(source))
-        return false;
-
-    // The header message must trail a zero byte (yes, it's stoopid).
-    // bitcoin.org/en/developer-reference#headers
-    if (version != version::level::canonical && source.read_byte() != 0x00)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool header::from_data(uint32_t version, reader& source)
+//{
+//    if (!chain::header::from_data(source))
+//        return false;
+//
+//    // The header message must trail a zero byte (yes, it's stoopid).
+//    // bitcoin.org/en/developer-reference#headers
+//    if (version != version::level::canonical && source.read_byte() != 0x00)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk header::to_data(uint32_t version) const
 {
@@ -146,19 +146,19 @@ data_chunk header::to_data(uint32_t version) const
     return data;
 }
 
-void header::to_data(uint32_t version, std::ostream& stream) const
+void header::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void header::to_data(uint32_t version, writer& sink) const
-{
-    chain::header::to_data(sink);
-
-    if (version != version::level::canonical)
-        sink.write_variable_little_endian(0);
-}
+//void header::to_data(uint32_t version, writer& sink) const
+//{
+//    chain::header::to_data(sink);
+//
+//    if (version != version::level::canonical)
+//        sink.write_variable_little_endian(0);
+//}
 
 void header::reset()
 {
