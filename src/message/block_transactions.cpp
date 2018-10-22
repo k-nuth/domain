@@ -35,29 +35,26 @@ const std::string block_transactions::command = "blocktxn";
 const uint32_t block_transactions::version_minimum = version::level::bip152;
 const uint32_t block_transactions::version_maximum = version::level::bip152;
 
-block_transactions block_transactions::factory_from_data(uint32_t version,
-    const data_chunk& data)
+block_transactions block_transactions::factory_from_data(uint32_t version, const data_chunk& data)
 {
     block_transactions instance;
     instance.from_data(version, data);
     return instance;
 }
 
-block_transactions block_transactions::factory_from_data(uint32_t version,
-    std::istream& stream)
+block_transactions block_transactions::factory_from_data(uint32_t version, data_source& stream)
 {
     block_transactions instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-block_transactions block_transactions::factory_from_data(uint32_t version,
-    reader& source)
-{
-    block_transactions instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//block_transactions block_transactions::factory_from_data(uint32_t version, reader& source)
+//{
+//    block_transactions instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 block_transactions::block_transactions()
   : block_hash_(null_hash), transactions_()
@@ -99,52 +96,50 @@ void block_transactions::reset()
     transactions_.shrink_to_fit();
 }
 
-bool block_transactions::from_data(uint32_t version,
-    const data_chunk& data)
+bool block_transactions::from_data(uint32_t version, const data_chunk& data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool block_transactions::from_data(uint32_t version,
-    std::istream& stream)
+bool block_transactions::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool block_transactions::from_data(uint32_t version, reader& source)
-{
-    //std::cout << "bool block_transactions::from_data(uint32_t version, reader& source) \n";
-    reset();
-    
-    block_hash_ = source.read_hash();
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
-        source.invalidate();
-    else
-        transactions_.resize(count);
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-
-    // Order is required.
-    for (auto& tx: transactions_)
-        if ( ! tx.from_data(source, true, witness))
-            break;
-
-    if (version < block_transactions::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool block_transactions::from_data(uint32_t version, reader& source)
+//{
+//    //std::cout << "bool block_transactions::from_data(uint32_t version, reader& source) \n";
+//    reset();
+//    
+//    block_hash_ = source.read_hash();
+//    const auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > get_max_block_size())
+//        source.invalidate();
+//    else
+//        transactions_.resize(count);
+//#ifdef BITPRIM_CURRENCY_BCH
+//    bool witness = false;
+//#else
+//    bool witness = true;
+//#endif
+//
+//    // Order is required.
+//    for (auto& tx: transactions_)
+//        if ( ! tx.from_data(source, true, witness))
+//            break;
+//
+//    if (version < block_transactions::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk block_transactions::to_data(uint32_t version) const
 {
@@ -158,27 +153,26 @@ data_chunk block_transactions::to_data(uint32_t version) const
     return data;
 }
 
-void block_transactions::to_data(uint32_t version,
-    std::ostream& stream) const
+void block_transactions::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void block_transactions::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_hash(block_hash_);
-    sink.write_variable_little_endian(transactions_.size());
-
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-    for (const auto& element: transactions_) {
-        element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
-    }
-}
+//void block_transactions::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_hash(block_hash_);
+//    sink.write_variable_little_endian(transactions_.size());
+//
+//#ifdef BITPRIM_CURRENCY_BCH
+//    bool witness = false;
+//#else
+//    bool witness = true;
+//#endif
+//    for (const auto& element: transactions_) {
+//        element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
+//    }
+//}
 
 size_t block_transactions::serialized_size(uint32_t version) const
 {

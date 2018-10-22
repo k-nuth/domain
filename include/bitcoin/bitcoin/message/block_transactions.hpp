@@ -20,11 +20,18 @@
 #define LIBBITCOIN_MESSAGE_BLOCK_TRANSACTIONS_HPP
 
 #include <istream>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -35,12 +42,18 @@ public:
     typedef std::shared_ptr<block_transactions> ptr;
     typedef std::shared_ptr<const block_transactions> const_ptr;
 
-    static block_transactions factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static block_transactions factory_from_data(uint32_t version,
-        std::istream& stream);
-    static block_transactions factory_from_data(uint32_t version,
-        reader& source);
+    static block_transactions factory_from_data(uint32_t version, const data_chunk& data);
+    static block_transactions factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static block_transactions factory_from_data(uint32_t version, R& source)
+    {
+        block_transactions instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static block_transactions factory_from_data(uint32_t version, reader& source);
 
     block_transactions();
     block_transactions(const hash_digest& block_hash,
@@ -61,11 +74,63 @@ public:
     void set_transactions(chain::transaction::list&& other);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        //std::cout << "bool block_transactions::from_data(uint32_t version, R& source) \n";
+        reset();
+        
+        block_hash_ = source.read_hash();
+        const auto count = source.read_size_little_endian();
+    
+        // Guard against potential for arbitary memory allocation.
+        if (count > get_max_block_size())
+            source.invalidate();
+        else
+            transactions_.resize(count);
+    #ifdef BITPRIM_CURRENCY_BCH
+        bool witness = false;
+    #else
+        bool witness = true;
+    #endif
+    
+        // Order is required.
+        for (auto& tx: transactions_)
+            if ( ! tx.from_data(source, true, witness))
+                break;
+    
+        if (version < block_transactions::version_minimum)
+            source.invalidate();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_hash(block_hash_);
+        sink.write_variable_little_endian(transactions_.size());
+    
+    #ifdef BITPRIM_CURRENCY_BCH
+        bool witness = false;
+    #else
+        bool witness = true;
+    #endif
+        for (const auto& element: transactions_) {
+            element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
+        }
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
