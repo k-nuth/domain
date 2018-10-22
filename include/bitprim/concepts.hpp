@@ -22,4 +22,23 @@
 #define Reader typename
 #define Writer typename
 
+namespace bitprim {
+
+template <typename R, bool result = std::is_same<decltype(((R*)nullptr)->read_size_little_endian()), size_t>::value>
+constexpr bool is_reader_helper(int) { 
+    return result;
+}
+
+template <typename R>
+constexpr bool is_reader_helper(...) { return false; }
+
+template <typename R>
+constexpr bool is_reader() {
+    return is_reader_helper<R>(0);
+}
+
+} // namespace bitprim
+
+#define BITPRIM_IS_READER(R) typename std::enable_if<bitprim::is_reader<R>(), int>::type = 0
+
 #endif //BITPRIM_CONCEPTS_HPP_
