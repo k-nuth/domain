@@ -31,29 +31,26 @@ const std::string send_headers::command = "sendheaders";
 const uint32_t send_headers::version_minimum = version::level::bip130;
 const uint32_t send_headers::version_maximum = version::level::maximum;
 
-send_headers send_headers::factory_from_data(uint32_t version,
-    const data_chunk& data)
+send_headers send_headers::factory_from_data(uint32_t version, const data_chunk& data)
 {
     send_headers instance;
     instance.from_data(version, data);
     return instance;
 }
 
-send_headers send_headers::factory_from_data(uint32_t version,
-    std::istream& stream)
+send_headers send_headers::factory_from_data(uint32_t version, data_source& stream)
 {
     send_headers instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-send_headers send_headers::factory_from_data(uint32_t version,
-    reader& source)
-{
-    send_headers instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//send_headers send_headers::factory_from_data(uint32_t version, reader& source)
+//{
+//    send_headers instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 size_t send_headers::satoshi_fixed_size(uint32_t version)
 {
@@ -100,30 +97,30 @@ bool send_headers::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool send_headers::from_data(uint32_t version, std::istream& stream)
+bool send_headers::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool send_headers::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    // Initialize as valid from deserialization.
-    insufficient_version_ = false;
-
-    if (version < send_headers::version_minimum)
-    {
-        insufficient_version_ = true;
-        source.invalidate();
-    }
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool send_headers::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    // Initialize as valid from deserialization.
+//    insufficient_version_ = false;
+//
+//    if (version < send_headers::version_minimum)
+//    {
+//        insufficient_version_ = true;
+//        source.invalidate();
+//    }
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk send_headers::to_data(uint32_t version) const
 {
@@ -137,7 +134,7 @@ data_chunk send_headers::to_data(uint32_t version) const
     return data;
 }
 
-void send_headers::to_data(uint32_t version, std::ostream& stream) const
+void send_headers::to_data(uint32_t version, data_sink& stream) const
 {
 }
 
