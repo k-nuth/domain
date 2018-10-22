@@ -24,11 +24,11 @@
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -36,18 +36,16 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API memory_pool
-{
-public:
+class BC_API memory_pool {
+   public:
     typedef std::shared_ptr<memory_pool> ptr;
     typedef std::shared_ptr<const memory_pool> const_ptr;
 
     static memory_pool factory_from_data(uint32_t version, const data_chunk& data);
     static memory_pool factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static memory_pool factory_from_data(uint32_t version, R& source)
-    {
+    static memory_pool factory_from_data(uint32_t version, R& source) {
         memory_pool instance;
         instance.from_data(version, source);
         return instance;
@@ -62,31 +60,29 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         // Initialize as valid from deserialization.
         insufficient_version_ = false;
-    
+
         if (version < memory_pool::version_minimum)
             source.invalidate();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
     }
 
     //void to_data(uint32_t version, writer& sink) const;
@@ -98,14 +94,14 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-protected:
+   protected:
     memory_pool(bool insufficient_version);
 
-private:
+   private:
     bool insufficient_version_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
