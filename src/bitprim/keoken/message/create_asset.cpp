@@ -71,7 +71,7 @@ create_asset create_asset::factory_from_data(data_chunk const& data) {
 }
 
 // static
-create_asset create_asset::factory_from_data(std::istream& stream) {
+create_asset create_asset::factory_from_data(data_source& stream) {
     create_asset instance;
     instance.from_data(stream);
     return instance;
@@ -89,9 +89,9 @@ bool create_asset::from_data(data_chunk const& data) {
     return from_data(istream);
 }
 
-bool create_asset::from_data(std::istream& stream) {
-    istream_reader source(stream);
-    return from_data(source);
+bool create_asset::from_data(data_source& stream) {
+    istream_reader stream_r(stream);
+    return from_data(stream_r);
 }
 
 //Note: from_data and to_data are not longer simetrical.
@@ -130,9 +130,9 @@ data_chunk create_asset::to_data() const {
     return data;
 }
 
-void create_asset::to_data(std::ostream& stream) const {
-    ostream_writer sink(stream);
-    to_data(sink);
+void create_asset::to_data(data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(sink_w);
 }
 
 //Note: from_data and to_data are not simetrical.
