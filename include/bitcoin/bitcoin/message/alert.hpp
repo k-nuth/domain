@@ -24,11 +24,11 @@
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -36,18 +36,16 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API alert
-{
-public:
+class BC_API alert {
+   public:
     typedef std::shared_ptr<alert> ptr;
     typedef std::shared_ptr<const alert> const_ptr;
 
     static alert factory_from_data(uint32_t version, const data_chunk& data);
     static alert factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static alert factory_from_data(uint32_t version, R& source)
-    {
+    static alert factory_from_data(uint32_t version, R& source) {
         alert instance;
         instance.from_data(version, source);
         return instance;
@@ -67,24 +65,23 @@ public:
     void set_payload(data_chunk&& value);
 
     data_chunk& signature();
-    const  data_chunk& signature() const;
+    const data_chunk& signature() const;
     void set_signature(const data_chunk& value);
     void set_signature(data_chunk&& value);
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         payload_ = source.read_bytes(source.read_size_little_endian());
         signature_ = source.read_bytes(source.read_size_little_endian());
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -92,10 +89,9 @@ public:
 
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(payload_.size());
         sink.write_bytes(payload_);
         sink.write_variable_little_endian(signature_.size());
@@ -119,12 +115,12 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-private:
+   private:
     data_chunk payload_;
     data_chunk signature_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
