@@ -31,15 +31,13 @@ const std::string pong::command = "pong";
 const uint32_t pong::version_minimum = version::level::minimum;
 const uint32_t pong::version_maximum = version::level::maximum;
 
-pong pong::factory_from_data(uint32_t version, const data_chunk& data)
-{
+pong pong::factory_from_data(uint32_t version, const data_chunk& data) {
     pong instance;
     instance.from_data(version, data);
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, data_source& stream)
-{
+pong pong::factory_from_data(uint32_t version, data_source& stream) {
     pong instance;
     instance.from_data(version, stream);
     return instance;
@@ -52,34 +50,28 @@ pong pong::factory_from_data(uint32_t version, data_source& stream)
 //    return instance;
 //}
 
-size_t pong::satoshi_fixed_size(uint32_t version)
-{
+size_t pong::satoshi_fixed_size(uint32_t version) {
     return sizeof(nonce_);
 }
 
 pong::pong()
-  : nonce_(0), valid_(false)
-{
+    : nonce_(0), valid_(false) {
 }
 
 pong::pong(uint64_t nonce)
-  : nonce_(nonce), valid_(true)
-{
+    : nonce_(nonce), valid_(true) {
 }
 
 pong::pong(const pong& other)
-  : nonce_(other.nonce_), valid_(other.valid_)
-{
+    : nonce_(other.nonce_), valid_(other.valid_) {
 }
 
-bool pong::from_data(uint32_t version, const data_chunk& data)
-{
+bool pong::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool pong::from_data(uint32_t version, data_source& stream)
-{
+bool pong::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -97,8 +89,7 @@ bool pong::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk pong::to_data(uint32_t version) const
-{
+data_chunk pong::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -109,8 +100,7 @@ data_chunk pong::to_data(uint32_t version) const
     return data;
 }
 
-void pong::to_data(uint32_t version, data_sink& stream) const
-{
+void pong::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -120,47 +110,39 @@ void pong::to_data(uint32_t version, data_sink& stream) const
 //    sink.write_8_bytes_little_endian(nonce_);
 //}
 
-bool pong::is_valid() const
-{
+bool pong::is_valid() const {
     return valid_ || (nonce_ != 0);
 }
 
-void pong::reset()
-{
+void pong::reset() {
     nonce_ = 0;
     valid_ = false;
 }
 
-size_t pong::serialized_size(uint32_t version) const
-{
+size_t pong::serialized_size(uint32_t version) const {
     return satoshi_fixed_size(version);
 }
 
-uint64_t pong::nonce() const
-{
+uint64_t pong::nonce() const {
     return nonce_;
 }
 
-void pong::set_nonce(uint64_t value)
-{
+void pong::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-pong& pong::operator=(pong&& other)
-{
+pong& pong::operator=(pong&& other) {
     nonce_ = other.nonce_;
     return *this;
 }
 
-bool pong::operator==(const pong& other) const
-{
+bool pong::operator==(const pong& other) const {
     return (nonce_ == other.nonce_);
 }
 
-bool pong::operator!=(const pong& other) const
-{
+bool pong::operator!=(const pong& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

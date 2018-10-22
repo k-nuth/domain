@@ -25,11 +25,11 @@
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -37,18 +37,16 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API pong
-{
-public:
+class BC_API pong {
+   public:
     typedef std::shared_ptr<pong> ptr;
     typedef std::shared_ptr<const pong> const_ptr;
 
     static pong factory_from_data(uint32_t version, const data_chunk& data);
     static pong factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static pong factory_from_data(uint32_t version, R& source)
-    {
+    static pong factory_from_data(uint32_t version, R& source) {
         pong instance;
         instance.from_data(version, source);
         return instance;
@@ -66,18 +64,17 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         valid_ = true;
         nonce_ = source.read_8_bytes_little_endian();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -85,10 +82,9 @@ public:
 
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         sink.write_8_bytes_little_endian(nonce_);
     }
 
@@ -108,12 +104,12 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-private:
+   private:
     uint64_t nonce_;
     bool valid_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
