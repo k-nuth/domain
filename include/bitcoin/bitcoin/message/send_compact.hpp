@@ -22,10 +22,16 @@
 #include <istream>
 #include <memory>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -36,12 +42,18 @@ public:
     typedef std::shared_ptr<send_compact> ptr;
     typedef std::shared_ptr<const send_compact> const_ptr;
 
-    static send_compact factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static send_compact factory_from_data(uint32_t version,
-        std::istream& stream);
-    static send_compact factory_from_data(uint32_t version,
-        reader& source);
+    static send_compact factory_from_data(uint32_t version, const data_chunk& data);
+    static send_compact factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static send_compact factory_from_data(uint32_t version, R& source)
+    {
+        send_compact instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static send_compact factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
     send_compact();
@@ -56,11 +68,42 @@ public:
     void set_version(uint64_t version);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        const auto mode = source.read_byte();
+    
+        if (mode > 1)
+            source.invalidate();
+    
+        high_bandwidth_mode_ = (mode == 1);
+        this->version_ = source.read_8_bytes_little_endian();
+    
+        if (version < send_compact::version_minimum)
+            source.invalidate();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_byte(static_cast<uint8_t>(high_bandwidth_mode_));
+        sink.write_8_bytes_little_endian(this->version_);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;

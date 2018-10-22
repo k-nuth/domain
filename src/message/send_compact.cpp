@@ -32,29 +32,26 @@ const std::string send_compact::command = "sendcmpct";
 const uint32_t send_compact::version_minimum = version::level::bip152;
 const uint32_t send_compact::version_maximum = version::level::bip152;
 
-send_compact send_compact::factory_from_data(uint32_t version,
-    const data_chunk& data)
+send_compact send_compact::factory_from_data(uint32_t version, const data_chunk& data)
 {
     send_compact instance;
     instance.from_data(version, data);
     return instance;
 }
 
-send_compact send_compact::factory_from_data(uint32_t version,
-    std::istream& stream)
+send_compact send_compact::factory_from_data(uint32_t version, data_source& stream)
 {
     send_compact instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-send_compact send_compact::factory_from_data(uint32_t version,
-    reader& source)
-{
-    send_compact instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//send_compact send_compact::factory_from_data(uint32_t version, reader& source)
+//{
+//    send_compact instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 size_t send_compact::satoshi_fixed_size(uint32_t version)
 {
@@ -94,41 +91,38 @@ void send_compact::reset()
     version_ = 0;
 }
 
-bool send_compact::from_data(uint32_t version,
-    const data_chunk& data)
+bool send_compact::from_data(uint32_t version, const data_chunk& data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool send_compact::from_data(uint32_t version,
-    std::istream& stream)
+bool send_compact::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool send_compact::from_data(uint32_t version,
-    reader& source)
-{
-    reset();
-
-    const auto mode = source.read_byte();
-
-    if (mode > 1)
-        source.invalidate();
-
-    high_bandwidth_mode_ = (mode == 1);
-    this->version_ = source.read_8_bytes_little_endian();
-
-    if (version < send_compact::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool send_compact::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    const auto mode = source.read_byte();
+//
+//    if (mode > 1)
+//        source.invalidate();
+//
+//    high_bandwidth_mode_ = (mode == 1);
+//    this->version_ = source.read_8_bytes_little_endian();
+//
+//    if (version < send_compact::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk send_compact::to_data(uint32_t version) const
 {
@@ -142,19 +136,17 @@ data_chunk send_compact::to_data(uint32_t version) const
     return data;
 }
 
-void send_compact::to_data(uint32_t version,
-    std::ostream& stream) const
+void send_compact::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void send_compact::to_data(uint32_t version,
-    writer& sink) const
-{
-    sink.write_byte(static_cast<uint8_t>(high_bandwidth_mode_));
-    sink.write_8_bytes_little_endian(this->version_);
-}
+//void send_compact::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_byte(static_cast<uint8_t>(high_bandwidth_mode_));
+//    sink.write_8_bytes_little_endian(this->version_);
+//}
 
 size_t send_compact::serialized_size(uint32_t version) const
 {
