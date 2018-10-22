@@ -22,10 +22,17 @@
 #include <istream>
 #include <memory>
 #include <string>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/message/network_address.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -37,8 +44,17 @@ public:
     typedef std::shared_ptr<const address> const_ptr;
 
     static address factory_from_data(uint32_t version, const data_chunk& data);
-    static address factory_from_data(uint32_t version, std::istream& stream);
-    static address factory_from_data(uint32_t version, reader& source);
+    static address factory_from_data(uint32_t version, data_source& stream);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static address factory_from_data(uint32_t version, R& source)
+    {
+        address instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static address factory_from_data(uint32_t version, reader& source);
 
     address();
     address(const network_address::list& addresses);
@@ -52,11 +68,48 @@ public:
     void set_addresses(network_address::list&& value);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        const auto count = source.read_size_little_endian();
+    
+        // Guard against potential for arbitary memory allocation.
+        if (count > max_address)
+            source.invalidate();
+        else
+            addresses_.resize(count);
+    
+        for (auto& address: addresses_)
+            if (!address.from_data(version, source, true))
+                break;
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
+
+
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_variable_little_endian(addresses_.size());
+    
+        for (const auto& net_address: addresses_)
+            net_address.to_data(version, sink, true);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
+
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;

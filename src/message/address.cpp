@@ -40,19 +40,19 @@ address address::factory_from_data(uint32_t version, const data_chunk& data)
     return instance;
 }
 
-address address::factory_from_data(uint32_t version, std::istream& stream)
+address address::factory_from_data(uint32_t version, data_source& stream)
 {
     address instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-address address::factory_from_data(uint32_t version, reader& source)
-{
-    address instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//address address::factory_from_data(uint32_t version, reader& source)
+//{
+//    address instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 address::address()
   : addresses_()
@@ -96,33 +96,33 @@ bool address::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool address::from_data(uint32_t version, std::istream& stream)
+bool address::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool address::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > max_address)
-        source.invalidate();
-    else
-        addresses_.resize(count);
-
-    for (auto& address: addresses_)
-        if (!address.from_data(version, source, true))
-            break;
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool address::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    const auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > max_address)
+//        source.invalidate();
+//    else
+//        addresses_.resize(count);
+//
+//    for (auto& address: addresses_)
+//        if (!address.from_data(version, source, true))
+//            break;
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk address::to_data(uint32_t version) const
 {
@@ -136,19 +136,19 @@ data_chunk address::to_data(uint32_t version) const
     return data;
 }
 
-void address::to_data(uint32_t version, std::ostream& stream) const
+void address::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void address::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_variable_little_endian(addresses_.size());
-
-    for (const auto& net_address: addresses_)
-        net_address.to_data(version, sink, true);
-}
+//void address::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_variable_little_endian(addresses_.size());
+//
+//    for (const auto& net_address: addresses_)
+//        net_address.to_data(version, sink, true);
+//}
 
 size_t address::serialized_size(uint32_t version) const
 {
