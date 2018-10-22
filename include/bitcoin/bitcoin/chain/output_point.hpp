@@ -19,27 +19,24 @@
 #ifndef LIBBITCOIN_CHAIN_OUTPUT_POINT_HPP
 #define LIBBITCOIN_CHAIN_OUTPUT_POINT_HPP
 
-#include <cstddef>
-#include <cstdint>
-#include <vector>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/chain/point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
+#include <cstddef>
+#include <cstdint>
+#include <vector>
 
 namespace libbitcoin {
 namespace chain {
 
 class BC_API output_point
-  : public point
-{
-public:
-
+    : public point {
+   public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation_type
-    {
+    struct validation_type {
         /// An output is spent if a valid transaction has a valid claim on it.
         /// When validating blocks only long chain blocks can have a claim.
         /// When validating memory pool tx another mempool tx can have a claim.
@@ -93,18 +90,16 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static output_point factory_from_data(const data_chunk& data, bool wire=true);
-    static output_point factory_from_data(data_source& stream, bool wire=true);
+    static output_point factory_from_data(const data_chunk& data, bool wire = true);
+    static output_point factory_from_data(data_source& stream, bool wire = true);
     // static output_point factory_from_data(reader& source, bool wire=true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static
-    output_point factory_from_data(R& source, bool wire) {
+    static output_point factory_from_data(R& source, bool wire) {
         output_point instance;
         instance.from_data(source, wire);
         return instance;
     }
-
 
     // Validation.
     //-------------------------------------------------------------------------
@@ -115,12 +110,12 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_type validation;
 
-protected:
+   protected:
     // So that input may call reset from its own.
     friend class input;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif
