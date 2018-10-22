@@ -139,8 +139,8 @@ class BC_API block_transactions {
     bool operator!=(const block_transactions& other) const;
 
     static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
    private:
     hash_digest block_hash_;
