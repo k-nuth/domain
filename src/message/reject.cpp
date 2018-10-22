@@ -18,9 +18,9 @@
  */
 #include <bitcoin/bitcoin/message/reject.hpp>
 
-#include <bitcoin/bitcoin/message/block.hpp>
+// #include <bitcoin/bitcoin/message/block.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
-#include <bitcoin/bitcoin/message/transaction.hpp>
+// #include <bitcoin/bitcoin/message/transaction.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
@@ -34,29 +34,26 @@ const std::string reject::command = "reject";
 const uint32_t reject::version_minimum = version::level::bip61;
 const uint32_t reject::version_maximum = version::level::maximum;
 
-reject reject::factory_from_data(uint32_t version,
-    const data_chunk& data)
+reject reject::factory_from_data(uint32_t version, const data_chunk& data)
 {
     reject instance;
     instance.from_data(version, data);
     return instance;
 }
 
-reject reject::factory_from_data(uint32_t version,
-    std::istream& stream)
+reject reject::factory_from_data(uint32_t version, data_source& stream)
 {
     reject instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-reject reject::factory_from_data(uint32_t version,
-    reader& source)
-{
-    reject instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//reject reject::factory_from_data(uint32_t version, reader& source)
+//{
+//    reject instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 reject::reject()
   : code_(reason_code::undefined), message_(), reason_(), data_(null_hash)
@@ -130,39 +127,39 @@ bool reject::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool reject::from_data(uint32_t version, std::istream& stream)
+bool reject::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool reject::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    message_ = source.read_string();
-    code_ = reason_from_byte(source.read_byte());
-    reason_ = source.read_string();
-
-    if ((message_ == block::command) ||
-        (message_ == transaction::command))
-    {
-        // Some nodes do not follow the documented convention of supplying hash
-        // for tx and block rejects. Use this to prevent error on empty stream.
-        const auto bytes = source.read_bytes();
-
-        if (bytes.size() == hash_size)
-            build_array(data_, { bytes });
-    }
-
-    if (version < reject::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool reject::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    message_ = source.read_string();
+//    code_ = reason_from_byte(source.read_byte());
+//    reason_ = source.read_string();
+//
+//    if ((message_ == block::command) ||
+//        (message_ == transaction::command))
+//    {
+//        // Some nodes do not follow the documented convention of supplying hash
+//        // for tx and block rejects. Use this to prevent error on empty stream.
+//        const auto bytes = source.read_bytes();
+//
+//        if (bytes.size() == hash_size)
+//            build_array(data_, { bytes });
+//    }
+//
+//    if (version < reject::version_minimum)
+//        source.invalidate();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk reject::to_data(uint32_t version) const
 {
@@ -176,24 +173,24 @@ data_chunk reject::to_data(uint32_t version) const
     return data;
 }
 
-void reject::to_data(uint32_t version, std::ostream& stream) const
+void reject::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void reject::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_string(message_);
-    sink.write_byte(reason_to_byte(code_));
-    sink.write_string(reason_);
-
-    if ((message_ == block::command) ||
-        (message_ == transaction::command))
-    {
-        sink.write_hash(data_);
-    }
-}
+//void reject::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_string(message_);
+//    sink.write_byte(reason_to_byte(code_));
+//    sink.write_string(reason_);
+//
+//    if ((message_ == block::command) ||
+//        (message_ == transaction::command))
+//    {
+//        sink.write_hash(data_);
+//    }
+//}
 
 size_t reject::serialized_size(uint32_t version) const
 {

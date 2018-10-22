@@ -23,9 +23,17 @@
 #include <istream>
 #include <memory>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/message/block.hpp>
+#include <bitcoin/bitcoin/message/transaction.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -69,8 +77,17 @@ public:
     typedef std::shared_ptr<const reject> const_ptr;
 
     static reject factory_from_data(uint32_t version, const data_chunk& data);
-    static reject factory_from_data(uint32_t version, std::istream& stream);
-    static reject factory_from_data(uint32_t version, reader& source);
+    static reject factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static reject factory_from_data(uint32_t version, R& source)
+    {
+        reject instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static reject factory_from_data(uint32_t version, reader& source);
 
     reject();
 
@@ -105,11 +122,56 @@ public:
     void set_data(hash_digest&& value);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        message_ = source.read_string();
+        code_ = reason_from_byte(source.read_byte());
+        reason_ = source.read_string();
+    
+        if ((message_ == block::command) ||
+            (message_ == transaction::command))
+        {
+            // Some nodes do not follow the documented convention of supplying hash
+            // for tx and block rejects. Use this to prevent error on empty stream.
+            const auto bytes = source.read_bytes();
+    
+            if (bytes.size() == hash_size)
+                build_array(data_, { bytes });
+        }
+    
+        if (version < reject::version_minimum)
+            source.invalidate();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_string(message_);
+        sink.write_byte(reason_to_byte(code_));
+        sink.write_string(reason_);
+    
+        if ((message_ == block::command) ||
+            (message_ == transaction::command))
+        {
+            sink.write_hash(data_);
+        }
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
