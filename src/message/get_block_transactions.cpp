@@ -36,29 +36,26 @@ const std::string get_block_transactions::command = "getblocktxn";
 const uint32_t get_block_transactions::version_minimum = version::level::bip152;
 const uint32_t get_block_transactions::version_maximum = version::level::bip152;
 
-get_block_transactions get_block_transactions::factory_from_data(
-    uint32_t version, const data_chunk& data)
+get_block_transactions get_block_transactions::factory_from_data(uint32_t version, const data_chunk& data)
 {
     get_block_transactions instance;
     instance.from_data(version, data);
     return instance;
 }
 
-get_block_transactions get_block_transactions::factory_from_data(
-    uint32_t version, std::istream& stream)
+get_block_transactions get_block_transactions::factory_from_data(uint32_t version, data_source& stream)
 {
     get_block_transactions instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-get_block_transactions get_block_transactions::factory_from_data(
-    uint32_t version, reader& source)
-{
-    get_block_transactions instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//get_block_transactions get_block_transactions::factory_from_data(uint32_t version, reader& source)
+//{
+//    get_block_transactions instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 get_block_transactions::get_block_transactions()
   : block_hash_(null_hash), indexes_()
@@ -101,42 +98,39 @@ void get_block_transactions::reset()
     indexes_.shrink_to_fit();
 }
 
-bool get_block_transactions::from_data(uint32_t version,
-    const data_chunk& data)
+bool get_block_transactions::from_data(uint32_t version, const data_chunk& data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool get_block_transactions::from_data(uint32_t version,
-    std::istream& stream)
+bool get_block_transactions::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool get_block_transactions::from_data(uint32_t version,
-    reader& source)
-{
-    reset();
-
-    block_hash_ = source.read_hash();
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
-        source.invalidate();
-    else
-        indexes_.reserve(count);
-
-    for (size_t position = 0; position < count && source; ++position)
-        indexes_.push_back(source.read_size_little_endian());
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool get_block_transactions::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    block_hash_ = source.read_hash();
+//    const auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > get_max_block_size())
+//        source.invalidate();
+//    else
+//        indexes_.reserve(count);
+//
+//    for (size_t position = 0; position < count && source; ++position)
+//        indexes_.push_back(source.read_size_little_endian());
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk get_block_transactions::to_data(uint32_t version) const
 {
@@ -150,21 +144,19 @@ data_chunk get_block_transactions::to_data(uint32_t version) const
     return data;
 }
 
-void get_block_transactions::to_data(uint32_t version,
-    std::ostream& stream) const
+void get_block_transactions::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void get_block_transactions::to_data(uint32_t version,
-    writer& sink) const
-{
-    sink.write_hash(block_hash_);
-    sink.write_variable_little_endian(indexes_.size());
-    for (const auto& element: indexes_)
-        sink.write_variable_little_endian(element);
-}
+//void get_block_transactions::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_hash(block_hash_);
+//    sink.write_variable_little_endian(indexes_.size());
+//    for (const auto& element: indexes_)
+//        sink.write_variable_little_endian(element);
+//}
 
 size_t get_block_transactions::serialized_size(uint32_t version) const
 {

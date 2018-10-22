@@ -21,11 +21,18 @@
 
 #include <istream>
 #include <memory>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -36,12 +43,18 @@ public:
     typedef std::shared_ptr<get_block_transactions> ptr;
     typedef std::shared_ptr<const get_block_transactions> const_ptr;
 
-    static get_block_transactions factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static get_block_transactions factory_from_data(uint32_t version,
-        std::istream& stream);
-    static get_block_transactions factory_from_data(uint32_t version,
-        reader& source);
+    static get_block_transactions factory_from_data(uint32_t version, const data_chunk& data);
+    static get_block_transactions factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static get_block_transactions factory_from_data(uint32_t version, R& source)
+    {
+        get_block_transactions instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static get_block_transactions factory_from_data(uint32_t version, reader& source);
 
     get_block_transactions();
     get_block_transactions(const hash_digest& block_hash,
@@ -62,11 +75,45 @@ public:
     void set_indexes(std::vector<uint64_t>&& values);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        block_hash_ = source.read_hash();
+        const auto count = source.read_size_little_endian();
+    
+        // Guard against potential for arbitary memory allocation.
+        if (count > get_max_block_size())
+            source.invalidate();
+        else
+            indexes_.reserve(count);
+    
+        for (size_t position = 0; position < count && source; ++position)
+            indexes_.push_back(source.read_size_little_endian());
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_hash(block_hash_);
+        sink.write_variable_little_endian(indexes_.size());
+        for (const auto& element: indexes_)
+            sink.write_variable_little_endian(element);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
