@@ -26,8 +26,8 @@
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
+// #include <bitcoin/infrastructure/utility/container_sink.hpp>
+// #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
@@ -157,21 +157,30 @@ header header::factory_from_data(const data_chunk& data, bool wire)
     return instance;
 }
 
+// // static
+// header header::factory_from_data(data_source& stream, bool wire)
+// {
+//     header instance;
+//     instance.from_data(stream, wire);
+//     return instance;
+// }
+
 // static
-header header::factory_from_data(std::istream& stream, bool wire)
+header header::factory_from_data(data_source& stream, bool wire)
 {
     header instance;
     instance.from_data(stream, wire);
     return instance;
 }
 
+
 // static
-header header::factory_from_data(reader& source, bool wire)
-{
-    header instance;
-    instance.from_data(source, wire);
-    return instance;
-}
+//header header::factory_from_data(reader& source, bool wire)
+//{
+//    header instance;
+//    instance.from_data(source, wire);
+//    return instance;
+//}
 
 bool header::from_data(const data_chunk& data, bool wire)
 {
@@ -179,31 +188,38 @@ bool header::from_data(const data_chunk& data, bool wire)
     return from_data(istream, wire);
 }
 
-bool header::from_data(std::istream& stream, bool wire)
+bool header::from_data(data_source& stream, bool wire)
 {
-    istream_reader source(stream);
-    return from_data(source, wire);
+    istream_reader stream_r(stream);
+    return from_data(stream_r, wire);
 }
 
-bool header::from_data(reader& source, bool wire)
-{
-    ////reset();
+//TODO(fernando): check what happend when replacing std::istream to data_source
+// bool header::from_data(data_source& stream, bool wire)
+// {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
-    version_ = source.read_4_bytes_little_endian();
-    previous_block_hash_ = source.read_hash();
-    merkle_ = source.read_hash();
-    timestamp_ = source.read_4_bytes_little_endian();
-    bits_ = source.read_4_bytes_little_endian();
-    nonce_ = source.read_4_bytes_little_endian();
-
-    if (!wire)
-        validation.median_time_past = source.read_4_bytes_little_endian();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool header::from_data(reader& source, bool wire)
+//{
+//    ////reset();
+//
+//    version_ = source.read_4_bytes_little_endian();
+//    previous_block_hash_ = source.read_hash();
+//    merkle_ = source.read_hash();
+//    timestamp_ = source.read_4_bytes_little_endian();
+//    bits_ = source.read_4_bytes_little_endian();
+//    nonce_ = source.read_4_bytes_little_endian();
+//
+//    if (!wire)
+//        validation.median_time_past = source.read_4_bytes_little_endian();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 // protected
 void header::reset()
@@ -242,24 +258,31 @@ data_chunk header::to_data(bool wire) const
     return data;
 }
 
-void header::to_data(std::ostream& stream, bool wire) const
+// void header::to_data(data_sink& stream, bool wire) const
+// {
+//     ostream_writer sink_w(stream);
+//     to_data(sink, wire);
+// }
+
+void header::to_data(data_sink& stream, bool wire) const
 {
-    ostream_writer sink(stream);
-    to_data(sink, wire);
+    ostream_writer sink_w(stream);
+    to_data(sink_w, wire);
 }
 
-void header::to_data(writer& sink, bool wire) const
-{
-    sink.write_4_bytes_little_endian(version_);
-    sink.write_hash(previous_block_hash_);
-    sink.write_hash(merkle_);
-    sink.write_4_bytes_little_endian(timestamp_);
-    sink.write_4_bytes_little_endian(bits_);
-    sink.write_4_bytes_little_endian(nonce_);
 
-    if (!wire)
-        sink.write_4_bytes_little_endian(validation.median_time_past);
-}
+//void header::to_data(writer& sink, bool wire) const
+//{
+//    sink.write_4_bytes_little_endian(version_);
+//    sink.write_hash(previous_block_hash_);
+//    sink.write_hash(merkle_);
+//    sink.write_4_bytes_little_endian(timestamp_);
+//    sink.write_4_bytes_little_endian(bits_);
+//    sink.write_4_bytes_little_endian(nonce_);
+//
+//    if (!wire)
+//        sink.write_4_bytes_little_endian(validation.median_time_past);
+//}
 
 // Size.
 //-----------------------------------------------------------------------------
