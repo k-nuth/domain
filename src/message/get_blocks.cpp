@@ -33,29 +33,26 @@ const std::string get_blocks::command = "getblocks";
 const uint32_t get_blocks::version_minimum = version::level::minimum;
 const uint32_t get_blocks::version_maximum = version::level::maximum;
 
-get_blocks get_blocks::factory_from_data(uint32_t version,
-    const data_chunk& data)
+get_blocks get_blocks::factory_from_data(uint32_t version, const data_chunk& data)
 {
     get_blocks instance;
     instance.from_data(version, data);
     return instance;
 }
 
-get_blocks get_blocks::factory_from_data(uint32_t version,
-    std::istream& stream)
+get_blocks get_blocks::factory_from_data(uint32_t version, data_source& stream)
 {
     get_blocks instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-get_blocks get_blocks::factory_from_data(uint32_t version,
-    reader& source)
-{
-    get_blocks instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//get_blocks get_blocks::factory_from_data(uint32_t version, reader& source)
+//{
+//    get_blocks instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 get_blocks::get_blocks()
   : start_hashes_(), stop_hash_(null_hash)
@@ -100,36 +97,36 @@ bool get_blocks::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool get_blocks::from_data(uint32_t version, std::istream& stream)
+bool get_blocks::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool get_blocks::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    // Discard protocol version because it is stupid.
-    source.read_4_bytes_little_endian();
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > max_get_blocks)
-        source.invalidate();
-    else
-        start_hashes_.reserve(count);
-
-    for (size_t hash = 0; hash < count && source; ++hash)
-        start_hashes_.push_back(source.read_hash());
-
-    stop_hash_ = source.read_hash();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool get_blocks::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    // Discard protocol version because it is stupid.
+//    source.read_4_bytes_little_endian();
+//    const auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > max_get_blocks)
+//        source.invalidate();
+//    else
+//        start_hashes_.reserve(count);
+//
+//    for (size_t hash = 0; hash < count && source; ++hash)
+//        start_hashes_.push_back(source.read_hash());
+//
+//    stop_hash_ = source.read_hash();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk get_blocks::to_data(uint32_t version) const
 {
@@ -143,22 +140,22 @@ data_chunk get_blocks::to_data(uint32_t version) const
     return data;
 }
 
-void get_blocks::to_data(uint32_t version, std::ostream& stream) const
+void get_blocks::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void get_blocks::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_4_bytes_little_endian(version);
-    sink.write_variable_little_endian(start_hashes_.size());
-
-    for (const auto& start_hash: start_hashes_)
-        sink.write_hash(start_hash);
-
-    sink.write_hash(stop_hash_);
-}
+//void get_blocks::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_4_bytes_little_endian(version);
+//    sink.write_variable_little_endian(start_hashes_.size());
+//
+//    for (const auto& start_hash: start_hashes_)
+//        sink.write_hash(start_hash);
+//
+//    sink.write_hash(stop_hash_);
+//}
 
 size_t get_blocks::serialized_size(uint32_t version) const
 {

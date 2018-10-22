@@ -23,11 +23,18 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -38,11 +45,18 @@ public:
     typedef std::shared_ptr<get_blocks> ptr;
     typedef std::shared_ptr<const get_blocks> const_ptr;
 
-    static get_blocks factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static get_blocks factory_from_data(uint32_t version,
-        std::istream& stream);
-    static get_blocks factory_from_data(uint32_t version, reader& source);
+    static get_blocks factory_from_data(uint32_t version, const data_chunk& data);
+    static get_blocks factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static get_blocks factory_from_data(uint32_t version, R& source)
+    {
+        get_blocks instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static get_blocks factory_from_data(uint32_t version, reader& source);
 
     get_blocks();
     get_blocks(const hash_list& start, const hash_digest& stop);
@@ -61,11 +75,52 @@ public:
     void set_stop_hash(hash_digest&& value);
 
     virtual bool from_data(uint32_t version, const data_chunk& data);
-    virtual bool from_data(uint32_t version, std::istream& stream);
-    virtual bool from_data(uint32_t version, reader& source);
+    virtual bool from_data(uint32_t version, data_source& stream);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    /*virtual*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        // Discard protocol version because it is stupid.
+        source.read_4_bytes_little_endian();
+        const auto count = source.read_size_little_endian();
+    
+        // Guard against potential for arbitary memory allocation.
+        if (count > max_get_blocks)
+            source.invalidate();
+        else
+            start_hashes_.reserve(count);
+    
+        for (size_t hash = 0; hash < count && source; ++hash)
+            start_hashes_.push_back(source.read_hash());
+    
+        stop_hash_ = source.read_hash();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_4_bytes_little_endian(version);
+        sink.write_variable_little_endian(start_hashes_.size());
+    
+        for (const auto& start_hash: start_hashes_)
+            sink.write_hash(start_hash);
+    
+        sink.write_hash(stop_hash_);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
