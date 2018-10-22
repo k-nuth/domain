@@ -19,9 +19,11 @@
 #include <bitcoin/bitcoin/machine/operation.hpp>
 
 #include <string>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
+
+// #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
@@ -47,7 +49,7 @@ operation operation::factory_from_data(const data_chunk& encoded)
 }
 
 // static
-operation operation::factory_from_data(std::istream& stream)
+operation operation::factory_from_data(data_source& stream)
 {
     operation instance;
     instance.from_data(stream);
@@ -55,12 +57,12 @@ operation operation::factory_from_data(std::istream& stream)
 }
 
 // static
-operation operation::factory_from_data(reader& source)
-{
-    operation instance;
-    instance.from_data(source);
-    return instance;
-}
+//operation operation::factory_from_data(reader& source)
+//{
+//    operation instance;
+//    instance.from_data(source);
+//    return instance;
+//}
 
 bool operation::from_data(const data_chunk& encoded)
 {
@@ -68,33 +70,33 @@ bool operation::from_data(const data_chunk& encoded)
     return from_data(istream);
 }
 
-bool operation::from_data(std::istream& stream)
+bool operation::from_data(data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(source);
+    istream_reader stream_r(stream);
+    return from_data(stream_r);
 }
 
 // TODO: optimize for larger data by using a shared byte array.
-bool operation::from_data(reader& source)
-{
-    ////reset();
-    valid_ = true;
-    code_ = static_cast<opcode>(source.read_byte());
-    const auto size = read_data_size(code_, source);
-
-    // The max_script_size and max_push_data_size constants limit
-    // evaluation, but not all scripts evaluate, so use max_block_size
-    // to guard memory allocation here.
-    if (size > get_max_block_size()) //TODO: bitprim max_block_size changed to get_max_block_size (check space for BCH)
-        source.invalidate();
-    else
-        data_ = source.read_bytes(size);
-
-    if (!source)
-        reset();
-
-    return valid_;
-}
+//bool operation::from_data(reader& source)
+//{
+//    ////reset();
+//    valid_ = true;
+//    code_ = static_cast<opcode>(source.read_byte());
+//    const auto size = read_data_size(code_, source);
+//
+//    // The max_script_size and max_push_data_size constants limit
+//    // evaluation, but not all scripts evaluate, so use max_block_size
+//    // to guard memory allocation here.
+//    if (size > get_max_block_size()) //TODO: bitprim max_block_size changed to get_max_block_size (check space for BCH)
+//        source.invalidate();
+//    else
+//        data_ = source.read_bytes(size);
+//
+//    if (!source)
+//        reset();
+//
+//    return valid_;
+//}
 
 inline bool is_push_token(const std::string& token)
 {
@@ -249,35 +251,35 @@ data_chunk operation::to_data() const
     return data;
 }
 
-void operation::to_data(std::ostream& stream) const
+void operation::to_data(data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(sink);
+    ostream_writer sink_w(stream);
+    to_data(sink_w);
 }
 
-void operation::to_data(writer& sink) const
-{
-    const auto size = data_.size();
-
-    sink.write_byte(static_cast<uint8_t>(code_));
-
-    switch (code_)
-    {
-        case opcode::push_one_size:
-            sink.write_byte(static_cast<uint8_t>(size));
-            break;
-        case opcode::push_two_size:
-            sink.write_2_bytes_little_endian(static_cast<uint16_t>(size));
-            break;
-        case opcode::push_four_size:
-            sink.write_4_bytes_little_endian(static_cast<uint32_t>(size));
-            break;
-        default:
-            break;
-    }
-
-    sink.write_bytes(data_);
-}
+//void operation::to_data(writer& sink) const
+//{
+//    const auto size = data_.size();
+//
+//    sink.write_byte(static_cast<uint8_t>(code_));
+//
+//    switch (code_)
+//    {
+//        case opcode::push_one_size:
+//            sink.write_byte(static_cast<uint8_t>(size));
+//            break;
+//        case opcode::push_two_size:
+//            sink.write_2_bytes_little_endian(static_cast<uint16_t>(size));
+//            break;
+//        case opcode::push_four_size:
+//            sink.write_4_bytes_little_endian(static_cast<uint32_t>(size));
+//            break;
+//        default:
+//            break;
+//    }
+//
+//    sink.write_bytes(data_);
+//}
 
 static std::string opcode_to_prefix(opcode code, const data_chunk& data)
 {

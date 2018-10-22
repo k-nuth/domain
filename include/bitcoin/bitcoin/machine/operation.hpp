@@ -23,12 +23,20 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
+#include <bitcoin/bitcoin/constants.hpp>
+
 #include <bitcoin/infrastructure/define.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace machine {
@@ -65,12 +73,44 @@ public:
     //-------------------------------------------------------------------------
 
     static operation factory_from_data(const data_chunk& encoded);
-    static operation factory_from_data(std::istream& stream);
-    static operation factory_from_data(reader& source);
+    static operation factory_from_data(data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static operation factory_from_data(R& source)
+    {
+        operation instance;
+        instance.from_data(source);
+        return instance;
+    }
+
+    //static operation factory_from_data(reader& source);
 
     bool from_data(const data_chunk& encoded);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source)
+    {
+        ////reset();
+        valid_ = true;
+        code_ = static_cast<opcode>(source.read_byte());
+        const auto size = read_data_size(code_, source);
+    
+        // The max_script_size and max_push_data_size constants limit
+        // evaluation, but not all scripts evaluate, so use max_block_size
+        // to guard memory allocation here.
+        if (size > get_max_block_size()) //TODO(bitprim): max_block_size changed to get_max_block_size (check space for BCH)
+            source.invalidate();
+        else
+            data_ = source.read_bytes(size);
+    
+        if (!source)
+            reset();
+    
+        return valid_;
+    }
+
+    //bool from_data(reader& source);
 
     bool from_string(const std::string& mnemonic);
 
@@ -80,8 +120,34 @@ public:
     //-------------------------------------------------------------------------
 
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(W& sink) const
+    {
+        const auto size = data_.size();
+    
+        sink.write_byte(static_cast<uint8_t>(code_));
+    
+        switch (code_)
+        {
+            case opcode::push_one_size:
+                sink.write_byte(static_cast<uint8_t>(size));
+                break;
+            case opcode::push_two_size:
+                sink.write_2_bytes_little_endian(static_cast<uint16_t>(size));
+                break;
+            case opcode::push_four_size:
+                sink.write_4_bytes_little_endian(static_cast<uint32_t>(size));
+                break;
+            default:
+                break;
+        }
+    
+        sink.write_bytes(data_);
+    }
+
+    //void to_data(writer& sink) const;
 
     std::string to_string(uint32_t active_forks) const;
 
@@ -143,7 +209,11 @@ public:
 protected:
     operation(opcode code, data_chunk&& data, bool valid);
     operation(opcode code, const data_chunk& data, bool valid);
-    static uint32_t read_data_size(opcode code, reader& source);
+
+    template <typename R>
+    static 
+    uint32_t read_data_size(opcode code, R& source);
+
     opcode opcode_from_data(const data_chunk& data, bool minimal);
     void reset();
 
