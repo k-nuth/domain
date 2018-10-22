@@ -46,7 +46,7 @@ class BC_API point {
    public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
-    static const uint32_t null_index;
+    static uint32_t const null_index;
 
     typedef std::vector<point> list;
     typedef std::vector<uint32_t> indexes;

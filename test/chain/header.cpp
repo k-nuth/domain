@@ -32,12 +32,12 @@ BOOST_AUTO_TEST_CASE(header__constructor_1__always__initialized_invalid)
 
 BOOST_AUTO_TEST_CASE(header__constructor_2__always__equals_params)
 {
-    const uint32_t version = 10u;
+    uint32_t const version = 10u;
     const auto previous = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     const auto merkle = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    const uint32_t timestamp = 531234u;
-    const uint32_t bits = 6523454u;
-    const uint32_t nonce = 68644u;
+    uint32_t const timestamp = 531234u;
+    uint32_t const bits = 6523454u;
+    uint32_t const nonce = 68644u;
 
     chain::header instance(version, previous, merkle, timestamp, bits, nonce);
     BOOST_REQUIRE(instance.is_valid());
@@ -51,10 +51,10 @@ BOOST_AUTO_TEST_CASE(header__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(header__constructor_3__always__equals_params)
 {
-    const uint32_t version = 10u;
-    const uint32_t timestamp = 531234u;
-    const uint32_t bits = 6523454u;
-    const uint32_t nonce = 68644u;
+    uint32_t const version = 10u;
+    uint32_t const timestamp = 531234u;
+    uint32_t const bits = 6523454u;
+    uint32_t const nonce = 68644u;
 
     // These must be non-const.
     auto previous = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(header__version_accessor__always__returns_initialized_value)
 {
-    const uint32_t value = 11234u;
+    uint32_t const value = 11234u;
     const chain::header instance(
         value,
         hash_literal("abababababababababababababababababababababababababababababababab"),

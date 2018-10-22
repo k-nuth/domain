@@ -35,10 +35,10 @@ namespace chain {
 using namespace bc::wallet;
 
 // This is a consensus critical value that must be set on reset.
-const uint64_t output::not_found = sighash_null_value;
+uint64_t const output::not_found = sighash_null_value;
 
 // This is a non-consensus sentinel used to indicate an output is unspent.
-const uint32_t output::validation::not_spent = max_uint32;
+uint32_t const output::validation::not_spent = max_uint32;
 
 // Constructors.
 //-----------------------------------------------------------------------------

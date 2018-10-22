@@ -151,9 +151,9 @@ private:
 
     const chain::script& script_;
     const chain::transaction& transaction_;
-    const uint32_t input_index_;
-    const uint32_t forks_;
-    const uint64_t value_;
+    uint32_t const input_index_;
+    uint32_t const forks_;
+    uint64_t const value_;
 
     script_version version_;
     size_t negative_count_;

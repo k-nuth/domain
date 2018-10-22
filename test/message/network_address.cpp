@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(network_address__factory_from_data_3__with_timestamp__succe
 
 BOOST_AUTO_TEST_CASE(network_address__timestamp_accessor__always__returns_initialized_value)
 {
-    const uint32_t timestamp = 734678u;
+    uint32_t const timestamp = 734678u;
     message::network_address instance(
         timestamp,
         5357534u,
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(network_address__timestamp_accessor__always__returns_initia
 
 BOOST_AUTO_TEST_CASE(network_address__timestamp_setter__roundtrip__success)
 {
-    const uint32_t timestamp = 734678u;
+    uint32_t const timestamp = 734678u;
     message::network_address instance;
     BOOST_REQUIRE(timestamp != instance.timestamp());
     instance.set_timestamp(timestamp);
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(network_address__timestamp_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(network_address__services_accessor__always__returns_initialized_value)
 {
-    const uint32_t services = 5357534u;
+    uint32_t const services = 5357534u;
     message::network_address instance(
         734678u,
         services,
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE(network_address__services_accessor__always__returns_initial
 
 BOOST_AUTO_TEST_CASE(network_address__services_setter__roundtrip__success)
 {
-    const uint64_t services = 6842368u;
+    uint64_t const services = 6842368u;
     message::network_address instance;
     BOOST_REQUIRE(services != instance.services());
     instance.set_services(services);

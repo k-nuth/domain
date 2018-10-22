@@ -38,7 +38,7 @@ static uint32_t factory(int32_t logical_exponent, bool negative, uint32_t mantis
     BITCOIN_ASSERT((mantissa & 0xff800000) == 0);
 
     // The logical 0 exponent is represented as 3, so consider that the decimal point.
-    const uint32_t exponent = logical_exponent + 3;
+    uint32_t const exponent = logical_exponent + 3;
 
     // Construct the non-normalized compact value.
     return exponent << 24 | (negative ? 1 : 0) << 23 | mantissa;

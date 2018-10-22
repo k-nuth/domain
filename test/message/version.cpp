@@ -538,7 +538,7 @@ BOOST_AUTO_TEST_CASE(version__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(version__value_accessor__returns_initialized_value)
 {
-    const uint32_t expected = 210u;
+    uint32_t const expected = 210u;
     const message::version instance
     (
         expected,
@@ -577,7 +577,7 @@ BOOST_AUTO_TEST_CASE(version__value_accessor__returns_initialized_value)
 
 BOOST_AUTO_TEST_CASE(version__value_setter__roundtrip__success)
 {
-    const uint32_t expected = 210u;
+    uint32_t const expected = 210u;
     message::version instance;
     instance.set_value(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.value());
@@ -585,7 +585,7 @@ BOOST_AUTO_TEST_CASE(version__value_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(version__services_accessor__always__returns_initialized_value)
 {
-    const uint64_t expected = 1515u;
+    uint64_t const expected = 1515u;
     const message::version instance
     (
         210u,
@@ -624,7 +624,7 @@ BOOST_AUTO_TEST_CASE(version__services_accessor__always__returns_initialized_val
 
 BOOST_AUTO_TEST_CASE(version__services_setter__roundtrip__success)
 {
-    const uint64_t expected = 1515u;
+    uint64_t const expected = 1515u;
     message::version instance;
     instance.set_services(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.services());
@@ -632,7 +632,7 @@ BOOST_AUTO_TEST_CASE(version__services_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(version__timestamp_accessor__always__returns_initialized_value)
 {
-    const uint64_t expected = 979797u;
+    uint64_t const expected = 979797u;
     const message::version instance
     (
         210u,
@@ -671,7 +671,7 @@ BOOST_AUTO_TEST_CASE(version__timestamp_accessor__always__returns_initialized_va
 
 BOOST_AUTO_TEST_CASE(version__timestamp_setter__roundtrip__success)
 {
-    const uint64_t expected = 979797u;
+    uint64_t const expected = 979797u;
     message::version instance;
     instance.set_timestamp(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.timestamp());
@@ -849,7 +849,7 @@ BOOST_AUTO_TEST_CASE(version__address_sender_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(version__nonce_accessor__always__returns_initialized_value)
 {
-    const uint64_t expected = 13626u;
+    uint64_t const expected = 13626u;
     const message::version instance
     (
         210u,
@@ -888,7 +888,7 @@ BOOST_AUTO_TEST_CASE(version__nonce_accessor__always__returns_initialized_value)
 
 BOOST_AUTO_TEST_CASE(version__nonce_setter__roundtrip__success)
 {
-    const uint64_t expected = 13626u;
+    uint64_t const expected = 13626u;
     message::version instance;
     instance.set_nonce(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.nonce());
@@ -952,7 +952,7 @@ BOOST_AUTO_TEST_CASE(version__user_agent_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(version__start_height_accessor__always__returns_initialized_value)
 {
-    const uint32_t expected = 514u;
+    uint32_t const expected = 514u;
     const message::version instance
     (
         210u,
@@ -991,7 +991,7 @@ BOOST_AUTO_TEST_CASE(version__start_height_accessor__always__returns_initialized
 
 BOOST_AUTO_TEST_CASE(version__start_height_setter__roundtrip__success)
 {
-    const uint32_t expected = 514u;
+    uint32_t const expected = 514u;
     message::version instance;
     instance.set_start_height(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.start_height());

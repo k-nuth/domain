@@ -48,12 +48,12 @@ class BC_API output {
     /// This is a sentinel used in .value to indicate not found in store.
     /// This is a sentinel used in cache.value to indicate not populated.
     /// This is a consensus value used in script::generate_signature_hash.
-    static const uint64_t not_found;
+    static uint64_t const not_found;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation {
         /// This is a non-consensus sentinel indicating output is unspent.
-        static const uint32_t not_spent;
+        static uint32_t const not_spent;
 
         size_t spender_height = validation::not_spent;
     };

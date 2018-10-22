@@ -31,16 +31,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(alert_payload__constructor_2__always__equals_params)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -67,16 +67,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(alert_payload__constructor_3__always__equals_params)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -110,16 +110,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(alert_payload__constructor_4__always__equals_params)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -148,16 +148,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(alert_payload__constructor_5__always__equals_params)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -390,16 +390,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__cancel__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_1__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -414,16 +414,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_1__always__returns_initi
 
 BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_2__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -475,16 +475,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__max_version__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_1__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -499,16 +499,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_1__always__returns_
 
 BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_2__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -551,16 +551,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__priority__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_1__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -575,16 +575,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_1__always__returns_initiali
 
 BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_2__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -618,16 +618,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_1__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -642,16 +642,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_1__always__returns_initi
 
 BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_2__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -685,16 +685,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_1__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -709,16 +709,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_1__always__returns_initial
 
 BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_2__always__returns_initialized)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";
@@ -752,16 +752,16 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__operator_assign_equals__always__matches_equivalent)
 {
-    const uint32_t version = 3452u;
-    const uint64_t relay_until = 64556u;
-    const uint64_t expiration = 78545u;
-    const uint32_t id = 43547u;
-    const uint32_t cancel = 546562345u;
+    uint32_t const version = 3452u;
+    uint64_t const relay_until = 64556u;
+    uint64_t const expiration = 78545u;
+    uint32_t const id = 43547u;
+    uint32_t const cancel = 546562345u;
     const std::vector<uint32_t> set_cancel = { 2345u, 346754u, 234u, 4356u };
-    const uint32_t min_version = 4644u;
-    const uint32_t max_version = 89876u;
+    uint32_t const min_version = 4644u;
+    uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
-    const uint32_t priority = 34323u;
+    uint32_t const priority = 34323u;
     const std::string comment = "asfgsddsa";
     const std::string status_bar = "fgjdfhjg";
     const std::string reserved = "utyurtevc";

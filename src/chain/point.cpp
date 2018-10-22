@@ -38,7 +38,7 @@ namespace chain {
 static const auto store_point_size = std::tuple_size<point>::value;
 
 // This sentinel is serialized and defined by consensus, not implementation.
-const uint32_t point::null_index = no_previous_output;
+uint32_t const point::null_index = no_previous_output;
 
 // Constructors.
 //-----------------------------------------------------------------------------

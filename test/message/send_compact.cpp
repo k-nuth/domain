@@ -141,14 +141,14 @@ BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_setter__roundtrip__succes
 
 BOOST_AUTO_TEST_CASE(send_compact__version_accessor__always__returns_initialized_value)
 {
-    const uint64_t expected = 6548u;
+    uint64_t const expected = 6548u;
     const message::send_compact instance(false, expected);
     BOOST_REQUIRE_EQUAL(expected, instance.version());
 }
 
 BOOST_AUTO_TEST_CASE(send_compact__version_setter__roundtrip__success)
 {
-    const uint64_t expected = 6548u;
+    uint64_t const expected = 6548u;
     message::send_compact instance;
     BOOST_REQUIRE(expected != instance.version());
     instance.set_version(expected);

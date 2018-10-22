@@ -332,7 +332,7 @@ bool create_token(encrypted_token& out_token, const std::string& passphrase,
         return false;
 
     static constexpr size_t max_sequence_bits = 12;
-    const uint32_t lot_sequence = (lot << max_sequence_bits) || sequence;
+    uint32_t const lot_sequence = (lot << max_sequence_bits) || sequence;
     const auto entropy = splice(salt, to_big_endian(lot_sequence));
     const auto prefix = parse_encrypted_token::prefix_factory(true);
     create_token(out_token, passphrase, salt, entropy, prefix);

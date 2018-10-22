@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_1__always__returns_default_initia
 
 BOOST_AUTO_TEST_CASE(output_point__constructor_2__valid_input__returns_input_initialized)
 {
-    static const uint32_t index = 1234u;
+    static uint32_t const index = 1234u;
     const chain::point value(hash1, index);
     chain::output_point instance(value);
     BOOST_REQUIRE(instance.is_valid());
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_2__valid_input__returns_input_ini
 
 BOOST_AUTO_TEST_CASE(output_point__constructor_3__valid_input__returns_input_initialized)
 {
-    static const uint32_t index = 1234u;
+    static uint32_t const index = 1234u;
     chain::point value(hash1, index);
     chain::output_point instance(std::move(value));
     BOOST_REQUIRE(instance.is_valid());
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_3__valid_input__returns_input_ini
 
 BOOST_AUTO_TEST_CASE(output_point__constructor_4__valid_input__returns_input_initialized)
 {
-    static const uint32_t index = 1234u;
+    static uint32_t const index = 1234u;
     chain::output_point instance(hash1, index);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(hash1 == instance.hash());
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_4__valid_input__returns_input_ini
 
 BOOST_AUTO_TEST_CASE(output_point__constructor_5__valid_input__returns_input_initialized)
 {
-    static const uint32_t index = 1234u;
+    static uint32_t const index = 1234u;
     auto dup_hash = hash1;
     chain::output_point instance(std::move(dup_hash), index);
     BOOST_REQUIRE(instance.is_valid());
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(output_point__from_data__insufficient_bytes__failure)
 
 BOOST_AUTO_TEST_CASE(output_point__from_data__roundtrip__success)
 {
-    static const uint32_t index = 53213u;
+    static uint32_t const index = 53213u;
     static const hash_digest hash
     {
         {

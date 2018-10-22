@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(heading__magic_accessor__always__returns_initialized_value)
 
 BOOST_AUTO_TEST_CASE(heading__magic_setter__roundtrip__success)
 {
-    const uint32_t expected = 3574u;
+    uint32_t const expected = 3574u;
     message::heading instance;
     BOOST_REQUIRE_EQUAL(0, instance.magic());
     instance.set_magic(expected);
@@ -214,14 +214,14 @@ BOOST_AUTO_TEST_CASE(heading__command_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(heading__payload_size_accessor__always__returns_initialized_value)
 {
-    const uint32_t expected = 4356u;
+    uint32_t const expected = 4356u;
     message::heading instance(3574u, "baz", expected, 7923u);
     BOOST_REQUIRE_EQUAL(expected, instance.payload_size());
 }
 
 BOOST_AUTO_TEST_CASE(heading__payload_size_setter__roundtrip__success)
 {
-    const uint32_t expected = 3574u;
+    uint32_t const expected = 3574u;
     message::heading instance;
     BOOST_REQUIRE_EQUAL(0, instance.payload_size());
     instance.set_payload_size(expected);
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(heading__checksum_accessor__always__returns_initialized_val
 
 BOOST_AUTO_TEST_CASE(heading__checksum_setter__roundtrip__success)
 {
-    const uint32_t expected = 3574u;
+    uint32_t const expected = 3574u;
     message::heading instance;
     BOOST_REQUIRE_EQUAL(0, instance.checksum());
     instance.set_checksum(expected);

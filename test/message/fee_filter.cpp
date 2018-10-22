@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(fee_filter__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(fee_filter__constructor_2__always__equals_params)
 {
-    const uint64_t value = 6434u;
+    uint64_t const value = 6434u;
     const fee_filter instance(value);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(value, instance.minimum_fee());
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(fee_filter__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(fee_filter__constructor_3__always__equals_params)
 {
-    const uint64_t fee = 6434u;
+    uint64_t const fee = 6434u;
     const fee_filter value(fee);
     const fee_filter instance(value);
     BOOST_REQUIRE(instance.is_valid());
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(fee_filter__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(fee_filter__constructor_4__always__equals_params)
 {
-    const uint64_t fee = 6434u;
+    uint64_t const fee = 6434u;
     const fee_filter value(fee);
     const fee_filter instance(std::move(value));
     BOOST_REQUIRE(instance.is_valid());
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(fee_filter__factory_from_data_3__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(fee_filter__minimum_fee__roundtrip__success)
 {
-    const uint64_t value = 42134u;
+    uint64_t const value = 42134u;
     fee_filter instance;
     BOOST_REQUIRE_NE(instance.minimum_fee(), value);
 

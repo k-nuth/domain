@@ -351,7 +351,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__two_inputs_first_null__r
 BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_zero__returns_true)
 {
     static const size_t height = 100;
-    static const uint32_t time = 100;
+    static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(0);
     BOOST_REQUIRE(instance.is_final(height, time));
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_zero__returns_true)
 BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_less_block_time_greater_threshold__returns_true)
 {
     static const size_t height = locktime_threshold + 100;
-    static const uint32_t time = 100;
+    static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(locktime_threshold + 50);
     BOOST_REQUIRE(instance.is_final(height, time));
@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_less_block_time_greater_thr
 BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_less_block_height_less_threshold_returns_true)
 {
     static const size_t height = 100;
-    static const uint32_t time = 100;
+    static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(50);
     BOOST_REQUIRE(instance.is_final(height, time));
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_less_block_height_less_thre
 BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_input_not_final__returns_false)
 {
     static const size_t height = 100;
-    static const uint32_t time = 100;
+    static uint32_t const time = 100;
     chain::input input;
     input.set_sequence(1);
     chain::transaction instance(0, 101, { input }, {});
@@ -388,7 +388,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_input_not_final__returns_fa
 BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_inputs_final__returns_true)
 {
     static const size_t height = 100;
-    static const uint32_t time = 100;
+    static uint32_t const time = 100;
     chain::input input;
     input.set_sequence(max_input_sequence);
     chain::transaction instance(0u, 101u, { input }, {});

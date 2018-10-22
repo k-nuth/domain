@@ -128,8 +128,8 @@ BOOST_AUTO_TEST_CASE(limits__floor_subtract__size_t_half_minus_maximum__minimum)
     BOOST_REQUIRE_EQUAL(floor_subtract(half, maximum), minimum);
 }
 
-static const uint32_t min_uint32 = 0;
-static const uint32_t half_uint32 = max_uint32 / 2;
+static uint32_t const min_uint32 = 0;
+static uint32_t const half_uint32 = max_uint32 / 2;
 
 // ceiling_add32
 //-----------------------------------------------------------------------------
@@ -187,8 +187,8 @@ BOOST_AUTO_TEST_CASE(limits__floor_subtract__half_uint32_minus_max_uint32__min_u
     BOOST_REQUIRE_EQUAL(floor_subtract(half_uint32, max_uint32), min_uint32);
 }
 
-static const uint64_t min_uint64 = 0;
-static const uint64_t half_uint64 = max_uint64 / 2;
+static uint64_t const min_uint64 = 0;
+static uint64_t const half_uint64 = max_uint64 / 2;
 
 // ceiling_add64
 //-----------------------------------------------------------------------------
