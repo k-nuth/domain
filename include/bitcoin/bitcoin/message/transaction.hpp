@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <istream>
 #include <memory>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
@@ -30,6 +31,11 @@
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -45,12 +51,18 @@ public:
     typedef std::shared_ptr<const_ptr_list> const_ptr_list_ptr;
     typedef std::shared_ptr<const const_ptr_list> const_ptr_list_const_ptr;
 
-    static transaction factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static transaction factory_from_data(uint32_t version,
-        std::istream& stream);
-    static transaction factory_from_data(uint32_t version,
-        reader& source);
+    static transaction factory_from_data(uint32_t version, const data_chunk& data);
+    static transaction factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static transaction factory_from_data(uint32_t version, R& source)
+    {
+        transaction instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static transaction factory_from_data(uint32_t version, reader& source);
 
     transaction();
 
@@ -66,11 +78,25 @@ public:
         const chain::input::list& inputs, const chain::output::list& outputs);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        return chain::transaction::from_data(source, true, true);
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version, bool witness = true) const;
-    void to_data(uint32_t version, std::ostream& stream, bool witness = true) const;
-    void to_data(uint32_t version, writer& sink, bool witness = true) const;
+    void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink, bool witness = true) const
+    {
+        chain::transaction::to_data(sink, true, witness);
+    }
+
+    //void to_data(uint32_t version, writer& sink, bool witness = true) const;
     size_t serialized_size(uint32_t version) const;
 
     transaction& operator=(chain::transaction&& other);
