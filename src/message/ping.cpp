@@ -18,7 +18,7 @@
  */
 #include <bitcoin/bitcoin/message/ping.hpp>
 
-#include <bitcoin/bitcoin/message/version.hpp>
+// #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
@@ -38,19 +38,19 @@ ping ping::factory_from_data(uint32_t version, const data_chunk& data)
     return instance;
 }
 
-ping ping::factory_from_data(uint32_t version, std::istream& stream)
+ping ping::factory_from_data(uint32_t version, data_source& stream)
 {
     ping instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-ping ping::factory_from_data(uint32_t version, reader& source)
-{
-    ping instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//ping ping::factory_from_data(uint32_t version, reader& source)
+//{
+//    ping instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 size_t ping::satoshi_fixed_size(uint32_t version)
 {
@@ -78,27 +78,27 @@ bool ping::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool ping::from_data(uint32_t version, std::istream& stream)
+bool ping::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool ping::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    valid_ = true;
-    nonceless_ = (version < version::level::bip31);
-
-    if (!nonceless_)
-        nonce_ = source.read_8_bytes_little_endian();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool ping::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    valid_ = true;
+//    nonceless_ = (version < version::level::bip31);
+//
+//    if (!nonceless_)
+//        nonce_ = source.read_8_bytes_little_endian();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk ping::to_data(uint32_t version) const
 {
@@ -112,17 +112,17 @@ data_chunk ping::to_data(uint32_t version) const
     return data;
 }
 
-void ping::to_data(uint32_t version, std::ostream& stream) const
+void ping::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void ping::to_data(uint32_t version, writer& sink) const
-{
-    if (version >= version::level::bip31)
-        sink.write_8_bytes_little_endian(nonce_);
-}
+//void ping::to_data(uint32_t version, writer& sink) const
+//{
+//    if (version >= version::level::bip31)
+//        sink.write_8_bytes_little_endian(nonce_);
+//}
 
 bool ping::is_valid() const
 {

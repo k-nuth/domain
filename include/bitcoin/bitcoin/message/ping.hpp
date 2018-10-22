@@ -23,10 +23,17 @@
 #include <istream>
 #include <memory>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -38,8 +45,17 @@ public:
     typedef std::shared_ptr<const ping> const_ptr;
 
     static ping factory_from_data(uint32_t version, const data_chunk& data);
-    static ping factory_from_data(uint32_t version, std::istream& stream);
-    static ping factory_from_data(uint32_t version, reader& source);
+    static ping factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static ping factory_from_data(uint32_t version, R& source)
+    {
+        ping instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static ping factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
     ping();
@@ -50,12 +66,38 @@ public:
     void set_nonce(uint64_t value);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        valid_ = true;
+        nonceless_ = (version < version::level::bip31);
+    
+        if (!nonceless_)
+            nonce_ = source.read_8_bytes_little_endian();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
 
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        if (version >= version::level::bip31)
+            sink.write_8_bytes_little_endian(nonce_);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
