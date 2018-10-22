@@ -153,7 +153,7 @@ input input::factory_from_data(const data_chunk& data, bool wire, bool witness)
     return instance;
 }
 
-input input::factory_from_data(std::istream& stream, bool wire, bool witness)
+input input::factory_from_data(data_source& stream, bool wire, bool witness)
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
@@ -163,15 +163,15 @@ input input::factory_from_data(std::istream& stream, bool wire, bool witness)
     return instance;
 }
 
-input input::factory_from_data(reader& source, bool wire, bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
-    input instance;
-    instance.from_data(source, wire, witness);
-    return instance;
-}
+//input input::factory_from_data(reader& source, bool wire, bool witness)
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    witness = false;
+//#endif
+//    input instance;
+//    instance.from_data(source, wire, witness);
+//    return instance;
+//}
 
 bool input::from_data(const data_chunk& data, bool wire, bool witness)
 {
@@ -182,42 +182,42 @@ bool input::from_data(const data_chunk& data, bool wire, bool witness)
     return from_data(istream, wire, witness);
 }
 
-bool input::from_data(std::istream& stream, bool wire, bool witness)
+bool input::from_data(data_source& stream, bool wire, bool witness)
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
 #endif
-    istream_reader source(stream);
-    return from_data(source, wire, witness);
+    istream_reader stream_r(stream);
+    return from_data(stream_r, wire, witness);
 }
 
-bool input::from_data(reader& source, bool wire, bool witness)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#else
-    // Always write witness to store so that we know how to read it.
-    witness |= !wire;
-#endif
-
-    reset();
-
-    if (!previous_output_.from_data(source, wire))
-        return false;
-
-    script_.from_data(source, true);
-
-    // Transaction from_data handles the discontiguous wire witness decoding.
-    if (witness && !wire)
-        witness_.from_data(source, true);
-
-    sequence_ = source.read_4_bytes_little_endian();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool input::from_data(reader& source, bool wire, bool witness)
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    witness = false;
+//#else
+//    // Always write witness to store so that we know how to read it.
+//    witness |= !wire;
+//#endif
+//
+//    reset();
+//
+//    if (!previous_output_.from_data(source, wire))
+//        return false;
+//
+//    script_.from_data(source, true);
+//
+//    // Transaction from_data handles the discontiguous wire witness decoding.
+//    if (witness && !wire)
+//        witness_.from_data(source, true);
+//
+//    sequence_ = source.read_4_bytes_little_endian();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 void input::reset()
 {
@@ -252,33 +252,33 @@ data_chunk input::to_data(bool wire, bool witness) const
     return data;
 }
 
-void input::to_data(std::ostream& stream, bool wire, bool witness) const
+void input::to_data(data_sink& stream, bool wire, bool witness) const
 {
 #ifdef BITPRIM_CURRENCY_BCH
     witness = false;
 #endif
-    ostream_writer sink(stream);
-    to_data(sink, wire, witness);
+    ostream_writer sink_w(stream);
+    to_data(sink_w, wire, witness);
 }
 
-void input::to_data(writer& sink, bool wire, bool witness) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#else
-    // Always write witness to store so that we know how to read it.
-    witness |= !wire;
-#endif
-
-    previous_output_.to_data(sink, wire);
-    script_.to_data(sink, true);
-
-    // Transaction to_data handles the discontiguous wire witness encoding.
-    if (witness && !wire)
-        witness_.to_data(sink, true);
-
-    sink.write_4_bytes_little_endian(sequence_);
-}
+//void input::to_data(writer& sink, bool wire, bool witness) const
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    witness = false;
+//#else
+//    // Always write witness to store so that we know how to read it.
+//    witness |= !wire;
+//#endif
+//
+//    previous_output_.to_data(sink, wire);
+//    script_.to_data(sink, true);
+//
+//    // Transaction to_data handles the discontiguous wire witness encoding.
+//    if (witness && !wire)
+//        witness_.to_data(sink, true);
+//
+//    sink.write_4_bytes_little_endian(sequence_);
+//}
 
 // Size.
 //-----------------------------------------------------------------------------

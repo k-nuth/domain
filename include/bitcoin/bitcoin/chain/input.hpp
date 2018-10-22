@@ -24,6 +24,7 @@
 #include <istream>
 #include <memory>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/output_point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
@@ -33,6 +34,11 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -73,12 +79,54 @@ public:
     //-------------------------------------------------------------------------
 
     static input factory_from_data(const data_chunk& data, bool wire=true, bool witness=false);
-    static input factory_from_data(std::istream& stream, bool wire=true, bool witness=false);
-    static input factory_from_data(reader& source, bool wire=true, bool witness=false);
+    static input factory_from_data(data_source& stream, bool wire=true, bool witness=false);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static input factory_from_data(R& source, bool wire=true, bool witness=false)
+    {
+#ifdef BITPRIM_CURRENCY_BCH
+        witness = false;
+#endif
+        input instance;
+        instance.from_data(source, wire, witness);
+        return instance;
+    }
+
+    //static input factory_from_data(reader& source, bool wire=true, bool witness=false);
 
     bool from_data(const data_chunk& data, bool wire=true, bool witness=false);
-    bool from_data(std::istream& stream, bool wire=true, bool witness=false);
-    bool from_data(reader& source, bool wire=true, bool witness=false);
+    bool from_data(data_source& stream, bool wire=true, bool witness=false);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool wire=true, bool witness=false)
+    {
+    #ifdef BITPRIM_CURRENCY_BCH
+        witness = false;
+    #else
+        // Always write witness to store so that we know how to read it.
+        witness |= !wire;
+    #endif
+    
+        reset();
+    
+        if (!previous_output_.from_data(source, wire))
+            return false;
+    
+        script_.from_data(source, true);
+    
+        // Transaction from_data handles the discontiguous wire witness decoding.
+        if (witness && !wire)
+            witness_.from_data(source, true);
+    
+        sequence_ = source.read_4_bytes_little_endian();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(reader& source, bool wire=true, bool witness=false);
 
     bool is_valid() const;
 
@@ -86,8 +134,29 @@ public:
     //-------------------------------------------------------------------------
 
     data_chunk to_data(bool wire=true, bool witness=false) const;
-    void to_data(std::ostream& stream, bool wire=true, bool witness=false) const;
-    void to_data(writer& sink, bool wire=true, bool witness=false) const;
+    void to_data(data_sink& stream, bool wire=true, bool witness=false) const;
+    
+    template <Writer W>
+    void to_data(W& sink, bool wire=true, bool witness=false) const
+    {
+    #ifdef BITPRIM_CURRENCY_BCH
+        witness = false;
+    #else
+        // Always write witness to store so that we know how to read it.
+        witness |= !wire;
+    #endif
+    
+        previous_output_.to_data(sink, wire);
+        script_.to_data(sink, true);
+    
+        // Transaction to_data handles the discontiguous wire witness encoding.
+        if (witness && !wire)
+            witness_.to_data(sink, true);
+    
+        sink.write_4_bytes_little_endian(sequence_);
+    }
+
+    //void to_data(writer& sink, bool wire=true, bool witness=false) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -161,5 +230,7 @@ private:
 
 } // namespace chain
 } // namespace libbitcoin
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif
