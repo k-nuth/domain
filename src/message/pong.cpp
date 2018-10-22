@@ -38,19 +38,19 @@ pong pong::factory_from_data(uint32_t version, const data_chunk& data)
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, std::istream& stream)
+pong pong::factory_from_data(uint32_t version, data_source& stream)
 {
     pong instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, reader& source)
-{
-    pong instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//pong pong::factory_from_data(uint32_t version, reader& source)
+//{
+//    pong instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 size_t pong::satoshi_fixed_size(uint32_t version)
 {
@@ -78,24 +78,24 @@ bool pong::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool pong::from_data(uint32_t version, std::istream& stream)
+bool pong::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool pong::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    valid_ = true;
-    nonce_ = source.read_8_bytes_little_endian();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool pong::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    valid_ = true;
+//    nonce_ = source.read_8_bytes_little_endian();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk pong::to_data(uint32_t version) const
 {
@@ -109,16 +109,16 @@ data_chunk pong::to_data(uint32_t version) const
     return data;
 }
 
-void pong::to_data(uint32_t version, std::ostream& stream) const
+void pong::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void pong::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_8_bytes_little_endian(nonce_);
-}
+//void pong::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_8_bytes_little_endian(nonce_);
+//}
 
 bool pong::is_valid() const
 {
