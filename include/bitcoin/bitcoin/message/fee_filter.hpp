@@ -108,8 +108,8 @@ class BC_API fee_filter {
     bool operator!=(const fee_filter& other) const;
 
     static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
    protected:
     fee_filter(uint64_t minimum, bool insufficient_version);
