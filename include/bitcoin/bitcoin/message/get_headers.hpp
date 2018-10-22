@@ -23,8 +23,8 @@
 #include <memory>
 #include <string>
 
-#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/get_blocks.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 
@@ -35,18 +35,16 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API get_headers
-  : public get_blocks
-{
-public:
+    : public get_blocks {
+   public:
     typedef std::shared_ptr<get_headers> ptr;
     typedef std::shared_ptr<const get_headers> const_ptr;
 
     static get_headers factory_from_data(uint32_t version, const data_chunk& data);
     static get_headers factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static get_headers factory_from_data(uint32_t version, R& source)
-    {
+    static get_headers factory_from_data(uint32_t version, R& source) {
         get_headers instance;
         instance.from_data(version, source);
         return instance;
@@ -60,21 +58,21 @@ public:
     get_headers(const get_headers& other);
     get_headers(get_headers&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_source& stream); /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    
+    bool from_data(uint32_t version, const data_chunk& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) /*override*/ //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     {
         if (!get_blocks::from_data(version, source))
             return false;
-    
+
         if (version < get_headers::version_minimum)
             source.invalidate();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -92,7 +90,7 @@ public:
     static const uint32_t version_maximum;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
