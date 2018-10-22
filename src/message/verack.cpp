@@ -31,29 +31,26 @@ const std::string verack::command = "verack";
 const uint32_t verack::version_minimum = version::level::minimum;
 const uint32_t verack::version_maximum = version::level::maximum;
 
-verack verack::factory_from_data(uint32_t version,
-    const data_chunk& data)
+verack verack::factory_from_data(uint32_t version, const data_chunk& data)
 {
     verack instance;
     instance.from_data(version, data);
     return instance;
 }
 
-verack verack::factory_from_data(uint32_t version,
-    std::istream& stream)
+verack verack::factory_from_data(uint32_t version, data_source& stream)
 {
     verack instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-verack verack::factory_from_data(uint32_t version,
-    reader& source)
-{
-    verack instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//verack verack::factory_from_data(uint32_t version, reader& source)
+//{
+//    verack instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 verack::verack()
 {
@@ -74,17 +71,17 @@ bool verack::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool verack::from_data(uint32_t version, std::istream& stream)
+bool verack::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool verack::from_data(uint32_t version, reader& source)
-{
-    reset();
-    return source;
-}
+//bool verack::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//    return source;
+//}
 
 data_chunk verack::to_data(uint32_t version) const
 {
@@ -98,7 +95,7 @@ data_chunk verack::to_data(uint32_t version) const
     return data;
 }
 
-void verack::to_data(uint32_t version, std::ostream& stream) const
+void verack::to_data(uint32_t version, data_sink& stream) const
 {
 }
 
