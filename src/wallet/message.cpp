@@ -20,10 +20,10 @@
 
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 #include <bitcoin/bitcoin/wallet/ec_private.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
+#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
 namespace wallet {
@@ -35,8 +35,7 @@ static constexpr uint8_t magic_differential = magic_compressed - magic_uncompres
 static_assert(magic_differential > max_recovery_id, "oops!");
 static_assert(max_uint8 - max_recovery_id >= magic_uncompressed, "oops!");
 
-hash_digest hash_message(data_slice message)
-{
+hash_digest hash_message(data_slice message) {
     // This is a specified magic prefix.
     static const std::string prefix("Bitcoin Signed Message:\n");
 
@@ -50,18 +49,12 @@ hash_digest hash_message(data_slice message)
     return bitcoin_hash(data);
 }
 
-static bool recover(short_hash& out_hash, bool compressed,
-    const ec_signature& compact, uint8_t recovery_id,
-    const hash_digest& message_digest)
-{
-    const recoverable_signature recoverable
-    {
+static bool recover(short_hash& out_hash, bool compressed, const ec_signature& compact, uint8_t recovery_id, const hash_digest& message_digest) {
+    const recoverable_signature recoverable{
         compact,
-        recovery_id
-    };
+        recovery_id};
 
-    if (compressed)
-    {
+    if (compressed) {
         ec_compressed point;
         if (!recover_public(point, recoverable, message_digest))
             return false;
@@ -78,9 +71,7 @@ static bool recover(short_hash& out_hash, bool compressed,
     return true;
 }
 
-bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id,
-    bool compressed)
-{
+bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id, bool compressed) {
     if (recovery_id > max_recovery_id)
         return false;
 
@@ -90,9 +81,7 @@ bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id,
     return true;
 }
 
-bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed,
-    uint8_t magic)
-{
+bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed, uint8_t magic) {
     // Magic less offsets cannot exceed recovery id range [0, max_recovery_id].
     if (magic < magic_uncompressed ||
         magic > magic_compressed + max_recovery_id)
@@ -112,23 +101,17 @@ bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed,
     return true;
 }
 
-bool sign_message(message_signature& signature, data_slice message,
-    const ec_private& secret)
-{
+bool sign_message(message_signature& signature, data_slice message, const ec_private& secret) {
     return sign_message(signature, message, secret, secret.compressed());
 }
 
-bool sign_message(message_signature& signature, data_slice message,
-    const std::string& wif)
-{
+bool sign_message(message_signature& signature, data_slice message, const std::string& wif) {
     ec_private secret(wif);
     return (secret &&
-        sign_message(signature, message, secret, secret.compressed()));
+            sign_message(signature, message, secret, secret.compressed()));
 }
 
-bool sign_message(message_signature& signature, data_slice message,
-    const ec_secret& secret, bool compressed)
-{
+bool sign_message(message_signature& signature, data_slice message, const ec_secret& secret, bool compressed) {
     recoverable_signature recoverable;
     if (!sign_recoverable(recoverable, secret, hash_message(message)))
         return false;
@@ -141,9 +124,7 @@ bool sign_message(message_signature& signature, data_slice message,
     return true;
 }
 
-bool verify_message(data_slice message, const payment_address& address,
-    const message_signature& signature)
-{
+bool verify_message(data_slice message, const payment_address& address, const message_signature& signature) {
     const auto magic = signature.front();
     const auto compact = slice<1, message_signature_size>(signature);
 
@@ -155,8 +136,8 @@ bool verify_message(data_slice message, const payment_address& address,
     short_hash hash;
     const auto message_digest = hash_message(message);
     return recover(hash, compressed, compact, recovery_id, message_digest) &&
-        (hash == address.hash());
+           (hash == address.hash());
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
