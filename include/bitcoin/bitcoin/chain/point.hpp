@@ -23,13 +23,21 @@
 #include <istream>
 #include <string>
 #include <vector>
+
 #include <boost/functional/hash.hpp>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/point_iterator.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -70,12 +78,48 @@ public:
     //-------------------------------------------------------------------------
 
     static point factory_from_data(const data_chunk& data, bool wire=true);
-    static point factory_from_data(std::istream& stream, bool wire=true);
-    static point factory_from_data(reader& source, bool wire=true);
+    static point factory_from_data(data_source& stream, bool wire=true);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static point factory_from_data(R& source, bool wire=true)
+    {
+        point instance;
+        instance.from_data(source, wire);
+        return instance;
+    }
+
+    //static point factory_from_data(reader& source, bool wire=true);
 
     bool from_data(const data_chunk& data, bool wire=true);
-    bool from_data(std::istream& stream, bool wire=true);
-    bool from_data(reader& source, bool wire=true);
+    bool from_data(data_source& stream, bool wire=true);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool wire=true)
+    {
+        reset();
+    
+        valid_ = true;
+        hash_ = source.read_hash();
+    
+        if (wire)
+        {
+            index_ = source.read_4_bytes_little_endian();
+        }
+        else
+        {
+            index_ = source.read_2_bytes_little_endian();
+    
+            if (index_ == max_uint16)
+                index_ = null_index;
+        }
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(reader& source, bool wire=true);
 
     bool is_valid() const;
 
@@ -83,8 +127,25 @@ public:
     //-------------------------------------------------------------------------
 
     data_chunk to_data(bool wire=true) const;
-    void to_data(std::ostream& stream, bool wire=true) const;
-    void to_data(writer& sink, bool wire=true) const;
+    void to_data(data_sink& stream, bool wire=true) const;
+    
+    template <Writer W>
+    void to_data(W& sink, bool wire=true) const
+    {
+        sink.write_hash(hash_);
+    
+        if (wire)
+        {
+            sink.write_4_bytes_little_endian(index_);
+        }
+        else
+        {
+            BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
+            sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
+        }
+    }
+
+    //void to_data(writer& sink, bool wire=true) const;
 
     // Iteration (limited to store serialization).
     //-------------------------------------------------------------------------
@@ -167,5 +228,7 @@ struct tuple_size<bc::chain::point>
 };
 
 } // namespace std
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif

@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <sstream>
 #include <utility>
-#include <bitcoin/bitcoin/constants.hpp>
+// #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
@@ -127,7 +127,7 @@ point point::factory_from_data(const data_chunk& data, bool wire)
 }
 
 // static
-point point::factory_from_data(std::istream& stream, bool wire)
+point point::factory_from_data(data_source& stream, bool wire)
 {
     point instance;
     instance.from_data(stream, wire);
@@ -135,12 +135,12 @@ point point::factory_from_data(std::istream& stream, bool wire)
 }
 
 // static
-point point::factory_from_data(reader& source, bool wire)
-{
-    point instance;
-    instance.from_data(source, wire);
-    return instance;
-}
+//point point::factory_from_data(reader& source, bool wire)
+//{
+//    point instance;
+//    instance.from_data(source, wire);
+//    return instance;
+//}
 
 bool point::from_data(const data_chunk& data, bool wire)
 {
@@ -148,36 +148,36 @@ bool point::from_data(const data_chunk& data, bool wire)
     return from_data(istream, wire);
 }
 
-bool point::from_data(std::istream& stream, bool wire)
+bool point::from_data(data_source& stream, bool wire)
 {
-    istream_reader source(stream);
-    return from_data(source, wire);
+    istream_reader stream_r(stream);
+    return from_data(stream_r, wire);
 }
 
-bool point::from_data(reader& source, bool wire)
-{
-    reset();
-
-    valid_ = true;
-    hash_ = source.read_hash();
-
-    if (wire)
-    {
-        index_ = source.read_4_bytes_little_endian();
-    }
-    else
-    {
-        index_ = source.read_2_bytes_little_endian();
-
-        if (index_ == max_uint16)
-            index_ = null_index;
-    }
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool point::from_data(reader& source, bool wire)
+//{
+//    reset();
+//
+//    valid_ = true;
+//    hash_ = source.read_hash();
+//
+//    if (wire)
+//    {
+//        index_ = source.read_4_bytes_little_endian();
+//    }
+//    else
+//    {
+//        index_ = source.read_2_bytes_little_endian();
+//
+//        if (index_ == max_uint16)
+//            index_ = null_index;
+//    }
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 // protected
 void point::reset()
@@ -207,26 +207,26 @@ data_chunk point::to_data(bool wire) const
     return data;
 }
 
-void point::to_data(std::ostream& stream, bool wire) const
+void point::to_data(data_sink& stream, bool wire) const
 {
-    ostream_writer sink(stream);
-    to_data(sink, wire);
+    ostream_writer sink_w(stream);
+    to_data(sink_w, wire);
 }
 
-void point::to_data(writer& sink, bool wire) const
-{
-    sink.write_hash(hash_);
-
-    if (wire)
-    {
-        sink.write_4_bytes_little_endian(index_);
-    }
-    else
-    {
-        BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
-        sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
-    }
-}
+//void point::to_data(writer& sink, bool wire) const
+//{
+//    sink.write_hash(hash_);
+//
+//    if (wire)
+//    {
+//        sink.write_4_bytes_little_endian(index_);
+//    }
+//    else
+//    {
+//        BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
+//        sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
+//    }
+//}
 
 // Iterator.
 //-----------------------------------------------------------------------------
