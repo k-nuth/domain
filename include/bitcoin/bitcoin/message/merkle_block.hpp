@@ -23,15 +23,15 @@
 #include <memory>
 #include <string>
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
+#include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -39,19 +39,17 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API merkle_block
-{
-public:
+class BC_API merkle_block {
+   public:
     typedef std::vector<merkle_block> list;
     typedef std::shared_ptr<merkle_block> ptr;
     typedef std::shared_ptr<const merkle_block> const_ptr;
 
     static merkle_block factory_from_data(uint32_t version, const data_chunk& data);
     static merkle_block factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static merkle_block factory_from_data(uint32_t version, R& source)
-    {
+    static merkle_block factory_from_data(uint32_t version, R& source) {
         merkle_block instance;
         instance.from_data(version, source);
         return instance;
@@ -60,10 +58,8 @@ public:
     //static merkle_block factory_from_data(uint32_t version, reader& source);
 
     merkle_block();
-    merkle_block(const chain::header& header, size_t total_transactions,
-        const hash_list& hashes, const data_chunk& flags);
-    merkle_block(chain::header&& header, size_t total_transactions,
-        hash_list&& hashes, data_chunk&& flags);
+    merkle_block(const chain::header& header, size_t total_transactions, const hash_list& hashes, const data_chunk& flags);
+    merkle_block(chain::header&& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
     merkle_block(const chain::block& block);
     merkle_block(const merkle_block& other);
     merkle_block(merkle_block&& other);
@@ -88,54 +84,52 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         if (!header_.from_data(source))
             return false;
-    
+
         total_transactions_ = source.read_4_bytes_little_endian();
         const auto count = source.read_size_little_endian();
-    
+
         // Guard against potential for arbitary memory allocation.
         if (count > get_max_block_size())
             source.invalidate();
         else
             hashes_.reserve(count);
-    
+
         for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash)
             hashes_.push_back(source.read_hash());
-    
+
         flags_ = source.read_bytes(source.read_size_little_endian());
-    
+
         if (version < merkle_block::version_minimum)
             source.invalidate();
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
-    
+
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const
-    {
+    void to_data(uint32_t version, W& sink) const {
         header_.to_data(sink);
-    
+
         const auto total32 = safe_unsigned<uint32_t>(total_transactions_);
         sink.write_4_bytes_little_endian(total32);
         sink.write_variable_little_endian(hashes_.size());
-    
+
         for (const auto& hash : hashes_)
             sink.write_hash(hash);
-    
+
         sink.write_variable_little_endian(flags_.size());
         sink.write_bytes(flags_);
     }
@@ -156,14 +150,14 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-private:
+   private:
     chain::header header_;
     size_t total_transactions_;
     hash_list hashes_;
     data_chunk flags_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
