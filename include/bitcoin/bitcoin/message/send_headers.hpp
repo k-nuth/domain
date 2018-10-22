@@ -24,11 +24,11 @@
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -36,18 +36,16 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API send_headers
-{
-public:
+class BC_API send_headers {
+   public:
     typedef std::shared_ptr<send_headers> ptr;
     typedef std::shared_ptr<const send_headers> const_ptr;
 
     static send_headers factory_from_data(uint32_t version, const data_chunk& data);
     static send_headers factory_from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static send_headers factory_from_data(uint32_t version, R& source)
-    {
+    static send_headers factory_from_data(uint32_t version, R& source) {
         send_headers instance;
         instance.from_data(version, source);
         return instance;
@@ -62,24 +60,22 @@ public:
 
     bool from_data(uint32_t version, const data_chunk& data);
     bool from_data(uint32_t version, data_source& stream);
-    
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source)
-    {
+    bool from_data(uint32_t version, R& source) {
         reset();
-    
+
         // Initialize as valid from deserialization.
         insufficient_version_ = false;
-    
-        if (version < send_headers::version_minimum)
-        {
+
+        if (version < send_headers::version_minimum) {
             insufficient_version_ = true;
             source.invalidate();
         }
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -95,14 +91,14 @@ public:
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-protected:
+   protected:
     send_headers(bool insufficient_version);
 
-private:
+   private:
     bool insufficient_version_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif
