@@ -26,15 +26,15 @@
 
 #include <boost/functional/hash.hpp>
 
+#include <bitcoin/bitcoin/chain/point_iterator.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/chain/point_iterator.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
@@ -42,9 +42,8 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API point
-{
-public:
+class BC_API point {
+   public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
     static const uint32_t null_index;
@@ -77,12 +76,11 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static point factory_from_data(const data_chunk& data, bool wire=true);
-    static point factory_from_data(data_source& stream, bool wire=true);
-    
+    static point factory_from_data(const data_chunk& data, bool wire = true);
+    static point factory_from_data(data_source& stream, bool wire = true);
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    static point factory_from_data(R& source, bool wire=true)
-    {
+    static point factory_from_data(R& source, bool wire = true) {
         point instance;
         instance.from_data(source, wire);
         return instance;
@@ -90,32 +88,28 @@ public:
 
     //static point factory_from_data(reader& source, bool wire=true);
 
-    bool from_data(const data_chunk& data, bool wire=true);
-    bool from_data(data_source& stream, bool wire=true);
-    
+    bool from_data(const data_chunk& data, bool wire = true);
+    bool from_data(data_source& stream, bool wire = true);
+
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire=true)
-    {
+    bool from_data(R& source, bool wire = true) {
         reset();
-    
+
         valid_ = true;
         hash_ = source.read_hash();
-    
-        if (wire)
-        {
+
+        if (wire) {
             index_ = source.read_4_bytes_little_endian();
-        }
-        else
-        {
+        } else {
             index_ = source.read_2_bytes_little_endian();
-    
+
             if (index_ == max_uint16)
                 index_ = null_index;
         }
-    
+
         if (!source)
             reset();
-    
+
         return source;
     }
 
@@ -126,20 +120,16 @@ public:
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire=true) const;
-    void to_data(data_sink& stream, bool wire=true) const;
-    
+    data_chunk to_data(bool wire = true) const;
+    void to_data(data_sink& stream, bool wire = true) const;
+
     template <Writer W>
-    void to_data(W& sink, bool wire=true) const
-    {
+    void to_data(W& sink, bool wire = true) const {
         sink.write_hash(hash_);
-    
-        if (wire)
-        {
+
+        if (wire) {
             sink.write_4_bytes_little_endian(index_);
-        }
-        else
-        {
+        } else {
             BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
             sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
         }
@@ -157,7 +147,7 @@ public:
     //-------------------------------------------------------------------------
 
     static size_t satoshi_fixed_size();
-    size_t serialized_size(bool wire=true) const;
+    size_t serialized_size(bool wire = true) const;
 
     // deprecated (unsafe)
     hash_digest& hash();
@@ -180,33 +170,29 @@ public:
 
     bool is_null() const;
 
-protected:
+   protected:
     point(hash_digest&& hash, uint32_t index, bool valid);
     point(const hash_digest& hash, uint32_t index, bool valid);
     void reset();
 
-private:
+   private:
     hash_digest hash_;
     uint32_t index_;
     bool valid_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
-
+}  // namespace chain
+}  // namespace libbitcoin
 
 // Standard hash.
 //-----------------------------------------------------------------------------
 
-namespace std
-{
+namespace std {
 
 // Extend std namespace with our hash wrapper (database key, not checksum).
 template <>
-struct hash<bc::chain::point>
-{
-    size_t operator()(const bc::chain::point& point) const
-    {
+struct hash<bc::chain::point> {
+    size_t operator()(const bc::chain::point& point) const {
         size_t seed = 0;
         boost::hash_combine(seed, point.hash());
         boost::hash_combine(seed, point.index());
@@ -216,18 +202,16 @@ struct hash<bc::chain::point>
 
 // Extend std namespace with the non-wire size of point (database key size).
 template <>
-struct tuple_size<bc::chain::point>
-{
+struct tuple_size<bc::chain::point> {
     static const auto value = std::tuple_size<bc::hash_digest>::value +
-        sizeof(uint16_t);
+                              sizeof(uint16_t);
 
-    operator std::size_t() const
-    {
+    operator std::size_t() const {
         return value;
     }
 };
 
-} // namespace std
+}  // namespace std
 
 //#include <bitprim/concepts_undef.hpp>
 
