@@ -33,15 +33,13 @@ const std::string version::command = "version";
 const uint32_t message::version::version_minimum = level::minimum;
 const uint32_t message::version::version_maximum = level::maximum;
 
-version version::factory_from_data(uint32_t version, const data_chunk& data)
-{
+version version::factory_from_data(uint32_t version, const data_chunk& data) {
     message::version instance;
     instance.from_data(version, data);
     return instance;
 }
 
-version version::factory_from_data(uint32_t version, data_source& stream)
-{
+version version::factory_from_data(uint32_t version, data_source& stream) {
     message::version instance;
     instance.from_data(version, stream);
     return instance;
@@ -55,66 +53,30 @@ version version::factory_from_data(uint32_t version, data_source& stream)
 //}
 
 version::version()
-  : value_(0), services_(0), timestamp_(0), address_receiver_(),
-    address_sender_(), nonce_(0), user_agent_(), start_height_(0),
-    relay_(false)
-{
+    : value_(0), services_(0), timestamp_(0), address_receiver_(), address_sender_(), nonce_(0), user_agent_(), start_height_(0), relay_(false) {
 }
 
-version::version(uint32_t value, uint64_t services, uint64_t timestamp,
-    const network_address& address_receiver,
-    const network_address& address_sender, uint64_t nonce,
-    const std::string& user_agent, uint32_t start_height, bool relay)
-  : value_(value), services_(services), timestamp_(timestamp),
-    address_receiver_(address_receiver), address_sender_(address_sender),
-    nonce_(nonce), user_agent_(user_agent), start_height_(start_height),
-    relay_(relay)
-{
+version::version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, const std::string& user_agent, uint32_t start_height, bool relay)
+    : value_(value), services_(services), timestamp_(timestamp), address_receiver_(address_receiver), address_sender_(address_sender), nonce_(nonce), user_agent_(user_agent), start_height_(start_height), relay_(relay) {
 }
 
-version::version(uint32_t value, uint64_t services, uint64_t timestamp,
-    network_address&& address_receiver, network_address&& address_sender,
-    uint64_t nonce, std::string&& user_agent, uint32_t start_height,
-    bool relay)
-  : value_(value), services_(services), timestamp_(timestamp),
-    address_receiver_(std::move(address_receiver)),
-    address_sender_(std::move(address_sender)),
-    nonce_(nonce), user_agent_(std::move(user_agent)),
-    start_height_(start_height), relay_(relay)
-{
+version::version(uint32_t value, uint64_t services, uint64_t timestamp, network_address&& address_receiver, network_address&& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay)
+    : value_(value), services_(services), timestamp_(timestamp), address_receiver_(std::move(address_receiver)), address_sender_(std::move(address_sender)), nonce_(nonce), user_agent_(std::move(user_agent)), start_height_(start_height), relay_(relay) {
 }
 
 version::version(const version& other)
-  : version(other.value_, other.services_, other.timestamp_,
-      other.address_receiver_, other.address_sender_, other.nonce_,
-      other.user_agent_, other.start_height_, other.relay_)
-{
+    : version(other.value_, other.services_, other.timestamp_, other.address_receiver_, other.address_sender_, other.nonce_, other.user_agent_, other.start_height_, other.relay_) {
 }
 
 version::version(version&& other)
-  : version(other.value_, other.services_, other.timestamp_,
-      std::move(other.address_receiver_),
-      std::move(other.address_sender_), other.nonce_,
-      std::move(other.user_agent_), other.start_height_,
-      other.relay_)
-{
+    : version(other.value_, other.services_, other.timestamp_, std::move(other.address_receiver_), std::move(other.address_sender_), other.nonce_, std::move(other.user_agent_), other.start_height_, other.relay_) {
 }
 
-bool version::is_valid() const
-{
-    return (value_ != 0)
-        || (services_ != 0)
-        || (timestamp_ != 0)
-        || address_receiver_.is_valid()
-        || address_sender_.is_valid()
-        || (nonce_ != 0)
-        || !user_agent_.empty()
-        || (start_height_ != 0)
-        || (relay_ != false);
+bool version::is_valid() const {
+    return (value_ != 0) || (services_ != 0) || (timestamp_ != 0) || address_receiver_.is_valid() || address_sender_.is_valid() || (nonce_ != 0) || !user_agent_.empty() || (start_height_ != 0) || (relay_ != false);
 }
 
-void version::reset()
-{
+void version::reset() {
     value_ = 0;
     services_ = 0;
     timestamp_ = 0;
@@ -127,14 +89,12 @@ void version::reset()
     relay_ = false;
 }
 
-bool version::from_data(uint32_t version, const data_chunk& data)
-{
+bool version::from_data(uint32_t version, const data_chunk& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool version::from_data(uint32_t version, data_source& stream)
-{
+bool version::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
@@ -166,7 +126,7 @@ bool version::from_data(uint32_t version, data_source& stream)
 //    // the expansion of the version message, which is a clear compat break.
 //    // So relay is eabled if either peer is below 70001, it is not set, or
 //    // peers are at/above 70001 and the field is set.
-//    relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() || 
+//    relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() ||
 //        (self_bip37 && source.read_byte() != 0);
 //
 //    if (!source)
@@ -175,8 +135,7 @@ bool version::from_data(uint32_t version, data_source& stream)
 //    return source;
 //}
 
-data_chunk version::to_data(uint32_t version) const
-{
+data_chunk version::to_data(uint32_t version) const {
     data_chunk data;
     const auto size = serialized_size(version);
     data.reserve(size);
@@ -187,8 +146,7 @@ data_chunk version::to_data(uint32_t version) const
     return data;
 }
 
-void version::to_data(uint32_t version, data_sink& stream) const
-{
+void version::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
@@ -209,8 +167,7 @@ void version::to_data(uint32_t version, data_sink& stream) const
 //        sink.write_byte(relay_ ? 1 : 0);
 //}
 
-size_t version::serialized_size(uint32_t version) const
-{
+size_t version::serialized_size(uint32_t version) const {
     auto size =
         sizeof(value_) +
         sizeof(services_) +
@@ -227,118 +184,95 @@ size_t version::serialized_size(uint32_t version) const
     return size;
 }
 
-uint32_t version::value() const
-{
+uint32_t version::value() const {
     return value_;
 }
 
-void version::set_value(uint32_t value)
-{
+void version::set_value(uint32_t value) {
     value_ = value;
 }
 
-uint64_t version::services() const
-{
+uint64_t version::services() const {
     return services_;
 }
 
-void version::set_services(uint64_t services)
-{
+void version::set_services(uint64_t services) {
     services_ = services;
 }
 
-uint64_t version::timestamp() const
-{
+uint64_t version::timestamp() const {
     return timestamp_;
 }
 
-void version::set_timestamp(uint64_t timestamp)
-{
+void version::set_timestamp(uint64_t timestamp) {
     timestamp_ = timestamp;
 }
 
-network_address& version::address_receiver()
-{
+network_address& version::address_receiver() {
     return address_receiver_;
 }
 
-const network_address& version::address_receiver() const
-{
+const network_address& version::address_receiver() const {
     return address_receiver_;
 }
 
-void version::set_address_receiver(network_address&& address)
-{
+void version::set_address_receiver(network_address&& address) {
     address_receiver_ = std::move(address);
 }
 
-network_address& version::address_sender()
-{
+network_address& version::address_sender() {
     return address_sender_;
 }
 
-const network_address& version::address_sender() const
-{
+const network_address& version::address_sender() const {
     return address_sender_;
 }
 
-void version::set_address_sender(network_address&& address)
-{
+void version::set_address_sender(network_address&& address) {
     address_sender_ = std::move(address);
 }
 
-uint64_t version::nonce() const
-{
+uint64_t version::nonce() const {
     return nonce_;
 }
 
-void version::set_nonce(uint64_t nonce)
-{
+void version::set_nonce(uint64_t nonce) {
     nonce_ = nonce;
 }
 
-std::string& version::user_agent()
-{
+std::string& version::user_agent() {
     return user_agent_;
 }
 
-const std::string& version::user_agent() const
-{
+const std::string& version::user_agent() const {
     return user_agent_;
 }
 
-void version::set_user_agent(const std::string& agent)
-{
+void version::set_user_agent(const std::string& agent) {
     user_agent_ = agent;
 }
 
-void version::set_user_agent(std::string&& agent)
-{
+void version::set_user_agent(std::string&& agent) {
     user_agent_ = std::move(agent);
 }
 
-uint32_t version::start_height() const
-{
+uint32_t version::start_height() const {
     return start_height_;
 }
 
-void version::set_start_height(uint32_t height)
-{
+void version::set_start_height(uint32_t height) {
     start_height_ = height;
 }
 
-bool version::relay() const
-{
+bool version::relay() const {
     return relay_;
 }
 
-void version::set_relay(bool relay)
-{
+void version::set_relay(bool relay) {
     relay_ = relay;
 }
 
-version& version::operator=(version&& other)
-{
+version& version::operator=(version&& other) {
     value_ = other.value_;
     services_ = other.services_;
     timestamp_ = other.timestamp_;
@@ -351,20 +285,18 @@ version& version::operator=(version&& other)
     return *this;
 }
 
-bool version::operator==(const version& other) const
-{
+bool version::operator==(const version& other) const {
     return (value_ == other.value_) && (services_ == other.services_) &&
-        (timestamp_ == other.timestamp_) &&
-        (address_receiver_ == other.address_receiver_) &&
-        (address_sender_ == other.address_sender_) &&
-        (nonce_ == other.nonce_) && (user_agent_ == other.user_agent_) &&
-        (start_height_ == other.start_height_) && (relay_ == other.relay_);
+           (timestamp_ == other.timestamp_) &&
+           (address_receiver_ == other.address_receiver_) &&
+           (address_sender_ == other.address_sender_) &&
+           (nonce_ == other.nonce_) && (user_agent_ == other.user_agent_) &&
+           (start_height_ == other.start_height_) && (relay_ == other.relay_);
 }
 
-bool version::operator!=(const version& other) const
-{
+bool version::operator!=(const version& other) const {
     return !(*this == other);
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
