@@ -33,29 +33,26 @@ const std::string version::command = "version";
 const uint32_t message::version::version_minimum = level::minimum;
 const uint32_t message::version::version_maximum = level::maximum;
 
-version version::factory_from_data(uint32_t version,
-    const data_chunk& data)
+version version::factory_from_data(uint32_t version, const data_chunk& data)
 {
     message::version instance;
     instance.from_data(version, data);
     return instance;
 }
 
-version version::factory_from_data(uint32_t version,
-    std::istream& stream)
+version version::factory_from_data(uint32_t version, data_source& stream)
 {
     message::version instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-version version::factory_from_data(uint32_t version,
-    reader& source)
-{
-    message::version instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//version version::factory_from_data(uint32_t version, reader& source)
+//{
+//    message::version instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 version::version()
   : value_(0), services_(0), timestamp_(0), address_receiver_(),
@@ -136,47 +133,47 @@ bool version::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool version::from_data(uint32_t version, std::istream& stream)
+bool version::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool version::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    value_ = source.read_4_bytes_little_endian();
-    services_ = source.read_8_bytes_little_endian();
-    timestamp_ = source.read_8_bytes_little_endian();
-    address_receiver_.from_data(version, source, false);
-    address_sender_.from_data(version, source, false);
-    nonce_ = source.read_8_bytes_little_endian();
-    user_agent_ = source.read_string();
-    start_height_ = source.read_4_bytes_little_endian();
-
-    // HACK: disabled check due to inconsistent node implementation.
-    // The protocol expects duplication of the sender's services.
-    ////if (services_ != address_sender_.services())
-    ////    source.invalidate();
-
-    const auto peer_bip37 = (value_ >= level::bip37);
-    const auto self_bip37 = (version >= level::bip37);
-
-    // The relay field is optional at or above version 70001.
-    // But the peer doesn't know our version when it sends its version.
-    // This is a bug in the BIP37 design as it forces older peers to adapt to
-    // the expansion of the version message, which is a clear compat break.
-    // So relay is eabled if either peer is below 70001, it is not set, or
-    // peers are at/above 70001 and the field is set.
-    relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() || 
-        (self_bip37 && source.read_byte() != 0);
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool version::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    value_ = source.read_4_bytes_little_endian();
+//    services_ = source.read_8_bytes_little_endian();
+//    timestamp_ = source.read_8_bytes_little_endian();
+//    address_receiver_.from_data(version, source, false);
+//    address_sender_.from_data(version, source, false);
+//    nonce_ = source.read_8_bytes_little_endian();
+//    user_agent_ = source.read_string();
+//    start_height_ = source.read_4_bytes_little_endian();
+//
+//    // HACK: disabled check due to inconsistent node implementation.
+//    // The protocol expects duplication of the sender's services.
+//    ////if (services_ != address_sender_.services())
+//    ////    source.invalidate();
+//
+//    const auto peer_bip37 = (value_ >= level::bip37);
+//    const auto self_bip37 = (version >= level::bip37);
+//
+//    // The relay field is optional at or above version 70001.
+//    // But the peer doesn't know our version when it sends its version.
+//    // This is a bug in the BIP37 design as it forces older peers to adapt to
+//    // the expansion of the version message, which is a clear compat break.
+//    // So relay is eabled if either peer is below 70001, it is not set, or
+//    // peers are at/above 70001 and the field is set.
+//    relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() || 
+//        (self_bip37 && source.read_byte() != 0);
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk version::to_data(uint32_t version) const
 {
@@ -190,27 +187,27 @@ data_chunk version::to_data(uint32_t version) const
     return data;
 }
 
-void version::to_data(uint32_t version, std::ostream& stream) const
+void version::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void version::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_4_bytes_little_endian(value_);
-    const auto effective_version = std::min(version, value_);
-    sink.write_8_bytes_little_endian(services_);
-    sink.write_8_bytes_little_endian(timestamp_);
-    address_receiver_.to_data(version, sink, false);
-    address_sender_.to_data(version, sink, false);
-    sink.write_8_bytes_little_endian(nonce_);
-    sink.write_string(user_agent_);
-    sink.write_4_bytes_little_endian(start_height_);
-
-    if (effective_version >= level::bip37)
-        sink.write_byte(relay_ ? 1 : 0);
-}
+//void version::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_4_bytes_little_endian(value_);
+//    const auto effective_version = std::min(version, value_);
+//    sink.write_8_bytes_little_endian(services_);
+//    sink.write_8_bytes_little_endian(timestamp_);
+//    address_receiver_.to_data(version, sink, false);
+//    address_sender_.to_data(version, sink, false);
+//    sink.write_8_bytes_little_endian(nonce_);
+//    sink.write_string(user_agent_);
+//    sink.write_4_bytes_little_endian(start_height_);
+//
+//    if (effective_version >= level::bip37)
+//        sink.write_byte(relay_ ? 1 : 0);
+//}
 
 size_t version::serialized_size(uint32_t version) const
 {

@@ -23,11 +23,17 @@
 #include <istream>
 #include <memory>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/message/network_address.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -121,8 +127,17 @@ public:
     };
 
     static version factory_from_data(uint32_t version, const data_chunk& data);
-    static version factory_from_data(uint32_t version, std::istream& stream);
-    static version factory_from_data(uint32_t version, reader& source);
+    static version factory_from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static version factory_from_data(uint32_t version, R& source)
+    {
+        message::version instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static version factory_from_data(uint32_t version, reader& source);
 
     version();
     version(uint32_t value, uint64_t services, uint64_t timestamp,
@@ -172,11 +187,67 @@ public:
     void set_relay(bool relay);
 
     bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source)
+    {
+        reset();
+    
+        value_ = source.read_4_bytes_little_endian();
+        services_ = source.read_8_bytes_little_endian();
+        timestamp_ = source.read_8_bytes_little_endian();
+        address_receiver_.from_data(version, source, false);
+        address_sender_.from_data(version, source, false);
+        nonce_ = source.read_8_bytes_little_endian();
+        user_agent_ = source.read_string();
+        start_height_ = source.read_4_bytes_little_endian();
+    
+        // HACK: disabled check due to inconsistent node implementation.
+        // The protocol expects duplication of the sender's services.
+        ////if (services_ != address_sender_.services())
+        ////    source.invalidate();
+    
+        const auto peer_bip37 = (value_ >= level::bip37);
+        const auto self_bip37 = (version >= level::bip37);
+    
+        // The relay field is optional at or above version 70001.
+        // But the peer doesn't know our version when it sends its version.
+        // This is a bug in the BIP37 design as it forces older peers to adapt to
+        // the expansion of the version message, which is a clear compat break.
+        // So relay is eabled if either peer is below 70001, it is not set, or
+        // peers are at/above 70001 and the field is set.
+        relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() || 
+            (self_bip37 && source.read_byte() != 0);
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const
+    {
+        sink.write_4_bytes_little_endian(value_);
+        const auto effective_version = std::min(version, value_);
+        sink.write_8_bytes_little_endian(services_);
+        sink.write_8_bytes_little_endian(timestamp_);
+        address_receiver_.to_data(version, sink, false);
+        address_sender_.to_data(version, sink, false);
+        sink.write_8_bytes_little_endian(nonce_);
+        sink.write_string(user_agent_);
+        sink.write_4_bytes_little_endian(start_height_);
+    
+        if (effective_version >= level::bip37)
+            sink.write_byte(relay_ ? 1 : 0);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
