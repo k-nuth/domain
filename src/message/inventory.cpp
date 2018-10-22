@@ -38,29 +38,26 @@ const std::string inventory::command = "inv";
 const uint32_t inventory::version_minimum = version::level::minimum;
 const uint32_t inventory::version_maximum = version::level::maximum;
 
-inventory inventory::factory_from_data(uint32_t version,
-    const data_chunk& data)
+inventory inventory::factory_from_data(uint32_t version, const data_chunk& data)
 {
     inventory instance;
     instance.from_data(version, data);
     return instance;
 }
 
-inventory inventory::factory_from_data(uint32_t version,
-    std::istream& stream)
+inventory inventory::factory_from_data(uint32_t version, data_source& stream)
 {
     inventory instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-inventory inventory::factory_from_data(uint32_t version,
-    reader& source)
-{
-    inventory instance;
-    instance.from_data(version, source);
-    return instance;
-}
+//inventory inventory::factory_from_data(uint32_t version, reader& source)
+//{
+//    inventory instance;
+//    instance.from_data(version, source);
+//    return instance;
+//}
 
 inventory::inventory()
   : inventories_()
@@ -121,34 +118,34 @@ bool inventory::from_data(uint32_t version, const data_chunk& data)
     return from_data(version, istream);
 }
 
-bool inventory::from_data(uint32_t version, std::istream& stream)
+bool inventory::from_data(uint32_t version, data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(version, source);
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool inventory::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > max_inventory)
-        source.invalidate();
-    else
-        inventories_.resize(count);
-
-    // Order is required.
-    for (auto& inventory: inventories_)
-        if (!inventory.from_data(version, source))
-            break;
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool inventory::from_data(uint32_t version, reader& source)
+//{
+//    reset();
+//
+//    const auto count = source.read_size_little_endian();
+//
+//    // Guard against potential for arbitary memory allocation.
+//    if (count > max_inventory)
+//        source.invalidate();
+//    else
+//        inventories_.resize(count);
+//
+//    // Order is required.
+//    for (auto& inventory: inventories_)
+//        if (!inventory.from_data(version, source))
+//            break;
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk inventory::to_data(uint32_t version) const
 {
@@ -162,19 +159,19 @@ data_chunk inventory::to_data(uint32_t version) const
     return data;
 }
 
-void inventory::to_data(uint32_t version, std::ostream& stream) const
+void inventory::to_data(uint32_t version, data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(version, sink);
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void inventory::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_variable_little_endian(inventories_.size());
-
-    for (const auto& inventory: inventories_)
-        inventory.to_data(version, sink);
-}
+//void inventory::to_data(uint32_t version, writer& sink) const
+//{
+//    sink.write_variable_little_endian(inventories_.size());
+//
+//    for (const auto& inventory: inventories_)
+//        inventory.to_data(version, sink_w);
+//}
 
 void inventory::to_hashes(hash_list& out, type_id type) const
 {
