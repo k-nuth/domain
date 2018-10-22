@@ -30,8 +30,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string get_blocks::command = "getblocks";
-const uint32_t get_blocks::version_minimum = version::level::minimum;
-const uint32_t get_blocks::version_maximum = version::level::maximum;
+uint32_t const get_blocks::version_minimum = version::level::minimum;
+uint32_t const get_blocks::version_maximum = version::level::maximum;
 
 get_blocks get_blocks::factory_from_data(uint32_t version, const data_chunk& data) {
     get_blocks instance;
