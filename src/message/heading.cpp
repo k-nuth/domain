@@ -73,19 +73,19 @@ heading heading::factory_from_data(const data_chunk& data)
     return instance;
 }
 
-heading heading::factory_from_data(std::istream& stream)
+heading heading::factory_from_data(data_source& stream)
 {
     heading instance;
     instance.from_data(stream);
     return instance;
 }
 
-heading heading::factory_from_data(reader& source)
-{
-    heading instance;
-    instance.from_data(source);
-    return instance;
-}
+//heading heading::factory_from_data(reader& source)
+//{
+//    heading instance;
+//    instance.from_data(source);
+//    return instance;
+//}
 
 heading::heading()
   : magic_(0), command_(), payload_size_(0), checksum_(0)
@@ -140,25 +140,25 @@ bool heading::from_data(const data_chunk& data)
     return from_data(istream);
 }
 
-bool heading::from_data(std::istream& stream)
+bool heading::from_data(data_source& stream)
 {
-    istream_reader source(stream);
-    return from_data(source);
+    istream_reader stream_r(stream);
+    return from_data(stream_r);
 }
 
-bool heading::from_data(reader& source)
-{
-    reset();
-    magic_ = source.read_4_bytes_little_endian();
-    command_ = source.read_string(command_size);
-    payload_size_ = source.read_4_bytes_little_endian();
-    checksum_ = source.read_4_bytes_little_endian();
-
-    if (!source)
-        reset();
-
-    return source;
-}
+//bool heading::from_data(reader& source)
+//{
+//    reset();
+//    magic_ = source.read_4_bytes_little_endian();
+//    command_ = source.read_string(command_size);
+//    payload_size_ = source.read_4_bytes_little_endian();
+//    checksum_ = source.read_4_bytes_little_endian();
+//
+//    if (!source)
+//        reset();
+//
+//    return source;
+//}
 
 data_chunk heading::to_data() const
 {
@@ -172,19 +172,19 @@ data_chunk heading::to_data() const
     return data;
 }
 
-void heading::to_data(std::ostream& stream) const
+void heading::to_data(data_sink& stream) const
 {
-    ostream_writer sink(stream);
-    to_data(sink);
+    ostream_writer sink_w(stream);
+    to_data(sink_w);
 }
 
-void heading::to_data(writer& sink) const
-{
-    sink.write_4_bytes_little_endian(magic_);
-    sink.write_string(command_, command_size);
-    sink.write_4_bytes_little_endian(payload_size_);
-    sink.write_4_bytes_little_endian(checksum_);
-}
+//void heading::to_data(writer& sink) const
+//{
+//    sink.write_4_bytes_little_endian(magic_);
+//    sink.write_string(command_, command_size);
+//    sink.write_4_bytes_little_endian(payload_size_);
+//    sink.write_4_bytes_little_endian(checksum_);
+//}
 
 message_type heading::type() const
 {

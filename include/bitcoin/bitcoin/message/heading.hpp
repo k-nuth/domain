@@ -23,13 +23,20 @@
 #include <cstddef>
 #include <istream>
 #include <string>
+
 #include <boost/array.hpp>
+
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -73,8 +80,17 @@ public:
     static size_t maximum_payload_size(uint32_t version, bool witness);
     static size_t satoshi_fixed_size();
     static heading factory_from_data(const data_chunk& data);
-    static heading factory_from_data(std::istream& stream);
-    static heading factory_from_data(reader& source);
+    static heading factory_from_data(data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static heading factory_from_data(R& source)
+    {
+        heading instance;
+        instance.from_data(source);
+        return instance;
+    }
+
+    //static heading factory_from_data(reader& source);
 
     heading();
     heading(uint32_t magic, const std::string& command, uint32_t payload_size,
@@ -101,11 +117,37 @@ public:
     message_type type() const;
 
     bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(data_source& stream);
+    
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source)
+    {
+        reset();
+        magic_ = source.read_4_bytes_little_endian();
+        command_ = source.read_string(command_size);
+        payload_size_ = source.read_4_bytes_little_endian();
+        checksum_ = source.read_4_bytes_little_endian();
+    
+        if (!source)
+            reset();
+    
+        return source;
+    }
+
+    //bool from_data(reader& source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(data_sink& stream) const;
+    
+    template <Writer W>
+    void to_data(W& sink) const
+    {
+        sink.write_4_bytes_little_endian(magic_);
+        sink.write_string(command_, command_size);
+        sink.write_4_bytes_little_endian(payload_size_);
+        sink.write_4_bytes_little_endian(checksum_);
+    }
+
+    //void to_data(writer& sink) const;
     bool is_valid() const;
     void reset();
 
