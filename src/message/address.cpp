@@ -30,8 +30,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string address::command = "addr";
-const uint32_t address::version_minimum = version::level::minimum;
-const uint32_t address::version_maximum = version::level::maximum;
+uint32_t const address::version_minimum = version::level::minimum;
+uint32_t const address::version_maximum = version::level::maximum;
 
 address address::factory_from_data(uint32_t version, const data_chunk& data) {
     address instance;
