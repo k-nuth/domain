@@ -64,7 +64,7 @@ witness::witness(const witness& other)
     : stack_(other.stack_), valid_(other.valid_) {
 }
 
-witness::witness(const data_stack& stack) {
+witness::witness(data_stack const& stack) {
     stack_ = stack;
 }
 
@@ -184,7 +184,7 @@ bool witness::from_data(data_source& stream, bool prefix) {
 //}
 
 // private/static
-size_t witness::serialized_size(const data_stack& stack) {
+size_t witness::serialized_size(data_stack const& stack) {
     auto const sum = [](size_t total, data_chunk const& element) {
         // Tokens encoded as variable integer prefixed byte array (bip144).
         auto const size = element.size();
@@ -303,7 +303,7 @@ size_t witness::serialized_size(bool prefix) const {
            serialized_size(stack_);
 }
 
-const data_stack& witness::stack() const {
+data_stack const& witness::stack() const {
     return stack_;
 }
 
@@ -311,7 +311,7 @@ const data_stack& witness::stack() const {
 //-----------------------------------------------------------------------------
 
 // static
-bool witness::is_push_size(const data_stack& stack) {
+bool witness::is_push_size(data_stack const& stack) {
     auto const push_size = [](data_chunk const& element) {
         return element.size() <= max_push_data_size;
     };
@@ -321,7 +321,7 @@ bool witness::is_push_size(const data_stack& stack) {
 
 // static
 // The (only) coinbase witness must be (arbitrary) 32-byte value (bip141).
-bool witness::is_reserved_pattern(const data_stack& stack) {
+bool witness::is_reserved_pattern(data_stack const& stack) {
     return stack.size() == 1 &&
            stack[0].size() == hash_size;
 }

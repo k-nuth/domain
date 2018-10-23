@@ -240,7 +240,7 @@ public:
     static operation::list to_pay_key_hash_pattern(short_hash const& hash);
     static operation::list to_pay_script_hash_pattern(short_hash const& hash);
     static operation::list to_pay_multisig_pattern(uint8_t signatures, const point_list& points);
-    static operation::list to_pay_multisig_pattern(uint8_t signatures, const data_stack& points);
+    static operation::list to_pay_multisig_pattern(uint8_t signatures, data_stack const& points);
 
     // Utilities (non-static).
     //-------------------------------------------------------------------------
@@ -254,7 +254,7 @@ public:
 
     /// Consensus computations.
     size_t sigops(bool accurate) const;
-    void find_and_delete(const data_stack& endorsements);
+    void find_and_delete(data_stack const& endorsements);
     bool is_unspendable() const;
 
     // Validation.

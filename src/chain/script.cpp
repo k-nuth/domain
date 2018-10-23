@@ -986,7 +986,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
 // The embedded script is limited to 520 bytes, an effective limit of 15 for
 // p2sh multisig, which can be as low as 7 when using all uncompressed keys.
 operation::list script::to_pay_multisig_pattern(uint8_t signatures,
-                                                const data_stack& points) {
+                                                data_stack const& points) {
     static constexpr auto op_81 = static_cast<uint8_t>(opcode::push_positive_1);
     static constexpr auto op_96 = static_cast<uint8_t>(opcode::push_positive_16);
     static constexpr auto zero = op_81 - 1;
@@ -1166,7 +1166,7 @@ void script::find_and_delete_(data_chunk const& endorsement) {
 }
 
 // Concurrent read/write is not supported, so no critical section.
-void script::find_and_delete(const data_stack& endorsements) {
+void script::find_and_delete(data_stack const& endorsements) {
     for (auto const& endorsement : endorsements)
         find_and_delete_(endorsement);
 

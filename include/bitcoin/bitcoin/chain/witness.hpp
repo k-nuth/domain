@@ -53,7 +53,7 @@ class BC_API witness {
     witness(const witness& other);
 
     witness(data_stack&& stack);
-    witness(const data_stack& stack);
+    witness(data_stack const& stack);
 
     witness(data_chunk&& encoded, bool prefix);
     witness(data_chunk const& encoded, bool prefix);
@@ -172,13 +172,13 @@ class BC_API witness {
     //-------------------------------------------------------------------------
 
     size_t serialized_size(bool prefix) const;
-    const data_stack& stack() const;
+    data_stack const& stack() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
 
-    static bool is_push_size(const data_stack& stack);
-    static bool is_reserved_pattern(const data_stack& stack);
+    static bool is_push_size(data_stack const& stack);
+    static bool is_reserved_pattern(data_stack const& stack);
 
     bool extract_sigop_script(script& out_script,
                               script const& program_script) const;
@@ -196,7 +196,7 @@ class BC_API witness {
     void reset();
 
    private:
-    static size_t serialized_size(const data_stack& stack);
+    static size_t serialized_size(data_stack const& stack);
     static operation::list to_pay_key_hash(data_chunk&& program);
 
     bool valid_;

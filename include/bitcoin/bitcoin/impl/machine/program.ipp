@@ -320,7 +320,7 @@ inline bool program::if_(operation const& op) const
     return op.is_conditional() || succeeded();
 }
 
-inline const data_stack::value_type& program::item(size_t index) /*const*/
+inline data_stack const::value_type& program::item(size_t index) /*const*/
 {
     return *position(index);
 }
