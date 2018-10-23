@@ -31,10 +31,11 @@ bool witness_default() {
 }
 
 constexpr inline
-bool witness_val(bool x) {
 #ifdef BITPRIM_CURRENCY_BCH
+bool witness_val(bool /*x*/) {
     return false;
 #else
+bool witness_val(bool x) {
     return x;
 #endif
 }
