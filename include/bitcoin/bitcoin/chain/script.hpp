@@ -198,7 +198,7 @@ public:
                                 script_version version = script_version::unversioned,
                                 uint64_t value = max_uint64);
 
-    static bool create_endorsement(endorsement& out, const ec_secret& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
+    static bool create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------

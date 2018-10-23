@@ -90,7 +90,7 @@ bool create_stealth_data(script& out_null_data, ec_secret& out_secret,
 }
 
 // Mine a filter into the leftmost bytes of sha256(sha256(output-script)).
-bool create_stealth_script(script& out_null_data, const ec_secret& secret,
+bool create_stealth_script(script& out_null_data, ec_secret const& secret,
     const binary& filter, data_chunk const& seed)
 {
     // [ephemeral-public-key-hash:32][pad:0-44][nonce:4]
@@ -173,7 +173,7 @@ bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
     return true;
 }
 
-bool shared_secret(ec_secret& out_shared, const ec_secret& secret,
+bool shared_secret(ec_secret& out_shared, ec_secret const& secret,
     const ec_compressed& point)
 {
     auto copy = point;
@@ -185,7 +185,7 @@ bool shared_secret(ec_secret& out_shared, const ec_secret& secret,
 }
 
 bool uncover_stealth(ec_compressed& out_stealth,
-    const ec_compressed& ephemeral_or_scan, const ec_secret& scan_or_ophemeral,
+    const ec_compressed& ephemeral_or_scan, ec_secret const& scan_or_ophemeral,
     const ec_compressed& spend)
 {
     ec_secret shared;
@@ -201,8 +201,8 @@ bool uncover_stealth(ec_compressed& out_stealth,
 }
 
 bool uncover_stealth(ec_secret& out_stealth,
-    const ec_compressed& ephemeral_or_scan, const ec_secret& scan_or_ephemeral,
-    const ec_secret& spend)
+    const ec_compressed& ephemeral_or_scan, ec_secret const& scan_or_ephemeral,
+    ec_secret const& spend)
 {
     ec_secret shared;
     if ( ! shared_secret(shared, scan_or_ephemeral, ephemeral_or_scan))

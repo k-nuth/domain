@@ -74,7 +74,7 @@ ec_private::ec_private(const wif_uncompressed& wif, uint8_t address_version)
 {
 }
 
-ec_private::ec_private(const ec_secret& secret, uint16_t version, bool compress)
+ec_private::ec_private(ec_secret const& secret, uint16_t version, bool compress)
   : valid_(true), compress_(compress), version_(version), secret_(secret)
 {
 }
@@ -141,7 +141,7 @@ ec_private::operator const bool() const
     return valid_;
 }
 
-ec_private::operator const ec_secret&() const
+ec_private::operator ec_secret const&() const
 {
     return secret_;
 }
@@ -170,7 +170,7 @@ std::string ec_private::encoded() const
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const ec_secret& ec_private::secret() const
+ec_secret const& ec_private::secret() const
 {
     return secret_;
 }

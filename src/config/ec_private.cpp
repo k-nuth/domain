@@ -39,12 +39,12 @@ ec_private::ec_private(std::string const& hexcode)
     std::stringstream(hexcode) >> *this;
 }
 
-ec_private::ec_private(const ec_secret& secret)
+ec_private::ec_private(ec_secret const& secret)
   : value_(secret)
 {
 }
 
-ec_private::operator const ec_secret&() const
+ec_private::operator ec_secret const&() const
 {
     return value_;
 }

@@ -770,7 +770,7 @@ bool script::check_signature(ec_signature const& signature,
 }
 
 // static
-bool script::create_endorsement(endorsement& out, const ec_secret& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version, uint64_t value) {
+bool script::create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version, uint64_t value) {
     out.reserve(max_endorsement_size);
 
     // This always produces a valid signature hash, including one_hash.

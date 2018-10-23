@@ -111,7 +111,7 @@ bool sign_message(message_signature& signature, data_slice message, std::string 
             sign_message(signature, message, secret, secret.compressed()));
 }
 
-bool sign_message(message_signature& signature, data_slice message, const ec_secret& secret, bool compressed) {
+bool sign_message(message_signature& signature, data_slice message, ec_secret const& secret, bool compressed) {
     recoverable_signature recoverable;
     if ( ! sign_recoverable(recoverable, secret, hash_message(message)))
         return false;

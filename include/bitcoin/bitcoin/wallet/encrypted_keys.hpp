@@ -161,7 +161,7 @@ BC_API bool create_token(encrypted_token& out_token,
  * @param[in]  compressed   Set true to associate ec public key compression.
  * @return false if the secret could not be converted to a public key.
  */
-BC_API bool encrypt(encrypted_private& out_private, const ec_secret& secret,
+BC_API bool encrypt(encrypted_private& out_private, ec_secret const& secret,
     std::string const& passphrase, uint8_t version, bool compressed=true);
 
 /**

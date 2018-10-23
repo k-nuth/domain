@@ -51,13 +51,13 @@ public:
      * Initialization constructor.
      * @param[in]  secret  The value to initialize with.
      */
-    ec_private(const ec_secret& secret);
+    ec_private(ec_secret const& secret);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const ec_secret&() const;
+    operator ec_secret const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.

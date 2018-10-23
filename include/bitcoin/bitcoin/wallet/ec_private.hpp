@@ -84,7 +84,7 @@ public:
 
     /// The version is 16 bits. The most significant byte is the WIF prefix and
     /// the least significant byte is the address perfix. 0x8000 by default.
-    ec_private(const ec_secret& secret, uint16_t version=mainnet,
+    ec_private(ec_secret const& secret, uint16_t version=mainnet,
         bool compress=true);
 
     /// Operators.
@@ -97,13 +97,13 @@ public:
 
     /// Cast operators.
     operator const bool() const;
-    operator const ec_secret&() const;
+    operator ec_secret const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const ec_secret& secret() const;
+    ec_secret const& secret() const;
     const uint16_t version() const;
     const uint8_t payment_version() const;
     const uint8_t wif_version() const;

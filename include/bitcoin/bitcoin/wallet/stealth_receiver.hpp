@@ -34,8 +34,8 @@ class BC_API stealth_receiver
 {
 public:
     /// Constructors.
-    stealth_receiver(const ec_secret& scan_private,
-        const ec_secret& spend_private, const binary& filter,
+    stealth_receiver(ec_secret const& scan_private,
+        ec_secret const& spend_private, const binary& filter,
         uint8_t version=payment_address::mainnet_p2kh);
 
     /// Caller must test after construct.
@@ -54,8 +54,8 @@ public:
 
 private:
     const uint8_t version_;
-    const ec_secret scan_private_;
-    const ec_secret spend_private_;
+    ec_secret const scan_private_;
+    ec_secret const spend_private_;
     ec_compressed spend_public_;
     wallet::stealth_address address_;
 };

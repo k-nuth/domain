@@ -71,7 +71,7 @@ static bool address_salt(ek_salt& salt, const ec_compressed& point,
     return address ? address_salt(salt, address) : false;
 }
 
-static bool address_salt(ek_salt& salt, const ec_secret& secret,
+static bool address_salt(ek_salt& salt, ec_secret const& secret,
     uint8_t version, bool compressed)
 {
     payment_address address({ secret, version, compressed });
@@ -92,7 +92,7 @@ static bool address_validate(const ek_salt& salt, const ec_compressed& point,
     return address ? address_validate(salt, address) : false;
 }
 
-static bool address_validate(const ek_salt& salt, const ec_secret& secret,
+static bool address_validate(const ek_salt& salt, ec_secret const& secret,
     uint8_t version, bool compressed)
 {
     payment_address address({ secret, version, compressed });
@@ -204,7 +204,7 @@ static void create_private_key(encrypted_private& out_private,
 static bool create_public_key(encrypted_public& out_public,
     const one_byte& flags, const ek_salt& salt, const ek_entropy& entropy,
     hash_digest const& derived1, hash_digest const& derived2,
-    const ec_secret& secret, uint8_t version)
+    ec_secret const& secret, uint8_t version)
 {
     ec_compressed point;
     if ( ! secret_to_public(point, secret))
@@ -342,7 +342,7 @@ bool create_token(encrypted_token& out_token, std::string const& passphrase,
 // encrypt
 // ----------------------------------------------------------------------------
 
-bool encrypt(encrypted_private& out_private, const ec_secret& secret,
+bool encrypt(encrypted_private& out_private, ec_secret const& secret,
     std::string const& passphrase, uint8_t version, bool compressed)
 {
     ek_salt salt;

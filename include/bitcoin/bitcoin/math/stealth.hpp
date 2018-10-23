@@ -47,7 +47,7 @@ BI_API bool create_stealth_data(chain::script& out_null_data,
 /// Create a stealth null data script the specified filter prefix.
 /// Use the ephemeral secret key provided by parameter.
 BI_API bool create_stealth_script(chain::script& out_null_data,
-    const ec_secret& secret, const binary& filter, data_chunk const& seed);
+    ec_secret const& secret, const binary& filter, data_chunk const& seed);
 
 /// Extract the stealth ephemeral public key from an output script.
 BI_API bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
@@ -58,18 +58,18 @@ BI_API bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
     const chain::script& script);
 
 /// Calculate the shared secret.
-BI_API bool shared_secret(ec_secret& out_shared, const ec_secret& secret,
+BI_API bool shared_secret(ec_secret& out_shared, ec_secret const& secret,
     const ec_compressed& point);
 
 /// Uncover the stealth public key.
 BI_API bool uncover_stealth(ec_compressed& out_stealth,
-    const ec_compressed& ephemeral_or_scan, const ec_secret& scan_or_ephemeral,
+    const ec_compressed& ephemeral_or_scan, ec_secret const& scan_or_ephemeral,
     const ec_compressed& spend);
 
 /// Uncover the stealth secret.
 BI_API bool uncover_stealth(ec_secret& out_stealth,
-    const ec_compressed& ephemeral_or_scan, const ec_secret& scan_or_ephemeral,
-    const ec_secret& spend);
+    const ec_compressed& ephemeral_or_scan, ec_secret const& scan_or_ephemeral,
+    ec_secret const& spend);
 
 } // namespace libbitcoin
 

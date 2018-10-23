@@ -41,7 +41,7 @@ public:
         const binary& filter, uint8_t version=payment_address::mainnet_p2kh);
 
     /// Generate a send address from the stealth address.
-    stealth_sender(const ec_secret& ephemeral_private,
+    stealth_sender(ec_secret const& ephemeral_private,
         const stealth_address& address, data_chunk const& seed,
         const binary& filter, uint8_t version=payment_address::mainnet_p2kh);
 
@@ -55,7 +55,7 @@ public:
     const wallet::payment_address& payment_address() const;
 
 private:
-    void initialize(const ec_secret& ephemeral_private,
+    void initialize(ec_secret const& ephemeral_private,
         const stealth_address& address, data_chunk const& seed,
         const binary& filter);
 

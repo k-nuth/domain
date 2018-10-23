@@ -37,7 +37,7 @@ stealth_sender::stealth_sender(const stealth_address& address,
         initialize(ephemeral_private, address, seed, filter);
 }
 
-stealth_sender::stealth_sender(const ec_secret& ephemeral_private,
+stealth_sender::stealth_sender(ec_secret const& ephemeral_private,
     const stealth_address& address, data_chunk const& seed,
     const binary& filter, uint8_t version)
   : version_(version)
@@ -52,7 +52,7 @@ stealth_sender::operator const bool() const
 
 // private
 // TODO(libbitcoin): convert to factory and make script_ and address_ const.
-void stealth_sender::initialize(const ec_secret& ephemeral_private,
+void stealth_sender::initialize(ec_secret const& ephemeral_private,
     const stealth_address& address, data_chunk const& seed,
     const binary& filter)
 {
