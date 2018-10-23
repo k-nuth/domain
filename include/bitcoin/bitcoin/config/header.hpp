@@ -56,7 +56,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    header(const header& other);
+    header(header const& other);
 
     /**
      * Overload cast to internal type.
@@ -79,7 +79,7 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const header& argument);
+        header const& argument);
 
 private:
 

@@ -1048,7 +1048,7 @@ chain_state::chain_state(chain_state const& pool, block const& block)
 {}
 
 chain_state::data chain_state::to_header(const chain_state& parent,
-    const header& header)
+    header const& header)
 {
     // Alias configured forks.
     auto const forks = parent.forks_;

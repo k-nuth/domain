@@ -49,7 +49,7 @@ header::header(header&& other)
     validation = std::move(other.validation);
 }
 
-header::header(const header& other)
+header::header(header const& other)
     : header(other.version_, other.previous_block_hash_, other.merkle_, other.timestamp_, other.bits_, other.nonce_) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     validation = other.validation;
@@ -61,7 +61,7 @@ header::header(header&& other, hash_digest&& hash)
     validation = std::move(other.validation);
 }
 
-header::header(const header& other, const hash_digest& hash)
+header::header(header const& other, const hash_digest& hash)
     : header(other.version_, other.previous_block_hash_, other.merkle_, other.timestamp_, other.bits_, other.nonce_) {
     hash_ = std::make_shared<hash_digest>(hash);
     validation = other.validation;
@@ -102,7 +102,7 @@ header& header::operator=(header&& other) {
     return *this;
 }
 
-header& header::operator=(const header& other) {
+header& header::operator=(header const& other) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     version_ = other.version_;
     previous_block_hash_ = other.previous_block_hash_;
@@ -114,11 +114,11 @@ header& header::operator=(const header& other) {
     return *this;
 }
 
-bool header::operator==(const header& other) const {
+bool header::operator==(header const& other) const {
     return (version_ == other.version_) && (previous_block_hash_ == other.previous_block_hash_) && (merkle_ == other.merkle_) && (timestamp_ == other.timestamp_) && (bits_ == other.bits_) && (nonce_ == other.nonce_);
 }
 
-bool header::operator!=(const header& other) const {
+bool header::operator!=(header const& other) const {
     return !(*this == other);
 }
 

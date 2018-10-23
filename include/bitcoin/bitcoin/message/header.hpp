@@ -43,7 +43,7 @@ class BC_API header
    public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
-    typedef std::shared_ptr<const header> const_ptr;
+    typedef std::shared_ptr<header const> const_ptr;
     typedef std::vector<ptr> ptr_list;
     typedef std::vector<const_ptr> const_ptr_list;
 
@@ -65,7 +65,7 @@ class BC_API header
     header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(chain::header const& other);
     header(chain::header&& other);
-    header(const header& other);
+    header(header const& other);
     header(header&& other);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -107,13 +107,13 @@ class BC_API header
 
     /// This class is move assignable but not copy assignable.
     header& operator=(header&& other);
-    header& operator=(const header&) /*= delete*/;
+    header& operator=(header const&) /*= delete*/;
 
     bool operator==(chain::header const& other) const;
     bool operator!=(chain::header const& other) const;
 
-    bool operator==(const header& other) const;
-    bool operator!=(const header& other) const;
+    bool operator==(header const& other) const;
+    bool operator!=(header const& other) const;
 
     static const std::string command;
     static uint32_t const version_minimum;

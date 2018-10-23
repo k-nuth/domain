@@ -45,7 +45,7 @@ header::header(chain::header const& value)
 {
 }
 
-header::header(const header& other)
+header::header(header const& other)
   : header(other.value_)
 {
 }
@@ -68,7 +68,7 @@ std::istream& operator>>(std::istream& input, header& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const header& argument)
+std::ostream& operator<<(std::ostream& output, header const& argument)
 {
     auto const bytes = argument.value_.to_data();
 

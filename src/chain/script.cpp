@@ -823,7 +823,7 @@ bool script::is_coinbase_pattern(const operation::list& ops, size_t height) {
 // CONSENSUS: this pattern is used to commit to bip141 witness data.
 //*****************************************************************************
 bool script::is_commitment_pattern(const operation::list& ops) {
-    static auto const header = to_big_endian(witness_head);
+    static auto header const = to_big_endian(witness_head);
 
     // Bytes after commitment are optional with no consensus meaning (bip141).
     // Commitment is not executable so invalid trailing operations are allowed.

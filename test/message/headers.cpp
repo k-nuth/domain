@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_1__always__initialized_invalid)
 
 BOOST_AUTO_TEST_CASE(headers__constructor_2__always__equals_params)
 {
-    const header::list expected
+    header const::list expected
     {
         header(
             10u,
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(headers__constructor_3__always__equals_params)
 {
-    const header::list expected
+    header const::list expected
     {
         header(
             10u,
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(headers__elements_accessor_1__always__returns_initialized_value)
 {
-    const header::list expected
+    header const::list expected
     {
         header(
             10u,
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(headers__elements_accessor_1__always__returns_initialized_v
 
 BOOST_AUTO_TEST_CASE(headers__elements_accessor_2__always__returns_initialized_value)
 {
-    const header::list expected
+    header const::list expected
     {
         header(
             10u,
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(headers__elements_accessor_2__always__returns_initialized_v
 
 BOOST_AUTO_TEST_CASE(headers__command_setter_1__roundtrip__success)
 {
-    const header::list expected
+    header const::list expected
     {
         header(
             10u,
@@ -656,7 +656,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__empty__true)
 
 BOOST_AUTO_TEST_CASE(headers__is_sequential__single__true)
 {
-    static const header first
+    static header const first
     {
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
@@ -672,7 +672,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__single__true)
 
 BOOST_AUTO_TEST_CASE(headers__is_sequential__sequential__true)
 {
-    static const header first
+    static header const first
     {
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
@@ -682,7 +682,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__sequential__true)
         1000u
     };
 
-    static const header second
+    static header const second
     {
         2u,
         first.hash(),
@@ -692,7 +692,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__sequential__true)
         2000u
     };
 
-    static const header third
+    static header const third
     {
         3u,
         second.hash(),
@@ -708,7 +708,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__sequential__true)
 
 BOOST_AUTO_TEST_CASE(headers__is_sequential__disordered__false)
 {
-    static const header first
+    static header const first
     {
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
@@ -718,7 +718,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__disordered__false)
         1000u
     };
 
-    static const header second
+    static header const second
     {
         2u,
         hash_literal("abababababababababababababababababababababababababababababababab"),
@@ -728,7 +728,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__disordered__false)
         2000u
     };
 
-    static const header third
+    static header const third
     {
         3u,
         hash_literal("e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2"),

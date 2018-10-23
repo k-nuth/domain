@@ -65,7 +65,7 @@ headers::headers()
 }
 
 // Uses headers copy assignment.
-headers::headers(const header::list& values)
+headers::headers(header const::list& values)
     : elements_(values) {
 }
 
@@ -173,7 +173,7 @@ bool headers::is_sequential() const {
 void headers::to_hashes(hash_list& out) const {
     out.clear();
     out.reserve(elements_.size());
-    auto const map = [&out](const header& header) {
+    auto const map = [&out](header const& header) {
         out.push_back(header.hash());
     };
 
@@ -184,7 +184,7 @@ void headers::to_inventory(inventory_vector::list& out,
                            inventory::type_id type) const {
     out.clear();
     out.reserve(elements_.size());
-    auto const map = [&out, type](const header& header) {
+    auto const map = [&out, type](header const& header) {
         out.emplace_back(type, header.hash());
     };
 
@@ -200,11 +200,11 @@ header::list& headers::elements() {
     return elements_;
 }
 
-const header::list& headers::elements() const {
+header const::list& headers::elements() const {
     return elements_;
 }
 
-void headers::set_elements(const header::list& values) {
+void headers::set_elements(header const::list& values) {
     elements_ = values;
 }
 

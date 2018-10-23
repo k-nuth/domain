@@ -47,7 +47,7 @@ class BC_API header {
    public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
-    typedef std::shared_ptr<const header> const_ptr;
+    typedef std::shared_ptr<header const> const_ptr;
     typedef std::vector<header> ptr_list;
     typedef std::vector<const_ptr> const_ptr_list;
 
@@ -63,10 +63,10 @@ class BC_API header {
     header();
 
     header(header&& other);
-    header(const header& other);
+    header(header const& other);
 
     header(header&& other, hash_digest&& hash);
-    header(const header& other, const hash_digest& hash);
+    header(header const& other, const hash_digest& hash);
 
     header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
@@ -76,10 +76,10 @@ class BC_API header {
 
     /// This class is move and copy assignable.
     header& operator=(header&& other);
-    header& operator=(const header& other);
+    header& operator=(header const& other);
 
-    bool operator==(const header& other) const;
-    bool operator!=(const header& other) const;
+    bool operator==(header const& other) const;
+    bool operator!=(header const& other) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------

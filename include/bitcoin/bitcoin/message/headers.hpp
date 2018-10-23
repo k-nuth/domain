@@ -60,15 +60,15 @@ class BC_API headers {
     //static headers factory_from_data(uint32_t version, reader& source);
 
     headers();
-    headers(const header::list& values);
+    headers(header const::list& values);
     headers(header::list&& values);
     headers(const std::initializer_list<header>& values);
     headers(const headers& other);
     headers(headers&& other);
 
     header::list& elements();
-    const header::list& elements() const;
-    void set_elements(const header::list& values);
+    header const::list& elements() const;
+    void set_elements(header const::list& values);
     void set_elements(header::list&& values);
 
     bool is_sequential() const;
