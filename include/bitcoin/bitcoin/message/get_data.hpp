@@ -60,7 +60,7 @@ class BC_API get_data
     get_data(const inventory_vector::list& list);
     get_data(inventory_vector::list&& list);
     get_data(const hash_list& hashes, type_id type);
-    get_data(const std::initializer_list<inventory_vector>& elements);
+    get_data(std::initializer_list<inventory_vector> const& elements);
     get_data(const get_data& other);
     get_data(get_data&& other);
 

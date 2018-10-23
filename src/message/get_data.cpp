@@ -68,7 +68,7 @@ get_data::get_data(const hash_list& hashes, inventory::type_id type)
     : inventory(hashes, type) {
 }
 
-get_data::get_data(const std::initializer_list<inventory_vector>& values)
+get_data::get_data(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 

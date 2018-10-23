@@ -80,7 +80,7 @@ inventory::inventory(const hash_list& hashes, type_id type) {
     std::for_each(hashes.begin(), hashes.end(), map);
 }
 
-inventory::inventory(const std::initializer_list<inventory_vector>& values)
+inventory::inventory(std::initializer_list<inventory_vector> const& values)
     : inventories_(values) {
 }
 

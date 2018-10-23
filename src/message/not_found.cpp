@@ -66,7 +66,7 @@ not_found::not_found(const hash_list& hashes, inventory::type_id type)
     : inventory(hashes, type) {
 }
 
-not_found::not_found(const std::initializer_list<inventory_vector>& values)
+not_found::not_found(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 

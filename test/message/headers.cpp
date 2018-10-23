@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(headers__constructor_5__always__equals_params)
 {
-    const headers expected(
+    headers const expected(
     {
         header(
             10u,
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_bytes__failure)
 
 BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure)
 {
-    static const headers expected
+    static headers const expected
     {
         {
             10,
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure)
 
 BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success)
 {
-    static const headers expected
+    static headers const expected
     {
         {
             10,
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(headers__factory_from_data_2__valid_input__success)
 {
-    static const headers expected
+    static headers const expected
     {
         {
             15,
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_2__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success)
 {
-    static const headers expected
+    static headers const expected
     {
         {
             7,
@@ -610,7 +610,7 @@ BOOST_AUTO_TEST_CASE(headers__to_inventory__non_empty__returns_header_hash_inven
         inventory_vector(inventory_vector::type_id::block, hash_literal("d9bbb4b47ca45ec8477cba125262b07b17daae944b54d1780e0a6373d2eed879"))
     };
 
-    const headers instance(
+    headers const instance(
     {
         header
         {
@@ -649,7 +649,7 @@ BOOST_AUTO_TEST_CASE(headers__to_inventory__non_empty__returns_header_hash_inven
 
 BOOST_AUTO_TEST_CASE(headers__is_sequential__empty__true)
 {
-    static const headers instance;
+    static headers const instance;
     BOOST_REQUIRE(instance.elements().empty());
     BOOST_REQUIRE(instance.is_sequential());
 }
@@ -666,7 +666,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__single__true)
         1000u
     };
 
-    const headers instance({ first });
+    headers const instance({ first });
     BOOST_REQUIRE(instance.is_sequential());
 }
 
@@ -702,7 +702,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__sequential__true)
         3000u
     };
 
-    const headers instance({ first, second, third });
+    headers const instance({ first, second, third });
     BOOST_REQUIRE(instance.is_sequential());
 }
 
@@ -738,7 +738,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__disordered__false)
         3000u
     };
 
-    const headers instance({ first, second, third });
+    headers const instance({ first, second, third });
     BOOST_REQUIRE(!instance.is_sequential());
 }
 

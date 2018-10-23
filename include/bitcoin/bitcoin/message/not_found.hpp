@@ -61,7 +61,7 @@ class BC_API not_found
     not_found(const inventory_vector::list& values);
     not_found(inventory_vector::list&& values);
     not_found(const hash_list& hashes, type_id type);
-    not_found(const std::initializer_list<inventory_vector>& values);
+    not_found(std::initializer_list<inventory_vector> const& values);
     not_found(const not_found& other);
     not_found(not_found&& other);
 

@@ -64,7 +64,7 @@ class BC_API inventory {
     inventory(const inventory_vector::list& values);
     inventory(inventory_vector::list&& values);
     inventory(const hash_list& hashes, type_id type);
-    inventory(const std::initializer_list<inventory_vector>& values);
+    inventory(std::initializer_list<inventory_vector> const& values);
     inventory(const inventory& other);
     inventory(inventory&& other);
 
