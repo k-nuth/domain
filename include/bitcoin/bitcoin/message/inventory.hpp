@@ -61,16 +61,16 @@ public:
     //static inventory factory_from_data(uint32_t version, reader& source);
 
     inventory();
-    inventory(const inventory_vector::list& values);
+    inventory(inventory_vector::list const& values);
     inventory(inventory_vector::list&& values);
-    inventory(const hash_list& hashes, type_id type);
+    inventory(hash_list const& hashes, type_id type);
     inventory(std::initializer_list<inventory_vector> const& values);
     inventory(const inventory& x);
     inventory(inventory&& x);
 
     inventory_vector::list& inventories();
-    const inventory_vector::list& inventories() const;
-    void set_inventories(const inventory_vector::list& value);
+    inventory_vector::list const& inventories() const;
+    void set_inventories(inventory_vector::list const& value);
     void set_inventories(inventory_vector::list&& value);
 
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way

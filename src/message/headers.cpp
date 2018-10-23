@@ -222,7 +222,7 @@ bool headers::operator==(headers const& x) const {
 }
 
 bool headers::operator!=(headers const& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

@@ -168,7 +168,7 @@ bool send_compact::operator==(const send_compact& x) const {
 }
 
 bool send_compact::operator!=(const send_compact& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

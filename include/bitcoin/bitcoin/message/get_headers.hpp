@@ -53,7 +53,7 @@ public:
     //static get_headers factory_from_data(uint32_t version, reader& source);
 
     get_headers();
-    get_headers(const hash_list& start, hash_digest const& stop);
+    get_headers(hash_list const& start, hash_digest const& stop);
     get_headers(hash_list&& start, hash_digest const& stop);
     get_headers(const get_headers& x);
     get_headers(get_headers&& x);

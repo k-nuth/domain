@@ -57,19 +57,18 @@ public:
     //static get_blocks factory_from_data(uint32_t version, reader& source);
 
     get_blocks();
-    get_blocks(const hash_list& start, hash_digest const& stop);
+    get_blocks(hash_list const& start, hash_digest const& stop);
     get_blocks(hash_list&& start, hash_digest const& stop);
     get_blocks(const get_blocks& x);
     get_blocks(get_blocks&& x);
 
     hash_list& start_hashes();
-    const hash_list& start_hashes() const;
-    void set_start_hashes(const hash_list& value);
+    hash_list const& start_hashes() const;
+    void set_start_hashes(hash_list const& value);
     void set_start_hashes(hash_list&& value);
 
     hash_digest& stop_hash();
     hash_digest const& stop_hash() const;
-    void set_stop_hash(hash_digest const& value);
     void set_stop_hash(hash_digest const& value);
 
     virtual bool from_data(uint32_t version, data_chunk const& data);

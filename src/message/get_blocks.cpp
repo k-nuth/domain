@@ -56,7 +56,7 @@ get_blocks::get_blocks()
     : start_hashes_(), stop_hash_(null_hash) {
 }
 
-get_blocks::get_blocks(const hash_list& start, hash_digest const& stop)
+get_blocks::get_blocks(hash_list const& start, hash_digest const& stop)
     : start_hashes_(start), stop_hash_(stop) {
 }
 
@@ -153,11 +153,11 @@ hash_list& get_blocks::start_hashes() {
     return start_hashes_;
 }
 
-const hash_list& get_blocks::start_hashes() const {
+hash_list const& get_blocks::start_hashes() const {
     return start_hashes_;
 }
 
-void get_blocks::set_start_hashes(const hash_list& value) {
+void get_blocks::set_start_hashes(hash_list const& value) {
     start_hashes_ = value;
 }
 
@@ -177,10 +177,6 @@ void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
 }
 
-void get_blocks::set_stop_hash(hash_digest const& value) {
-    stop_hash_ = std::move(value);
-}
-
 get_blocks& get_blocks::operator=(get_blocks&& x) {
     start_hashes_ = std::move(x.start_hashes_);
     stop_hash_ = std::move(x.stop_hash_);
@@ -198,7 +194,7 @@ bool get_blocks::operator==(const get_blocks& x) const {
 }
 
 bool get_blocks::operator!=(const get_blocks& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

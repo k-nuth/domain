@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__constructor_4__always__equals_params)
 {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    const inventory_vector expected(type, hash);
+    inventory_vector const expected(type, hash);
     BOOST_REQUIRE(expected.is_valid());
     inventory_vector instance(expected);
     BOOST_REQUIRE(instance.is_valid());
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__from_data__insufficient_bytes__failure)
 
 BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success)
 {
-    static const inventory_vector expected
+    static inventory_vector const expected
     {
         inventory_vector::type_id::error,
         {
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success
 
 BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_2__valid_input__success)
 {
-    static const inventory_vector expected
+    static inventory_vector const expected
     {
         inventory_vector::type_id::transaction,
         {
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_2__valid_input__success
 
 BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_3__valid_input__success)
 {
-    static const inventory_vector expected
+    static inventory_vector const expected
     {
         inventory_vector::type_id::block,
         {
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__operator_assign_equals_2__always__matches
 
 BOOST_AUTO_TEST_CASE(inventory_vector__operator_boolean_equals__duplicates__returns_true)
 {
-    const inventory_vector expected(
+    inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")
     );
@@ -389,7 +389,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__operator_boolean_equals__duplicates__retu
 
 BOOST_AUTO_TEST_CASE(inventory_vector__operator_boolean_equals__differs__returns_false)
 {
-    const inventory_vector expected(
+    inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")
     );
@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__operator_boolean_equals__differs__returns
 
 BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__duplicates__returns_false)
 {
-    const inventory_vector expected(
+    inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")
     );
@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__duplicates__returns_fa
 
 BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__differs__returns_true)
 {
-    const inventory_vector expected(
+    inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")
     );

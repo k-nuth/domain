@@ -148,7 +148,7 @@ bool ping::operator==(const ping& x) const {
 
 bool ping::operator!=(const ping& x) const {
     // Nonce should be zero if not used.
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

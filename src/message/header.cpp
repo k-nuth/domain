@@ -77,15 +77,6 @@ header::header(uint32_t version,
     : chain::header(version, previous_block_hash, merkle, timestamp, bits, nonce) 
 {}
 
-header::header(uint32_t version,
-               hash_digest const& previous_block_hash,
-               hash_digest const& merkle,
-               uint32_t timestamp,
-               uint32_t bits,
-               uint32_t nonce)
-    : chain::header(version, std::move(previous_block_hash), std::move(merkle), timestamp, bits, nonce) 
-{}
-
 header::header(chain::header const& x)
     : chain::header(x) {
 }

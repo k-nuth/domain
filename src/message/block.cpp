@@ -78,11 +78,10 @@ block::block(const chain::block& x)
 }
 
 block::block(chain::header const& header, chain::transaction::list&& transactions)
-    : chain::block(std::move(header), std::move(transactions)) {
+    : chain::block(header, std::move(transactions)) {
 }
 
-block::block(chain::header const& header,
-             chain::transaction::list const& transactions)
+block::block(chain::header const& header, chain::transaction::list const& transactions)
     : chain::block(header, transactions) {
 }
 

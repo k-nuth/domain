@@ -187,7 +187,7 @@ bool prefilled_transaction::operator==(const prefilled_transaction& x) const {
 }
 
 bool prefilled_transaction::operator!=(const prefilled_transaction& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

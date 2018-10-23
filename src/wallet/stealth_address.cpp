@@ -344,7 +344,7 @@ bool stealth_address::operator==(const stealth_address& x) const
 
 bool stealth_address::operator!=(const stealth_address& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 std::istream& operator>>(std::istream& in, stealth_address& to)

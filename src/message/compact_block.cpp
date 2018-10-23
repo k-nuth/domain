@@ -81,7 +81,7 @@ compact_block::compact_block(chain::header const& header, uint64_t nonce, const 
 }
 
 compact_block::compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions)
-    : header_(std::move(header)),
+    : header_(header),
       nonce_(nonce),
       short_ids_(std::move(short_ids)),
       transactions_(std::move(transactions)) {
@@ -94,7 +94,7 @@ compact_block::compact_block(const compact_block& x)
 }
 
 compact_block::compact_block(compact_block&& x)
-    : compact_block(std::move(x.header_), x.nonce_, std::move(x.short_ids_), std::move(x.transactions_)) {
+    : compact_block(x.header_, x.nonce_, std::move(x.short_ids_), std::move(x.transactions_)) {
     //std::cout << "compact_block::compact_block 5\n";
 }
 
@@ -328,7 +328,7 @@ void compact_block::set_transactions(prefilled_transaction::list&& value) {
 }
 
 compact_block& compact_block::operator=(compact_block&& x) {
-    header_ = std::move(x.header_);
+    header_ = x.header_;
     nonce_ = x.nonce_;
     short_ids_ = std::move(x.short_ids_);
     transactions_ = std::move(x.transactions_);
@@ -340,7 +340,7 @@ bool compact_block::operator==(const compact_block& x) const {
 }
 
 bool compact_block::operator!=(const compact_block& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 // void to_data_header_nonce(compact_block const& block, writer& sink) {

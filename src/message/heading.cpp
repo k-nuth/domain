@@ -272,7 +272,7 @@ bool heading::operator==(const heading& x) const {
 }
 
 bool heading::operator!=(const heading& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

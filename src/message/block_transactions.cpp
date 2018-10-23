@@ -208,7 +208,7 @@ bool block_transactions::operator==(const block_transactions& x) const {
 }
 
 bool block_transactions::operator!=(const block_transactions& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

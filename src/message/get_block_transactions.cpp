@@ -196,7 +196,7 @@ bool get_block_transactions::operator==(
 
 bool get_block_transactions::operator!=(
     const get_block_transactions& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

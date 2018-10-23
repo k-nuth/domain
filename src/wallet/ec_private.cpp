@@ -237,7 +237,7 @@ bool ec_private::operator==(const ec_private& x) const
 
 bool ec_private::operator!=(const ec_private& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 std::istream& operator>>(std::istream& in, ec_private& to)

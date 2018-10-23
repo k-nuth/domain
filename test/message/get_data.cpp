@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(get_data__constructor_2__always__equals_params)
 {
-    static const inventory_vector::list values =
+    static inventory_vector::list const values =
     {
         inventory_vector
         {
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_3__always__equals_params)
 {
     static auto const type = inventory_vector::type_id::error;
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    const inventory_vector::list values
+    inventory_vector::list const values
     {
         inventory_vector(type, hash)
     };
@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__block_error_transaction__expected)
 BOOST_AUTO_TEST_CASE(get_data__operator_assign_equals__always__matches_equivalent)
 {
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    static const inventory_vector::list elements
+    static inventory_vector::list const elements
     {
         inventory_vector(inventory_vector::type_id::error, hash)
     };

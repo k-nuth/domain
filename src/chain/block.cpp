@@ -170,8 +170,7 @@ static std::string const encoded_regtest_genesis_block =
 //-----------------------------------------------------------------------------
 
 block::block()
-    : header_{}
-    , validation{} {
+    : validation{} {
 }
 
 // TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
@@ -181,7 +180,7 @@ block::block(chain::header const& header, transaction::list const& transactions)
 
 // TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list&& transactions)
-    : header_(std::move(header)), transactions_(std::move(transactions)), validation{} {
+    : header_(header), transactions_(std::move(transactions)), validation{} {
 }
 
 block::block(block const& x)
@@ -190,8 +189,7 @@ block::block(block const& x)
 }
 
 block::block(block&& x) noexcept
-    : block(std::move(x.header_)
-    , std::move(x.transactions_)) 
+    : block(x.header_, std::move(x.transactions_)) 
 {
     validation = std::move(x.validation);
 }

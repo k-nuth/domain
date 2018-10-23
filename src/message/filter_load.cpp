@@ -206,7 +206,7 @@ bool filter_load::operator==(const filter_load& x) const {
 }
 
 bool filter_load::operator!=(const filter_load& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

@@ -58,9 +58,9 @@ public:
     //static not_found factory_from_data(uint32_t version, reader& source);
 
     not_found();
-    not_found(const inventory_vector::list& values);
+    not_found(inventory_vector::list const& values);
     not_found(inventory_vector::list&& values);
-    not_found(const hash_list& hashes, type_id type);
+    not_found(hash_list const& hashes, type_id type);
     not_found(std::initializer_list<inventory_vector> const& values);
     not_found(const not_found& x);
     not_found(not_found&& x);

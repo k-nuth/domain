@@ -179,7 +179,7 @@ bool alert::operator==(const alert& x) const {
 }
 
 bool alert::operator!=(const alert& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

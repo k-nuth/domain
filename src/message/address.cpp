@@ -168,7 +168,7 @@ bool address::operator==(const address& x) const {
 }
 
 bool address::operator!=(const address& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

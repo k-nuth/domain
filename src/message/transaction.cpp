@@ -144,7 +144,7 @@ bool transaction::operator==(transaction const& x) const {
 }
 
 bool transaction::operator!=(transaction const& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

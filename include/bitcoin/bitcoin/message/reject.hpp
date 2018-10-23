@@ -113,7 +113,6 @@ public:
     hash_digest& data();
     hash_digest const& data() const;
     void set_data(hash_digest const& value);
-    void set_data(hash_digest const& value);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);

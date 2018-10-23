@@ -112,7 +112,7 @@ bool ek_token::operator==(const ek_token& x) const
 
 bool ek_token::operator!=(const ek_token& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 std::istream& operator>>(std::istream& in, ek_token& to)

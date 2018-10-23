@@ -232,7 +232,7 @@ bool ec_public::operator==(const ec_public& x) const
 
 bool ec_public::operator!=(const ec_public& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 std::istream& operator>>(std::istream& in, ec_public& to)

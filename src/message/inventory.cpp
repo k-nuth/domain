@@ -62,7 +62,7 @@ inventory::inventory()
     : inventories_() {
 }
 
-inventory::inventory(const inventory_vector::list& values)
+inventory::inventory(inventory_vector::list const& values)
     : inventories_(values) {
 }
 
@@ -70,7 +70,7 @@ inventory::inventory(inventory_vector::list&& values)
     : inventories_(std::move(values)) {
 }
 
-inventory::inventory(const hash_list& hashes, type_id type) {
+inventory::inventory(hash_list const& hashes, type_id type) {
     inventories_.clear();
     inventories_.reserve(hashes.size());
     auto const map = [type, this](hash_digest const& hash) {
@@ -184,7 +184,7 @@ size_t inventory::serialized_size(uint32_t version) const {
 }
 
 size_t inventory::count(type_id type) const {
-    auto const is_type = [type](const inventory_vector& element) {
+    auto const is_type = [type](inventory_vector const& element) {
         return element.type() == type;
     };
 
@@ -195,11 +195,11 @@ inventory_vector::list& inventory::inventories() {
     return inventories_;
 }
 
-const inventory_vector::list& inventory::inventories() const {
+inventory_vector::list const& inventory::inventories() const {
     return inventories_;
 }
 
-void inventory::set_inventories(const inventory_vector::list& value) {
+void inventory::set_inventories(inventory_vector::list const& value) {
     inventories_ = value;
 }
 
@@ -217,7 +217,7 @@ bool inventory::operator==(const inventory& x) const {
 }
 
 bool inventory::operator!=(const inventory& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

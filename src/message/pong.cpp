@@ -141,7 +141,7 @@ bool pong::operator==(const pong& x) const {
 }
 
 bool pong::operator!=(const pong& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

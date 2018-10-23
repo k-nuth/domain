@@ -56,7 +56,7 @@ get_data::get_data()
     : inventory() {
 }
 
-get_data::get_data(const inventory_vector::list& values)
+get_data::get_data(inventory_vector::list const& values)
     : inventory(values) {
 }
 
@@ -64,7 +64,7 @@ get_data::get_data(inventory_vector::list&& values)
     : inventory(values) {
 }
 
-get_data::get_data(const hash_list& hashes, inventory::type_id type)
+get_data::get_data(hash_list const& hashes, inventory::type_id type)
     : inventory(hashes, type) {
 }
 
@@ -72,7 +72,7 @@ get_data::get_data(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 
-get_data::get_data(const get_data& x)
+get_data::get_data(get_data const& x)
     : inventory(x) {
 }
 
@@ -115,11 +115,11 @@ get_data& get_data::operator=(get_data&& x) {
     return *this;
 }
 
-bool get_data::operator==(const get_data& x) const {
+bool get_data::operator==(get_data const& x) const {
     return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
 
-bool get_data::operator!=(const get_data& x) const {
+bool get_data::operator!=(get_data const& x) const {
     return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 

@@ -128,7 +128,7 @@ program::program(script const& script, const program& x)
 }
 
 // Condition, alternate, jump and operation_count are not moved.
-program::program(script const& script, program&& other, bool)
+program::program(script const& script, program&& x, bool)
   : script_(script),
     transaction_(x.transaction_),
     input_index_(x.input_index_),

@@ -235,10 +235,6 @@ void reject::set_data(hash_digest const& value) {
     data_ = value;
 }
 
-void reject::set_data(hash_digest const& value) {
-    data_ = std::move(value);
-}
-
 reject& reject::operator=(reject&& x) {
     code_ = x.code_;
     reason_ = std::move(x.reason_);
@@ -252,7 +248,7 @@ bool reject::operator==(const reject& x) const {
 }
 
 bool reject::operator!=(const reject& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 reject::reason_code reject::reason_from_byte(uint8_t byte) {

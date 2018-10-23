@@ -447,7 +447,7 @@ bool alert_payload::operator==(const alert_payload& x) const {
 }
 
 bool alert_payload::operator!=(const alert_payload& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

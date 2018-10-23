@@ -54,7 +54,7 @@ not_found::not_found()
     : inventory() {
 }
 
-not_found::not_found(const inventory_vector::list& values)
+not_found::not_found(inventory_vector::list const& values)
     : inventory(values) {
 }
 
@@ -62,7 +62,7 @@ not_found::not_found(inventory_vector::list&& values)
     : inventory(values) {
 }
 
-not_found::not_found(const hash_list& hashes, inventory::type_id type)
+not_found::not_found(hash_list const& hashes, inventory::type_id type)
     : inventory(hashes, type) {
 }
 

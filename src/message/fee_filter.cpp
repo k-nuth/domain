@@ -162,7 +162,7 @@ bool fee_filter::operator==(const fee_filter& x) const {
 }
 
 bool fee_filter::operator!=(const fee_filter& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

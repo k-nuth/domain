@@ -80,24 +80,16 @@ inventory_vector inventory_vector::factory_from_data(uint32_t version, data_sour
 //}
 
 inventory_vector::inventory_vector()
-    : inventory_vector(type_id::error, null_hash) {
-}
+    : type_(type_id::error), hash_(null_hash) 
+{}
 
 inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
     : type_(type), hash_(hash) {
 }
 
-inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
-    : type_(type), hash_(std::move(hash)) {
-}
-
-inventory_vector::inventory_vector(const inventory_vector& x)
-    : inventory_vector(x.type_, x.hash_) {
-}
-
-inventory_vector::inventory_vector(inventory_vector&& x)
-    : inventory_vector(x.type_, std::move(x.hash_)) {
-}
+inventory_vector::inventory_vector(inventory_vector const& x)
+    : type_(x.type_), hash_(x.hash_) 
+{}
 
 bool inventory_vector::is_valid() const {
     return (type_ != type_id::error) || (hash_ != null_hash);
@@ -197,27 +189,17 @@ void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = value;
 }
 
-void inventory_vector::set_hash(hash_digest const& value) {
-    hash_ = std::move(value);
-}
-
-inventory_vector& inventory_vector::operator=(inventory_vector&& x) {
-    type_ = x.type_;
-    hash_ = std::move(x.hash_);
-    return *this;
-}
-
-void inventory_vector::operator=(const inventory_vector& x) {
+void inventory_vector::operator=(inventory_vector const& x) {
     type_ = x.type_;
     hash_ = x.hash_;
 }
 
-bool inventory_vector::operator==(const inventory_vector& x) const {
+bool inventory_vector::operator==(inventory_vector const& x) const {
     return (hash_ == x.hash_) && (type_ == x.type_);
 }
 
-bool inventory_vector::operator!=(const inventory_vector& x) const {
-    return !(*this == other);
+bool inventory_vector::operator!=(inventory_vector const& x) const {
+    return !(*this == x);
 }
 
 }  // namespace message

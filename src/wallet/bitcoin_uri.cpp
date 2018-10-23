@@ -272,7 +272,7 @@ bool bitcoin_uri::operator==(const bitcoin_uri& x) const
 
 bool bitcoin_uri::operator!=(const bitcoin_uri& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 // This is always strict.

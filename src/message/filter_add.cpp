@@ -164,7 +164,7 @@ bool filter_add::operator==(const filter_add& x) const {
 }
 
 bool filter_add::operator!=(const filter_add& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

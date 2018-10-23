@@ -112,7 +112,7 @@ bool ek_private::operator==(const ek_private& x) const
 
 bool ek_private::operator!=(const ek_private& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 std::istream& operator>>(std::istream& in, ek_private& to)

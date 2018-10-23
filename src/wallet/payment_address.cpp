@@ -415,7 +415,7 @@ bool payment_address::operator==(const payment_address& x) const
 
 bool payment_address::operator!=(const payment_address& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 std::istream& operator>>(std::istream& in, payment_address& to)

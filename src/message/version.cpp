@@ -295,7 +295,7 @@ bool version::operator==(const version& x) const {
 }
 
 bool version::operator!=(const version& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message

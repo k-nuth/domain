@@ -60,15 +60,12 @@ merkle_block::merkle_block()
     : header_(), total_transactions_(0), hashes_(), flags_() {
 }
 
-merkle_block::merkle_block(chain::header const& header,
-                           size_t total_transactions,
-                           const hash_list& hashes,
-                           data_chunk const& flags)
+merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags) 
     : header_(header), total_transactions_(total_transactions), hashes_(hashes), flags_(flags) {
 }
 
 merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags)
-    : header_(std::move(header)), total_transactions_(total_transactions), hashes_(std::move(hashes)), flags_(std::move(flags)) {
+    : header_(header), total_transactions_(total_transactions), hashes_(std::move(hashes)), flags_(std::move(flags)) {
 }
 
 // Hack: use of safe_unsigned here isn't great. We should consider using size_t
@@ -85,7 +82,7 @@ merkle_block::merkle_block(const merkle_block& x)
 }
 
 merkle_block::merkle_block(merkle_block&& x)
-    : merkle_block(std::move(x.header_), x.total_transactions_, std::move(x.hashes_), std::move(x.flags_)) {
+    : merkle_block(x.header_, x.total_transactions_, std::move(x.hashes_), std::move(x.flags_)) {
 }
 
 bool merkle_block::is_valid() const {
@@ -202,11 +199,11 @@ hash_list& merkle_block::hashes() {
     return hashes_;
 }
 
-const hash_list& merkle_block::hashes() const {
+hash_list const& merkle_block::hashes() const {
     return hashes_;
 }
 
-void merkle_block::set_hashes(const hash_list& value) {
+void merkle_block::set_hashes(hash_list const& value) {
     hashes_ = value;
 }
 
@@ -231,7 +228,7 @@ void merkle_block::set_flags(data_chunk&& value) {
 }
 
 merkle_block& merkle_block::operator=(merkle_block&& x) {
-    header_ = std::move(x.header_);
+    header_ = x.header_;
     hashes_ = std::move(x.hashes_);
     flags_ = std::move(x.flags_);
     return *this;
@@ -252,7 +249,7 @@ bool merkle_block::operator==(const merkle_block& x) const {
 }
 
 bool merkle_block::operator!=(const merkle_block& x) const {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 }  // namespace message
