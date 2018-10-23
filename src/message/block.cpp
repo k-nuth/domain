@@ -35,8 +35,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string block::command = "block";
-uint32_t const block::version_minimum = version::level::minimum;
-uint32_t const block::version_maximum = version::level::maximum;
+uint32_t block const::version_minimum = version::level::minimum;
+uint32_t block const::version_maximum = version::level::maximum;
 
 block block::factory_from_data(uint32_t version, const data_chunk& data) {
     block instance;
@@ -65,7 +65,7 @@ block::block(block&& other)
     : chain::block(std::move(other)) {
 }
 
-block::block(const block& other)
+block::block(block const& other)
     : chain::block(other) {
 }
 
@@ -144,11 +144,11 @@ bool block::operator!=(const chain::block& other) const {
     return chain::block::operator!=(other);
 }
 
-bool block::operator==(const block& other) const {
+bool block::operator==(block const& other) const {
     return chain::block::operator==(other);
 }
 
-bool block::operator!=(const block& other) const {
+bool block::operator!=(block const& other) const {
     return !(*this == other);
 }
 

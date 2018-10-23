@@ -173,7 +173,7 @@ block::block()
     : header_{}, validation{} {
 }
 
-block::block(const block& other)
+block::block(block const& other)
     : block(other.header_, other.transactions_) {
     validation = other.validation;
 }
@@ -204,11 +204,11 @@ block& block::operator=(block&& other) {
     return *this;
 }
 
-bool block::operator==(const block& other) const {
+bool block::operator==(block const& other) const {
     return (header_ == other.header_) && (transactions_ == other.transactions_);
 }
 
-bool block::operator!=(const block& other) const {
+bool block::operator!=(block const& other) const {
     return !(*this == other);
 }
 

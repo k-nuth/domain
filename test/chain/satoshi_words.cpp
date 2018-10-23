@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_SUITE(satoshi_words)
 BOOST_AUTO_TEST_CASE(satoshi_words_mainnet)
 {
     // Create mainnet genesis block (contains a single coinbase transaction).
-    auto const block = chain::block::genesis_mainnet();
+    auto block const = chain::block::genesis_mainnet();
     auto const& transactions = block.transactions();
     BOOST_REQUIRE_EQUAL(transactions.size(), 1u);
 

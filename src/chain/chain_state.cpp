@@ -990,7 +990,7 @@ chain_state::chain_state(chain_state const& top)
 {}
 
 chain_state::data chain_state::to_block(const chain_state& pool,
-    const block& block)
+    block const& block)
 {
     // Alias configured forks.
     auto const forks = pool.forks_;
@@ -1030,7 +1030,7 @@ chain_state::data chain_state::to_block(const chain_state& pool,
 
 // Constructor (tx pool to block).
 // This assumes that the pool state is the same height as the block.
-chain_state::chain_state(chain_state const& pool, const block& block)
+chain_state::chain_state(chain_state const& pool, block const& block)
     : data_(to_block(pool, block))
     , forks_(pool.forks_)
     , checkpoints_(pool.checkpoints_)

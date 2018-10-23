@@ -44,7 +44,7 @@ class BC_API block
     : public chain::block {
    public:
     typedef std::shared_ptr<block> ptr;
-    typedef std::shared_ptr<const block> const_ptr;
+    typedef std::shared_ptr<block const> const_ptr;
     typedef std::vector<ptr> ptr_list;
     typedef std::vector<const_ptr> const_ptr_list;
     typedef std::shared_ptr<const_ptr_list> const_ptr_list_ptr;
@@ -65,7 +65,7 @@ class BC_API block
     block();
 
     block(block&& other);
-    block(const block& other);
+    block(block const& other);
 
     block(chain::block&& other);
     block(const chain::block& other);
@@ -97,13 +97,13 @@ class BC_API block
 
     // This class is move assignable but not copy assignable.
     block& operator=(block&& other);
-    void operator=(const block&) = delete;
+    void operator=(block const&) = delete;
 
     bool operator==(const chain::block& other) const;
     bool operator!=(const chain::block& other) const;
 
-    bool operator==(const block& other) const;
-    bool operator!=(const block& other) const;
+    bool operator==(block const& other) const;
+    bool operator!=(block const& other) const;
 
     static const std::string command;
     static uint32_t const version_minimum;
