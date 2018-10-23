@@ -44,7 +44,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API header {
-   public:
+public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
     typedef std::shared_ptr<header const> const_ptr;
@@ -61,22 +61,15 @@ class BC_API header {
     //-----------------------------------------------------------------------------
 
     header();
-
     header(header const& x);
-    header(header&& x) noexcept;
-
     header(header const& x, const hash_digest& hash);
-    header(header&& x, hash_digest&& hash);
-
     header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
-    header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
     // Operators.
     //-----------------------------------------------------------------------------
 
-    /// This class is move and copy assignable.
+    /// This class is copy assignable.
     header& operator=(header const& x);
-    header& operator=(header&& x) noexcept;
 
     bool operator==(header const& x) const;
     bool operator!=(header const& x) const;
@@ -201,14 +194,14 @@ class BC_API header {
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-   protected:
+protected:
     // So that block may call reset from its own.
     friend class block;
 
     void reset();
     void invalidate_cache() const;
 
-   private:
+private:
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
 

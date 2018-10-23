@@ -40,67 +40,70 @@ using wall_clock = std::chrono::system_clock;
 //-----------------------------------------------------------------------------
 
 header::header()
-    : header(0, null_hash, null_hash, 0, 0, 0) {
-}
+    // : header(0, null_hash, null_hash, 0, 0, 0) {
+    : version_(0)
+    , previous_block_hash_(null_hash)
+    , merkle_(null_hash)
+    , timestamp_(0)
+    , bits_(0)
+    , nonce_(0)
+    , validation{} 
+{}
 
-header::header(header&& x) noexcept
-    : header(x.version_, std::move(x.previous_block_hash_), std::move(x.merkle_), x.timestamp_, x.bits_, x.nonce_) {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = std::move(x.validation);
-}
+// header::header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
+//     : version_(version),
+//       previous_block_hash_(previous_block_hash),
+//       merkle_(merkle),
+//       timestamp_(timestamp),
+//       bits_(bits),
+//       nonce_(nonce),
+//       validation{} 
+// {}
+
+header::header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
+    : version_(version)
+    , previous_block_hash_(previous_block_hash)
+    , merkle_(merkle)
+    , timestamp_(timestamp)
+    , bits_(bits)
+    , nonce_(nonce)
+    , validation{} 
+{}
 
 header::header(header const& x)
-    : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) {
+    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) 
+
+    : version_(x.version_)
+    , previous_block_hash_(x.previous_block_hash_)
+    , merkle_(x.merkle_)
+    , timestamp_(x.timestamp_)
+    , bits_(x.bits_)
+    , nonce_(x.nonce_)
+    , validation{} 
+
+{
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     validation = x.validation;
 }
 
-header::header(header&& x, hash_digest&& hash)
-    : header(x.version_, std::move(x.previous_block_hash_), std::move(x.merkle_), x.timestamp_, x.bits_, x.nonce_) {
-    hash_ = std::make_shared<hash_digest>(std::move(hash));
-    validation = std::move(x.validation);
-}
-
 header::header(header const& x, const hash_digest& hash)
-    : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) {
+    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) 
+    : version_(x.version_)
+    , previous_block_hash_(x.previous_block_hash_)
+    , merkle_(x.merkle_)
+    , timestamp_(x.timestamp_)
+    , bits_(x.bits_)
+    , nonce_(x.nonce_)
+    , validation{} 
+{
     hash_ = std::make_shared<hash_digest>(hash);
     validation = x.validation;
 }
 
-header::header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
-    : version_(version),
-      previous_block_hash_(std::move(previous_block_hash)),
-      merkle_(std::move(merkle)),
-      timestamp_(timestamp),
-      bits_(bits),
-      nonce_(nonce),
-      validation{} {
-}
 
-header::header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
-    : version_(version),
-      previous_block_hash_(previous_block_hash),
-      merkle_(merkle),
-      timestamp_(timestamp),
-      bits_(bits),
-      nonce_(nonce),
-      validation{} {
-}
 
 // Operators.
 //-----------------------------------------------------------------------------
-
-header& header::operator=(header&& x) noexcept {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    version_ = x.version_;
-    previous_block_hash_ = std::move(x.previous_block_hash_);
-    merkle_ = std::move(x.merkle_);
-    timestamp_ = x.timestamp_;
-    bits_ = x.bits_;
-    nonce_ = x.nonce_;
-    validation = std::move(x.validation);
-    return *this;
-}
 
 header& header::operator=(header const& x) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
@@ -288,7 +291,7 @@ void header::set_previous_block_hash(const hash_digest& value) {
 }
 
 void header::set_previous_block_hash(hash_digest&& value) {
-    previous_block_hash_ = std::move(value);
+    previous_block_hash_ = value;
     invalidate_cache();
 }
 
@@ -306,7 +309,7 @@ void header::set_merkle(const hash_digest& value) {
 }
 
 void header::set_merkle(hash_digest&& value) {
-    merkle_ = std::move(value);
+    merkle_ = value;
     invalidate_cache();
 }
 
@@ -440,9 +443,9 @@ bool header::is_valid_proof_of_work(bool retarget) const {
         // Ensure actual work is at least claimed amount (smaller is more work).
 #ifdef BITPRIM_CURRENCY_LTC
     return to_uint256(litecoin_proof_of_work_hash()) <= target;
-#else   //BITPRIM_CURRENCY_LTC
+#else
     return to_uint256(hash()) <= target;
-#endif  //BITPRIM_CURRENCY_LTC
+#endif
 }
 
 // Validation.
