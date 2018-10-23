@@ -69,11 +69,11 @@ header::header(header const& x)
     , timestamp_(x.timestamp_)
     , bits_(x.bits_)
     , nonce_(x.nonce_)
-    , validation{} 
-
+    // , validation{} 
+    , validation(x.validation)
 {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = x.validation;
+    // validation = x.validation;
 }
 
 header::header(header const& x, hash_digest const& hash)
@@ -84,10 +84,11 @@ header::header(header const& x, hash_digest const& hash)
     , timestamp_(x.timestamp_)
     , bits_(x.bits_)
     , nonce_(x.nonce_)
-    , validation{} 
+    // , validation{} 
+    , validation(x.validation)
 {
     hash_ = std::make_shared<hash_digest>(hash);
-    validation = x.validation;
+    // validation = x.validation;
 }
 
 
@@ -400,8 +401,7 @@ uint256_t header::proof() const {
 
 /// BUGBUG: bitcoin 32bit unix time: en.wikipedia.org/wiki/Year_2038_problem
 bool header::is_valid_timestamp() const {
-    using namespace std::chrono;
-    static auto const two_hours = seconds(timestamp_future_seconds);
+    static auto const two_hours = std::chrono::seconds(timestamp_future_seconds);
     auto const time = wall_clock::from_time_t(timestamp_);
     auto const future = wall_clock::now() + two_hours;
     return time <= future;
