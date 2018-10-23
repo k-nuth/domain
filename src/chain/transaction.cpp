@@ -621,8 +621,9 @@ bool transaction::is_coinbase() const {
 
 // True if coinbase and has invalid input[0] script size.
 bool transaction::is_oversized_coinbase() const {
-    if ( ! is_coinbase())
+    if ( ! is_coinbase()) {
         return false;
+    }
 
     auto const script_size = inputs_.front().script().serialized_size(false);
     return script_size < min_coinbase_size || script_size > max_coinbase_size;
@@ -630,8 +631,9 @@ bool transaction::is_oversized_coinbase() const {
 
 // True if not coinbase but has null previous_output(s).
 bool transaction::is_null_non_coinbase() const {
-    if (is_coinbase())
+    if (is_coinbase()) {
         return false;
+    }
 
     auto const invalid = [](const input& input) {
         return input.previous_output().is_null();
@@ -659,8 +661,9 @@ bool transaction::is_final(size_t block_height, uint32_t block_time) const {
 
 bool transaction::is_locked(size_t block_height,
                             uint32_t median_time_past) const {
-    if (version_ < relative_locktime_min_version || is_coinbase())
+    if (version_ < relative_locktime_min_version || is_coinbase()) {
         return false;
+    }
 
     auto const locked = [block_height, median_time_past](const input& input) {
         return input.is_locked(block_height, median_time_past);
@@ -814,8 +817,9 @@ point::list transaction::missing_previous_outputs() const {
         auto const& prevout = input.previous_output();
         auto const missing = !prevout.validation.cache.is_valid();
 
-        if (missing && !prevout.is_null())
+        if (missing && !prevout.is_null()) {
             prevouts.push_back(prevout);
+        }
     };
 
     std::for_each(inputs_.begin(), inputs_.end(), accumulator);
@@ -901,19 +905,21 @@ bool transaction::is_segregated() const {
 }
 
 // Coinbase transactions return success, to simplify iteration.
-code transaction::connect_input(const chain_state& state,
-                                size_t input_index) const {
-    if (input_index >= inputs_.size())
+code transaction::connect_input(const chain_state& state, size_t input_index) const {
+    if (input_index >= inputs_.size()) {
         return error::operation_failed;
+    }
 
-    if (is_coinbase())
+    if (is_coinbase()) {
         return error::success;
+    }
 
     auto const& prevout = inputs_[input_index].previous_output().validation;
 
     // Verify that the previous output cache has been populated.
-    if ( ! prevout.cache.is_valid())
+    if ( ! prevout.cache.is_valid()) {
         return error::missing_previous_output;
+    }
 
     auto const forks = state.enabled_forks();
     auto const index32 = static_cast<uint32_t>(input_index);
@@ -927,26 +933,20 @@ code transaction::connect_input(const chain_state& state,
 
 // These checks are self-contained; blockchain (and so version) independent.
 code transaction::check(bool transaction_pool, bool retarget) const {
-    if (inputs_.empty() || outputs_.empty())
+    if (inputs_.empty() || outputs_.empty()) {
         return error::empty_transaction;
-
-    else if (is_null_non_coinbase())
+    } else if (is_null_non_coinbase()) {
         return error::previous_output_null;
-
-    else if (total_output_value() > max_money(retarget))
+    } else if (total_output_value() > max_money(retarget)) {
         return error::spend_overflow;
-
-    else if ( ! transaction_pool && is_oversized_coinbase())
+    } else if ( ! transaction_pool && is_oversized_coinbase()) {
         return error::invalid_coinbase_script_size;
-
-    else if (transaction_pool && is_coinbase())
+    } else if (transaction_pool && is_coinbase()) {
         return error::coinbase_transaction;
-
-    else if (transaction_pool && is_internal_double_spend())
+    } else if (transaction_pool && is_internal_double_spend()) {
         return error::transaction_internal_double_spend;
-
     // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
-    else if (transaction_pool && serialized_size(true, false) >= get_max_block_size())
+    } else if (transaction_pool && serialized_size(true, false) >= get_max_block_size()) {
         return error::transaction_size_limit;
 
     // We cannot know if bip16/bip141 is enabled here so we do not check it.
@@ -957,8 +957,9 @@ code transaction::check(bool transaction_pool, bool retarget) const {
     ////else if (transaction_pool && signature_operations(false, false) > get_max_block_sigops()
     ////    return error::transaction_legacy_sigop_limit;
 
-    else
+    } else {
         return error::success;
+    }
 }
 
 code transaction::accept(bool transaction_pool) const {
@@ -981,15 +982,12 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
     // bip141 discounts segwit sigops by increasing limit and legacy weight.
     auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
 
-    if (transaction_pool && state.is_under_checkpoint())
+    if (transaction_pool && state.is_under_checkpoint()) {
         return error::premature_validation;
-
     // A segregated tx should appear empty if bip141 is not enabled.
-    else if ( ! bip141 && is_segregated())
+    } else if ( ! bip141 && is_segregated()) {
         return error::empty_transaction;
-
-    else if (transaction_pool && !is_final(state.height(),
-                                           state.median_time_past()))
+    } else if (transaction_pool && !is_final(state.height(), state.median_time_past())) {
         return error::transaction_non_final;
 
     //*************************************************************************
@@ -998,37 +996,30 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
     // the original is spent in the new block. This is not necessary nor is it
     // described by BIP30, but it is in the code referenced by BIP30.
     //*************************************************************************
-    else if (bip30 && !revert_bip30 && validation.duplicate)
+    } else if (bip30 && !revert_bip30 && validation.duplicate) {
         return error::unspent_duplicate;
-
-    else if (is_missing_previous_outputs())
+    } else if (is_missing_previous_outputs()) {
         return error::missing_previous_output;
-
-    else if (is_double_spend(transaction_pool))
+    } else if (is_double_spend(transaction_pool)) {
         return error::double_spend;
-
     // This relates height to maturity of spent coinbase. Since reorg is the
     // only way to decrease height and reorg invalidates, this is cache safe.
-    else if ( ! is_mature(state.height()))
+    } else if ( ! is_mature(state.height())) {
         return error::coinbase_maturity;
-
-    else if (is_overspent())
+    } else if (is_overspent()) {
         return error::spend_exceeds_value;
-
-    else if (bip68 && is_locked(state.height(), state.median_time_past()))
+    } else if (bip68 && is_locked(state.height(), state.median_time_past())) {
         return error::sequence_locked;
-
     // This recomputes sigops to include p2sh from prevouts if bip16 is true.
-    else if (transaction_pool && signature_operations(bip16, bip141) > max_sigops)
+    } else if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
         return error::transaction_embedded_sigop_limit;
-
     // This causes second serialized_size(true, false) computation (uncached).
     // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
-    else if (transaction_pool && bip141 && weight() > max_block_weight)
+    } else if (transaction_pool && bip141 && weight() > max_block_weight) {
         return error::transaction_weight_limit;
-
-    else
+    } else {
         return error::success;
+    }
 }
 
 code transaction::connect() const {
@@ -1039,9 +1030,11 @@ code transaction::connect() const {
 code transaction::connect(const chain_state& state) const {
     code ec;
 
-    for (size_t input = 0; input < inputs_.size(); ++input)
-        if ((ec = connect_input(state, input)))
+    for (size_t input = 0; input < inputs_.size(); ++input) {
+        if ((ec = connect_input(state, input))) {
             return ec;
+        }
+    }
 
     return error::success;
 }
