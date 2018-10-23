@@ -251,7 +251,7 @@ inline void program::duplicate(size_t index)
 // pop1/pop2/push1/push2
 inline void program::swap(size_t index_left, size_t index_right)
 {
-    // TODO: refactor to allow DRY without const_cast here.
+    // TODO(libbitcoin): refactor to allow DRY without const_cast here.
     std::swap(
         const_cast<data_stack::value_type&>(item(index_left)),
         const_cast<data_stack::value_type&>(item(index_right)));

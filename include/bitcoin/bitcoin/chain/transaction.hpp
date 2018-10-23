@@ -228,7 +228,7 @@ class BC_API transaction {
             }
         }
 
-        // TODO: optimize by having reader skip witness data.
+        // TODO(libbitcoin): optimize by having reader skip witness data.
         if (!witness_val(witness))
             strip_witness();
 
@@ -379,7 +379,7 @@ class BC_API transaction {
     input::list inputs_;
     output::list outputs_;
 
-    // TODO: (refactor to transaction_result)
+    // TODO(libbitcoin): (refactor to transaction_result)
     // this 3 variables should be stored in transaction_unconfired database when the store
     // function is called. This values will be in the transaction_result object before
     // creating the transaction object

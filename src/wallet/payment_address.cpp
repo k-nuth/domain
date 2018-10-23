@@ -157,7 +157,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     // In order to avoid using the wrong network address, the from_string method
     // only accepts the cashaddr_prefix set on the multi_crypto_support file
 
-    // TODO: validate the network on RPC/Interface calls and make payment_address independent of the network
+    // TODO(libbitcoin): validate the network on RPC/Interface calls and make payment_address independent of the network
 
     std::string prefix;
     data_chunk payload;

@@ -72,7 +72,7 @@ bool operation::from_data(data_source& stream) {
     return from_data(stream_r);
 }
 
-// TODO: optimize for larger data by using a shared byte array.
+// TODO(libbitcoin): optimize for larger data by using a shared byte array.
 //bool operation::from_data(reader& source)
 //{
 //    ////reset();

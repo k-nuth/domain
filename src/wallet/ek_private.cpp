@@ -54,7 +54,7 @@ ek_private::ek_private(const encrypted_private& value)
 
 ek_private ek_private::from_string(const std::string& encoded)
 {
-    // TODO: incorporate existing parser here, setting new members.
+    // TODO(libbitcoin): incorporate existing parser here, setting new members.
 
     encrypted_private key;
     return decode_base58(key, encoded) && verify_checksum(key) ?

@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(create_transaction__test) {
   BOOST_REQUIRE_EQUAL(libbitcoin::encode_base16(result.second.to_data()), TX_ENCODE);
 }
 
-// TODO: make test for BTC and LTC signatures
+// TODO(libbitcoin): make test for BTC and LTC signatures
 
 #ifdef BITPRIM_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(sign_transaction__test) {

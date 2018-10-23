@@ -343,7 +343,7 @@ payment_address::list input::addresses() const {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
 
-        // TODO: expand to include segregated witness address extraction.
+        // TODO(libbitcoin): expand to include segregated witness address extraction.
         addresses_ = std::make_shared<payment_address::list>(
             payment_address::extract_input(script_));
         mutex_.unlock_and_lock_upgrade();

@@ -157,7 +157,7 @@ ptree property_list(const chain::output& tx_output)
 
     tree.put("script", tx_output.script().to_string(rule_fork::all_rules));
 
-    // TODO: this will eventually change due to privacy problems, see:
+    // TODO(libbitcoin): this will eventually change due to privacy problems, see:
     // lists.dyne.org/lurker/message/20140812.214120.317490ae.en.html
 
     if (!address)

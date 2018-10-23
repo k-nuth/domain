@@ -183,13 +183,13 @@ block::block(block&& other)
     validation = std::move(other.validation);
 }
 
-// TODO: deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header,
              transaction::list const& transactions)
     : header_(header), transactions_(transactions), validation{} {
 }
 
-// TODO: deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header&& header, transaction::list&& transactions)
     : header_(std::move(header)), transactions_(std::move(transactions)), validation{} {
 }
@@ -275,7 +275,7 @@ bool block::from_data(data_source& stream, bool witness) {
 //        if (!tx.from_data(source, true, witness))
 //            break;
 //
-//    // TODO: optimize by having reader skip witness data.
+//    // TODO(libbitcoin): optimize by having reader skip witness data.
 //    if (!witness)
 //        strip_witness();
 //
@@ -400,14 +400,14 @@ chain::header const& block::header() const {
     return header_;
 }
 
-// TODO: must call header.set_merkle(generate_merkle_root()) though this may
+// TODO(libbitcoin): must call header.set_merkle(generate_merkle_root()) though this may
 // be very suboptimal if the block is being constructed. First verify that all
 // current uses will not be impacted and if so change them to use constructor.
 void block::set_header(chain::header const& value) {
     header_ = value;
 }
 
-// TODO: see set_header comments.
+// TODO(libbitcoin): see set_header comments.
 void block::set_header(chain::header&& value) {
     header_ = std::move(value);
 }
@@ -420,7 +420,7 @@ transaction::list const& block::transactions() const {
     return transactions_;
 }
 
-// TODO: see set_header comments.
+// TODO(libbitcoin): see set_header comments.
 void block::set_transactions(transaction::list const& value) {
     transactions_ = value;
     segregated_ = boost::none;
@@ -429,7 +429,7 @@ void block::set_transactions(transaction::list const& value) {
     total_size_ = boost::none;
 }
 
-// TODO: see set_header comments.
+// TODO(libbitcoin): see set_header comments.
 void block::set_transactions(transaction::list&& value) {
     transactions_ = std::move(value);
     segregated_ = boost::none;
@@ -864,7 +864,7 @@ code block::check() const {
     if ((ec = header_.check()))
         return ec;
 
-    // TODO: relates to total of tx.size(false) (pool cache). -> no witness size
+    // TODO(libbitcoin): relates to total of tx.size(false) (pool cache). -> no witness size
     else if (serialized_size(false) > get_max_block_size())
         return error::block_size_limit;
 
@@ -877,7 +877,7 @@ code block::check() const {
     else if (is_extra_coinbases())
         return error::extra_coinbases;
 
-    // TODO: determinable from tx pool graph.
+    // TODO(libbitcoin): determinable from tx pool graph.
     else if (is_forward_reference())
         return error::forward_reference;
 
@@ -885,11 +885,11 @@ code block::check() const {
     ////else if (!is_distinct_transaction_set())
     ////    return error::internal_duplicate;
 
-    // TODO: determinable from tx pool graph.
+    // TODO(libbitcoin): determinable from tx pool graph.
     else if (is_internal_double_spend())
         return error::block_internal_double_spend;
 
-    // TODO: relates height to tx.hash(false) (pool cache).
+    // TODO(libbitcoin): relates height to tx.hash(false) (pool cache).
     else if (!is_valid_merkle_root())
         return error::merkle_mismatch;
 
@@ -941,7 +941,7 @@ code block::accept(chain_state const& state, bool transactions) const {
     else if (state.is_under_checkpoint())
         return error::success;
 
-    // TODO: relates height to total of tx.size(true) (pool cache).
+    // TODO(libbitcoin): relates height to total of tx.size(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
     else if (bip141 && weight() > max_block_weight)
         return error::block_weight_limit;
@@ -949,21 +949,21 @@ code block::accept(chain_state const& state, bool transactions) const {
     else if (bip34 && !is_valid_coinbase_script(state.height()))
         return error::coinbase_height_mismatch;
 
-    // TODO: relates height to total of tx.fee (pool cach).
+    // TODO(libbitcoin): relates height to total of tx.fee (pool cach).
     else if (!is_valid_coinbase_claim(state.height()))
         return error::coinbase_value_limit;
 
-    // TODO: relates median time past to tx.locktime (pool cache min tx.time).
+    // TODO(libbitcoin): relates median time past to tx.locktime (pool cache min tx.time).
     else if (!is_final(state.height(), block_time))
         return error::block_non_final;
 
-    // TODO: relates height to tx.hash(true) (pool cache).
+    // TODO(libbitcoin): relates height to tx.hash(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
     else if (bip141 && !is_valid_witness_commitment())
         return error::invalid_witness_commitment;
 
-    // TODO: determine if performance benefit is worth excluding sigops here.
-    // TODO: relates block limit to total of tx.sigops (pool cache tx.sigops).
+    // TODO(libbitcoin): determine if performance benefit is worth excluding sigops here.
+    // TODO(libbitcoin): relates block limit to total of tx.sigops (pool cache tx.sigops).
     // This recomputes sigops to include p2sh from prevouts.
     // NOTE: for BCH bit141 is set as false
     else if (transactions && (signature_operations(bip16, bip141) > allowed_sigops))

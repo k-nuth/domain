@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__decrypt1)
 
-// TODO: create compressed+multiplied and altchain/testnet vector(s).
+// TODO(libbitcoin): create compressed+multiplied and altchain/testnet vector(s).
 
 #define BC_REQUIRE_DECRYPT_SECRET(key, passphrase) \
     ec_secret out_secret; \
@@ -338,7 +338,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__decrypt_public)
 
-// TODO: create compressed and altchain/testnet vector(s).
+// TODO(libbitcoin): create compressed and altchain/testnet vector(s).
 
 #define BC_REQUIRE_DECRYPT_POINT(key, passphrase, version) \
     ec_compressed out_point; \
@@ -397,7 +397,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair)
 
-// TODO: create compressed vector(s).
+// TODO(libbitcoin): create compressed vector(s).
 
 #define BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compressed) \
     ec_compressed out_point; \
@@ -475,7 +475,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair_with_confirmation)
 
-// TODO: create compressed vector(s).
+// TODO(libbitcoin): create compressed vector(s).
 
 #define BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compressed) \
     ec_compressed out_point; \

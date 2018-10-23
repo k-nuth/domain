@@ -484,7 +484,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure)
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-// TODO: update test for v4 store serialization (input with witness).
+// TODO(libbitcoin): update test for v4 store serialization (input with witness).
 ////BOOST_AUTO_TEST_CASE(transaction__from_data__compare_wire_to_store__success)
 ////{
 ////    static auto const wire = true;
@@ -827,7 +827,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_overspent__output_exceeds_input__returns_tr
     BOOST_REQUIRE(instance.is_overspent());
 }
 
-// TODO: tests with initialized data
+// TODO(libbitcoin): tests with initialized data
 BOOST_AUTO_TEST_CASE(transaction__signature_operations_single_input_output_uninitialized__returns_zero)
 {
     chain::transaction instance;

@@ -898,12 +898,12 @@ uint32_t chain_state::signal_version(uint32_t forks) {
     if (script::is_enabled(forks, rule_fork::bip34_rule))
         return bip34_version;
 
-    // TODO: these can be retired.
+    // TODO(libbitcoin): these can be retired.
     // Signal bip9 bit0 if any of the group is configured.
     if (script::is_enabled(forks, rule_fork::bip9_bit0_group))
         return bip9_version_base | bip9_version_bit0;
 
-    // TODO: these can be retired.
+    // TODO(libbitcoin): these can be retired.
     // Signal bip9 bit1 if any of the group is configured.
     if (script::is_enabled(forks, rule_fork::bip9_bit1_group))
         return bip9_version_base | bip9_version_bit1;

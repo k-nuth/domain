@@ -136,7 +136,7 @@ class BC_API block {
             if (!tx.from_data(source, true, witness_val(witness)))
                 break;
 
-        // TODO: optimize by having reader skip witness data.
+        // TODO(libbitcoin): optimize by having reader skip witness data.
         if (!witness_val(witness))
             strip_witness();
 

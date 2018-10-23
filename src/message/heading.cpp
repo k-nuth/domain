@@ -160,7 +160,7 @@ void heading::to_data(data_sink& stream) const {
 //}
 
 message_type heading::type() const {
-    // TODO: convert to static map.
+    // TODO(libbitcoin): convert to static map.
     if (command_ == address::command)
         return message_type::address;
     if (command_ == alert::command)

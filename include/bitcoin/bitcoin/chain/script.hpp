@@ -151,7 +151,7 @@ class BC_API script {
 
     template <Writer W>
     void to_data(W& sink, bool prefix) const {
-        // TODO: optimize by always storing the prefixed serialization.
+        // TODO(libbitcoin): optimize by always storing the prefixed serialization.
         if (prefix)
             sink.write_variable_little_endian(serialized_size(false));
 
@@ -265,7 +265,7 @@ class BC_API script {
 
     static code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
-    // TODO: move back to private.
+    // TODO(libbitcoin): move back to private.
     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value);
 
    protected:

@@ -106,7 +106,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     const wallet::stealth_address stealth(target);
     if (stealth)
     {
-        // TODO: finish stealth multisig implemetation (p2sh and !p2sh).
+        // TODO(libbitcoin): finish stealth multisig implemetation (p2sh and !p2sh).
 
         if (stealth.spend_keys().size() != 1 || tokens.size() != 3)
         {

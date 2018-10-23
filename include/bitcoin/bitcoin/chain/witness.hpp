@@ -108,7 +108,7 @@ class BC_API witness {
             return source.read_bytes(size);
         };
 
-        // TODO: optimize store serialization to avoid loop, reading data directly.
+        // TODO(libbitcoin): optimize store serialization to avoid loop, reading data directly.
         if (prefix) {
             // Witness prefix is an element count, not byte length (unlike script).
             // On wire each witness is prefixed with number of elements (bip144).
@@ -148,7 +148,7 @@ class BC_API witness {
             sink.write_bytes(element);
         };
 
-        // TODO: optimize store serialization to avoid loop, writing data directly.
+        // TODO(libbitcoin): optimize store serialization to avoid loop, writing data directly.
         std::for_each(stack_.begin(), stack_.end(), serialize);
     }
 

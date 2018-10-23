@@ -141,7 +141,7 @@ void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const {
 //}
 
 size_t prefilled_transaction::serialized_size(uint32_t version) const {
-    // TODO: serialize size should use witness for ! BCH
+    // TODO(libbitcoin): serialize size should use witness for ! BCH
     return message::variable_uint_size(index_) +
            transaction_.serialized_size(/*wire*/ true, witness_default(), /*unconfirmed*/ false);
 }

@@ -54,7 +54,7 @@ ek_token::ek_token(const encrypted_token& value)
 
 ek_token ek_token::from_string(const std::string& encoded)
 {
-    // TODO: incorporate existing parser here, setting new members.
+    // TODO(libbitcoin): incorporate existing parser here, setting new members.
 
     encrypted_token key;
     return decode_base58(key, encoded) && verify_checksum(key) ?

@@ -74,12 +74,12 @@ script::script()
 
 script::script(script&& other)
     : bytes_(std::move(other.bytes_)), valid_(other.valid_), cached_(false) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
 }
 
 script::script(const script& other)
     : bytes_(other.bytes_), valid_(other.valid_), cached_(false) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
 }
 
 script::script(const operation::list& ops) {
@@ -112,7 +112,7 @@ script::script(data_chunk const& encoded, bool prefix) {
 
 // Concurrent read/write is not supported, so no critical section.
 script& script::operator=(script&& other) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     reset();
     bytes_ = std::move(other.bytes_);
     valid_ = other.valid_;
@@ -121,7 +121,7 @@ script& script::operator=(script&& other) {
 
 // Concurrent read/write is not supported, so no critical section.
 script& script::operator=(const script& other) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     reset();
     bytes_ = other.bytes_;
     valid_ = other.valid_;
@@ -303,7 +303,7 @@ void script::to_data(data_sink& stream, bool prefix) const {
 
 //void script::to_data(writer& sink, bool prefix) const
 //{
-//    // TODO: optimize by always storing the prefixed serialization.
+//    // TODO(libbitcoin): optimize by always storing the prefixed serialization.
 //    if (prefix)
 //        sink.write_variable_little_endian(serialized_size(false));
 //
@@ -855,7 +855,7 @@ bool script::is_null_data_pattern(const operation::list& ops) {
     return ops.size() == 2 && ops[0].code() == opcode::return_ && ops[1].is_minimal_push() && ops[1].data().size() <= max_null_data_size;
 }
 
-// TODO: expand this to the 20 signature op_check_multisig limit.
+// TODO(libbitcoin): expand this to the 20 signature op_check_multisig limit.
 // The current 16 (or 20) limit does not affect server indexing because bare
 // multisig is not indexable and p2sh multisig is byte-limited to 15 sigs.
 // The satoshi client policy limit is 3 signatures for bare multisig.
@@ -981,7 +981,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
     return to_pay_multisig_pattern(signatures, chunks);
 }
 
-// TODO: expand this to a 20 signature limit.
+// TODO(libbitcoin): expand this to a 20 signature limit.
 // This supports up to 16 signatures, however check_multisig is limited to 20.
 // The embedded script is limited to 520 bytes, an effective limit of 15 for
 // p2sh multisig, which can be as low as 7 when using all uncompressed keys.

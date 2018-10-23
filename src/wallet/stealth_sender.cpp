@@ -51,7 +51,7 @@ stealth_sender::operator const bool() const
 }
 
 // private
-// TODO: convert to factory and make script_ and address_ const.
+// TODO(libbitcoin): convert to factory and make script_ and address_ const.
 void stealth_sender::initialize(const ec_secret& ephemeral_private,
     const stealth_address& address, data_chunk const& seed,
     const binary& filter)

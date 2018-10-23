@@ -4596,7 +4596,7 @@ namespace detail
 #ifdef DOCTEST_PLATFORM_WINDOWS
     void myOutputDebugString(const String& text) { ::OutputDebugStringA(text.c_str()); }
 #else
-    // TODO: integration with XCode and other IDEs
+    // TODO(libbitcoin): integration with XCode and other IDEs
     void myOutputDebugString(const String&) {}
 #endif // Platform
 

@@ -874,7 +874,7 @@ const script_test_list invalid_context_free_scripts
     { "0x00", "'00' equal", "basic op_0 execution" }
 };
 
-////// TODO: move these to operation tests.
+////// TODO(libbitcoin): move these to operation tests.
 ////// These are always invalid due to parsing.
 ////const script_test_list invalid_parse_scripts
 ////{

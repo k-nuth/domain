@@ -63,7 +63,7 @@ uint8_t point_iterator::current() const
     if (current_ < hash_size)
         return point_.hash()[current_];
 
-    // TODO: move the little-endian iterator into endian.hpp.
+    // TODO(libbitcoin): move the little-endian iterator into endian.hpp.
     auto const position = current_ - hash_size;
     return static_cast<uint8_t>(point_.index() >> (position * byte_bits));
 }

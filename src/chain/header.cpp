@@ -45,13 +45,13 @@ header::header()
 
 header::header(header&& other)
     : header(other.version_, std::move(other.previous_block_hash_), std::move(other.merkle_), other.timestamp_, other.bits_, other.nonce_) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     validation = std::move(other.validation);
 }
 
 header::header(const header& other)
     : header(other.version_, other.previous_block_hash_, other.merkle_, other.timestamp_, other.bits_, other.nonce_) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     validation = other.validation;
 }
 
@@ -91,7 +91,7 @@ header::header(uint32_t version, const hash_digest& previous_block_hash, const h
 //-----------------------------------------------------------------------------
 
 header& header::operator=(header&& other) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     version_ = other.version_;
     previous_block_hash_ = std::move(other.previous_block_hash_);
     merkle_ = std::move(other.merkle_);
@@ -103,7 +103,7 @@ header& header::operator=(header&& other) {
 }
 
 header& header::operator=(const header& other) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     version_ = other.version_;
     previous_block_hash_ = other.previous_block_hash_;
     merkle_ = other.merkle_;

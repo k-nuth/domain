@@ -112,7 +112,7 @@ BC_CONSTEXPR size_t locktime_threshold = 500000000;
 #ifdef BITPRIM_CURRENCY_LTC
 //0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 BC_CONSTEXPR uint32_t retarget_proof_of_work_limit = 0x1e0fffff; 
-BC_CONSTEXPR uint32_t no_retarget_proof_of_work_limit = 0x207fffff; // TODO: merge version3. check the no_retarget value for LTC 
+BC_CONSTEXPR uint32_t no_retarget_proof_of_work_limit = 0x207fffff; // TODO(libbitcoin): merge version3. check the no_retarget value for LTC 
 #else // BITPRIM_CURRENCY_LTC
 BC_CONSTEXPR size_t max_work_bits = 0x1d00ffff;
 BC_CONSTEXPR uint32_t retarget_proof_of_work_limit = 0x1d00ffff;
@@ -272,7 +272,7 @@ static const config::checkpoint mainnet_bip16_exception_checkpoint {
 
 // github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
 static const config::checkpoint mainnet_bip30_exception_checkpoint1 {
-    // TODO: figure out why this block validates without an exception.
+    // TODO(libbitcoin): figure out why this block validates without an exception.
     "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842
 };
 
@@ -516,7 +516,7 @@ uint64_t initial_block_subsidy_satoshi() {
 #ifdef BITPRIM_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 840000;
 BC_CONSTEXPR uint64_t retarget_subsidy_interval = 840000;
-BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150; // TODO: merge version3. check the no_retarget (regtest) value for LTC 
+BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150; // TODO(libbitcoin): merge version3. check the no_retarget (regtest) value for LTC 
 #else //BITPRIM_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 210000;
 BC_CONSTEXPR uint64_t retarget_subsidy_interval = 210000;

@@ -28,7 +28,7 @@
 namespace libbitcoin {
 namespace wallet {
 
-// TODO: use to factory and make address_ and spend_public_ const.
+// TODO(libbitcoin): use to factory and make address_ and spend_public_ const.
 stealth_receiver::stealth_receiver(const ec_secret& scan_private,
     const ec_secret& spend_private, const binary& filter, uint8_t version)
   : version_(version), scan_private_(scan_private),

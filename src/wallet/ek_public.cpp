@@ -54,7 +54,7 @@ ek_public::ek_public(const encrypted_public& value)
 
 ek_public ek_public::from_string(const std::string& encoded)
 {
-    // TODO: incorporate existing parser here, setting new members.
+    // TODO(libbitcoin): incorporate existing parser here, setting new members.
 
     encrypted_public key;
     return decode_base58(key, encoded) && verify_checksum(key) ?

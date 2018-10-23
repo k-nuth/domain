@@ -118,13 +118,13 @@ transaction::transaction()
 
 transaction::transaction(transaction&& other)
     : transaction(other.version_, other.locktime_, std::move(other.inputs_), std::move(other.outputs_)) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     validation = std::move(other.validation);
 }
 
 transaction::transaction(transaction const& other)
     : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     validation = other.validation;
 }
 
@@ -150,7 +150,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inpu
 //-----------------------------------------------------------------------------
 
 transaction& transaction::operator=(transaction&& other) {
-    // TODO: implement safe private accessor for conditional cache transfer.
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     version_ = other.version_;
     locktime_ = other.locktime_;
     inputs_ = std::move(other.inputs_);
@@ -159,7 +159,7 @@ transaction& transaction::operator=(transaction&& other) {
     return *this;
 }
 
-// TODO: eliminate blockchain transaction copies and then delete this.
+// TODO(libbitcoin): eliminate blockchain transaction copies and then delete this.
 transaction& transaction::operator=(transaction const& other) {
     version_ = other.version_;
     locktime_ = other.locktime_;
@@ -262,7 +262,7 @@ bool transaction::from_data(data_source& stream, bool wire, bool witness, bool u
 ////         }
 ////     }
 //
-////     // TODO: optimize by having reader skip witness data.
+////     // TODO(libbitcoin): optimize by having reader skip witness data.
 ////     if (!witness_val(witness))
 ////         strip_witness();
 //
@@ -937,7 +937,7 @@ code transaction::check(bool transaction_pool, bool retarget) const {
     else if (transaction_pool && is_internal_double_spend())
         return error::transaction_internal_double_spend;
 
-    // TODO: reduce by header, txcount and smallest coinbase size for height.
+    // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
     else if (transaction_pool && serialized_size(true, false) >= get_max_block_size())
         return error::transaction_size_limit;
 
@@ -1015,7 +1015,7 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
         return error::transaction_embedded_sigop_limit;
 
     // This causes second serialized_size(true, false) computation (uncached).
-    // TODO: reduce by header, txcount and smallest coinbase size for height.
+    // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
     else if (transaction_pool && bip141 && weight() > max_block_weight)
         return error::transaction_weight_limit;
 

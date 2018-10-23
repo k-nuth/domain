@@ -163,7 +163,7 @@ bool witness::from_data(data_source& stream, bool prefix) {
 //        return source.read_bytes(size);
 //    };
 //
-//    // TODO: optimize store serialization to avoid loop, reading data directly.
+//    // TODO(libbitcoin): optimize store serialization to avoid loop, reading data directly.
 //    if (prefix)
 //    {
 //        // Witness prefix is an element count, not byte length (unlike script).
@@ -238,7 +238,7 @@ void witness::to_data(data_sink& stream, bool prefix) const {
 //        sink.write_bytes(element);
 //    };
 //
-//    // TODO: optimize store serialization to avoid loop, writing data directly.
+//    // TODO(libbitcoin): optimize store serialization to avoid loop, writing data directly.
 //    std::for_each(stack_.begin(), stack_.end(), serialize);
 //}
 
