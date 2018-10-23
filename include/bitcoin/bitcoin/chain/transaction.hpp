@@ -109,7 +109,7 @@ inline void write_witnesses(W& sink, const input::list& inputs) {
 }  // namespace detail
 
 class BC_API transaction {
-   public:
+public:
     typedef input::list ins;
     typedef output::list outs;
     typedef std::vector<transaction> list;
@@ -139,24 +139,23 @@ class BC_API transaction {
 
     transaction();
 
-    transaction(transaction&& other);
-    transaction(transaction const& other);
-
-    transaction(transaction&& other, hash_digest&& hash);
-    transaction(transaction const& other, hash_digest const& hash);
-
+    transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
     transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
-    transaction(uint32_t version, uint32_t locktime, const ins& inputs, const outs& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
+    transaction(transaction const& x, hash_digest const& hash);
+    transaction(transaction&& x, hash_digest&& hash);
+
+    transaction(transaction const& x);
+    transaction(transaction&& x);
 
     // Operators.
     //-----------------------------------------------------------------------------
 
-    /// This class is move assignable and copy assignable [TODO: remove copy].
-    transaction& operator=(transaction&& other);
-    transaction& operator=(transaction const& other);
+    /// This class is move assignable and copy assignable.
+    transaction& operator=(transaction const& x);
+    transaction& operator=(transaction&& x);
 
-    bool operator==(transaction const& other) const;
-    bool operator!=(transaction const& other) const;
+    bool operator==(transaction const& x) const;
+    bool operator!=(transaction const& x) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------
@@ -229,11 +228,13 @@ class BC_API transaction {
         }
 
         // TODO(libbitcoin): optimize by having reader skip witness data.
-        if ( ! witness_val(witness))
+        if ( ! witness_val(witness)) {
             strip_witness();
+        }
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+        }
 
         return source;
     }
@@ -368,12 +369,12 @@ class BC_API transaction {
 
     bool is_standard() const;
 
-   protected:
+protected:
     void reset();
     void invalidate_cache() const;
     bool all_inputs_final() const;
 
-   private:
+private:
     uint32_t version_;
     uint32_t locktime_;
     input::list inputs_;

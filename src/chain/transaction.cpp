@@ -55,126 +55,134 @@ namespace chain {
 
 using namespace bc::machine;
 
-// // Read a length-prefixed collection of inputs or outputs from the source.
-// template <class Source, class Put>
-// bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
-//     auto result = true;
-//     auto const count = source.read_size_little_endian();
-
-//     // Guard against potential for arbitary memory allocation.
-//     if (count > get_max_block_size())
-//         source.invalidate();
-//     else
-//         puts.resize(count);
-
-//     auto const deserialize = [&](Put& put) {
-//         result = result && put.from_data(source, wire, witness_val(witness));
-// #ifndef NDBEUG
-//         put.script().operations();
-// #endif
-//     };
-
-//     std::for_each(puts.begin(), puts.end(), deserialize);
-//     return result;
-// }
-
-// // Write a length-prefixed collection of inputs or outputs to the sink.
-// template <class Sink, class Put>
-// void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
-//     sink.write_variable_little_endian(puts.size());
-
-//     auto const serialize = [&](const Put& put) {
-//         put.to_data(sink, wire, witness_val(witness));
-//     };
-
-//     std::for_each(puts.begin(), puts.end(), serialize);
-// }
-
-// Input list must be pre-populated as it determines witness count.
-// inline
-// void read_witnesses(reader& source, input::list& inputs) {
-//     auto const deserialize = [&](input& input) {
-//         input.witness().from_data(source, true);
-//     };
-
-//     std::for_each(inputs.begin(), inputs.end(), deserialize);
-// }
-
-// // Witness count is not written as it is inferred from input count.
-// inline
-// void write_witnesses(writer& sink, const input::list& inputs) {
-//     auto const serialize = [&sink](const input& input) {
-//         input.witness().to_data(sink, true);
-//     };
-
-//     std::for_each(inputs.begin(), inputs.end(), serialize);
-// }
-
 // Constructors.
 //-----------------------------------------------------------------------------
 
 transaction::transaction()
-    : version_(0), locktime_(0), validation{} {}
+    : version_(0)
+    , locktime_(0)
+    , validation{} 
+{}
 
-transaction::transaction(transaction&& other)
-    : transaction(other.version_, other.locktime_, std::move(other.inputs_), std::move(other.outputs_)) {
+transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs, uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard)
+    : version_(version)
+    , locktime_(locktime)
+    , inputs_(inputs)
+    , outputs_(outputs)
+    , cached_fees_(cached_fees)
+    , cached_sigops_(cached_sigops)
+    , cached_is_standard_(cached_is_standard)
+    , validation{} 
+{}
+
+transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs, uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard)
+    : version_(version)
+    , locktime_(locktime)
+    , inputs_(std::move(inputs))
+    , outputs_(std::move(outputs))
+    , cached_fees_(cached_fees)
+    , cached_sigops_(cached_sigops)
+    , cached_is_standard_(cached_is_standard)
+    , validation{} 
+{}
+
+transaction::transaction(transaction const& x)
+    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_) 
+
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(x.inputs_)
+    , outputs_(x.outputs_)
+    , cached_fees_(0)
+    , cached_sigops_(0)
+    , cached_is_standard_(false)
+    , validation{} 
+
+{
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = std::move(other.validation);
+    validation = x.validation;
 }
 
-transaction::transaction(transaction const& other)
-    : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_) {
+transaction::transaction(transaction&& x)
+    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_)) 
+
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(std::move(x.inputs_))
+    , outputs_(std::move(x.outputs_))
+    , cached_fees_(0)
+    , cached_sigops_(0)
+    , cached_is_standard_(false)
+    , validation{}     
+{
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = other.validation;
+    validation = std::move(x.validation);
 }
 
-transaction::transaction(transaction&& other, hash_digest&& hash)
-    : transaction(other.version_, other.locktime_, std::move(other.inputs_), std::move(other.outputs_), other.cached_sigops_, other.cached_fees_, other.cached_is_standard_) {
-    hash_ = std::make_shared<hash_digest>(std::move(hash));
-    validation = std::move(other.validation);
-}
+transaction::transaction(transaction const& x, hash_digest const& hash)
+    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_, x.cached_sigops_, x.cached_fees_, x.cached_is_standard_) 
 
-transaction::transaction(transaction const& other, hash_digest const& hash)
-    : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_, other.cached_sigops_, other.cached_fees_, other.cached_is_standard_) {
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(x.inputs_)
+    , outputs_(x.outputs_)
+    , cached_fees_(x.cached_fees_)
+    , cached_sigops_(x.cached_sigops_)
+    , cached_is_standard_(x.cached_is_standard_)
+    , validation{}     
+
+{
     hash_ = std::make_shared<hash_digest>(hash);
-    validation = other.validation;
+    validation = x.validation;
 }
 
-transaction::transaction(uint32_t version, uint32_t locktime, const input::list& inputs, const output::list& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
-    : version_(version), locktime_(locktime), inputs_(inputs), outputs_(outputs), cached_fees_(fees), cached_sigops_(cached_sigops), cached_is_standard_(is_standard), validation{} {}
+transaction::transaction(transaction&& x, hash_digest&& hash)
+    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_), x.cached_sigops_, x.cached_fees_, x.cached_is_standard_) 
 
-transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs, uint32_t cached_sigops, uint64_t fees, bool is_standard)
-    : version_(version), locktime_(locktime), inputs_(std::move(inputs)), outputs_(std::move(outputs)), cached_fees_(fees), cached_sigops_(cached_sigops), cached_is_standard_(is_standard), validation{} {}
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(std::move(x.inputs_))
+    , outputs_(std::move(x.outputs_))
+    , cached_fees_(x.cached_fees_)
+    , cached_sigops_(x.cached_sigops_)
+    , cached_is_standard_(x.cached_is_standard_)
+    , validation{}     
+
+{
+    hash_ = std::make_shared<hash_digest>(std::move(hash));
+    validation = std::move(x.validation);
+}
+
 
 // Operators.
 //-----------------------------------------------------------------------------
 
-transaction& transaction::operator=(transaction&& other) {
+transaction& transaction::operator=(transaction&& x) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    version_ = other.version_;
-    locktime_ = other.locktime_;
-    inputs_ = std::move(other.inputs_);
-    outputs_ = std::move(other.outputs_);
-    validation = std::move(other.validation);
+    version_ = x.version_;
+    locktime_ = x.locktime_;
+    inputs_ = std::move(x.inputs_);
+    outputs_ = std::move(x.outputs_);
+    validation = std::move(x.validation);
     return *this;
 }
 
 // TODO(libbitcoin): eliminate blockchain transaction copies and then delete this.
-transaction& transaction::operator=(transaction const& other) {
-    version_ = other.version_;
-    locktime_ = other.locktime_;
-    inputs_ = other.inputs_;
-    outputs_ = other.outputs_;
-    validation = other.validation;
+transaction& transaction::operator=(transaction const& x) {
+    version_ = x.version_;
+    locktime_ = x.locktime_;
+    inputs_ = x.inputs_;
+    outputs_ = x.outputs_;
+    validation = x.validation;
     return *this;
 }
 
-bool transaction::operator==(transaction const& other) const {
-    return (version_ == other.version_) && (locktime_ == other.locktime_) && (inputs_ == other.inputs_) && (outputs_ == other.outputs_);
+bool transaction::operator==(transaction const& x) const {
+    return (version_ == x.version_) && (locktime_ == x.locktime_) && (inputs_ == x.inputs_) && (outputs_ == x.outputs_);
 }
 
-bool transaction::operator!=(transaction const& other) const {
-    return !(*this == other);
+bool transaction::operator!=(transaction const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.
