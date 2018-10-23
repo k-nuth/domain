@@ -53,15 +53,15 @@
 namespace libbitcoin {
 namespace chain {
 
-using namespace bc::machine;
+// using namespace bc::machine;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
-transaction::transaction()
+transaction::transaction() //NOLINT
     : version_(0)
     , locktime_(0)
-    , validation{} 
+    , validation{}
 {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs, uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard)
@@ -96,14 +96,14 @@ transaction::transaction(transaction const& x)
     , cached_fees_(0)
     , cached_sigops_(0)
     , cached_is_standard_(false)
-    , validation{} 
-
+    // , validation{} 
+    , validation(x.validation)
 {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = x.validation;
+    // validation = x.validation;
 }
 
-transaction::transaction(transaction&& x)
+transaction::transaction(transaction&& x) noexcept
     // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_)) 
 
     : version_(x.version_)
@@ -113,10 +113,11 @@ transaction::transaction(transaction&& x)
     , cached_fees_(0)
     , cached_sigops_(0)
     , cached_is_standard_(false)
-    , validation{}     
+    // , validation{}
+    , validation(std::move(x.validation))
 {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = std::move(x.validation);
+    // validation = std::move(x.validation);
 }
 
 transaction::transaction(transaction const& x, hash_digest const& hash)
@@ -129,11 +130,11 @@ transaction::transaction(transaction const& x, hash_digest const& hash)
     , cached_fees_(x.cached_fees_)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
-    , validation{}     
-
+    // , validation{}     
+    , validation(x.validation)
 {
     hash_ = std::make_shared<hash_digest>(hash);
-    validation = x.validation;
+    // validation = x.validation;
 }
 
 transaction::transaction(transaction&& x, hash_digest&& hash)
@@ -146,26 +147,16 @@ transaction::transaction(transaction&& x, hash_digest&& hash)
     , cached_fees_(x.cached_fees_)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
-    , validation{}     
-
+    // , validation{}
+    , validation(std::move(x.validation))
 {
-    hash_ = std::make_shared<hash_digest>(std::move(hash));
-    validation = std::move(x.validation);
+    hash_ = std::make_shared<hash_digest>(hash);
+    // validation = std::move(x.validation);
 }
 
 
 // Operators.
 //-----------------------------------------------------------------------------
-
-transaction& transaction::operator=(transaction&& x) {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    version_ = x.version_;
-    locktime_ = x.locktime_;
-    inputs_ = std::move(x.inputs_);
-    outputs_ = std::move(x.outputs_);
-    validation = std::move(x.validation);
-    return *this;
-}
 
 // TODO(libbitcoin): eliminate blockchain transaction copies and then delete this.
 transaction& transaction::operator=(transaction const& x) {
@@ -174,6 +165,16 @@ transaction& transaction::operator=(transaction const& x) {
     inputs_ = x.inputs_;
     outputs_ = x.outputs_;
     validation = x.validation;
+    return *this;
+}
+
+transaction& transaction::operator=(transaction&& x) noexcept {
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+    version_ = x.version_;
+    locktime_ = x.locktime_;
+    inputs_ = std::move(x.inputs_);
+    outputs_ = std::move(x.outputs_);
+    validation = std::move(x.validation);
     return *this;
 }
 
@@ -503,8 +504,7 @@ hash_digest transaction::hash(bool witness) const {
             hash_mutex_.unlock_upgrade_and_lock();
 
             // Witness coinbase tx hash is assumed to be null_hash (bip141).
-            witness_hash_ = std::make_shared<hash_digest>(
-                is_coinbase() ? null_hash : bitcoin_hash(to_data(true, true)));
+            witness_hash_ = std::make_shared<hash_digest>(is_coinbase() ? null_hash : bitcoin_hash(to_data(true, true)));
 
             hash_mutex_.unlock_and_lock_upgrade();
             //-----------------------------------------------------------------
@@ -534,8 +534,7 @@ hash_digest transaction::outputs_hash() const {
     if ( ! outputs_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
-        outputs_hash_ = std::make_shared<hash_digest>(
-            script::to_outputs(*this));
+        outputs_hash_ = std::make_shared<hash_digest>(script::to_outputs(*this));
         hash_mutex_.unlock_and_lock_upgrade();
         //-----------------------------------------------------------------
     }
@@ -555,8 +554,7 @@ hash_digest transaction::inpoints_hash() const {
     if ( ! inpoints_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
-        inpoints_hash_ = std::make_shared<hash_digest>(
-            script::to_inpoints(*this));
+        inpoints_hash_ = std::make_shared<hash_digest>(script::to_inpoints(*this));
         hash_mutex_.unlock_and_lock_upgrade();
         //-----------------------------------------------------------------
     }
@@ -576,8 +574,7 @@ hash_digest transaction::sequences_hash() const {
     if ( ! sequences_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
-        sequences_hash_ = std::make_shared<hash_digest>(
-            script::to_sequences(*this));
+        sequences_hash_ = std::make_shared<hash_digest>(script::to_sequences(*this));
         hash_mutex_.unlock_and_lock_upgrade();
         //-----------------------------------------------------------------
     }
@@ -755,11 +752,13 @@ bool transaction::is_overspent() const {
 // Returns max_size_t in case of overflow.
 size_t transaction::signature_operations() const {
     auto const state = validation.state;
+    auto const bip16_enabled = state->is_enabled(bc::machine::rule_fork::bip16_rule);
 #ifdef BITPRIM_CURRENCY_BCH
-    return state ? signature_operations(state->is_enabled(rule_fork::bip16_rule), false) : max_size_t;
+    auto const bip141_enabled = false;
 #else
-    return state ? signature_operations(state->is_enabled(rule_fork::bip16_rule), state->is_enabled(rule_fork::bip141_rule)) : max_size_t;
+    auto const bip141_enabled = state->is_enabled(bc::machine::rule_fork::bip141_rule);
 #endif
+    return state ? signature_operations(bip16_enabled, bip141_enabled) : max_size_t;
 }
 
 // Returns max_size_t in case of overflow.
@@ -935,18 +934,30 @@ code transaction::connect_input(const chain_state& state, size_t input_index) co
 code transaction::check(bool transaction_pool, bool retarget) const {
     if (inputs_.empty() || outputs_.empty()) {
         return error::empty_transaction;
-    } else if (is_null_non_coinbase()) {
+    } 
+    
+    if (is_null_non_coinbase()) {
         return error::previous_output_null;
-    } else if (total_output_value() > max_money(retarget)) {
+    } 
+    
+    if (total_output_value() > max_money(retarget)) {
         return error::spend_overflow;
-    } else if ( ! transaction_pool && is_oversized_coinbase()) {
+    } 
+    
+    if ( ! transaction_pool && is_oversized_coinbase()) {
         return error::invalid_coinbase_script_size;
-    } else if (transaction_pool && is_coinbase()) {
+    } 
+    
+    if (transaction_pool && is_coinbase()) {
         return error::coinbase_transaction;
-    } else if (transaction_pool && is_internal_double_spend()) {
+    } 
+    
+    if (transaction_pool && is_internal_double_spend()) {
         return error::transaction_internal_double_spend;
     // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
-    } else if (transaction_pool && serialized_size(true, false) >= get_max_block_size()) {
+    } 
+    
+    if (transaction_pool && serialized_size(true, false) >= get_max_block_size()) {
         return error::transaction_size_limit;
 
     // We cannot know if bip16/bip141 is enabled here so we do not check it.
@@ -957,9 +968,9 @@ code transaction::check(bool transaction_pool, bool retarget) const {
     ////else if (transaction_pool && signature_operations(false, false) > get_max_block_sigops()
     ////    return error::transaction_legacy_sigop_limit;
 
-    } else {
-        return error::success;
-    }
+    } 
+
+    return error::success;
 }
 
 code transaction::accept(bool transaction_pool) const {
@@ -969,15 +980,15 @@ code transaction::accept(bool transaction_pool) const {
 
 // These checks assume that prevout caching is completed on all tx.inputs.
 code transaction::accept(const chain_state& state, bool transaction_pool) const {
-    auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
-    auto const bip30 = state.is_enabled(rule_fork::bip30_rule);
-    auto const bip68 = state.is_enabled(rule_fork::bip68_rule);
+    auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
+    auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);
+    auto const bip68 = state.is_enabled(bc::machine::rule_fork::bip68_rule);
 #ifdef BITPRIM_CURRENCY_BCH
     auto const bip141 = false;  // No segwit
 #else
-    auto const bip141 = state.is_enabled(rule_fork::bip141_rule);
+    auto const bip141 = state.is_enabled(bc::machine::rule_fork::bip141_rule);
 #endif
-    auto const revert_bip30 = state.is_enabled(rule_fork::allow_collisions);
+    auto const revert_bip30 = state.is_enabled(bc::machine::rule_fork::allow_collisions);
 
     // bip141 discounts segwit sigops by increasing limit and legacy weight.
     auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
@@ -985,9 +996,13 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
     if (transaction_pool && state.is_under_checkpoint()) {
         return error::premature_validation;
     // A segregated tx should appear empty if bip141 is not enabled.
-    } else if ( ! bip141 && is_segregated()) {
+    } 
+    
+    if ( ! bip141 && is_segregated()) {
         return error::empty_transaction;
-    } else if (transaction_pool && !is_final(state.height(), state.median_time_past())) {
+    } 
+    
+    if (transaction_pool && !is_final(state.height(), state.median_time_past())) {
         return error::transaction_non_final;
 
     //*************************************************************************
@@ -996,30 +1011,46 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
     // the original is spent in the new block. This is not necessary nor is it
     // described by BIP30, but it is in the code referenced by BIP30.
     //*************************************************************************
-    } else if (bip30 && !revert_bip30 && validation.duplicate) {
+    } 
+    
+    if (bip30 && !revert_bip30 && validation.duplicate) {
         return error::unspent_duplicate;
-    } else if (is_missing_previous_outputs()) {
+    }
+    
+    if (is_missing_previous_outputs()) {
         return error::missing_previous_output;
-    } else if (is_double_spend(transaction_pool)) {
+    } 
+    
+    if (is_double_spend(transaction_pool)) {
         return error::double_spend;
     // This relates height to maturity of spent coinbase. Since reorg is the
     // only way to decrease height and reorg invalidates, this is cache safe.
-    } else if ( ! is_mature(state.height())) {
+    } 
+    
+    if ( ! is_mature(state.height())) {
         return error::coinbase_maturity;
-    } else if (is_overspent()) {
+    } 
+    
+    if (is_overspent()) {
         return error::spend_exceeds_value;
-    } else if (bip68 && is_locked(state.height(), state.median_time_past())) {
+    }
+    
+    if (bip68 && is_locked(state.height(), state.median_time_past())) {
         return error::sequence_locked;
     // This recomputes sigops to include p2sh from prevouts if bip16 is true.
-    } else if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
+    } 
+    
+    if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
         return error::transaction_embedded_sigop_limit;
     // This causes second serialized_size(true, false) computation (uncached).
     // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
-    } else if (transaction_pool && bip141 && weight() > max_block_weight) {
+    } 
+    
+    if (transaction_pool && bip141 && weight() > max_block_weight) {
         return error::transaction_weight_limit;
-    } else {
-        return error::success;
-    }
+    } 
+    
+    return error::success;
 }
 
 code transaction::connect() const {
