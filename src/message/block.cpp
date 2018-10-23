@@ -82,7 +82,7 @@ block::block(chain::header&& header, chain::transaction::list&& transactions)
 }
 
 block::block(chain::header const& header,
-             const chain::transaction::list& transactions)
+             chain::transaction::list const& transactions)
     : chain::block(header, transactions) {
 }
 

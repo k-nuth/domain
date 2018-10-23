@@ -42,7 +42,7 @@ namespace message {
 
 class BC_API transaction
     : public chain::transaction {
-   public:
+public:
     typedef std::shared_ptr<transaction> ptr;
     typedef std::shared_ptr<transaction const> const_ptr;
     typedef std::vector<ptr> ptr_list;
@@ -68,7 +68,7 @@ class BC_API transaction
     transaction(chain::transaction&& other);
 
     transaction(transaction const& other);
-    transaction(const chain::transaction& other);
+    transaction(chain::transaction const& other);
 
     transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs);
     transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs);
@@ -99,8 +99,8 @@ class BC_API transaction
     transaction& operator=(transaction&& other);
     void operator=(transaction const&) = delete;
 
-    bool operator==(const chain::transaction& other) const;
-    bool operator!=(const chain::transaction& other) const;
+    bool operator==(chain::transaction const& other) const;
+    bool operator!=(chain::transaction const& other) const;
 
     bool operator==(transaction const& other) const;
     bool operator!=(transaction const& other) const;

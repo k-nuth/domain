@@ -38,7 +38,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API filter_add {
-   public:
+public:
     typedef std::shared_ptr<filter_add> ptr;
     typedef std::shared_ptr<const filter_add> const_ptr;
 
@@ -114,7 +114,7 @@ class BC_API filter_add {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     data_chunk data_;
 };
 

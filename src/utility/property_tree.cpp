@@ -213,7 +213,7 @@ ptree property_tree(const chain::points_value& values, bool json)
 
 ptree property_list(const config::transaction& transaction, bool json)
 {
-    const chain::transaction& tx = transaction;
+    chain::transaction const& tx = transaction;
 
     ptree tree;
     tree.put("hash", hash256(tx.hash()));

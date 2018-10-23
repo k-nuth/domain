@@ -40,7 +40,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API get_blocks {
-   public:
+public:
     typedef std::shared_ptr<get_blocks> ptr;
     typedef std::shared_ptr<const get_blocks> const_ptr;
 
@@ -132,7 +132,7 @@ class BC_API get_blocks {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     // 10 sequential hashes, then exponential samples until reaching genesis.
     hash_list start_hashes_;
     hash_digest stop_hash_;

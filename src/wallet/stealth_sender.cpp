@@ -74,7 +74,7 @@ void stealth_sender::initialize(ec_secret const& ephemeral_private,
 }
 
 // Will be invalid if construct fails.
-const chain::script& stealth_sender::stealth_script() const
+chain::script const& stealth_sender::stealth_script() const
 {
     return script_;
 }

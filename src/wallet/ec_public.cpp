@@ -89,8 +89,9 @@ bool ec_public::is_point(data_slice decoded)
 
 ec_public ec_public::from_private(const ec_private& secret)
 {
-    if ( ! secret)
+    if ( ! secret) {
         return ec_public();
+}
 
     return ec_public(secret.to_public());
 }

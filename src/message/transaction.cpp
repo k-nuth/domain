@@ -69,7 +69,7 @@ transaction::transaction(chain::transaction&& other)
     : chain::transaction(std::move(other)) {
 }
 
-transaction::transaction(const chain::transaction& other)
+transaction::transaction(chain::transaction const& other)
     : chain::transaction(other) {
 }
 
@@ -131,11 +131,11 @@ transaction& transaction::operator=(transaction&& other) {
     return *this;
 }
 
-bool transaction::operator==(const chain::transaction& other) const {
+bool transaction::operator==(chain::transaction const& other) const {
     return chain::transaction::operator==(other);
 }
 
-bool transaction::operator!=(const chain::transaction& other) const {
+bool transaction::operator!=(chain::transaction const& other) const {
     return chain::transaction::operator!=(other);
 }
 

@@ -44,7 +44,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API input {
-   public:
+public:
     typedef std::vector<input> list;
 
     // Constructors.
@@ -56,10 +56,10 @@ class BC_API input {
     input(const input& other);
 
     input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
-    input(const output_point& previous_output, const chain::script& script, uint32_t sequence);
+    input(const output_point& previous_output, chain::script const& script, uint32_t sequence);
 
     input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
-    input(const output_point& previous_output, const chain::script& script, const chain::witness& witness, uint32_t sequence);
+    input(const output_point& previous_output, chain::script const& script, const chain::witness& witness, uint32_t sequence);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -157,8 +157,8 @@ class BC_API input {
     // Deprecated (unsafe).
     chain::script& script();
 
-    const chain::script& script() const;
-    void set_script(const chain::script& value);
+    chain::script const& script() const;
+    void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
     // Deprecated (unsafe).
@@ -193,13 +193,13 @@ class BC_API input {
     bool extract_reserved_hash(hash_digest& out) const;
     bool extract_embedded_script(chain::script& out) const;
     bool extract_witness_script(chain::script& out,
-                                const chain::script& prevout) const;
+                                chain::script const& prevout) const;
 
-   protected:
+protected:
     void reset();
     void invalidate_cache() const;
 
-   private:
+private:
     typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
 
     addresses_ptr addresses_cache() const;

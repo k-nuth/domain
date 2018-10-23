@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__index_setter__roundtrip__success)
 BOOST_AUTO_TEST_CASE(prefilled_transaction__message_accessor_1__always__returns_initialized_value)
 {
     uint64_t index = 634u;
-    const chain::transaction tx(5, 23, {}, {});
+    chain::transaction const tx(5, 23, {}, {});
     message::prefilled_transaction instance(index, tx);
     BOOST_REQUIRE(tx == instance.transaction());
 }
@@ -170,14 +170,14 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__message_accessor_1__always__returns_
 BOOST_AUTO_TEST_CASE(prefilled_transaction__message_accessor_2__always__returns_initialized_value)
 {
     uint64_t index = 634u;
-    const chain::transaction tx(5, 23, {}, {});
+    chain::transaction const tx(5, 23, {}, {});
     const message::prefilled_transaction instance(index, tx);
     BOOST_REQUIRE(tx == instance.transaction());
 }
 
 BOOST_AUTO_TEST_CASE(prefilled_transaction__message_setter_1__roundtrip__success)
 {
-    const chain::transaction tx(5, 23, {}, {});
+    chain::transaction const tx(5, 23, {}, {});
     message::prefilled_transaction instance;
     BOOST_REQUIRE(tx != instance.transaction());
     instance.set_transaction(tx);
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__message_setter_1__roundtrip__success
 
 BOOST_AUTO_TEST_CASE(prefilled_transaction__message_setter_2__roundtrip__success)
 {
-    const chain::transaction duplicate(16, 57, {}, {});
+    chain::transaction const duplicate(16, 57, {}, {});
     chain::transaction tx(16, 57, {}, {});
     message::prefilled_transaction instance;
     BOOST_REQUIRE(duplicate != instance.transaction());

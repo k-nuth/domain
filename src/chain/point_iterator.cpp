@@ -138,8 +138,9 @@ void point_iterator::increment()
 
 void point_iterator::decrement()
 {
-    if (current_ > 0)
+    if (current_ > 0) {
         current_--;
+}
 }
 
 point_iterator point_iterator::increase(unsigned value) const

@@ -40,7 +40,7 @@ transaction::transaction(std::string const& hexcode)
     std::stringstream(hexcode) >> *this;
 }
 
-transaction::transaction(const chain::transaction& value)
+transaction::transaction(chain::transaction const& value)
   : value_(value)
 {
 }
@@ -55,7 +55,7 @@ chain::transaction& transaction::data()
     return value_;
 }
 
-transaction::operator const chain::transaction&() const
+transaction::operator chain::transaction const&() const
 {
     return value_;
 }

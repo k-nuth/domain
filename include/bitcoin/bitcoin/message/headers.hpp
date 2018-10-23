@@ -43,7 +43,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API headers {
-   public:
+public:
     typedef std::shared_ptr<headers> ptr;
     typedef std::shared_ptr<headers const> const_ptr;
 
@@ -133,7 +133,7 @@ class BC_API headers {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     header::list elements_;
 };
 

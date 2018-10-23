@@ -51,7 +51,7 @@ public:
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    script(const chain::script& value);
+    script(chain::script const& value);
 
     /**
      * Initialization constructor.
@@ -87,7 +87,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::script&() const;
+    operator chain::script const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.

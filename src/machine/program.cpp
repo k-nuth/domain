@@ -36,8 +36,8 @@ using namespace bc::chain;
 // Fixed tuning parameters, max_stack_size ensures no reallocation.
 static constexpr size_t stack_capactity = max_stack_size;
 static constexpr size_t condition_capactity = max_counted_ops;
-static const chain::transaction default_tx_;
-static const chain::script default_script_;
+static chain::transaction const default_tx_;
+static chain::script const default_script_;
 
 void program::reserve_stacks()
 {
@@ -77,7 +77,7 @@ program::program(script const& script)
     reserve_stacks();
 }
 
-program::program(script const& script, const chain::transaction& transaction,
+program::program(script const& script, chain::transaction const& transaction,
     uint32_t input_index, uint32_t forks)
   : script_(script),
     transaction_(transaction),
@@ -93,7 +93,7 @@ program::program(script const& script, const chain::transaction& transaction,
 }
 
 // Condition, alternate, jump and operation_count are not copied.
-program::program(script const& script, const chain::transaction& transaction,
+program::program(script const& script, chain::transaction const& transaction,
     uint32_t input_index, uint32_t forks, data_stack&& stack, uint64_t value,
     script_version version)
   : script_(script),

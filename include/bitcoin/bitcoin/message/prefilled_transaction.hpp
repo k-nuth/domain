@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API prefilled_transaction {
-   public:
+public:
     typedef std::vector<prefilled_transaction> list;
     typedef std::shared_ptr<const prefilled_transaction> const_ptr;
 
@@ -54,7 +54,7 @@ class BC_API prefilled_transaction {
     //static prefilled_transaction factory_from_data(uint32_t version, reader& source);
 
     prefilled_transaction();
-    prefilled_transaction(uint64_t index, const chain::transaction& tx);
+    prefilled_transaction(uint64_t index, chain::transaction const& tx);
     prefilled_transaction(uint64_t index, chain::transaction&& tx);
     prefilled_transaction(const prefilled_transaction& other);
     prefilled_transaction(prefilled_transaction&& other);
@@ -63,8 +63,8 @@ class BC_API prefilled_transaction {
     void set_index(uint64_t value);
 
     chain::transaction& transaction();
-    const chain::transaction& transaction() const;
-    void set_transaction(const chain::transaction& tx);
+    chain::transaction const& transaction() const;
+    void set_transaction(chain::transaction const& tx);
     void set_transaction(chain::transaction&& tx);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -104,7 +104,7 @@ class BC_API prefilled_transaction {
     bool operator==(const prefilled_transaction& other) const;
     bool operator!=(const prefilled_transaction& other) const;
 
-   private:
+private:
     uint64_t index_;
     chain::transaction transaction_;
 };

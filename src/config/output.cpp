@@ -62,7 +62,7 @@ uint8_t output::version() const
     return version_;
 }
 
-const chain::script& output::script() const
+chain::script const& output::script() const
 {
     return script_;
 }

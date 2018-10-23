@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API send_compact {
-   public:
+public:
     typedef std::shared_ptr<send_compact> ptr;
     typedef std::shared_ptr<const send_compact> const_ptr;
 
@@ -115,7 +115,7 @@ class BC_API send_compact {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     bool high_bandwidth_mode_;
     uint64_t version_;
 };

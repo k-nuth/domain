@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API alert {
-   public:
+public:
     typedef std::shared_ptr<alert> ptr;
     typedef std::shared_ptr<const alert> const_ptr;
 
@@ -115,7 +115,7 @@ class BC_API alert {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     data_chunk payload_;
     data_chunk signature_;
 };

@@ -40,7 +40,7 @@ namespace message {
 
 class BC_API get_data
     : public inventory {
-   public:
+public:
     typedef std::shared_ptr<get_data> ptr;
     typedef std::shared_ptr<const get_data> const_ptr;
 

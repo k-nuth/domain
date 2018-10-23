@@ -52,7 +52,7 @@ public:
     bool is_stealth() const;
     uint64_t amount() const;
     uint8_t version() const;
-    const chain::script& script() const;
+    chain::script const& script() const;
     short_hash const& pay_to_hash() const;
 
     /**

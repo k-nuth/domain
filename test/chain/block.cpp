@@ -22,7 +22,7 @@
 using namespace bc;
 
 // Test helper.
-static bool all_valid(const chain::transaction::list& transactions)
+static bool all_valid(chain::transaction::list const& transactions)
 {
     auto valid = true;
 
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params)
         6523454u,
         68644u);
 
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_3__always__equals_params)
         6523454u,
         68644u);
 
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_4__always__equals_params)
         6523454u,
         68644u);
 
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_5__always__equals_params)
         6523454u,
         68644u);
 
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -415,7 +415,7 @@ BOOST_AUTO_TEST_CASE(block__header_accessor__always__returns_initialized_value)
         6523454u,
         68644u);
 
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -468,7 +468,7 @@ BOOST_AUTO_TEST_CASE(block__transactions_accessor__always__returns_initialized_v
         6523454u,
         68644u);
 
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_CASE(block__transactions_accessor__always__returns_initialized_v
 
 BOOST_AUTO_TEST_CASE(block__transactions_setter_1__roundtrip__success)
 {
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -496,7 +496,7 @@ BOOST_AUTO_TEST_CASE(block__transactions_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(block__transactions_setter_2__roundtrip__success)
 {
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
@@ -521,7 +521,7 @@ BOOST_AUTO_TEST_CASE(block__operator_assign_equals__always__matches_equivalent)
         6523454u,
         68644u);
 
-    const chain::transaction::list transactions
+    chain::transaction::list const transactions
     {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),

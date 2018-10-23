@@ -58,7 +58,7 @@ prefilled_transaction::prefilled_transaction()
     : index_(max_index), transaction_() {}
 
 prefilled_transaction::prefilled_transaction(uint64_t index,
-                                             const chain::transaction& tx)
+                                             chain::transaction const& tx)
     : index_(index), transaction_(tx) {
 }
 
@@ -158,11 +158,11 @@ chain::transaction& prefilled_transaction::transaction() {
     return transaction_;
 }
 
-const chain::transaction& prefilled_transaction::transaction() const {
+chain::transaction const& prefilled_transaction::transaction() const {
     return transaction_;
 }
 
-void prefilled_transaction::set_transaction(const chain::transaction& tx) {
+void prefilled_transaction::set_transaction(chain::transaction const& tx) {
     transaction_ = tx;
 }
 

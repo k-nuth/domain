@@ -42,7 +42,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API output {
-   public:
+public:
     typedef std::vector<output> list;
 
     /// This is a sentinel used in .value to indicate not found in store.
@@ -66,7 +66,7 @@ class BC_API output {
     output(const output& x);
     output(output&& x);
 
-    output(uint64_t value, const chain::script& script);
+    output(uint64_t value, chain::script const& script);
     output(uint64_t value, chain::script&& script);
 
     // Operators.
@@ -145,8 +145,8 @@ class BC_API output {
 
     // Deprecated (unsafe).
     chain::script& script();
-    const chain::script& script() const;
-    void set_script(const chain::script& value);
+    chain::script const& script() const;
+    void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
     /// The payment address extracted from this output as a standard script.
@@ -170,11 +170,11 @@ class BC_API output {
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-   protected:
+protected:
     void reset();
     void invalidate_cache() const;
 
-   private:
+private:
     typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
 
     addresses_ptr addresses_cache() const;

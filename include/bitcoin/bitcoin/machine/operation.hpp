@@ -42,7 +42,7 @@ namespace libbitcoin {
 namespace machine {
 
 class BI_API operation {
-   public:
+public:
     typedef std::vector<operation> list;
     typedef list::const_iterator iterator;
 
@@ -201,7 +201,7 @@ class BI_API operation {
     bool is_minimal_push() const;
     bool is_nominal_push() const;
 
-   protected:
+protected:
     operation(opcode code, data_chunk&& data, bool valid);
     operation(opcode code, data_chunk const& data, bool valid);
 
@@ -211,7 +211,7 @@ class BI_API operation {
     opcode opcode_from_data(data_chunk const& data, bool minimal);
     void reset();
 
-   private:
+private:
     opcode code_;
     data_chunk data_;
     bool valid_;

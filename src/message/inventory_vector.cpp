@@ -109,8 +109,9 @@ void inventory_vector::reset() {
 }
 
 void inventory_vector::to_witness() {
-    if (type_ == type_id::block || type_ == type_id::transaction)
+    if (type_ == type_id::block || type_ == type_id::transaction) {
         type_ = to_type(to_number(type_) | to_number(type_id::witness));
+}
 }
 
 bool inventory_vector::from_data(uint32_t version, data_chunk const& data) {

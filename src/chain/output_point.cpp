@@ -130,8 +130,9 @@ output_point output_point::factory_from_data(data_source& stream, bool wire) {
 // For tx pool validation height is that of the candidate block.
 bool output_point::is_mature(size_t height) const {
     // Coinbase (null) inputs and those with non-coinbase prevouts are mature.
-    if ( ! validation.coinbase || is_null())
+    if ( ! validation.coinbase || is_null()) {
         return true;
+}
 
     // The (non-coinbase) input refers to a coinbase output, so validate depth.
     return floor_subtract(height, validation.height) >= coinbase_maturity;

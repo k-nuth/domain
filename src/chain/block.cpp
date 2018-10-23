@@ -381,10 +381,11 @@ size_t block::serialized_size(bool witness) const {
             message::variable_uint_size(transactions_.size()) +
             std::accumulate(txs.begin(), txs.end(), size_t(0), sum);
 
-    if (witness_val(witness))
+    if (witness_val(witness)) {
         total_size_ = value;
-    else
+    } else {
         base_size_ = value;
+}
 
     mutex_.unlock();
     ///////////////////////////////////////////////////////////////////////////
@@ -502,8 +503,9 @@ block::indexes block::locator_heights(size_t top) {
     // Start at the top of the chain and work backwards to zero.
     for (auto height = top; height > 0; height = floor_subtract(height, step)) {
         // Push top 10 indexes first, then back off exponentially.
-        if (heights.size() >= 10)
+        if (heights.size() >= 10) {
             step <<= 1;
+}
 
         heights.push_back(height);
     }
@@ -621,8 +623,9 @@ size_t block::weight() const {
 // True if there is another coinbase other than the first tx.
 // No txs or coinbases returns false.
 bool block::is_extra_coinbases() const {
-    if (transactions_.empty())
+    if (transactions_.empty()) {
         return false;
+}
 
     auto const value = [](transaction const& tx) {
         return tx.is_coinbase();
@@ -653,8 +656,9 @@ bool block::is_distinct_transaction_set() const {
 }
 
 hash_digest block::generate_merkle_root(bool witness) const {
-    if (transactions_.empty())
+    if (transactions_.empty()) {
         return null_hash;
+}
 
     hash_list update;
     auto merkle = to_hashes(witness_val(witness));
@@ -664,11 +668,13 @@ hash_digest block::generate_merkle_root(bool witness) const {
 
     while (merkle.size() > 1) {
         // If number of hashes is odd, duplicate last hash in the list.
-        if (merkle.size() % 2 != 0)
+        if (merkle.size() % 2 != 0) {
             merkle.push_back(merkle.back());
+}
 
-        for (auto it = merkle.begin(); it != merkle.end(); it += 2)
+        for (auto it = merkle.begin(); it != merkle.end(); it += 2) {
             update.push_back(bitcoin_hash(build_chunk({it[0], it[1]})));
+}
 
         std::swap(merkle, update);
         update.clear();
@@ -679,8 +685,9 @@ hash_digest block::generate_merkle_root(bool witness) const {
 }
 
 size_t block::non_coinbase_input_count() const {
-    if (transactions_.empty())
+    if (transactions_.empty()) {
         return 0;
+}
 
     auto const counter = [](size_t sum, transaction const& tx) {
         return sum + tx.inputs().size();
@@ -703,8 +710,9 @@ bool block::is_forward_reference() const {
     for (auto const& tx : reverse(transactions_)) {
         hashes.emplace(tx.hash(), true);
 
-        if (std::any_of(tx.inputs().begin(), tx.inputs().end(), is_forward))
+        if (std::any_of(tx.inputs().begin(), tx.inputs().end(), is_forward)) {
             return true;
+}
     }
 
     return false;
@@ -712,8 +720,9 @@ bool block::is_forward_reference() const {
 
 // This is an early check that is redundant with block pool accept checks.
 bool block::is_internal_double_spend() const {
-    if (transactions_.empty())
+    if (transactions_.empty()) {
         return false;
+}
 
     point::list outs;
     outs.reserve(non_coinbase_input_count());
@@ -761,8 +770,9 @@ bool block::is_valid_coinbase_claim(size_t height) const {
 }
 
 bool block::is_valid_coinbase_script(size_t height) const {
-    if (transactions_.empty() || transactions_.front().inputs().empty())
+    if (transactions_.empty() || transactions_.front().inputs().empty()) {
         return false;
+}
 
     auto const& script = transactions_.front().inputs().front().script();
     return script::is_coinbase_pattern(script.operations(), height);
@@ -772,18 +782,20 @@ bool block::is_valid_witness_commitment() const {
 #ifdef BITPRIM_CURRENCY_BCH
     return false;
 #endif
-    if (transactions_.empty() || transactions_.front().inputs().empty())
+    if (transactions_.empty() || transactions_.front().inputs().empty()) {
         return false;
+}
 
     hash_digest reserved, committed;
     auto const& coinbase = transactions_.front();
 
     // Last output of commitment pattern holds committed value (bip141).
-    if (coinbase.inputs().front().extract_reserved_hash(reserved))
-        for (auto const& output : reverse(coinbase.outputs()))
-            if (output.extract_committed_hash(committed))
+    if (coinbase.inputs().front().extract_reserved_hash(reserved)) {
+        for (auto const& output : reverse(coinbase.outputs())) {
+            if (output.extract_committed_hash(committed)) {
                 return committed == bitcoin_hash(
                                         build_chunk({generate_merkle_root(true), reserved}));
+}
 
     // If no txs in block are segregated the commitment is optional (bip141).
     return !is_segregated();
@@ -825,9 +837,10 @@ bool block::is_segregated() const {
 code block::check_transactions() const {
     code ec;
 
-    for (auto const& tx : transactions_)
-        if ((ec = tx.check(false)))
+    for (auto const& tx : transactions_) {
+        if ((ec = tx.check(false))) {
             return ec;
+}
 
     return error::success;
 }
@@ -835,9 +848,10 @@ code block::check_transactions() const {
 code block::accept_transactions(const chain_state& state) const {
     code ec;
 
-    for (auto const& tx : transactions_)
-        if ((ec = tx.accept(state, false)))
+    for (auto const& tx : transactions_) {
+        if ((ec = tx.accept(state, false))) {
             return ec;
+}
 
     return error::success;
 }
@@ -845,9 +859,10 @@ code block::accept_transactions(const chain_state& state) const {
 code block::connect_transactions(const chain_state& state) const {
     code ec;
 
-    for (auto const& tx : transactions_)
-        if ((ec = tx.connect(state)))
+    for (auto const& tx : transactions_) {
+        if ((ec = tx.connect(state))) {
             return ec;
+}
 
     return error::success;
 }
@@ -861,24 +876,24 @@ code block::check() const {
 
     code ec;
 
-    if ((ec = header_.check()))
+    if ((ec = header_.check())) {
         return ec;
 
     // TODO(libbitcoin): relates to total of tx.size(false) (pool cache). -> no witness size
-    else if (serialized_size(false) > get_max_block_size())
+    } else if (serialized_size(false) > get_max_block_size()) {
         return error::block_size_limit;
 
-    else if (transactions_.empty())
+    } else if (transactions_.empty()) {
         return error::empty_block;
 
-    else if ( ! transactions_.front().is_coinbase())
+    } else if ( ! transactions_.front().is_coinbase()) {
         return error::first_not_coinbase;
 
-    else if (is_extra_coinbases())
+    } else if (is_extra_coinbases()) {
         return error::extra_coinbases;
 
     // TODO(libbitcoin): determinable from tx pool graph.
-    else if (is_forward_reference())
+    } else if (is_forward_reference()) {
         return error::forward_reference;
 
     // This is subset of is_internal_double_spend if collisions cannot happen.
@@ -886,11 +901,11 @@ code block::check() const {
     ////    return error::internal_duplicate;
 
     // TODO(libbitcoin): determinable from tx pool graph.
-    else if (is_internal_double_spend())
+    } else if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
 
     // TODO(libbitcoin): relates height to tx.hash(false) (pool cache).
-    else if ( ! is_valid_merkle_root())
+    } else if ( ! is_valid_merkle_root()) {
         return error::merkle_mismatch;
 
     // We cannot know if bip16 is enabled at this point so we disable it.
@@ -901,8 +916,9 @@ code block::check() const {
     ////else if (signature_operations(false, false) > get_max_block_sigops())
     ////    return error::block_legacy_sigop_limit;
 
-    else
+    } else {
         return check_transactions();
+}
 }
 
 code block::accept(bool transactions) const {
@@ -929,51 +945,52 @@ code block::accept(chain_state const& state, bool transactions) const {
 
     size_t allowed_sigops = get_allowed_sigops(serialized_size());
 
-    if ((ec = header_.accept(state)))
+    if ((ec = header_.accept(state))) {
         return ec;
 
         //In Bitcoin Cash, block size check is now dependent on the Blockchain state.
 #if defined(BITPRIM_CURRENCY_BCH)
-    else if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old)
+    } else if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old) {
         return error::block_size_limit;
 #endif
 
-    else if (state.is_under_checkpoint())
+    } else if (state.is_under_checkpoint()) {
         return error::success;
 
     // TODO(libbitcoin): relates height to total of tx.size(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
-    else if (bip141 && weight() > max_block_weight)
+    } else if (bip141 && weight() > max_block_weight) {
         return error::block_weight_limit;
 
-    else if (bip34 && !is_valid_coinbase_script(state.height()))
+    } else if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;
 
     // TODO(libbitcoin): relates height to total of tx.fee (pool cach).
-    else if ( ! is_valid_coinbase_claim(state.height()))
+    } else if ( ! is_valid_coinbase_claim(state.height())) {
         return error::coinbase_value_limit;
 
     // TODO(libbitcoin): relates median time past to tx.locktime (pool cache min tx.time).
-    else if ( ! is_final(state.height(), block_time))
+    } else if ( ! is_final(state.height(), block_time)) {
         return error::block_non_final;
 
     // TODO(libbitcoin): relates height to tx.hash(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
-    else if (bip141 && !is_valid_witness_commitment())
+    } else if (bip141 && !is_valid_witness_commitment()) {
         return error::invalid_witness_commitment;
 
     // TODO(libbitcoin): determine if performance benefit is worth excluding sigops here.
     // TODO(libbitcoin): relates block limit to total of tx.sigops (pool cache tx.sigops).
     // This recomputes sigops to include p2sh from prevouts.
     // NOTE: for BCH bit141 is set as false
-    else if (transactions && (signature_operations(bip16, bip141) > allowed_sigops))
+    } else if (transactions && (signature_operations(bip16, bip141) > allowed_sigops)) {
         return error::block_embedded_sigop_limit;
 
-    else if (transactions)
+    } else if (transactions) {
         return accept_transactions(state);
 
-    else
+    } else {
         return ec;
+}
 }
 
 code block::connect() const {
@@ -984,11 +1001,12 @@ code block::connect() const {
 code block::connect(const chain_state& state) const {
     validation.start_connect = asio::steady_clock::now();
 
-    if (state.is_under_checkpoint())
+    if (state.is_under_checkpoint()) {
         return error::success;
 
-    else
+    } else {
         return connect_transactions(state);
+}
 }
 
 }  // namespace chain

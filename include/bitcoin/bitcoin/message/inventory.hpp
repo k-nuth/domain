@@ -43,7 +43,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API inventory {
-   public:
+public:
     typedef std::shared_ptr<inventory> ptr;
     typedef std::shared_ptr<const inventory> const_ptr;
     typedef inventory_vector::type_id type_id;
@@ -134,7 +134,7 @@ class BC_API inventory {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     inventory_vector::list inventories_;
 };
 

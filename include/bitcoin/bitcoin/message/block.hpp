@@ -42,7 +42,7 @@ namespace message {
 
 class BC_API block
     : public chain::block {
-   public:
+public:
     typedef std::shared_ptr<block> ptr;
     typedef std::shared_ptr<block const> const_ptr;
     typedef std::vector<ptr> ptr_list;
@@ -71,7 +71,7 @@ class BC_API block
     block(const chain::block& other);
 
     block(chain::header&& header, chain::transaction::list&& transactions);
-    block(chain::header const& header, const chain::transaction::list& transactions);
+    block(chain::header const& header, chain::transaction::list const& transactions);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);

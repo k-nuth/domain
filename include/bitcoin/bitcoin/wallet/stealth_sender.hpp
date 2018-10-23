@@ -49,7 +49,7 @@ public:
     operator const bool() const;
 
     /// Attach this script to the output before the send output.
-    const chain::script& stealth_script() const;
+    chain::script const& stealth_script() const;
 
     /// The bitcoin payment address to which the payment will be made.
     const wallet::payment_address& payment_address() const;

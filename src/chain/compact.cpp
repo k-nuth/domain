@@ -148,8 +148,9 @@ bool compact::from_compact(uint256_t& out, uint32_t compact)
 
     // Compact has space for more exponent bits than can be represented in a
     // base 256 number represented in 32 bytes, so we trap overflow here.
-    if (is_overflow(exponent, mantissa))
+    if (is_overflow(exponent, mantissa)) {
         return false;
+}
 
     out = mantissa;
     out <<= shift_high(exponent);

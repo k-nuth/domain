@@ -94,7 +94,7 @@ payment_address::payment_address(const ec_public& point, uint8_t version)
 {
 }
 
-payment_address::payment_address(const chain::script& script, uint8_t version)
+payment_address::payment_address(chain::script const& script, uint8_t version)
   : payment_address(from_script(script, version))
 {
 }
@@ -256,8 +256,9 @@ payment_address payment_address::from_payment(const payment& decoded)
 
 payment_address payment_address::from_private(const ec_private& secret)
 {
-    if ( ! secret)
-        return{};
+    if ( ! secret) {
+        return{}
+};
 
     return{ secret.to_public(), secret.payment_version() };
 }
@@ -265,8 +266,9 @@ payment_address payment_address::from_private(const ec_private& secret)
 payment_address payment_address::from_public(const ec_public& point,
     uint8_t version)
 {
-    if ( ! point)
-        return{};
+    if ( ! point) {
+        return{}
+};
 
     data_chunk data;
     if ( ! point.to_data(data))
@@ -275,7 +277,7 @@ payment_address payment_address::from_public(const ec_public& point,
     return{ bitcoin_short_hash(data), version };
 }
 
-payment_address payment_address::from_script(const chain::script& script,
+payment_address payment_address::from_script(chain::script const& script,
     uint8_t version)
 {
     // Working around VC++ CTP compiler break here.
@@ -445,7 +447,7 @@ std::ostream& operator<<(std::ostream& out, const payment_address& of)
 // ----------------------------------------------------------------------------
 
 // Context free input extraction is provably ambiguous (see extract_input).
-payment_address::list payment_address::extract(const chain::script& script,
+payment_address::list payment_address::extract(chain::script const& script,
     uint8_t p2kh_version, uint8_t p2sh_version)
 {
     auto const input = extract_input(script, p2kh_version, p2sh_version);
@@ -455,7 +457,7 @@ payment_address::list payment_address::extract(const chain::script& script,
 
 // Context free input extraction is provably ambiguous. See inline comments.
 payment_address::list payment_address::extract_input(
-    const chain::script& script, uint8_t p2kh_version, uint8_t p2sh_version)
+    chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version)
 {
     // A sign_key_hash result always implies sign_script_hash as well.
     auto const pattern = script.input_pattern();
@@ -504,7 +506,7 @@ payment_address::list payment_address::extract_input(
 
 // A server should use this against the prevout instead of using extract_input.
 payment_address::list payment_address::extract_output(
-    const chain::script& script, uint8_t p2kh_version, uint8_t p2sh_version)
+    chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version)
 {
     auto const pattern = script.output_pattern();
 

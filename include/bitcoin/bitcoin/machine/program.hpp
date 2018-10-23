@@ -53,22 +53,22 @@ public:
     /// Create an instance that does not expect to verify signatures.
     /// This is useful for script utilities but not with input validation.
     /// This can run ops via run(op, program) or the script via run(program).
-    program(const chain::script& script);
+    program(chain::script const& script);
 
     /// Create an instance with empty stacks, value unused/max (input run).
-    program(const chain::script& script, const chain::transaction& transaction,
+    program(chain::script const& script, chain::transaction const& transaction,
         uint32_t input_index, uint32_t forks);
 
     /// Create an instance with initialized stack (witness run, v0 by default).
-    program(const chain::script& script, const chain::transaction& transaction,
+    program(chain::script const& script, chain::transaction const& transaction,
         uint32_t input_index, uint32_t forks, data_stack&& stack,
         uint64_t value, script_version version=script_version::zero);
 
     /// Create using copied tx, input, forks, value, stack (prevout run).
-    program(const chain::script& script, const program& other);
+    program(chain::script const& script, const program& other);
 
     /// Create using copied tx, input, forks, value and moved stack (p2sh run).
-    program(const chain::script& script, program&& other, bool move);
+    program(chain::script const& script, program&& other, bool move);
 
     /// Constant registers.
     bool is_valid() const;
@@ -76,7 +76,7 @@ public:
     uint32_t input_index() const;
     uint64_t value() const;
     script_version version() const;
-    const chain::transaction& transaction() const;
+    chain::transaction const& transaction() const;
 
     /// Program registers.
     op_iterator begin() const;
@@ -149,8 +149,8 @@ private:
     void reserve_stacks();
     bool stack_to_bool(bool clean) const;
 
-    const chain::script& script_;
-    const chain::transaction& transaction_;
+    chain::script const& script_;
+    chain::transaction const& transaction_;
     uint32_t const input_index_;
     uint32_t const forks_;
     uint64_t const value_;

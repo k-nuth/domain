@@ -50,7 +50,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API block {
-   public:
+public:
     typedef std::vector<block> list;
     typedef std::vector<size_t> indexes;
 
@@ -243,11 +243,11 @@ class BC_API block {
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-   protected:
+protected:
     void reset();
     size_t non_coinbase_input_count() const;
 
-   private:
+private:
     chain::header header_;
     transaction::list transactions_;
 

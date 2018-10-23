@@ -67,7 +67,7 @@ input::input(output_point&& previous_output, chain::script&& script, uint32_t se
       sequence_(sequence) {
 }
 
-input::input(const output_point& previous_output, const chain::script& script, uint32_t sequence)
+input::input(const output_point& previous_output, chain::script const& script, uint32_t sequence)
     : previous_output_(previous_output),
       script_(script),
       sequence_(sequence) {
@@ -87,7 +87,7 @@ input::input(output_point&& previous_output, chain::script&& script, chain::witn
     : previous_output_(std::move(previous_output)), script_(std::move(script)), witness_(std::move(witness)), sequence_(sequence) {
 }
 
-input::input(const output_point& previous_output, const chain::script& script, const chain::witness& witness, uint32_t sequence)
+input::input(const output_point& previous_output, chain::script const& script, const chain::witness& witness, uint32_t sequence)
     : previous_output_(previous_output), script_(script), witness_(witness), sequence_(sequence) {
 }
 
@@ -271,11 +271,11 @@ chain::script& input::script() {
     return script_;
 }
 
-const chain::script& input::script() const {
+chain::script const& input::script() const {
     return script_;
 }
 
-void input::set_script(const chain::script& value) {
+void input::set_script(chain::script const& value) {
     script_ = value;
     invalidate_cache();
 }
@@ -377,8 +377,9 @@ bool input::is_segregated() const {
 }
 
 bool input::is_locked(size_t block_height, uint32_t median_time_past) const {
-    if ((sequence_ & relative_locktime_disabled) != 0)
+    if ((sequence_ & relative_locktime_disabled) != 0) {
         return false;
+}
 
     // bip68: a minimum block-height constraint over the input's age.
     auto const minimum = (sequence_ & relative_locktime_mask);
@@ -437,13 +438,15 @@ bool input::extract_embedded_script(chain::script& out) const {
     auto const& prevout_script = previous_output_.validation.cache.script();
 
     // There are no embedded sigops when the prevout script is not p2sh.
-    if ( ! prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule))
+    if ( ! prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule)) {
         return false;
+}
 
     // There are no embedded sigops when the input script is not push only.
     // The first operations access must be method-based to guarantee the cache.
-    if (ops.empty() || !script::is_relaxed_push(ops))
+    if (ops.empty() || !script::is_relaxed_push(ops)) {
         return false;
+}
 
     // Parse the embedded script from the last input script item (data).
     // This cannot fail because there is no prefix to invalidate the length.
@@ -453,8 +456,9 @@ bool input::extract_embedded_script(chain::script& out) const {
 bool input::extract_reserved_hash(hash_digest& out) const {
     auto const& stack = witness_.stack();
 
-    if ( ! witness::is_reserved_pattern(stack))
+    if ( ! witness::is_reserved_pattern(stack)) {
         return false;
+}
 
     std::copy_n(stack.front().begin(), hash_size, out.begin());
     return true;

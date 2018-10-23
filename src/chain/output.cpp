@@ -69,7 +69,7 @@ output::output(uint64_t value, chain::script&& script)
       validation{} {
 }
 
-output::output(uint64_t value, const chain::script& script)
+output::output(uint64_t value, chain::script const& script)
     : value_(value),
       script_(script),
       validation{} {
@@ -226,11 +226,11 @@ chain::script& output::script() {
     return script_;
 }
 
-const chain::script& output::script() const {
+chain::script const& output::script() const {
     return script_;
 }
 
-void output::set_script(const chain::script& value) {
+void output::set_script(chain::script const& value) {
     script_ = value;
     invalidate_cache();
 }
@@ -316,8 +316,9 @@ bool output::is_dust(uint64_t minimum_value) const {
 bool output::extract_committed_hash(hash_digest& out) const {
     auto const& ops = script_.operations();
 
-    if ( ! script::is_commitment_pattern(ops))
+    if ( ! script::is_commitment_pattern(ops)) {
         return false;
+}
 
     // The four byte offset for the witness commitment hash (bip141).
     auto const start = ops[1].data().begin() + sizeof(witness_head);

@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API block_transactions {
-   public:
+public:
     typedef std::shared_ptr<block_transactions> ptr;
     typedef std::shared_ptr<const block_transactions> const_ptr;
 
@@ -55,7 +55,7 @@ class BC_API block_transactions {
 
     block_transactions();
     block_transactions(hash_digest const& block_hash,
-                       const chain::transaction::list& transactions);
+                       chain::transaction::list const& transactions);
     block_transactions(hash_digest&& block_hash,
                        chain::transaction::list&& transactions);
     block_transactions(const block_transactions& other);
@@ -67,8 +67,8 @@ class BC_API block_transactions {
     void set_block_hash(hash_digest&& value);
 
     chain::transaction::list& transactions();
-    const chain::transaction::list& transactions() const;
-    void set_transactions(const chain::transaction::list& other);
+    chain::transaction::list const& transactions() const;
+    void set_transactions(chain::transaction::list const& other);
     void set_transactions(chain::transaction::list&& other);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -132,7 +132,7 @@ class BC_API block_transactions {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     hash_digest block_hash_;
     chain::transaction::list transactions_;
 };

@@ -29,11 +29,11 @@
 namespace libbitcoin {
 
 /// Determine if the script is a null-data script of at least 32 data bytes.
-BI_API bool is_stealth_script(const chain::script& script);
+BI_API bool is_stealth_script(chain::script const& script);
 
 /// Convert a stealth info script to a prefix usable for stealth.
 BI_API bool to_stealth_prefix(uint32_t& out_prefix,
-    const chain::script& script);
+    chain::script const& script);
 
 /// Create a valid stealth ephemeral private key from the provided seed.
 BI_API bool create_ephemeral_key(ec_secret& out_secret,
@@ -51,11 +51,11 @@ BI_API bool create_stealth_script(chain::script& out_null_data,
 
 /// Extract the stealth ephemeral public key from an output script.
 BI_API bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
-    const chain::script& script);
+    chain::script const& script);
 
 /// Extract the unsigned stealth ephemeral public key from an output script.
 BI_API bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
-    const chain::script& script);
+    chain::script const& script);
 
 /// Calculate the shared secret.
 BI_API bool shared_secret(ec_secret& out_shared, ec_secret const& secret,

@@ -899,7 +899,7 @@ namespace detail
     template <class Head, class Callable>
     struct ForEachType<Typelist<Head, NullType>, Callable>
     {
-    public:
+ public:
         enum
         {
             value = 0
@@ -1745,7 +1745,7 @@ namespace detail
     template <typename T>
     class ExceptionTranslator : public IExceptionTranslator //!OCLINT destructor of virtual class
     {
-    public:
+ public:
         explicit ExceptionTranslator(String (*translateFunction)(T))
                 : m_translateFunction(translateFunction) {}
 
@@ -1763,7 +1763,7 @@ namespace detail
             return false;
         }
 
-    protected:
+ protected:
         String (*m_translateFunction)(T);
     };
 
@@ -1908,7 +1908,7 @@ namespace detail
 
         ContextBuilder& operator=(const ContextBuilder&); // NOLINT
 
-    public:
+ public:
         // cppcheck-suppress uninitMemberVar
         DOCTEST_NOINLINE ContextBuilder() // NOLINT
                 : numCaptures(0)
@@ -1966,7 +1966,7 @@ namespace detail
         ContextBuilder contextBuilder;
         bool           built;
 
-    public:
+ public:
         DOCTEST_NOINLINE explicit ContextScope(ContextBuilder& temp)
                 : contextBuilder(temp)
                 , built(false) {
@@ -1992,7 +1992,7 @@ namespace detail
         int              m_line;
         assertType::Enum m_severity;
 
-    public:
+ public:
         MessageBuilder(const char* file, int line, assertType::Enum severity);
         ~MessageBuilder();
 
@@ -4041,7 +4041,7 @@ namespace detail
 
     class Timer
     {
-    public:
+ public:
         Timer()
                 : m_ticks(0) {}
         void         start() { m_ticks = getCurrentTicks(); }
@@ -4053,7 +4053,7 @@ namespace detail
         }
         double getElapsedSeconds() const { return getElapsedMicroseconds() / 1000000.0; }
 
-    private:
+ private:
         UInt64 m_ticks;
     };
 
@@ -4451,7 +4451,7 @@ namespace detail
 
         ~FatalConditionHandler() { reset(); }
 
-    private:
+ private:
         static bool  isSet;
         static ULONG guaranteeSize;
         static PVOID exceptionHandlerHandle;

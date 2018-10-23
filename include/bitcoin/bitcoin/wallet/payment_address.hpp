@@ -60,11 +60,11 @@ public:
     typedef std::shared_ptr<payment_address> ptr;
 
     /// Extract a payment address list from an input or output script.
-    static list extract(const chain::script& script,
+    static list extract(chain::script const& script,
         uint8_t p2kh_version=mainnet_p2kh, uint8_t p2sh_version=mainnet_p2sh);
-    static list extract_input(const chain::script& script,
+    static list extract_input(chain::script const& script,
         uint8_t p2kh_version=mainnet_p2kh, uint8_t p2sh_version=mainnet_p2sh);
-    static list extract_output(const chain::script& script,
+    static list extract_output(chain::script const& script,
         uint8_t p2kh_version=mainnet_p2kh, uint8_t p2sh_version=mainnet_p2sh);
 
     /// Constructors.
@@ -77,7 +77,7 @@ public:
     payment_address(short_hash&& hash, uint8_t version=mainnet_p2kh);
     payment_address(short_hash const& hash, uint8_t version=mainnet_p2kh);
     payment_address(const ec_public& point, uint8_t version=mainnet_p2kh);
-    payment_address(const chain::script& script, uint8_t version=mainnet_p2sh);
+    payment_address(chain::script const& script, uint8_t version=mainnet_p2sh);
 
     /// Operators.
     bool operator<(const payment_address& other) const;
@@ -120,7 +120,7 @@ private:
     static payment_address from_payment(const payment& decoded);
     static payment_address from_private(const ec_private& secret);
     static payment_address from_public(const ec_public& point, uint8_t version);
-    static payment_address from_script(const chain::script& script,
+    static payment_address from_script(chain::script const& script,
         uint8_t version);
 
     /// Members.

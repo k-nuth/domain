@@ -209,9 +209,11 @@ bool script::from_string(std::string const& mnemonic) {
     ops.resize(tokens.empty() || tokens.front().empty() ? 0 : tokens.size());
 
     // Create an op list from the split tokens, one operation per token.
-    for (size_t index = 0; index < ops.size(); ++index)
-        if ( ! ops[index].from_string(tokens[index]))
+    for (size_t index = 0; index < ops.size(); ++index) {
+        if ( ! ops[index].from_string(tokens[index])) {
             return false;
+        }
+    }
 
     from_operations(ops);
     return true;
@@ -369,8 +371,9 @@ operation::iterator script::end() const {
 size_t script::serialized_size(bool prefix) const {
     auto size = bytes_.size();
 
-    if (prefix)
+    if (prefix) {
         size += message::variable_uint_size(size);
+    }
 
     return size;
 }
@@ -408,7 +411,7 @@ operation::list const& script::operations() const {
     // If an op fails it is pushed to operations and the loop terminates.
     // To validate the ops the caller must test the last op.is_valid(), or may
     // text script.is_valid_operations(), which is done in script validation.
-    while (!stream_r.is_exhausted()) {
+    while ( ! stream_r.is_exhausted()) {
         op.from_data(stream_r);
         operations_.push_back(std::move(op));
     }
@@ -468,8 +471,9 @@ static hash_digest sign_none(transaction const& tx, uint32_t input_index, script
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
     } else {
         // Erase all input scripts and sequences.
-        for (auto const& input : inputs)
+        for (auto const& input : inputs) {
             ins.emplace_back(input.previous_output(), script{}, 0);
+        }
 
         // Replace self that is lost in the loop.
         ins[input_index].set_script(script_code);
@@ -477,8 +481,7 @@ static hash_digest sign_none(transaction const& tx, uint32_t input_index, script
     }
 
     // Move new inputs to new transaction and drop outputs.
-    return signature_hash({tx.version(), tx.locktime(), std::move(ins), {}},
-                          sighash_type);
+    return signature_hash({tx.version(), tx.locktime(), std::move(ins), {}}, sighash_type);
 }
 
 static hash_digest sign_single(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
@@ -495,8 +498,9 @@ static hash_digest sign_single(transaction const& tx, uint32_t input_index, scri
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
     } else {
         // Erase all input scripts and sequences.
-        for (auto const& input : inputs)
+        for (auto const& input : inputs) {
             ins.emplace_back(input.previous_output(), script{}, 0);
+        }
 
         // Replace self that is lost in the loop.
         ins[input_index].set_script(script_code);
@@ -530,9 +534,10 @@ static hash_digest sign_all(transaction const& tx, uint32_t input_index, script 
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
     } else {
         // Erase all input scripts.
-        for (auto const& input : inputs)
+        for (auto const& input : inputs) {
             ins.emplace_back(input.previous_output(), script{},
                              input.sequence());
+        }
 
         // Replace self that is lost in the loop.
         ins[input_index].set_script(script_code);
@@ -548,9 +553,11 @@ static hash_digest sign_all(transaction const& tx, uint32_t input_index, script 
 static script strip_code_seperators(script const& script_code) {
     operation::list ops;
 
-    for (auto op = script_code.begin(); op != script_code.end(); ++op)
-        if (op->code() != opcode::codeseparator)
+    for (auto op = script_code.begin(); op != script_code.end(); ++op) {
+        if (op->code() != opcode::codeseparator) {
             ops.push_back(*op);
+        }
+    }
 
     return script(std::move(ops));
 }
@@ -562,8 +569,7 @@ hash_digest script::generate_unversioned_signature_hash(transaction const& tx,
                                                         uint8_t sighash_type) {
     auto const sighash = to_sighash_enum(sighash_type);
     if (input_index >= tx.inputs().size() ||
-        (input_index >= tx.outputs().size() &&
-         sighash == sighash_algorithm::single)) {
+        (input_index >= tx.outputs().size() && sighash == sighash_algorithm::single)) {
         //*********************************************************************
         // CONSENSUS: wacky satoshi behavior.
         //*********************************************************************
@@ -679,6 +685,7 @@ hash_digest script::generate_version_0_signature_hash(transaction const& tx,
     // Flags derived from the signature hash byte.
     auto const sighash = to_sighash_enum(sighash_type);
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+
 #ifdef BITPRIM_CURRENCY_BCH
     auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
     auto const none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
@@ -737,11 +744,9 @@ hash_digest script::generate_signature_hash(transaction const& tx,
     // The way of serialization is changed (bip143).
     switch (version) {
         case script_version::unversioned:
-            return generate_unversioned_signature_hash(tx, input_index,
-                                                       script_code, sighash_type);
+            return generate_unversioned_signature_hash(tx, input_index, script_code, sighash_type);
         case script_version::zero:
-            return generate_version_0_signature_hash(tx, input_index,
-                                                     script_code, value, sighash_type);
+            return generate_version_0_signature_hash(tx, input_index, script_code, value, sighash_type);
         case script_version::reserved:
         default:
             BITCOIN_ASSERT_MSG(false, "invalid script version");
@@ -758,8 +763,9 @@ bool script::check_signature(ec_signature const& signature,
                              uint32_t input_index,
                              script_version version,
                              uint64_t value) {
-    if (public_key.empty())
+    if (public_key.empty()) {
         return false;
+    }
 
     // This always produces a valid signature hash, including one_hash.
     auto const sighash = chain::script::generate_signature_hash(tx,
@@ -774,13 +780,13 @@ bool script::create_endorsement(endorsement& out, ec_secret const& secret, scrip
     out.reserve(max_endorsement_size);
 
     // This always produces a valid signature hash, including one_hash.
-    auto const sighash = chain::script::generate_signature_hash(tx,
-                                                                input_index, prevout_script, sighash_type, version, value);
+    auto const sighash = chain::script::generate_signature_hash(tx, input_index, prevout_script, sighash_type, version, value);
 
     // Create the EC signature and encode as DER.
     ec_signature signature;
-    if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature))
+    if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature)) {
         return false;
+    }
 
     // Add the sighash type to the end of the DER signature -> endorsement.
     out.push_back(sighash_type);
@@ -823,7 +829,7 @@ bool script::is_coinbase_pattern(operation::list const& ops, size_t height) {
 // CONSENSUS: this pattern is used to commit to bip141 witness data.
 //*****************************************************************************
 bool script::is_commitment_pattern(operation::list const& ops) {
-    static auto header const = to_big_endian(witness_head);
+    static auto const header = to_big_endian(witness_head);
 
     // Bytes after commitment are optional with no consensus meaning (bip141).
     // Commitment is not executable so invalid trailing operations are allowed.
@@ -865,24 +871,29 @@ bool script::is_pay_multisig_pattern(operation::list const& ops) {
 
     auto const op_count = ops.size();
 
-    if (op_count < 4 || ops[op_count - 1].code() != opcode::checkmultisig)
+    if (op_count < 4 || ops[op_count - 1].code() != opcode::checkmultisig) {
         return false;
+    }
 
     auto const op_m = static_cast<uint8_t>(ops[0].code());
     auto const op_n = static_cast<uint8_t>(ops[op_count - 2].code());
 
-    if (op_m < op_1 || op_m > op_n || op_n < op_1 || op_n > op_16)
+    if (op_m < op_1 || op_m > op_n || op_n < op_1 || op_n > op_16) {
         return false;
+}
 
     auto const number = op_n - op_1 + 1u;
     auto const points = op_count - 3u;
 
-    if (number != points)
+    if (number != points) {
         return false;
+    }
 
-    for (auto op = ops.begin() + 1; op != ops.end() - 2; ++op)
-        if ( ! is_public_key(op->data()))
+    for (auto op = ops.begin() + 1; op != ops.end() - 2; ++op) {
+        if ( ! is_public_key(op->data())) {
             return false;
+        }
+    }
 
     return true;
 }
@@ -935,21 +946,21 @@ bool script::is_sign_script_hash_pattern(operation::list const& ops) {
 }
 
 operation::list script::to_null_data_pattern(data_slice data) {
-    if (data.size() > max_null_data_size)
+    if (data.size() > max_null_data_size) {
         return {};
+    }
 
-    return operation::list{
-        {opcode::return_},
-        {to_chunk(data)}};
+    return operation::list{ {opcode::return_},
+                            {to_chunk(data)}};
 }
 
 operation::list script::to_pay_public_key_pattern(data_slice point) {
-    if ( ! is_public_key(point))
+    if ( ! is_public_key(point)) {
         return {};
+    }
 
-    return operation::list{
-        {to_chunk(point)},
-        {opcode::checksig}};
+    return operation::list{ {to_chunk(point)},
+                            {opcode::checksig}};
 }
 
 operation::list script::to_pay_key_hash_pattern(short_hash const& hash) {
@@ -995,8 +1006,9 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
     auto const m = signatures;
     auto const n = points.size();
 
-    if (m < 1 || m > n || n < 1 || n > max)
+    if (m < 1 || m > n || n < 1 || n > max) {
         return operation::list();
+    }
 
     auto const op_m = static_cast<opcode>(m + zero);
     auto const op_n = static_cast<opcode>(points.size() + zero);
@@ -1006,8 +1018,9 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
     ops.emplace_back(op_m);
 
     for (auto const point : points) {
-        if ( ! is_public_key(point))
+        if ( ! is_public_key(point)) {
             return {};
+        }
 
         ops.emplace_back(point);
     }
@@ -1030,8 +1043,9 @@ script_version script::version() const {
     // The first operations access must be method-based to guarantee the cache.
     auto const& ops = operations();
 
-    if ( ! is_witness_program_pattern(ops))
+    if ( ! is_witness_program_pattern(ops)) {
         return script_version::unversioned;
+    }
 
     // Version 0 is specified, others are reserved (bip141).
     return (ops[0].code() == opcode::push_size_0) ? script_version::zero : script_version::reserved;
@@ -1048,20 +1062,25 @@ script_pattern script::pattern() const {
 // The bip141 coinbase pattern is not tested here, must test independently.
 script_pattern script::output_pattern() const {
     // The first operations access must be method-based to guarantee the cache.
-    if (is_pay_key_hash_pattern(operations()))
+    if (is_pay_key_hash_pattern(operations())) {
         return script_pattern::pay_key_hash;
+    }
 
-    if (is_pay_script_hash_pattern(operations_))
+    if (is_pay_script_hash_pattern(operations_)) {
         return script_pattern::pay_script_hash;
+    }
 
-    if (is_null_data_pattern(operations_))
+    if (is_null_data_pattern(operations_)) {
         return script_pattern::null_data;
+    }
 
-    if (is_pay_public_key_pattern(operations_))
+    if (is_pay_public_key_pattern(operations_)) {
         return script_pattern::pay_public_key;
+    }
 
-    if (is_pay_multisig_pattern(operations_))
+    if (is_pay_multisig_pattern(operations_)) {
         return script_pattern::pay_multisig;
+    }
 
     return script_pattern::non_standard;
 }
@@ -1070,18 +1089,22 @@ script_pattern script::output_pattern() const {
 // The bip34 coinbase pattern is not tested here, must test independently.
 script_pattern script::input_pattern() const {
     // The first operations access must be method-based to guarantee the cache.
-    if (is_sign_key_hash_pattern(operations()))
+    if (is_sign_key_hash_pattern(operations())) {
         return script_pattern::sign_key_hash;
+    }
 
     // This must follow is_sign_key_hash_pattern for ambiguity comment to hold.
-    if (is_sign_script_hash_pattern(operations_))
+    if (is_sign_script_hash_pattern(operations_)) {
         return script_pattern::sign_script_hash;
+    }
 
-    if (is_sign_public_key_pattern(operations_))
+    if (is_sign_public_key_pattern(operations_)) {
         return script_pattern::sign_public_key;
+    }
 
-    if (is_sign_multisig_pattern(operations_))
+    if (is_sign_multisig_pattern(operations_)) {
         return script_pattern::sign_multisig;
+    }
 
     return script_pattern::non_standard;
 }
@@ -1113,11 +1136,9 @@ size_t script::sigops(bool accurate) const {
     for (auto const& op : operations()) {
         auto const code = op.code();
 
-        if (code == opcode::checksig ||
-            code == opcode::checksigverify) {
+        if (code == opcode::checksig || code == opcode::checksigverify) {
             ++total;
-        } else if (code == opcode::checkmultisig ||
-                   code == opcode::checkmultisigverify) {
+        } else if (code == opcode::checkmultisig || code == opcode::checkmultisigverify) {
             total += multisig_sigops(accurate, preceding);
         }
 
@@ -1135,8 +1156,9 @@ size_t script::sigops(bool accurate) const {
 void script::find_and_delete_(data_chunk const& endorsement) {
     // If this is empty it would produce an empty script but not operation.
     // So we test it for empty prior to operation reserialization.
-    if (endorsement.empty())
+    if (endorsement.empty()) {
         return;
+    }
 
     // The value must be serialized to script using non-minimal encoding.
     // Non-minimally-encoded target values will therefore not match.
@@ -1161,14 +1183,16 @@ void script::find_and_delete_(data_chunk const& endorsement) {
     }
 
     // Delete any found values, reversed to prevent iterator invalidation.
-    for (auto const it : reverse(found))
+    for (auto const it : reverse(found)) {
         bytes_.erase(it, it + value.size());
+    }
 }
 
 // Concurrent read/write is not supported, so no critical section.
 void script::find_and_delete(data_stack const& endorsements) {
-    for (auto const& endorsement : endorsements)
+    for (auto const& endorsement : endorsements) {
         find_and_delete_(endorsement);
+    }
 
     // Invalidate the cache so that the operations may be regenerated.
     operations_.clear();
@@ -1195,7 +1219,7 @@ void script::find_and_delete(data_stack const& endorsements) {
 // The criteria below are not be comprehensive but are fast to evaluate.
 bool script::is_unspendable() const {
     // The first operations access must be method-based to guarantee the cache.
-    return (!operations().empty() && operations_[0].code() == opcode::return_) || serialized_size(false) > max_script_size;
+    return ( ! operations().empty() && operations_[0].code() == opcode::return_) || serialized_size(false) > max_script_size;
 }
 
 // Validation.
@@ -1207,74 +1231,83 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
 
     // Evaluate input script.
     program input(input_script, tx, input_index, forks);
-    if ((ec = input.evaluate()))
+    if ((ec = input.evaluate())) {
         return ec;
+    }
 
     // Evaluate output script using stack result from input script.
     program prevout(prevout_script, input);
-    if ((ec = prevout.evaluate()))
+    if ((ec = prevout.evaluate())) {
         return ec;
+    }
 
     // This precludes bare witness programs of -0 (undocumented).
-    if ( ! prevout.stack_result(false))
+    if ( ! prevout.stack_result(false)) {
         return error::stack_false;
+    }
 
     // Triggered by output script push of version and witness program (bip141).
     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
         // The input script must be empty (bip141).
-        if ( ! input_script.empty())
+        if ( ! input_script.empty()) {
             return error::dirty_witness;
+        }
 
         // This is a valid witness script so validate it.
-        if ((ec = input_witness.verify(tx, input_index, forks,
-                                       prevout_script, value)))
+        if ((ec = input_witness.verify(tx, input_index, forks, prevout_script, value))) {
             return ec;
+        }
     }
 
     // p2sh and p2w are mutually exclusive.
     else if (prevout_script.is_pay_to_script_hash(forks)) {
-        if ( ! is_relaxed_push(input_script.operations()))
+        if ( ! is_relaxed_push(input_script.operations())) {
             return error::invalid_script_embed;
+        }
 
         // Embedded script must be at the top of the stack (bip16).
         script embedded_script(input.pop(), false);
 
         program embedded(embedded_script, std::move(input), true);
-        if ((ec = embedded.evaluate()))
+        if ((ec = embedded.evaluate())) {
             return ec;
+        }
 
         // This precludes embedded witness programs of -0 (undocumented).
-        if ( ! embedded.stack_result(false))
+        if ( ! embedded.stack_result(false)) {
             return error::stack_false;
+        }
 
         // Triggered by embedded push of version and witness program (bip141).
         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
             // The input script must be a push of the embedded_script (bip141).
-            if (input_script.size() != 1)
+            if (input_script.size() != 1) {
                 return error::dirty_witness;
+            }
 
             // This is a valid embedded witness script so validate it.
-            if ((ec = input_witness.verify(tx, input_index, forks,
-                                           embedded_script, value)))
+            if ((ec = input_witness.verify(tx, input_index, forks, embedded_script, value))) {
                 return ec;
+            }
         }
     }
 
     // Witness must be empty if no bip141 or valid witness program (bip141).
-    if ( ! witnessed && !input_witness.empty())
+    if ( ! witnessed && !input_witness.empty()) {
         return error::unexpected_witness;
+    }
 
     return error::success;
 }
 
 code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
-    if (input >= tx.inputs().size())
+    if (input >= tx.inputs().size()) {
         return error::operation_failed;
+    }
 
     auto const& in = tx.inputs()[input];
     auto const& prevout = in.previous_output().validation.cache;
-    return verify(tx, input, forks, in.script(), in.witness(),
-                  prevout.script(), prevout.value());
+    return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
 }
 
 }  // namespace chain

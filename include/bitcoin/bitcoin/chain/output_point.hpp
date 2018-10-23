@@ -34,7 +34,7 @@ namespace chain {
 
 class BC_API output_point
     : public point {
-   public:
+public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation_type {
         /// An output is spent if a valid transaction has a valid claim on it.
@@ -110,7 +110,7 @@ class BC_API output_point
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_type validation;
 
-   protected:
+protected:
     // So that input may call reset from its own.
     friend class input;
 };

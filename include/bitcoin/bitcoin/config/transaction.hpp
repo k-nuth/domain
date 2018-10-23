@@ -50,7 +50,7 @@ public:
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    transaction(const chain::transaction& value);
+    transaction(chain::transaction const& value);
 
     /**
      * Copy constructor.
@@ -68,7 +68,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::transaction&() const;
+    operator chain::transaction const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.

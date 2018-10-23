@@ -44,7 +44,7 @@ script::script(std::string const& mnemonic)
     std::stringstream(mnemonic) >> *this;
 }
 
-script::script(const chain::script& value)
+script::script(chain::script const& value)
   : value_(value)
 {
 }
@@ -65,7 +65,7 @@ script::script(script const& other)
 {
 }
 
-data_chunk script const::to_data() const
+data_chunk const script::to_data() const
 {
     return value_.to_data(false);
 }
@@ -76,7 +76,7 @@ std::string const script::to_string() const
     return value_.to_string(flags);
 }
 
-script::operator const chain::script&() const
+script::operator chain::script const&() const
 {
     return value_;
 }
