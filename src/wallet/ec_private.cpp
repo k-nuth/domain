@@ -84,7 +84,7 @@ ec_private::ec_private(const ec_secret& secret, uint16_t version, bool compress)
 
 bool ec_private::is_wif(data_slice decoded)
 {
-    const auto size = decoded.size();
+    auto const size = decoded.size();
     if (size != wif_compressed_size && size != wif_uncompressed_size)
         return false;
 
@@ -105,7 +105,7 @@ ec_private ec_private::from_string(const std::string& wif,
     if (!decode_base58(decoded, wif) || !is_wif(decoded))
         return ec_private();
 
-    const auto compressed = decoded.size() == wif_compressed_size;
+    auto const compressed = decoded.size() == wif_compressed_size;
     return compressed ?
         ec_private(to_array<wif_compressed_size>(decoded), address_version) :
         ec_private(to_array<wif_uncompressed_size>(decoded), address_version);
@@ -118,7 +118,7 @@ ec_private ec_private::from_compressed(const wif_compressed& wif,
         return ec_private();
 
     const uint16_t version = to_version(address_version, wif.front());
-    const auto secret = slice<1, ec_secret_size + 1>(wif);
+    auto const secret = slice<1, ec_secret_size + 1>(wif);
     return ec_private(secret, version, true);
 }
 
@@ -129,7 +129,7 @@ ec_private ec_private::from_uncompressed(const wif_uncompressed& wif,
         return ec_private();
 
     const uint16_t version = to_version(address_version, wif.front());
-    const auto secret = slice<1, ec_secret_size + 1>(wif);
+    auto const secret = slice<1, ec_secret_size + 1>(wif);
     return ec_private(secret, version, false);
 }
 
@@ -155,14 +155,14 @@ std::string ec_private::encoded() const
     if (compressed())
     {
         wif_compressed wif;
-        const auto prefix = to_array(wif_version());
-        const auto compressed = to_array(compressed_sentinel);
+        auto const prefix = to_array(wif_version());
+        auto const compressed = to_array(compressed_sentinel);
         build_checked_array(wif, { prefix, secret_, compressed });
         return encode_base58(wif);
     }
 
     wif_uncompressed wif;
-    const auto prefix = to_array(wif_version());
+    auto const prefix = to_array(wif_version());
     build_checked_array(wif, { prefix, secret_ });
     return encode_base58(wif);
 }

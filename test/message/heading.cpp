@@ -91,11 +91,11 @@ BOOST_AUTO_TEST_CASE(heading__to_data__checksum_variations__success)
         0u
     };
 
-    const auto zero_checksum = instance.to_data();
+    auto const zero_checksum = instance.to_data();
     BOOST_REQUIRE_EQUAL(zero_checksum.size(), heading::satoshi_fixed_size());
 
     instance.set_checksum(123u);
-    const auto nonzero_checksum = instance.to_data();
+    auto const nonzero_checksum = instance.to_data();
     BOOST_REQUIRE_EQUAL(nonzero_checksum.size(), heading::satoshi_fixed_size());
 }
 
@@ -120,8 +120,8 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_1__valid_input__success)
         0u
     };
 
-    const auto data = expected.to_data();
-    const auto result = heading::factory_from_data(data);
+    auto const data = expected.to_data();
+    auto const result = heading::factory_from_data(data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
@@ -137,9 +137,9 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_2__valid_input__success)
         0u
     };
 
-    const auto data = expected.to_data();
+    auto const data = expected.to_data();
     data_source istream(data);
-    const auto result = heading::factory_from_data(istream);
+    auto const result = heading::factory_from_data(istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
@@ -155,10 +155,10 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_3__valid_input__success)
         0u
     };
 
-    const auto data = expected.to_data();
+    auto const data = expected.to_data();
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = heading::factory_from_data(source);
+    auto const result = heading::factory_from_data(source);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);

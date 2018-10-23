@@ -143,9 +143,9 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success
         }
     };
 
-    static const auto version = version::level::minimum;
-    const auto data = expected.to_data(version);
-    const auto result = inventory_vector::factory_from_data(version, data);
+    static auto const version = version::level::minimum;
+    auto const data = expected.to_data(version);
+    auto const result = inventory_vector::factory_from_data(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -167,10 +167,10 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_2__valid_input__success
         }
     };
 
-    static const auto version = version::level::minimum;
-    const auto data = expected.to_data(version);
+    static auto const version = version::level::minimum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
-    const auto result = inventory_vector::factory_from_data(version, istream);
+    auto const result = inventory_vector::factory_from_data(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -192,11 +192,11 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_3__valid_input__success
         }
     };
 
-    static const auto version = version::level::minimum;
-    const auto data = expected.to_data(version);
+    static auto const version = version::level::minimum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = inventory_vector::factory_from_data(version, source);
+    auto const result = inventory_vector::factory_from_data(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_3__valid_input__success
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__error__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::error;
+    static auto const expected = inventory_vector::type_id::error;
     inventory_vector instance{ expected, {} };
     instance.to_witness();
     BOOST_REQUIRE(instance.type() == expected);
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__error__unchanged)
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__filtered_block__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::filtered_block;
+    static auto const expected = inventory_vector::type_id::filtered_block;
     inventory_vector instance{ expected, {} };
     instance.to_witness();
     BOOST_REQUIRE(instance.type() == expected);
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__filtered_block__unchanged)
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__compact_block__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::compact_block;
+    static auto const expected = inventory_vector::type_id::compact_block;
     inventory_vector instance{ expected, {} };
     instance.to_witness();
     BOOST_REQUIRE(instance.type() == expected);
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__compact_block__unchanged)
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__witness_transaction__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::witness_transaction;
+    static auto const expected = inventory_vector::type_id::witness_transaction;
     inventory_vector instance{ expected, {} };
     instance.to_witness();
     BOOST_REQUIRE(instance.type() == expected);
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__witness_transaction__unchange
 
 BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__witness_block__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::witness_block;
+    static auto const expected = inventory_vector::type_id::witness_block;
     inventory_vector instance{ expected, {} };
     instance.to_witness();
     BOOST_REQUIRE(instance.type() == expected);

@@ -193,9 +193,9 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success)
         }
     };
 
-    static const auto version = headers::version_minimum;
-    const auto data = expected.to_data(version);
-    const auto result = headers::factory_from_data(version, data);
+    static auto const version = headers::version_minimum;
+    auto const data = expected.to_data(version);
+    auto const result = headers::factory_from_data(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
     BOOST_REQUIRE_EQUAL(result.serialized_size(version), data.size());
@@ -216,8 +216,8 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_2__valid_input__success)
         }
     };
 
-    static const auto version = headers::version_minimum;
-    const auto data = expected.to_data(version);
+    static auto const version = headers::version_minimum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
     auto result = headers::factory_from_data(version, istream);
     BOOST_REQUIRE(result.is_valid());
@@ -240,11 +240,11 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success)
         }
     };
 
-    static const auto version = headers::version_minimum;
-    const auto data = expected.to_data(version);
+    static auto const version = headers::version_minimum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = headers::factory_from_data(version, source);
+    auto const result = headers::factory_from_data(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));

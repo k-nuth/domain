@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(get_data__constructor_3__always__equals_params)
 {
-    static const auto type = inventory_vector::type_id::error;
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const type = inventory_vector::type_id::error;
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const inventory_vector::list values
     {
         inventory_vector(type, hash)
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_3__always__equals_params)
 
     const get_data instance(std::move(values));
     BOOST_REQUIRE(instance.is_valid());
-    const auto inventories = instance.inventories();
+    auto const inventories = instance.inventories();
     BOOST_REQUIRE_EQUAL(1u, inventories.size());
     BOOST_REQUIRE(type == inventories[0].type());
     BOOST_REQUIRE(hash == inventories[0].hash());
@@ -72,8 +72,8 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(get_data__constructor_4__always__equals_params)
 {
-    static const auto type = inventory_vector::type_id::error;
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const type = inventory_vector::type_id::error;
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     static const hash_list hashes{ hash };
 
     const get_data instance(hashes, type);
@@ -86,8 +86,8 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(get_data__constructor_5__always__equals_params)
 {
-    static const auto type = inventory_vector::type_id::error;
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const type = inventory_vector::type_id::error;
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     const get_data instance{ { type, hash } };
     BOOST_REQUIRE(instance.is_valid());
@@ -99,13 +99,13 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(get_data__constructor_6__always__equals_params)
 {
-    static const auto type = inventory_vector::type_id::error;
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const type = inventory_vector::type_id::error;
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     const get_data value{ { type, hash } };
     BOOST_REQUIRE(value.is_valid());
     const get_data instance(value);
-    const auto inventories = instance.inventories();
+    auto const inventories = instance.inventories();
     BOOST_REQUIRE_EQUAL(1u, inventories.size());
     BOOST_REQUIRE(type == inventories[0].type());
     BOOST_REQUIRE(hash == inventories[0].hash());
@@ -114,13 +114,13 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_6__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(get_data__constructor_7__always__equals_params)
 {
-    static const auto type = inventory_vector::type_id::error;
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const type = inventory_vector::type_id::error;
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     const get_data value{ { type, hash } };
     BOOST_REQUIRE(value.is_valid());
     const get_data instance(std::move(value));
-    const auto inventories = instance.inventories();
+    auto const inventories = instance.inventories();
     BOOST_REQUIRE_EQUAL(1u, inventories.size());
     BOOST_REQUIRE(type == inventories[0].type());
     BOOST_REQUIRE(hash == inventories[0].hash());
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_bytes__failure)
 {
     static const data_chunk raw{ 0xab, 0xcd };
     get_data instance;
-    static const auto version = version::level::maximum;
+    static auto const version = version::level::maximum;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version, raw));
 }
 
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_version__failure)
         }
     };
 
-    const auto raw = expected.to_data(version::level::maximum);
+    auto const raw = expected.to_data(version::level::maximum);
     get_data instance;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(get_data::version_minimum - 1, raw));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
@@ -160,9 +160,9 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_1__valid_input__success)
         }
     };
 
-    static const auto version = version::level::maximum;
-    const auto data = expected.to_data(version);
-    const auto result = get_data::factory_from_data(version, data);
+    static auto const version = version::level::maximum;
+    auto const data = expected.to_data(version);
+    auto const result = get_data::factory_from_data(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -181,10 +181,10 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_2__valid_input__success)
         }
     };
 
-    static const auto version = version::level::maximum;
-    const auto data = expected.to_data(version);
+    static auto const version = version::level::maximum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
-    const auto result = get_data::factory_from_data(version, istream);
+    auto const result = get_data::factory_from_data(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -203,11 +203,11 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_3__valid_input__success)
         }
     };
 
-    static const auto version = version::level::maximum;
-    const auto data = expected.to_data(version);
+    static auto const version = version::level::maximum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = get_data::factory_from_data(version, source);
+    auto const result = get_data::factory_from_data(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(get_data__to_witness__error__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::error;
+    static auto const expected = inventory_vector::type_id::error;
     get_data instance{ { expected, {} } };
     instance.to_witness();
     BOOST_REQUIRE(instance.inventories()[0].type() == expected);
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__error__unchanged)
 
 BOOST_AUTO_TEST_CASE(get_data__to_witness__filtered_block__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::filtered_block;
+    static auto const expected = inventory_vector::type_id::filtered_block;
     get_data instance{ { expected, {} } };
     instance.to_witness();
     BOOST_REQUIRE(instance.inventories()[0].type() == expected);
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__filtered_block__unchanged)
 
 BOOST_AUTO_TEST_CASE(get_data__to_witness__compact_block__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::compact_block;
+    static auto const expected = inventory_vector::type_id::compact_block;
     get_data instance{ { expected, {} } };
     instance.to_witness();
     BOOST_REQUIRE(instance.inventories()[0].type() == expected);
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__compact_block__unchanged)
 
 BOOST_AUTO_TEST_CASE(get_data__to_witness__witness_transaction__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::witness_transaction;
+    static auto const expected = inventory_vector::type_id::witness_transaction;
     get_data instance{ { expected, {} } };
     instance.to_witness();
     BOOST_REQUIRE(instance.inventories()[0].type() == expected);
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__witness_transaction__unchanged)
 
 BOOST_AUTO_TEST_CASE(get_data__to_witness__witness_block__unchanged)
 {
-    static const auto expected = inventory_vector::type_id::witness_block;
+    static auto const expected = inventory_vector::type_id::witness_block;
     get_data instance{ { expected, {} } };
     instance.to_witness();
     BOOST_REQUIRE(instance.inventories()[0].type() == expected);
@@ -284,7 +284,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__block_error_transaction__expected)
 
 BOOST_AUTO_TEST_CASE(get_data__operator_assign_equals__always__matches_equivalent)
 {
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     static const inventory_vector::list elements
     {
         inventory_vector(inventory_vector::type_id::error, hash)
@@ -303,7 +303,7 @@ BOOST_AUTO_TEST_CASE(get_data__operator_assign_equals__always__matches_equivalen
 
 BOOST_AUTO_TEST_CASE(get_data__operator_boolean_equals__duplicates__returns_true)
 {
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const get_data expected
     {
         inventory_vector(inventory_vector::type_id::error, hash)
@@ -315,7 +315,7 @@ BOOST_AUTO_TEST_CASE(get_data__operator_boolean_equals__duplicates__returns_true
 
 BOOST_AUTO_TEST_CASE(get_data__operator_boolean_equals__differs__returns_false)
 {
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const get_data expected
     {
         inventory_vector(inventory_vector::type_id::error, hash)
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_CASE(get_data__operator_boolean_equals__differs__returns_false)
 
 BOOST_AUTO_TEST_CASE(get_data__operator_boolean_not_equals__duplicates__returns_false)
 {
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const get_data expected
     {
         inventory_vector(inventory_vector::type_id::error, hash)
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(get_data__operator_boolean_not_equals__duplicates__returns_
 
 BOOST_AUTO_TEST_CASE(get_data__operator_boolean_not_equals__differs__returns_true)
 {
-    static const auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const get_data expected
     {
         inventory_vector(inventory_vector::type_id::error, hash)

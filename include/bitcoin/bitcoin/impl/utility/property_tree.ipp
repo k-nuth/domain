@@ -55,7 +55,7 @@ pt::ptree property_tree_list(const std::string& name, const Values& values,
     bool json)
 {
     pt::ptree list;
-    for (const auto& value: values)
+    for (auto const& value: values)
         add_child(list, name, property_list(value), json);
 
     return list;
@@ -75,7 +75,7 @@ pt::ptree property_tree_list_of_lists(const std::string& name,
     const Values& values, bool json)
 {
     pt::ptree list;
-    for (const auto& value: values)
+    for (auto const& value: values)
         add_child(list, name, property_list(value, json), json);
 
     return list;
@@ -95,7 +95,7 @@ pt::ptree property_value_list(const std::string& name, const Values& values,
 {
     pt::ptree list;
     pt::ptree element;
-    for (const auto& value: values)
+    for (auto const& value: values)
     {
         element.put_value(value);
         add_child(list, name, element, json);

@@ -156,7 +156,7 @@ class BC_API compact_block {
         sink.write_8_bytes_little_endian(nonce_);
         sink.write_variable_little_endian(short_ids_.size());
 
-        for (const auto& element : short_ids_) {
+        for (auto const& element : short_ids_) {
             //sink.write_mini_hash(element);
             uint32_t lsb = element & 0xffffffff;
             uint16_t msb = (element >> 32) & 0xffff;
@@ -167,7 +167,7 @@ class BC_API compact_block {
         sink.write_variable_little_endian(transactions_.size());
 
         // NOTE: Witness flag is controlled by prefilled tx
-        for (const auto& element : transactions_)
+        for (auto const& element : transactions_)
             element.to_data(version, sink);
     }
 

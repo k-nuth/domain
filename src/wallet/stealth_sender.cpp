@@ -60,7 +60,7 @@ void stealth_sender::initialize(const ec_secret& ephemeral_private,
     if (!secret_to_public(ephemeral_public, ephemeral_private))
         return;
 
-    const auto& spend_keys = address.spend_keys();
+    auto const& spend_keys = address.spend_keys();
     if (spend_keys.size() != 1)
         return;
 

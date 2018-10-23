@@ -117,8 +117,8 @@ BOOST_AUTO_TEST_CASE(network_address__factory_from_data_1__without_timestamp__su
         123u
     };
 
-    const auto data = expected.to_data(message::version::level::minimum, false);
-    const auto result = message::network_address::factory_from_data(
+    auto const data = expected.to_data(message::version::level::minimum, false);
+    auto const result = message::network_address::factory_from_data(
         message::version::level::minimum, data, false);
 
     BOOST_REQUIRE(result.is_valid());
@@ -139,9 +139,9 @@ BOOST_AUTO_TEST_CASE(network_address__factory_from_data_2__without_timestamp__su
         123u
     };
 
-    const auto data = expected.to_data(message::version::level::minimum, false);
+    auto const data = expected.to_data(message::version::level::minimum, false);
     data_source istream(data);
-    const auto result = message::network_address::factory_from_data(
+    auto const result = message::network_address::factory_from_data(
         message::version::level::minimum, istream, false);
 
     BOOST_REQUIRE(result.is_valid());
@@ -162,10 +162,10 @@ BOOST_AUTO_TEST_CASE(network_address__factory_from_data_3__without_timestamp__su
         123u
     };
 
-    const auto data = expected.to_data(message::version::level::minimum, false);
+    auto const data = expected.to_data(message::version::level::minimum, false);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::network_address::factory_from_data(
+    auto const result = message::network_address::factory_from_data(
         message::version::level::minimum, source, false);
 
     BOOST_REQUIRE(result.is_valid());
@@ -186,8 +186,8 @@ BOOST_AUTO_TEST_CASE(network_address__factory_from_data_1__with_timestamp__succe
         123u
     };
 
-    const auto data = expected.to_data(message::version::level::minimum, true);
-    const auto result = message::network_address::factory_from_data(
+    auto const data = expected.to_data(message::version::level::minimum, true);
+    auto const result = message::network_address::factory_from_data(
         message::version::level::minimum, data, true);
 
     BOOST_REQUIRE(result.is_valid());
@@ -208,9 +208,9 @@ BOOST_AUTO_TEST_CASE(network_address__factory_from_data_2__with_timestamp__succe
         123u
     };
 
-    const auto data = expected.to_data(message::version::level::minimum, true);
+    auto const data = expected.to_data(message::version::level::minimum, true);
     data_source istream(data);
-    const auto result = message::network_address::factory_from_data(
+    auto const result = message::network_address::factory_from_data(
         message::version::level::minimum, istream, true);
 
     BOOST_REQUIRE(result.is_valid());
@@ -231,10 +231,10 @@ BOOST_AUTO_TEST_CASE(network_address__factory_from_data_3__with_timestamp__succe
         123u
     };
 
-    const auto data = expected.to_data(message::version::level::minimum, true);
+    auto const data = expected.to_data(message::version::level::minimum, true);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::network_address::factory_from_data(
+    auto const result = message::network_address::factory_from_data(
         message::version::level::minimum, source, true);
 
     BOOST_REQUIRE(result.is_valid());

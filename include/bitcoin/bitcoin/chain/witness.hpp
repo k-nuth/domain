@@ -93,9 +93,9 @@ class BC_API witness {
         reset();
         valid_ = true;
 
-        const auto read_element = [](R& source) {
+        auto const read_element = [](R& source) {
             // Tokens encoded as variable integer prefixed byte array (bip144).
-            const auto size = source.read_size_little_endian();
+            auto const size = source.read_size_little_endian();
 
             // The max_script_size and max_push_data_size constants limit
             // evaluation, but not all stacks evaluate, so use max_block_weight
@@ -142,7 +142,7 @@ class BC_API witness {
         if (prefix)
             sink.write_size_little_endian(stack_.size());
 
-        const auto serialize = [&sink](const data_chunk& element) {
+        auto const serialize = [&sink](const data_chunk& element) {
             // Tokens encoded as variable integer prefixed byte array (bip144).
             sink.write_size_little_endian(element.size());
             sink.write_bytes(element);

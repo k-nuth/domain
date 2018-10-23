@@ -106,7 +106,7 @@ bool filter_clear::from_data(uint32_t version, data_source& stream) {
 
 data_chunk filter_clear::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);

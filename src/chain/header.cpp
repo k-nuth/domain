@@ -219,7 +219,7 @@ bool header::is_valid() const {
 
 data_chunk header::to_data(bool wire) const {
     data_chunk data;
-    const auto size = serialized_size(wire);
+    auto const size = serialized_size(wire);
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream, wire);
@@ -373,7 +373,7 @@ hash_digest header::hash() const {
         //---------------------------------------------------------------------
     }
 
-    const auto hash = *hash_;
+    auto const hash = *hash_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 
@@ -387,7 +387,7 @@ hash_digest header::litecoin_proof_of_work_hash() const {
 #endif  //BITPRIM_CURRENCY_LTC
 
 uint256_t header::proof(uint32_t bits) {
-    const auto header_bits = compact(bits);
+    auto const header_bits = compact(bits);
 
     if (header_bits.is_overflowed())
         return 0;
@@ -400,7 +400,7 @@ uint256_t header::proof(uint32_t bits) {
     // While actually achieving this work is improbable, this method operates
     // on user data method and therefore must be guarded.
     //*************************************************************************
-    const auto divisor = target + 1;
+    auto const divisor = target + 1;
 
     // We need to compute 2**256 / (target + 1), but we can't represent 2**256
     // as it's too large for uint256. However as 2**256 is at least as large as
@@ -419,15 +419,15 @@ uint256_t header::proof() const {
 /// BUGBUG: bitcoin 32bit unix time: en.wikipedia.org/wiki/Year_2038_problem
 bool header::is_valid_timestamp() const {
     using namespace std::chrono;
-    static const auto two_hours = seconds(timestamp_future_seconds);
-    const auto time = wall_clock::from_time_t(timestamp_);
-    const auto future = wall_clock::now() + two_hours;
+    static auto const two_hours = seconds(timestamp_future_seconds);
+    auto const time = wall_clock::from_time_t(timestamp_);
+    auto const future = wall_clock::now() + two_hours;
     return time <= future;
 }
 
 // [CheckProofOfWork]
 bool header::is_valid_proof_of_work(bool retarget) const {
-    const auto bits = compact(bits_);
+    auto const bits = compact(bits_);
     static const uint256_t pow_limit(compact{work_limit(retarget)});
 
     if (bits.is_overflowed())

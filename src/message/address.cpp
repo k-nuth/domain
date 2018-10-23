@@ -95,7 +95,7 @@ bool address::from_data(uint32_t version, data_source& stream) {
 //{
 //    reset();
 //
-//    const auto count = source.read_size_little_endian();
+//    auto const count = source.read_size_little_endian();
 //
 //    // Guard against potential for arbitary memory allocation.
 //    if (count > max_address)
@@ -115,7 +115,7 @@ bool address::from_data(uint32_t version, data_source& stream) {
 
 data_chunk address::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -133,7 +133,7 @@ void address::to_data(uint32_t version, data_sink& stream) const {
 //{
 //    sink.write_variable_little_endian(addresses_.size());
 //
-//    for (const auto& net_address: addresses_)
+//    for (auto const& net_address: addresses_)
 //        net_address.to_data(version, sink, true);
 //}
 

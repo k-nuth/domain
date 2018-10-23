@@ -105,7 +105,7 @@ private:
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__typical_uri__test)
 {
-    const auto uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD?amount=0.1");
+    auto const uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD?amount=0.1");
     BOOST_REQUIRE(uri);
     BOOST_REQUIRE_EQUAL(uri.payment().encoded(), "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     BOOST_REQUIRE_EQUAL(uri.amount(), 10000000u);
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__positive_unknown_optional_parameter__tes
     BOOST_REQUIRE(parse("bitcoin:?x="));
     BOOST_REQUIRE(parse("bitcoin:?x"));
 
-    const auto uri = parse("bitcoin:?ignore=true");
+    auto const uri = parse("bitcoin:?ignore=true");
     BOOST_REQUIRE(uri);
     BOOST_REQUIRE(uri.address().empty());
     BOOST_REQUIRE_EQUAL(uri.amount(), 0);
@@ -153,13 +153,13 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__positive_unknown_optional_parameter__tes
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_unknown_required_parameter__test)
 {
-    const auto uri = parse("bitcoin:?req-ignore=false");
+    auto const uri = parse("bitcoin:?req-ignore=false");
     BOOST_REQUIRE(!uri);
 }
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__address__test)
 {
-    const auto uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    auto const uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     BOOST_REQUIRE(uri);
     BOOST_REQUIRE_EQUAL(uri.payment().encoded(), "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     BOOST_REQUIRE_EQUAL(uri.amount(), 0);
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__address__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__uri_encoded_address__test)
 {
-    const auto uri = parse("bitcoin:%3113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    auto const uri = parse("bitcoin:%3113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     BOOST_REQUIRE(uri);
     BOOST_REQUIRE_EQUAL(uri.payment().encoded(), "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
 }
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_address__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__amount_only__test)
 {
-    const auto uri = parse("bitcoin:?amount=4.2");
+    auto const uri = parse("bitcoin:?amount=4.2");
     BOOST_REQUIRE(uri);
     BOOST_REQUIRE(!uri.payment());
     BOOST_REQUIRE_EQUAL(uri.amount(), 420000000u);
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__amount_only__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__minimal_amount__test)
 {
-    const auto uri = parse("bitcoin:?amount=.");
+    auto const uri = parse("bitcoin:?amount=.");
     BOOST_REQUIRE(uri);
     BOOST_REQUIRE_EQUAL(uri.amount(), 0);
 }
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__invalid_amount__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__label_only__test)
 {
-    const auto uri = parse("bitcoin:?label=test");
+    auto const uri = parse("bitcoin:?label=test");
     BOOST_REQUIRE(uri);
     BOOST_REQUIRE(!uri.payment());
     BOOST_REQUIRE_EQUAL(uri.amount(), 0);
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__label_only__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__reserved_symbol_with_lowercase_percent__test)
 {
-    const auto uri = parse("bitcoin:?label=%26%3d%6b");
+    auto const uri = parse("bitcoin:?label=%26%3d%6b");
     BOOST_REQUIRE_EQUAL(uri.label(), "&=k");
 }
 
@@ -231,13 +231,13 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_percent_encoding__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__encoded_multibyte_utf8__test)
 {
-    const auto uri = parse("bitcoin:?label=%E3%83%95");
+    auto const uri = parse("bitcoin:?label=%E3%83%95");
     BOOST_REQUIRE_EQUAL(uri.label(), "フ");
 }
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__non_strict_encoded_multibyte_utf8_with_unencoded_label_space__test)
 {
-    const auto uri = parse("bitcoin:?label=Some テスト", false);
+    auto const uri = parse("bitcoin:?label=Some テスト", false);
     BOOST_REQUIRE_EQUAL(uri.label(), "Some テスト");
 }
 
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_strict_encoded_multibyte_utf8_w
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__message_only__test)
 {
-    const auto uri = parse("bitcoin:?message=Hi%20Alice");
+    auto const uri = parse("bitcoin:?message=Hi%20Alice");
     BOOST_REQUIRE(!uri.payment());
     BOOST_REQUIRE_EQUAL(uri.amount(), 0);
     BOOST_REQUIRE(uri.label().empty());
@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__message_only__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__payment_protocol_only__test)
 {
-    const auto uri = parse("bitcoin:?r=http://www.example.com?purchase%3Dshoes");
+    auto const uri = parse("bitcoin:?r=http://www.example.com?purchase%3Dshoes");
     BOOST_REQUIRE(!uri.payment());
     BOOST_REQUIRE_EQUAL(uri.amount(), 0);
     BOOST_REQUIRE(uri.label().empty());
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__payment_protocol_only__test)
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_optional_parameter_type__test)
 {
-    const auto custom = uri_reader::parse<custom_reader>("foo:part/abc?myparam1=1&myparam2=2#myfrag");
+    auto const custom = uri_reader::parse<custom_reader>("foo:part/abc?myparam1=1&myparam2=2#myfrag");
     BOOST_REQUIRE(custom.is_valid());
     BOOST_REQUIRE_EQUAL(custom.myscheme, "foo");
     BOOST_REQUIRE_EQUAL(custom.mypath, "part/abc");

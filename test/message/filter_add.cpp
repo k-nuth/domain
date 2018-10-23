@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(filter_add__from_data__insufficient_version__failure)
             }
         };
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    auto const data = expected.to_data(message::version::level::maximum);
     message::filter_add instance;
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(
@@ -104,8 +104,8 @@ BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_1__valid_input__success)
         }
     };
 
-    const auto data = expected.to_data(message::version::level::maximum);
-    const auto result = message::filter_add::factory_from_data(
+    auto const data = expected.to_data(message::version::level::maximum);
+    auto const result = message::filter_add::factory_from_data(
         message::version::level::maximum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -128,9 +128,9 @@ BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_2__valid_input__success)
         }
     };
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
-    const auto result = message::filter_add::factory_from_data(
+    auto const result = message::filter_add::factory_from_data(
         message::version::level::maximum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -153,10 +153,10 @@ BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_3__valid_input__success)
         }
     };
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::filter_add::factory_from_data(
+    auto const result = message::filter_add::factory_from_data(
         message::version::level::maximum, source);
 
     BOOST_REQUIRE(result.is_valid());

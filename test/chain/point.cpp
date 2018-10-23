@@ -21,7 +21,7 @@
 
 using namespace bc;
 
-const auto valid_raw_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));
+auto const valid_raw_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));
 
 BOOST_AUTO_TEST_SUITE(point_tests)
 
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(point__constructor_1__always__returns_default_initialized)
 
 BOOST_AUTO_TEST_CASE(point__constructor_2__valid_input__returns_input_initialized)
 {
-    const auto hash = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    auto const hash = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     uint32_t index = 1234u;
 
     chain::point instance(hash, index);
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(point__constructor_2__valid_input__returns_input_initialize
 
 BOOST_AUTO_TEST_CASE(point__constructor_3__valid_input__returns_input_initialized)
 {
-    const auto hash = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    auto const hash = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     uint32_t index = 1234u;
 
     // This must be non-const.
@@ -127,8 +127,8 @@ BOOST_AUTO_TEST_CASE(point__from_data__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(point__factory_from_data_1__roundtrip__success)
 {
-    const auto raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    const auto data = data_chunk
+    auto const raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
+    auto const data = data_chunk
     {
         0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
         0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(point__factory_from_data_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(point__factory_from_data_2__roundtrip__success)
 {
-    const auto raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
+    auto const raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
     const data_chunk data
     {
         0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(point__factory_from_data_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(point__factory_from_data_3__roundtrip__success)
 {
-    const auto raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
+    auto const raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
     const data_chunk data
     {
         0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(point__factory_from_data_3__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(point__hash_setter_1__roundtrip__success)
 {
-    const auto value = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    auto const value = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     chain::point instance;
     BOOST_REQUIRE(value != instance.hash());
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE(point__hash_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(point__hash_setter_2__roundtrip__success)
 {
-    const auto value = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    auto const value = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     // This must be non-const.
     auto dup_value = value;
@@ -285,28 +285,28 @@ BOOST_AUTO_TEST_CASE(point__operator_boolean_not_equals__differs__returns_true)
 
 BOOST_AUTO_TEST_CASE(point__checksum__all_ones__returns_all_ones)
 {
-    static const auto tx_hash = hash_literal("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    static auto const tx_hash = hash_literal("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     chain::point instance(tx_hash, 0xffffffff);
     BOOST_REQUIRE_EQUAL(instance.checksum(), 0xffffffffffffffff);
 }
 
 BOOST_AUTO_TEST_CASE(point__checksum__all_zeroes__returns_all_zeroes)
 {
-    static const auto tx_hash = hash_literal("0000000000000000000000000000000000000000000000000000000000000000");
+    static auto const tx_hash = hash_literal("0000000000000000000000000000000000000000000000000000000000000000");
     chain::point instance(tx_hash, 0x00000000);
     BOOST_REQUIRE_EQUAL(instance.checksum(), 0x0000000000000000);
 }
 
 BOOST_AUTO_TEST_CASE(point__checksum__pattern_one__returns_expected)
 {
-    static const auto tx_hash = hash_literal("000000000000000000000000aaaaaaaaaaaaaaaa000000000000000000000000");
+    static auto const tx_hash = hash_literal("000000000000000000000000aaaaaaaaaaaaaaaa000000000000000000000000");
     chain::point instance(tx_hash, 0x00000001);
     BOOST_REQUIRE_EQUAL(instance.checksum(), 0xaaaaaaaaaaaa8001);
 }
 
 BOOST_AUTO_TEST_CASE(point__checksum__pattern_high__returns_expected)
 {
-    static const auto tx_hash = hash_literal("ffffffffffffffffffffffff01234567aaaaaaaaffffffffffffffffffffffff");
+    static auto const tx_hash = hash_literal("ffffffffffffffffffffffff01234567aaaaaaaaffffffffffffffffffffffff");
     chain::point instance(tx_hash, 0x89abcdef);
     BOOST_REQUIRE_EQUAL(instance.checksum(), 0x1234567aaaacdef);
 }

@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure)
         }
     };
 
-    const auto version = version::level::maximum;
+    auto const version = version::level::maximum;
     const data_chunk raw = expected.to_data(version);
     not_found instance;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(not_found::version_minimum - 1, raw));
@@ -177,9 +177,9 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_1__valid_input__success)
         }
     };
 
-    const auto version = version::level::maximum;
-    const auto data = expected.to_data(version);
-    const auto result = not_found::factory_from_data(version, data);
+    auto const version = version::level::maximum;
+    auto const data = expected.to_data(version);
+    auto const result = not_found::factory_from_data(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -205,10 +205,10 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_2__valid_input__success)
         }
     };
 
-    const auto version = version::level::maximum;
-    const auto data = expected.to_data(version);
+    auto const version = version::level::maximum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
-    const auto result = not_found::factory_from_data(version, istream);
+    auto const result = not_found::factory_from_data(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -234,11 +234,11 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_3__valid_input__success)
         }
     };
 
-    const auto version = version::level::maximum;
-    const auto data = expected.to_data(version);
+    auto const version = version::level::maximum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = not_found::factory_from_data(version, source);
+    auto const result = not_found::factory_from_data(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));

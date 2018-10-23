@@ -78,7 +78,7 @@ bool operation::from_data(data_source& stream) {
 //    ////reset();
 //    valid_ = true;
 //    code_ = static_cast<opcode>(source.read_byte());
-//    const auto size = read_data_size(code_, source);
+//    auto const size = read_data_size(code_, source);
 //
 //    // The max_script_size and max_push_data_size constants limit
 //    // evaluation, but not all scripts evaluate, so use max_block_size
@@ -104,7 +104,7 @@ inline bool is_text_token(const std::string& token) {
 
 inline bool is_valid_data_size(opcode code, size_t size) {
     BC_CONSTEXPR auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
-    const auto value = static_cast<uint8_t>(code);
+    auto const value = static_cast<uint8_t>(code);
     return value > op_75 || value == size;
 }
 
@@ -121,7 +121,7 @@ static bool opcode_from_data_prefix(opcode& out_code,
                                     const std::string& prefix,
                                     const data_chunk& data) {
     BC_CONSTEXPR auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
-    const auto size = data.size();
+    auto const size = data.size();
     out_code = operation::opcode_from_size(size);
 
     if (prefix == "0") {
@@ -156,7 +156,7 @@ bool operation::from_string(const std::string& mnemonic) {
 
     if (is_push_token(mnemonic)) {
         // Data encoding uses single token (with optional non-minimality).
-        const auto parts = split_push_token(mnemonic);
+        auto const parts = split_push_token(mnemonic);
 
         if (parts.size() == 1) {
             // Extract operation using nominal data size encoding.
@@ -170,7 +170,7 @@ bool operation::from_string(const std::string& mnemonic) {
                      opcode_from_data_prefix(code_, parts[0], data_);
         }
     } else if (is_text_token(mnemonic)) {
-        const auto text = trim_token(mnemonic);
+        auto const text = trim_token(mnemonic);
         data_ = data_chunk{text.begin(), text.end()};
         code_ = nominal_opcode_from_data(data_);
         valid_ = true;
@@ -207,7 +207,7 @@ void operation::reset() {
 
 data_chunk operation::to_data() const {
     data_chunk data;
-    const auto size = serialized_size();
+    auto const size = serialized_size();
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream);
@@ -223,7 +223,7 @@ void operation::to_data(data_sink& stream) const {
 
 //void operation::to_data(writer& sink) const
 //{
-//    const auto size = data_.size();
+//    auto const size = data_.size();
 //
 //    sink.write_byte(static_cast<uint8_t>(code_));
 //

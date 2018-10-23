@@ -105,7 +105,7 @@ bool send_tokens::from_data(bc::reader& source) {
 
 data_chunk send_tokens::to_data() const {
     data_chunk data;
-    const auto size = serialized_size();
+    auto const size = serialized_size();
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream);

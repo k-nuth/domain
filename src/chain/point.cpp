@@ -35,7 +35,7 @@
 namespace libbitcoin {
 namespace chain {
 
-static const auto store_point_size = std::tuple_size<point>::value;
+static auto const store_point_size = std::tuple_size<point>::value;
 
 // This sentinel is serialized and defined by consensus, not implementation.
 uint32_t const point::null_index = no_previous_output;
@@ -179,7 +179,7 @@ bool point::is_valid() const {
 
 data_chunk point::to_data(bool wire) const {
     data_chunk data;
-    const auto size = serialized_size(wire);
+    auto const size = serialized_size(wire);
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream, wire);
@@ -274,11 +274,11 @@ uint64_t point::checksum() const {
     // Use an offset to the middle of the hash to avoid coincidental mining
     // of values into the front or back of tx hash (not a security feature).
     // Use most possible bits of tx hash to make intentional collision hard.
-    const auto tx = from_little_endian_unsafe<uint64_t>(hash_.begin() + 12);
-    const auto index = static_cast<uint64_t>(index_);
+    auto const tx = from_little_endian_unsafe<uint64_t>(hash_.begin() + 12);
+    auto const index = static_cast<uint64_t>(index_);
 
-    const auto tx_upper_49_bits = tx & mask;
-    const auto index_lower_15_bits = index & ~mask;
+    auto const tx_upper_49_bits = tx & mask;
+    auto const index_lower_15_bits = index & ~mask;
     return tx_upper_49_bits | index_lower_15_bits;
 }
 

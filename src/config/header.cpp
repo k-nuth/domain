@@ -70,7 +70,7 @@ std::istream& operator>>(std::istream& input, header& argument)
 
 std::ostream& operator<<(std::ostream& output, const header& argument)
 {
-    const auto bytes = argument.value_.to_data();
+    auto const bytes = argument.value_.to_data();
 
     output << base16(bytes);
     return output;

@@ -61,7 +61,7 @@ using namespace bc::machine;
 using namespace boost::adaptors;
 
 // bit.ly/2cPazSa
-static const auto one_hash = hash_literal(
+static auto const one_hash = hash_literal(
     "0000000000000000000000000000000000000000000000000000000000000001");
 
 // Constructors.
@@ -179,7 +179,7 @@ bool script::from_data(data_source& stream, bool prefix) {
 //
 //    if (prefix)
 //    {
-//        const auto size = source.read_size_little_endian();
+//        auto const size = source.read_size_little_endian();
 //
 //        // The max_script_size constant limits evaluation, but not all scripts
 //        // evaluate, so use max_block_size to guard memory allocation here.
@@ -204,7 +204,7 @@ bool script::from_string(const std::string& mnemonic) {
     reset();
 
     // There is strictly one operation per string token.
-    const auto tokens = split(mnemonic);
+    auto const tokens = split(mnemonic);
     operation::list ops;
     ops.resize(tokens.empty() || tokens.front().empty() ? 0 : tokens.size());
 
@@ -238,9 +238,9 @@ void script::from_operations(const operation::list& ops) {
 // private/static
 data_chunk script::operations_to_data(const operation::list& ops) {
     data_chunk out;
-    const auto size = serialized_size(ops);
+    auto const size = serialized_size(ops);
     out.reserve(size);
-    const auto concatenate = [&out](const operation& op) {
+    auto const concatenate = [&out](const operation& op) {
         auto bytes = op.to_data();
         std::move(bytes.begin(), bytes.end(), std::back_inserter(out));
     };
@@ -252,7 +252,7 @@ data_chunk script::operations_to_data(const operation::list& ops) {
 
 // private/static
 size_t script::serialized_size(const operation::list& ops) {
-    const auto op_size = [](size_t total, const operation& op) {
+    auto const op_size = [](size_t total, const operation& op) {
         return total + op.serialized_size();
     };
 
@@ -287,7 +287,7 @@ bool script::is_valid_operations() const {
 
 data_chunk script::to_data(bool prefix) const {
     data_chunk data;
-    const auto size = serialized_size(prefix);
+    auto const size = serialized_size(prefix);
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream, prefix);
@@ -314,7 +314,7 @@ std::string script::to_string(uint32_t active_forks) const {
     auto first = true;
     std::ostringstream text;
 
-    for (const auto& op : operations()) {
+    for (auto const& op : operations()) {
         text << (first ? "" : " ") << op.to_string(active_forks);
         first = false;
     }
@@ -390,7 +390,7 @@ const operation::list& script::operations() const {
     operation op;
     data_source istream(bytes_);
     istream_reader stream_r(istream);
-    const auto size = bytes_.size();
+    auto const size = bytes_.size();
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     mutex_.unlock_upgrade_and_lock();
@@ -456,19 +456,19 @@ inline uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 
 static hash_digest sign_none(const transaction& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
     input::list ins;
-    const auto& inputs = tx.inputs();
-    const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+    auto const& inputs = tx.inputs();
+    auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
     ins.reserve(any ? 1 : inputs.size());
 
     BITCOIN_ASSERT(input_index < inputs.size());
-    const auto& self = inputs[input_index];
+    auto const& self = inputs[input_index];
 
     if (any) {
         // Retain only self.
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
     } else {
         // Erase all input scripts and sequences.
-        for (const auto& input : inputs)
+        for (auto const& input : inputs)
             ins.emplace_back(input.previous_output(), script{}, 0);
 
         // Replace self that is lost in the loop.
@@ -483,19 +483,19 @@ static hash_digest sign_none(const transaction& tx, uint32_t input_index, const 
 
 static hash_digest sign_single(const transaction& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
     input::list ins;
-    const auto& inputs = tx.inputs();
-    const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+    auto const& inputs = tx.inputs();
+    auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
     ins.reserve(any ? 1 : inputs.size());
 
     BITCOIN_ASSERT(input_index < inputs.size());
-    const auto& self = inputs[input_index];
+    auto const& self = inputs[input_index];
 
     if (any) {
         // Retain only self.
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
     } else {
         // Erase all input scripts and sequences.
-        for (const auto& input : inputs)
+        for (auto const& input : inputs)
             ins.emplace_back(input.previous_output(), script{}, 0);
 
         // Replace self that is lost in the loop.
@@ -504,7 +504,7 @@ static hash_digest sign_single(const transaction& tx, uint32_t input_index, cons
     }
 
     // Trim and clear outputs except that of specified input index.
-    const auto& outputs = tx.outputs();
+    auto const& outputs = tx.outputs();
     output::list outs(input_index + 1);
 
     BITCOIN_ASSERT(input_index < outputs.size());
@@ -518,19 +518,19 @@ static hash_digest sign_single(const transaction& tx, uint32_t input_index, cons
 
 static hash_digest sign_all(const transaction& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
     input::list ins;
-    const auto& inputs = tx.inputs();
-    const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+    auto const& inputs = tx.inputs();
+    auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
     ins.reserve(any ? 1 : inputs.size());
 
     BITCOIN_ASSERT(input_index < inputs.size());
-    const auto& self = inputs[input_index];
+    auto const& self = inputs[input_index];
 
     if (any) {
         // Retain only self.
         ins.emplace_back(self.previous_output(), script_code, self.sequence());
     } else {
         // Erase all input scripts.
-        for (const auto& input : inputs)
+        for (auto const& input : inputs)
             ins.emplace_back(input.previous_output(), script{},
                              input.sequence());
 
@@ -560,7 +560,7 @@ hash_digest script::generate_unversioned_signature_hash(const transaction& tx,
                                                         uint32_t input_index,
                                                         const script& script_code,
                                                         uint8_t sighash_type) {
-    const auto sighash = to_sighash_enum(sighash_type);
+    auto const sighash = to_sighash_enum(sighash_type);
     if (input_index >= tx.inputs().size() ||
         (input_index >= tx.outputs().size() &&
          sighash == sighash_algorithm::single)) {
@@ -573,7 +573,7 @@ hash_digest script::generate_unversioned_signature_hash(const transaction& tx,
     //*************************************************************************
     // CONSENSUS: more wacky satoshi behavior.
     //*************************************************************************
-    const auto stripped = strip_code_seperators(script_code);
+    auto const stripped = strip_code_seperators(script_code);
 
     // The sighash serializations are isolated for clarity and optimization.
     switch (sighash) {
@@ -591,18 +591,18 @@ hash_digest script::generate_unversioned_signature_hash(const transaction& tx,
 //-----------------------------------------------------------------------------
 
 hash_digest script::to_outputs(const transaction& tx) {
-    const auto sum = [&](size_t total, const output& output) {
+    auto const sum = [&](size_t total, const output& output) {
         return total + output.serialized_size();
     };
 
-    const auto& outs = tx.outputs();
+    auto const& outs = tx.outputs();
     auto size = std::accumulate(outs.begin(), outs.end(), size_t(0), sum);
     data_chunk data;
     data.reserve(size);
     data_sink ostream(data);
     ostream_writer sink_w(ostream);
 
-    const auto write = [&](const output& output) {
+    auto const write = [&](const output& output) {
         output.to_data(sink_w, true);
     };
 
@@ -613,18 +613,18 @@ hash_digest script::to_outputs(const transaction& tx) {
 }
 
 hash_digest script::to_inpoints(const transaction& tx) {
-    const auto sum = [&](size_t total, const input& input) {
+    auto const sum = [&](size_t total, const input& input) {
         return total + input.previous_output().serialized_size();
     };
 
-    const auto& ins = tx.inputs();
+    auto const& ins = tx.inputs();
     auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
     data_chunk data;
     data.reserve(size);
     data_sink ostream(data);
     ostream_writer sink_w(ostream);
 
-    const auto write = [&](const input& input) {
+    auto const write = [&](const input& input) {
         input.previous_output().to_data(sink_w);
     };
 
@@ -635,18 +635,18 @@ hash_digest script::to_inpoints(const transaction& tx) {
 }
 
 hash_digest script::to_sequences(const transaction& tx) {
-    const auto sum = [&](size_t total, const input& input) {
+    auto const sum = [&](size_t total, const input& input) {
         return total + sizeof(uint32_t);
     };
 
-    const auto& ins = tx.inputs();
+    auto const& ins = tx.inputs();
     auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
     data_chunk data;
     data.reserve(size);
     data_sink ostream(data);
     ostream_writer sink_w(ostream);
 
-    const auto write = [&](const input& input) {
+    auto const write = [&](const input& input) {
         sink_w.write_4_bytes_little_endian(input.sequence());
     };
 
@@ -668,8 +668,8 @@ hash_digest script::generate_version_0_signature_hash(const transaction& tx,
                                                       uint8_t sighash_type) {
     // Unlike unversioned algorithm this does not allow an invalid input index.
     BITCOIN_ASSERT(input_index < tx.inputs().size());
-    const auto& input = tx.inputs()[input_index];
-    const auto size = preimage_size(script_code.serialized_size(true));
+    auto const& input = tx.inputs()[input_index];
+    auto const size = preimage_size(script_code.serialized_size(true));
 
     data_chunk data;
     data.reserve(size);
@@ -677,16 +677,16 @@ hash_digest script::generate_version_0_signature_hash(const transaction& tx,
     ostream_writer sink_w(ostream);
 
     // Flags derived from the signature hash byte.
-    const auto sighash = to_sighash_enum(sighash_type);
-    const auto any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
+    auto const sighash = to_sighash_enum(sighash_type);
+    auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 #ifdef BITPRIM_CURRENCY_BCH
-    const auto single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
-    const auto none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
-    const auto all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::cash_forkid_all);
+    auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
+    auto const none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
+    auto const all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::cash_forkid_all);
 #else
-    const auto single = (sighash == sighash_algorithm::single);
-    const auto none = (sighash == sighash_algorithm::none);
-    const auto all = (sighash == sighash_algorithm::all);
+    auto const single = (sighash == sighash_algorithm::single);
+    auto const none = (sighash == sighash_algorithm::none);
+    auto const all = (sighash == sighash_algorithm::all);
 #endif
 
     // 1. transaction version (4-byte little endian).
@@ -762,7 +762,7 @@ bool script::check_signature(const ec_signature& signature,
         return false;
 
     // This always produces a valid signature hash, including one_hash.
-    const auto sighash = chain::script::generate_signature_hash(tx,
+    auto const sighash = chain::script::generate_signature_hash(tx,
                                                                 input_index, script_code, sighash_type, version, value);
 
     // Validate the EC signature.
@@ -774,7 +774,7 @@ bool script::create_endorsement(endorsement& out, const ec_secret& secret, const
     out.reserve(max_endorsement_size);
 
     // This always produces a valid signature hash, including one_hash.
-    const auto sighash = chain::script::generate_signature_hash(tx,
+    auto const sighash = chain::script::generate_signature_hash(tx,
                                                                 input_index, prevout_script, sighash_type, version, value);
 
     // Create the EC signature and encode as DER.
@@ -792,7 +792,7 @@ bool script::create_endorsement(endorsement& out, const ec_secret& secret, const
 //-----------------------------------------------------------------------------
 
 bool script::is_push_only(const operation::list& ops) {
-    const auto push = [](const operation& op) {
+    auto const push = [](const operation& op) {
         return op.is_push();
     };
 
@@ -803,7 +803,7 @@ bool script::is_push_only(const operation::list& ops) {
 // CONSENSUS: this pattern is used to activate bip16 validation rules.
 //*****************************************************************************
 bool script::is_relaxed_push(const operation::list& ops) {
-    const auto push = [&](const operation& op) {
+    auto const push = [&](const operation& op) {
         return op.is_relaxed_push();
     };
 
@@ -823,7 +823,7 @@ bool script::is_coinbase_pattern(const operation::list& ops, size_t height) {
 // CONSENSUS: this pattern is used to commit to bip141 witness data.
 //*****************************************************************************
 bool script::is_commitment_pattern(const operation::list& ops) {
-    static const auto header = to_big_endian(witness_head);
+    static auto const header = to_big_endian(witness_head);
 
     // Bytes after commitment are optional with no consensus meaning (bip141).
     // Commitment is not executable so invalid trailing operations are allowed.
@@ -863,19 +863,19 @@ bool script::is_pay_multisig_pattern(const operation::list& ops) {
     static constexpr auto op_1 = static_cast<uint8_t>(opcode::push_positive_1);
     static constexpr auto op_16 = static_cast<uint8_t>(opcode::push_positive_16);
 
-    const auto op_count = ops.size();
+    auto const op_count = ops.size();
 
     if (op_count < 4 || ops[op_count - 1].code() != opcode::checkmultisig)
         return false;
 
-    const auto op_m = static_cast<uint8_t>(ops[0].code());
-    const auto op_n = static_cast<uint8_t>(ops[op_count - 2].code());
+    auto const op_m = static_cast<uint8_t>(ops[0].code());
+    auto const op_n = static_cast<uint8_t>(ops[op_count - 2].code());
 
     if (op_m < op_1 || op_m > op_n || op_n < op_1 || op_n > op_16)
         return false;
 
-    const auto number = op_n - op_1 + 1u;
-    const auto points = op_count - 3u;
+    auto const number = op_n - op_1 + 1u;
+    auto const points = op_count - 3u;
 
     if (number != points)
         return false;
@@ -972,7 +972,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
                                                 const point_list& points) {
     data_stack chunks;
     chunks.reserve(points.size());
-    const auto conversion = [&chunks](const ec_compressed& point) {
+    auto const conversion = [&chunks](const ec_compressed& point) {
         chunks.push_back(to_chunk(point));
     };
 
@@ -992,20 +992,20 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
     static constexpr auto zero = op_81 - 1;
     static constexpr auto max = op_96 - zero;
 
-    const auto m = signatures;
-    const auto n = points.size();
+    auto const m = signatures;
+    auto const n = points.size();
 
     if (m < 1 || m > n || n < 1 || n > max)
         return operation::list();
 
-    const auto op_m = static_cast<opcode>(m + zero);
-    const auto op_n = static_cast<opcode>(points.size() + zero);
+    auto const op_m = static_cast<opcode>(m + zero);
+    auto const op_n = static_cast<opcode>(points.size() + zero);
 
     operation::list ops;
     ops.reserve(points.size() + 3);
     ops.emplace_back(op_m);
 
-    for (const auto point : points) {
+    for (auto const point : points) {
         if (!is_public_key(point))
             return {};
 
@@ -1022,13 +1022,13 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
 
 data_chunk script::witness_program() const {
     // The first operations access must be method-based to guarantee the cache.
-    const auto& ops = operations();
+    auto const& ops = operations();
     return is_witness_program_pattern(ops) ? ops[1].data() : data_chunk{};
 }
 
 script_version script::version() const {
     // The first operations access must be method-based to guarantee the cache.
-    const auto& ops = operations();
+    auto const& ops = operations();
 
     if (!is_witness_program_pattern(ops))
         return script_version::unversioned;
@@ -1040,7 +1040,7 @@ script_version script::version() const {
 // Caller should test for is_sign_script_hash_pattern when sign_key_hash result
 // as it is possible for an input script to match both patterns.
 script_pattern script::pattern() const {
-    const auto input = output_pattern();
+    auto const input = output_pattern();
     return input == script_pattern::non_standard ? input_pattern() : input;
 }
 
@@ -1110,8 +1110,8 @@ size_t script::sigops(bool accurate) const {
     auto preceding = opcode::reserved_255;
 
     // The first operations access must be method-based to guarantee the cache.
-    for (const auto& op : operations()) {
-        const auto code = op.code();
+    for (auto const& op : operations()) {
+        auto const code = op.code();
 
         if (code == opcode::checksig ||
             code == opcode::checksigverify) {
@@ -1140,7 +1140,7 @@ void script::find_and_delete_(const data_chunk& endorsement) {
 
     // The value must be serialized to script using non-minimal encoding.
     // Non-minimally-encoded target values will therefore not match.
-    const auto value = operation(endorsement, false).to_data();
+    auto const value = operation(endorsement, false).to_data();
 
     operation op;
     data_source stream(bytes_);
@@ -1161,13 +1161,13 @@ void script::find_and_delete_(const data_chunk& endorsement) {
     }
 
     // Delete any found values, reversed to prevent iterator invalidation.
-    for (const auto it : reverse(found))
+    for (auto const it : reverse(found))
         bytes_.erase(it, it + value.size());
 }
 
 // Concurrent read/write is not supported, so no critical section.
 void script::find_and_delete(const data_stack& endorsements) {
-    for (const auto& endorsement : endorsements)
+    for (auto const& endorsement : endorsements)
         find_and_delete_(endorsement);
 
     // Invalidate the cache so that the operations may be regenerated.
@@ -1180,11 +1180,11 @@ void script::find_and_delete(const data_stack& endorsements) {
 ////// but the static template implementation is more self-explanatory.
 ////bool script::is_coinbase_pattern(size_t height) const
 ////{
-////    const auto actual = to_data(false);
+////    auto const actual = to_data(false);
 ////
 ////    // Create the expected script as a non-minimal byte vector.
 ////    script compare(operation::list{ { number(height).data(), false } });
-////    const auto expected = compare.to_data(false);
+////    auto const expected = compare.to_data(false);
 ////
 ////    // Require the actual script start with the expected coinbase script.
 ////    return std::equal(expected.begin(), expected.end(), actual.begin());
@@ -1271,8 +1271,8 @@ code script::verify(const transaction& tx, uint32_t input, uint32_t forks) {
     if (input >= tx.inputs().size())
         return error::operation_failed;
 
-    const auto& in = tx.inputs()[input];
-    const auto& prevout = in.previous_output().validation.cache;
+    auto const& in = tx.inputs()[input];
+    auto const& prevout = in.previous_output().validation.cache;
     return verify(tx, input, forks, in.script(), in.witness(),
                   prevout.script(), prevout.value());
 }

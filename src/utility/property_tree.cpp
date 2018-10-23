@@ -90,7 +90,7 @@ ptree property_list(const chain::input& tx_input)
 
     // This does not support pay_multisig or pay_public_key (nonstandard).
     // This will have default versioning, but the address version is unused.
-    const auto address = tx_input.address();
+    auto const address = tx_input.address();
 
     if (address)
         tree.put("address_hash", hash160(address.hash()));
@@ -135,7 +135,7 @@ ptree property_tree(const config::input& input)
 
 ptree property_tree(const std::vector<config::input>& inputs, bool json)
 {
-    const auto tx_inputs = cast<input, chain::input>(inputs);
+    auto const tx_inputs = cast<input, chain::input>(inputs);
 
     ptree tree;
     tree.add_child("inputs", property_tree_list("input", tx_inputs, json));
@@ -150,7 +150,7 @@ ptree property_list(const chain::output& tx_output)
 
     // This does not support pay_multisig or pay_public_key (nonstandard).
     // This will have default versioning, but the address version is unused.
-    const auto address = tx_output.address();
+    auto const address = tx_output.address();
 
     if (address)
         tree.put("address_hash", hash160(address.hash()));
@@ -281,7 +281,7 @@ ptree property_tree(const settings_list& settings)
 {
     ptree list;
 
-    for (const auto& setting: settings)
+    for (auto const& setting: settings)
         list.put(setting.first, setting.second);
 
     ptree tree;

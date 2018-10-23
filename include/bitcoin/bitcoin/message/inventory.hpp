@@ -84,7 +84,7 @@ class BC_API inventory {
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        const auto count = source.read_size_little_endian();
+        auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
         if (count > max_inventory)
@@ -111,7 +111,7 @@ class BC_API inventory {
     void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(inventories_.size());
 
-        for (const auto& inventory : inventories_)
+        for (auto const& inventory : inventories_)
             inventory.to_data(version, sink);
     }
 

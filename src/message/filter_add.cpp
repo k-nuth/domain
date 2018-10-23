@@ -96,7 +96,7 @@ bool filter_add::from_data(uint32_t version, data_source& stream) {
 //{
 //    reset();
 //
-//    const auto size = source.read_size_little_endian();
+//    auto const size = source.read_size_little_endian();
 //
 //    if (size > max_filter_add)
 //        source.invalidate();
@@ -114,7 +114,7 @@ bool filter_add::from_data(uint32_t version, data_source& stream) {
 
 data_chunk filter_add::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);

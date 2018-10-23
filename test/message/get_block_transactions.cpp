@@ -97,8 +97,8 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_1__valid_input__s
         }
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
-    const auto result = message::get_block_transactions::factory_from_data(
+    auto const data = expected.to_data(message::version::level::minimum);
+    auto const result = message::get_block_transactions::factory_from_data(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_2__valid_input__s
         }
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     auto result = message::get_block_transactions::factory_from_data(
         message::version::level::minimum, istream);
@@ -148,10 +148,10 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_3__valid_input__s
         }
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::get_block_transactions::factory_from_data(
+    auto const result = message::get_block_transactions::factory_from_data(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

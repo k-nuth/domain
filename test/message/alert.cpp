@@ -43,8 +43,8 @@ BOOST_AUTO_TEST_CASE(alert__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(alert__constructor_3__always__equals_params)
 {
-    const auto payload = to_chunk(base16_literal("0123456789abcdef"));
-    const auto signature = to_chunk(base16_literal("fedcba9876543210"));
+    auto const payload = to_chunk(base16_literal("0123456789abcdef"));
+    auto const signature = to_chunk(base16_literal("fedcba9876543210"));
     auto dup_payload = payload;
     auto dup_signature = signature;
 
@@ -145,14 +145,14 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
     };
 
     const message::alert expected{ raw_payload, raw_signature };
-    const auto result = message::alert::factory_from_data(
+    auto const result = message::alert::factory_from_data(
         message::version::level::minimum, raw);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(raw.size(), result.serialized_size(message::version::level::minimum));
     BOOST_REQUIRE(result == expected);
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
 
     BOOST_REQUIRE_EQUAL(raw.size(), data.size());
     BOOST_REQUIRE_EQUAL(data.size(), expected.serialized_size(message::version::level::minimum));
@@ -166,8 +166,8 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__roundtrip__success)
         { 0x04, 0xff, 0xab, 0xcd, 0xee }
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
-    const auto result = message::alert::factory_from_data(
+    auto const data = expected.to_data(message::version::level::minimum);
+    auto const result = message::alert::factory_from_data(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -184,9 +184,9 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_2__roundtrip__success)
         { 0x04, 0xff, 0xab, 0xcd, 0xee }
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    const auto result = message::alert::factory_from_data(message::version::level::minimum, istream);
+    auto const result = message::alert::factory_from_data(message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -202,10 +202,10 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success)
         { 0x04, 0xff, 0xab, 0xcd, 0xee }
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::alert::factory_from_data(
+    auto const result = message::alert::factory_from_data(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE(alert__payload_accessor_2__always__returns_initialized)
 
 BOOST_AUTO_TEST_CASE(alert__payload_setter_1__roundtrip__success)
 {
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     message::alert instance;
     BOOST_REQUIRE(instance.payload() != value);
     instance.set_payload(value);
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(alert__payload_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert__payload_setter_2__roundtrip__success)
 {
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     auto dup_value = value;
     message::alert instance;
     BOOST_REQUIRE(instance.payload() != value);
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(alert__signature_accessor_2__always__returns_initialized)
 
 BOOST_AUTO_TEST_CASE(alert__signature_setter_1__roundtrip__success)
 {
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     message::alert instance;
     BOOST_REQUIRE(instance.signature() != value);
     instance.set_signature(value);
@@ -280,7 +280,7 @@ BOOST_AUTO_TEST_CASE(alert__signature_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert__signature_setter_2__roundtrip__success)
 {
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     auto dup_value = value;
     message::alert instance;
     BOOST_REQUIRE(instance.signature() != value);

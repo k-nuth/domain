@@ -72,7 +72,7 @@ class BC_API address {
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        const auto count = source.read_size_little_endian();
+        auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
         if (count > max_address)
@@ -99,7 +99,7 @@ class BC_API address {
     void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(addresses_.size());
 
-        for (const auto& net_address : addresses_)
+        for (auto const& net_address : addresses_)
             net_address.to_data(version, sink, true);
     }
 

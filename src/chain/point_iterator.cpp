@@ -33,7 +33,7 @@
 namespace libbitcoin {
 namespace chain {
 
-static const auto point_size = static_cast<unsigned>(
+static auto const point_size = static_cast<unsigned>(
     std::tuple_size<point>::value);
 
 // Constructors.
@@ -64,7 +64,7 @@ uint8_t point_iterator::current() const
         return point_.hash()[current_];
 
     // TODO: move the little-endian iterator into endian.hpp.
-    const auto position = current_ - hash_size;
+    auto const position = current_ - hash_size;
     return static_cast<uint8_t>(point_.index() >> (position * byte_bits));
 }
 
@@ -144,13 +144,13 @@ void point_iterator::decrement()
 
 point_iterator point_iterator::increase(unsigned value) const
 {
-    const auto index = ceiling_add(current_, value);
+    auto const index = ceiling_add(current_, value);
     return point_iterator(point_, std::max(index, point_size));
 }
 
 point_iterator point_iterator::decrease(unsigned value) const
 {
-    const auto index = floor_subtract(current_, value);
+    auto const index = floor_subtract(current_, value);
     return point_iterator(point_, index);
 }
 

@@ -73,7 +73,7 @@ inventory::inventory(inventory_vector::list&& values)
 inventory::inventory(const hash_list& hashes, type_id type) {
     inventories_.clear();
     inventories_.reserve(hashes.size());
-    const auto map = [type, this](const hash_digest& hash) {
+    auto const map = [type, this](const hash_digest& hash) {
         inventories_.emplace_back(type, hash);
     };
 
@@ -115,7 +115,7 @@ bool inventory::from_data(uint32_t version, data_source& stream) {
 //{
 //    reset();
 //
-//    const auto count = source.read_size_little_endian();
+//    auto const count = source.read_size_little_endian();
 //
 //    // Guard against potential for arbitary memory allocation.
 //    if (count > max_inventory)
@@ -136,7 +136,7 @@ bool inventory::from_data(uint32_t version, data_source& stream) {
 
 data_chunk inventory::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -154,14 +154,14 @@ void inventory::to_data(uint32_t version, data_sink& stream) const {
 //{
 //    sink.write_variable_little_endian(inventories_.size());
 //
-//    for (const auto& inventory: inventories_)
+//    for (auto const& inventory: inventories_)
 //        inventory.to_data(version, sink_w);
 //}
 
 void inventory::to_hashes(hash_list& out, type_id type) const {
     out.reserve(inventories_.size());
 
-    for (const auto& element : inventories_)
+    for (auto const& element : inventories_)
         if (element.type() == type)
             out.push_back(element.hash());
 
@@ -171,7 +171,7 @@ void inventory::to_hashes(hash_list& out, type_id type) const {
 void inventory::reduce(inventory_vector::list& out, type_id type) const {
     out.reserve(inventories_.size());
 
-    for (const auto& inventory : inventories_)
+    for (auto const& inventory : inventories_)
         if (inventory.type() == type)
             out.push_back(inventory);
 
@@ -184,7 +184,7 @@ size_t inventory::serialized_size(uint32_t version) const {
 }
 
 size_t inventory::count(type_id type) const {
-    const auto is_type = [type](const inventory_vector& element) {
+    auto const is_type = [type](const inventory_vector& element) {
         return element.type() == type;
     };
 

@@ -80,7 +80,7 @@ class BC_API get_block_transactions {
         reset();
 
         block_hash_ = source.read_hash();
-        const auto count = source.read_size_little_endian();
+        auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
         if (count > get_max_block_size())
@@ -105,7 +105,7 @@ class BC_API get_block_transactions {
     void to_data(uint32_t version, W& sink) const {
         sink.write_hash(block_hash_);
         sink.write_variable_little_endian(indexes_.size());
-        for (const auto& element : indexes_)
+        for (auto const& element : indexes_)
             sink.write_variable_little_endian(element);
     }
 

@@ -176,7 +176,7 @@ bool output::is_valid() const {
 
 data_chunk output::to_data(bool wire) const {
     data_chunk data;
-    const auto size = serialized_size(wire);
+    auto const size = serialized_size(wire);
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream, wire);
@@ -267,7 +267,7 @@ payment_address output::address(bool testnet /*= false*/) const {
 
 payment_address output::address(uint8_t p2kh_version,
                                 uint8_t p2sh_version) const {
-    const auto value = addresses(p2kh_version, p2sh_version);
+    auto const value = addresses(p2kh_version, p2sh_version);
     return value.empty() ? payment_address{} : value.front();
 }
 
@@ -287,7 +287,7 @@ payment_address::list output::addresses(uint8_t p2kh_version,
         //---------------------------------------------------------------------
     }
 
-    const auto addresses = *addresses_;
+    auto const addresses = *addresses_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 
@@ -302,7 +302,7 @@ size_t output::signature_operations(bool bip141) const {
     bip141 = false;  // No segwit
 #endif
     // Penalize quadratic signature operations (bip141).
-    const auto sigops_factor = bip141 ? fast_sigops_factor : 1u;
+    auto const sigops_factor = bip141 ? fast_sigops_factor : 1u;
 
     // Count heavy sigops in the output script.
     return script_.sigops(false) * sigops_factor;
@@ -314,13 +314,13 @@ bool output::is_dust(uint64_t minimum_value) const {
 }
 
 bool output::extract_committed_hash(hash_digest& out) const {
-    const auto& ops = script_.operations();
+    auto const& ops = script_.operations();
 
     if (!script::is_commitment_pattern(ops))
         return false;
 
     // The four byte offset for the witness commitment hash (bip141).
-    const auto start = ops[1].data().begin() + sizeof(witness_head);
+    auto const start = ops[1].data().begin() + sizeof(witness_head);
     std::copy_n(start, hash_size, out.begin());
     return true;
 }

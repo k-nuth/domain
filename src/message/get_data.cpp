@@ -103,7 +103,7 @@ bool get_data::from_data(uint32_t version, data_source& stream) {
 //}
 
 void get_data::to_witness() {
-    const auto convert = [](inventory_vector& element) {
+    auto const convert = [](inventory_vector& element) {
         element.to_witness();
     };
 

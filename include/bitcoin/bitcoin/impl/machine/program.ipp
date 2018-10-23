@@ -110,7 +110,7 @@ inline bool program::increment_operation_count(const operation& op)
 
 inline bool program::increment_operation_count(int32_t public_keys)
 {
-    static const auto max_keys = static_cast<int32_t>(max_script_public_keys);
+    static auto const max_keys = static_cast<int32_t>(max_script_public_keys);
 
     // bit.ly/2d1bsdB
     if (public_keys < 0 || public_keys > max_keys)
@@ -126,7 +126,7 @@ inline bool program::set_jump_register(const operation& op, int32_t offset)
     if (script_.empty())
         return false;
 
-    const auto finder = [&op](const operation& operation)
+    auto const finder = [&op](const operation& operation)
     {
         return &operation == &op;
     };
@@ -174,7 +174,7 @@ inline void program::push_copy(const value_type& item)
 inline data_chunk program::pop()
 {
     BITCOIN_ASSERT(!empty());
-    const auto value = primary_.back();
+    auto const value = primary_.back();
     primary_.pop_back();
     return value;
 }
@@ -218,7 +218,7 @@ inline bool program::pop_position(stack_iterator& out_position)
     if (signed_index < 0)
         return false;
 
-    const auto index = static_cast<uint32_t>(signed_index);
+    auto const index = static_cast<uint32_t>(signed_index);
 
     if (index >= size())
         return false;
@@ -279,7 +279,7 @@ inline bool program::stack_to_bool(bool clean) const
     if (clean && primary_.size() != 1)
         return false;
 
-    const auto& back = primary_.back();
+    auto const& back = primary_.back();
 
     // It's not non-zero it's the terminating negative sentinel.
     for (auto it = back.begin(); it != back.end(); ++it)
@@ -370,7 +370,7 @@ inline void program::push_alternate(value_type&& value)
 inline program::value_type program::pop_alternate()
 {
     BITCOIN_ASSERT(!alternate_.empty());
-    const auto value = alternate_.back();
+    auto const value = alternate_.back();
     alternate_.pop_back();
     return value;
 }
@@ -389,7 +389,7 @@ inline void program::negate()
 {
     BITCOIN_ASSERT(!closed());
 
-    const auto value = condition_.back();
+    auto const value = condition_.back();
     negative_count_ += (value ? 1 : -1);
     condition_.back() = !value;
 
@@ -402,7 +402,7 @@ inline void program::close()
 {
     BITCOIN_ASSERT(!closed());
 
-    const auto value = condition_.back();
+    auto const value = condition_.back();
     negative_count_ += (value ? 0 : -1);
     condition_.pop_back();
 
@@ -420,7 +420,7 @@ inline bool program::succeeded() const
     return negative_count_ == 0;
 
     // Optimized above to avoid succeeded loop.
-    ////const auto is_true = [](bool value) { return value; };
+    ////auto const is_true = [](bool value) { return value; };
     ////return std::all_of(condition_.begin(), condition_.end(), true);
 }
 

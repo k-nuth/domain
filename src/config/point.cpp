@@ -35,7 +35,7 @@ using namespace boost::program_options;
 // point format is currently private to bx.
 static bool decode_point(chain::output_point& point, const std::string& tuple)
 {
-    const auto tokens = split(tuple, point::delimeter);
+    auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() != 2)
         return false;
 

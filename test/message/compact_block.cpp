@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes__failure)
 
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transaction__failure)
 {
-    const auto raw = to_chunk(base16_literal(
+    auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
         "221b08003e8a6300240c0100d2040000000000000400000012121212121234343434"
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transactio
 
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure)
 {
-    const auto raw = to_chunk(base16_literal(
+    auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
         "221b08003e8a6300240c0100d2040000000000000400000012121212121234343434"
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure)
 
     message::compact_block expected;
     expected.from_data(message::compact_block::version_minimum, raw);
-    const auto data = expected.to_data(message::compact_block::version_minimum);
+    auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     message::compact_block instance{};
@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure)
 
 BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_1__valid_input__success)
 {
-    const auto raw = to_chunk(base16_literal(
+    auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
         "221b08003e8a6300240c0100d2040000000000000400000012121212121234343434"
@@ -218,10 +218,10 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_1__valid_input__success)
 
     message::compact_block expected;
     expected.from_data(message::compact_block::version_minimum, raw);
-    const auto data = expected.to_data(message::compact_block::version_minimum);
+    auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
-    const auto result = message::compact_block::factory_from_data(
+    auto const result = message::compact_block::factory_from_data(
         message::compact_block::version_minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_1__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_2__valid_input__success)
 {
-    const auto raw = to_chunk(base16_literal(
+    auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
         "221b08003e8a6300240c0100d2040000000000000400000012121212121234343434"
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_2__valid_input__success)
 
     message::compact_block expected;
     expected.from_data(message::compact_block::version_minimum, raw);
-    const auto data = expected.to_data(message::compact_block::version_minimum);
+    auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     data_source istream(data);
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_2__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_3__valid_input__success)
 {
-    const auto raw = to_chunk(base16_literal(
+    auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
         "221b08003e8a6300240c0100d2040000000000000400000012121212121234343434"
@@ -269,12 +269,12 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_3__valid_input__success)
 
     message::compact_block expected;
     expected.from_data(message::compact_block::version_minimum, raw);
-    const auto data = expected.to_data(message::compact_block::version_minimum);
+    auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::compact_block::factory_from_data(
+    auto const result = message::compact_block::factory_from_data(
         message::compact_block::version_minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

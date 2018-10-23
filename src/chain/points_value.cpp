@@ -27,7 +27,7 @@ namespace chain {
 
 uint64_t points_value::value() const
 {
-    const auto sum = [](uint64_t total, const point_value& point)
+    auto const sum = [](uint64_t total, const point_value& point)
     {
         return safe_add(total, point.value());
     };

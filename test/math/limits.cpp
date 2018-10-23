@@ -308,7 +308,7 @@ BOOST_AUTO_TEST_CASE(limits__safe_subtract__size_t_half_minus_maximum__throws_un
 BOOST_AUTO_TEST_CASE(limits__safe_increment__size_t_minimum__expected)
 {
     auto value = minimum;
-    static const auto expected = minimum + 1u;
+    static auto const expected = minimum + 1u;
     safe_increment(value);
     BOOST_REQUIRE_EQUAL(value, expected);
 }
@@ -316,7 +316,7 @@ BOOST_AUTO_TEST_CASE(limits__safe_increment__size_t_minimum__expected)
 BOOST_AUTO_TEST_CASE(limits__safe_increment__size_t_half__expected)
 {
     auto value = half;
-    static const auto expected = half + 1u;
+    static auto const expected = half + 1u;
     safe_increment(value);
     BOOST_REQUIRE_EQUAL(value, expected);
 }
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(limits__safe_increment__size_t_maximum__throws_overflow)
 BOOST_AUTO_TEST_CASE(limits__safe_decrement__size_t_maximum__expected)
 {
     auto value = maximum;
-    static const auto expected = maximum - 1u;
+    static auto const expected = maximum - 1u;
     safe_decrement(value);
     BOOST_REQUIRE_EQUAL(value, expected);
 }
@@ -341,7 +341,7 @@ BOOST_AUTO_TEST_CASE(limits__safe_decrement__size_t_maximum__expected)
 BOOST_AUTO_TEST_CASE(limits__safe_decrement__size_t_half__expected)
 {
     auto value = half;
-    static const auto expected = half - 1u;
+    static auto const expected = half - 1u;
     safe_decrement(value);
     BOOST_REQUIRE_EQUAL(value, expected);
 }
@@ -430,21 +430,21 @@ BOOST_AUTO_TEST_CASE(limits__safe_to_unsigned__min_int64_to_uint32__throws_range
 BOOST_AUTO_TEST_CASE(limits__range_constrain__over__max)
 {
     const size_t expected = 10;
-    const auto result = range_constrain(size_t(42), size_t(1), expected);
+    auto const result = range_constrain(size_t(42), size_t(1), expected);
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
 BOOST_AUTO_TEST_CASE(limits__range_constrain__under__min)
 {
     const size_t expected = 50;
-    const auto result = range_constrain(size_t(42), expected, size_t(100));
+    auto const result = range_constrain(size_t(42), expected, size_t(100));
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
 BOOST_AUTO_TEST_CASE(limits__range_constrain__internal__unchanged)
 {
     const size_t expected = 42;
-    const auto result = range_constrain(expected, size_t(10), size_t(100));
+    auto const result = range_constrain(expected, size_t(10), size_t(100));
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 

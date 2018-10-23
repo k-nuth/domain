@@ -56,7 +56,7 @@ script::script(const data_chunk& value)
 
 script::script(const std::vector<std::string>& tokens)
 {
-    const auto mnemonic = join(tokens);
+    auto const mnemonic = join(tokens);
     std::stringstream(mnemonic) >> *this;
 }
 

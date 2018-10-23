@@ -119,7 +119,7 @@ bool merkle_block::from_data(uint32_t version, data_source& stream) {
 //        return false;
 //
 //    total_transactions_ = source.read_4_bytes_little_endian();
-//    const auto count = source.read_size_little_endian();
+//    auto const count = source.read_size_little_endian();
 //
 //    // Guard against potential for arbitary memory allocation.
 //    if (count > get_max_block_size())
@@ -143,7 +143,7 @@ bool merkle_block::from_data(uint32_t version, data_source& stream) {
 
 data_chunk merkle_block::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -161,11 +161,11 @@ void merkle_block::to_data(uint32_t version, data_sink& stream) const {
 //{
 //    header_.to_data(sink);
 //
-//    const auto total32 = safe_unsigned<uint32_t>(total_transactions_);
+//    auto const total32 = safe_unsigned<uint32_t>(total_transactions_);
 //    sink.write_4_bytes_little_endian(total32);
 //    sink.write_variable_little_endian(hashes_.size());
 //
-//    for (const auto& hash : hashes_)
+//    for (auto const& hash : hashes_)
 //        sink.write_hash(hash);
 //
 //    sink.write_variable_little_endian(flags_.size());

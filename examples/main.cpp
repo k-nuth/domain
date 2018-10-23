@@ -105,7 +105,7 @@ int bc::main(int argc, char* argv[]) {
 //         0x85, 0x02, 0x03, 0x02, 0x03, 0x02, 0x03, 0x02, 0x02, 0x02, 0x02, 0x03,
 //         0x02, 0x03, 0x02, 0x02, 0x03, 0x03, 0x03, 0x02, 0x02
 //     };
-//     const auto input_data = to_chunk(raw_input_data);
+//     auto const input_data = to_chunk(raw_input_data);
 
 //     const uint8_t expected_data[] =
 //     {
@@ -194,10 +194,10 @@ int bc::main(int argc, char* argv[]) {
 //#endif
 //
 //    // Extracting Satoshi's words.
-//    const auto block = bc::chain::block::genesis_mainnet();
-//    const auto& tx = block.transactions().front();
-//    const auto& input = tx.inputs().front();
-//    const auto script = input.script().to_data(false);
+//    auto const block = bc::chain::block::genesis_mainnet();
+//    auto const& tx = block.transactions().front();
+//    auto const& input = tx.inputs().front();
+//    auto const script = input.script().to_data(false);
 //    std::string message(script.begin() + sizeof(uint64_t), script.end());
 //    bc::cout << message << std::endl;
 //

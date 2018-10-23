@@ -127,7 +127,7 @@ bool inventory_vector::from_data(uint32_t version, data_source& stream) {
 //{
 //    reset();
 //
-//    const auto raw_type = source.read_4_bytes_little_endian();
+//    auto const raw_type = source.read_4_bytes_little_endian();
 //    type_ = inventory_vector::to_type(raw_type);
 //    hash_ = source.read_hash();
 //
@@ -139,7 +139,7 @@ bool inventory_vector::from_data(uint32_t version, data_source& stream) {
 
 data_chunk inventory_vector::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -155,7 +155,7 @@ void inventory_vector::to_data(uint32_t version, data_sink& stream) const {
 
 //void inventory_vector::to_data(uint32_t version, writer& sink) const
 //{
-//    const auto raw_type = inventory_vector::to_number(type_);
+//    auto const raw_type = inventory_vector::to_number(type_);
 //    sink.write_4_bytes_little_endian(raw_type);
 //    sink.write_hash(hash_);
 //}

@@ -61,11 +61,11 @@ public:
         if (parsed.has_fragment() && !out.set_fragment(parsed.fragment()))
             return UriReader();
 
-        const auto query = parsed.decode_query();
-        for (const auto& term: query)
+        auto const query = parsed.decode_query();
+        for (auto const& term: query)
         {
-            const auto& key = term.first;
-            const auto& value = term.second;
+            auto const& key = term.first;
+            auto const& value = term.second;
             if (!key.empty() && !out.set_parameter(key, value))
                 return UriReader();
         }

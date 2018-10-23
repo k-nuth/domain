@@ -32,14 +32,14 @@ BOOST_AUTO_TEST_CASE(points_value__value__default__zero)
 
 BOOST_AUTO_TEST_CASE(points_value__value__single_point_value__expected)
 {
-    static const auto expected = 42u;
+    static auto const expected = 42u;
     static const points_value instance{ { { { null_hash, 0u }, expected } } };
     BOOST_REQUIRE_EQUAL(instance.value(), expected);
 }
 
 BOOST_AUTO_TEST_CASE(points_value__value__multiple_point_values__expected)
 {
-    static const auto expected = 10u + 30u + 42u;
+    static auto const expected = 10u + 30u + 42u;
     static const points_value instance
     {
         {
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(points_value__value__multiple_point_values__expected)
 
 BOOST_AUTO_TEST_CASE(points_value__value__multiple_point_values_remove_last__expected)
 {
-    static const auto expected = 10u + 30u;
+    static auto const expected = 10u + 30u;
     points_value instance
     {
         {

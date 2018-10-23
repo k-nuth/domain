@@ -126,7 +126,7 @@ bool reject::from_data(uint32_t version, data_source& stream) {
 //    {
 //        // Some nodes do not follow the documented convention of supplying hash
 //        // for tx and block rejects. Use this to prevent error on empty stream.
-//        const auto bytes = source.read_bytes();
+//        auto const bytes = source.read_bytes();
 //
 //        if (bytes.size() == hash_size)
 //            build_array(data_, { bytes });
@@ -143,7 +143,7 @@ bool reject::from_data(uint32_t version, data_source& stream) {
 
 data_chunk reject::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);

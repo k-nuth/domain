@@ -76,7 +76,7 @@ bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id, bool compress
         return false;
 
     // Offset the recovery id with sentinels to indication compression state.
-    const auto increment = compressed ? magic_compressed : magic_uncompressed;
+    auto const increment = compressed ? magic_compressed : magic_uncompressed;
     out_magic = recovery_id + increment;
     return true;
 }
@@ -125,8 +125,8 @@ bool sign_message(message_signature& signature, data_slice message, const ec_sec
 }
 
 bool verify_message(data_slice message, const payment_address& address, const message_signature& signature) {
-    const auto magic = signature.front();
-    const auto compact = slice<1, message_signature_size>(signature);
+    auto const magic = signature.front();
+    auto const compact = slice<1, message_signature_size>(signature);
 
     bool compressed;
     uint8_t recovery_id;
@@ -134,7 +134,7 @@ bool verify_message(data_slice message, const payment_address& address, const me
         return false;
 
     short_hash hash;
-    const auto message_digest = hash_message(message);
+    auto const message_digest = hash_message(message);
     return recover(hash, compressed, compact, recovery_id, message_digest) &&
            (hash == address.hash());
 }

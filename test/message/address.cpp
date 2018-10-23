@@ -24,8 +24,8 @@ using namespace bc::message;
 
 bool equal(const address& left, const address& right)
 {
-    const auto left_addresses = left.addresses();
-    const auto right_addresses = right.addresses();
+    auto const left_addresses = left.addresses();
+    auto const right_addresses = right.addresses();
 
     bool same = (left_addresses.size() == right_addresses.size());
 
@@ -179,12 +179,12 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success)
         }
     });
 
-    const auto data = expected.to_data(version::level::minimum);
-    const auto result = address::factory_from_data(version::level::minimum, data);
+    auto const data = expected.to_data(version::level::minimum);
+    auto const result = address::factory_from_data(version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
-    const auto serialized_size = result.serialized_size(version::level::minimum);
+    auto const serialized_size = result.serialized_size(version::level::minimum);
     BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
 }
@@ -201,13 +201,13 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success)
         }
     });
 
-    const auto data = expected.to_data(version::level::minimum);
+    auto const data = expected.to_data(version::level::minimum);
     data_source istream(data);
-    const auto result = address::factory_from_data(version::level::minimum, istream);
+    auto const result = address::factory_from_data(version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
-    const auto serialized_size = result.serialized_size(version::level::minimum);
+    auto const serialized_size = result.serialized_size(version::level::minimum);
     BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
 }
@@ -227,11 +227,11 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success)
     const data_chunk data = expected.to_data(version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = address::factory_from_data(version::level::minimum, source);
+    auto const result = address::factory_from_data(version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
-    const auto serialized_size = result.serialized_size(version::level::minimum);
+    auto const serialized_size = result.serialized_size(version::level::minimum);
     BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
 }

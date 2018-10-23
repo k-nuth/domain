@@ -53,21 +53,21 @@ Space cast_subtract(Integer left, Integer right)
 template <typename Integer, typename = UNSIGNED(Integer)>
 Integer ceiling_add(Integer left, Integer right)
 {
-    static const auto ceiling = (std::numeric_limits<Integer>::max)();
+    static auto const ceiling = (std::numeric_limits<Integer>::max)();
     return left > ceiling - right ? ceiling : left + right;
 }
 
 template <typename Integer, typename = UNSIGNED(Integer)>
 Integer floor_subtract(Integer left, Integer right)
 {
-    static const auto floor = (std::numeric_limits<Integer>::min)();
+    static auto const floor = (std::numeric_limits<Integer>::min)();
     return right >= left ? floor : left - right;
 }
 
 template <typename Integer, typename = UNSIGNED(Integer)>
 Integer safe_add(Integer left, Integer right)
 {
-    static const auto maximum = (std::numeric_limits<Integer>::max)();
+    static auto const maximum = (std::numeric_limits<Integer>::max)();
 
     if (left > maximum - right)
         throw std::overflow_error("addition overflow");
@@ -78,7 +78,7 @@ Integer safe_add(Integer left, Integer right)
 template <typename Integer, typename = UNSIGNED(Integer)>
 Integer safe_subtract(Integer left, Integer right)
 {
-    static const auto minimum = (std::numeric_limits<Integer>::min)();
+    static auto const minimum = (std::numeric_limits<Integer>::min)();
 
     if (left < minimum + right)
         throw std::underflow_error("subtraction underflow");
@@ -103,8 +103,8 @@ void safe_decrement(Integer& value)
 template <typename To, typename From, typename = SIGNED_SIGNED(To, From)>
 To safe_signed(From signed_value)
 {
-    static const auto signed_minimum = (std::numeric_limits<To>::min)();
-    static const auto signed_maximum = (std::numeric_limits<To>::max)();
+    static auto const signed_minimum = (std::numeric_limits<To>::min)();
+    static auto const signed_maximum = (std::numeric_limits<To>::max)();
 
     if (signed_value < signed_minimum || signed_value > signed_maximum)
         throw std::range_error("signed assignment out of range");
@@ -115,8 +115,8 @@ To safe_signed(From signed_value)
 template <typename To, typename From, typename = UNSIGNED_UNSIGNED(To, From)>
 To safe_unsigned(From unsigned_value)
 {
-    static const auto unsigned_minimum = (std::numeric_limits<To>::min)();
-    static const auto unsigned_maximum = (std::numeric_limits<To>::max)();
+    static auto const unsigned_minimum = (std::numeric_limits<To>::min)();
+    static auto const unsigned_maximum = (std::numeric_limits<To>::max)();
 
     if (unsigned_value < unsigned_minimum || unsigned_value > unsigned_maximum)
         throw std::range_error("unsigned assignment out of range");
@@ -128,7 +128,7 @@ template <typename To, typename From, typename = SIGNED_UNSIGNED(To, From)>
 To safe_to_signed(From unsigned_value)
 {
     static_assert(sizeof(uint64_t) >= sizeof(To), "safe assign out of range");
-    static const auto signed_maximum = (std::numeric_limits<To>::max)();
+    static auto const signed_maximum = (std::numeric_limits<To>::max)();
 
     if (unsigned_value > static_cast<uint64_t>(signed_maximum))
         throw std::range_error("to signed assignment out of range");
@@ -140,7 +140,7 @@ template <typename To, typename From, typename = UNSIGNED_SIGNED(To, From)>
 To safe_to_unsigned(From signed_value)
 {
     static_assert(sizeof(uint64_t) >= sizeof(To), "safe assign out of range");
-    static const auto unsigned_maximum = (std::numeric_limits<To>::max)();
+    static auto const unsigned_maximum = (std::numeric_limits<To>::max)();
 
     if (signed_value < 0 ||
         static_cast<uint64_t>(signed_value) > unsigned_maximum)
@@ -153,8 +153,8 @@ To safe_to_unsigned(From signed_value)
 template <typename To, typename From>
 To domain_constrain(From value)
 {
-    static const auto minimum = (std::numeric_limits<To>::min)();
-    static const auto maximum = (std::numeric_limits<To>::max)();
+    static auto const minimum = (std::numeric_limits<To>::min)();
+    static auto const maximum = (std::numeric_limits<To>::max)();
 
     if (value < minimum)
         return minimum;

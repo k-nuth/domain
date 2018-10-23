@@ -60,15 +60,15 @@ BOOST_AUTO_TEST_CASE(ping__satoshi_fixed_size__bip31_version__8)
 
 BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__maximum_version_empty_data__invalid)
 {
-    static const auto version = message::version::level::maximum;
-    const auto result = message::ping::factory_from_data(version, data_chunk{});
+    static auto const version = message::version::level::maximum;
+    auto const result = message::ping::factory_from_data(version, data_chunk{});
     BOOST_REQUIRE(!result.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_empty_data__valid)
 {
-    static const auto version = message::version::level::minimum;
-    const auto result = message::ping::factory_from_data(version, data_chunk{});
+    static auto const version = message::version::level::minimum;
+    auto const result = message::ping::factory_from_data(version, data_chunk{});
     BOOST_REQUIRE(result.is_valid());
 }
 
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(ping__from_data_1__minimum_version__success_zero_nonce)
     };
 
     // This serializes the nonce.
-    const auto data = value.to_data(message::version::level::bip31);
+    auto const data = value.to_data(message::version::level::bip31);
     BOOST_REQUIRE_EQUAL(data.size(), 8u);
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
@@ -97,9 +97,9 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_round_trip__zero
         16545612u
     };
 
-    static const auto version = message::version::level::minimum;
-    const auto data = value.to_data(version);
-    const auto result = message::ping::factory_from_data(version, data);
+    static auto const version = message::version::level::minimum;
+    auto const data = value.to_data(version);
+    auto const result = message::ping::factory_from_data(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
 }
@@ -111,10 +111,10 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__minimum_version_round_trip__zero
         5087222u
     };
 
-    static const auto version = message::version::level::minimum;
-    const auto data = value.to_data(version);
+    static auto const version = message::version::level::minimum;
+    auto const data = value.to_data(version);
     data_source istream(data);
-    const auto result = message::ping::factory_from_data(version, istream);
+    auto const result = message::ping::factory_from_data(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
 }
@@ -126,11 +126,11 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__minimum_version_round_trip__zero
         6456147u
     };
 
-    static const auto version = message::version::level::minimum;
-    const auto data = value.to_data(version);
+    static auto const version = message::version::level::minimum;
+    auto const data = value.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::ping::factory_from_data(version, source);
+    auto const result = message::ping::factory_from_data(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
 }
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(ping__from_data_1__maximum_version__success_expected_nonce)
     };
 
     // This serializes the nonce.
-    const auto data = expected.to_data(message::version::level::bip31);
+    auto const data = expected.to_data(message::version::level::bip31);
     BOOST_REQUIRE_EQUAL(data.size(), 8u);
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
@@ -160,9 +160,9 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__bip31_version_round_trip__expect
         16545612u
     };
 
-    static const auto version = message::version::level::bip31;
-    const auto data = expected.to_data(version);
-    const auto result = message::ping::factory_from_data(version, data);
+    static auto const version = message::version::level::bip31;
+    auto const data = expected.to_data(version);
+    auto const result = message::ping::factory_from_data(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
 }
@@ -174,10 +174,10 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__bip31_version_round_trip__expect
         5087222u
     };
 
-    static const auto version = message::version::level::bip31;
-    const auto data = expected.to_data(version);
+    static auto const version = message::version::level::bip31;
+    auto const data = expected.to_data(version);
     data_source istream(data);
-    const auto result = message::ping::factory_from_data(version, istream);
+    auto const result = message::ping::factory_from_data(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
 }
@@ -189,11 +189,11 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__bip31_version_round_trip__expect
         6456147u
     };
 
-    static const auto version = message::version::level::bip31;
-    const auto data = expected.to_data(version);
+    static auto const version = message::version::level::bip31;
+    auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::ping::factory_from_data(version, source);
+    auto const result = message::ping::factory_from_data(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
 }

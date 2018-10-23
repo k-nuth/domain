@@ -81,7 +81,7 @@ static bool address_salt(ek_salt& salt, const ec_secret& secret,
 static bool address_validate(const ek_salt& salt,
     const payment_address& address)
 {
-    const auto hash = address_hash(address);
+    auto const hash = address_hash(address);
     return std::equal(hash.begin(), hash.begin() + salt.size(), salt.begin());
 }
 
@@ -179,16 +179,16 @@ static void create_private_key(encrypted_private& out_private,
     const hash_digest& derived1, const hash_digest& derived2,
     const ek_seed& seed, uint8_t version)
 {
-    const auto prefix = parse_encrypted_private::prefix_factory(version, true);
+    auto const prefix = parse_encrypted_private::prefix_factory(version, true);
 
     auto encrypt1 = xor_data<half>(seed, derived1);
     aes256_encrypt(derived2, encrypt1);
-    const auto combined = splice(slice<quarter, half>(encrypt1),
+    auto const combined = splice(slice<quarter, half>(encrypt1),
         slice<half, half + quarter>(seed));
 
     auto encrypt2 = xor_data<half>(combined, derived1, 0, half);
     aes256_encrypt(derived2, encrypt2);
-    const auto quarter1 = slice<0, quarter>(encrypt1);
+    auto const quarter1 = slice<0, quarter>(encrypt1);
 
     build_checked_array(out_private,
     {
@@ -210,8 +210,8 @@ static bool create_public_key(encrypted_public& out_public,
     if (!secret_to_public(point, secret))
         return false;
 
-    const auto prefix = parse_encrypted_public::prefix_factory(version);
-    const auto hash = point_hash(point);
+    auto const prefix = parse_encrypted_public::prefix_factory(version);
+    auto const hash = point_hash(point);
 
     auto encrypted1 = xor_data<half>(hash, derived1);
     aes256_encrypt(derived2, encrypted1);
@@ -219,7 +219,7 @@ static bool create_public_key(encrypted_public& out_public,
     auto encrypted2 = xor_data<half>(hash, derived1, half);
     aes256_encrypt(derived2, encrypted2);
 
-    const auto sign = point_sign(point.front(), derived2);
+    auto const sign = point_sign(point.front(), derived2);
     return build_checked_array(out_public,
     {
         prefix,
@@ -242,9 +242,9 @@ bool create_key_pair(encrypted_private& out_private,
     if (!parse.valid())
         return false;
 
-    const auto point = splice(parse.sign(), parse.data());
+    auto const point = splice(parse.sign(), parse.data());
     auto point_copy = point;
-    const auto factor = bitcoin_hash(seed);
+    auto const factor = bitcoin_hash(seed);
     if (!ec_multiply(point_copy, factor))
         return false;
 
@@ -252,9 +252,9 @@ bool create_key_pair(encrypted_private& out_private,
     if (!address_salt(salt, point_copy, version, compressed))
         return false;
 
-    const auto salt_entropy = splice(salt, parse.entropy());
-    const auto derived = split(scrypt_pair(point, salt_entropy));
-    const auto flags = set_flags(compressed, parse.lot_sequence(), true);
+    auto const salt_entropy = splice(salt, parse.entropy());
+    auto const derived = split(scrypt_pair(point, salt_entropy));
+    auto const flags = set_flags(compressed, parse.lot_sequence(), true);
 
     if (!create_public_key(out_public, flags, salt, parse.entropy(),
         derived.left, derived.right, factor, version))
@@ -295,7 +295,7 @@ static bool create_token(encrypted_token& out_token,
     BITCOIN_ASSERT(owner_salt.size() == ek_salt_size ||
         owner_salt.size() == ek_entropy_size);
 
-    const auto lot_sequence = owner_salt.size() == ek_salt_size;
+    auto const lot_sequence = owner_salt.size() == ek_salt_size;
     auto factor = scrypt_token(normal(passphrase), owner_salt);
 
     if (lot_sequence)
@@ -320,7 +320,7 @@ bool create_token(encrypted_token& out_token, const std::string& passphrase,
     // BIP38: If lot and sequence numbers are not being included, then
     // owner_salt is 8 random bytes instead of 4, lot_sequence is omitted and
     // owner_entropy becomes an alias for owner_salt.
-    const auto prefix = parse_encrypted_token::prefix_factory(false);
+    auto const prefix = parse_encrypted_token::prefix_factory(false);
     return create_token(out_token, passphrase, entropy, entropy, prefix);
 }
 
@@ -333,8 +333,8 @@ bool create_token(encrypted_token& out_token, const std::string& passphrase,
 
     static constexpr size_t max_sequence_bits = 12;
     uint32_t const lot_sequence = (lot << max_sequence_bits) || sequence;
-    const auto entropy = splice(salt, to_big_endian(lot_sequence));
-    const auto prefix = parse_encrypted_token::prefix_factory(true);
+    auto const entropy = splice(salt, to_big_endian(lot_sequence));
+    auto const prefix = parse_encrypted_token::prefix_factory(true);
     create_token(out_token, passphrase, salt, entropy, prefix);
     return true;
 }
@@ -349,8 +349,8 @@ bool encrypt(encrypted_private& out_private, const ec_secret& secret,
     if (!address_salt(salt, secret, version, compressed))
         return false;
 
-    const auto derived = split(scrypt_private(normal(passphrase), salt));
-    const auto prefix = parse_encrypted_private::prefix_factory(version,
+    auto const derived = split(scrypt_private(normal(passphrase), salt));
+    auto const prefix = parse_encrypted_private::prefix_factory(version,
         false);
 
     auto encrypted1 = xor_data<half>(secret, derived.left);
@@ -384,25 +384,25 @@ static bool decrypt_multiplied(ec_secret& out_secret,
     if (!secret_to_public(point, secret))
         return false;
 
-    const auto salt_entropy = splice(parse.salt(), parse.entropy());
-    const auto derived = split(scrypt_pair(point, salt_entropy));
+    auto const salt_entropy = splice(parse.salt(), parse.entropy());
+    auto const derived = split(scrypt_pair(point, salt_entropy));
 
     auto encrypt1 = parse.data1();
     auto encrypt2 = parse.data2();
 
     aes256_decrypt(derived.right, encrypt2);
-    const auto decrypt2 = xor_data<half>(encrypt2, derived.left, 0, half);
+    auto const decrypt2 = xor_data<half>(encrypt2, derived.left, 0, half);
     auto part = split(decrypt2);
     auto extended = splice(encrypt1, part.left);
 
     aes256_decrypt(derived.right, extended);
-    const auto decrypt1 = xor_data<half>(extended, derived.left);
-    const auto factor = bitcoin_hash(splice(decrypt1, part.right));
+    auto const decrypt1 = xor_data<half>(extended, derived.left);
+    auto const factor = bitcoin_hash(splice(decrypt1, part.right));
     if (!ec_multiply(secret, factor))
         return false;
 
-    const auto compressed = parse.compressed();
-    const auto address_version = parse.address_version();
+    auto const compressed = parse.compressed();
+    auto const address_version = parse.address_version();
     if (!address_validate(parse.salt(), secret, address_version, compressed))
         return false;
 
@@ -415,17 +415,17 @@ static bool decrypt_secret(ec_secret& out_secret,
 {
     auto encrypt1 = splice(parse.entropy(), parse.data1());
     auto encrypt2 = parse.data2();
-    const auto derived = split(scrypt_private(normal(passphrase),
+    auto const derived = split(scrypt_private(normal(passphrase),
         parse.salt()));
 
     aes256_decrypt(derived.right, encrypt1);
     aes256_decrypt(derived.right, encrypt2);
 
-    const auto encrypted = splice(encrypt1, encrypt2);
-    const auto secret = xor_data<hash_size>(encrypted, derived.left);
+    auto const encrypted = splice(encrypt1, encrypt2);
+    auto const secret = xor_data<hash_size>(encrypted, derived.left);
 
-    const auto compressed = parse.compressed();
-    const auto address_version = parse.address_version();
+    auto const compressed = parse.compressed();
+    auto const address_version = parse.address_version();
     if (!address_validate(parse.salt(), secret, address_version, compressed))
         return false;
 
@@ -440,7 +440,7 @@ bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed,
     if (!parse.valid())
         return false;
 
-    const auto success = parse.multiplied() ?
+    auto const success = parse.multiplied() ?
         decrypt_multiplied(out_secret, parse, passphrase) :
         decrypt_secret(out_secret, parse, passphrase);
 
@@ -464,8 +464,8 @@ bool decrypt(ec_compressed& out_point, uint8_t& out_version,
     if (!parse.valid())
         return false;
 
-    const auto version = parse.address_version();
-    const auto lot_sequence = parse.lot_sequence();
+    auto const version = parse.address_version();
+    auto const lot_sequence = parse.lot_sequence();
     auto factor = scrypt_token(normal(passphrase), parse.owner_salt());
 
     if (lot_sequence)
@@ -475,17 +475,17 @@ bool decrypt(ec_compressed& out_point, uint8_t& out_version,
     if (!secret_to_public(point, factor))
         return false;
 
-    const auto salt_entropy = splice(parse.salt(), parse.entropy());
+    auto const salt_entropy = splice(parse.salt(), parse.entropy());
     auto derived = split(scrypt_pair(point, salt_entropy));
     auto encrypt = split(parse.data());
 
     aes256_decrypt(derived.right, encrypt.left);
-    const auto decrypt1 = xor_data<half>(encrypt.left, derived.left);
+    auto const decrypt1 = xor_data<half>(encrypt.left, derived.left);
 
     aes256_decrypt(derived.right, encrypt.right);
-    const auto decrypt2 = xor_data<half>(encrypt.right, derived.left, 0, half);
+    auto const decrypt2 = xor_data<half>(encrypt.right, derived.left, 0, half);
 
-    const auto sign_byte = point_sign(parse.sign(), derived.right);
+    auto const sign_byte = point_sign(parse.sign(), derived.right);
     auto product = splice(sign_byte, decrypt1, decrypt2);
     if (!ec_multiply(product, factor))
         return false;

@@ -203,7 +203,7 @@ struct hash<bc::chain::point> {
 // Extend std namespace with the non-wire size of point (database key size).
 template <>
 struct tuple_size<bc::chain::point> {
-    static const auto value = std::tuple_size<bc::hash_digest>::value +
+    static auto const value = std::tuple_size<bc::hash_digest>::value +
                               sizeof(uint16_t);
 
     operator std::size_t() const {

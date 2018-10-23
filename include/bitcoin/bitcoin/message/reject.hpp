@@ -130,7 +130,7 @@ class BC_API reject {
             (message_ == transaction::command)) {
             // Some nodes do not follow the documented convention of supplying hash
             // for tx and block rejects. Use this to prevent error on empty stream.
-            const auto bytes = source.read_bytes();
+            auto const bytes = source.read_bytes();
 
             if (bytes.size() == hash_size)
                 build_array(data_, {bytes});

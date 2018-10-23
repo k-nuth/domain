@@ -72,7 +72,7 @@ class BC_API filter_add {
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        const auto size = source.read_size_little_endian();
+        auto const size = source.read_size_little_endian();
 
         if (size > max_filter_add)
             source.invalidate();

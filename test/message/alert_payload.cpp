@@ -228,14 +228,14 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__wiki_sample_test__succe
         ""
     };
 
-    const auto result = message::alert_payload::factory_from_data(
+    auto const result = message::alert_payload::factory_from_data(
         message::version::level::minimum, raw);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(raw.size(), result.serialized_size(message::version::level::minimum));
     BOOST_REQUIRE(result == expected);
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
 
     BOOST_REQUIRE_EQUAL(raw.size(), data.size());
     BOOST_REQUIRE_EQUAL(data.size(), expected.serialized_size(message::version::level::minimum));
@@ -264,8 +264,8 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__roundtrip__success)
         "RESERVED?"
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
-    const auto result = message::alert_payload::factory_from_data(
+    auto const data = expected.to_data(message::version::level::minimum);
+    auto const result = message::alert_payload::factory_from_data(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -297,9 +297,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_2__roundtrip__success)
         "RESERVED?"
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    const auto result = message::alert_payload::factory_from_data(
+    auto const result = message::alert_payload::factory_from_data(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -331,10 +331,10 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_3__roundtrip__success)
         "RESERVED?"
     };
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::alert_payload::factory_from_data(
+    auto const result = message::alert_payload::factory_from_data(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

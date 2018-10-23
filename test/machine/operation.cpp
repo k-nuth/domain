@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(operation__constructor_1__always__returns_default_initializ
 
 BOOST_AUTO_TEST_CASE(operation__constructor_2__valid_input__returns_input_initialized)
 {
-    const auto data = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
+    auto const data = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
     auto dup_data = data;
     operation instance(std::move(dup_data));
 
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(operation__constructor_2__valid_input__returns_input_initia
 
 BOOST_AUTO_TEST_CASE(operation__constructor_3__valid_input__returns_input_initialized)
 {
-    const auto data = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
+    auto const data = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
     operation instance(data);
 
     BOOST_REQUIRE(instance.is_valid());
@@ -84,8 +84,8 @@ BOOST_AUTO_TEST_CASE(operation__from_data__insufficient_bytes__failure)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_size_0__success)
 {
-    const auto data0 = to_chunk(base16_literal(""));
-    const auto raw_operation = to_chunk(base16_literal("00"));
+    auto const data0 = to_chunk(base16_literal(""));
+    auto const raw_operation = to_chunk(base16_literal("00"));
     operation instance;
 
     BOOST_REQUIRE(instance.from_data(raw_operation));
@@ -102,8 +102,8 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_size_0__success)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_size_75__success)
 {
-    const auto data75 = data_chunk(75, '.');
-    const auto raw_operation = build_chunk({ base16_literal("4b"), data75 });
+    auto const data75 = data_chunk(75, '.');
+    auto const raw_operation = build_chunk({ base16_literal("4b"), data75 });
     operation instance;
 
     BOOST_REQUIRE(instance.from_data(raw_operation));
@@ -120,9 +120,9 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_size_75__success)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_negative_1__success)
 {
-    static const auto op_79 = static_cast<uint8_t>(opcode::push_negative_1);
-    const auto data1 = data_chunk{ op_79 };
-    const auto raw_operation = data1;
+    static auto const op_79 = static_cast<uint8_t>(opcode::push_negative_1);
+    auto const data1 = data_chunk{ op_79 };
+    auto const raw_operation = data1;
     operation instance;
 
     // This is read as an encoded operation, not as data.
@@ -142,9 +142,9 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_negative_1__success)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_positive_1__success)
 {
-    static const auto op_81 = static_cast<uint8_t>(opcode::push_positive_1);
-    const auto data1 = data_chunk{ op_81 };
-    const auto raw_operation = data1;
+    static auto const op_81 = static_cast<uint8_t>(opcode::push_positive_1);
+    auto const data1 = data_chunk{ op_81 };
+    auto const raw_operation = data1;
     operation instance;
 
     // This is read as an encoded operation, not as data.
@@ -164,9 +164,9 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_positive_1__success)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_positive_16__success)
 {
-    static const auto op_96 = static_cast<uint8_t>(opcode::push_positive_16);
-    const auto data1 = data_chunk{ op_96 };
-    const auto raw_operation = data1;
+    static auto const op_96 = static_cast<uint8_t>(opcode::push_positive_16);
+    auto const data1 = data_chunk{ op_96 };
+    auto const raw_operation = data1;
     operation instance;
 
     // This is read as an encoded operation, not as data.
@@ -186,8 +186,8 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_positive_16__success)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_one_size__success)
 {
-    const auto data255 = data_chunk(255, '.');
-    const auto raw_operation = build_chunk({ base16_literal("4c" "ff"), data255 });
+    auto const data255 = data_chunk(255, '.');
+    auto const raw_operation = build_chunk({ base16_literal("4c" "ff"), data255 });
     operation instance;
 
     BOOST_REQUIRE(instance.from_data(raw_operation));
@@ -204,8 +204,8 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_one_size__success)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_two_size__success)
 {
-    const auto data520 = data_chunk(520, '.');
-    const auto raw_operation = build_chunk({ base16_literal("4d" "0802"), data520 });
+    auto const data520 = data_chunk(520, '.');
+    auto const raw_operation = build_chunk({ base16_literal("4d" "0802"), data520 });
     operation instance;
 
     BOOST_REQUIRE(instance.from_data(raw_operation));
@@ -222,8 +222,8 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_two_size__success)
 
 BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_four_size__success)
 {
-    const auto data520 = data_chunk(520, '.');
-    const auto raw_operation = build_chunk({ base16_literal("4e" "08020000"), data520 });
+    auto const data520 = data_chunk(520, '.');
+    auto const raw_operation = build_chunk({ base16_literal("4e" "08020000"), data520 });
     operation instance;
 
     BOOST_REQUIRE(instance.from_data(raw_operation));

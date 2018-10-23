@@ -59,7 +59,7 @@ header header::factory_from_data(uint32_t version, data_source& stream) {
 //}
 
 size_t header::satoshi_fixed_size(uint32_t version) {
-    const auto canonical = (version == version::level::canonical);
+    auto const canonical = (version == version::level::canonical);
     return chain::header::satoshi_fixed_size() +
            (canonical ? 0 : message::variable_uint_size(0));
 }
@@ -130,7 +130,7 @@ bool header::from_data(uint32_t version, data_source& stream) {
 
 data_chunk header::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);

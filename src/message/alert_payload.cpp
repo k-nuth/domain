@@ -228,7 +228,7 @@ bool alert_payload::from_data(uint32_t version, data_source& stream) {
 
 data_chunk alert_payload::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -251,14 +251,14 @@ void alert_payload::to_data(uint32_t version, data_sink& stream) const {
 //    sink.write_4_bytes_little_endian(cancel_);
 //    sink.write_variable_little_endian(set_cancel_.size());
 //
-//    for (const auto& entry: set_cancel_)
+//    for (auto const& entry: set_cancel_)
 //        sink.write_4_bytes_little_endian(entry);
 //
 //    sink.write_4_bytes_little_endian(min_version_);
 //    sink.write_4_bytes_little_endian(max_version_);
 //    sink.write_variable_little_endian(set_sub_version_.size());
 //
-//    for (const auto& entry: set_sub_version_)
+//    for (auto const& entry: set_sub_version_)
 //        sink.write_string(entry);
 //
 //    sink.write_4_bytes_little_endian(priority_);
@@ -275,7 +275,7 @@ size_t alert_payload::serialized_size(uint32_t version) const {
                   message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
                   message::variable_uint_size(set_sub_version_.size());
 
-    for (const auto& sub_version : set_sub_version_)
+    for (auto const& sub_version : set_sub_version_)
         size += message::variable_uint_size(sub_version.size()) + sub_version.size();
 
     return size;

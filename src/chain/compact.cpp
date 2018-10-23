@@ -136,7 +136,7 @@ bool compact::from_compact(uint256_t& out, uint32_t compact)
     auto mantissa = compact & mantissa_max;
 
     // Shift off the mantissa and sign to get the exponent byte.
-    const auto exponent = static_cast<uint8_t>(compact >> mantissa_bits);
+    auto const exponent = static_cast<uint8_t>(compact >> mantissa_bits);
 
     // Shift the mantissa into the big number.
     if (exponent <= 3)
@@ -162,7 +162,7 @@ uint32_t compact::from_big(const uint256_t& big)
     auto exponent = static_cast<uint8_t>(logical_size(big));
 
     // Shift the big number significant digits into the mantissa.
-    const auto mantissa64 = exponent <= 3 ?
+    auto const mantissa64 = exponent <= 3 ?
         static_cast<uint64_t>(big) << shift_low(exponent) :
         static_cast<uint64_t>(big >> shift_high(exponent));
 

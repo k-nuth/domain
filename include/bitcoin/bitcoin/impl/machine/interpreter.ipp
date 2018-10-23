@@ -230,8 +230,8 @@ inline interpreter::result interpreter::op_rot2(program& program)
     if (program.size() < 6)
         return error::op_rot2;
 
-    const auto position_5 = program.position(5);
-    const auto position_4 = program.position(4);
+    auto const position_5 = program.position(5);
+    auto const position_4 = program.position(4);
 
     auto copy_5 = *position_5;
     auto copy_4 = *position_4;
@@ -365,7 +365,7 @@ inline interpreter::result interpreter::op_size(program& program)
         return error::op_size;
 
     auto top = program.pop();
-    const auto size = top.size();
+    auto const size = top.size();
     program.push_move(std::move(top));
     program.push_move(number(size).data());
     return error::success;
@@ -461,7 +461,7 @@ inline interpreter::result interpreter::op_add(program& program)
     if (!program.pop_binary(first, second))
         return error::op_add;
 
-    const auto result = first + second;
+    auto const result = first + second;
     program.push_move(result.data());
     return error::success;
 }
@@ -472,7 +472,7 @@ inline interpreter::result interpreter::op_sub(program& program)
     if (!program.pop_binary(first, second))
         return error::op_sub;
 
-    const auto result = second - first;
+    auto const result = second - first;
     program.push_move(result.data());
     return error::success;
 }
@@ -661,7 +661,7 @@ inline interpreter::result interpreter::op_check_sig_verify(program& program)
     auto bip66 = chain::script::is_enabled(program.forks(), bip66_rule);
     auto bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
 
-    const auto public_key = program.pop();
+    auto const public_key = program.pop();
     auto endorsement = program.pop();
 
     // Create a subscript with endorsements stripped (sort of).
@@ -691,7 +691,7 @@ inline interpreter::result interpreter::op_check_sig_verify(program& program)
 
 inline interpreter::result interpreter::op_check_sig(program& program)
 {
-    const auto verified = op_check_sig_verify(program);
+    auto const verified = op_check_sig_verify(program);
 
     // BIP62: only lax encoding fails the operation.
     if (verified == error::invalid_signature_lax_encoding)
@@ -786,7 +786,7 @@ inline interpreter::result interpreter::op_check_multisig_verify(
 
 inline interpreter::result interpreter::op_check_multisig(program& program)
 {
-    const auto verified = op_check_multisig_verify(program);
+    auto const verified = op_check_multisig_verify(program);
 
     // BIP62: only lax encoding fails the operation.
     if (verified == error::invalid_signature_lax_encoding)
@@ -803,8 +803,8 @@ inline interpreter::result interpreter::op_check_locktime_verify(
     if (!chain::script::is_enabled(program.forks(), rule_fork::bip65_rule))
         return op_nop(opcode::nop2);
 
-    const auto& tx = program.transaction();
-    const auto input_index = program.input_index();
+    auto const& tx = program.transaction();
+    auto const input_index = program.input_index();
 
     if (input_index >= tx.inputs().size())
         return error::op_check_locktime_verify1;
@@ -824,7 +824,7 @@ inline interpreter::result interpreter::op_check_locktime_verify(
         return error::op_check_locktime_verify4;
 
     // The top stack item is positive, so cast is safe.
-    const auto locktime = static_cast<uint64_t>(stack.int64());
+    auto const locktime = static_cast<uint64_t>(stack.int64());
 
     // BIP65: the stack locktime type differs from that of tx.
     if ((locktime < locktime_threshold) !=
@@ -843,8 +843,8 @@ inline interpreter::result interpreter::op_check_sequence_verify(
     if (!chain::script::is_enabled(program.forks(), rule_fork::bip112_rule))
         return op_nop(opcode::nop3);
 
-    const auto& tx = program.transaction();
-    const auto input_index = program.input_index();
+    auto const& tx = program.transaction();
+    auto const input_index = program.input_index();
 
     if (input_index >= tx.inputs().size())
         return error::op_check_sequence_verify1;
@@ -860,7 +860,7 @@ inline interpreter::result interpreter::op_check_sequence_verify(
         return error::op_check_sequence_verify3;
 
     // The top stack item is positive, so cast is safe.
-    const auto sequence = static_cast<uint64_t>(stack.int64());
+    auto const sequence = static_cast<uint64_t>(stack.int64());
 
     // BIP112: the stack sequence is disabled, treat as nop3.
     if ((sequence & relative_locktime_disabled) != 0)
@@ -870,7 +870,7 @@ inline interpreter::result interpreter::op_check_sequence_verify(
     if (tx.version() < relative_locktime_min_version)
         return error::op_check_sequence_verify4;
 
-    const auto tx_sequence = tx.inputs()[input_index].sequence();
+    auto const tx_sequence = tx.inputs()[input_index].sequence();
 
     // BIP112: the transaction sequence is disabled.
     if ((tx_sequence & relative_locktime_disabled) != 0)
@@ -891,7 +891,7 @@ inline interpreter::result interpreter::op_check_sequence_verify(
 inline interpreter::result interpreter::run_op(const operation& op,
     program& program)
 {
-    const auto code = op.code();
+    auto const code = op.code();
     BITCOIN_ASSERT(op.data().empty() || op.is_push());
 
     switch (op.code())

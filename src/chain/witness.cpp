@@ -146,10 +146,10 @@ bool witness::from_data(data_source& stream, bool prefix) {
 //    reset();
 //    valid_ = true;
 //
-//    const auto read_element = [](reader& source)
+//    auto const read_element = [](reader& source)
 //    {
 //        // Tokens encoded as variable integer prefixed byte array (bip144).
-//        const auto size = source.read_size_little_endian();
+//        auto const size = source.read_size_little_endian();
 //
 //        // The max_script_size and max_push_data_size constants limit
 //        // evaluation, but not all stacks evaluate, so use max_block_weight
@@ -185,9 +185,9 @@ bool witness::from_data(data_source& stream, bool prefix) {
 
 // private/static
 size_t witness::serialized_size(const data_stack& stack) {
-    const auto sum = [](size_t total, const data_chunk& element) {
+    auto const sum = [](size_t total, const data_chunk& element) {
         // Tokens encoded as variable integer prefixed byte array (bip144).
-        const auto size = element.size();
+        auto const size = element.size();
         return total + message::variable_uint_size(size) + size;
     };
 
@@ -211,7 +211,7 @@ bool witness::is_valid() const {
 
 data_chunk witness::to_data(bool prefix) const {
     data_chunk data;
-    const auto size = serialized_size(prefix);
+    auto const size = serialized_size(prefix);
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream, prefix);
@@ -231,7 +231,7 @@ void witness::to_data(data_sink& stream, bool prefix) const {
 //    if (prefix)
 //        sink.write_size_little_endian(stack_.size());
 //
-//    const auto serialize = [&sink](const data_chunk& element)
+//    auto const serialize = [&sink](const data_chunk& element)
 //    {
 //        // Tokens encoded as variable integer prefixed byte array (bip144).
 //        sink.write_size_little_endian(element.size());
@@ -247,7 +247,7 @@ std::string witness::to_string() const {
         return "<invalid>";
 
     std::string text;
-    const auto serialize = [&text](const data_chunk& element) {
+    auto const serialize = [&text](const data_chunk& element) {
         text += "[" + encode_base16(element) + "] ";
     };
 
@@ -312,7 +312,7 @@ const data_stack& witness::stack() const {
 
 // static
 bool witness::is_push_size(const data_stack& stack) {
-    const auto push_size = [](const data_chunk& element) {
+    auto const push_size = [](const data_chunk& element) {
         return element.size() <= max_push_data_size;
     };
 
@@ -380,7 +380,7 @@ bool witness::extract_embedded_script(script& out_script,
         // The v0 program size must be either 20 or 32 bytes (bip141).
         case script_version::zero: {
             auto program = program_script.witness_program();
-            const auto program_size = program.size();
+            auto const program_size = program.size();
             out_stack = stack_;
 
             // always: <signature> <pubkey>
@@ -432,7 +432,7 @@ bool witness::extract_embedded_script(script& out_script,
 // The program script is either a prevout script or an emedded script.
 // It validates this witness, from which the witness script is derived.
 code witness::verify(const transaction& tx, uint32_t input_index, uint32_t forks, const script& program_script, uint64_t value) const {
-    const auto version = program_script.version();
+    auto const version = program_script.version();
 
     switch (version) {
         case script_version::zero: {

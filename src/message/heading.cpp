@@ -137,7 +137,7 @@ bool heading::from_data(data_source& stream) {
 
 data_chunk heading::to_data() const {
     data_chunk data;
-    const auto size = satoshi_fixed_size();
+    auto const size = satoshi_fixed_size();
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream);

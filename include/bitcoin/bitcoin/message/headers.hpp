@@ -83,7 +83,7 @@ class BC_API headers {
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        const auto count = source.read_size_little_endian();
+        auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
         if (count > max_get_headers)
@@ -113,7 +113,7 @@ class BC_API headers {
     void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(elements_.size());
 
-        for (const auto& element : elements_)
+        for (auto const& element : elements_)
             element.to_data(version, sink);
     }
 

@@ -112,7 +112,7 @@ class BC_API script {
         valid_ = true;
 
         if (prefix) {
-            const auto size = source.read_size_little_endian();
+            auto const size = source.read_size_little_endian();
 
             // The max_script_size constant limits evaluation, but not all scripts
             // evaluate, so use max_block_size to guard memory allocation here.

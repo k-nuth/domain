@@ -89,8 +89,8 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_1__valid_input__su
         }
     );
 
-    const auto data = expected.to_data(message::version::level::minimum);
-    const auto result = message::prefilled_transaction::factory_from_data(
+    auto const data = expected.to_data(message::version::level::minimum);
+    auto const result = message::prefilled_transaction::factory_from_data(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -110,9 +110,9 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_2__valid_input__su
         }
     );
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    const auto result = message::prefilled_transaction::factory_from_data(
+    auto const result = message::prefilled_transaction::factory_from_data(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -132,10 +132,10 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_3__valid_input__su
         }
     );
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::prefilled_transaction::factory_from_data(
+    auto const result = message::prefilled_transaction::factory_from_data(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

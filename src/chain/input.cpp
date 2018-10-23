@@ -201,7 +201,7 @@ bool input::is_valid() const {
 
 data_chunk input::to_data(bool wire, bool witness) const {
     data_chunk data;
-    const auto size = serialized_size(wire, witness_val(witness));
+    auto const size = serialized_size(wire, witness_val(witness));
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream, wire, witness_val(witness));
@@ -330,7 +330,7 @@ void input::invalidate_cache() const {
 }
 
 payment_address input::address() const {
-    const auto value = addresses();
+    auto const value = addresses();
     return value.empty() ? payment_address{} : value.front();
 }
 
@@ -350,7 +350,7 @@ payment_address::list input::addresses() const {
         //---------------------------------------------------------------------
     }
 
-    const auto addresses = *addresses_;
+    auto const addresses = *addresses_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 
@@ -381,18 +381,18 @@ bool input::is_locked(size_t block_height, uint32_t median_time_past) const {
         return false;
 
     // bip68: a minimum block-height constraint over the input's age.
-    const auto minimum = (sequence_ & relative_locktime_mask);
-    const auto& prevout = previous_output_.validation;
+    auto const minimum = (sequence_ & relative_locktime_mask);
+    auto const& prevout = previous_output_.validation;
 
     if ((sequence_ & relative_locktime_time_locked) != 0) {
         // Median time past must be monotonically-increasing by block.
         BITCOIN_ASSERT(median_time_past >= prevout.median_time_past);
-        const auto age_seconds = median_time_past - prevout.median_time_past;
+        auto const age_seconds = median_time_past - prevout.median_time_past;
         return age_seconds < (minimum << relative_locktime_seconds_shift);
     }
 
     BITCOIN_ASSERT(block_height >= prevout.height);
-    const auto age_blocks = block_height - prevout.height;
+    auto const age_blocks = block_height - prevout.height;
     return age_blocks < minimum;
 }
 
@@ -403,11 +403,11 @@ size_t input::signature_operations(bool bip16, bool bip141) const {
     bip141 = false;  // No segwit
 #endif
     chain::script witness, embedded;
-    const auto& prevout = previous_output_.validation.cache.script();
+    auto const& prevout = previous_output_.validation.cache.script();
     ////BITCOIN_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");
 
     // Penalize quadratic signature operations (bip141).
-    const auto sigops_factor = bip141 ? fast_sigops_factor : 1u;
+    auto const sigops_factor = bip141 ? fast_sigops_factor : 1u;
 
     // Count heavy sigops in the input script.
     auto sigops = script_.sigops(false) * sigops_factor;
@@ -433,8 +433,8 @@ size_t input::signature_operations(bool bip16, bool bip141) const {
 // This requires that previous outputs have been populated.
 bool input::extract_embedded_script(chain::script& out) const {
     ////BITCOIN_ASSERT(previous_output_.is_valid());
-    const auto& ops = script_.operations();
-    const auto& prevout_script = previous_output_.validation.cache.script();
+    auto const& ops = script_.operations();
+    auto const& prevout_script = previous_output_.validation.cache.script();
 
     // There are no embedded sigops when the prevout script is not p2sh.
     if (!prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule))
@@ -451,7 +451,7 @@ bool input::extract_embedded_script(chain::script& out) const {
 }
 
 bool input::extract_reserved_hash(hash_digest& out) const {
-    const auto& stack = witness_.stack();
+    auto const& stack = witness_.stack();
 
     if (!witness::is_reserved_pattern(stack))
         return false;

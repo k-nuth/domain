@@ -39,8 +39,8 @@ parse_encrypted_private::magic_
 byte_array<parse_encrypted_private::prefix_size>
 parse_encrypted_private::prefix_factory(uint8_t address, bool multiplied)
 {
-    const auto base = multiplied ? multiplied_context_ : default_context_;
-    const auto context = base + address;
+    auto const base = multiplied ? multiplied_context_ : default_context_;
+    auto const context = base + address;
     return splice(magic_, to_array(context));
 }
 
@@ -58,7 +58,7 @@ parse_encrypted_private::parse_encrypted_private(const encrypted_private& key)
 
 uint8_t parse_encrypted_private::address_version() const
 {
-    const auto base = multiplied() ? multiplied_context_ : default_context_;
+    auto const base = multiplied() ? multiplied_context_ : default_context_;
     return context() - base;
 }
 

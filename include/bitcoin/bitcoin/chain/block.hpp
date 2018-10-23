@@ -123,7 +123,7 @@ class BC_API block {
         if (!header_.from_data(source, true))
             return false;
 
-        const auto count = source.read_size_little_endian();
+        auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
         if (count > get_max_block_size())
@@ -161,7 +161,7 @@ class BC_API block {
     void to_data(W& sink, bool witness = false) const {
         header_.to_data(sink, true);
         sink.write_size_little_endian(transactions_.size());
-        const auto to = [&sink, witness](const transaction& tx) {
+        auto const to = [&sink, witness](const transaction& tx) {
             tx.to_data(sink, true, witness_val(witness));
         };
 

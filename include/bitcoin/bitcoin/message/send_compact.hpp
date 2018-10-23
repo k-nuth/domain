@@ -72,7 +72,7 @@ class BC_API send_compact {
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        const auto mode = source.read_byte();
+        auto const mode = source.read_byte();
 
         if (mode > 1)
             source.invalidate();

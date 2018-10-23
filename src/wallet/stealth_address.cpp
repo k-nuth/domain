@@ -120,11 +120,11 @@ stealth_address stealth_address::from_stealth(const data_chunk& decoded)
 
     // [version:1 = 0x2a]
     auto iterator = decoded.begin();
-    const auto version = *iterator;
+    auto const version = *iterator;
 
     // [options:1]
     ++iterator;
-    const auto options = *iterator;
+    auto const options = *iterator;
     if (options > reuse_key_flag)
         return{};
 
@@ -160,17 +160,17 @@ stealth_address stealth_address::from_stealth(const data_chunk& decoded)
     }
 
     // [number_signatures:1]
-    const auto signatures = *iterator;
+    auto const signatures = *iterator;
     ++iterator;
 
     // [prefix_number_bits:1]
-    const auto filter_bits = *iterator;
+    auto const filter_bits = *iterator;
     if (filter_bits > max_filter_bits)
         return{};
 
     // [prefix:prefix_number_bits / 8, round up]
     ++iterator;
-    const auto filter_bytes = (filter_bits + (byte_bits - 1)) / byte_bits;
+    auto const filter_bytes = (filter_bits + (byte_bits - 1)) / byte_bits;
 
     // Adjust and retest required size.
     required_size += filter_bytes;
@@ -194,7 +194,7 @@ stealth_address stealth_address::from_stealth(const binary& filter,
         spenders.push_back(scan_key);
 
     // Guard against too many keys.
-    const auto spend_keys_size = spenders.size();
+    auto const spend_keys_size = spenders.size();
     if (spend_keys_size > max_spend_key_count)
         return{};
 
@@ -204,8 +204,8 @@ stealth_address stealth_address::from_stealth(const binary& filter,
         return{};
 
     // Coerce signatures to a valid range.
-    const auto maximum = signatures == 0 || signatures > spend_keys_size;
-    const auto coerced = maximum ? static_cast<uint8_t>(spend_keys_size) :
+    auto const maximum = signatures == 0 || signatures > spend_keys_size;
+    auto const coerced = maximum ? static_cast<uint8_t>(spend_keys_size) :
         signatures;
 
     // Parameter order is used to change the constructor signature.
@@ -281,7 +281,7 @@ data_chunk stealth_address::to_chunk() const
     address.push_back(number_spend_pubkeys);
 
     // Serialize the spend keys, excluding any that match the scan key.
-    for (const auto& key : spend_keys_)
+    for (auto const& key : spend_keys_)
         if (key != scan_key_)
             extend_data(address, key);
 
@@ -289,7 +289,7 @@ data_chunk stealth_address::to_chunk() const
 
     // The prefix must be guarded against a size greater than 32
     // so that the bitfield can convert into uint32_t and sized by uint8_t.
-    const auto prefix_number_bits = static_cast<uint8_t>(filter_.size());
+    auto const prefix_number_bits = static_cast<uint8_t>(filter_.size());
 
     // Serialize the prefix bytes/blocks.
     address.push_back(prefix_number_bits);

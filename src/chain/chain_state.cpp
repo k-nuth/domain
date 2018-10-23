@@ -79,7 +79,7 @@ inline bool is_bip30_exception(const checkpoint& check, bool mainnet)
 inline bool allow_collisions(const hash_digest& hash, bool mainnet,
     bool testnet)
 {
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return
         (mainnet && hash == mainnet_bip34_active_checkpoint.hash()) ||
         (testnet && hash == testnet_bip34_active_checkpoint.hash()) ||
@@ -88,7 +88,7 @@ inline bool allow_collisions(const hash_digest& hash, bool mainnet,
 
 inline bool allow_collisions(size_t height, bool mainnet, bool testnet)
 {
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return
         (mainnet && height == mainnet_bip34_active_checkpoint.height()) ||
         (testnet && height == testnet_bip34_active_checkpoint.height()) ||
@@ -98,7 +98,7 @@ inline bool allow_collisions(size_t height, bool mainnet, bool testnet)
 inline bool bip9_bit0_active(const hash_digest& hash, bool mainnet,
     bool testnet)
 {
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return
         (mainnet && hash == mainnet_bip9_bit0_active_checkpoint.hash()) ||
         (testnet && hash == testnet_bip9_bit0_active_checkpoint.hash()) ||
@@ -107,7 +107,7 @@ inline bool bip9_bit0_active(const hash_digest& hash, bool mainnet,
 
 inline bool bip9_bit0_active(size_t height, bool mainnet, bool testnet)
 {
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return
         (mainnet && height == mainnet_bip9_bit0_active_checkpoint.height()) ||
         (testnet && height == testnet_bip9_bit0_active_checkpoint.height()) ||
@@ -120,7 +120,7 @@ inline bool bip9_bit1_active(const hash_digest& hash, bool mainnet,
 #ifdef BITPRIM_CURRENCY_BCH
     return false;
 #endif
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return
         (mainnet && hash == mainnet_bip9_bit1_active_checkpoint.hash()) ||
         (testnet && hash == testnet_bip9_bit1_active_checkpoint.hash()) ||
@@ -132,7 +132,7 @@ inline bool bip9_bit1_active(size_t height, bool mainnet, bool testnet)
 #ifdef BITPRIM_CURRENCY_BCH
     return false;
 #endif
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return
         (mainnet && height == mainnet_bip9_bit1_active_checkpoint.height()) ||
         (testnet && height == testnet_bip9_bit1_active_checkpoint.height()) ||
@@ -141,7 +141,7 @@ inline bool bip9_bit1_active(size_t height, bool mainnet, bool testnet)
 
 inline bool bip34(size_t height, bool frozen, bool mainnet, bool testnet)
 {
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return frozen &&
         (    (mainnet && height >= mainnet_bip34_freeze) 
           || (testnet && height >= testnet_bip34_freeze) 
@@ -155,7 +155,7 @@ inline bool bip34(size_t height, bool frozen, bool mainnet, bool testnet)
 
 inline bool bip66(size_t height, bool frozen, bool mainnet, bool testnet)
 {
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return frozen &&
         ((mainnet && height >= mainnet_bip66_freeze) ||
          (testnet && height >= testnet_bip66_freeze) ||
@@ -164,7 +164,7 @@ inline bool bip66(size_t height, bool frozen, bool mainnet, bool testnet)
 
 inline bool bip65(size_t height, bool frozen, bool mainnet, bool testnet)
 {
-    const auto regtest = !mainnet && !testnet;
+    auto const regtest = !mainnet && !testnet;
     return frozen &&
         ((mainnet && height >= mainnet_bip65_freeze) ||
          (testnet && height >= testnet_bip65_freeze) ||
@@ -221,8 +221,8 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     auto const& history = values.version.ordered;
     auto const frozen = script::is_enabled(forks, rule_fork::bip90_rule);
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
-    const auto mainnet = retarget && !testnet;
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const mainnet = retarget && !testnet;
 
     //*************************************************************************
     // CONSENSUS: Though unspecified in bip34, the satoshi implementation
@@ -243,9 +243,9 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     auto const count_4 = std::count_if(history.begin(), history.end(), ge_4);
 
     // Frozen activations (require version and enforce above freeze height).
-    const auto bip34_ice = bip34(height, frozen, mainnet, testnet);
-    const auto bip66_ice = bip66(height, frozen, mainnet, testnet);
-    const auto bip65_ice = bip65(height, frozen, mainnet, testnet);
+    auto const bip34_ice = bip34(height, frozen, mainnet, testnet);
+    auto const bip66_ice = bip66(height, frozen, mainnet, testnet);
+    auto const bip65_ice = bip65(height, frozen, mainnet, testnet);
 
     // Initialize activation results with genesis values.
     activations result{ rule_fork::no_rules, first_version };
@@ -365,8 +365,8 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
 
 size_t chain_state::bits_count(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
-    const auto easy_work = testnet && retarget && !is_retarget_height(height);
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const easy_work = testnet && retarget && !is_retarget_height(height);
 
 #ifdef BITPRIM_CURRENCY_BCH
     return easy_work ? std::min(height, retargeting_interval) : std::min(height, chain_state_timestamp_count);
@@ -381,8 +381,8 @@ size_t chain_state::version_count(size_t height, uint32_t forks) {
     }
 
     // Regtest and testnet both use bip34 test activation.
-    const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     return std::min(height, version_sample_size(retarget && !testnet));
 }
 
@@ -408,10 +408,10 @@ size_t chain_state::retarget_height(size_t height, uint32_t forks)
 
 size_t chain_state::collision_height(size_t height, uint32_t forks)
 {
-    const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto regtest = !script::is_enabled(forks, rule_fork::retarget);
+    auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    auto const regtest = !script::is_enabled(forks, rule_fork::retarget);
 
-    const auto bip34_height =
+    auto const bip34_height =
         testnet ? testnet_bip34_active_checkpoint.height() :
         regtest ? regtest_bip34_active_checkpoint.height() :
             mainnet_bip34_active_checkpoint.height();
@@ -422,10 +422,10 @@ size_t chain_state::collision_height(size_t height, uint32_t forks)
 
 size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks)
 {
-    const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto regtest = !script::is_enabled(forks, rule_fork::retarget);
+    auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    auto const regtest = !script::is_enabled(forks, rule_fork::retarget);
 
-    const auto activation_height =
+    auto const activation_height =
         testnet ? testnet_bip9_bit0_active_checkpoint.height() :
         regtest ? regtest_bip9_bit0_active_checkpoint.height() :
             mainnet_bip9_bit0_active_checkpoint.height();
@@ -439,9 +439,9 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks)
 #ifdef BITPRIM_CURRENCY_BCH
     return map::unrequested;
 #endif
-    const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
 
-    const auto activation_height = testnet ?
+    auto const activation_height = testnet ?
         testnet_bip9_bit1_active_checkpoint.height() :
         mainnet_bip9_bit1_active_checkpoint.height();
 
@@ -466,8 +466,8 @@ size_t chain_state::uahf_height(size_t height, uint32_t forks) {
 inline 
 size_t chain_state::daa_height(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
-    const auto mainnet = retarget && !testnet;
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const mainnet = retarget && !testnet;
 
     if (!mainnet && !testnet) {
         // Regtest activate at block 0
@@ -483,8 +483,8 @@ size_t chain_state::daa_height(size_t height, uint32_t forks) {
 inline 
 bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
-    const auto mainnet = retarget && !testnet;
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const mainnet = retarget && !testnet;
 
     if (!mainnet && !testnet) {
         // Regtest activate at block 0
@@ -499,8 +499,8 @@ bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
 inline 
 bool chain_state::is_daa_enabled(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
-    const auto mainnet = retarget && !testnet;
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const mainnet = retarget && !testnet;
 
     if (!mainnet && !testnet) {
         // Regtest activate at block 0
@@ -915,10 +915,10 @@ uint32_t chain_state::signal_version(uint32_t forks) {
 chain_state::data chain_state::to_pool(const chain_state& top)
 {
     // Alias configured forks.
-    const auto forks = top.forks_;
+    auto const forks = top.forks_;
 
     // Retargeting is only activated via configuration.
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
 
     // Copy data from presumed previous-height block state.
     auto data = top.data_;
@@ -993,12 +993,12 @@ chain_state::data chain_state::to_block(const chain_state& pool,
     const block& block)
 {
     // Alias configured forks.
-    const auto forks = pool.forks_;
+    auto const forks = pool.forks_;
 
     // Retargeting and testnet are only activated via configuration.
-    const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
-    const auto mainnet = retarget && !testnet;
+    auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const mainnet = retarget && !testnet;
 
     // Copy data from presumed same-height pool state.
     auto data = pool.data_;
@@ -1051,12 +1051,12 @@ chain_state::data chain_state::to_header(const chain_state& parent,
     const header& header)
 {
     // Alias configured forks.
-    const auto forks = parent.forks_;
+    auto const forks = parent.forks_;
 
     // Retargeting and testnet are only activated via configuration.
-    const auto testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    const auto retarget = script::is_enabled(forks, rule_fork::retarget);
-    const auto mainnet = retarget && !testnet;
+    auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+    auto const mainnet = retarget && !testnet;
 
     // Copy and promote data from presumed parent-height header/block state.
     auto data = to_pool(parent);

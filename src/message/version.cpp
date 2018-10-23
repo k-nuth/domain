@@ -117,8 +117,8 @@ bool version::from_data(uint32_t version, data_source& stream) {
 //    ////if (services_ != address_sender_.services())
 //    ////    source.invalidate();
 //
-//    const auto peer_bip37 = (value_ >= level::bip37);
-//    const auto self_bip37 = (version >= level::bip37);
+//    auto const peer_bip37 = (value_ >= level::bip37);
+//    auto const self_bip37 = (version >= level::bip37);
 //
 //    // The relay field is optional at or above version 70001.
 //    // But the peer doesn't know our version when it sends its version.
@@ -137,7 +137,7 @@ bool version::from_data(uint32_t version, data_source& stream) {
 
 data_chunk version::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -154,7 +154,7 @@ void version::to_data(uint32_t version, data_sink& stream) const {
 //void version::to_data(uint32_t version, writer& sink) const
 //{
 //    sink.write_4_bytes_little_endian(value_);
-//    const auto effective_version = std::min(version, value_);
+//    auto const effective_version = std::min(version, value_);
 //    sink.write_8_bytes_little_endian(services_);
 //    sink.write_8_bytes_little_endian(timestamp_);
 //    address_receiver_.to_data(version, sink, false);

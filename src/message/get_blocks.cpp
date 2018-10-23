@@ -98,7 +98,7 @@ bool get_blocks::from_data(uint32_t version, data_source& stream) {
 //
 //    // Discard protocol version because it is stupid.
 //    source.read_4_bytes_little_endian();
-//    const auto count = source.read_size_little_endian();
+//    auto const count = source.read_size_little_endian();
 //
 //    // Guard against potential for arbitary memory allocation.
 //    if (count > max_get_blocks)
@@ -119,7 +119,7 @@ bool get_blocks::from_data(uint32_t version, data_source& stream) {
 
 data_chunk get_blocks::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -138,7 +138,7 @@ void get_blocks::to_data(uint32_t version, data_sink& stream) const {
 //    sink.write_4_bytes_little_endian(version);
 //    sink.write_variable_little_endian(start_hashes_.size());
 //
-//    for (const auto& start_hash: start_hashes_)
+//    for (auto const& start_hash: start_hashes_)
 //        sink.write_hash(start_hash);
 //
 //    sink.write_hash(stop_hash_);

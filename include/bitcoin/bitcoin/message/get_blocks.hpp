@@ -82,7 +82,7 @@ class BC_API get_blocks {
 
         // Discard protocol version because it is stupid.
         source.read_4_bytes_little_endian();
-        const auto count = source.read_size_little_endian();
+        auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
         if (count > max_get_blocks)
@@ -110,7 +110,7 @@ class BC_API get_blocks {
         sink.write_4_bytes_little_endian(version);
         sink.write_variable_little_endian(start_hashes_.size());
 
-        for (const auto& start_hash : start_hashes_)
+        for (auto const& start_hash : start_hashes_)
             sink.write_hash(start_hash);
 
         sink.write_hash(stop_hash_);

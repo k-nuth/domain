@@ -94,7 +94,7 @@ class BC_API inventory_vector {
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        const auto raw_type = source.read_4_bytes_little_endian();
+        auto const raw_type = source.read_4_bytes_little_endian();
         type_ = inventory_vector::to_type(raw_type);
         hash_ = source.read_hash();
 
@@ -110,7 +110,7 @@ class BC_API inventory_vector {
 
     template <Writer W>
     void to_data(uint32_t version, W& sink) const {
-        const auto raw_type = inventory_vector::to_number(type_);
+        auto const raw_type = inventory_vector::to_number(type_);
         sink.write_4_bytes_little_endian(raw_type);
         sink.write_hash(hash_);
     }

@@ -56,7 +56,7 @@ namespace detail {
 template <class Source, class Put>
 bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
     auto result = true;
-    const auto count = source.read_size_little_endian();
+    auto const count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
     if (count > get_max_block_size())
@@ -64,7 +64,7 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
     else
         puts.resize(count);
 
-    const auto deserialize = [&](Put& put) {
+    auto const deserialize = [&](Put& put) {
         result = result && put.from_data(source, wire, witness_val(witness));
 #ifndef NDBEUG
         put.script().operations();
@@ -80,7 +80,7 @@ template <class Sink, class Put>
 void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
     sink.write_variable_little_endian(puts.size());
 
-    const auto serialize = [&](const Put& put) {
+    auto const serialize = [&](const Put& put) {
         put.to_data(sink, wire, witness_val(witness));
     };
 
@@ -90,7 +90,7 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
 // Input list must be pre-populated as it determines witness count.
 template <Reader R, BITPRIM_IS_READER(R)>
 inline void read_witnesses(R& source, input::list& inputs) {
-    const auto deserialize = [&](input& input) {
+    auto const deserialize = [&](input& input) {
         input.witness().from_data(source, true);
     };
 
@@ -100,7 +100,7 @@ inline void read_witnesses(R& source, input::list& inputs) {
 // Witness count is not written as it is inferred from input count.
 template <typename W>
 inline void write_witnesses(W& sink, const input::list& inputs) {
-    const auto serialize = [&sink](const input& input) {
+    auto const serialize = [&sink](const input& input) {
         input.witness().to_data(sink, true);
     };
 
@@ -186,10 +186,10 @@ class BC_API transaction {
             version_ = source.read_4_bytes_little_endian();
             detail::read(source, inputs_, wire, witness_val(witness));
 #ifdef BITPRIM_CURRENCY_BCH
-            const auto marker = false;
+            auto const marker = false;
 #else
             // Detect witness as no inputs (marker) and expected flag (bip144).
-            const auto marker = inputs_.size() == witness_marker && source.peek_byte() == witness_flag;
+            auto const marker = inputs_.size() == witness_marker && source.peek_byte() == witness_flag;
 #endif
 
             // This is always enabled so caller should validate with is_segregated.
@@ -209,8 +209,8 @@ class BC_API transaction {
             // Witness data is managed internal to inputs.
             detail::read(source, outputs_, wire, witness_val(witness));
             detail::read(source, inputs_, wire, witness_val(witness));
-            const auto locktime = source.read_variable_little_endian();
-            const auto version = source.read_variable_little_endian();
+            auto const locktime = source.read_variable_little_endian();
+            auto const version = source.read_variable_little_endian();
 
             if (locktime > max_uint32 || version > max_uint32)
                 source.invalidate();
@@ -219,11 +219,11 @@ class BC_API transaction {
             version_ = static_cast<uint32_t>(version);
 
             if (unconfirmed) {
-                const auto sigops = source.read_4_bytes_little_endian();
+                auto const sigops = source.read_4_bytes_little_endian();
                 cached_sigops_ = static_cast<uint32_t>(sigops);
-                const auto fees = source.read_8_bytes_little_endian();
+                auto const fees = source.read_8_bytes_little_endian();
                 cached_fees_ = static_cast<uint64_t>(fees);
-                const auto is_standard = source.read_byte();
+                auto const is_standard = source.read_byte();
                 cached_is_standard_ = static_cast<bool>(is_standard);
             }
         }

@@ -48,14 +48,14 @@ BOOST_AUTO_TEST_CASE(pong__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(pong__satoshi_fixed_size__minimum_version__returns_8)
 {
-    const auto size = message::pong::satoshi_fixed_size(message::version::level::minimum);
+    auto const size = message::pong::satoshi_fixed_size(message::version::level::minimum);
     BOOST_REQUIRE_EQUAL(size, 8u);
 }
 
 BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__minimum_version_empty_data__invalid)
 {
-    static const auto version = message::version::level::minimum;
-    const auto result = message::pong::factory_from_data(version, data_chunk{});
+    static auto const version = message::version::level::minimum;
+    auto const result = message::pong::factory_from_data(version, data_chunk{});
     BOOST_REQUIRE(!result.is_valid());
 }
 
@@ -66,9 +66,9 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__round_trip__expected)
         4306550u
     };
 
-    static const auto version = message::version::level::minimum;
-    const auto data = expected.to_data(version);
-    const auto result = message::pong::factory_from_data(version, data);
+    static auto const version = message::version::level::minimum;
+    auto const data = expected.to_data(version);
+    auto const result = message::pong::factory_from_data(version, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -83,10 +83,10 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_2__round_trip__expected)
         3100693u
     };
 
-    static const auto version = message::version::level::minimum;
-    const auto data = expected.to_data(version);
+    static auto const version = message::version::level::minimum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
-    const auto result = message::pong::factory_from_data(version, istream);
+    auto const result = message::pong::factory_from_data(version, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -101,11 +101,11 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_3__round_trip__expected)
         4642675u
     };
 
-    static const auto version = message::version::level::minimum;
-    const auto data = expected.to_data(version);
+    static auto const version = message::version::level::minimum;
+    auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::pong::factory_from_data(version, source);
+    auto const result = message::pong::factory_from_data(version, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);

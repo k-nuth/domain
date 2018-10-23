@@ -153,14 +153,14 @@ class BC_API alert_payload {
         sink.write_4_bytes_little_endian(cancel_);
         sink.write_variable_little_endian(set_cancel_.size());
 
-        for (const auto& entry : set_cancel_)
+        for (auto const& entry : set_cancel_)
             sink.write_4_bytes_little_endian(entry);
 
         sink.write_4_bytes_little_endian(min_version_);
         sink.write_4_bytes_little_endian(max_version_);
         sink.write_variable_little_endian(set_sub_version_.size());
 
-        for (const auto& entry : set_sub_version_)
+        for (auto const& entry : set_sub_version_)
             sink.write_string(entry);
 
         sink.write_4_bytes_little_endian(priority_);

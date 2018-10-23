@@ -77,7 +77,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     std::string tuple;
     input >> tuple;
 
-    const auto tokens = split(tuple, point::delimeter);
+    auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() < 2 || tokens.size() > 3)
     {
         BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
@@ -91,7 +91,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     }
 
     argument.amount_ = amount;
-    const auto& target = tokens.front();
+    auto const& target = tokens.front();
 
     // Is the target a payment address?
     const wallet::payment_address payment(target);

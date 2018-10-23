@@ -30,7 +30,7 @@ using namespace bc;
 #define MALFORMED_REJECT "0274784016746f6f2d6c6f6e672d6d656d706f6f6c2d636861696e"
 
 static const std::string reason_text = "My Reason...";
-static const auto version_maximum = message::version::level::maximum;
+static auto const version_maximum = message::version::level::maximum;
 
 static const hash_digest data
 {
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data__tx_nonstandard_empty_data__valid
 {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, MALFORMED_REJECT));
-    const auto reject = message::reject::factory_from_data(version_maximum, payload);
+    auto const reject = message::reject::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(reject.is_valid());
 }
 
@@ -282,8 +282,8 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_1__valid_input__success)
         data
     );
 
-    const auto data = expected.to_data(version_maximum);
-    const auto result = message::reject::factory_from_data(version_maximum, data);
+    auto const data = expected.to_data(version_maximum);
+    auto const result = message::reject::factory_from_data(version_maximum, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
@@ -299,9 +299,9 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_2__valid_input__success)
         data
     );
 
-    const auto data = expected.to_data(version_maximum);
+    auto const data = expected.to_data(version_maximum);
     data_source istream(data);
-    const auto result = message::reject::factory_from_data(version_maximum, istream);
+    auto const result = message::reject::factory_from_data(version_maximum, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
@@ -317,10 +317,10 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_3__valid_input__success)
         data
     );
 
-    const auto data = expected.to_data(version_maximum);
+    auto const data = expected.to_data(version_maximum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::reject::factory_from_data(version_maximum, source);
+    auto const result = message::reject::factory_from_data(version_maximum, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));

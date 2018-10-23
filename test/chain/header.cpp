@@ -33,8 +33,8 @@ BOOST_AUTO_TEST_CASE(header__constructor_1__always__initialized_invalid)
 BOOST_AUTO_TEST_CASE(header__constructor_2__always__equals_params)
 {
     uint32_t const version = 10u;
-    const auto previous = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
-    const auto merkle = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    auto const previous = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    auto const merkle = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     uint32_t const timestamp = 531234u;
     uint32_t const bits = 6523454u;
     uint32_t const nonce = 68644u;
@@ -123,9 +123,9 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input__success)
         68644
     };
 
-    const auto data = expected.to_data();
+    auto const data = expected.to_data();
 
-    const auto result = chain::header::factory_from_data(data);
+    auto const result = chain::header::factory_from_data(data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -143,10 +143,10 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success)
         68644
     };
 
-    const auto data = expected.to_data();
+    auto const data = expected.to_data();
     data_source istream(data);
 
-    const auto result = chain::header::factory_from_data(istream);
+    auto const result = chain::header::factory_from_data(istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -164,11 +164,11 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success)
         68644
     };
 
-    const auto data = expected.to_data();
+    auto const data = expected.to_data();
     data_source istream(data);
     istream_reader source(istream);
 
-    const auto result = chain::header::factory_from_data(source);
+    auto const result = chain::header::factory_from_data(source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(header__version_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(header__previous_block_hash_accessor_1__always__returns_initialized_value)
 {
-    const auto value = hash_literal("abababababababababababababababababababababababababababababababab");
+    auto const value = hash_literal("abababababababababababababababababababababababababababababababab");
     chain::header instance(
         11234u,
         value,
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(header__previous_block_hash_accessor_1__always__returns_ini
 
 BOOST_AUTO_TEST_CASE(header__previous_block_hash_accessor_2__always__returns_initialized_value)
 {
-    const auto value = hash_literal("abababababababababababababababababababababababababababababababab");
+    auto const value = hash_literal("abababababababababababababababababababababababababababababababab");
     const chain::header instance(
         11234u,
         value,
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE(header__previous_block_hash_accessor_2__always__returns_ini
 
 BOOST_AUTO_TEST_CASE(header__previous_block_hash_setter_1__roundtrip__success)
 {
-    const auto expected = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
+    auto const expected = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
     chain::header instance;
     BOOST_REQUIRE(expected != instance.previous_block_hash());
     instance.set_previous_block_hash(expected);
@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE(header__previous_block_hash_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(header__previous_block_hash_setter_2__roundtrip__success)
 {
-    const auto expected = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
+    auto const expected = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
 
     // This must be non-const.
     auto duplicate = expected;
@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_CASE(header__previous_block_hash_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(header__merkle_accessor_1__always__returns_initialized_value)
 {
-    const auto value = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
+    auto const value = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
     chain::header instance(
         11234u,
         hash_literal("abababababababababababababababababababababababababababababababab"),
@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_CASE(header__merkle_accessor_1__always__returns_initialized_valu
 
 BOOST_AUTO_TEST_CASE(header__merkle_accessor_2__always__returns_initialized_value)
 {
-    const auto value = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
+    auto const value = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
     const chain::header instance(
         11234u,
         hash_literal("abababababababababababababababababababababababababababababababab"),
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(header__merkle_accessor_2__always__returns_initialized_valu
 
 BOOST_AUTO_TEST_CASE(header__merkle_setter_1__roundtrip__success)
 {
-    const auto expected = hash_literal("abababababababababababababababababababababababababababababababab");
+    auto const expected = hash_literal("abababababababababababababababababababababababababababababababab");
     chain::header instance;
     BOOST_REQUIRE(expected != instance.merkle());
     instance.set_merkle(expected);
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(header__merkle_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(header__merkle_setter_2__roundtrip__success)
 {
-    const auto expected = hash_literal("abababababababababababababababababababababababababababababababab");
+    auto const expected = hash_literal("abababababababababababababababababababababababababababababababab");
 
     // This must be non-const.
     hash_digest duplicate = expected;
@@ -369,8 +369,8 @@ BOOST_AUTO_TEST_CASE(header__nonce_setter__roundtrip__success)
 BOOST_AUTO_TEST_CASE(header__is_valid_timestamp__timestamp_less_than_2_hours_from_now__returns_true)
 {
     chain::header instance;
-    const auto now = std::chrono::system_clock::now();
-    const auto now_time = std::chrono::system_clock::to_time_t(now);
+    auto const now = std::chrono::system_clock::now();
+    auto const now_time = std::chrono::system_clock::to_time_t(now);
     instance.set_timestamp(static_cast<uint32_t>(now_time));
     BOOST_REQUIRE(instance.is_valid_timestamp());
 }
@@ -378,9 +378,9 @@ BOOST_AUTO_TEST_CASE(header__is_valid_timestamp__timestamp_less_than_2_hours_fro
 BOOST_AUTO_TEST_CASE(header__is_valid_timestamp__timestamp_greater_than_2_hours_from_now__returns_false)
 {
     chain::header instance;
-    const auto now = std::chrono::system_clock::now();
-    const auto duration = std::chrono::hours(3);
-    const auto future = std::chrono::system_clock::to_time_t(now + duration);
+    auto const now = std::chrono::system_clock::now();
+    auto const duration = std::chrono::hours(3);
+    auto const future = std::chrono::system_clock::to_time_t(now + duration);
     instance.set_timestamp(static_cast<uint32_t>(future));
     BOOST_REQUIRE(!instance.is_valid_timestamp());
 }

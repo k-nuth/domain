@@ -91,7 +91,7 @@ class BI_API operation {
         ////reset();
         valid_ = true;
         code_ = static_cast<opcode>(source.read_byte());
-        const auto size = read_data_size(code_, source);
+        auto const size = read_data_size(code_, source);
 
         // The max_script_size and max_push_data_size constants limit
         // evaluation, but not all scripts evaluate, so use max_block_size
@@ -121,7 +121,7 @@ class BI_API operation {
 
     template <Writer W>
     void to_data(W& sink) const {
-        const auto size = data_.size();
+        auto const size = data_.size();
 
         sink.write_byte(static_cast<uint8_t>(code_));
 

@@ -33,7 +33,7 @@ code interpreter::run(program& program)
     if (!program.is_valid())
         return error::invalid_script;
 
-    for (const auto& op: program)
+    for (auto const& op: program)
     {
         if (op.is_oversized())
             return error::invalid_push_data_size;

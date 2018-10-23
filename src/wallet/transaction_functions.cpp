@@ -44,7 +44,7 @@ static bool push_scripts(chain::output::list& outputs,
     return false;
 
   libbitcoin::machine::operation::list payment_ops;
-  const auto hash = output.pay_to_hash();
+  auto const hash = output.pay_to_hash();
 
   // This presumes stealth versions are the same as non-stealth.
   if (output.version() != script_version)

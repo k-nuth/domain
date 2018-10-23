@@ -137,14 +137,14 @@ BOOST_AUTO_TEST_SUITE(script_tests)
 
 BOOST_AUTO_TEST_CASE(script__one_hash__literal__same)
 {
-    static const auto hash_one = hash_literal("0000000000000000000000000000000000000000000000000000000000000001");
+    static auto const hash_one = hash_literal("0000000000000000000000000000000000000000000000000000000000000001");
     static const hash_digest one_hash{ { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
     BOOST_REQUIRE(one_hash == hash_one);
 }
 
 BOOST_AUTO_TEST_CASE(script__from_data__testnet_119058_invalid_op_codes__success)
 {
-    const auto raw_script = to_chunk(base16_literal("0130323066643366303435313438356531306633383837363437356630643265396130393739343332353534313766653139316438623963623230653430643863333030326431373463336539306366323433393231383761313037623634373337633937333135633932393264653431373731636565613062323563633534353732653302ae"));
+    auto const raw_script = to_chunk(base16_literal("0130323066643366303435313438356531306633383837363437356630643265396130393739343332353534313766653139316438623963623230653430643863333030326431373463336539306366323433393231383761313037623634373337633937333135633932393264653431373731636565613062323563633534353732653302ae"));
 
     script parsed;
     BOOST_REQUIRE(parsed.from_data(raw_script, false));
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(script__from_data__testnet_119058_invalid_op_codes__success
 
 BOOST_AUTO_TEST_CASE(script__from_data__parse__success)
 {
-    const auto raw_script = to_chunk(base16_literal("3045022100ff1fc58dbd608e5e05846a8e6b45a46ad49878aef6879ad1a7cf4c5a7f853683022074a6a10f6053ab3cddc5620d169c7374cd42c1416c51b9744db2c8d9febfb84d01"));
+    auto const raw_script = to_chunk(base16_literal("3045022100ff1fc58dbd608e5e05846a8e6b45a46ad49878aef6879ad1a7cf4c5a7f853683022074a6a10f6053ab3cddc5620d169c7374cd42c1416c51b9744db2c8d9febfb84d01"));
 
     script parsed;
     BOOST_REQUIRE(parsed.from_data(raw_script, true));
@@ -160,18 +160,18 @@ BOOST_AUTO_TEST_CASE(script__from_data__parse__success)
 
 BOOST_AUTO_TEST_CASE(script__from_data__to_data__roundtrips)
 {
-    const auto normal_output_script = to_chunk(base16_literal("76a91406ccef231c2db72526df9338894ccf9355e8f12188ac"));
+    auto const normal_output_script = to_chunk(base16_literal("76a91406ccef231c2db72526df9338894ccf9355e8f12188ac"));
 
     script out_script;
     BOOST_REQUIRE(out_script.from_data(normal_output_script, false));
 
-    const auto roundtrip = out_script.to_data(false);
+    auto const roundtrip = out_script.to_data(false);
     BOOST_REQUIRE(roundtrip == normal_output_script);
 }
 
 BOOST_AUTO_TEST_CASE(script__from_data__to_data_weird__roundtrips)
 {
-    const auto weird_raw_script = to_chunk(base16_literal(
+    auto const weird_raw_script = to_chunk(base16_literal(
         "0c49206c69656b20636174732e483045022100c7387f64e1f4"
         "cf654cae3b28a15f7572106d6c1319ddcdc878e636ccb83845"
         "e30220050ebf440160a4c0db5623e0cb1562f46401a7ff5b87"
@@ -193,14 +193,14 @@ BOOST_AUTO_TEST_CASE(script__from_data__to_data_weird__roundtrips)
     script weird;
     BOOST_REQUIRE(weird.from_data(weird_raw_script, false));
 
-    const auto roundtrip_result = weird.to_data(false);
+    auto const roundtrip_result = weird.to_data(false);
     BOOST_REQUIRE(roundtrip_result == weird_raw_script);
 }
 
 BOOST_AUTO_TEST_CASE(script__factory_from_data_chunk_test)
 {
-    const auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
-    const auto instance = script::factory_from_data(raw, false);
+    auto const raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
+    auto const instance = script::factory_from_data(raw, false);
     BOOST_REQUIRE(instance.is_valid());
 }
 
@@ -217,13 +217,13 @@ BOOST_AUTO_TEST_CASE(script__factory_from_data_reader_test)
     auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     data_source istream(raw);
     istream_reader source(istream);
-    const auto instance = script::factory_from_data(source, false);
+    auto const instance = script::factory_from_data(source, false);
     BOOST_REQUIRE(instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(script__from_data__first_byte_invalid_wire_code__success)
 {
-    const auto raw = to_chunk(base16_literal(
+    auto const raw = to_chunk(base16_literal(
         "bb566a54e38193e381aee4b896e7958ce381afe496e4babae381abe38288e381"
         "a3e381a6e7ac91e9a194e38292e5a5aae3828fe3828ce3828be7bea9e58b99e3"
         "8292e8a8ade38191e381a6e381afe38184e381aae38184"));
@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE(script__from_data__first_byte_invalid_wire_code__success)
 
 BOOST_AUTO_TEST_CASE(script__from_data__internal_invalid_wire_code__success)
 {
-    const auto raw = to_chunk(base16_literal(
+    auto const raw = to_chunk(base16_literal(
         "566a54e38193e381aee4b896e7958ce381afe4bb96e4babae381abe38288e381"
         "a3e381a6e7ac91e9a194e38292e5a5aae3828fe3828ce3828be7bea9e58b99e3"
         "8292e8a8ade38191e381a6e381afe38184e381aae38184"));
@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE(script__from_string__two_of_three_multisig__success)
 {
     script instance;
     BOOST_REQUIRE(instance.from_string(SCRIPT_2_OF_3_MULTISIG));
-    const auto& ops = instance.operations();
+    auto const& ops = instance.operations();
     BOOST_REQUIRE_EQUAL(ops.size(), 6u);
     BOOST_REQUIRE(ops[0] == opcode::push_positive_2);
     BOOST_REQUIRE(ops[1].to_string(rule_fork::no_rules) == "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864]");
@@ -415,10 +415,10 @@ BOOST_AUTO_TEST_CASE(script__pattern__17_of_17_multisig__non_standard)
 
 BOOST_AUTO_TEST_CASE(script__bip16__valid)
 {
-    for (const auto& test: valid_bip16_scripts)
+    for (auto const& test: valid_bip16_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are valid prior to and after BIP16 activation.
@@ -430,10 +430,10 @@ BOOST_AUTO_TEST_CASE(script__bip16__valid)
 
 BOOST_AUTO_TEST_CASE(script__bip16__invalid)
 {
-    for (const auto& test: invalid_bip16_scripts)
+    for (auto const& test: invalid_bip16_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are invalid prior to and after BIP16 activation.
@@ -445,10 +445,10 @@ BOOST_AUTO_TEST_CASE(script__bip16__invalid)
 
 BOOST_AUTO_TEST_CASE(script__bip16__invalidated)
 {
-    for (const auto& test: invalidated_bip16_scripts)
+    for (auto const& test: invalidated_bip16_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are valid prior to BIP16 activation and invalid after.
@@ -462,10 +462,10 @@ BOOST_AUTO_TEST_CASE(script__bip16__invalidated)
 
 BOOST_AUTO_TEST_CASE(script__bip65__valid)
 {
-    for (const auto& test: valid_bip65_scripts)
+    for (auto const& test: valid_bip65_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are valid prior to and after BIP65 activation.
@@ -477,10 +477,10 @@ BOOST_AUTO_TEST_CASE(script__bip65__valid)
 
 BOOST_AUTO_TEST_CASE(script__bip65__invalid)
 {
-    for (const auto& test: invalid_bip65_scripts)
+    for (auto const& test: invalid_bip65_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are invalid prior to and after BIP65 activation.
@@ -492,10 +492,10 @@ BOOST_AUTO_TEST_CASE(script__bip65__invalid)
 
 BOOST_AUTO_TEST_CASE(script__bip65__invalidated)
 {
-    for (const auto& test: invalidated_bip65_scripts)
+    for (auto const& test: invalidated_bip65_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are valid prior to BIP65 activation and invalid after.
@@ -509,10 +509,10 @@ BOOST_AUTO_TEST_CASE(script__bip65__invalidated)
 
 BOOST_AUTO_TEST_CASE(script__bip112__valid)
 {
-    for (const auto& test: valid_bip112_scripts)
+    for (auto const& test: valid_bip112_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are valid prior to and after BIP112 activation.
@@ -524,10 +524,10 @@ BOOST_AUTO_TEST_CASE(script__bip112__valid)
 
 BOOST_AUTO_TEST_CASE(script__bip112__invalid)
 {
-    for (const auto& test: invalid_bip112_scripts)
+    for (auto const& test: invalid_bip112_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are invalid prior to and after BIP112 activation.
@@ -539,10 +539,10 @@ BOOST_AUTO_TEST_CASE(script__bip112__invalid)
 
 BOOST_AUTO_TEST_CASE(script__bip112__invalidated)
 {
-    for (const auto& test: invalidated_bip112_scripts)
+    for (auto const& test: invalidated_bip112_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are valid prior to BIP112 activation and invalid after.
@@ -556,10 +556,10 @@ BOOST_AUTO_TEST_CASE(script__bip112__invalidated)
 
 BOOST_AUTO_TEST_CASE(script__multisig__valid)
 {
-    for (const auto& test: valid_multisig_scripts)
+    for (auto const& test: valid_multisig_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are always valid.
@@ -572,10 +572,10 @@ BOOST_AUTO_TEST_CASE(script__multisig__valid)
 
 BOOST_AUTO_TEST_CASE(script__multisig__invalid)
 {
-    for (const auto& test: invalid_multisig_scripts)
+    for (auto const& test: invalid_multisig_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are always invalid.
@@ -590,10 +590,10 @@ BOOST_AUTO_TEST_CASE(script__multisig__invalid)
 
 BOOST_AUTO_TEST_CASE(script__context_free__valid)
 {
-    for (const auto& test: valid_context_free_scripts)
+    for (auto const& test: valid_context_free_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are always valid.
@@ -604,10 +604,10 @@ BOOST_AUTO_TEST_CASE(script__context_free__valid)
 
 BOOST_AUTO_TEST_CASE(script__context_free__invalid)
 {
-    for (const auto& test: invalid_context_free_scripts)
+    for (auto const& test: invalid_context_free_scripts)
     {
-        const auto tx = new_tx(test);
-        const auto name = test_name(test);
+        auto const tx = new_tx(test);
+        auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
 
         // These are always invalid.
@@ -640,8 +640,8 @@ BOOST_AUTO_TEST_CASE(script__checksig__single__uses_one_hash)
     BOOST_REQUIRE(script_code.from_data(script_data, false));
 
     ec_signature signature;
-    static const auto index = 1u;
-    static const auto strict = true;
+    static auto const index = 1u;
+    static auto const strict = true;
     BOOST_REQUIRE(parse_signature(signature, distinguished, strict));
     BOOST_REQUIRE(script::check_signature(signature, sighash_algorithm::single, pubkey, script_code, parent_tx, index));
 }
@@ -667,7 +667,7 @@ BOOST_AUTO_TEST_CASE(script__checksig__normal__success)
     BOOST_REQUIRE(script_code.from_data(script_data, false));
 
     ec_signature signature;
-    static const auto index = 0u;
+    static auto const index = 0u;
     BOOST_REQUIRE(parse_signature(signature, distinguished, true));
     BOOST_REQUIRE(script::check_signature(signature, sighash_algorithm::single, pubkey, script_code, parent_tx, index));
 }
@@ -685,12 +685,12 @@ BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_single_output__exp
     const ec_secret secret = hash_literal("ce8f4b713ffdd2658900845251890f30371856be201cd1f5b3d970f793634333");
 
     endorsement out;
-    const auto index = 0u;
-    const auto sighash_type = sighash_algorithm::all;
+    auto const index = 0u;
+    auto const sighash_type = sighash_algorithm::all;
     BOOST_REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
 
-    const auto result = encode_base16(out);
-    const auto expected = "3045022100e428d3cc67a724cb6cfe8634aa299e58f189d9c46c02641e936c40cc16c7e8ed0220083949910fe999c21734a1f33e42fca15fb463ea2e08f0a1bccd952aacaadbb801";
+    auto const result = encode_base16(out);
+    auto const expected = "3045022100e428d3cc67a724cb6cfe8634aa299e58f189d9c46c02641e936c40cc16c7e8ed0220083949910fe999c21734a1f33e42fca15fb463ea2e08f0a1bccd952aacaadbb801";
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
@@ -707,12 +707,12 @@ BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_no_output__expecte
     const ec_secret secret = hash_literal("ce8f4b713ffdd2658900845251890f30371856be201cd1f5b3d970f793634333");
 
     endorsement out;
-    const auto index = 0u;
-    const auto sighash_type = sighash_algorithm::all;
+    auto const index = 0u;
+    auto const sighash_type = sighash_algorithm::all;
     BOOST_REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
 
-    const auto result = encode_base16(out);
-    const auto expected = "3045022100ba57820be5f0b93a0d5b880fbf2a86f819d959ecc24dc31b6b2d4f6ed286f253022071ccd021d540868ee10ca7634f4d270dfac7aea0d5912cf2b104111ac9bc756b01";
+    auto const result = encode_base16(out);
+    auto const expected = "3045022100ba57820be5f0b93a0d5b880fbf2a86f819d959ecc24dc31b6b2d4f6ed286f253022071ccd021d540868ee10ca7634f4d270dfac7aea0d5912cf2b104111ac9bc756b01";
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
@@ -727,11 +727,11 @@ BOOST_AUTO_TEST_CASE(script__generate_signature_hash__all__expected)
     BOOST_REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
 
     endorsement out;
-    const auto index = 0u;
-    const auto sighash_type = sighash_algorithm::all;
-    const auto sighash = script::generate_signature_hash(new_tx, index, prevout_script, sighash_type);
-    const auto result = encode_base16(sighash);
-    const auto expected = "f89572635651b2e4f89778350616989183c98d1a721c911324bf9f17a0cf5bf0";
+    auto const index = 0u;
+    auto const sighash_type = sighash_algorithm::all;
+    auto const sighash = script::generate_signature_hash(new_tx, index, prevout_script, sighash_type);
+    auto const result = encode_base16(sighash);
+    auto const expected = "f89572635651b2e4f89778350616989183c98d1a721c911324bf9f17a0cf5bf0";
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
@@ -748,10 +748,10 @@ BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid)
     //// inpoint      : 5df1375ffe61ac35ca178ebb0cab9ea26dedbd0e96005dfcee7e379fa513232f:1
     //// transaction  : 0100000002f9cbafc519425637ba4227f8d0a0b7160b4e65168193d5af39747891de98b5b5000000006b4830450221008dd619c563e527c47d9bd53534a770b102e40faa87f61433580e04e271ef2f960220029886434e18122b53d5decd25f1f4acb2480659fea20aabd856987ba3c3907e0121022b78b756e2258af13779c1a1f37ea6800259716ca4b7f0b87610e0bf3ab52a01ffffffff42e7988254800876b69f24676b3e0205b77be476512ca4d970707dd5c60598ab00000000fd260100483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a53034930460221008431bdfa72bc67f9d41fe72e94c88fb8f359ffa30b33c72c121c5a877d922e1002210089ef5fc22dd8bfc6bf9ffdb01a9862d27687d424d1fefbab9e9c7176844a187a014c9052483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a5303210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c71210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c7153aeffffffff01a08601000000000017a914d8dacdadb7462ae15cd906f1878706d0da8660e68700000000
 
-    static const auto index = 1u;
-    static const auto forks = static_cast<rule_fork>(1073742030);
-    static const auto encoded_script = "a914d8dacdadb7462ae15cd906f1878706d0da8660e687";
-    static const auto encoded_tx = "0100000002f9cbafc519425637ba4227f8d0a0b7160b4e65168193d5af39747891de98b5b5000000006b4830450221008dd619c563e527c47d9bd53534a770b102e40faa87f61433580e04e271ef2f960220029886434e18122b53d5decd25f1f4acb2480659fea20aabd856987ba3c3907e0121022b78b756e2258af13779c1a1f37ea6800259716ca4b7f0b87610e0bf3ab52a01ffffffff42e7988254800876b69f24676b3e0205b77be476512ca4d970707dd5c60598ab00000000fd260100483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a53034930460221008431bdfa72bc67f9d41fe72e94c88fb8f359ffa30b33c72c121c5a877d922e1002210089ef5fc22dd8bfc6bf9ffdb01a9862d27687d424d1fefbab9e9c7176844a187a014c9052483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a5303210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c71210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c7153aeffffffff01a08601000000000017a914d8dacdadb7462ae15cd906f1878706d0da8660e68700000000";
+    static auto const index = 1u;
+    static auto const forks = static_cast<rule_fork>(1073742030);
+    static auto const encoded_script = "a914d8dacdadb7462ae15cd906f1878706d0da8660e687";
+    static auto const encoded_tx = "0100000002f9cbafc519425637ba4227f8d0a0b7160b4e65168193d5af39747891de98b5b5000000006b4830450221008dd619c563e527c47d9bd53534a770b102e40faa87f61433580e04e271ef2f960220029886434e18122b53d5decd25f1f4acb2480659fea20aabd856987ba3c3907e0121022b78b756e2258af13779c1a1f37ea6800259716ca4b7f0b87610e0bf3ab52a01ffffffff42e7988254800876b69f24676b3e0205b77be476512ca4d970707dd5c60598ab00000000fd260100483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a53034930460221008431bdfa72bc67f9d41fe72e94c88fb8f359ffa30b33c72c121c5a877d922e1002210089ef5fc22dd8bfc6bf9ffdb01a9862d27687d424d1fefbab9e9c7176844a187a014c9052483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a5303210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c71210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c7153aeffffffff01a08601000000000017a914d8dacdadb7462ae15cd906f1878706d0da8660e68700000000";
 
     data_chunk decoded_tx;
     BOOST_REQUIRE(decode_base16(decoded_tx, encoded_tx));
@@ -763,7 +763,7 @@ BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid)
     BOOST_REQUIRE(tx.from_data(decoded_tx));
     BOOST_REQUIRE_GT(tx.inputs().size(), index);
 
-    const auto& input = tx.inputs()[index];
+    auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
     prevout.set_script(script::factory_from_data(decoded_script, false));
@@ -773,7 +773,7 @@ BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid)
     ////std::cout << input.script().to_string(forks) << std::endl;
     ////std::cout << input.witness().to_string() << std::endl;
 
-    const auto result = script::verify(tx, index, forks);
+    auto const result = script::verify(tx, index, forks);
     BOOST_REQUIRE_EQUAL(result.value(), error::success);
 }
 
@@ -787,10 +787,10 @@ BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid)
     //// inpoint      : 6b7f50afb8448c39f4714a73d2b181d3e3233e84670bdfda8f141db668226c54:0
     //// transaction  : 0100000001a06bf74cc36eac395188b06850c5a01d00b355065c589d14036e89e075d7518e000000009d483045022100ba555ac17a084e2a1b621c2171fa563bc4fb75cd5c0968153f44ba7203cb876f022036626f4579de16e3ad160df01f649ffb8dbf47b504ee56dc3ad7260af24ca0db0101004c50632102768e47607c52e581595711e27faffa7cb646b4f481fe269bd49691b2fbc12106ad6704355e2658b1756821028a5af8284a12848d69a25a0ac5cea20be905848eb645fd03d3b065df88a9117cacfeffffff0158920100000000001976a9149d86f66406d316d44d58cbf90d71179dd8162dd388ac355e2658
 
-    static const auto index = 0u;
-    static const auto forks = static_cast<rule_fork>(62);
-    static const auto encoded_script = "a914faa558780a5767f9e3be14992a578fc1cbcf483087";
-    static const auto encoded_tx = "0100000001a06bf74cc36eac395188b06850c5a01d00b355065c589d14036e89e075d7518e000000009d483045022100ba555ac17a084e2a1b621c2171fa563bc4fb75cd5c0968153f44ba7203cb876f022036626f4579de16e3ad160df01f649ffb8dbf47b504ee56dc3ad7260af24ca0db0101004c50632102768e47607c52e581595711e27faffa7cb646b4f481fe269bd49691b2fbc12106ad6704355e2658b1756821028a5af8284a12848d69a25a0ac5cea20be905848eb645fd03d3b065df88a9117cacfeffffff0158920100000000001976a9149d86f66406d316d44d58cbf90d71179dd8162dd388ac355e2658";
+    static auto const index = 0u;
+    static auto const forks = static_cast<rule_fork>(62);
+    static auto const encoded_script = "a914faa558780a5767f9e3be14992a578fc1cbcf483087";
+    static auto const encoded_tx = "0100000001a06bf74cc36eac395188b06850c5a01d00b355065c589d14036e89e075d7518e000000009d483045022100ba555ac17a084e2a1b621c2171fa563bc4fb75cd5c0968153f44ba7203cb876f022036626f4579de16e3ad160df01f649ffb8dbf47b504ee56dc3ad7260af24ca0db0101004c50632102768e47607c52e581595711e27faffa7cb646b4f481fe269bd49691b2fbc12106ad6704355e2658b1756821028a5af8284a12848d69a25a0ac5cea20be905848eb645fd03d3b065df88a9117cacfeffffff0158920100000000001976a9149d86f66406d316d44d58cbf90d71179dd8162dd388ac355e2658";
 
     data_chunk decoded_tx;
     BOOST_REQUIRE(decode_base16(decoded_tx, encoded_tx));
@@ -802,13 +802,13 @@ BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid)
     BOOST_REQUIRE(tx.from_data(decoded_tx));
     BOOST_REQUIRE_GT(tx.inputs().size(), index);
 
-    const auto& input = tx.inputs()[index];
+    auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
     prevout.set_script(script::factory_from_data(decoded_script, false));
     BOOST_REQUIRE(prevout.script().is_valid());
 
-    const auto result = script::verify(tx, index, forks);
+    auto const result = script::verify(tx, index, forks);
     BOOST_REQUIRE_EQUAL(result.value(), error::success);
 }
 
@@ -825,11 +825,11 @@ BOOST_AUTO_TEST_CASE(script__native__block_481824_tx__valid)
     //// inpoint      : c586389e5e4b3acb9d6c8be1c19ae8ab2795397633176f5a6442a261bbdefc3a:0
     //// transaction  : 0200000000010140d43a99926d43eb0e619bf0b3d83b4a31f60c176beecfb9d35bf45e54d0f7420100000017160014a4b4ca48de0b3fffc15404a1acdc8dbaae226955ffffffff0100e1f5050000000017a9144a1154d50b03292b3024370901711946cb7cccc387024830450221008604ef8f6d8afa892dee0f31259b6ce02dd70c545cfcfed8148179971876c54a022076d771d6e91bed212783c9b06e0de600fab2d518fad6f15a2b191d7fbd262a3e0121039d25ab79f41f75ceaf882411fd41fa670a4c672c23ffaf0e361a969cde0692e800000000
 
-    static const auto index = 0u;
-    static const auto value = 100200000u;
-    static const auto forks = 1073758206u;
-    static const auto encoded_script = "a9142928f43af18d2d60e8a843540d8086b30534133987";
-    static const auto encoded_tx = "0200000000010140d43a99926d43eb0e619bf0b3d83b4a31f60c176beecfb9d35bf45e54d0f7420100000017160014a4b4ca48de0b3fffc15404a1acdc8dbaae226955ffffffff0100e1f5050000000017a9144a1154d50b03292b3024370901711946cb7cccc387024830450221008604ef8f6d8afa892dee0f31259b6ce02dd70c545cfcfed8148179971876c54a022076d771d6e91bed212783c9b06e0de600fab2d518fad6f15a2b191d7fbd262a3e0121039d25ab79f41f75ceaf882411fd41fa670a4c672c23ffaf0e361a969cde0692e800000000";
+    static auto const index = 0u;
+    static auto const value = 100200000u;
+    static auto const forks = 1073758206u;
+    static auto const encoded_script = "a9142928f43af18d2d60e8a843540d8086b30534133987";
+    static auto const encoded_tx = "0200000000010140d43a99926d43eb0e619bf0b3d83b4a31f60c176beecfb9d35bf45e54d0f7420100000017160014a4b4ca48de0b3fffc15404a1acdc8dbaae226955ffffffff0100e1f5050000000017a9144a1154d50b03292b3024370901711946cb7cccc387024830450221008604ef8f6d8afa892dee0f31259b6ce02dd70c545cfcfed8148179971876c54a022076d771d6e91bed212783c9b06e0de600fab2d518fad6f15a2b191d7fbd262a3e0121039d25ab79f41f75ceaf882411fd41fa670a4c672c23ffaf0e361a969cde0692e800000000";
 
     data_chunk decoded_tx;
     BOOST_REQUIRE(decode_base16(decoded_tx, encoded_tx));
@@ -841,14 +841,14 @@ BOOST_AUTO_TEST_CASE(script__native__block_481824_tx__valid)
     BOOST_REQUIRE(tx.from_data(decoded_tx, true, true));
     BOOST_REQUIRE_GT(tx.inputs().size(), index);
 
-    const auto& input = tx.inputs()[index];
+    auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
     prevout.set_value(value);
     prevout.set_script(script::factory_from_data(decoded_script, false));
     BOOST_REQUIRE(prevout.script().is_valid());
 
-    const auto result = script::verify(tx, index, forks);
+    auto const result = script::verify(tx, index, forks);
     BOOST_REQUIRE_EQUAL(result.value(), error::success);
 }
 
@@ -862,11 +862,11 @@ BOOST_AUTO_TEST_CASE(script__native__testnet_block_892321_tx_missing_witness__in
     //// value        : 194445
     //// inpoint      : feecd68efcbbf1b81a99ca7b58410aa1477a46b0a03e4cfcea11b9dc538eb713:0
     //// transaction  : 0200000001f508cd3a9902906e2101a0632e937284bf6cfe8d263052f40152ced6f5e8a5fc0000000000ffffffff0105e4020000000000160014b6aa463696df9140b1191fa2cc1891cf9b5da6d900000000
-    static const auto index = 0u;
-    static const auto value = 194445u;
-    static const auto forks = 1073758207u;
-    static const auto encoded_script = "0020925fe0a6cde95bdc7a21b08925c246cae17005f8a013efffdb5e5cb7b7f8d0c2";
-    static const auto encoded_tx = "0200000001f508cd3a9902906e2101a0632e937284bf6cfe8d263052f40152ced6f5e8a5fc0000000000ffffffff0105e4020000000000160014b6aa463696df9140b1191fa2cc1891cf9b5da6d900000000";
+    static auto const index = 0u;
+    static auto const value = 194445u;
+    static auto const forks = 1073758207u;
+    static auto const encoded_script = "0020925fe0a6cde95bdc7a21b08925c246cae17005f8a013efffdb5e5cb7b7f8d0c2";
+    static auto const encoded_tx = "0200000001f508cd3a9902906e2101a0632e937284bf6cfe8d263052f40152ced6f5e8a5fc0000000000ffffffff0105e4020000000000160014b6aa463696df9140b1191fa2cc1891cf9b5da6d900000000";
 
     data_chunk decoded_tx;
     BOOST_REQUIRE(decode_base16(decoded_tx, encoded_tx));
@@ -878,14 +878,14 @@ BOOST_AUTO_TEST_CASE(script__native__testnet_block_892321_tx_missing_witness__in
     BOOST_REQUIRE(tx.from_data(decoded_tx, true, true));
     BOOST_REQUIRE_GT(tx.inputs().size(), index);
 
-    const auto& input = tx.inputs()[index];
+    auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
     prevout.set_value(value);
     prevout.set_script(script::factory_from_data(decoded_script, false));
     BOOST_REQUIRE(prevout.script().is_valid());
 
-    const auto result = script::verify(tx, index, forks);
+    auto const result = script::verify(tx, index, forks);
     BOOST_REQUIRE_EQUAL(result.value(), error::invalid_witness);
 }
 

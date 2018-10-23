@@ -155,9 +155,9 @@ template <typename Message>
 data_chunk serialize(uint32_t version, const Message& packet,
     uint32_t magic)
 {
-    const auto heading_size = heading::satoshi_fixed_size();
-    const auto payload_size = packet.serialized_size(version);
-    const auto message_size = heading_size + payload_size;
+    auto const heading_size = heading::satoshi_fixed_size();
+    auto const payload_size = packet.serialized_size(version);
+    auto const message_size = heading_size + payload_size;
 
     // Unfortunately data_sink doesn't support seek, so this is a little ugly.
     // The header requires payload size and checksum but prepends the payload.
@@ -178,8 +178,8 @@ data_chunk serialize(uint32_t version, const Message& packet,
 
     // Create the payload checksum without copying the buffer.
     data_slice slice(data.data() + heading_size, data.data() + message_size);
-    const auto check = bitcoin_checksum(slice);
-    const auto payload_size32 = safe_unsigned<uint32_t>(payload_size);
+    auto const check = bitcoin_checksum(slice);
+    auto const payload_size32 = safe_unsigned<uint32_t>(payload_size);
 
     // Create and serialize the heading to a temporary variable (12 bytes).
     heading head(magic, Message::command, payload_size32, check);

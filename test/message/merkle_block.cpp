@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_version_fails)
         }
     };
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    auto const data = expected.to_data(message::version::level::maximum);
     message::merkle_block instance{};
 
     BOOST_REQUIRE(!instance.from_data(message::merkle_block::version_minimum - 1, data));
@@ -195,8 +195,8 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk)
         }
     };
 
-    const auto data = expected.to_data(message::version::level::maximum);
-    const auto result = message::merkle_block::factory_from_data(message::version::level::maximum, data);
+    auto const data = expected.to_data(message::version::level::maximum);
+    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -223,9 +223,9 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream)
         }
     };
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
-    const auto result = message::merkle_block::factory_from_data(message::version::level::maximum, istream);
+    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -252,10 +252,10 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader)
         }
     };
 
-    const auto data = expected.to_data(message::version::level::maximum);
+    auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::merkle_block::factory_from_data(message::version::level::maximum, source);
+    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);

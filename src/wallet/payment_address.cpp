@@ -250,7 +250,7 @@ payment_address payment_address::from_payment(const payment& decoded)
     if (!is_address(decoded))
         return{};
 
-    const auto hash = slice<1, short_hash_size + 1>(decoded);
+    auto const hash = slice<1, short_hash_size + 1>(decoded);
     return{ hash, decoded.front() };
 }
 
@@ -279,7 +279,7 @@ payment_address payment_address::from_script(const chain::script& script,
     uint8_t version)
 {
     // Working around VC++ CTP compiler break here.
-    const auto data = script.to_data(false);
+    auto const data = script.to_data(false);
     return{ bitcoin_short_hash(data), version };
 }
 
@@ -448,7 +448,7 @@ std::ostream& operator<<(std::ostream& out, const payment_address& of)
 payment_address::list payment_address::extract(const chain::script& script,
     uint8_t p2kh_version, uint8_t p2sh_version)
 {
-    const auto input = extract_input(script, p2kh_version, p2sh_version);
+    auto const input = extract_input(script, p2kh_version, p2sh_version);
     return input.empty() ? extract_output(script, p2kh_version, p2sh_version) :
         input;
 }
@@ -458,7 +458,7 @@ payment_address::list payment_address::extract_input(
     const chain::script& script, uint8_t p2kh_version, uint8_t p2sh_version)
 {
     // A sign_key_hash result always implies sign_script_hash as well.
-    const auto pattern = script.input_pattern();
+    auto const pattern = script.input_pattern();
 
     switch (pattern)
     {
@@ -506,7 +506,7 @@ payment_address::list payment_address::extract_input(
 payment_address::list payment_address::extract_output(
     const chain::script& script, uint8_t p2kh_version, uint8_t p2sh_version)
 {
-    const auto pattern = script.output_pattern();
+    auto const pattern = script.output_pattern();
 
     switch (pattern)
     {

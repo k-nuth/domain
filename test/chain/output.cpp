@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(output__constructor_2__valid_input__returns_input_initializ
 {
     uint64_t value = 643u;
     chain::script script;
-    const auto data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
+    auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
     BOOST_REQUIRE(script.from_data(data, false));
 
     chain::output instance(value, script);
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(output__constructor_3__valid_input__returns_input_initializ
 {
     uint64_t value = 643u;
     chain::script script;
-    const auto data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
+    auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
     BOOST_REQUIRE(script.from_data(data, false));
 
     // This must be non-const.
@@ -148,21 +148,21 @@ BOOST_AUTO_TEST_CASE(output__value__roundtrip__success)
 BOOST_AUTO_TEST_CASE(output__script_setter_1__roundtrip__success)
 {
     chain::script value;
-    const auto data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
+    auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
      BOOST_REQUIRE(value.from_data(data, false));
 
     chain::output instance;
     BOOST_REQUIRE(value != instance.script());
     instance.set_script(value);
     BOOST_REQUIRE(value == instance.script());
-    const auto& restricted = instance;
+    auto const& restricted = instance;
     BOOST_REQUIRE(value == instance.script());
 }
 
 BOOST_AUTO_TEST_CASE(output__script_setter_2__roundtrip__success)
 {
     chain::script value;
-    const auto data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
+    auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
     BOOST_REQUIRE(value.from_data(data, false));
 
     // This must be non-const.
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(output__script_setter_2__roundtrip__success)
     BOOST_REQUIRE(value != instance.script());
     instance.set_script(std::move(dup_value));
     BOOST_REQUIRE(value == instance.script());
-    const auto& restricted = instance;
+    auto const& restricted = instance;
     BOOST_REQUIRE(value == instance.script());
 }
 

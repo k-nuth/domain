@@ -210,7 +210,7 @@ data_chunk compact_block::to_data(uint32_t version) const {
     //std::cout << "compact_block::to_data\n";
 
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -234,7 +234,7 @@ void compact_block::to_data(uint32_t version, data_sink& stream) const {
 //    sink.write_8_bytes_little_endian(nonce_);
 //    sink.write_variable_little_endian(short_ids_.size());
 //
-//    for (const auto& element: short_ids_) {
+//    for (auto const& element: short_ids_) {
 //        //sink.write_mini_hash(element);
 //        uint32_t lsb = element & 0xffffffff;
 //        uint16_t msb = (element >> 32) & 0xffff;
@@ -245,7 +245,7 @@ void compact_block::to_data(uint32_t version, data_sink& stream) const {
 //    sink.write_variable_little_endian(transactions_.size());
 //
 //    // NOTE: Witness flag is controlled by prefilled tx
-//    for (const auto& element: transactions_)
+//    for (auto const& element: transactions_)
 //        element.to_data(version, sink_w);
 //}
 
@@ -258,7 +258,7 @@ size_t compact_block::serialized_size(uint32_t version) const {
                 message::variable_uint_size(transactions_.size()) + 8u;
 
     // NOTE: Witness flag is controlled by prefilled tx
-    for (const auto& tx : transactions_)
+    for (auto const& tx : transactions_)
         size += tx.serialized_size(version);
 
     return size;

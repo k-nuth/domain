@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(verify_string_constructor)
     BOOST_REQUIRE_EQUAL(value.size(), prefix.size());
     for (size_t i = 0; i < value.size(); ++i)
     {
-        const auto comparison = value[i] == '1';
+        auto const comparison = value[i] == '1';
         BOOST_REQUIRE_EQUAL(prefix[i], comparison);
     }
 }

@@ -108,7 +108,7 @@ bool headers::from_data(uint32_t version, data_source& stream) {
 //{
 //    reset();
 //
-//    const auto count = source.read_size_little_endian();
+//    auto const count = source.read_size_little_endian();
 //
 //    // Guard against potential for arbitary memory allocation.
 //    if (count > max_get_headers)
@@ -132,7 +132,7 @@ bool headers::from_data(uint32_t version, data_source& stream) {
 
 data_chunk headers::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -150,7 +150,7 @@ void headers::to_data(uint32_t version, data_sink& stream) const {
 //{
 //    sink.write_variable_little_endian(elements_.size());
 //
-//    for (const auto& element: elements_)
+//    for (auto const& element: elements_)
 //        element.to_data(version, sink_w);
 //}
 
@@ -173,7 +173,7 @@ bool headers::is_sequential() const {
 void headers::to_hashes(hash_list& out) const {
     out.clear();
     out.reserve(elements_.size());
-    const auto map = [&out](const header& header) {
+    auto const map = [&out](const header& header) {
         out.push_back(header.hash());
     };
 
@@ -184,7 +184,7 @@ void headers::to_inventory(inventory_vector::list& out,
                            inventory::type_id type) const {
     out.clear();
     out.reserve(elements_.size());
-    const auto map = [&out, type](const header& header) {
+    auto const map = [&out, type](const header& header) {
         out.emplace_back(type, header.hash());
     };
 

@@ -32,12 +32,12 @@
 namespace libbitcoin {
 namespace wallet {
 
-static const auto bitcoin_scheme = "bitcoin";
-static const auto parameter_amount = "amount";
-static const auto parameter_label = "label";
-static const auto parameter_message = "message";
-static const auto parameter_r = "r";
-static const auto parameter_req_ = "req-";
+static auto const bitcoin_scheme = "bitcoin";
+static auto const parameter_amount = "amount";
+static auto const parameter_label = "label";
+static auto const parameter_message = "message";
+static auto const parameter_r = "r";
+static auto const parameter_req_ = "req-";
 static constexpr size_t parameter_req_length = 4;
 
 bitcoin_uri::bitcoin_uri()
@@ -115,7 +115,7 @@ stealth_address bitcoin_uri::stealth() const
 
 std::string bitcoin_uri::parameter(const std::string& key) const
 {
-    const auto value = query_.find(key);
+    auto const value = query_.find(key);
     return value == query_.end() ? std::string() : value->second;
 }
 
@@ -129,7 +129,7 @@ std::string bitcoin_uri::address() const
 
 void bitcoin_uri::set_amount(uint64_t satoshis)
 {
-    const auto amount = encode_base10(satoshis, btc_decimal_places);
+    auto const amount = encode_base10(satoshis, btc_decimal_places);
     query_[parameter_amount] = amount;
 }
 
@@ -228,7 +228,7 @@ bool bitcoin_uri::set_fragment(const std::string& fragment)
 bool bitcoin_uri::set_parameter(const std::string& key,
     const std::string& value)
 {
-    const auto required = [](const std::string& key)
+    auto const required = [](const std::string& key)
     {
         return key.substr(0, parameter_req_length) == parameter_req_;
     };

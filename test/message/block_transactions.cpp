@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_version__failur
     message::block_transactions expected;
     expected.from_data(message::block_transactions::version_minimum, raw);
 
-    const auto data = expected.to_data(
+    auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
@@ -222,11 +222,11 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_1__valid_input__succe
     message::block_transactions expected;
     expected.from_data(message::block_transactions::version_minimum, raw);
 
-    const auto data = expected.to_data(
+    auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
-    const auto result = message::block_transactions::factory_from_data(
+    auto const result = message::block_transactions::factory_from_data(
         message::block_transactions::version_minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_2__valid_input__succe
     message::block_transactions expected;
     expected.from_data(message::block_transactions::version_minimum, raw);
 
-    const auto data = expected.to_data(
+    auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
@@ -320,13 +320,13 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_3__valid_input__succe
     message::block_transactions expected;
     expected.from_data(message::block_transactions::version_minimum, raw);
 
-    const auto data = expected.to_data(
+    auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::block_transactions::factory_from_data(
+    auto const result = message::block_transactions::factory_from_data(
         message::block_transactions::version_minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

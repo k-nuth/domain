@@ -41,7 +41,7 @@ parse_encrypted_public::magic_
 byte_array<parse_encrypted_public::prefix_size>
 parse_encrypted_public::prefix_factory(uint8_t address)
 {
-    const auto context = default_context_ + address;
+    auto const context = default_context_ + address;
     return splice(magic_, to_array(context));
 }
 
