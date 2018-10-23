@@ -55,8 +55,8 @@ public:
     static size_t satoshi_fixed_size(uint32_t version);
 
     send_headers();
-    send_headers(const send_headers& other);
-    send_headers(send_headers&& other);
+    send_headers(const send_headers& x);
+    send_headers(send_headers&& x);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);

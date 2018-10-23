@@ -61,23 +61,23 @@ block::block()
     : chain::block() {
 }
 
-block::block(block&& other)
-    : chain::block(std::move(other)) {
+block::block(block&& x) noexcept
+    : chain::block(std::move(x)) {
 }
 
-block::block(block const& other)
-    : chain::block(other) {
+block::block(block const& x)
+    : chain::block(x) {
 }
 
-block::block(chain::block&& other)
-    : chain::block(std::move(other)) {
+block::block(chain::block&& x)
+    : chain::block(std::move(x)) {
 }
 
-block::block(const chain::block& other)
-    : chain::block(other) {
+block::block(const chain::block& x)
+    : chain::block(x) {
 }
 
-block::block(chain::header&& header, chain::transaction::list&& transactions)
+block::block(chain::header const& header, chain::transaction::list&& transactions)
     : chain::block(std::move(header), std::move(transactions)) {
 }
 
@@ -125,31 +125,31 @@ size_t block::serialized_size(uint32_t) const {
     return chain::block::serialized_size(true);
 }
 
-block& block::operator=(chain::block&& other) {
+block& block::operator=(chain::block&& x) {
     reset();
-    chain::block::operator=(std::move(other));
+    chain::block::operator=(std::move(x));
     return *this;
 }
 
-block& block::operator=(block&& other) {
-    chain::block::operator=(std::move(other));
+block& block::operator=(block&& x) noexcept {
+    chain::block::operator=(std::move(x));
     return *this;
 }
 
-bool block::operator==(const chain::block& other) const {
-    return chain::block::operator==(other);
+bool block::operator==(const chain::block& x) const {
+    return chain::block::operator==(x);
 }
 
-bool block::operator!=(const chain::block& other) const {
-    return chain::block::operator!=(other);
+bool block::operator!=(const chain::block& x) const {
+    return chain::block::operator!=(x);
 }
 
-bool block::operator==(block const& other) const {
-    return chain::block::operator==(other);
+bool block::operator==(block const& x) const {
+    return chain::block::operator==(x);
 }
 
-bool block::operator!=(block const& other) const {
-    return !(*this == other);
+bool block::operator!=(block const& x) const {
+    return !(*this == x);
 }
 
 //TODO(fernando): check this family of functions: to_data_header_nonce

@@ -64,12 +64,12 @@ address::address(network_address::list&& addresses)
     : addresses_(std::move(addresses)) {
 }
 
-address::address(const address& other)
-    : address(other.addresses_) {
+address::address(const address& x)
+    : address(x.addresses_) {
 }
 
-address::address(address&& other)
-    : address(std::move(other.addresses_)) {
+address::address(address&& x)
+    : address(std::move(x.addresses_)) {
 }
 
 bool address::is_valid() const {
@@ -158,16 +158,16 @@ void address::set_addresses(network_address::list&& value) {
     addresses_ = std::move(value);
 }
 
-address& address::operator=(address&& other) {
-    addresses_ = std::move(other.addresses_);
+address& address::operator=(address&& x) {
+    addresses_ = std::move(x.addresses_);
     return *this;
 }
 
-bool address::operator==(const address& other) const {
-    return (addresses_ == other.addresses_);
+bool address::operator==(const address& x) const {
+    return (addresses_ == x.addresses_);
 }
 
-bool address::operator!=(const address& other) const {
+bool address::operator!=(const address& x) const {
     return !(*this == other);
 }
 

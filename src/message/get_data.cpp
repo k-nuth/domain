@@ -72,12 +72,12 @@ get_data::get_data(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 
-get_data::get_data(const get_data& other)
-    : inventory(other) {
+get_data::get_data(const get_data& x)
+    : inventory(x) {
 }
 
-get_data::get_data(get_data&& other)
-    : inventory(other) {
+get_data::get_data(get_data&& x)
+    : inventory(x) {
 }
 
 bool get_data::from_data(uint32_t version, data_chunk const& data) {
@@ -110,17 +110,17 @@ void get_data::to_witness() {
     std::for_each(inventories().begin(), inventories().end(), convert);
 }
 
-get_data& get_data::operator=(get_data&& other) {
-    set_inventories(other.inventories());
+get_data& get_data::operator=(get_data&& x) {
+    set_inventories(x.inventories());
     return *this;
 }
 
-bool get_data::operator==(const get_data& other) const {
-    return (static_cast<inventory>(*this) == static_cast<inventory>(other));
+bool get_data::operator==(const get_data& x) const {
+    return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
 
-bool get_data::operator!=(const get_data& other) const {
-    return (static_cast<inventory>(*this) != static_cast<inventory>(other));
+bool get_data::operator!=(const get_data& x) const {
+    return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
 }  // namespace message

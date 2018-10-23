@@ -57,8 +57,8 @@ public:
     filter_add();
     filter_add(data_chunk const& data);
     filter_add(data_chunk&& data);
-    filter_add(const filter_add& other);
-    filter_add(filter_add&& other);
+    filter_add(const filter_add& x);
+    filter_add(filter_add&& x);
 
     data_chunk& data();
     data_chunk const& data() const;
@@ -104,11 +104,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    filter_add& operator=(filter_add&& other);
+    filter_add& operator=(filter_add&& x);
     void operator=(const filter_add&) = delete;
 
-    bool operator==(const filter_add& other) const;
-    bool operator!=(const filter_add& other) const;
+    bool operator==(const filter_add& x) const;
+    bool operator!=(const filter_add& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

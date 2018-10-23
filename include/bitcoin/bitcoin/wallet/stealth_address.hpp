@@ -52,16 +52,16 @@ public:
     stealth_address();
     stealth_address(data_chunk const& decoded);
     stealth_address(std::string const& encoded);
-    stealth_address(const stealth_address& other);
+    stealth_address(const stealth_address& x);
     stealth_address(const binary& filter, const ec_compressed& scan_key,
         const point_list& spend_keys, uint8_t signatures=0,
         uint8_t version=mainnet_p2kh);
 
     /// Operators.
-    bool operator<(const stealth_address& other) const;
-    bool operator==(const stealth_address& other) const;
-    bool operator!=(const stealth_address& other) const;
-    stealth_address& operator=(const stealth_address& other);
+    bool operator<(const stealth_address& x) const;
+    bool operator==(const stealth_address& x) const;
+    bool operator!=(const stealth_address& x) const;
+    stealth_address& operator=(const stealth_address& x);
     friend std::istream& operator>>(std::istream& in, stealth_address& to);
     friend std::ostream& operator<<(std::ostream& out,
         const stealth_address& of);

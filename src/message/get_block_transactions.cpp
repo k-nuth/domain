@@ -64,19 +64,19 @@ get_block_transactions::get_block_transactions(hash_digest const& block_hash,
     : block_hash_(block_hash), indexes_(indexes) {
 }
 
-get_block_transactions::get_block_transactions(hash_digest&& block_hash,
+get_block_transactions::get_block_transactions(hash_digest const& block_hash,
                                                std::vector<uint64_t>&& indexes)
     : block_hash_(std::move(block_hash)), indexes_(std::move(indexes)) {
 }
 
 get_block_transactions::get_block_transactions(
-    const get_block_transactions& other)
-    : get_block_transactions(other.block_hash_, other.indexes_) {
+    const get_block_transactions& x)
+    : get_block_transactions(x.block_hash_, x.indexes_) {
 }
 
-get_block_transactions::get_block_transactions(get_block_transactions&& other)
-    : get_block_transactions(std::move(other.block_hash_),
-                             std::move(other.indexes_)) {
+get_block_transactions::get_block_transactions(get_block_transactions&& x)
+    : get_block_transactions(std::move(x.block_hash_),
+                             std::move(x.indexes_)) {
 }
 
 bool get_block_transactions::is_valid() const {
@@ -166,10 +166,6 @@ void get_block_transactions::set_block_hash(hash_digest const& value) {
     block_hash_ = value;
 }
 
-void get_block_transactions::set_block_hash(hash_digest&& value) {
-    block_hash_ = std::move(value);
-}
-
 std::vector<uint64_t>& get_block_transactions::indexes() {
     return indexes_;
 }
@@ -187,19 +183,19 @@ void get_block_transactions::set_indexes(std::vector<uint64_t>&& values) {
 }
 
 get_block_transactions& get_block_transactions::operator=(
-    get_block_transactions&& other) {
-    block_hash_ = other.block_hash_;
-    indexes_ = other.indexes_;
+    get_block_transactions&& x) {
+    block_hash_ = x.block_hash_;
+    indexes_ = x.indexes_;
     return *this;
 }
 
 bool get_block_transactions::operator==(
-    const get_block_transactions& other) const {
-    return (block_hash_ == other.block_hash_) && (indexes_ == other.indexes_);
+    const get_block_transactions& x) const {
+    return (block_hash_ == x.block_hash_) && (indexes_ == x.indexes_);
 }
 
 bool get_block_transactions::operator!=(
-    const get_block_transactions& other) const {
+    const get_block_transactions& x) const {
     return !(*this == other);
 }
 

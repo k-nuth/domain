@@ -56,8 +56,8 @@ public:
 
     send_compact();
     send_compact(bool high_bandwidth_mode, uint64_t version);
-    send_compact(const send_compact& other);
-    send_compact(send_compact&& other);
+    send_compact(const send_compact& x);
+    send_compact(send_compact&& x);
 
     bool high_bandwidth_mode() const;
     void set_high_bandwidth_mode(bool mode);
@@ -105,11 +105,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     /// This class is move assignable but not copy assignable.
-    send_compact& operator=(send_compact&& other);
+    send_compact& operator=(send_compact&& x);
     void operator=(const send_compact&) = delete;
 
-    bool operator==(const send_compact& other) const;
-    bool operator!=(const send_compact& other) const;
+    bool operator==(const send_compact& x) const;
+    bool operator!=(const send_compact& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

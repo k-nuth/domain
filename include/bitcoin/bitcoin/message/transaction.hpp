@@ -64,11 +64,11 @@ public:
 
     transaction();
 
-    transaction(transaction&& other);
-    transaction(chain::transaction&& other);
+    transaction(transaction&& x);
+    transaction(chain::transaction&& x);
 
-    transaction(transaction const& other);
-    transaction(chain::transaction const& other);
+    transaction(transaction const& x);
+    transaction(chain::transaction const& x);
 
     transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs);
     transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs);
@@ -93,17 +93,17 @@ public:
     //void to_data(uint32_t version, writer& sink, bool witness = true) const;
     size_t serialized_size(uint32_t version) const;
 
-    transaction& operator=(chain::transaction&& other);
+    transaction& operator=(chain::transaction&& x);
 
     /// This class is move assignable but not copy assignable.
-    transaction& operator=(transaction&& other);
+    transaction& operator=(transaction&& x);
     void operator=(transaction const&) = delete;
 
-    bool operator==(chain::transaction const& other) const;
-    bool operator!=(chain::transaction const& other) const;
+    bool operator==(chain::transaction const& x) const;
+    bool operator!=(chain::transaction const& x) const;
 
-    bool operator==(transaction const& other) const;
-    bool operator!=(transaction const& other) const;
+    bool operator==(transaction const& x) const;
+    bool operator!=(transaction const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

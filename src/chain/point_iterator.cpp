@@ -39,8 +39,8 @@ static auto const point_size = static_cast<unsigned>(
 // Constructors.
 //-----------------------------------------------------------------------------
 
-point_iterator::point_iterator(const point_iterator& other)
-  : point_iterator(other.point_, other.current_)
+point_iterator::point_iterator(const point_iterator& x)
+  : point_iterator(x.point_, x.current_)
 {
 }
 
@@ -116,14 +116,14 @@ point_iterator point_iterator::operator-(int value) const
         decrease(value);
 }
 
-bool point_iterator::operator==(const point_iterator& other) const
+bool point_iterator::operator==(const point_iterator& x) const
 {
-    return (current_ == other.current_) && (&point_ == &other.point_);
+    return (current_ == x.current_) && (&point_ == &x.point_);
 }
 
-bool point_iterator::operator!=(const point_iterator& other) const
+bool point_iterator::operator!=(const point_iterator& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 // Utilities.

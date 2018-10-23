@@ -677,7 +677,7 @@ class DOCTEST_INTERFACE String
         view data;
     };
 
-    void copy(const String& other);
+    void copy(const String& x);
 
     void setOnHeap() { *reinterpret_cast<unsigned char*>(&buf[last]) = 128; }
     void setLast(unsigned in = last) { buf[last] = char(in); }
@@ -690,7 +690,7 @@ public:
 
     String(const char* in);
 
-    String(const String& other) { copy(other); }
+    String(const String& x) { copy(x); }
 
     ~String() {
         if(!isOnStack())
@@ -699,23 +699,23 @@ public:
 
     // GCC 4.9/5/6 report Wstrict-overflow when optimizations are ON and it got inlined in the vector class somewhere...
     // see commit 574ef95f0cd379118be5011704664e4b5351f1e0 and build https://travis-ci.org/onqtam/doctest/builds/230671611
-    DOCTEST_NOINLINE String& operator=(const String& other) {
+    DOCTEST_NOINLINE String& operator=(const String& x) {
         if(this != &other) {
             if(!isOnStack())
                 delete[] data.ptr;
 
-            copy(other);
+            copy(x);
         }
 
         return *this;
     }
-    String& operator+=(const String& other);
+    String& operator+=(const String& x);
 
-    String operator+(const String& other) const { return String(*this) += other; }
+    String operator+(const String& x) const { return String(*this) += other; }
 
 #ifdef DOCTEST_CONFIG_WITH_RVALUE_REFERENCES
-    String(String&& other);
-    String& operator=(String&& other);
+    String(String&& x);
+    String& operator=(String&& x);
 #endif // DOCTEST_CONFIG_WITH_RVALUE_REFERENCES
 
     bool isOnStack() const { return (buf[last] & 128) == 0; }
@@ -1289,7 +1289,7 @@ namespace detail
                 , m_file(file)
                 , m_line(line) {}
 
-        bool operator<(const SubcaseSignature& other) const;
+        bool operator<(const SubcaseSignature& x) const;
     };
 
     // cppcheck-suppress copyCtorAndEqOperator
@@ -1299,7 +1299,7 @@ namespace detail
         bool             m_entered;
 
         Subcase(const char* name, const char* file, int line);
-        Subcase(const Subcase& other);
+        Subcase(const Subcase& x);
         ~Subcase();
 
         operator bool() const { return m_entered; }
@@ -1322,11 +1322,11 @@ namespace detail
                 : m_passed(passed)
                 , m_decomposition(decomposition) {}
 
-        DOCTEST_NOINLINE Result(const Result& other)
-                : m_passed(other.m_passed)
-                , m_decomposition(other.m_decomposition) {}
+        DOCTEST_NOINLINE Result(const Result& x)
+                : m_passed(x.m_passed)
+                , m_decomposition(x.m_decomposition) {}
 
-        Result& operator=(const Result& other);
+        Result& operator=(const Result& x);
 
         operator bool() { return !m_passed; }
 
@@ -1552,11 +1552,11 @@ namespace detail
             return *this;
         }
 
-        TestCase(const TestCase& other) { *this = other; }
+        TestCase(const TestCase& x) { *this = other; }
 
-        TestCase& operator=(const TestCase& other);
+        TestCase& operator=(const TestCase& x);
 
-        bool operator<(const TestCase& other) const;
+        bool operator<(const TestCase& x) const;
     };
 
     // forward declarations of functions used by the macros
@@ -1895,14 +1895,14 @@ namespace detail
         }
 
         // steal the contents of the other - acting as a move constructor...
-        DOCTEST_NOINLINE ContextBuilder(ContextBuilder& other)
-                : numCaptures(other.numCaptures)
-                , head(other.head)
-                , tail(other.tail) {
-            other.numCaptures = 0;
-            other.head        = 0;
-            other.tail        = 0;
-            my_memcpy(stackChunks, other.stackChunks,
+        DOCTEST_NOINLINE ContextBuilder(ContextBuilder& x)
+                : numCaptures(x.numCaptures)
+                , head(x.head)
+                , tail(x.tail) {
+            x.numCaptures = 0;
+            x.head        = 0;
+            x.tail        = 0;
+            my_memcpy(stackChunks, x.stackChunks,
                       unsigned(int(sizeof(Chunk)) * DOCTEST_CONFIG_NUM_CAPTURES_ON_STACK));
         }
 
@@ -3495,15 +3495,15 @@ namespace detail
 #endif // DOCTEST_CONFIG_DISABLE
 } // namespace detail
 
-void String::copy(const String& other) {
-    if(other.isOnStack()) {
-        detail::my_memcpy(buf, other.buf, len);
+void String::copy(const String& x) {
+    if(x.isOnStack()) {
+        detail::my_memcpy(buf, x.buf, len);
     } else {
         setOnHeap();
-        data.size     = other.data.size;
+        data.size     = x.data.size;
         data.capacity = data.size + 1;
         data.ptr      = new char[data.capacity];
-        detail::my_memcpy(data.ptr, other.data.ptr, data.size + 1);
+        detail::my_memcpy(data.ptr, x.data.ptr, data.size + 1);
     }
 }
 
@@ -3521,14 +3521,14 @@ String::String(const char* in) {
     }
 }
 
-String& String::operator+=(const String& other) {
+String& String::operator+=(const String& x) {
     const unsigned my_old_size = size();
-    const unsigned other_size  = other.size();
+    const unsigned other_size  = x.size();
     const unsigned total_size  = my_old_size + other_size;
     if(isOnStack()) {
         if(total_size < len) {
             // append to the current stack space
-            detail::my_memcpy(buf + my_old_size, other.c_str(), other_size + 1);
+            detail::my_memcpy(buf + my_old_size, x.c_str(), other_size + 1);
             setLast(last - total_size);
         } else {
             // alloc new chunk
@@ -3541,13 +3541,13 @@ String& String::operator+=(const String& other) {
             data.capacity = data.size + 1;
             data.ptr      = temp;
             // transfer the rest of the data
-            detail::my_memcpy(data.ptr + my_old_size, other.c_str(), other_size + 1);
+            detail::my_memcpy(data.ptr + my_old_size, x.c_str(), other_size + 1);
         }
     } else {
         if(data.capacity > total_size) {
             // append to the current heap block
             data.size = total_size;
-            detail::my_memcpy(data.ptr + my_old_size, other.c_str(), other_size + 1);
+            detail::my_memcpy(data.ptr + my_old_size, x.c_str(), other_size + 1);
         } else {
             // resize
             data.capacity *= 2;
@@ -3563,7 +3563,7 @@ String& String::operator+=(const String& other) {
             data.size = total_size;
             data.ptr  = temp;
             // transfer the rest of the data
-            detail::my_memcpy(data.ptr + my_old_size, other.c_str(), other_size + 1);
+            detail::my_memcpy(data.ptr + my_old_size, x.c_str(), other_size + 1);
         }
     }
 
@@ -3571,19 +3571,19 @@ String& String::operator+=(const String& other) {
 }
 
 #ifdef DOCTEST_CONFIG_WITH_RVALUE_REFERENCES
-String::String(String&& other) {
-    detail::my_memcpy(buf, other.buf, len);
-    other.buf[0] = '\0';
-    other.setLast();
+String::String(String&& x) {
+    detail::my_memcpy(buf, x.buf, len);
+    x.buf[0] = '\0';
+    x.setLast();
 }
 
-String& String::operator=(String&& other) {
+String& String::operator=(String&& x) {
     if(this != &other) {
         if(!isOnStack())
             delete[] data.ptr;
-        detail::my_memcpy(buf, other.buf, len);
-        other.buf[0] = '\0';
-        other.setLast();
+        detail::my_memcpy(buf, x.buf, len);
+        x.buf[0] = '\0';
+        x.setLast();
     }
     return *this;
 }
@@ -3596,7 +3596,7 @@ int String::compare(const char* other, bool no_case) const {
 }
 
 int String::compare(const String& other, bool no_case) const {
-    return compare(other.c_str(), no_case);
+    return compare(x.c_str(), no_case);
 }
 
 std::ostream& operator<<(std::ostream& stream, const String& in) {
@@ -3822,34 +3822,34 @@ namespace detail
         return *this;
     }
 
-    TestCase& TestCase::operator=(const TestCase& other) {
-        m_test              = other.m_test;
-        m_full_name         = other.m_full_name;
-        m_name              = other.m_name;
-        m_type              = other.m_type;
-        m_test_suite        = other.m_test_suite;
-        m_description       = other.m_description;
-        m_skip              = other.m_skip;
-        m_may_fail          = other.m_may_fail;
-        m_should_fail       = other.m_should_fail;
-        m_expected_failures = other.m_expected_failures;
-        m_timeout           = other.m_timeout;
-        m_file              = other.m_file;
-        m_line              = other.m_line;
-        m_template_id       = other.m_template_id;
+    TestCase& TestCase::operator=(const TestCase& x) {
+        m_test              = x.m_test;
+        m_full_name         = x.m_full_name;
+        m_name              = x.m_name;
+        m_type              = x.m_type;
+        m_test_suite        = x.m_test_suite;
+        m_description       = x.m_description;
+        m_skip              = x.m_skip;
+        m_may_fail          = x.m_may_fail;
+        m_should_fail       = x.m_should_fail;
+        m_expected_failures = x.m_expected_failures;
+        m_timeout           = x.m_timeout;
+        m_file              = x.m_file;
+        m_line              = x.m_line;
+        m_template_id       = x.m_template_id;
 
         if(m_template_id != -1)
             m_name = m_full_name.c_str();
         return *this;
     }
 
-    bool TestCase::operator<(const TestCase& other) const {
-        if(m_line != other.m_line)
-            return m_line < other.m_line;
-        const int file_cmp = std::strcmp(m_file, other.m_file);
+    bool TestCase::operator<(const TestCase& x) const {
+        if(m_line != x.m_line)
+            return m_line < x.m_line;
+        const int file_cmp = std::strcmp(m_file, x.m_file);
         if(file_cmp != 0)
             return file_cmp < 0;
-        return m_template_id < other.m_template_id;
+        return m_template_id < x.m_template_id;
     }
 
     const char* getAssertString(assertType::Enum val) {
@@ -4059,12 +4059,12 @@ namespace detail
 
     TestAccessibleContextState* getTestsContextState() { return contextState; }
 
-    bool SubcaseSignature::operator<(const SubcaseSignature& other) const {
-        if(m_line != other.m_line)
-            return m_line < other.m_line;
-        if(std::strcmp(m_file, other.m_file) != 0)
-            return std::strcmp(m_file, other.m_file) < 0;
-        return std::strcmp(m_name, other.m_name) < 0;
+    bool SubcaseSignature::operator<(const SubcaseSignature& x) const {
+        if(m_line != x.m_line)
+            return m_line < x.m_line;
+        if(std::strcmp(m_file, x.m_file) != 0)
+            return std::strcmp(m_file, x.m_file) < 0;
+        return std::strcmp(m_name, x.m_name) < 0;
     }
 
     Subcase::Subcase(const char* name, const char* file, int line)
@@ -4099,10 +4099,10 @@ namespace detail
         m_entered = true;
     }
 
-    Subcase::Subcase(const Subcase& other)
-            : m_signature(other.m_signature.m_name, other.m_signature.m_file,
-                          other.m_signature.m_line)
-            , m_entered(other.m_entered) {}
+    Subcase::Subcase(const Subcase& x)
+            : m_signature(x.m_signature.m_name, x.m_signature.m_file,
+                          x.m_signature.m_line)
+            , m_entered(x.m_entered) {}
 
     Subcase::~Subcase() {
         if(m_entered) {
@@ -4123,9 +4123,9 @@ namespace detail
 
     Result::~Result() {}
 
-    Result& Result::operator=(const Result& other) {
-        m_passed        = other.m_passed;
-        m_decomposition = other.m_decomposition;
+    Result& Result::operator=(const Result& x) {
+        m_passed        = x.m_passed;
+        m_decomposition = x.m_decomposition;
 
         return *this;
     }

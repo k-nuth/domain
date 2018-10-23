@@ -39,8 +39,8 @@ ek_public::ek_public(std::string const& encoded)
 {
 }
 
-ek_public::ek_public(const ek_public& other)
-  : valid_(other.valid_), public_(other.public_)
+ek_public::ek_public(const ek_public& x)
+  : valid_(x.valid_), public_(x.public_)
 {
 }
 
@@ -93,24 +93,24 @@ const encrypted_public& ek_public::public_key() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_public& ek_public::operator=(const ek_public& other)
+ek_public& ek_public::operator=(const ek_public& x)
 {
-    valid_ = other.valid_;
-    public_ = other.public_;
+    valid_ = x.valid_;
+    public_ = x.public_;
     return *this;
 }
 
-bool ek_public::operator<(const ek_public& other) const
+bool ek_public::operator<(const ek_public& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool ek_public::operator==(const ek_public& other) const
+bool ek_public::operator==(const ek_public& x) const
 {
-    return valid_ == other.valid_ && public_ == other.public_;
+    return valid_ == x.valid_ && public_ == x.public_;
 }
 
-bool ek_public::operator!=(const ek_public& other) const
+bool ek_public::operator!=(const ek_public& x) const
 {
     return !(*this == other);
 }

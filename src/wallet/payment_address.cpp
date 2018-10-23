@@ -63,14 +63,14 @@ payment_address::payment_address()
 {
 }
 
-payment_address::payment_address(payment_address&& other)
-  : valid_(other.valid_), version_(other.version_),
-    hash_(std::move(other.hash_))
+payment_address::payment_address(payment_address&& x)
+  : valid_(x.valid_), version_(x.version_),
+    hash_(std::move(x.hash_))
 {
 }
 
-payment_address::payment_address(const payment_address& other)
-  : valid_(other.valid_), version_(other.version_), hash_(other.hash_)
+payment_address::payment_address(const payment_address& x)
+  : valid_(x.valid_), version_(x.version_), hash_(x.hash_)
 {
 }
 
@@ -394,26 +394,26 @@ payment payment_address::to_payment() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-payment_address& payment_address::operator=(const payment_address& other)
+payment_address& payment_address::operator=(const payment_address& x)
 {
-    valid_ = other.valid_;
-    version_ = other.version_;
-    hash_ = other.hash_;
+    valid_ = x.valid_;
+    version_ = x.version_;
+    hash_ = x.hash_;
     return *this;
 }
 
-bool payment_address::operator<(const payment_address& other) const
+bool payment_address::operator<(const payment_address& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool payment_address::operator==(const payment_address& other) const
+bool payment_address::operator==(const payment_address& x) const
 {
-    return valid_ == other.valid_ && version_ == other.version_ &&
-        hash_ == other.hash_;
+    return valid_ == x.valid_ && version_ == x.version_ &&
+        hash_ == x.hash_;
 }
 
-bool payment_address::operator!=(const payment_address& other) const
+bool payment_address::operator!=(const payment_address& x) const
 {
     return !(*this == other);
 }

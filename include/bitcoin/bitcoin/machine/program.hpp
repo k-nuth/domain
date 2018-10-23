@@ -65,7 +65,7 @@ public:
         uint64_t value, script_version version=script_version::zero);
 
     /// Create using copied tx, input, forks, value, stack (prevout run).
-    program(chain::script const& script, const program& other);
+    program(chain::script const& script, const program& x);
 
     /// Create using copied tx, input, forks, value and moved stack (p2sh run).
     program(chain::script const& script, program&& other, bool move);

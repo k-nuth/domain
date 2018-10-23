@@ -67,10 +67,10 @@ stealth_address::stealth_address()
 {
 }
 
-stealth_address::stealth_address(const stealth_address& other)
-  : valid_(other.valid_), version_(other.version_), scan_key_(other.scan_key_),
-    spend_keys_(other.spend_keys_), signatures_(other.signatures_),
-    filter_(other.filter_)
+stealth_address::stealth_address(const stealth_address& x)
+  : valid_(x.valid_), version_(x.version_), scan_key_(x.scan_key_),
+    spend_keys_(x.spend_keys_), signatures_(x.signatures_),
+    filter_(x.filter_)
 {
 }
 
@@ -319,30 +319,30 @@ uint8_t stealth_address::options() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-stealth_address& stealth_address::operator=(const stealth_address& other)
+stealth_address& stealth_address::operator=(const stealth_address& x)
 {
-    valid_ = other.valid_;
-    version_ = other.version_;
-    scan_key_ = other.scan_key_;
-    spend_keys_ = other.spend_keys_;
-    signatures_ = other.signatures_;
-    filter_ = other.filter_;
+    valid_ = x.valid_;
+    version_ = x.version_;
+    scan_key_ = x.scan_key_;
+    spend_keys_ = x.spend_keys_;
+    signatures_ = x.signatures_;
+    filter_ = x.filter_;
     return *this;
 }
 
-bool stealth_address::operator<(const stealth_address& other) const
+bool stealth_address::operator<(const stealth_address& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool stealth_address::operator==(const stealth_address& other) const
+bool stealth_address::operator==(const stealth_address& x) const
 {
-    return valid_ == other.valid_ && version_ == other.version_ &&
-        scan_key_ == other.scan_key_&& spend_keys_ == other.spend_keys_ &&
-        signatures_ == other.signatures_ && filter_ == other.filter_;
+    return valid_ == x.valid_ && version_ == x.version_ &&
+        scan_key_ == x.scan_key_&& spend_keys_ == x.spend_keys_ &&
+        signatures_ == x.signatures_ && filter_ == x.filter_;
 }
 
-bool stealth_address::operator!=(const stealth_address& other) const
+bool stealth_address::operator!=(const stealth_address& x) const
 {
     return !(*this == other);
 }

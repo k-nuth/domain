@@ -72,13 +72,13 @@ script::script()
     : valid_(false), cached_(false) {
 }
 
-script::script(script&& other)
-    : bytes_(std::move(other.bytes_)), valid_(other.valid_), cached_(false) {
+script::script(script&& x) noexcept
+    : bytes_(std::move(x.bytes_)), valid_(x.valid_), cached_(false) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
 }
 
-script::script(script const& other)
-    : bytes_(other.bytes_), valid_(other.valid_), cached_(false) {
+script::script(script const& x)
+    : bytes_(x.bytes_), valid_(x.valid_), cached_(false) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
 }
 
@@ -111,29 +111,29 @@ script::script(data_chunk const& encoded, bool prefix) {
 //-----------------------------------------------------------------------------
 
 // Concurrent read/write is not supported, so no critical section.
-script& script::operator=(script&& other) {
+script& script::operator=(script&& x) noexcept {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     reset();
-    bytes_ = std::move(other.bytes_);
-    valid_ = other.valid_;
+    bytes_ = std::move(x.bytes_);
+    valid_ = x.valid_;
     return *this;
 }
 
 // Concurrent read/write is not supported, so no critical section.
-script& script::operator=(script const& other) {
+script& script::operator=(script const& x) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     reset();
-    bytes_ = other.bytes_;
-    valid_ = other.valid_;
+    bytes_ = x.bytes_;
+    valid_ = x.valid_;
     return *this;
 }
 
-bool script::operator==(script const& other) const {
-    return bytes_ == other.bytes_;
+bool script::operator==(script const& x) const {
+    return bytes_ == x.bytes_;
 }
 
-bool script::operator!=(script const& other) const {
-    return !(*this == other);
+bool script::operator!=(script const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.

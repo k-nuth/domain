@@ -51,8 +51,8 @@ public:
 
     operation();
 
-    operation(operation&& other);
-    operation(operation const& other);
+    operation(operation&& x);
+    operation(operation const& x);
 
     operation(data_chunk&& uncoded, bool minimal = true);
     operation(data_chunk const& uncoded, bool minimal = true);
@@ -62,11 +62,11 @@ public:
     // Operators.
     //-------------------------------------------------------------------------
 
-    operation& operator=(operation&& other);
-    operation& operator=(operation const& other);
+    operation& operator=(operation&& x);
+    operation& operator=(operation const& x);
 
-    bool operator==(operation const& other) const;
-    bool operator!=(operation const& other) const;
+    bool operator==(operation const& x) const;
+    bool operator!=(operation const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------

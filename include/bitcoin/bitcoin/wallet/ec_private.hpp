@@ -77,7 +77,7 @@ public:
 
     /// Constructors.
     ec_private();
-    ec_private(const ec_private& other);
+    ec_private(const ec_private& x);
     ec_private(std::string const& wif, uint8_t version=mainnet_p2kh);
     ec_private(const wif_compressed& wif, uint8_t version=mainnet_p2kh);
     ec_private(const wif_uncompressed& wif, uint8_t version=mainnet_p2kh);
@@ -88,10 +88,10 @@ public:
         bool compress=true);
 
     /// Operators.
-    bool operator<(const ec_private& other) const;
-    bool operator==(const ec_private& other) const;
-    bool operator!=(const ec_private& other) const;
-    ec_private& operator=(const ec_private& other);
+    bool operator<(const ec_private& x) const;
+    bool operator==(const ec_private& x) const;
+    bool operator!=(const ec_private& x) const;
+    ec_private& operator=(const ec_private& x);
     friend std::istream& operator>>(std::istream& in, ec_private& to);
     friend std::ostream& operator<<(std::ostream& out, const ec_private& of);
 

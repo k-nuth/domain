@@ -37,13 +37,13 @@ public:
     ek_token();
     ek_token(std::string const& encoded);
     ek_token(const encrypted_token& key);
-    ek_token(const ek_token& other);
+    ek_token(const ek_token& x);
 
     /// Operators.
-    bool operator<(const ek_token& other) const;
-    bool operator==(const ek_token& other) const;
-    bool operator!=(const ek_token& other) const;
-    ek_token& operator=(const ek_token& other);
+    bool operator<(const ek_token& x) const;
+    bool operator==(const ek_token& x) const;
+    bool operator!=(const ek_token& x) const;
+    ek_token& operator=(const ek_token& x);
     friend std::istream& operator>>(std::istream& in, ek_token& to);
     friend std::ostream& operator<<(std::ostream& out, const ek_token& of);
 

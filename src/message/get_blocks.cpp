@@ -60,16 +60,16 @@ get_blocks::get_blocks(const hash_list& start, hash_digest const& stop)
     : start_hashes_(start), stop_hash_(stop) {
 }
 
-get_blocks::get_blocks(hash_list&& start, hash_digest&& stop)
+get_blocks::get_blocks(hash_list&& start, hash_digest const& stop)
     : start_hashes_(std::move(start)), stop_hash_(std::move(stop)) {
 }
 
-get_blocks::get_blocks(const get_blocks& other)
-    : get_blocks(other.start_hashes_, other.stop_hash_) {
+get_blocks::get_blocks(const get_blocks& x)
+    : get_blocks(x.start_hashes_, x.stop_hash_) {
 }
 
-get_blocks::get_blocks(get_blocks&& other)
-    : get_blocks(std::move(other.start_hashes_), std::move(other.stop_hash_)) {
+get_blocks::get_blocks(get_blocks&& x)
+    : get_blocks(std::move(x.start_hashes_), std::move(x.stop_hash_)) {
 }
 
 bool get_blocks::is_valid() const {
@@ -177,27 +177,27 @@ void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
 }
 
-void get_blocks::set_stop_hash(hash_digest&& value) {
+void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = std::move(value);
 }
 
-get_blocks& get_blocks::operator=(get_blocks&& other) {
-    start_hashes_ = std::move(other.start_hashes_);
-    stop_hash_ = std::move(other.stop_hash_);
+get_blocks& get_blocks::operator=(get_blocks&& x) {
+    start_hashes_ = std::move(x.start_hashes_);
+    stop_hash_ = std::move(x.stop_hash_);
     return *this;
 }
 
-bool get_blocks::operator==(const get_blocks& other) const {
-    auto result = (start_hashes_.size() == other.start_hashes_.size()) &&
-                  (stop_hash_ == other.stop_hash_);
+bool get_blocks::operator==(const get_blocks& x) const {
+    auto result = (start_hashes_.size() == x.start_hashes_.size()) &&
+                  (stop_hash_ == x.stop_hash_);
 
     for (size_t i = 0; i < start_hashes_.size() && result; i++)
-        result = (start_hashes_[i] == other.start_hashes_[i]);
+        result = (start_hashes_[i] == x.start_hashes_[i]);
 
     return result;
 }
 
-bool get_blocks::operator!=(const get_blocks& other) const {
+bool get_blocks::operator!=(const get_blocks& x) const {
     return !(*this == other);
 }
 

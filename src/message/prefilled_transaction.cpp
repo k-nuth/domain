@@ -68,12 +68,12 @@ prefilled_transaction::prefilled_transaction(uint64_t index,
 }
 
 prefilled_transaction::prefilled_transaction(
-    const prefilled_transaction& other)
-    : prefilled_transaction(other.index_, other.transaction_) {
+    const prefilled_transaction& x)
+    : prefilled_transaction(x.index_, x.transaction_) {
 }
 
-prefilled_transaction::prefilled_transaction(prefilled_transaction&& other)
-    : prefilled_transaction(other.index_, std::move(other.transaction_)) {
+prefilled_transaction::prefilled_transaction(prefilled_transaction&& x)
+    : prefilled_transaction(x.index_, std::move(x.transaction_)) {
 }
 
 bool prefilled_transaction::is_valid() const {
@@ -170,23 +170,23 @@ void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
 }
 
-prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction&& other) {
-    index_ = other.index_;
-    transaction_ = std::move(other.transaction_);
+prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction&& x) {
+    index_ = x.index_;
+    transaction_ = std::move(x.transaction_);
     return *this;
 }
 
-prefilled_transaction& prefilled_transaction::operator=(const prefilled_transaction& other) {
-    index_ = other.index_;
-    transaction_ = other.transaction_;
+prefilled_transaction& prefilled_transaction::operator=(const prefilled_transaction& x) {
+    index_ = x.index_;
+    transaction_ = x.transaction_;
     return *this;
 }
 
-bool prefilled_transaction::operator==(const prefilled_transaction& other) const {
-    return (index_ == other.index_) && (transaction_ == other.transaction_);
+bool prefilled_transaction::operator==(const prefilled_transaction& x) const {
+    return (index_ == x.index_) && (transaction_ == x.transaction_);
 }
 
-bool prefilled_transaction::operator!=(const prefilled_transaction& other) const {
+bool prefilled_transaction::operator!=(const prefilled_transaction& x) const {
     return !(*this == other);
 }
 

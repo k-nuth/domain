@@ -138,8 +138,8 @@ public:
     version();
     version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
     version(uint32_t value, uint64_t services, uint64_t timestamp, network_address&& address_receiver, network_address&& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
-    version(const version& other);
-    version(version&& other);
+    version(const version& x);
+    version(version&& x);
 
     uint32_t value() const;
     void set_value(uint32_t value);
@@ -240,11 +240,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    version& operator=(version&& other);
+    version& operator=(version&& x);
     void operator=(const version&) = delete;
 
-    bool operator==(const version& other) const;
-    bool operator!=(const version& other) const;
+    bool operator==(const version& x) const;
+    bool operator!=(const version& x) const;
 
     static std::string const command;
     //    static const bounds version;

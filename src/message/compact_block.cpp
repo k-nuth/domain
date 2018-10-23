@@ -80,7 +80,7 @@ compact_block::compact_block(chain::header const& header, uint64_t nonce, const 
     //std::cout << "compact_block::compact_block 2\n";
 }
 
-compact_block::compact_block(chain::header&& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions)
+compact_block::compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions)
     : header_(std::move(header)),
       nonce_(nonce),
       short_ids_(std::move(short_ids)),
@@ -88,13 +88,13 @@ compact_block::compact_block(chain::header&& header, uint64_t nonce, short_id_li
     //std::cout << "compact_block::compact_block 3\n";
 }
 
-compact_block::compact_block(const compact_block& other)
-    : compact_block(other.header_, other.nonce_, other.short_ids_, other.transactions_) {
+compact_block::compact_block(const compact_block& x)
+    : compact_block(x.header_, x.nonce_, x.short_ids_, x.transactions_) {
     //std::cout << "compact_block::compact_block 4\n";
 }
 
-compact_block::compact_block(compact_block&& other)
-    : compact_block(std::move(other.header_), other.nonce_, std::move(other.short_ids_), std::move(other.transactions_)) {
+compact_block::compact_block(compact_block&& x)
+    : compact_block(std::move(x.header_), x.nonce_, std::move(x.short_ids_), std::move(x.transactions_)) {
     //std::cout << "compact_block::compact_block 5\n";
 }
 
@@ -282,12 +282,6 @@ void compact_block::set_header(chain::header const& value) {
     header_ = value;
 }
 
-void compact_block::set_header(chain::header&& value) {
-    //std::cout << "compact_block::set_header 2\n";
-
-    header_ = std::move(value);
-}
-
 uint64_t compact_block::nonce() const {
     //std::cout << "compact_block::nonce\n";
 
@@ -333,19 +327,19 @@ void compact_block::set_transactions(prefilled_transaction::list&& value) {
     transactions_ = std::move(value);
 }
 
-compact_block& compact_block::operator=(compact_block&& other) {
-    header_ = std::move(other.header_);
-    nonce_ = other.nonce_;
-    short_ids_ = std::move(other.short_ids_);
-    transactions_ = std::move(other.transactions_);
+compact_block& compact_block::operator=(compact_block&& x) {
+    header_ = std::move(x.header_);
+    nonce_ = x.nonce_;
+    short_ids_ = std::move(x.short_ids_);
+    transactions_ = std::move(x.transactions_);
     return *this;
 }
 
-bool compact_block::operator==(const compact_block& other) const {
-    return (header_ == other.header_) && (nonce_ == other.nonce_) && (short_ids_ == other.short_ids_) && (transactions_ == other.transactions_);
+bool compact_block::operator==(const compact_block& x) const {
+    return (header_ == x.header_) && (nonce_ == x.nonce_) && (short_ids_ == x.short_ids_) && (transactions_ == x.transactions_);
 }
 
-bool compact_block::operator!=(const compact_block& other) const {
+bool compact_block::operator!=(const compact_block& x) const {
     return !(*this == other);
 }
 

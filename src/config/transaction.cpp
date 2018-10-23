@@ -45,8 +45,8 @@ transaction::transaction(chain::transaction const& value)
 {
 }
 
-transaction::transaction(transaction const& other)
-  : transaction(other.value_)
+transaction::transaction(transaction const& x)
+  : transaction(x.value_)
 {
 }
 

@@ -38,8 +38,8 @@ public:
     //-------------------------------------------------------------------------
 
     point_value();
-    point_value(point_value&& other);
-    point_value(const point_value& other);
+    point_value(point_value&& x);
+    point_value(const point_value& x);
     point_value(point&& instance, uint64_t value);
     point_value(point const& instance, uint64_t value);
 
@@ -49,8 +49,8 @@ public:
     /// This class is move assignable and copy assignable.
     point_value& operator=(point_value other);
 
-    bool operator==(const point_value& other) const;
-    bool operator!=(const point_value& other) const;
+    bool operator==(const point_value& x) const;
+    bool operator!=(const point_value& x) const;
 
     // Swap implementation required to properly handle base class.
     friend void swap(point_value& left, point_value& right);

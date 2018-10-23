@@ -69,8 +69,8 @@ public:
 
     /// Constructors.
     payment_address();
-    payment_address(payment_address&& other);
-    payment_address(const payment_address& other);
+    payment_address(payment_address&& x);
+    payment_address(const payment_address& x);
     payment_address(const payment& decoded);
     payment_address(const ec_private& secret);
     payment_address(std::string const& address);
@@ -80,10 +80,10 @@ public:
     payment_address(chain::script const& script, uint8_t version=mainnet_p2sh);
 
     /// Operators.
-    bool operator<(const payment_address& other) const;
-    bool operator==(const payment_address& other) const;
-    bool operator!=(const payment_address& other) const;
-    payment_address& operator=(const payment_address& other);
+    bool operator<(const payment_address& x) const;
+    bool operator==(const payment_address& x) const;
+    bool operator!=(const payment_address& x) const;
+    payment_address& operator=(const payment_address& x);
     friend std::istream& operator>>(std::istream& in, payment_address& to);
     friend std::ostream& operator<<(std::ostream& out,
         const payment_address& of);

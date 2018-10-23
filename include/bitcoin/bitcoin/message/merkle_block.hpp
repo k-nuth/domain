@@ -59,15 +59,14 @@ public:
 
     merkle_block();
     merkle_block(chain::header const& header, size_t total_transactions, const hash_list& hashes, data_chunk const& flags);
-    merkle_block(chain::header&& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
+    merkle_block(chain::header const& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
     merkle_block(const chain::block& block);
-    merkle_block(const merkle_block& other);
-    merkle_block(merkle_block&& other);
+    merkle_block(const merkle_block& x);
+    merkle_block(merkle_block&& x);
 
     chain::header& header();
     chain::header const& header() const;
     void set_header(chain::header const& value);
-    void set_header(chain::header&& value);
 
     size_t total_transactions() const;
     void set_total_transactions(size_t value);
@@ -140,11 +139,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    merkle_block& operator=(merkle_block&& other);
+    merkle_block& operator=(merkle_block&& x);
     void operator=(const merkle_block&) = delete;
 
-    bool operator==(const merkle_block& other) const;
-    bool operator!=(const merkle_block& other) const;
+    bool operator==(const merkle_block& x) const;
+    bool operator!=(const merkle_block& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

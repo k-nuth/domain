@@ -77,12 +77,12 @@ headers::headers(std::initializer_list<header> const& values)
     : elements_(values) {
 }
 
-headers::headers(headers const& other)
-    : headers(other.elements_) {
+headers::headers(headers const& x)
+    : headers(x.elements_) {
 }
 
-headers::headers(headers&& other)
-    : headers(std::move(other.elements_)) {
+headers::headers(headers&& x)
+    : headers(std::move(x.elements_)) {
 }
 
 bool headers::is_valid() const {
@@ -212,16 +212,16 @@ void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
 }
 
-headers& headers::operator=(headers&& other) {
-    elements_ = std::move(other.elements_);
+headers& headers::operator=(headers&& x) {
+    elements_ = std::move(x.elements_);
     return *this;
 }
 
-bool headers::operator==(headers const& other) const {
-    return (elements_ == other.elements_);
+bool headers::operator==(headers const& x) const {
+    return (elements_ == x.elements_);
 }
 
-bool headers::operator!=(headers const& other) const {
+bool headers::operator!=(headers const& x) const {
     return !(*this == other);
 }
 

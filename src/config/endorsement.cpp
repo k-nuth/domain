@@ -63,8 +63,8 @@ endorsement::endorsement(data_chunk const& value)
 {
 }
 
-endorsement::endorsement(const endorsement& other)
-  : endorsement(other.value_)
+endorsement::endorsement(const endorsement& x)
+  : endorsement(x.value_)
 {
 }
 

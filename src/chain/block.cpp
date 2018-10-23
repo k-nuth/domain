@@ -170,46 +170,49 @@ static std::string const encoded_regtest_genesis_block =
 //-----------------------------------------------------------------------------
 
 block::block()
-    : header_{}, validation{} {
-}
-
-block::block(block const& other)
-    : block(other.header_, other.transactions_) {
-    validation = other.validation;
-}
-
-block::block(block&& other)
-    : block(std::move(other.header_), std::move(other.transactions_)) {
-    validation = std::move(other.validation);
+    : header_{}
+    , validation{} {
 }
 
 // TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
-block::block(chain::header const& header,
-             transaction::list const& transactions)
+block::block(chain::header const& header, transaction::list const& transactions)
     : header_(header), transactions_(transactions), validation{} {
 }
 
 // TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
-block::block(chain::header&& header, transaction::list&& transactions)
+block::block(chain::header const& header, transaction::list&& transactions)
     : header_(std::move(header)), transactions_(std::move(transactions)), validation{} {
 }
+
+block::block(block const& x)
+    : block(x.header_, x.transactions_) {
+    validation = x.validation;
+}
+
+block::block(block&& x) noexcept
+    : block(std::move(x.header_)
+    , std::move(x.transactions_)) 
+{
+    validation = std::move(x.validation);
+}
+
 
 // Operators.
 //-----------------------------------------------------------------------------
 
-block& block::operator=(block&& other) {
-    header_ = std::move(other.header_);
-    transactions_ = std::move(other.transactions_);
-    validation = std::move(other.validation);
+block& block::operator=(block&& x) noexcept {
+    header_ = x.header_;
+    transactions_ = std::move(x.transactions_);
+    validation = std::move(x.validation);
     return *this;
 }
 
-bool block::operator==(block const& other) const {
-    return (header_ == other.header_) && (transactions_ == other.transactions_);
+bool block::operator==(block const& x) const {
+    return (header_ == x.header_) && (transactions_ == x.transactions_);
 }
 
-bool block::operator!=(block const& other) const {
-    return !(*this == other);
+bool block::operator!=(block const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.
@@ -406,11 +409,6 @@ chain::header const& block::header() const {
 // current uses will not be impacted and if so change them to use constructor.
 void block::set_header(chain::header const& value) {
     header_ = value;
-}
-
-// TODO(libbitcoin): see set_header comments.
-void block::set_header(chain::header&& value) {
-    header_ = std::move(value);
 }
 
 transaction::list& block::transactions() {

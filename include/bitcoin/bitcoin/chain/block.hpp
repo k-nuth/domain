@@ -81,21 +81,21 @@ public:
 
     block();
 
-    block(block&& other);
-    block(block const& other);
+    block(block&& x) noexcept;
+    block(block const& x);
 
-    block(chain::header&& header, transaction::list&& transactions);
+    block(chain::header const& header, transaction::list&& transactions);
     block(chain::header const& header, transaction::list const& transactions);
 
     // Operators.
     //-------------------------------------------------------------------------
 
     /// This class is move assignable but NOT copy assignable.
-    block& operator=(block&& other);
-    block& operator=(block const& other) = delete;
+    block& operator=(block&& x) noexcept;
+    block& operator=(block const& x) = delete;
 
-    bool operator==(block const& other) const;
-    bool operator!=(block const& other) const;
+    bool operator==(block const& x) const;
+    bool operator!=(block const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -181,7 +181,6 @@ public:
 
     chain::header const& header() const;
     void set_header(chain::header const& value);
-    void set_header(chain::header&& value);
 
     // deprecated (unsafe)
     transaction::list& transactions();

@@ -56,12 +56,12 @@ witness::witness()
     : valid_(false) {
 }
 
-witness::witness(witness&& other)
-    : stack_(std::move(other.stack_)), valid_(other.valid_) {
+witness::witness(witness&& x)
+    : stack_(std::move(x.stack_)), valid_(x.valid_) {
 }
 
-witness::witness(witness const& other)
-    : stack_(other.stack_), valid_(other.valid_) {
+witness::witness(witness const& x)
+    : stack_(x.stack_), valid_(x.valid_) {
 }
 
 witness::witness(data_stack const& stack) {
@@ -84,25 +84,25 @@ witness::witness(data_chunk const& encoded, bool prefix) {
 // Operators.
 //-----------------------------------------------------------------------------
 
-witness& witness::operator=(witness&& other) {
+witness& witness::operator=(witness&& x) {
     reset();
-    stack_ = std::move(other.stack_);
-    valid_ = other.valid_;
+    stack_ = std::move(x.stack_);
+    valid_ = x.valid_;
     return *this;
 }
 
-witness& witness::operator=(witness const& other) {
+witness& witness::operator=(witness const& x) {
     reset();
-    stack_ = other.stack_;
-    valid_ = other.valid_;
+    stack_ = x.stack_;
+    valid_ = x.valid_;
     return *this;
 }
-bool witness::operator==(witness const& other) const {
-    return stack_ == other.stack_;
+bool witness::operator==(witness const& x) const {
+    return stack_ == x.stack_;
 }
 
-bool witness::operator!=(witness const& other) const {
-    return !(*this == other);
+bool witness::operator!=(witness const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.

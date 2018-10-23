@@ -39,8 +39,8 @@ ek_token::ek_token(std::string const& encoded)
 {
 }
 
-ek_token::ek_token(const ek_token& other)
-  : valid_(other.valid_), token_(other.token_)
+ek_token::ek_token(const ek_token& x)
+  : valid_(x.valid_), token_(x.token_)
 {
 }
 
@@ -93,24 +93,24 @@ const encrypted_token& ek_token::token() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_token& ek_token::operator=(const ek_token& other)
+ek_token& ek_token::operator=(const ek_token& x)
 {
-    valid_ = other.valid_;
-    token_ = other.token_;
+    valid_ = x.valid_;
+    token_ = x.token_;
     return *this;
 }
 
-bool ek_token::operator<(const ek_token& other) const
+bool ek_token::operator<(const ek_token& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool ek_token::operator==(const ek_token& other) const
+bool ek_token::operator==(const ek_token& x) const
 {
-    return valid_ == other.valid_ && token_ == other.token_;
+    return valid_ == x.valid_ && token_ == x.token_;
 }
 
-bool ek_token::operator!=(const ek_token& other) const
+bool ek_token::operator!=(const ek_token& x) const
 {
     return !(*this == other);
 }

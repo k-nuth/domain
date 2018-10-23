@@ -61,12 +61,12 @@ filter_clear::filter_clear(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-filter_clear::filter_clear(const filter_clear& other)
-    : filter_clear(other.insufficient_version_) {
+filter_clear::filter_clear(const filter_clear& x)
+    : filter_clear(x.insufficient_version_) {
 }
 
-filter_clear::filter_clear(filter_clear&& other)
-    : filter_clear(other.insufficient_version_) {
+filter_clear::filter_clear(filter_clear&& x)
+    : filter_clear(x.insufficient_version_) {
 }
 
 bool filter_clear::is_valid() const {

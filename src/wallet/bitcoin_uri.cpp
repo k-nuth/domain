@@ -45,9 +45,9 @@ bitcoin_uri::bitcoin_uri()
 {
 }
 
-bitcoin_uri::bitcoin_uri(const bitcoin_uri& other)
-  : strict_(other.strict_), scheme_(other.scheme_), address_(other.address_),
-    query_(other.query_)
+bitcoin_uri::bitcoin_uri(const bitcoin_uri& x)
+  : strict_(x.strict_), scheme_(x.scheme_), address_(x.address_),
+    query_(x.query_)
 {
 }
 
@@ -250,27 +250,27 @@ bool bitcoin_uri::set_parameter(std::string const& key,
 // Operators.
 // ----------------------------------------------------------------------------
 
-bitcoin_uri& bitcoin_uri::operator=(const bitcoin_uri& other)
+bitcoin_uri& bitcoin_uri::operator=(const bitcoin_uri& x)
 {
-    strict_ = other.strict_;
-    scheme_ = other.scheme_;
-    address_ = other.address_;
-    query_ = other.query_;
+    strict_ = x.strict_;
+    scheme_ = x.scheme_;
+    address_ = x.address_;
+    query_ = x.query_;
     return *this;
 }
 
-bool bitcoin_uri::operator<(const bitcoin_uri& other) const
+bool bitcoin_uri::operator<(const bitcoin_uri& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool bitcoin_uri::operator==(const bitcoin_uri& other) const
+bool bitcoin_uri::operator==(const bitcoin_uri& x) const
 {
-    return strict_ == other.strict_ && scheme_ == other.scheme_ &&
-        address_ == other.address_ && query_ == other.query_;
+    return strict_ == x.strict_ && scheme_ == x.scheme_ &&
+        address_ == x.address_ && query_ == x.query_;
 }
 
-bool bitcoin_uri::operator!=(const bitcoin_uri& other) const
+bool bitcoin_uri::operator!=(const bitcoin_uri& x) const
 {
     return !(*this == other);
 }

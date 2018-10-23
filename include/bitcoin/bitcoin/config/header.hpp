@@ -56,7 +56,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    header(header const& other);
+    header(header const& x);
 
     /**
      * Overload cast to internal type.

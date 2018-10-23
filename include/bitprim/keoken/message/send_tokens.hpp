@@ -45,10 +45,10 @@ public:
     //-------------------------------------------------------------------------
 
     send_tokens() = default;
-    // send_tokens(send_tokens const& other) = default;
-    // send_tokens(send_tokens&& other) = default;
-    // send_tokens& operator=(send_tokens const& other) = default;
-    // send_tokens& operator=(send_tokens&& other) = default;
+    // send_tokens(send_tokens const& x) = default;
+    // send_tokens(send_tokens&& x) = default;
+    // send_tokens& operator=(send_tokens const& x) = default;
+    // send_tokens& operator=(send_tokens&& x) = default;
 
     // Regular.
     //-------------------------------------------------------------------------

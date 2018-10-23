@@ -57,20 +57,20 @@ transaction::transaction()
     : chain::transaction() {
 }
 
-transaction::transaction(transaction&& other)
-    : chain::transaction(std::move(other)) {
+transaction::transaction(transaction&& x)
+    : chain::transaction(std::move(x)) {
 }
 
-transaction::transaction(transaction const& other)
-    : chain::transaction(other) {
+transaction::transaction(transaction const& x)
+    : chain::transaction(x) {
 }
 
-transaction::transaction(chain::transaction&& other)
-    : chain::transaction(std::move(other)) {
+transaction::transaction(chain::transaction&& x)
+    : chain::transaction(std::move(x)) {
 }
 
-transaction::transaction(chain::transaction const& other)
-    : chain::transaction(other) {
+transaction::transaction(chain::transaction const& x)
+    : chain::transaction(x) {
 }
 
 transaction::transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs)
@@ -120,30 +120,30 @@ size_t transaction::serialized_size(uint32_t) const {
     return chain::transaction::serialized_size(true, true);
 }
 
-transaction& transaction::operator=(chain::transaction&& other) {
+transaction& transaction::operator=(chain::transaction&& x) {
     reset();
-    chain::transaction::operator=(std::move(other));
+    chain::transaction::operator=(std::move(x));
     return *this;
 }
 
-transaction& transaction::operator=(transaction&& other) {
-    chain::transaction::operator=(std::move(other));
+transaction& transaction::operator=(transaction&& x) {
+    chain::transaction::operator=(std::move(x));
     return *this;
 }
 
-bool transaction::operator==(chain::transaction const& other) const {
-    return chain::transaction::operator==(other);
+bool transaction::operator==(chain::transaction const& x) const {
+    return chain::transaction::operator==(x);
 }
 
-bool transaction::operator!=(chain::transaction const& other) const {
-    return chain::transaction::operator!=(other);
+bool transaction::operator!=(chain::transaction const& x) const {
+    return chain::transaction::operator!=(x);
 }
 
-bool transaction::operator==(transaction const& other) const {
-    return chain::transaction::operator==(other);
+bool transaction::operator==(transaction const& x) const {
+    return chain::transaction::operator==(x);
 }
 
-bool transaction::operator!=(transaction const& other) const {
+bool transaction::operator!=(transaction const& x) const {
     return !(*this == other);
 }
 

@@ -74,8 +74,8 @@ point::point(const chain::output_point& value)
 {
 }
 
-point::point(point const& other)
-  : point(other.value_)
+point::point(point const& x)
+  : point(x.value_)
 {
 }
 

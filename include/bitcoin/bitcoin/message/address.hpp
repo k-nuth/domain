@@ -57,8 +57,8 @@ public:
     address();
     address(const network_address::list& addresses);
     address(network_address::list&& addresses);
-    address(const address& other);
-    address(address&& other);
+    address(const address& x);
+    address(address&& x);
 
     network_address::list& addresses();
     const network_address::list& addresses() const;
@@ -110,11 +110,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     /// This class is move assignable but not copy assignable.
-    address& operator=(address&& other);
+    address& operator=(address&& x);
     void operator=(const address&) = delete;
 
-    bool operator==(const address& other) const;
-    bool operator!=(const address& other) const;
+    bool operator==(const address& x) const;
+    bool operator!=(const address& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

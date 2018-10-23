@@ -40,38 +40,36 @@ using namespace bc::machine;
 //-----------------------------------------------------------------------------
 
 input::input()
-    : previous_output_{},
-      script_{},
-      sequence_(0) {
-}
+    : sequence_(0) 
+{}
 
-input::input(input&& other)
-    : addresses_(other.addresses_cache()),
-      previous_output_(std::move(other.previous_output_)),
-      script_(std::move(other.script_)),
-      witness_(std::move(other.witness_)),
-      sequence_(other.sequence_) {
-}
+input::input(input const& x)
+    : addresses_(x.addresses_cache()),
+      previous_output_(x.previous_output_),
+      script_(x.script_),
+      witness_(x.witness_),
+      sequence_(x.sequence_) 
+{}
 
-input::input(input const& other)
-    : addresses_(other.addresses_cache()),
-      previous_output_(other.previous_output_),
-      script_(std::move(other.script_)),
-      witness_(other.witness_),
-      sequence_(other.sequence_) {
-}
+input::input(input&& x) noexcept
+    : addresses_(x.addresses_cache()),
+      previous_output_(std::move(x.previous_output_)),
+      script_(std::move(x.script_)),
+      witness_(std::move(x.witness_)),
+      sequence_(x.sequence_) 
+{}
 
 input::input(output_point&& previous_output, chain::script&& script, uint32_t sequence)
     : previous_output_(std::move(previous_output)),
       script_(std::move(script)),
-      sequence_(sequence) {
-}
+      sequence_(sequence) 
+{}
 
 input::input(output_point const& previous_output, chain::script const& script, uint32_t sequence)
     : previous_output_(previous_output),
       script_(script),
-      sequence_(sequence) {
-}
+      sequence_(sequence) 
+{}
 
 // Private cache access for copy/move construction.
 input::addresses_ptr input::addresses_cache() const {
@@ -94,30 +92,30 @@ input::input(output_point const& previous_output, chain::script const& script, c
 // Operators.
 //-----------------------------------------------------------------------------
 
-input& input::operator=(input&& other) {
-    addresses_ = other.addresses_cache();
-    previous_output_ = std::move(other.previous_output_);
-    script_ = std::move(other.script_);
-    witness_ = std::move(other.witness_);
-    sequence_ = other.sequence_;
+input& input::operator=(input&& x) noexcept {
+    addresses_ = x.addresses_cache();
+    previous_output_ = std::move(x.previous_output_);
+    script_ = std::move(x.script_);
+    witness_ = std::move(x.witness_);
+    sequence_ = x.sequence_;
     return *this;
 }
 
-input& input::operator=(input const& other) {
-    addresses_ = other.addresses_cache();
-    previous_output_ = other.previous_output_;
-    script_ = other.script_;
-    witness_ = other.witness_;
-    sequence_ = other.sequence_;
+input& input::operator=(input const& x) {
+    addresses_ = x.addresses_cache();
+    previous_output_ = x.previous_output_;
+    script_ = x.script_;
+    witness_ = x.witness_;
+    sequence_ = x.sequence_;
     return *this;
 }
 
-bool input::operator==(input const& other) const {
-    return (sequence_ == other.sequence_) && (previous_output_ == other.previous_output_) && (script_ == other.script_) && (witness_ == other.witness_);
+bool input::operator==(input const& x) const {
+    return (sequence_ == x.sequence_) && (previous_output_ == x.previous_output_) && (script_ == x.script_) && (witness_ == x.witness_);
 }
 
-bool input::operator!=(input const& other) const {
-    return !(*this == other);
+bool input::operator!=(input const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.
@@ -422,10 +420,9 @@ size_t input::signature_operations(bool bip16, bool bip141) const {
         if (bip141 && witness_.extract_sigop_script(witness, embedded)) {
             // Add sigops in the embedded witness (bip141).
             return sigops + witness.sigops(true);
-        } else {
-            // Add heavy sigops in the embedded script (bip16).
-            return sigops + embedded.sigops(true) * sigops_factor;
         }
+        // Add heavy sigops in the embedded script (bip16).
+        return sigops + embedded.sigops(true) * sigops_factor;
     }
 
     return sigops;

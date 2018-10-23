@@ -46,8 +46,8 @@ ec_public::ec_public()
 {
 }
 
-ec_public::ec_public(const ec_public& other)
-  : valid_(other.valid_), compress_(other.compress_), point_(other.point_)
+ec_public::ec_public(const ec_public& x)
+  : valid_(x.valid_), compress_(x.compress_), point_(x.point_)
 {
 }
 
@@ -210,27 +210,27 @@ payment_address ec_public::to_payment_address(uint8_t version) const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ec_public& ec_public::operator=(const ec_public& other)
+ec_public& ec_public::operator=(const ec_public& x)
 {
-    valid_ = other.valid_;
-    compress_ = other.compress_;
-    version_ = other.version_;
-    point_ = other.point_;
+    valid_ = x.valid_;
+    compress_ = x.compress_;
+    version_ = x.version_;
+    point_ = x.point_;
     return *this;
 }
 
-bool ec_public::operator<(const ec_public& other) const
+bool ec_public::operator<(const ec_public& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool ec_public::operator==(const ec_public& other) const
+bool ec_public::operator==(const ec_public& x) const
 {
-    return valid_ == other.valid_ && compress_ == other.compress_ &&
-        version_ == other.version_ && point_ == other.point_;
+    return valid_ == x.valid_ && compress_ == x.compress_ &&
+        version_ == x.version_ && point_ == x.point_;
 }
 
-bool ec_public::operator!=(const ec_public& other) const
+bool ec_public::operator!=(const ec_public& x) const
 {
     return !(*this == other);
 }

@@ -66,12 +66,12 @@ send_compact::send_compact(bool high_bandwidth_mode,
       version_(version) {
 }
 
-send_compact::send_compact(const send_compact& other)
-    : send_compact(other.high_bandwidth_mode_, other.version_) {
+send_compact::send_compact(const send_compact& x)
+    : send_compact(x.high_bandwidth_mode_, x.version_) {
 }
 
-send_compact::send_compact(send_compact&& other)
-    : send_compact(other.high_bandwidth_mode_, other.version_) {
+send_compact::send_compact(send_compact&& x)
+    : send_compact(x.high_bandwidth_mode_, x.version_) {
 }
 
 bool send_compact::is_valid() const {
@@ -156,18 +156,18 @@ void send_compact::set_version(uint64_t version) {
     version_ = version;
 }
 
-send_compact& send_compact::operator=(send_compact&& other) {
-    high_bandwidth_mode_ = other.high_bandwidth_mode_;
-    version_ = other.version_;
+send_compact& send_compact::operator=(send_compact&& x) {
+    high_bandwidth_mode_ = x.high_bandwidth_mode_;
+    version_ = x.version_;
     return *this;
 }
 
-bool send_compact::operator==(const send_compact& other) const {
-    return (high_bandwidth_mode_ == other.high_bandwidth_mode_) &&
-           (version_ == other.version_);
+bool send_compact::operator==(const send_compact& x) const {
+    return (high_bandwidth_mode_ == x.high_bandwidth_mode_) &&
+           (version_ == x.version_);
 }
 
-bool send_compact::operator!=(const send_compact& other) const {
+bool send_compact::operator!=(const send_compact& x) const {
     return !(*this == other);
 }
 

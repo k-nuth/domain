@@ -56,8 +56,8 @@ public:
     prefilled_transaction();
     prefilled_transaction(uint64_t index, chain::transaction const& tx);
     prefilled_transaction(uint64_t index, chain::transaction&& tx);
-    prefilled_transaction(const prefilled_transaction& other);
-    prefilled_transaction(prefilled_transaction&& other);
+    prefilled_transaction(const prefilled_transaction& x);
+    prefilled_transaction(prefilled_transaction&& x);
 
     uint64_t index() const;
     void set_index(uint64_t value);
@@ -98,11 +98,11 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    prefilled_transaction& operator=(prefilled_transaction&& other);
-    prefilled_transaction& operator=(const prefilled_transaction& other);
+    prefilled_transaction& operator=(prefilled_transaction&& x);
+    prefilled_transaction& operator=(const prefilled_transaction& x);
 
-    bool operator==(const prefilled_transaction& other) const;
-    bool operator!=(const prefilled_transaction& other) const;
+    bool operator==(const prefilled_transaction& x) const;
+    bool operator!=(const prefilled_transaction& x) const;
 
 private:
     uint64_t index_;

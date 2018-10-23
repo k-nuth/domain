@@ -65,8 +65,8 @@ public:
     inventory(inventory_vector::list&& values);
     inventory(const hash_list& hashes, type_id type);
     inventory(std::initializer_list<inventory_vector> const& values);
-    inventory(const inventory& other);
-    inventory(inventory&& other);
+    inventory(const inventory& x);
+    inventory(inventory&& x);
 
     inventory_vector::list& inventories();
     const inventory_vector::list& inventories() const;
@@ -124,11 +124,11 @@ public:
     size_t count(type_id type) const;
 
     // This class is move assignable but not copy assignable.
-    inventory& operator=(inventory&& other);
+    inventory& operator=(inventory&& x);
     void operator=(const inventory&) = delete;
 
-    bool operator==(const inventory& other) const;
-    bool operator!=(const inventory& other) const;
+    bool operator==(const inventory& x) const;
+    bool operator!=(const inventory& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

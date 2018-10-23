@@ -39,8 +39,8 @@ ek_private::ek_private(std::string const& encoded)
 {
 }
 
-ek_private::ek_private(const ek_private& other)
-  : valid_(other.valid_), private_(other.private_)
+ek_private::ek_private(const ek_private& x)
+  : valid_(x.valid_), private_(x.private_)
 {
 }
 
@@ -93,24 +93,24 @@ const encrypted_private& ek_private::private_key() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_private& ek_private::operator=(const ek_private& other)
+ek_private& ek_private::operator=(const ek_private& x)
 {
-    valid_ = other.valid_;
-    private_ = other.private_;
+    valid_ = x.valid_;
+    private_ = x.private_;
     return *this;
 }
 
-bool ek_private::operator<(const ek_private& other) const
+bool ek_private::operator<(const ek_private& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool ek_private::operator==(const ek_private& other) const
+bool ek_private::operator==(const ek_private& x) const
 {
-    return valid_ == other.valid_ && private_ == other.private_;
+    return valid_ == x.valid_ && private_ == x.private_;
 }
 
-bool ek_private::operator!=(const ek_private& other) const
+bool ek_private::operator!=(const ek_private& x) const
 {
     return !(*this == other);
 }

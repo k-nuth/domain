@@ -33,13 +33,13 @@ point_value::point_value()
 {
 }
 
-point_value::point_value(point_value&& other)
-  : value_(other.value_), point(std::move(other))
+point_value::point_value(point_value&& x)
+  : value_(x.value_), point(std::move(x))
 {
 }
 
-point_value::point_value(const point_value& other)
-  : point(other), value_(other.value_)
+point_value::point_value(const point_value& x)
+  : point(x), value_(x.value_)
 {
 }
 
@@ -57,21 +57,21 @@ point_value::point_value(point const& instance, uint64_t value)
 //-------------------------------------------------------------------------
 
 // Copy and swap idiom, see: stackoverflow.com/a/3279550/1172329
-point_value& point_value::operator=(point_value other)
+point_value& point_value::operator=(point_value x)
 {
-    swap(*this, other);
+    swap(*this, x);
     return *this;
 }
 
-bool point_value::operator==(const point_value& other) const
+bool point_value::operator==(const point_value& x) const
 {
-    return static_cast<point>(*this) == static_cast<point>(other) &&
-        (value_ == other.value_);
+    return static_cast<point>(*this) == static_cast<point>(x) &&
+        (value_ == x.value_);
 }
 
-bool point_value::operator!=(const point_value& other) const
+bool point_value::operator!=(const point_value& x) const
 {
-    return !(*this == other);
+    return !(*this == x);
 }
 
 // friend function, see: stackoverflow.com/a/5695855/1172329

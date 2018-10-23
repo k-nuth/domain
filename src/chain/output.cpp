@@ -35,10 +35,10 @@ namespace chain {
 using namespace bc::wallet;
 
 // This is a consensus critical value that must be set on reset.
-uint64_t output const::not_found = sighash_null_value;
+uint64_t const output::not_found = sighash_null_value;
 
 // This is a non-consensus sentinel used to indicate an output is unspent.
-uint32_t output const::validation::not_spent = max_uint32;
+uint32_t const output::validation::not_spent = max_uint32;
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ output& output::operator=(output&& x) noexcept {
     addresses_ = x.addresses_cache();
     value_ = x.value_;
     script_ = std::move(x.script_);
-    validation = std::move(x.validation);
+    validation = x.validation;
     return *this;
 }
 
@@ -259,19 +259,16 @@ void output::invalidate_cache() const {
 payment_address output::address(bool testnet /*= false*/) const {
     if (testnet) {
         return address(wallet::payment_address::testnet_p2kh, wallet::payment_address::testnet_p2sh);
-    } else {
-        return address(wallet::payment_address::mainnet_p2kh, wallet::payment_address::mainnet_p2sh);
     }
+    return address(wallet::payment_address::mainnet_p2kh, wallet::payment_address::mainnet_p2sh);
 }
 
-payment_address output::address(uint8_t p2kh_version,
-                                uint8_t p2sh_version) const {
+payment_address output::address(uint8_t p2kh_version, uint8_t p2sh_version) const {
     auto const value = addresses(p2kh_version, p2sh_version);
     return value.empty() ? payment_address{} : value.front();
 }
 
-payment_address::list output::addresses(uint8_t p2kh_version,
-                                        uint8_t p2sh_version) const {
+payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_version) const {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();

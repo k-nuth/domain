@@ -64,12 +64,12 @@ version::version(uint32_t value, uint64_t services, uint64_t timestamp, network_
     : value_(value), services_(services), timestamp_(timestamp), address_receiver_(std::move(address_receiver)), address_sender_(std::move(address_sender)), nonce_(nonce), user_agent_(std::move(user_agent)), start_height_(start_height), relay_(relay) {
 }
 
-version::version(const version& other)
-    : version(other.value_, other.services_, other.timestamp_, other.address_receiver_, other.address_sender_, other.nonce_, other.user_agent_, other.start_height_, other.relay_) {
+version::version(const version& x)
+    : version(x.value_, x.services_, x.timestamp_, x.address_receiver_, x.address_sender_, x.nonce_, x.user_agent_, x.start_height_, x.relay_) {
 }
 
-version::version(version&& other)
-    : version(other.value_, other.services_, other.timestamp_, std::move(other.address_receiver_), std::move(other.address_sender_), other.nonce_, std::move(other.user_agent_), other.start_height_, other.relay_) {
+version::version(version&& x)
+    : version(x.value_, x.services_, x.timestamp_, std::move(x.address_receiver_), std::move(x.address_sender_), x.nonce_, std::move(x.user_agent_), x.start_height_, x.relay_) {
 }
 
 bool version::is_valid() const {
@@ -272,29 +272,29 @@ void version::set_relay(bool relay) {
     relay_ = relay;
 }
 
-version& version::operator=(version&& other) {
-    value_ = other.value_;
-    services_ = other.services_;
-    timestamp_ = other.timestamp_;
-    address_receiver_ = std::move(other.address_receiver_);
-    address_sender_ = std::move(other.address_sender_);
-    nonce_ = other.nonce_;
-    user_agent_ = other.user_agent_;
-    start_height_ = other.start_height_;
-    relay_ = other.relay_;
+version& version::operator=(version&& x) {
+    value_ = x.value_;
+    services_ = x.services_;
+    timestamp_ = x.timestamp_;
+    address_receiver_ = std::move(x.address_receiver_);
+    address_sender_ = std::move(x.address_sender_);
+    nonce_ = x.nonce_;
+    user_agent_ = x.user_agent_;
+    start_height_ = x.start_height_;
+    relay_ = x.relay_;
     return *this;
 }
 
-bool version::operator==(const version& other) const {
-    return (value_ == other.value_) && (services_ == other.services_) &&
-           (timestamp_ == other.timestamp_) &&
-           (address_receiver_ == other.address_receiver_) &&
-           (address_sender_ == other.address_sender_) &&
-           (nonce_ == other.nonce_) && (user_agent_ == other.user_agent_) &&
-           (start_height_ == other.start_height_) && (relay_ == other.relay_);
+bool version::operator==(const version& x) const {
+    return (value_ == x.value_) && (services_ == x.services_) &&
+           (timestamp_ == x.timestamp_) &&
+           (address_receiver_ == x.address_receiver_) &&
+           (address_sender_ == x.address_sender_) &&
+           (nonce_ == x.nonce_) && (user_agent_ == x.user_agent_) &&
+           (start_height_ == x.start_height_) && (relay_ == x.relay_);
 }
 
-bool version::operator!=(const version& other) const {
+bool version::operator!=(const version& x) const {
     return !(*this == other);
 }
 

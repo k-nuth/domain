@@ -62,8 +62,8 @@ ping::ping(uint64_t nonce)
     : nonce_(nonce), nonceless_(false), valid_(true) {
 }
 
-ping::ping(const ping& other)
-    : nonce_(other.nonce_), nonceless_(other.nonceless_), valid_(other.valid_) {
+ping::ping(const ping& x)
+    : nonce_(x.nonce_), nonceless_(x.nonceless_), valid_(x.valid_) {
 }
 
 bool ping::from_data(uint32_t version, data_chunk const& data) {
@@ -136,17 +136,17 @@ void ping::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-ping& ping::operator=(ping&& other) {
-    nonce_ = other.nonce_;
+ping& ping::operator=(ping&& x) {
+    nonce_ = x.nonce_;
     return *this;
 }
 
-bool ping::operator==(const ping& other) const {
+bool ping::operator==(const ping& x) const {
     // Nonce should be zero if not used.
-    return (nonce_ == other.nonce_);
+    return (nonce_ == x.nonce_);
 }
 
-bool ping::operator!=(const ping& other) const {
+bool ping::operator!=(const ping& x) const {
     // Nonce should be zero if not used.
     return !(*this == other);
 }

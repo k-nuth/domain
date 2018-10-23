@@ -54,12 +54,12 @@ public:
 
     /**
      * Copy constructor.
-     * @param[in]  other  The object to copy into self on construct.
+     * @param[in]  x  The object to copy into self on construct.
      */
-    input(input const& other);
+    input(input const& x);
 
     /**
-     * Initialization constructor. Aspects of the input other than the point
+     * Initialization constructor. Aspects of the input x than the point
      * are defaulted.
      * @param[in]  value  The value to initialize with.
      */

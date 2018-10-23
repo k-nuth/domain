@@ -62,8 +62,8 @@ pong::pong(uint64_t nonce)
     : nonce_(nonce), valid_(true) {
 }
 
-pong::pong(const pong& other)
-    : nonce_(other.nonce_), valid_(other.valid_) {
+pong::pong(const pong& x)
+    : nonce_(x.nonce_), valid_(x.valid_) {
 }
 
 bool pong::from_data(uint32_t version, data_chunk const& data) {
@@ -131,16 +131,16 @@ void pong::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-pong& pong::operator=(pong&& other) {
-    nonce_ = other.nonce_;
+pong& pong::operator=(pong&& x) {
+    nonce_ = x.nonce_;
     return *this;
 }
 
-bool pong::operator==(const pong& other) const {
-    return (nonce_ == other.nonce_);
+bool pong::operator==(const pong& x) const {
+    return (nonce_ == x.nonce_);
 }
 
-bool pong::operator!=(const pong& other) const {
+bool pong::operator!=(const pong& x) const {
     return !(*this == other);
 }
 

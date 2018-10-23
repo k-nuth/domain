@@ -49,8 +49,8 @@ public:
 
     witness();
 
-    witness(witness&& other);
-    witness(witness const& other);
+    witness(witness&& x);
+    witness(witness const& x);
 
     witness(data_stack&& stack);
     witness(data_stack const& stack);
@@ -62,11 +62,11 @@ public:
     //-------------------------------------------------------------------------
 
     /// This class is move assignable and copy assignable.
-    witness& operator=(witness&& other);
-    witness& operator=(witness const& other);
+    witness& operator=(witness&& x);
+    witness& operator=(witness const& x);
 
-    bool operator==(witness const& other) const;
-    bool operator!=(witness const& other) const;
+    bool operator==(witness const& x) const;
+    bool operator!=(witness const& x) const;
 
     // Deserialization (from witness stack).
     //-------------------------------------------------------------------------

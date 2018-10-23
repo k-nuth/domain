@@ -54,9 +54,9 @@ public:
 
     get_headers();
     get_headers(const hash_list& start, hash_digest const& stop);
-    get_headers(hash_list&& start, hash_digest&& stop);
-    get_headers(const get_headers& other);
-    get_headers(get_headers&& other);
+    get_headers(hash_list&& start, hash_digest const& stop);
+    get_headers(const get_headers& x);
+    get_headers(get_headers&& x);
 
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
@@ -79,11 +79,11 @@ public:
     //bool from_data(uint32_t version, reader& source) override;
 
     // This class is move assignable but not copy assignable.
-    get_headers& operator=(get_headers&& other);
+    get_headers& operator=(get_headers&& x);
     void operator=(const get_headers&) = delete;
 
-    bool operator==(const get_headers& other) const;
-    bool operator!=(const get_headers& other) const;
+    bool operator==(const get_headers& x) const;
+    bool operator!=(const get_headers& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

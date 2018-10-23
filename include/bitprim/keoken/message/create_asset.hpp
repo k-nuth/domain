@@ -46,10 +46,10 @@ public:
     //-------------------------------------------------------------------------
 
     create_asset() = default;
-    // create_asset(create_asset const& other) = default;
-    // create_asset(create_asset&& other) = default;
-    // create_asset& operator=(create_asset const& other) = default;
-    // create_asset& operator=(create_asset&& other) = default;
+    // create_asset(create_asset const& x) = default;
+    // create_asset(create_asset&& x) = default;
+    // create_asset& operator=(create_asset const& x) = default;
+    // create_asset& operator=(create_asset&& x) = default;
 
     // Regular.
     //-------------------------------------------------------------------------

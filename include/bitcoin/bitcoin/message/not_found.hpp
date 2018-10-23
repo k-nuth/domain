@@ -62,8 +62,8 @@ public:
     not_found(inventory_vector::list&& values);
     not_found(const hash_list& hashes, type_id type);
     not_found(std::initializer_list<inventory_vector> const& values);
-    not_found(const not_found& other);
-    not_found(not_found&& other);
+    not_found(const not_found& x);
+    not_found(not_found&& x);
 
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
@@ -86,11 +86,11 @@ public:
     //bool from_data(uint32_t version, reader& source) override;
 
     // This class is move assignable but not copy assignable.
-    not_found& operator=(not_found&& other);
+    not_found& operator=(not_found&& x);
     void operator=(const not_found&) = delete;
 
-    bool operator==(const not_found& other) const;
-    bool operator!=(const not_found& other) const;
+    bool operator==(const not_found& x) const;
+    bool operator!=(const not_found& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

@@ -70,12 +70,12 @@ not_found::not_found(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 
-not_found::not_found(const not_found& other)
-    : inventory(other) {
+not_found::not_found(const not_found& x)
+    : inventory(x) {
 }
 
-not_found::not_found(not_found&& other)
-    : inventory(other) {
+not_found::not_found(not_found&& x)
+    : inventory(x) {
 }
 
 bool not_found::from_data(uint32_t version, data_chunk const& data) {
@@ -100,17 +100,17 @@ bool not_found::from_data(uint32_t version, data_source& stream) {
 //    return source;
 //}
 
-not_found& not_found::operator=(not_found&& other) {
-    set_inventories(other.inventories());
+not_found& not_found::operator=(not_found&& x) {
+    set_inventories(x.inventories());
     return *this;
 }
 
-bool not_found::operator==(const not_found& other) const {
-    return (static_cast<inventory>(*this) == static_cast<inventory>(other));
+bool not_found::operator==(const not_found& x) const {
+    return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
 
-bool not_found::operator!=(const not_found& other) const {
-    return (static_cast<inventory>(*this) != static_cast<inventory>(other));
+bool not_found::operator!=(const not_found& x) const {
+    return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
 }  // namespace message

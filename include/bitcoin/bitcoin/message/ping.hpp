@@ -58,7 +58,7 @@ public:
 
     ping();
     ping(uint64_t nonce);
-    ping(const ping& other);
+    ping(const ping& x);
 
     uint64_t nonce() const;
     void set_nonce(uint64_t value);
@@ -99,11 +99,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    ping& operator=(ping&& other);
+    ping& operator=(ping&& x);
     void operator=(const ping&) = delete;
 
-    bool operator==(const ping& other) const;
-    bool operator!=(const ping& other) const;
+    bool operator==(const ping& x) const;
+    bool operator!=(const ping& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

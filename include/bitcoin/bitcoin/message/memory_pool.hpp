@@ -55,8 +55,8 @@ public:
     static size_t satoshi_fixed_size(uint32_t version);
 
     memory_pool();
-    memory_pool(const memory_pool& other);
-    memory_pool(memory_pool&& other);
+    memory_pool(const memory_pool& x);
+    memory_pool(memory_pool&& x);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);

@@ -57,8 +57,8 @@ public:
 
     fee_filter();
     fee_filter(uint64_t minimum);
-    fee_filter(const fee_filter& other);
-    fee_filter(fee_filter&& other);
+    fee_filter(const fee_filter& x);
+    fee_filter(fee_filter&& x);
 
     uint64_t minimum_fee() const;
     void set_minimum_fee(uint64_t value);
@@ -101,11 +101,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    fee_filter& operator=(fee_filter&& other);
+    fee_filter& operator=(fee_filter&& x);
     void operator=(const fee_filter&) = delete;
 
-    bool operator==(const fee_filter& other) const;
-    bool operator!=(const fee_filter& other) const;
+    bool operator==(const fee_filter& x) const;
+    bool operator!=(const fee_filter& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

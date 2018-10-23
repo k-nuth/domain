@@ -87,16 +87,16 @@ inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
     : type_(type), hash_(hash) {
 }
 
-inventory_vector::inventory_vector(type_id type, hash_digest&& hash)
+inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
     : type_(type), hash_(std::move(hash)) {
 }
 
-inventory_vector::inventory_vector(const inventory_vector& other)
-    : inventory_vector(other.type_, other.hash_) {
+inventory_vector::inventory_vector(const inventory_vector& x)
+    : inventory_vector(x.type_, x.hash_) {
 }
 
-inventory_vector::inventory_vector(inventory_vector&& other)
-    : inventory_vector(other.type_, std::move(other.hash_)) {
+inventory_vector::inventory_vector(inventory_vector&& x)
+    : inventory_vector(x.type_, std::move(x.hash_)) {
 }
 
 bool inventory_vector::is_valid() const {
@@ -197,26 +197,26 @@ void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = value;
 }
 
-void inventory_vector::set_hash(hash_digest&& value) {
+void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = std::move(value);
 }
 
-inventory_vector& inventory_vector::operator=(inventory_vector&& other) {
-    type_ = other.type_;
-    hash_ = std::move(other.hash_);
+inventory_vector& inventory_vector::operator=(inventory_vector&& x) {
+    type_ = x.type_;
+    hash_ = std::move(x.hash_);
     return *this;
 }
 
-void inventory_vector::operator=(const inventory_vector& other) {
-    type_ = other.type_;
-    hash_ = other.hash_;
+void inventory_vector::operator=(const inventory_vector& x) {
+    type_ = x.type_;
+    hash_ = x.hash_;
 }
 
-bool inventory_vector::operator==(const inventory_vector& other) const {
-    return (hash_ == other.hash_) && (type_ == other.type_);
+bool inventory_vector::operator==(const inventory_vector& x) const {
+    return (hash_ == x.hash_) && (type_ == x.type_);
 }
 
-bool inventory_vector::operator!=(const inventory_vector& other) const {
+bool inventory_vector::operator!=(const inventory_vector& x) const {
     return !(*this == other);
 }
 

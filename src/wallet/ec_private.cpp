@@ -53,9 +53,9 @@ ec_private::ec_private()
 {
 }
 
-ec_private::ec_private(const ec_private& other)
-  : valid_(other.valid_), compress_(other.compress_), version_(other.version_),
-    secret_(other.secret_)
+ec_private::ec_private(const ec_private& x)
+  : valid_(x.valid_), compress_(x.compress_), version_(x.version_),
+    secret_(x.secret_)
 {
 }
 
@@ -215,27 +215,27 @@ payment_address ec_private::to_payment_address() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ec_private& ec_private::operator=(const ec_private& other)
+ec_private& ec_private::operator=(const ec_private& x)
 {
-    valid_ = other.valid_;
-    compress_ = other.compress_;
-    version_ = other.version_;
-    secret_ = other.secret_;
+    valid_ = x.valid_;
+    compress_ = x.compress_;
+    version_ = x.version_;
+    secret_ = x.secret_;
     return *this;
 }
 
-bool ec_private::operator<(const ec_private& other) const
+bool ec_private::operator<(const ec_private& x) const
 {
-    return encoded() < other.encoded();
+    return encoded() < x.encoded();
 }
 
-bool ec_private::operator==(const ec_private& other) const
+bool ec_private::operator==(const ec_private& x) const
 {
-    return valid_ == other.valid_ && compress_ == other.compress_ &&
-        version_ == other.version_ && secret_ == other.secret_;
+    return valid_ == x.valid_ && compress_ == x.compress_ &&
+        version_ == x.version_ && secret_ == x.secret_;
 }
 
-bool ec_private::operator!=(const ec_private& other) const
+bool ec_private::operator!=(const ec_private& x) const
 {
     return !(*this == other);
 }

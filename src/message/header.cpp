@@ -78,28 +78,24 @@ header::header(uint32_t version,
 {}
 
 header::header(uint32_t version,
-               hash_digest&& previous_block_hash,
-               hash_digest&& merkle,
+               hash_digest const& previous_block_hash,
+               hash_digest const& merkle,
                uint32_t timestamp,
                uint32_t bits,
                uint32_t nonce)
     : chain::header(version, std::move(previous_block_hash), std::move(merkle), timestamp, bits, nonce) 
 {}
 
-header::header(chain::header const& other)
-    : chain::header(other) {
+header::header(chain::header const& x)
+    : chain::header(x) {
 }
 
-header::header(chain::header&& other)
-    : chain::header(std::move(other)) {
+header::header(header const& x)
+    : chain::header(x) {
 }
 
-header::header(header const& other)
-    : chain::header(other) {
-}
-
-header::header(header&& other)
-    : chain::header(std::move(other)) {
+header::header(header&& x)
+    : chain::header(std::move(x)) {
 }
 
 bool header::from_data(uint32_t version, data_chunk const& data) {
@@ -160,35 +156,35 @@ size_t header::serialized_size(uint32_t version) const {
     return satoshi_fixed_size(version);
 }
 
-header& header::operator=(chain::header&& other) {
-    chain::header::operator=(std::move(other));
+header& header::operator=(chain::header const& x) {
+    chain::header::operator=(std::move(x));
     return *this;
 }
 
-header& header::operator=(header&& other) {
-    chain::header::operator=(std::move(other));
+header& header::operator=(header&& x) {
+    chain::header::operator=(std::move(x));
     return *this;
 }
 
-header& header::operator=(header const& other) {
-    chain::header::operator=(other);
+header& header::operator=(header const& x) {
+    chain::header::operator=(x);
     return *this;
 }
 
-bool header::operator==(chain::header const& other) const {
-    return chain::header::operator==(other);
+bool header::operator==(chain::header const& x) const {
+    return chain::header::operator==(x);
 }
 
-bool header::operator!=(chain::header const& other) const {
-    return chain::header::operator!=(other);
+bool header::operator!=(chain::header const& x) const {
+    return chain::header::operator!=(x);
 }
 
-bool header::operator==(header const& other) const {
-    return chain::header::operator==(other);
+bool header::operator==(header const& x) const {
+    return chain::header::operator==(x);
 }
 
-bool header::operator!=(header const& other) const {
-    return chain::header::operator!=(other);
+bool header::operator!=(header const& x) const {
+    return chain::header::operator!=(x);
 }
 
 }  // namespace message

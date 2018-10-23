@@ -112,17 +112,17 @@ program::program(script const& script, chain::transaction const& transaction,
 
 
 // Condition, alternate, jump and operation_count are not copied.
-program::program(script const& script, const program& other)
+program::program(script const& script, const program& x)
   : script_(script),
-    transaction_(other.transaction_),
-    input_index_(other.input_index_),
-    forks_(other.forks_),
-    value_(other.value_),
+    transaction_(x.transaction_),
+    input_index_(x.input_index_),
+    forks_(x.forks_),
+    value_(x.value_),
     version_(script_version::unversioned),
     negative_count_(0),
     operation_count_(0),
     jump_(script_.begin()),
-    primary_(other.primary_)
+    primary_(x.primary_)
 {
     reserve_stacks();
 }
@@ -130,15 +130,15 @@ program::program(script const& script, const program& other)
 // Condition, alternate, jump and operation_count are not moved.
 program::program(script const& script, program&& other, bool)
   : script_(script),
-    transaction_(other.transaction_),
-    input_index_(other.input_index_),
-    forks_(other.forks_),
-    value_(other.value_),
+    transaction_(x.transaction_),
+    input_index_(x.input_index_),
+    forks_(x.forks_),
+    value_(x.value_),
     version_(script_version::unversioned),
     negative_count_(0),
     operation_count_(0),
     jump_(script_.begin()),
-    primary_(std::move(other.primary_))
+    primary_(std::move(x.primary_))
 {
     reserve_stacks();
 }

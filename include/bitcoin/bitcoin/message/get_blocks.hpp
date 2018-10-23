@@ -58,9 +58,9 @@ public:
 
     get_blocks();
     get_blocks(const hash_list& start, hash_digest const& stop);
-    get_blocks(hash_list&& start, hash_digest&& stop);
-    get_blocks(const get_blocks& other);
-    get_blocks(get_blocks&& other);
+    get_blocks(hash_list&& start, hash_digest const& stop);
+    get_blocks(const get_blocks& x);
+    get_blocks(get_blocks&& x);
 
     hash_list& start_hashes();
     const hash_list& start_hashes() const;
@@ -70,7 +70,7 @@ public:
     hash_digest& stop_hash();
     hash_digest const& stop_hash() const;
     void set_stop_hash(hash_digest const& value);
-    void set_stop_hash(hash_digest&& value);
+    void set_stop_hash(hash_digest const& value);
 
     virtual bool from_data(uint32_t version, data_chunk const& data);
     virtual bool from_data(uint32_t version, data_source& stream);
@@ -122,11 +122,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    get_blocks& operator=(get_blocks&& other);
+    get_blocks& operator=(get_blocks&& x);
     void operator=(const get_blocks&) = delete;
 
-    bool operator==(const get_blocks& other) const;
-    bool operator!=(const get_blocks& other) const;
+    bool operator==(const get_blocks& x) const;
+    bool operator!=(const get_blocks& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

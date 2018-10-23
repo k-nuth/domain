@@ -57,7 +57,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    point(point const& other);
+    point(point const& x);
 
     /**
      * Overload cast to internal type.

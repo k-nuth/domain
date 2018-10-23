@@ -65,12 +65,12 @@ alert::alert(data_chunk&& payload, data_chunk&& signature)
     : payload_(std::move(payload)), signature_(std::move(signature)) {
 }
 
-alert::alert(const alert& other)
-    : alert(other.payload_, other.signature_) {
+alert::alert(const alert& x)
+    : alert(x.payload_, x.signature_) {
 }
 
-alert::alert(alert&& other)
-    : alert(std::move(other.payload_), std::move(other.signature_)) {
+alert::alert(alert&& x)
+    : alert(std::move(x.payload_), std::move(x.signature_)) {
 }
 
 bool alert::is_valid() const {
@@ -168,17 +168,17 @@ void alert::set_signature(data_chunk&& value) {
     signature_ = std::move(value);
 }
 
-alert& alert::operator=(alert&& other) {
-    payload_ = std::move(other.payload_);
-    signature_ = std::move(other.signature_);
+alert& alert::operator=(alert&& x) {
+    payload_ = std::move(x.payload_);
+    signature_ = std::move(x.signature_);
     return *this;
 }
 
-bool alert::operator==(const alert& other) const {
-    return (payload_ == other.payload_) && (signature_ == other.signature_);
+bool alert::operator==(const alert& x) const {
+    return (payload_ == x.payload_) && (signature_ == x.signature_);
 }
 
-bool alert::operator!=(const alert& other) const {
+bool alert::operator!=(const alert& x) const {
     return !(*this == other);
 }
 

@@ -67,7 +67,7 @@ merkle_block::merkle_block(chain::header const& header,
     : header_(header), total_transactions_(total_transactions), hashes_(hashes), flags_(flags) {
 }
 
-merkle_block::merkle_block(chain::header&& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags)
+merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags)
     : header_(std::move(header)), total_transactions_(total_transactions), hashes_(std::move(hashes)), flags_(std::move(flags)) {
 }
 
@@ -80,12 +80,12 @@ merkle_block::merkle_block(const chain::block& block)
                    {}) {
 }
 
-merkle_block::merkle_block(const merkle_block& other)
-    : merkle_block(other.header_, other.total_transactions_, other.hashes_, other.flags_) {
+merkle_block::merkle_block(const merkle_block& x)
+    : merkle_block(x.header_, x.total_transactions_, x.hashes_, x.flags_) {
 }
 
-merkle_block::merkle_block(merkle_block&& other)
-    : merkle_block(std::move(other.header_), other.total_transactions_, std::move(other.hashes_), std::move(other.flags_)) {
+merkle_block::merkle_block(merkle_block&& x)
+    : merkle_block(std::move(x.header_), x.total_transactions_, std::move(x.hashes_), std::move(x.flags_)) {
 }
 
 bool merkle_block::is_valid() const {
@@ -190,10 +190,6 @@ void merkle_block::set_header(chain::header const& value) {
     header_ = value;
 }
 
-void merkle_block::set_header(chain::header&& value) {
-    header_ = std::move(value);
-}
-
 size_t merkle_block::total_transactions() const {
     return total_transactions_;
 }
@@ -234,28 +230,28 @@ void merkle_block::set_flags(data_chunk&& value) {
     flags_ = std::move(value);
 }
 
-merkle_block& merkle_block::operator=(merkle_block&& other) {
-    header_ = std::move(other.header_);
-    hashes_ = std::move(other.hashes_);
-    flags_ = std::move(other.flags_);
+merkle_block& merkle_block::operator=(merkle_block&& x) {
+    header_ = std::move(x.header_);
+    hashes_ = std::move(x.hashes_);
+    flags_ = std::move(x.flags_);
     return *this;
 }
 
-bool merkle_block::operator==(const merkle_block& other) const {
-    auto result = (header_ == other.header_) &&
-                  (hashes_.size() == other.hashes_.size()) &&
-                  (flags_.size() == other.flags_.size());
+bool merkle_block::operator==(const merkle_block& x) const {
+    auto result = (header_ == x.header_) &&
+                  (hashes_.size() == x.hashes_.size()) &&
+                  (flags_.size() == x.flags_.size());
 
     for (size_t i = 0; i < hashes_.size() && result; i++)
-        result = (hashes_[i] == other.hashes_[i]);
+        result = (hashes_[i] == x.hashes_[i]);
 
     for (size_t i = 0; i < flags_.size() && result; i++)
-        result = (flags_[i] == other.flags_[i]);
+        result = (flags_[i] == x.flags_[i]);
 
     return result;
 }
 
-bool merkle_block::operator!=(const merkle_block& other) const {
+bool merkle_block::operator!=(const merkle_block& x) const {
     return !(*this == other);
 }
 

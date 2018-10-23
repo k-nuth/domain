@@ -53,8 +53,8 @@ public:
     alert_payload();
     alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, const std::vector<uint32_t>& set_cancel, uint32_t min_version, uint32_t max_version, const std::vector<std::string>& set_sub_version, uint32_t priority, std::string const& comment, std::string const& status_bar, std::string const& reserved);
     alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, std::vector<uint32_t>&& set_cancel, uint32_t min_version, uint32_t max_version, std::vector<std::string>&& set_sub_version, uint32_t priority, std::string&& comment, std::string&& status_bar, std::string&& reserved);
-    alert_payload(const alert_payload& other);
-    alert_payload(alert_payload&& other);
+    alert_payload(const alert_payload& x);
+    alert_payload(alert_payload&& x);
 
     uint32_t version() const;
     void set_version(uint32_t value);
@@ -175,11 +175,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     /// This class is move assignable but not copy assignable.
-    alert_payload& operator=(alert_payload&& other);
+    alert_payload& operator=(alert_payload&& x);
     void operator=(const alert_payload&) = delete;
 
-    bool operator==(const alert_payload& other) const;
-    bool operator!=(const alert_payload& other) const;
+    bool operator==(const alert_payload& x) const;
+    bool operator!=(const alert_payload& x) const;
 
     static const ec_uncompressed satoshi_public_key;
 

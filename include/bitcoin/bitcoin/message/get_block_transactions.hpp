@@ -57,15 +57,14 @@ public:
     get_block_transactions();
     get_block_transactions(hash_digest const& block_hash,
                            const std::vector<uint64_t>& indexes);
-    get_block_transactions(hash_digest&& block_hash,
+    get_block_transactions(hash_digest const& block_hash,
                            std::vector<uint64_t>&& indexes);
-    get_block_transactions(const get_block_transactions& other);
-    get_block_transactions(get_block_transactions&& other);
+    get_block_transactions(const get_block_transactions& x);
+    get_block_transactions(get_block_transactions&& x);
 
     hash_digest& block_hash();
     hash_digest const& block_hash() const;
     void set_block_hash(hash_digest const& value);
-    void set_block_hash(hash_digest&& value);
 
     std::vector<uint64_t>& indexes();
     const std::vector<uint64_t>& indexes() const;
@@ -115,11 +114,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    get_block_transactions& operator=(get_block_transactions&& other);
+    get_block_transactions& operator=(get_block_transactions&& x);
     void operator=(const get_block_transactions&) = delete;
 
-    bool operator==(const get_block_transactions& other) const;
-    bool operator!=(const get_block_transactions& other) const;
+    bool operator==(const get_block_transactions& x) const;
+    bool operator!=(const get_block_transactions& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

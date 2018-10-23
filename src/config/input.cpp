@@ -60,8 +60,7 @@ static std::string encode_input(const chain::input& input)
 
 input::input()
   : value_()
-{
-}
+{}
 
 input::input(std::string const& tuple)
 {
@@ -70,18 +69,15 @@ input::input(std::string const& tuple)
 
 input::input(const chain::input& value)
   : value_(value)
-{
-}
+{}
 
-input::input(input const& other)
-  : input(other.value_)
-{
-}
+input::input(input const& x)
+  : input(x.value_)
+{}
 
 input::input(const chain::input_point& value)
   : value_({value, {}, max_input_sequence})
-{
-}
+{}
 
 input::operator const chain::input&() const
 {

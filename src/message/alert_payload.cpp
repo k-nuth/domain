@@ -125,38 +125,38 @@ alert_payload::alert_payload(
       reserved_(std::move(reserved)) {
 }
 
-alert_payload::alert_payload(const alert_payload& other)
+alert_payload::alert_payload(const alert_payload& x)
     : alert_payload(
-          other.version_,
-          other.relay_until_,
-          other.expiration_,
-          other.id_,
-          other.cancel_,
-          other.set_cancel_,
-          other.min_version_,
-          other.max_version_,
-          other.set_sub_version_,
-          other.priority_,
-          other.comment_,
-          other.status_bar_,
-          other.reserved_) {
+          x.version_,
+          x.relay_until_,
+          x.expiration_,
+          x.id_,
+          x.cancel_,
+          x.set_cancel_,
+          x.min_version_,
+          x.max_version_,
+          x.set_sub_version_,
+          x.priority_,
+          x.comment_,
+          x.status_bar_,
+          x.reserved_) {
 }
 
-alert_payload::alert_payload(alert_payload&& other)
+alert_payload::alert_payload(alert_payload&& x)
     : alert_payload(
-          other.version_,
-          other.relay_until_,
-          other.expiration_,
-          other.id_,
-          other.cancel_,
-          std::move(other.set_cancel_),
-          other.min_version_,
-          other.max_version_,
-          std::move(other.set_sub_version_),
-          other.priority_,
-          std::move(other.comment_),
-          std::move(other.status_bar_),
-          std::move(other.reserved_)) {
+          x.version_,
+          x.relay_until_,
+          x.expiration_,
+          x.id_,
+          x.cancel_,
+          std::move(x.set_cancel_),
+          x.min_version_,
+          x.max_version_,
+          std::move(x.set_sub_version_),
+          x.priority_,
+          std::move(x.comment_),
+          std::move(x.status_bar_),
+          std::move(x.reserved_)) {
 }
 
 bool alert_payload::is_valid() const {
@@ -425,28 +425,28 @@ void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
 }
 
-alert_payload& alert_payload::operator=(alert_payload&& other) {
-    version_ = other.version_;
-    relay_until_ = other.relay_until_;
-    expiration_ = other.expiration_;
-    id_ = other.id_;
-    cancel_ = other.cancel_;
-    set_cancel_ = std::move(other.set_cancel_);
-    min_version_ = other.min_version_;
-    max_version_ = other.max_version_;
-    set_sub_version_ = std::move(other.set_sub_version_);
-    priority_ = other.priority_;
-    comment_ = std::move(other.comment_);
-    status_bar_ = std::move(other.status_bar_);
-    reserved_ = std::move(other.reserved_);
+alert_payload& alert_payload::operator=(alert_payload&& x) {
+    version_ = x.version_;
+    relay_until_ = x.relay_until_;
+    expiration_ = x.expiration_;
+    id_ = x.id_;
+    cancel_ = x.cancel_;
+    set_cancel_ = std::move(x.set_cancel_);
+    min_version_ = x.min_version_;
+    max_version_ = x.max_version_;
+    set_sub_version_ = std::move(x.set_sub_version_);
+    priority_ = x.priority_;
+    comment_ = std::move(x.comment_);
+    status_bar_ = std::move(x.status_bar_);
+    reserved_ = std::move(x.reserved_);
     return *this;
 }
 
-bool alert_payload::operator==(const alert_payload& other) const {
-    return (version_ == other.version_) && (relay_until_ == other.relay_until_) && (expiration_ == other.expiration_) && (id_ == other.id_) && (cancel_ == other.cancel_) && (set_cancel_ == other.set_cancel_) && (min_version_ == other.min_version_) && (max_version_ == other.max_version_) && (set_sub_version_ == other.set_sub_version_) && (priority_ == other.priority_) && (comment_ == other.comment_) && (status_bar_ == other.status_bar_) && (reserved_ == other.reserved_);
+bool alert_payload::operator==(const alert_payload& x) const {
+    return (version_ == x.version_) && (relay_until_ == x.relay_until_) && (expiration_ == x.expiration_) && (id_ == x.id_) && (cancel_ == x.cancel_) && (set_cancel_ == x.set_cancel_) && (min_version_ == x.min_version_) && (max_version_ == x.max_version_) && (set_sub_version_ == x.set_sub_version_) && (priority_ == x.priority_) && (comment_ == x.comment_) && (status_bar_ == x.status_bar_) && (reserved_ == x.reserved_);
 }
 
-bool alert_payload::operator!=(const alert_payload& other) const {
+bool alert_payload::operator!=(const alert_payload& x) const {
     return !(*this == other);
 }
 

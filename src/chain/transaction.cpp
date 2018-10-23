@@ -439,11 +439,11 @@ output::list& transaction::outputs() {
     return outputs_;
 }
 
-output const::list& transaction::outputs() const {
+output::list const& transaction::outputs() const {
     return outputs_;
 }
 
-void transaction::set_outputs(output const::list& value) {
+void transaction::set_outputs(output::list const& value) {
     outputs_ = value;
     invalidate_cache();
     outputs_hash_.reset();

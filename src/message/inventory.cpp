@@ -84,12 +84,12 @@ inventory::inventory(std::initializer_list<inventory_vector> const& values)
     : inventories_(values) {
 }
 
-inventory::inventory(const inventory& other)
-    : inventory(other.inventories_) {
+inventory::inventory(const inventory& x)
+    : inventory(x.inventories_) {
 }
 
-inventory::inventory(inventory&& other)
-    : inventory(std::move(other.inventories_)) {
+inventory::inventory(inventory&& x)
+    : inventory(std::move(x.inventories_)) {
 }
 
 bool inventory::is_valid() const {
@@ -207,16 +207,16 @@ void inventory::set_inventories(inventory_vector::list&& value) {
     inventories_ = std::move(value);
 }
 
-inventory& inventory::operator=(inventory&& other) {
-    inventories_ = std::move(other.inventories_);
+inventory& inventory::operator=(inventory&& x) {
+    inventories_ = std::move(x.inventories_);
     return *this;
 }
 
-bool inventory::operator==(const inventory& other) const {
-    return (inventories_ == other.inventories_);
+bool inventory::operator==(const inventory& x) const {
+    return (inventories_ == x.inventories_);
 }
 
-bool inventory::operator!=(const inventory& other) const {
+bool inventory::operator!=(const inventory& x) const {
     return !(*this == other);
 }
 

@@ -35,13 +35,13 @@ public:
     ek_private();
     ek_private(std::string const& encoded);
     ek_private(const encrypted_private& key);
-    ek_private(const ek_private& other);
+    ek_private(const ek_private& x);
 
     /// Operators.
-    bool operator<(const ek_private& other) const;
-    bool operator==(const ek_private& other) const;
-    bool operator!=(const ek_private& other) const;
-    ek_private& operator=(const ek_private& other);
+    bool operator<(const ek_private& x) const;
+    bool operator==(const ek_private& x) const;
+    bool operator!=(const ek_private& x) const;
+    ek_private& operator=(const ek_private& x);
     friend std::istream& operator>>(std::istream& in, ek_private& to);
     friend std::ostream& operator<<(std::ostream& out, const ek_private& of);
 

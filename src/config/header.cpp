@@ -45,8 +45,8 @@ header::header(chain::header const& value)
 {
 }
 
-header::header(header const& other)
-  : header(other.value_)
+header::header(header const& x)
+  : header(x.value_)
 {
 }
 

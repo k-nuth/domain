@@ -40,14 +40,14 @@ class BC_API bitcoin_uri
 public:
     /// Constructors.
     bitcoin_uri();
-    bitcoin_uri(const bitcoin_uri& other);
+    bitcoin_uri(const bitcoin_uri& x);
     bitcoin_uri(std::string const& uri, bool strict=true);
 
     /// Operators.
-    bool operator<(const bitcoin_uri& other) const;
-    bool operator==(const bitcoin_uri& other) const;
-    bool operator!=(const bitcoin_uri& other) const;
-    bitcoin_uri& operator=(const bitcoin_uri& other);
+    bool operator<(const bitcoin_uri& x) const;
+    bool operator==(const bitcoin_uri& x) const;
+    bool operator!=(const bitcoin_uri& x) const;
+    bitcoin_uri& operator=(const bitcoin_uri& x);
     friend std::istream& operator>>(std::istream& in, bitcoin_uri& to);
     friend std::ostream& operator<<(std::ostream& out,
         const bitcoin_uri& from);

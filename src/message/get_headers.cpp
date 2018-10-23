@@ -55,16 +55,16 @@ get_headers::get_headers(const hash_list& start, hash_digest const& stop)
     : get_blocks(start, stop) {
 }
 
-get_headers::get_headers(hash_list&& start, hash_digest&& stop)
+get_headers::get_headers(hash_list&& start, hash_digest const& stop)
     : get_headers(start, stop) {
 }
 
-get_headers::get_headers(const get_headers& other)
-    : get_blocks(other) {
+get_headers::get_headers(const get_headers& x)
+    : get_blocks(x) {
 }
 
-get_headers::get_headers(get_headers&& other)
-    : get_blocks(other) {
+get_headers::get_headers(get_headers&& x)
+    : get_blocks(x) {
 }
 
 bool get_headers::from_data(uint32_t version, data_chunk const& data) {
@@ -89,18 +89,18 @@ bool get_headers::from_data(uint32_t version, data_source& stream) {
 //    return source;
 //}
 
-get_headers& get_headers::operator=(get_headers&& other) {
-    set_start_hashes(other.start_hashes());
-    set_stop_hash(other.stop_hash());
+get_headers& get_headers::operator=(get_headers&& x) {
+    set_start_hashes(x.start_hashes());
+    set_stop_hash(x.stop_hash());
     return *this;
 }
 
-bool get_headers::operator==(const get_headers& other) const {
-    return (static_cast<get_blocks>(*this) == static_cast<get_blocks>(other));
+bool get_headers::operator==(const get_headers& x) const {
+    return (static_cast<get_blocks>(*this) == static_cast<get_blocks>(x));
 }
 
-bool get_headers::operator!=(const get_headers& other) const {
-    return (static_cast<get_blocks>(*this) != static_cast<get_blocks>(other));
+bool get_headers::operator!=(const get_headers& x) const {
+    return (static_cast<get_blocks>(*this) != static_cast<get_blocks>(x));
 }
 
 }  // namespace message

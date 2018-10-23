@@ -72,9 +72,9 @@ public:
 
     inventory_vector();
     inventory_vector(type_id type, hash_digest const& hash);
-    inventory_vector(type_id type, hash_digest&& hash);
-    inventory_vector(const inventory_vector& other);
-    inventory_vector(inventory_vector&& other);
+    inventory_vector(type_id type, hash_digest const& hash);
+    inventory_vector(const inventory_vector& x);
+    inventory_vector(inventory_vector&& x);
 
     type_id type() const;
     void set_type(type_id value);
@@ -82,7 +82,7 @@ public:
     hash_digest& hash();
     hash_digest const& hash() const;
     void set_hash(hash_digest const& value);
-    void set_hash(hash_digest&& value);
+    void set_hash(hash_digest const& value);
 
     bool is_block_type() const;
     bool is_transaction_type() const;
@@ -122,11 +122,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    inventory_vector& operator=(inventory_vector&& other);
-    void operator=(const inventory_vector& other);
+    inventory_vector& operator=(inventory_vector&& x);
+    void operator=(const inventory_vector& x);
 
-    bool operator==(const inventory_vector& other) const;
-    bool operator!=(const inventory_vector& other) const;
+    bool operator==(const inventory_vector& x) const;
+    bool operator!=(const inventory_vector& x) const;
 
 private:
     type_id type_;

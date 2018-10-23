@@ -92,10 +92,10 @@ public:
     reject(reason_code code, std::string&& message, std::string&& reason);
 
     reject(reason_code code, std::string const& message, std::string const& reason, hash_digest const& data);
-    reject(reason_code code, std::string&& message, std::string&& reason, hash_digest&& data);
+    reject(reason_code code, std::string&& message, std::string&& reason, hash_digest const& data);
 
-    reject(const reject& other);
-    reject(reject&& other);
+    reject(const reject& x);
+    reject(reject&& x);
 
     reason_code code() const;
     void set_code(reason_code value);
@@ -113,7 +113,7 @@ public:
     hash_digest& data();
     hash_digest const& data() const;
     void set_data(hash_digest const& value);
-    void set_data(hash_digest&& value);
+    void set_data(hash_digest const& value);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
@@ -167,11 +167,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    reject& operator=(reject&& other);
+    reject& operator=(reject&& x);
     void operator=(const reject&) = delete;
 
-    bool operator==(const reject& other) const;
-    bool operator!=(const reject& other) const;
+    bool operator==(const reject& x) const;
+    bool operator!=(const reject& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

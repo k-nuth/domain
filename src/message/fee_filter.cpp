@@ -69,12 +69,12 @@ fee_filter::fee_filter(uint64_t minimum, bool insufficient_version)
     : minimum_fee_(minimum), insufficient_version_(insufficient_version) {
 }
 
-fee_filter::fee_filter(const fee_filter& other)
-    : fee_filter(other.minimum_fee_, other.insufficient_version_) {
+fee_filter::fee_filter(const fee_filter& x)
+    : fee_filter(x.minimum_fee_, x.insufficient_version_) {
 }
 
-fee_filter::fee_filter(fee_filter&& other)
-    : fee_filter(other.minimum_fee_, other.insufficient_version_) {
+fee_filter::fee_filter(fee_filter&& x)
+    : fee_filter(x.minimum_fee_, x.insufficient_version_) {
 }
 
 bool fee_filter::from_data(uint32_t version, data_chunk const& data) {
@@ -151,17 +151,17 @@ void fee_filter::set_minimum_fee(uint64_t value) {
     insufficient_version_ = false;
 }
 
-fee_filter& fee_filter::operator=(fee_filter&& other) {
-    minimum_fee_ = other.minimum_fee_;
-    insufficient_version_ = other.insufficient_version_;
+fee_filter& fee_filter::operator=(fee_filter&& x) {
+    minimum_fee_ = x.minimum_fee_;
+    insufficient_version_ = x.insufficient_version_;
     return *this;
 }
 
-bool fee_filter::operator==(const fee_filter& other) const {
-    return (minimum_fee_ == other.minimum_fee_);
+bool fee_filter::operator==(const fee_filter& x) const {
+    return (minimum_fee_ == x.minimum_fee_);
 }
 
-bool fee_filter::operator!=(const fee_filter& other) const {
+bool fee_filter::operator!=(const fee_filter& x) const {
     return !(*this == other);
 }
 

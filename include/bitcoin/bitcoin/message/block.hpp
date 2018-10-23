@@ -64,13 +64,13 @@ public:
 
     block();
 
-    block(block&& other);
-    block(block const& other);
+    block(block&& x) noexcept;
+    block(block const& x);
 
-    block(chain::block&& other);
-    block(const chain::block& other);
+    block(chain::block&& x);
+    block(const chain::block& x);
 
-    block(chain::header&& header, chain::transaction::list&& transactions);
+    block(chain::header const& header, chain::transaction::list&& transactions);
     block(chain::header const& header, chain::transaction::list const& transactions);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -93,17 +93,17 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     size_t serialized_size(uint32_t version) const;
 
-    block& operator=(chain::block&& other);
+    block& operator=(chain::block&& x);
 
     // This class is move assignable but not copy assignable.
-    block& operator=(block&& other);
+    block& operator=(block&& x) noexcept;
     void operator=(block const&) = delete;
 
-    bool operator==(const chain::block& other) const;
-    bool operator!=(const chain::block& other) const;
+    bool operator==(const chain::block& x) const;
+    bool operator!=(const chain::block& x) const;
 
-    bool operator==(block const& other) const;
-    bool operator!=(block const& other) const;
+    bool operator==(block const& x) const;
+    bool operator!=(block const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

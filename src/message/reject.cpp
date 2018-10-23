@@ -75,19 +75,19 @@ reject::reject(reason_code code, std::string const& message, std::string const& 
       data_(data) {
 }
 
-reject::reject(reason_code code, std::string&& message, std::string&& reason, hash_digest&& data)
+reject::reject(reason_code code, std::string&& message, std::string&& reason, hash_digest const& data)
     : code_(code),
       message_(std::move(message)),
       reason_(std::move(reason)),
       data_(std::move(data)) {
 }
 
-reject::reject(const reject& other)
-    : reject(other.code_, other.message_, other.reason_, other.data_) {
+reject::reject(const reject& x)
+    : reject(x.code_, x.message_, x.reason_, x.data_) {
 }
 
-reject::reject(reject&& other)
-    : reject(other.code_, std::move(other.message_), std::move(other.reason_), std::move(other.data_)) {
+reject::reject(reject&& x)
+    : reject(x.code_, std::move(x.message_), std::move(x.reason_), std::move(x.data_)) {
 }
 
 bool reject::is_valid() const {
@@ -235,23 +235,23 @@ void reject::set_data(hash_digest const& value) {
     data_ = value;
 }
 
-void reject::set_data(hash_digest&& value) {
+void reject::set_data(hash_digest const& value) {
     data_ = std::move(value);
 }
 
-reject& reject::operator=(reject&& other) {
-    code_ = other.code_;
-    reason_ = std::move(other.reason_);
-    message_ = std::move(other.message_);
-    data_ = std::move(other.data_);
+reject& reject::operator=(reject&& x) {
+    code_ = x.code_;
+    reason_ = std::move(x.reason_);
+    message_ = std::move(x.message_);
+    data_ = std::move(x.data_);
     return *this;
 }
 
-bool reject::operator==(const reject& other) const {
-    return (code_ == other.code_) && (reason_ == other.reason_) && (message_ == other.message_) && (data_ == other.data_);
+bool reject::operator==(const reject& x) const {
+    return (code_ == x.code_) && (reason_ == x.reason_) && (message_ == x.message_) && (data_ == x.data_);
 }
 
-bool reject::operator!=(const reject& other) const {
+bool reject::operator!=(const reject& x) const {
     return !(*this == other);
 }
 

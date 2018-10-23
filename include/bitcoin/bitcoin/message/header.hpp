@@ -38,8 +38,7 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API header
-    : public chain::header {
+class BC_API header : public chain::header {
 public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
@@ -62,11 +61,9 @@ public:
 
     header();
     header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
-    header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
-    header(chain::header const& other);
-    header(chain::header&& other);
-    header(header const& other);
-    header(header&& other);
+    header(chain::header const& x);
+    header(header const& x);
+    header(header&& x);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
@@ -103,17 +100,17 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    header& operator=(chain::header&& other);
+    header& operator=(chain::header const& x);
 
     /// This class is move assignable but not copy assignable.
-    header& operator=(header&& other);
+    header& operator=(header&& x);
     header& operator=(header const&) /*= delete*/;
 
-    bool operator==(chain::header const& other) const;
-    bool operator!=(chain::header const& other) const;
+    bool operator==(chain::header const& x) const;
+    bool operator!=(chain::header const& x) const;
 
-    bool operator==(header const& other) const;
-    bool operator!=(header const& other) const;
+    bool operator==(header const& x) const;
+    bool operator!=(header const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

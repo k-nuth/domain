@@ -55,19 +55,18 @@ public:
 
     block_transactions();
     block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
-    block_transactions(hash_digest&& block_hash, chain::transaction::list&& transactions);
-    block_transactions(const block_transactions& other);
-    block_transactions(block_transactions&& other);
+    block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions);
+    block_transactions(const block_transactions& x);
+    block_transactions(block_transactions&& x);
 
     hash_digest& block_hash();
     hash_digest const& block_hash() const;
     void set_block_hash(hash_digest const& value);
-    void set_block_hash(hash_digest&& value);
 
     chain::transaction::list& transactions();
     chain::transaction::list const& transactions() const;
-    void set_transactions(chain::transaction::list const& other);
-    void set_transactions(chain::transaction::list&& other);
+    void set_transactions(chain::transaction::list const& x);
+    void set_transactions(chain::transaction::list&& x);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
@@ -120,11 +119,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    block_transactions& operator=(block_transactions&& other);
+    block_transactions& operator=(block_transactions&& x);
     void operator=(const block_transactions&) = delete;
 
-    bool operator==(const block_transactions& other) const;
-    bool operator!=(const block_transactions& other) const;
+    bool operator==(const block_transactions& x) const;
+    bool operator!=(const block_transactions& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

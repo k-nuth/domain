@@ -60,8 +60,8 @@ script::script(const std::vector<std::string>& tokens)
     std::stringstream(mnemonic) >> *this;
 }
 
-script::script(script const& other)
-  : script(other.value_)
+script::script(script const& x)
+  : script(x.value_)
 {
 }
 

@@ -35,13 +35,13 @@ public:
     ek_public();
     ek_public(std::string const& encoded);
     ek_public(const encrypted_public& key);
-    ek_public(const ek_public& other);
+    ek_public(const ek_public& x);
 
     /// Operators.
-    bool operator<(const ek_public& other) const;
-    bool operator==(const ek_public& other) const;
-    bool operator!=(const ek_public& other) const;
-    ek_public& operator=(const ek_public& other);
+    bool operator<(const ek_public& x) const;
+    bool operator==(const ek_public& x) const;
+    bool operator!=(const ek_public& x) const;
+    ek_public& operator=(const ek_public& x);
     friend std::istream& operator>>(std::istream& in, ek_public& to);
     friend std::ostream& operator<<(std::ostream& out, const ek_public& of);
 

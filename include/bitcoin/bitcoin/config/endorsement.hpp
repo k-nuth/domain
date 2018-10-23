@@ -67,7 +67,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    endorsement(const endorsement& other);
+    endorsement(const endorsement& x);
 
     /**
      * Overload cast to internal type.

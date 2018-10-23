@@ -65,12 +65,12 @@ filter_load::filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t 
     : filter_(std::move(filter)), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }
 
-filter_load::filter_load(const filter_load& other)
-    : filter_load(other.filter_, other.hash_functions_, other.tweak_, other.flags_) {
+filter_load::filter_load(const filter_load& x)
+    : filter_load(x.filter_, x.hash_functions_, x.tweak_, x.flags_) {
 }
 
-filter_load::filter_load(filter_load&& other)
-    : filter_load(std::move(other.filter_), other.hash_functions_, other.tweak_, other.flags_) {
+filter_load::filter_load(filter_load&& x)
+    : filter_load(std::move(x.filter_), x.hash_functions_, x.tweak_, x.flags_) {
 }
 
 bool filter_load::is_valid() const {
@@ -193,19 +193,19 @@ void filter_load::set_flags(uint8_t value) {
     flags_ = value;
 }
 
-filter_load& filter_load::operator=(filter_load&& other) {
-    filter_ = std::move(other.filter_);
-    hash_functions_ = other.hash_functions_;
-    tweak_ = other.tweak_;
-    flags_ = other.flags_;
+filter_load& filter_load::operator=(filter_load&& x) {
+    filter_ = std::move(x.filter_);
+    hash_functions_ = x.hash_functions_;
+    tweak_ = x.tweak_;
+    flags_ = x.flags_;
     return *this;
 }
 
-bool filter_load::operator==(const filter_load& other) const {
-    return (filter_ == other.filter_) && (hash_functions_ == other.hash_functions_) && (tweak_ == other.tweak_) && (flags_ == other.flags_);
+bool filter_load::operator==(const filter_load& x) const {
+    return (filter_ == x.filter_) && (hash_functions_ == x.hash_functions_) && (tweak_ == x.tweak_) && (flags_ == x.flags_);
 }
 
-bool filter_load::operator!=(const filter_load& other) const {
+bool filter_load::operator!=(const filter_load& x) const {
     return !(*this == other);
 }
 

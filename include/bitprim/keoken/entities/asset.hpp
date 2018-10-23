@@ -39,10 +39,10 @@ public:
     //-------------------------------------------------------------------------
 
     asset() = default;
-    // asset(asset const& other) = default;
-    // asset(asset&& other) = default;
-    // asset& operator=(asset const& other) = default;
-    // asset& operator=(asset&& other) = default;
+    // asset(asset const& x) = default;
+    // asset(asset&& x) = default;
+    // asset& operator=(asset const& x) = default;
+    // asset& operator=(asset&& x) = default;
 
     // Regular.
     //-------------------------------------------------------------------------

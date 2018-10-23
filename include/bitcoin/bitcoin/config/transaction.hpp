@@ -56,7 +56,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    transaction(transaction const& other);
+    transaction(transaction const& x);
 
     /**
      * Return a reference to the data member.

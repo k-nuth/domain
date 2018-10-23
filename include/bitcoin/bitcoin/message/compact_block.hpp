@@ -66,14 +66,13 @@ public:
 
     compact_block();
     compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, const prefilled_transaction::list& transactions);
-    compact_block(chain::header&& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
-    compact_block(const compact_block& other);
-    compact_block(compact_block&& other);
+    compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
+    compact_block(const compact_block& x);
+    compact_block(compact_block&& x);
 
     chain::header& header();
     chain::header const& header() const;
     void set_header(chain::header const& value);
-    void set_header(chain::header&& value);
 
     uint64_t nonce() const;
     void set_nonce(uint64_t value);
@@ -177,11 +176,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    compact_block& operator=(compact_block&& other);
+    compact_block& operator=(compact_block&& x);
     void operator=(const compact_block&) = delete;
 
-    bool operator==(const compact_block& other) const;
-    bool operator!=(const compact_block& other) const;
+    bool operator==(const compact_block& x) const;
+    bool operator!=(const compact_block& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

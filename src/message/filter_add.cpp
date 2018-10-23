@@ -65,12 +65,12 @@ filter_add::filter_add(data_chunk&& data)
     : data_(std::move(data)) {
 }
 
-filter_add::filter_add(const filter_add& other)
-    : filter_add(other.data_) {
+filter_add::filter_add(const filter_add& x)
+    : filter_add(x.data_) {
 }
 
-filter_add::filter_add(filter_add&& other)
-    : filter_add(std::move(other.data_)) {
+filter_add::filter_add(filter_add&& x)
+    : filter_add(std::move(x.data_)) {
 }
 
 bool filter_add::is_valid() const {
@@ -154,16 +154,16 @@ void filter_add::set_data(data_chunk&& value) {
     data_ = std::move(value);
 }
 
-filter_add& filter_add::operator=(filter_add&& other) {
-    data_ = std::move(other.data_);
+filter_add& filter_add::operator=(filter_add&& x) {
+    data_ = std::move(x.data_);
     return *this;
 }
 
-bool filter_add::operator==(const filter_add& other) const {
-    return (data_ == other.data_);
+bool filter_add::operator==(const filter_add& x) const {
+    return (data_ == x.data_);
 }
 
-bool filter_add::operator!=(const filter_add& other) const {
+bool filter_add::operator!=(const filter_add& x) const {
     return !(*this == other);
 }
 

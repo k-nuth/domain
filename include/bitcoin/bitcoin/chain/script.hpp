@@ -64,7 +64,7 @@ public:
     script();
 
     script(script const& x);
-    script(script&& x);
+    script(script&& x) noexcept;
 
     script(operation::list const& ops);
     script(operation::list&& ops);
@@ -77,7 +77,7 @@ public:
 
     /// This class is move assignable and copy assignable.
     script& operator=(script const& x);
-    script& operator=(script&& x);
+    script& operator=(script&& x) noexcept;
 
     bool operator==(script const& x) const;
     bool operator!=(script const& x) const;

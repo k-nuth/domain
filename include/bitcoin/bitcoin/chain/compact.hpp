@@ -37,10 +37,10 @@ public:
     explicit compact(const uint256_t& big);
 
     /// Move constructor.
-    compact(compact&& other);
+    compact(compact&& x);
 
     /// Copy constructor.
-    compact(const compact& other);
+    compact(const compact& x);
 
     /// True if construction overflowed.
     bool is_overflowed() const;

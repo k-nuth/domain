@@ -52,23 +52,23 @@ public:
 
     input();
 
-    input(input&& other);
-    input(input const& other);
+    input(input const& x);
+    input(input&& x) noexcept;
 
-    input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
     input(output_point const& previous_output, chain::script const& script, uint32_t sequence);
+    input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
 
-    input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
     input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
+    input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    input& operator=(input&& other);
-    input& operator=(input const& other);
+    input& operator=(input&& x) noexcept;
+    input& operator=(input const& x);
 
-    bool operator==(input const& other) const;
-    bool operator!=(input const& other) const;
+    bool operator==(input const& x) const;
+    bool operator!=(input const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -103,8 +103,9 @@ public:
         script_.from_data(source, true);
 
         // Transaction from_data handles the discontiguous wire witness decoding.
-        if (witness_val(witness) && !wire)
+        if (witness_val(witness) && !wire) {
             witness_.from_data(source, true);
+        }
 
         sequence_ = source.read_4_bytes_little_endian();
 

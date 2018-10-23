@@ -69,7 +69,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    script(script const& other);
+    script(script const& x);
 
     /**
      * Serialize the script to bytes according to the wire protocol.
