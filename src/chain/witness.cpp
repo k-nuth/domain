@@ -60,7 +60,7 @@ witness::witness(witness&& other)
     : stack_(std::move(other.stack_)), valid_(other.valid_) {
 }
 
-witness::witness(const witness& other)
+witness::witness(witness const& other)
     : stack_(other.stack_), valid_(other.valid_) {
 }
 
@@ -91,17 +91,17 @@ witness& witness::operator=(witness&& other) {
     return *this;
 }
 
-witness& witness::operator=(const witness& other) {
+witness& witness::operator=(witness const& other) {
     reset();
     stack_ = other.stack_;
     valid_ = other.valid_;
     return *this;
 }
-bool witness::operator==(const witness& other) const {
+bool witness::operator==(witness const& other) const {
     return stack_ == other.stack_;
 }
 
-bool witness::operator!=(const witness& other) const {
+bool witness::operator!=(witness const& other) const {
     return !(*this == other);
 }
 

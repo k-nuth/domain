@@ -1201,7 +1201,7 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, const witness& input_witness, script const& prevout_script, uint64_t value) {
+code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
     code ec;
     bool witnessed;
 

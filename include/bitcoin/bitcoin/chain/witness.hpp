@@ -50,7 +50,7 @@ class BC_API witness {
     witness();
 
     witness(witness&& other);
-    witness(const witness& other);
+    witness(witness const& other);
 
     witness(data_stack&& stack);
     witness(data_stack const& stack);
@@ -63,10 +63,10 @@ class BC_API witness {
 
     /// This class is move assignable and copy assignable.
     witness& operator=(witness&& other);
-    witness& operator=(const witness& other);
+    witness& operator=(witness const& other);
 
-    bool operator==(const witness& other) const;
-    bool operator!=(const witness& other) const;
+    bool operator==(witness const& other) const;
+    bool operator!=(witness const& other) const;
 
     // Deserialization (from witness stack).
     //-------------------------------------------------------------------------
