@@ -24,13 +24,13 @@
 
 namespace bitprim {
 
-template <typename R, bool result = std::is_same<decltype(((R*)nullptr)->read_size_little_endian()), size_t>::value>
+template <typename R, bool result = std::is_same<decltype(((R*)nullptr)->read_size_little_endian()), size_t>::value>    //NOLINT
 constexpr bool is_reader_helper(int) { 
     return result;
 }
 
 template <typename R>
-constexpr bool is_reader_helper(...) { return false; }
+constexpr bool is_reader_helper(...) { return false; }  //NOLINT
 
 template <typename R>
 constexpr bool is_reader() {
