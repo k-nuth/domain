@@ -140,10 +140,10 @@ class BC_API transaction {
     transaction();
 
     transaction(transaction&& other);
-    transaction(const transaction& other);
+    transaction(transaction const& other);
 
     transaction(transaction&& other, hash_digest&& hash);
-    transaction(const transaction& other, const hash_digest& hash);
+    transaction(transaction const& other, const hash_digest& hash);
 
     transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
     transaction(uint32_t version, uint32_t locktime, const ins& inputs, const outs& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
@@ -153,10 +153,10 @@ class BC_API transaction {
 
     /// This class is move assignable and copy assignable [TODO: remove copy].
     transaction& operator=(transaction&& other);
-    transaction& operator=(const transaction& other);
+    transaction& operator=(transaction const& other);
 
-    bool operator==(const transaction& other) const;
-    bool operator!=(const transaction& other) const;
+    bool operator==(transaction const& other) const;
+    bool operator!=(transaction const& other) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------

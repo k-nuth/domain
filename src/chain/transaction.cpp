@@ -122,7 +122,7 @@ transaction::transaction(transaction&& other)
     validation = std::move(other.validation);
 }
 
-transaction::transaction(const transaction& other)
+transaction::transaction(transaction const& other)
     : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_) {
     // TODO: implement safe private accessor for conditional cache transfer.
     validation = other.validation;
@@ -134,7 +134,7 @@ transaction::transaction(transaction&& other, hash_digest&& hash)
     validation = std::move(other.validation);
 }
 
-transaction::transaction(const transaction& other, const hash_digest& hash)
+transaction::transaction(transaction const& other, const hash_digest& hash)
     : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_, other.cached_sigops_, other.cached_fees_, other.cached_is_standard_) {
     hash_ = std::make_shared<hash_digest>(hash);
     validation = other.validation;
@@ -160,7 +160,7 @@ transaction& transaction::operator=(transaction&& other) {
 }
 
 // TODO: eliminate blockchain transaction copies and then delete this.
-transaction& transaction::operator=(const transaction& other) {
+transaction& transaction::operator=(transaction const& other) {
     version_ = other.version_;
     locktime_ = other.locktime_;
     inputs_ = other.inputs_;
@@ -169,11 +169,11 @@ transaction& transaction::operator=(const transaction& other) {
     return *this;
 }
 
-bool transaction::operator==(const transaction& other) const {
+bool transaction::operator==(transaction const& other) const {
     return (version_ == other.version_) && (locktime_ == other.locktime_) && (inputs_ == other.inputs_) && (outputs_ == other.outputs_);
 }
 
-bool transaction::operator!=(const transaction& other) const {
+bool transaction::operator!=(transaction const& other) const {
     return !(*this == other);
 }
 

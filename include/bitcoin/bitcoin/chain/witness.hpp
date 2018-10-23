@@ -187,7 +187,7 @@ class BC_API witness {
     // Validation.
     //-------------------------------------------------------------------------
 
-    code verify(const transaction& tx, uint32_t input_index, uint32_t forks, const script& program_script, uint64_t value) const;
+    code verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& program_script, uint64_t value) const;
 
    protected:
     // So that input may call reset from its own.

@@ -425,7 +425,7 @@ const operation::list& script::operations() const {
 // Signing (unversioned).
 //-----------------------------------------------------------------------------
 
-inline hash_digest signature_hash(const transaction& tx, uint32_t sighash_type) {
+inline hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
     BITCOIN_ASSERT(!tx.is_coinbase());
 
@@ -454,7 +454,7 @@ inline uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
     return to_sighash_enum(sighash_type) == value;
 }
 
-static hash_digest sign_none(const transaction& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
+static hash_digest sign_none(transaction const& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -481,7 +481,7 @@ static hash_digest sign_none(const transaction& tx, uint32_t input_index, const 
                           sighash_type);
 }
 
-static hash_digest sign_single(const transaction& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
+static hash_digest sign_single(transaction const& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -516,7 +516,7 @@ static hash_digest sign_single(const transaction& tx, uint32_t input_index, cons
                           sighash_type);
 }
 
-static hash_digest sign_all(const transaction& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
+static hash_digest sign_all(transaction const& tx, uint32_t input_index, const script& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -556,7 +556,7 @@ static script strip_code_seperators(const script& script_code) {
 }
 
 // private/static
-hash_digest script::generate_unversioned_signature_hash(const transaction& tx,
+hash_digest script::generate_unversioned_signature_hash(transaction const& tx,
                                                         uint32_t input_index,
                                                         const script& script_code,
                                                         uint8_t sighash_type) {
@@ -590,7 +590,7 @@ hash_digest script::generate_unversioned_signature_hash(const transaction& tx,
 // Signing (version 0).
 //-----------------------------------------------------------------------------
 
-hash_digest script::to_outputs(const transaction& tx) {
+hash_digest script::to_outputs(transaction const& tx) {
     auto const sum = [&](size_t total, const output& output) {
         return total + output.serialized_size();
     };
@@ -612,7 +612,7 @@ hash_digest script::to_outputs(const transaction& tx) {
     return bitcoin_hash(data);
 }
 
-hash_digest script::to_inpoints(const transaction& tx) {
+hash_digest script::to_inpoints(transaction const& tx) {
     auto const sum = [&](size_t total, const input& input) {
         return total + input.previous_output().serialized_size();
     };
@@ -634,7 +634,7 @@ hash_digest script::to_inpoints(const transaction& tx) {
     return bitcoin_hash(data);
 }
 
-hash_digest script::to_sequences(const transaction& tx) {
+hash_digest script::to_sequences(transaction const& tx) {
     auto const sum = [&](size_t total, const input& input) {
         return total + sizeof(uint32_t);
     };
@@ -661,7 +661,7 @@ static size_t preimage_size(size_t script_size) {
 }
 
 // private/static
-hash_digest script::generate_version_0_signature_hash(const transaction& tx,
+hash_digest script::generate_version_0_signature_hash(transaction const& tx,
                                                       uint32_t input_index,
                                                       const script& script_code,
                                                       uint64_t value,
@@ -728,7 +728,7 @@ hash_digest script::generate_version_0_signature_hash(const transaction& tx,
 //-----------------------------------------------------------------------------
 
 // static
-hash_digest script::generate_signature_hash(const transaction& tx,
+hash_digest script::generate_signature_hash(transaction const& tx,
                                             uint32_t input_index,
                                             const script& script_code,
                                             uint8_t sighash_type,
@@ -754,7 +754,7 @@ bool script::check_signature(const ec_signature& signature,
                              uint8_t sighash_type,
                              const data_chunk& public_key,
                              const script& script_code,
-                             const transaction& tx,
+                             transaction const& tx,
                              uint32_t input_index,
                              script_version version,
                              uint64_t value) {
@@ -770,7 +770,7 @@ bool script::check_signature(const ec_signature& signature,
 }
 
 // static
-bool script::create_endorsement(endorsement& out, const ec_secret& secret, const script& prevout_script, const transaction& tx, uint32_t input_index, uint8_t sighash_type, script_version version, uint64_t value) {
+bool script::create_endorsement(endorsement& out, const ec_secret& secret, const script& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version, uint64_t value) {
     out.reserve(max_endorsement_size);
 
     // This always produces a valid signature hash, including one_hash.
@@ -1201,7 +1201,7 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-code script::verify(const transaction& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value) {
+code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value) {
     code ec;
     bool witnessed;
 
@@ -1267,7 +1267,7 @@ code script::verify(const transaction& tx, uint32_t input_index, uint32_t forks,
     return error::success;
 }
 
-code script::verify(const transaction& tx, uint32_t input, uint32_t forks) {
+code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
     if (input >= tx.inputs().size())
         return error::operation_failed;
 

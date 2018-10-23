@@ -85,7 +85,7 @@ class BC_API block {
     block(const block& other);
 
     block(chain::header&& header, transaction::list&& transactions);
-    block(const chain::header& header, const transaction::list& transactions);
+    block(const chain::header& header, transaction const::list& transactions);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -161,7 +161,7 @@ class BC_API block {
     void to_data(W& sink, bool witness = false) const {
         header_.to_data(sink, true);
         sink.write_size_little_endian(transactions_.size());
-        auto const to = [&sink, witness](const transaction& tx) {
+        auto const to = [&sink, witness](transaction const& tx) {
             tx.to_data(sink, true, witness_val(witness));
         };
 
@@ -186,8 +186,8 @@ class BC_API block {
     // deprecated (unsafe)
     transaction::list& transactions();
 
-    const transaction::list& transactions() const;
-    void set_transactions(const transaction::list& value);
+    transaction const::list& transactions() const;
+    void set_transactions(transaction const::list& value);
     void set_transactions(transaction::list&& value);
 
     hash_digest hash() const;

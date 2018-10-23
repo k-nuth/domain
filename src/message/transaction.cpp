@@ -31,8 +31,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string transaction::command = "tx";
-uint32_t const transaction::version_minimum = version::level::minimum;
-uint32_t const transaction::version_maximum = version::level::maximum;
+uint32_t transaction const::version_minimum = version::level::minimum;
+uint32_t transaction const::version_maximum = version::level::maximum;
 
 transaction transaction::factory_from_data(uint32_t version, const data_chunk& data) {
     transaction instance;
@@ -61,7 +61,7 @@ transaction::transaction(transaction&& other)
     : chain::transaction(std::move(other)) {
 }
 
-transaction::transaction(const transaction& other)
+transaction::transaction(transaction const& other)
     : chain::transaction(other) {
 }
 
@@ -139,11 +139,11 @@ bool transaction::operator!=(const chain::transaction& other) const {
     return chain::transaction::operator!=(other);
 }
 
-bool transaction::operator==(const transaction& other) const {
+bool transaction::operator==(transaction const& other) const {
     return chain::transaction::operator==(other);
 }
 
-bool transaction::operator!=(const transaction& other) const {
+bool transaction::operator!=(transaction const& other) const {
     return !(*this == other);
 }
 

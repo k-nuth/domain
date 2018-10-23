@@ -56,7 +56,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    transaction(const transaction& other);
+    transaction(transaction const& other);
 
     /**
      * Return a reference to the data member.
@@ -86,7 +86,7 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const transaction& argument);
+        transaction const& argument);
 
 private:
 

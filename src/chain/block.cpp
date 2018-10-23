@@ -185,7 +185,7 @@ block::block(block&& other)
 
 // TODO: deal with possibility of inconsistent merkle root in relation to txs.
 block::block(const chain::header& header,
-             const transaction::list& transactions)
+             transaction const::list& transactions)
     : header_(header), transactions_(transactions), validation{} {
 }
 
@@ -324,7 +324,7 @@ void block::to_data(data_sink& stream, bool witness) const {
 //#endif
 //    header_.to_data(sink, true);
 //    sink.write_size_little_endian(transactions_.size());
-//    auto const to = [&sink, witness](const transaction& tx)
+//    auto const to = [&sink, witness](transaction const& tx)
 //    {
 //        tx.to_data(sink, true, witness);
 //    };
@@ -335,7 +335,7 @@ void block::to_data(data_sink& stream, bool witness) const {
 hash_list block::to_hashes(bool witness) const {
     hash_list out;
     out.reserve(transactions_.size());
-    auto const to_hash = [&out, witness](const transaction& tx) {
+    auto const to_hash = [&out, witness](transaction const& tx) {
         out.push_back(tx.hash(witness_val(witness)));
     };
 
@@ -372,7 +372,7 @@ size_t block::serialized_size(bool witness) const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    auto const sum = [witness](size_t total, const transaction& tx) {
+    auto const sum = [witness](size_t total, transaction const& tx) {
         return safe_add(total, tx.serialized_size(true, witness_val(witness)));
     };
 
@@ -416,12 +416,12 @@ transaction::list& block::transactions() {
     return transactions_;
 }
 
-const transaction::list& block::transactions() const {
+transaction const::list& block::transactions() const {
     return transactions_;
 }
 
 // TODO: see set_header comments.
-void block::set_transactions(const transaction::list& value) {
+void block::set_transactions(transaction const::list& value) {
     transactions_ = value;
     segregated_ = boost::none;
     total_inputs_ = boost::none;
@@ -568,7 +568,7 @@ size_t block::signature_operations(bool bip16, bool bip141) const {
 #ifdef BITPRIM_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
-    auto const value = [bip16, bip141](size_t total, const transaction& tx) {
+    auto const value = [bip16, bip141](size_t total, transaction const& tx) {
         return ceiling_add(total, tx.signature_operations(bip16, bip141));
     };
 
@@ -598,7 +598,7 @@ size_t block::total_inputs(bool with_coinbase) const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    auto const inputs = [](size_t total, const transaction& tx) {
+    auto const inputs = [](size_t total, transaction const& tx) {
         return safe_add(total, tx.inputs().size());
     };
 
@@ -624,7 +624,7 @@ bool block::is_extra_coinbases() const {
     if (transactions_.empty())
         return false;
 
-    auto const value = [](const transaction& tx) {
+    auto const value = [](transaction const& tx) {
         return tx.is_coinbase();
     };
 
@@ -633,7 +633,7 @@ bool block::is_extra_coinbases() const {
 }
 
 bool block::is_final(size_t height, uint32_t block_time) const {
-    auto const value = [=](const transaction& tx) {
+    auto const value = [=](transaction const& tx) {
         return tx.is_final(height, block_time);
     };
 
@@ -643,7 +643,7 @@ bool block::is_final(size_t height, uint32_t block_time) const {
 
 // Distinctness is defined by transaction hash.
 bool block::is_distinct_transaction_set() const {
-    auto const hasher = [](const transaction& tx) { return tx.hash(); };
+    auto const hasher = [](transaction const& tx) { return tx.hash(); };
     auto const& txs = transactions_;
     hash_list hashes(txs.size());
     std::transform(txs.begin(), txs.end(), hashes.begin(), hasher);
@@ -682,7 +682,7 @@ size_t block::non_coinbase_input_count() const {
     if (transactions_.empty())
         return 0;
 
-    auto const counter = [](size_t sum, const transaction& tx) {
+    auto const counter = [](size_t sum, transaction const& tx) {
         return sum + tx.inputs().size();
     };
 
@@ -738,7 +738,7 @@ bool block::is_valid_merkle_root() const {
 // Overflow returns max_uint64.
 uint64_t block::fees() const {
     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
-    auto const value = [](uint64_t total, const transaction& tx) {
+    auto const value = [](uint64_t total, transaction const& tx) {
         return ceiling_add(total, tx.fees());
     };
 
@@ -809,7 +809,7 @@ bool block::is_segregated() const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    auto const segregated = [](const transaction& tx) {
+    auto const segregated = [](transaction const& tx) {
         return tx.is_segregated();
     };
 

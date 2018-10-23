@@ -183,7 +183,7 @@ class BC_API script {
     // Signing.
     //-------------------------------------------------------------------------
 
-    static hash_digest generate_signature_hash(const transaction& tx,
+    static hash_digest generate_signature_hash(transaction const& tx,
                                                uint32_t input_index,
                                                const script& script_code,
                                                uint8_t sighash_type,
@@ -194,20 +194,20 @@ class BC_API script {
                                 uint8_t sighash_type,
                                 const data_chunk& public_key,
                                 const script& script_code,
-                                const transaction& tx,
+                                transaction const& tx,
                                 uint32_t input_index,
                                 script_version version = script_version::unversioned,
                                 uint64_t value = max_uint64);
 
-    static bool create_endorsement(endorsement& out, const ec_secret& secret, const script& prevout_script, const transaction& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
+    static bool create_endorsement(endorsement& out, const ec_secret& secret, const script& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
 
     /// Transaction helpers.
-    static hash_digest to_outputs(const transaction& tx);
-    static hash_digest to_inpoints(const transaction& tx);
-    static hash_digest to_sequences(const transaction& tx);
+    static hash_digest to_outputs(transaction const& tx);
+    static hash_digest to_inpoints(transaction const& tx);
+    static hash_digest to_sequences(transaction const& tx);
 
     /// Determine if the fork is enabled in the active forks set.
     static bool is_enabled(uint32_t active_forks, rule_fork fork) {
@@ -263,10 +263,10 @@ class BC_API script {
     // Validation.
     //-------------------------------------------------------------------------
 
-    static code verify(const transaction& tx, uint32_t input, uint32_t forks);
+    static code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
     // TODO: move back to private.
-    static code verify(const transaction& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value);
+    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value);
 
    protected:
     // So that input and output may call reset from their own.
@@ -281,11 +281,11 @@ class BC_API script {
     static size_t serialized_size(const operation::list& ops);
     static data_chunk operations_to_data(const operation::list& ops);
     static hash_digest generate_unversioned_signature_hash(
-        const transaction& tx,
+        transaction const& tx,
         uint32_t input_index,
         const script& script_code,
         uint8_t sighash_type);
-    static hash_digest generate_version_0_signature_hash(const transaction& tx,
+    static hash_digest generate_version_0_signature_hash(transaction const& tx,
                                                          uint32_t input_index,
                                                          const script& script_code,
                                                          uint64_t value,

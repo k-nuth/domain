@@ -45,7 +45,7 @@ transaction::transaction(const chain::transaction& value)
 {
 }
 
-transaction::transaction(const transaction& other)
+transaction::transaction(transaction const& other)
   : transaction(other.value_)
 {
 }
@@ -73,7 +73,7 @@ std::istream& operator>>(std::istream& input, transaction& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const transaction& argument)
+std::ostream& operator<<(std::ostream& output, transaction const& argument)
 {
     output << base16(argument.value_.to_data());
     return output;
