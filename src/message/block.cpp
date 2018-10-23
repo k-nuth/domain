@@ -81,7 +81,7 @@ block::block(chain::header&& header, chain::transaction::list&& transactions)
     : chain::block(std::move(header), std::move(transactions)) {
 }
 
-block::block(const chain::header& header,
+block::block(chain::header const& header,
              const chain::transaction::list& transactions)
     : chain::block(header, transactions) {
 }

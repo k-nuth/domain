@@ -50,7 +50,7 @@ public:
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    header(const chain::header& value);
+    header(chain::header const& value);
 
     /**
      * Copy constructor.
@@ -62,7 +62,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::header&() const;
+    operator chain::header const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.

@@ -65,14 +65,14 @@ class BC_API compact_block {
     static compact_block factory_from_block(message::block const& block);
 
     compact_block();
-    compact_block(const chain::header& header, uint64_t nonce, const short_id_list& short_ids, const prefilled_transaction::list& transactions);
+    compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, const prefilled_transaction::list& transactions);
     compact_block(chain::header&& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
     compact_block(const compact_block& other);
     compact_block(compact_block&& other);
 
     chain::header& header();
-    const chain::header& header() const;
-    void set_header(const chain::header& value);
+    chain::header const& header() const;
+    void set_header(chain::header const& value);
     void set_header(chain::header&& value);
 
     uint64_t nonce() const;

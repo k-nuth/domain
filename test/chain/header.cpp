@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(header__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(header__constructor_4__always__equals_params)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success)
 {
-    const chain::header expected
+    chain::header const expected
     {
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success)
 BOOST_AUTO_TEST_CASE(header__version_accessor__always__returns_initialized_value)
 {
     uint32_t const value = 11234u;
-    const chain::header instance(
+    chain::header const instance(
         value,
         hash_literal("abababababababababababababababababababababababababababababababab"),
         hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe"),
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(header__previous_block_hash_accessor_1__always__returns_ini
 BOOST_AUTO_TEST_CASE(header__previous_block_hash_accessor_2__always__returns_initialized_value)
 {
     auto const value = hash_literal("abababababababababababababababababababababababababababababababab");
-    const chain::header instance(
+    chain::header const instance(
         11234u,
         value,
         hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe"),
@@ -264,7 +264,7 @@ BOOST_AUTO_TEST_CASE(header__merkle_accessor_1__always__returns_initialized_valu
 BOOST_AUTO_TEST_CASE(header__merkle_accessor_2__always__returns_initialized_value)
 {
     auto const value = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
-    const chain::header instance(
+    chain::header const instance(
         11234u,
         hash_literal("abababababababababababababababababababababababababababababababab"),
         value,
@@ -407,7 +407,7 @@ BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__retarget_bits_exceeds_maxim
 
 BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__hash_greater_bits__returns_false)
 {
-    const chain::header instance(
+    chain::header const instance(
         11234u,
         hash_literal("abababababababababababababababababababababababababababababababab"),
         hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe"),
@@ -420,7 +420,7 @@ BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__hash_greater_bits__returns_
 
 BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__hash_less_than_bits__returns_true)
 {
-    const chain::header instance(
+    chain::header const instance(
         4u,
         hash_literal("000000000000000003ddc1e929e2944b8b0039af9aa0d826c480a83d8b39c373"),
         hash_literal("a6cb0b0d6531a71abe2daaa4a991e5498e1b6b0b51549568d0f9d55329b905df"),
@@ -453,7 +453,7 @@ BOOST_AUTO_TEST_CASE(header__operator_assign_equals__always__matches_equivalent)
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_equals__duplicates__returns_true)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -467,7 +467,7 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals__duplicates__returns_true)
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_equals__differs__returns_false)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals__differs__returns_false)
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals__duplicates__returns_false)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals__duplicates__returns_fa
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals__differs__returns_true)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),

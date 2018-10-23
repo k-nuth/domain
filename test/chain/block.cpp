@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(block__constructor_3__always__equals_params)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(block__constructor_4__always__equals_params)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(block__constructor_5__always__equals_params)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -408,7 +408,7 @@ BOOST_AUTO_TEST_CASE(block__generate_merkle_root__block_with_multiple_transactio
 
 BOOST_AUTO_TEST_CASE(block__header_accessor__always__returns_initialized_value)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE(block__header_accessor__always__returns_initialized_value)
 
 BOOST_AUTO_TEST_CASE(block__header_setter_1__roundtrip__success)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -443,7 +443,7 @@ BOOST_AUTO_TEST_CASE(block__header_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(block__header_setter_2__roundtrip__success)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -461,7 +461,7 @@ BOOST_AUTO_TEST_CASE(block__header_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(block__transactions_accessor__always__returns_initialized_value)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,
@@ -514,7 +514,7 @@ BOOST_AUTO_TEST_CASE(block__transactions_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(block__operator_assign_equals__always__matches_equivalent)
 {
-    const chain::header header(10u,
+    chain::header const header(10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         531234u,

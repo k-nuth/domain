@@ -40,7 +40,7 @@ header::header(const std::string& hexcode)
     std::stringstream(hexcode) >> *this;
 }
 
-header::header(const chain::header& value)
+header::header(chain::header const& value)
   : value_(value)
 {
 }
@@ -50,7 +50,7 @@ header::header(const header& other)
 {
 }
 
-header::operator const chain::header&() const
+header::operator chain::header const&() const
 {
     return value_;
 }

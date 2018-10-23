@@ -55,7 +55,7 @@ using namespace bc::wallet;
 
 ptree property_list(const config::header& header)
 {
-    const chain::header& block_header = header;
+    chain::header const& block_header = header;
 
     ptree tree;
     tree.put("bits", block_header.bits());

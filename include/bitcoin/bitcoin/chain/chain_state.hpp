@@ -134,7 +134,7 @@ public:
     chain_state(chain_state const& pool, const chain::block& block);
 
     /// Create header state from header pool chain state of previous height.
-    chain_state(chain_state const& parent, const chain::header& header);
+    chain_state(chain_state const& parent, chain::header const& header);
 
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.

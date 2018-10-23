@@ -58,15 +58,15 @@ class BC_API merkle_block {
     //static merkle_block factory_from_data(uint32_t version, reader& source);
 
     merkle_block();
-    merkle_block(const chain::header& header, size_t total_transactions, const hash_list& hashes, data_chunk const& flags);
+    merkle_block(chain::header const& header, size_t total_transactions, const hash_list& hashes, data_chunk const& flags);
     merkle_block(chain::header&& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
     merkle_block(const chain::block& block);
     merkle_block(const merkle_block& other);
     merkle_block(merkle_block&& other);
 
     chain::header& header();
-    const chain::header& header() const;
-    void set_header(const chain::header& value);
+    chain::header const& header() const;
+    void set_header(chain::header const& value);
     void set_header(chain::header&& value);
 
     size_t total_transactions() const;

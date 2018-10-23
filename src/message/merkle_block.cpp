@@ -60,7 +60,7 @@ merkle_block::merkle_block()
     : header_(), total_transactions_(0), hashes_(), flags_() {
 }
 
-merkle_block::merkle_block(const chain::header& header,
+merkle_block::merkle_block(chain::header const& header,
                            size_t total_transactions,
                            const hash_list& hashes,
                            data_chunk const& flags)
@@ -182,11 +182,11 @@ chain::header& merkle_block::header() {
     return header_;
 }
 
-const chain::header& merkle_block::header() const {
+chain::header const& merkle_block::header() const {
     return header_;
 }
 
-void merkle_block::set_header(const chain::header& value) {
+void merkle_block::set_header(chain::header const& value) {
     header_ = value;
 }
 

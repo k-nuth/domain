@@ -184,7 +184,7 @@ block::block(block&& other)
 }
 
 // TODO: deal with possibility of inconsistent merkle root in relation to txs.
-block::block(const chain::header& header,
+block::block(chain::header const& header,
              transaction const::list& transactions)
     : header_(header), transactions_(transactions), validation{} {
 }
@@ -396,14 +396,14 @@ chain::header& block::header() {
     return header_;
 }
 
-const chain::header& block::header() const {
+chain::header const& block::header() const {
     return header_;
 }
 
 // TODO: must call header.set_merkle(generate_merkle_root()) though this may
 // be very suboptimal if the block is being constructed. First verify that all
 // current uses will not be impacted and if so change them to use constructor.
-void block::set_header(const chain::header& value) {
+void block::set_header(chain::header const& value) {
     header_ = value;
 }
 

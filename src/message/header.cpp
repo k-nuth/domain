@@ -86,7 +86,7 @@ header::header(uint32_t version,
     : chain::header(version, std::move(previous_block_hash), std::move(merkle), timestamp, bits, nonce) {
 }
 
-header::header(const chain::header& other)
+header::header(chain::header const& other)
     : chain::header(other) {
 }
 
@@ -175,11 +175,11 @@ header& header::operator=(const header& other) {
     return *this;
 }
 
-bool header::operator==(const chain::header& other) const {
+bool header::operator==(chain::header const& other) const {
     return chain::header::operator==(other);
 }
 
-bool header::operator!=(const chain::header& other) const {
+bool header::operator!=(chain::header const& other) const {
     return chain::header::operator!=(other);
 }
 

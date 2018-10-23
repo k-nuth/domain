@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(merkle_block__constructor_2__always__equals_params)
 {
-    const chain::header header(
+    chain::header const header(
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(merkle_block__constructor_5__always__equals_params)
 {
-    const chain::header header(
+    chain::header const header(
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader)
 
 BOOST_AUTO_TEST_CASE(merkle_block__header_accessor_1__always__returns_initialized_value)
 {
-    const chain::header expected
+    chain::header const expected
     {
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__header_accessor_1__always__returns_initialize
 
 BOOST_AUTO_TEST_CASE(merkle_block__header_accessor_2__always__returns_initialized_value)
 {
-    const chain::header expected
+    chain::header const expected
     {
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__header_accessor_2__always__returns_initialize
 
 BOOST_AUTO_TEST_CASE(merkle_block__header_setter_1__roundtrip__success)
 {
-    const chain::header expected
+    chain::header const expected
     {
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),

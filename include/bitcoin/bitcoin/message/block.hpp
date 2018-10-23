@@ -71,7 +71,7 @@ class BC_API block
     block(const chain::block& other);
 
     block(chain::header&& header, chain::transaction::list&& transactions);
-    block(const chain::header& header, const chain::transaction::list& transactions);
+    block(chain::header const& header, const chain::transaction::list& transactions);
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);

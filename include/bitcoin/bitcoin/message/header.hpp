@@ -63,7 +63,7 @@ class BC_API header
     header();
     header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
-    header(const chain::header& other);
+    header(chain::header const& other);
     header(chain::header&& other);
     header(const header& other);
     header(header&& other);
@@ -109,8 +109,8 @@ class BC_API header
     header& operator=(header&& other);
     header& operator=(const header&) /*= delete*/;
 
-    bool operator==(const chain::header& other) const;
-    bool operator!=(const chain::header& other) const;
+    bool operator==(chain::header const& other) const;
+    bool operator!=(chain::header const& other) const;
 
     bool operator==(const header& other) const;
     bool operator!=(const header& other) const;

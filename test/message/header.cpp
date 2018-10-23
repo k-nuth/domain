@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(header__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(header__constructor_4__always__equals_params)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -272,7 +272,7 @@ BOOST_AUTO_TEST_CASE(header__operator_assign_equals_2__always__matches_equivalen
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__duplicates__returns_true)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__duplicates__returns_true
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__differs__returns_false)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__differs__returns_false)
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_1__duplicates__returns_false)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_1__duplicates__returns_
 
 BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_1__differs__returns_true)
 {
-    const chain::header expected(
+    chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
