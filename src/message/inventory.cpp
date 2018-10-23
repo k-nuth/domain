@@ -39,7 +39,7 @@ const std::string inventory::command = "inv";
 uint32_t const inventory::version_minimum = version::level::minimum;
 uint32_t const inventory::version_maximum = version::level::maximum;
 
-inventory inventory::factory_from_data(uint32_t version, const data_chunk& data) {
+inventory inventory::factory_from_data(uint32_t version, data_chunk const& data) {
     inventory instance;
     instance.from_data(version, data);
     return instance;
@@ -101,7 +101,7 @@ void inventory::reset() {
     inventories_.shrink_to_fit();
 }
 
-bool inventory::from_data(uint32_t version, const data_chunk& data) {
+bool inventory::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

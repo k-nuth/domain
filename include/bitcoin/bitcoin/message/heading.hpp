@@ -77,7 +77,7 @@ class BC_API heading {
     static size_t maximum_size();
     static size_t maximum_payload_size(uint32_t version, bool witness);
     static size_t satoshi_fixed_size();
-    static heading factory_from_data(const data_chunk& data);
+    static heading factory_from_data(data_chunk const& data);
     static heading factory_from_data(data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -111,7 +111,7 @@ class BC_API heading {
 
     message_type type() const;
 
-    bool from_data(const data_chunk& data);
+    bool from_data(data_chunk const& data);
     bool from_data(data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

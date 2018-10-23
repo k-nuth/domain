@@ -48,7 +48,7 @@ class BC_API compact_block {
     using short_id = uint64_t;
     using short_id_list = std::vector<short_id>;
 
-    static compact_block factory_from_data(uint32_t version, const data_chunk& data);
+    static compact_block factory_from_data(uint32_t version, data_chunk const& data);
     static compact_block factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -88,7 +88,7 @@ class BC_API compact_block {
     void set_transactions(const prefilled_transaction::list& value);
     void set_transactions(prefilled_transaction::list&& value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

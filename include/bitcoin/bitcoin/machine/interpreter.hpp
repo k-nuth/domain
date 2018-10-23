@@ -43,7 +43,7 @@ public:
     static result op_reserved(opcode);
     static result op_push_number(program& program, uint8_t value);
     static result op_push_size(program& program, const operation& op);
-    static result op_push_data(program& program, const data_chunk& data,
+    static result op_push_data(program& program, data_chunk const& data,
         uint32_t size_limit);
 
     // Operations (not shared).

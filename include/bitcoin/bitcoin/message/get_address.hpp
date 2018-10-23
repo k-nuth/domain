@@ -41,7 +41,7 @@ class BC_API get_address {
     typedef std::shared_ptr<get_address> ptr;
     typedef std::shared_ptr<const get_address> const_ptr;
 
-    static get_address factory_from_data(uint32_t version, const data_chunk& data);
+    static get_address factory_from_data(uint32_t version, data_chunk const& data);
     static get_address factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -56,7 +56,7 @@ class BC_API get_address {
 
     get_address();
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

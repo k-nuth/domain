@@ -42,7 +42,7 @@ class BC_API filter_load {
     typedef std::shared_ptr<filter_load> ptr;
     typedef std::shared_ptr<const filter_load> const_ptr;
 
-    static filter_load factory_from_data(uint32_t version, const data_chunk& data);
+    static filter_load factory_from_data(uint32_t version, data_chunk const& data);
     static filter_load factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -55,14 +55,14 @@ class BC_API filter_load {
     //static filter_load factory_from_data(uint32_t version, reader& source);
 
     filter_load();
-    filter_load(const data_chunk& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
+    filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
     filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
     filter_load(const filter_load& other);
     filter_load(filter_load&& other);
 
     data_chunk& filter();
-    const data_chunk& filter() const;
-    void set_filter(const data_chunk& value);
+    data_chunk const& filter() const;
+    void set_filter(data_chunk const& value);
     void set_filter(data_chunk&& value);
 
     uint32_t hash_functions() const;
@@ -74,7 +74,7 @@ class BC_API filter_load {
     uint8_t flags() const;
     void set_flags(uint8_t value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

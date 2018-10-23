@@ -35,7 +35,7 @@ constexpr size_t max_index = max_uint32;
 constexpr size_t max_index = max_uint16;
 #endif
 
-prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, const data_chunk& data) {
+prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, data_chunk const& data) {
     prefilled_transaction instance;
     instance.from_data(version, data);
     return instance;
@@ -85,7 +85,7 @@ void prefilled_transaction::reset() {
     transaction_ = chain::transaction{};
 }
 
-bool prefilled_transaction::from_data(uint32_t version, const data_chunk& data) {
+bool prefilled_transaction::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

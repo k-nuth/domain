@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(operation__constructor_5__valid_input__returns_input_initia
 
 BOOST_AUTO_TEST_CASE(operation__from_data__insufficient_bytes__failure)
 {
-    const data_chunk data;
+    data_chunk const data;
     operation instance;
 
     BOOST_REQUIRE(!instance.from_data(data));
@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE(operation__to_string__0x112233__0x112233)
 
 BOOST_AUTO_TEST_CASE(operation__to_string__push_size_3__0x112233__0x112233)
 {
-    static const data_chunk encoded{ { 0x03, 0x11, 0x22, 0x33 } };
+    static data_chunk const encoded{ { 0x03, 0x11, 0x22, 0x33 } };
     operation value;
     value.from_data(encoded);
     BOOST_REQUIRE_EQUAL(value.to_string(0), "[112233]");
@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE(operation__to_string__push_size_3__0x112233__0x112233)
 
 BOOST_AUTO_TEST_CASE(operation__to_string__push_one_size_0x112233__1_0x112233)
 {
-    static const data_chunk encoded{ { 0x4c, 0x03, 0x11, 0x22, 0x33 } };
+    static data_chunk const encoded{ { 0x4c, 0x03, 0x11, 0x22, 0x33 } };
     operation value;
     value.from_data(encoded);
     BOOST_REQUIRE_EQUAL(value.to_string(0), "[1.112233]");
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(operation__to_string__push_one_size_0x112233__1_0x112233)
 
 BOOST_AUTO_TEST_CASE(operation__to_string__push_two_size_0x112233__2_0x112233)
 {
-    static const data_chunk encoded{ { 0x4d, 0x03, 0x00, 0x11, 0x22, 0x33 } };
+    static data_chunk const encoded{ { 0x4d, 0x03, 0x00, 0x11, 0x22, 0x33 } };
     operation value;
     value.from_data(encoded);
     BOOST_REQUIRE_EQUAL(value.to_string(0), "[2.112233]");
@@ -393,7 +393,7 @@ BOOST_AUTO_TEST_CASE(operation__to_string__push_two_size_0x112233__2_0x112233)
 
 BOOST_AUTO_TEST_CASE(operation__to_string__push_four_size_0x112233__4_0x112233)
 {
-    static const data_chunk encoded{ { 0x4e, 0x03, 0x00, 0x00, 0x00, 0x11, 0x22, 0x33 } };
+    static data_chunk const encoded{ { 0x4e, 0x03, 0x00, 0x00, 0x00, 0x11, 0x22, 0x33 } };
     operation value;
     value.from_data(encoded);
     BOOST_REQUIRE_EQUAL(value.to_string(0), "[4.112233]");
@@ -459,7 +459,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__16__push_positive_16_empty)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__17__push_size_1_expected)
 {
-    static const data_chunk expected{ 0x11 };
+    static data_chunk const expected{ 0x11 };
     operation value;
     BOOST_REQUIRE(value.from_string("17"));
     BOOST_REQUIRE(value.code() == opcode::push_size_1);
@@ -468,7 +468,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__17__push_size_1_expected)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__negative_2__push_size_1_expected)
 {
-    static const data_chunk expected{ 0x82 };
+    static data_chunk const expected{ 0x82 };
     operation value;
     BOOST_REQUIRE(value.from_string("-2"));
     BOOST_REQUIRE(value.code() == opcode::push_size_1);
@@ -477,7 +477,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__negative_2__push_size_1_expected)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__9223372036854775807__push_size_8_expected)
 {
-    static const data_chunk expected{ { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f } };
+    static data_chunk const expected{ { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f } };
     operation value;
     BOOST_REQUIRE(value.from_string("9223372036854775807"));
     BOOST_REQUIRE(value.code() == opcode::push_size_8);
@@ -486,7 +486,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__9223372036854775807__push_size_8_ex
 
 BOOST_AUTO_TEST_CASE(operation__from_string__negative_9223372036854775807__push_size_8_expected)
 {
-    static const data_chunk expected{ { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff } };
+    static data_chunk const expected{ { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff } };
     operation value;
     BOOST_REQUIRE(value.from_string("-9223372036854775807"));
     BOOST_REQUIRE(value.code() == opcode::push_size_8);
@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__negative_9223372036854775807__push_
 
 BOOST_AUTO_TEST_CASE(operation__from_string__string_empty__push_size_0_empty)
 {
-    static const data_chunk expected{ 0x61 };
+    static data_chunk const expected{ 0x61 };
     operation value;
     BOOST_REQUIRE(value.from_string("''"));
     BOOST_REQUIRE(value.code() == opcode::push_size_0);
@@ -504,7 +504,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__string_empty__push_size_0_empty)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__string_a__push_size_1_expected_byte)
 {
-    static const data_chunk expected{ 0x61 };
+    static data_chunk const expected{ 0x61 };
     operation value;
     BOOST_REQUIRE(value.from_string("'a'"));
     BOOST_REQUIRE(value.code() == opcode::push_size_1);
@@ -513,7 +513,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__string_a__push_size_1_expected_byte
 
 BOOST_AUTO_TEST_CASE(operation__from_string__string_abc__push_size_3_expected_byte_order)
 {
-    static const data_chunk expected{ { 0x61, 0x62, 0x63 } };
+    static data_chunk const expected{ { 0x61, 0x62, 0x63 } };
     operation value;
     BOOST_REQUIRE(value.from_string("'abc'"));
     BOOST_REQUIRE(value.code() == opcode::push_size_3);
@@ -522,7 +522,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__string_abc__push_size_3_expected_by
 
 BOOST_AUTO_TEST_CASE(operation__from_string__negative_1_character__push_size_1_nominal_encoding)
 {
-    static const data_chunk expected{ 0x4f };
+    static data_chunk const expected{ 0x4f };
     operation value;
     BOOST_REQUIRE(value.from_string("'O'"));
     BOOST_REQUIRE(value.code() == opcode::push_size_1);
@@ -583,7 +583,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__7__push_positive_7)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__0x07__push_size_1)
 {
-    static const data_chunk expected{ 0x07 };
+    static data_chunk const expected{ 0x07 };
     operation value;
     BOOST_REQUIRE(value.from_string("[07]"));
     BOOST_REQUIRE(value.code() == opcode::push_size_1);
@@ -592,7 +592,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__0x07__push_size_1)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__0x42__push_size_1)
 {
-    static const data_chunk expected{ 0x42 };
+    static data_chunk const expected{ 0x42 };
     operation value;
     BOOST_REQUIRE(value.from_string("[42]"));
     BOOST_REQUIRE(value.code() == opcode::push_size_1);
@@ -601,7 +601,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__0x42__push_size_1)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__0x112233__push_size_3)
 {
-    static const data_chunk expected{ { 0x11, 0x22, 0x33 } };
+    static data_chunk const expected{ { 0x11, 0x22, 0x33 } };
     operation value;
     BOOST_REQUIRE(value.from_string("[112233]"));
     BOOST_REQUIRE(value.code() == opcode::push_size_3);
@@ -610,7 +610,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__0x112233__push_size_3)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__0_0x112233__push_size_3)
 {
-    static const data_chunk expected{ { 0x11, 0x22, 0x33 } };
+    static data_chunk const expected{ { 0x11, 0x22, 0x33 } };
     operation value;
     BOOST_REQUIRE(value.from_string("[0.112233]"));
     BOOST_REQUIRE(value.code() == opcode::push_size_3);
@@ -619,7 +619,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__0_0x112233__push_size_3)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__1_0x112233__push_one_size)
 {
-    static const data_chunk expected{ { 0x11, 0x22, 0x33 } };
+    static data_chunk const expected{ { 0x11, 0x22, 0x33 } };
     operation value;
     BOOST_REQUIRE(value.from_string("[1.112233]"));
     BOOST_REQUIRE(value.code() == opcode::push_one_size);
@@ -628,7 +628,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__1_0x112233__push_one_size)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__2_0x112233__push_two_size)
 {
-    static const data_chunk expected{ { 0x11, 0x22, 0x33 } };
+    static data_chunk const expected{ { 0x11, 0x22, 0x33 } };
     operation value;
     BOOST_REQUIRE(value.from_string("[2.112233]"));
     BOOST_REQUIRE(value.code() == opcode::push_two_size);
@@ -637,7 +637,7 @@ BOOST_AUTO_TEST_CASE(operation__from_string__2_0x112233__push_two_size)
 
 BOOST_AUTO_TEST_CASE(operation__from_string__4_0x112233__push_four_size)
 {
-    static const data_chunk expected{ { 0x11, 0x22, 0x33 } };
+    static data_chunk const expected{ { 0x11, 0x22, 0x33 } };
     operation value;
     BOOST_REQUIRE(value.from_string("[4.112233]"));
     BOOST_REQUIRE(value.code() == opcode::push_four_size);

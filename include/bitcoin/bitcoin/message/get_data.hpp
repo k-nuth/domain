@@ -44,7 +44,7 @@ class BC_API get_data
     typedef std::shared_ptr<get_data> ptr;
     typedef std::shared_ptr<const get_data> const_ptr;
 
-    static get_data factory_from_data(uint32_t version, const data_chunk& data);
+    static get_data factory_from_data(uint32_t version, data_chunk const& data);
     static get_data factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -64,7 +64,7 @@ class BC_API get_data
     get_data(const get_data& other);
     get_data(get_data&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <Reader R, BITPRIM_IS_READER(R)>

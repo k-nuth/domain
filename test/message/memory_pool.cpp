@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_SUITE(memory_pool_tests)
 BOOST_AUTO_TEST_CASE(from_data_insufficient_version_failure)
 {
     const message::memory_pool expected;
-    const data_chunk data = expected.to_data(message::version::level::maximum);
+    data_chunk const data = expected.to_data(message::version::level::maximum);
     message::memory_pool instance{};
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(

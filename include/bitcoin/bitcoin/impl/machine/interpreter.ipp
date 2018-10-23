@@ -74,7 +74,7 @@ inline interpreter::result interpreter::op_push_size(program& program,
 }
 
 inline interpreter::result interpreter::op_push_data(program& program,
-    const data_chunk& data, uint32_t size_limit)
+    data_chunk const& data, uint32_t size_limit)
 {
     if (data.size() > size_limit)
         return error::op_push_data;

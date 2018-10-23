@@ -90,7 +90,7 @@ class BC_API output_point
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static output_point factory_from_data(const data_chunk& data, bool wire = true);
+    static output_point factory_from_data(data_chunk const& data, bool wire = true);
     static output_point factory_from_data(data_source& stream, bool wire = true);
     // static output_point factory_from_data(reader& source, bool wire=true);
 

@@ -41,7 +41,7 @@ class BC_API block_transactions {
     typedef std::shared_ptr<block_transactions> ptr;
     typedef std::shared_ptr<const block_transactions> const_ptr;
 
-    static block_transactions factory_from_data(uint32_t version, const data_chunk& data);
+    static block_transactions factory_from_data(uint32_t version, data_chunk const& data);
     static block_transactions factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -71,7 +71,7 @@ class BC_API block_transactions {
     void set_transactions(const chain::transaction::list& other);
     void set_transactions(chain::transaction::list&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

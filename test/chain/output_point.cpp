@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(output_point__begin_end__initialized__begin_not_equal_end)
 
 BOOST_AUTO_TEST_CASE(output_point__from_data__insufficient_bytes__failure)
 {
-    static const data_chunk data(10);
+    static data_chunk const data(10);
     chain::output_point instance;
     BOOST_REQUIRE(!instance.from_data(data));
     BOOST_REQUIRE(!instance.is_valid());

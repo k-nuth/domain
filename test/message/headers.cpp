@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_6__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_bytes__failure)
 {
-    const data_chunk raw{ 0xab, 0xcd };
+    data_chunk const raw{ 0xab, 0xcd };
     headers instance{};
     BOOST_REQUIRE_EQUAL(false, instance.from_data(headers::version_minimum, raw));
 }
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure)
         }
     };
 
-    const data_chunk data = expected.to_data(headers::version_minimum);
+    data_chunk const data = expected.to_data(headers::version_minimum);
     headers instance{};
     BOOST_REQUIRE(!instance.from_data(headers::version_minimum - 1, data));
 }

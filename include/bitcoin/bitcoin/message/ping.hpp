@@ -43,7 +43,7 @@ class BC_API ping {
     typedef std::shared_ptr<ping> ptr;
     typedef std::shared_ptr<const ping> const_ptr;
 
-    static ping factory_from_data(uint32_t version, const data_chunk& data);
+    static ping factory_from_data(uint32_t version, data_chunk const& data);
     static ping factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -63,7 +63,7 @@ class BC_API ping {
     uint64_t nonce() const;
     void set_nonce(uint64_t value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

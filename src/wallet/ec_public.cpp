@@ -56,7 +56,7 @@ ec_public::ec_public(const ec_private& secret)
 {
 }
 
-ec_public::ec_public(const data_chunk& decoded)
+ec_public::ec_public(data_chunk const& decoded)
   : ec_public(from_data(decoded))
 {
 }
@@ -104,7 +104,7 @@ ec_public ec_public::from_string(const std::string& base16)
     return ec_public(decoded);
 }
 
-ec_public ec_public::from_data(const data_chunk& decoded)
+ec_public ec_public::from_data(data_chunk const& decoded)
 {
     if (!is_point(decoded))
         return ec_public();

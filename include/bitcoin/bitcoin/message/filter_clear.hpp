@@ -41,7 +41,7 @@ class BC_API filter_clear {
     typedef std::shared_ptr<filter_clear> ptr;
     typedef std::shared_ptr<const filter_clear> const_ptr;
 
-    static filter_clear factory_from_data(uint32_t version, const data_chunk& data);
+    static filter_clear factory_from_data(uint32_t version, data_chunk const& data);
     static filter_clear factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -58,7 +58,7 @@ class BC_API filter_clear {
     filter_clear(const filter_clear& other);
     filter_clear(filter_clear&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

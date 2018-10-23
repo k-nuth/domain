@@ -41,7 +41,7 @@ class BC_API memory_pool {
     typedef std::shared_ptr<memory_pool> ptr;
     typedef std::shared_ptr<const memory_pool> const_ptr;
 
-    static memory_pool factory_from_data(uint32_t version, const data_chunk& data);
+    static memory_pool factory_from_data(uint32_t version, data_chunk const& data);
     static memory_pool factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -58,7 +58,7 @@ class BC_API memory_pool {
     memory_pool(const memory_pool& other);
     memory_pool(memory_pool&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

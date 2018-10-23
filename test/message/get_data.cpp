@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(get_data__constructor_7__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_bytes__failure)
 {
-    static const data_chunk raw{ 0xab, 0xcd };
+    static data_chunk const raw{ 0xab, 0xcd };
     get_data instance;
     static auto const version = version::level::maximum;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version, raw));

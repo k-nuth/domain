@@ -33,7 +33,7 @@ const std::string address::command = "addr";
 uint32_t const address::version_minimum = version::level::minimum;
 uint32_t const address::version_maximum = version::level::maximum;
 
-address address::factory_from_data(uint32_t version, const data_chunk& data) {
+address address::factory_from_data(uint32_t version, data_chunk const& data) {
     address instance;
     instance.from_data(version, data);
     return instance;
@@ -81,7 +81,7 @@ void address::reset() {
     addresses_.shrink_to_fit();
 }
 
-bool address::from_data(uint32_t version, const data_chunk& data) {
+bool address::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

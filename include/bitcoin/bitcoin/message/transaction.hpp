@@ -50,7 +50,7 @@ class BC_API transaction
     typedef std::shared_ptr<const_ptr_list> const_ptr_list_ptr;
     typedef std::shared_ptr<const const_ptr_list> const_ptr_list_const_ptr;
 
-    static transaction factory_from_data(uint32_t version, const data_chunk& data);
+    static transaction factory_from_data(uint32_t version, data_chunk const& data);
     static transaction factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -73,7 +73,7 @@ class BC_API transaction
     transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs);
     transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

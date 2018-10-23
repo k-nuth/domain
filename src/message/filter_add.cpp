@@ -34,7 +34,7 @@ const std::string filter_add::command = "filteradd";
 uint32_t const filter_add::version_minimum = version::level::bip37;
 uint32_t const filter_add::version_maximum = version::level::maximum;
 
-filter_add filter_add::factory_from_data(uint32_t version, const data_chunk& data) {
+filter_add filter_add::factory_from_data(uint32_t version, data_chunk const& data) {
     filter_add instance;
     instance.from_data(version, data);
     return instance;
@@ -57,7 +57,7 @@ filter_add::filter_add()
     : data_() {
 }
 
-filter_add::filter_add(const data_chunk& data)
+filter_add::filter_add(data_chunk const& data)
     : data_(data) {
 }
 
@@ -82,7 +82,7 @@ void filter_add::reset() {
     data_.shrink_to_fit();
 }
 
-bool filter_add::from_data(uint32_t version, const data_chunk& data) {
+bool filter_add::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
@@ -142,11 +142,11 @@ data_chunk& filter_add::data() {
     return data_;
 }
 
-const data_chunk& filter_add::data() const {
+data_chunk const& filter_add::data() const {
     return data_;
 }
 
-void filter_add::set_data(const data_chunk& value) {
+void filter_add::set_data(data_chunk const& value) {
     data_ = value;
 }
 

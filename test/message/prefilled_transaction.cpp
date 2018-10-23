@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__constructor_5__always__equals_params
 
 BOOST_AUTO_TEST_CASE(prefilled_transaction__from_data__insufficient_bytes__failure)
 {
-    const data_chunk raw{ 1 };
+    data_chunk const raw{ 1 };
     message::prefilled_transaction instance{};
     BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::minimum, raw));
 }

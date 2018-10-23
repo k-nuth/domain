@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(network_address__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(network_address__from_data__insufficient_bytes__failure)
 {
-    const data_chunk raw{ 1 };
+    data_chunk const raw{ 1 };
     message::network_address instance{};
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(

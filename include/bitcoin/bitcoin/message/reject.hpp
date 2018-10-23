@@ -74,7 +74,7 @@ class BC_API reject {
     typedef std::shared_ptr<reject> ptr;
     typedef std::shared_ptr<const reject> const_ptr;
 
-    static reject factory_from_data(uint32_t version, const data_chunk& data);
+    static reject factory_from_data(uint32_t version, data_chunk const& data);
     static reject factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -115,7 +115,7 @@ class BC_API reject {
     void set_data(const hash_digest& value);
     void set_data(hash_digest&& value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(address__from_data__insufficient_bytes__failure)
 {
-    const data_chunk raw{ 0xab };
+    data_chunk const raw{ 0xab };
     address instance;
 
     BOOST_REQUIRE(!instance.from_data(version::level::minimum, raw));
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success)
         }
     });
 
-    const data_chunk data = expected.to_data(version::level::minimum);
+    data_chunk const data = expected.to_data(version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
     auto const result = address::factory_from_data(version::level::minimum, source);

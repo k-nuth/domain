@@ -34,7 +34,7 @@ const std::string alert::command = "alert";
 uint32_t const alert::version_minimum = version::level::minimum;
 uint32_t const alert::version_maximum = version::level::maximum;
 
-alert alert::factory_from_data(uint32_t version, const data_chunk& data) {
+alert alert::factory_from_data(uint32_t version, data_chunk const& data) {
     alert instance;
     instance.from_data(version, data);
     return instance;
@@ -57,7 +57,7 @@ alert::alert()
     : payload_(), signature_() {
 }
 
-alert::alert(const data_chunk& payload, const data_chunk& signature)
+alert::alert(data_chunk const& payload, data_chunk const& signature)
     : payload_(payload), signature_(signature) {
 }
 
@@ -84,7 +84,7 @@ void alert::reset() {
     signature_.shrink_to_fit();
 }
 
-bool alert::from_data(uint32_t version, const data_chunk& data) {
+bool alert::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
@@ -140,11 +140,11 @@ data_chunk& alert::payload() {
     return payload_;
 }
 
-const data_chunk& alert::payload() const {
+data_chunk const& alert::payload() const {
     return payload_;
 }
 
-void alert::set_payload(const data_chunk& value) {
+void alert::set_payload(data_chunk const& value) {
     payload_ = value;
 }
 
@@ -156,11 +156,11 @@ data_chunk& alert::signature() {
     return signature_;
 }
 
-const data_chunk& alert::signature() const {
+data_chunk const& alert::signature() const {
     return signature_;
 }
 
-void alert::set_signature(const data_chunk& value) {
+void alert::set_signature(data_chunk const& value) {
     signature_ = value;
 }
 

@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(fee_filter__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(fee_filter__from_data__insufficient_bytes_failure)
 {
-    const data_chunk raw = { 0xab, 0x11 };
+    data_chunk const raw = { 0xab, 0x11 };
     fee_filter instance;
     BOOST_REQUIRE(!instance.from_data(version::level::maximum, raw));
 }

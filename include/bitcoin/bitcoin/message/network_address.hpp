@@ -38,7 +38,7 @@
 //     typedef std::vector<network_address> list;
 
 //     static network_address factory_from_data(uint32_t version,
-//         const data_chunk& data, bool with_timestamp);
+//         data_chunk const& data, bool with_timestamp);
 //     static network_address factory_from_data(uint32_t version,
 //         std::istream& stream, bool with_timestamp);
 //     static network_address factory_from_data(uint32_t version,
@@ -76,7 +76,7 @@
 //     uint16_t port() const;
 //     void set_port(uint16_t value);
 
-//     bool from_data(uint32_t version, const data_chunk& data,
+//     bool from_data(uint32_t version, data_chunk const& data,
 //         bool with_timestamp);
 //     bool from_data(uint32_t version, data_source& stream,
 //         bool with_timestamp);

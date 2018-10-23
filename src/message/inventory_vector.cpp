@@ -60,7 +60,7 @@ std::string inventory_vector::to_string(type_id inventory_type) {
     }
 }
 
-inventory_vector inventory_vector::factory_from_data(uint32_t version, const data_chunk& data) {
+inventory_vector inventory_vector::factory_from_data(uint32_t version, data_chunk const& data) {
     inventory_vector instance;
     instance.from_data(version, data);
     return instance;
@@ -113,7 +113,7 @@ void inventory_vector::to_witness() {
         type_ = to_type(to_number(type_) | to_number(type_id::witness));
 }
 
-bool inventory_vector::from_data(uint32_t version, const data_chunk& data) {
+bool inventory_vector::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

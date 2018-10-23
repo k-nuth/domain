@@ -58,7 +58,7 @@ endorsement::endorsement(const std::string& hexcode)
     std::stringstream(hexcode) >> *this;
 }
 
-endorsement::endorsement(const data_chunk& value)
+endorsement::endorsement(data_chunk const& value)
   : value_(value)
 {
 }
@@ -68,7 +68,7 @@ endorsement::endorsement(const endorsement& other)
 {
 }
 
-endorsement::operator const data_chunk&() const
+endorsement::operator data_chunk const&() const
 {
     return value_;
 }

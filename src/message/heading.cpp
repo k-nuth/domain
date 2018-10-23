@@ -60,7 +60,7 @@ size_t heading::satoshi_fixed_size() {
            sizeof(uint32_t);
 }
 
-heading heading::factory_from_data(const data_chunk& data) {
+heading heading::factory_from_data(data_chunk const& data) {
     heading instance;
     instance.from_data(data);
     return instance;
@@ -111,7 +111,7 @@ void heading::reset() {
     checksum_ = 0;
 }
 
-bool heading::from_data(const data_chunk& data) {
+bool heading::from_data(data_chunk const& data) {
     data_source istream(data);
     return from_data(istream);
 }

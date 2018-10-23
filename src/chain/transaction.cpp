@@ -181,7 +181,7 @@ bool transaction::operator!=(transaction const& other) const {
 //-----------------------------------------------------------------------------
 
 // static
-transaction transaction::factory_from_data(const data_chunk& data, bool wire, bool witness) {
+transaction transaction::factory_from_data(data_chunk const& data, bool wire, bool witness) {
     transaction instance;
     instance.from_data(data, wire, witness_val(witness));
     return instance;
@@ -201,7 +201,7 @@ transaction transaction::factory_from_data(data_source& stream, bool wire, bool 
 ////     return instance;
 //// }
 
-bool transaction::from_data(const data_chunk& data, bool wire, bool witness, bool unconfirmed) {
+bool transaction::from_data(data_chunk const& data, bool wire, bool witness, bool unconfirmed) {
     data_source istream(data);
     return from_data(istream, wire, witness_val(witness), unconfirmed);
 }

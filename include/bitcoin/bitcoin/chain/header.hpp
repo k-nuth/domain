@@ -84,7 +84,7 @@ class BC_API header {
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static header factory_from_data(const data_chunk& data, bool wire = true);
+    static header factory_from_data(data_chunk const& data, bool wire = true);
     // static header factory_from_data(data_source& stream, bool wire=true);
     static header factory_from_data(data_source& stream, bool wire = true);
 
@@ -97,7 +97,7 @@ class BC_API header {
 
     //static header factory_from_data(reader& source, bool wire=true);
 
-    bool from_data(const data_chunk& data, bool wire = true);
+    bool from_data(data_chunk const& data, bool wire = true);
 
     //TODO(fernando): check what happend when replacing std::istream to data_source
     // bool from_data(data_source& stream, bool wire=true);

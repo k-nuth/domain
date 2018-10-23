@@ -161,7 +161,7 @@ class BC_API transaction {
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static transaction factory_from_data(const data_chunk& data, bool wire = true, bool witness = false);
+    static transaction factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
     static transaction factory_from_data(data_source& stream, bool wire = true, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -173,7 +173,7 @@ class BC_API transaction {
 
     //static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
 
-    bool from_data(const data_chunk& data, bool wire = true, bool witness = false, bool unconfirmed = false);
+    bool from_data(data_chunk const& data, bool wire = true, bool witness = false, bool unconfirmed = false);
     bool from_data(data_source& stream, bool wire = true, bool witness = false, bool unconfirmed = false);
 
     // Witness is not used by outputs, just for template normalization.

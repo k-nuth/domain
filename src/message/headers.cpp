@@ -41,7 +41,7 @@ const std::string headers::command = "headers";
 uint32_t const headers::version_minimum = version::level::headers;
 uint32_t const headers::version_maximum = version::level::maximum;
 
-headers headers::factory_from_data(uint32_t version, const data_chunk& data) {
+headers headers::factory_from_data(uint32_t version, data_chunk const& data) {
     headers instance;
     instance.from_data(version, data);
     return instance;
@@ -94,7 +94,7 @@ void headers::reset() {
     elements_.shrink_to_fit();
 }
 
-bool headers::from_data(uint32_t version, const data_chunk& data) {
+bool headers::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

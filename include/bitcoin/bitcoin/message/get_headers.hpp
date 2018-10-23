@@ -40,7 +40,7 @@ class BC_API get_headers
     typedef std::shared_ptr<get_headers> ptr;
     typedef std::shared_ptr<const get_headers> const_ptr;
 
-    static get_headers factory_from_data(uint32_t version, const data_chunk& data);
+    static get_headers factory_from_data(uint32_t version, data_chunk const& data);
     static get_headers factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -58,7 +58,7 @@ class BC_API get_headers
     get_headers(const get_headers& other);
     get_headers(get_headers&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <Reader R, BITPRIM_IS_READER(R)>

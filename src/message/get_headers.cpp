@@ -28,7 +28,7 @@ const std::string get_headers::command = "getheaders";
 uint32_t const get_headers::version_minimum = version::level::headers;
 uint32_t const get_headers::version_maximum = version::level::maximum;
 
-get_headers get_headers::factory_from_data(uint32_t version, const data_chunk& data) {
+get_headers get_headers::factory_from_data(uint32_t version, data_chunk const& data) {
     get_headers instance;
     instance.from_data(version, data);
     return instance;
@@ -67,7 +67,7 @@ get_headers::get_headers(get_headers&& other)
     : get_blocks(other) {
 }
 
-bool get_headers::from_data(uint32_t version, const data_chunk& data) {
+bool get_headers::from_data(uint32_t version, data_chunk const& data) {
     return get_blocks::from_data(version, data);
 }
 

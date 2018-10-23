@@ -47,7 +47,7 @@ class BC_API header
     typedef std::vector<ptr> ptr_list;
     typedef std::vector<const_ptr> const_ptr_list;
 
-    static header factory_from_data(uint32_t version, const data_chunk& data);
+    static header factory_from_data(uint32_t version, data_chunk const& data);
     static header factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -68,7 +68,7 @@ class BC_API header
     header(const header& other);
     header(header&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

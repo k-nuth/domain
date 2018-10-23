@@ -48,7 +48,7 @@ class BC_API inventory {
     typedef std::shared_ptr<const inventory> const_ptr;
     typedef inventory_vector::type_id type_id;
 
-    static inventory factory_from_data(uint32_t version, const data_chunk& data);
+    static inventory factory_from_data(uint32_t version, data_chunk const& data);
     static inventory factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -74,7 +74,7 @@ class BC_API inventory {
     void set_inventories(inventory_vector::list&& value);
 
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
 
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream);

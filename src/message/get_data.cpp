@@ -33,7 +33,7 @@ const std::string get_data::command = "getdata";
 uint32_t const get_data::version_minimum = version::level::minimum;
 uint32_t const get_data::version_maximum = version::level::maximum;
 
-get_data get_data::factory_from_data(uint32_t version, const data_chunk& data) {
+get_data get_data::factory_from_data(uint32_t version, data_chunk const& data) {
     get_data instance;
     instance.from_data(version, data);
     return instance;
@@ -80,7 +80,7 @@ get_data::get_data(get_data&& other)
     : inventory(other) {
 }
 
-bool get_data::from_data(uint32_t version, const data_chunk& data) {
+bool get_data::from_data(uint32_t version, data_chunk const& data) {
     return inventory::from_data(version, data);
 }
 

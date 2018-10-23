@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(inventory__constructor_7__always__equals_params)
 BOOST_AUTO_TEST_CASE(inventory__from_data__insufficient_bytes__failure)
 {
     static auto const version = version::level::minimum;
-    static const data_chunk raw{ 0xab, 0xcd };
+    static data_chunk const raw{ 0xab, 0xcd };
     inventory instance;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version, raw));
 }

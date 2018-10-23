@@ -33,7 +33,7 @@ const std::string get_blocks::command = "getblocks";
 uint32_t const get_blocks::version_minimum = version::level::minimum;
 uint32_t const get_blocks::version_maximum = version::level::maximum;
 
-get_blocks get_blocks::factory_from_data(uint32_t version, const data_chunk& data) {
+get_blocks get_blocks::factory_from_data(uint32_t version, data_chunk const& data) {
     get_blocks instance;
     instance.from_data(version, data);
     return instance;
@@ -82,7 +82,7 @@ void get_blocks::reset() {
     stop_hash_.fill(0);
 }
 
-bool get_blocks::from_data(uint32_t version, const data_chunk& data) {
+bool get_blocks::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

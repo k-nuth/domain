@@ -37,7 +37,7 @@ const ec_uncompressed alert_payload::satoshi_public_key{
      0x78, 0x2c, 0x09, 0x3b, 0xb8, 0x99, 0x69, 0x2d, 0x52, 0x4e, 0x9d,
      0x6a, 0x69, 0x56, 0xe7, 0xc5, 0xec, 0xbc, 0xd6, 0x82, 0x84}};
 
-alert_payload alert_payload::factory_from_data(uint32_t version, const data_chunk& data) {
+alert_payload alert_payload::factory_from_data(uint32_t version, data_chunk const& data) {
     alert_payload instance;
     instance.from_data(version, data);
     return instance;
@@ -184,7 +184,7 @@ void alert_payload::reset() {
     reserved_.shrink_to_fit();
 }
 
-bool alert_payload::from_data(uint32_t version, const data_chunk& data) {
+bool alert_payload::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

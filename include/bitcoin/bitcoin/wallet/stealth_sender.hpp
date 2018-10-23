@@ -37,12 +37,12 @@ class BC_API stealth_sender
 public:
     /// Constructors.
     /// Generate a send address from the stealth address.
-    stealth_sender(const stealth_address& address, const data_chunk& seed,
+    stealth_sender(const stealth_address& address, data_chunk const& seed,
         const binary& filter, uint8_t version=payment_address::mainnet_p2kh);
 
     /// Generate a send address from the stealth address.
     stealth_sender(const ec_secret& ephemeral_private,
-        const stealth_address& address, const data_chunk& seed,
+        const stealth_address& address, data_chunk const& seed,
         const binary& filter, uint8_t version=payment_address::mainnet_p2kh);
 
     /// Caller must test after construct.
@@ -56,7 +56,7 @@ public:
 
 private:
     void initialize(const ec_secret& ephemeral_private,
-        const stealth_address& address, const data_chunk& seed,
+        const stealth_address& address, data_chunk const& seed,
         const binary& filter);
 
     const uint8_t version_;

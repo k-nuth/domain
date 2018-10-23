@@ -31,8 +31,8 @@ BOOST_AUTO_TEST_CASE(alert__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(alert__constructor_2__always__equals_params)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
 
@@ -57,8 +57,8 @@ BOOST_AUTO_TEST_CASE(alert__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(alert__constructor_4__always__equals_params)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
     message::alert instance(value);
@@ -71,8 +71,8 @@ BOOST_AUTO_TEST_CASE(alert__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(alert__constructor_5__always__equals_params)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
     message::alert instance(std::move(value));
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(alert__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(alert__from_data__insufficient_bytes__failure)
 {
-    const data_chunk raw{ 0xab, 0x11 };
+    data_chunk const raw{ 0xab, 0x11 };
     message::alert instance;
 
     BOOST_REQUIRE(!instance.from_data(message::version::level::minimum, raw));
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(alert__from_data__insufficient_bytes__failure)
 
 BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
 {
-    const data_chunk raw_payload
+    data_chunk const raw_payload
     {
         0x01, 0x00, 0x00, 0x00, 0x37, 0x66, 0x40, 0x4f, 0x00,
         0x00, 0x00, 0x00, 0xb3, 0x05, 0x43, 0x4f, 0x00, 0x00, 0x00,
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
         0x72, 0x75, 0x61, 0x72, 0x79, 0x00
     };
 
-    const data_chunk raw_signature
+    data_chunk const raw_signature
     {
         0x30, 0x45, 0x02, 0x21, 0x00, 0x83, 0x89, 0xdf, 0x45, 0xf0,
         0x70, 0x3f, 0x39, 0xec, 0x8c, 0x1c, 0xc4, 0x2c, 0x13, 0x81,
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
         0xf1
     };
 
-    const data_chunk raw
+    data_chunk const raw
     {
         0x73, 0x01, 0x00, 0x00, 0x00, 0x37, 0x66, 0x40, 0x4f, 0x00,
         0x00, 0x00, 0x00, 0xb3, 0x05, 0x43, 0x4f, 0x00, 0x00, 0x00,
@@ -216,8 +216,8 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert__payload_accessor_1__always__returns_initialized)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
     BOOST_REQUIRE(payload == instance.payload());
@@ -225,8 +225,8 @@ BOOST_AUTO_TEST_CASE(alert__payload_accessor_1__always__returns_initialized)
 
 BOOST_AUTO_TEST_CASE(alert__payload_accessor_2__always__returns_initialized)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     const message::alert instance(payload, signature);
     BOOST_REQUIRE(payload == instance.payload());
@@ -253,8 +253,8 @@ BOOST_AUTO_TEST_CASE(alert__payload_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert__signature_accessor_1__always__returns_initialized)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
     BOOST_REQUIRE(signature == instance.signature());
@@ -262,8 +262,8 @@ BOOST_AUTO_TEST_CASE(alert__signature_accessor_1__always__returns_initialized)
 
 BOOST_AUTO_TEST_CASE(alert__signature_accessor_2__always__returns_initialized)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     const message::alert instance(payload, signature);
     BOOST_REQUIRE(signature == instance.signature());
@@ -290,8 +290,8 @@ BOOST_AUTO_TEST_CASE(alert__signature_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert__operator_assign_equals__always__matches_equivalent)
 {
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
 

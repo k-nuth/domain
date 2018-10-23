@@ -34,7 +34,7 @@ const std::string block_transactions::command = "blocktxn";
 uint32_t const block_transactions::version_minimum = version::level::bip152;
 uint32_t const block_transactions::version_maximum = version::level::bip152;
 
-block_transactions block_transactions::factory_from_data(uint32_t version, const data_chunk& data) {
+block_transactions block_transactions::factory_from_data(uint32_t version, data_chunk const& data) {
     block_transactions instance;
     instance.from_data(version, data);
     return instance;
@@ -86,7 +86,7 @@ void block_transactions::reset() {
     transactions_.shrink_to_fit();
 }
 
-bool block_transactions::from_data(uint32_t version, const data_chunk& data) {
+bool block_transactions::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

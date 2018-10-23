@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(heading__to_data__checksum_variations__success)
 
 BOOST_AUTO_TEST_CASE(heading__from_data__insufficient_bytes__failure)
 {
-    static const data_chunk raw
+    static data_chunk const raw
     {
         0xab, 0xcd
     };

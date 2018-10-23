@@ -595,7 +595,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_1__success)
 BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_2__success)
 {
     static const hash_digest tx_hash = hash_literal(TX4_HASH);
-    static const data_chunk raw_tx = to_chunk(base16_literal(TX4));
+    static data_chunk const raw_tx = to_chunk(base16_literal(TX4));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
 
     data_source stream(raw_tx);

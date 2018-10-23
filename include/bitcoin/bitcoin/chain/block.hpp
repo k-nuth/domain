@@ -100,7 +100,7 @@ class BC_API block {
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static block factory_from_data(const data_chunk& data, bool witness = false);
+    static block factory_from_data(data_chunk const& data, bool witness = false);
     static block factory_from_data(data_source& stream, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -112,7 +112,7 @@ class BC_API block {
 
     //static block factory_from_data(reader& source, bool witness=false);
 
-    bool from_data(const data_chunk& data, bool witness = false);
+    bool from_data(data_chunk const& data, bool witness = false);
     bool from_data(data_source& stream, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>

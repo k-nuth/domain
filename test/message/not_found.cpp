@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(not_found__constructor_7__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_bytes__failure)
 {
-    static const data_chunk raw{ 0xab, 0xcd };
+    static data_chunk const raw{ 0xab, 0xcd };
     not_found instance;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version::level::minimum, raw));
 }
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure)
     };
 
     auto const version = version::level::maximum;
-    const data_chunk raw = expected.to_data(version);
+    data_chunk const raw = expected.to_data(version);
     not_found instance;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(not_found::version_minimum - 1, raw));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());

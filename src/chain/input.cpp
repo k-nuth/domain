@@ -123,7 +123,7 @@ bool input::operator!=(const input& other) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-input input::factory_from_data(const data_chunk& data, bool wire, bool witness) {
+input input::factory_from_data(data_chunk const& data, bool wire, bool witness) {
     input instance;
     instance.from_data(data, wire, witness_val(witness));
     return instance;
@@ -145,7 +145,7 @@ input input::factory_from_data(data_source& stream, bool wire, bool witness) {
 //    return instance;
 //}
 
-bool input::from_data(const data_chunk& data, bool wire, bool witness) {
+bool input::from_data(data_chunk const& data, bool wire, bool witness) {
     data_source istream(data);
     return from_data(istream, wire, witness_val(witness));
 }

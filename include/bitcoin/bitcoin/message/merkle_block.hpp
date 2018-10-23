@@ -45,7 +45,7 @@ class BC_API merkle_block {
     typedef std::shared_ptr<merkle_block> ptr;
     typedef std::shared_ptr<const merkle_block> const_ptr;
 
-    static merkle_block factory_from_data(uint32_t version, const data_chunk& data);
+    static merkle_block factory_from_data(uint32_t version, data_chunk const& data);
     static merkle_block factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -58,7 +58,7 @@ class BC_API merkle_block {
     //static merkle_block factory_from_data(uint32_t version, reader& source);
 
     merkle_block();
-    merkle_block(const chain::header& header, size_t total_transactions, const hash_list& hashes, const data_chunk& flags);
+    merkle_block(const chain::header& header, size_t total_transactions, const hash_list& hashes, data_chunk const& flags);
     merkle_block(chain::header&& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
     merkle_block(const chain::block& block);
     merkle_block(const merkle_block& other);
@@ -78,11 +78,11 @@ class BC_API merkle_block {
     void set_hashes(hash_list&& value);
 
     data_chunk& flags();
-    const data_chunk& flags() const;
-    void set_flags(const data_chunk& value);
+    data_chunk const& flags() const;
+    void set_flags(data_chunk const& value);
     void set_flags(data_chunk&& value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

@@ -38,7 +38,7 @@ namespace message {
 
 class BC_API alert_payload {
    public:
-    static alert_payload factory_from_data(uint32_t version, const data_chunk& data);
+    static alert_payload factory_from_data(uint32_t version, data_chunk const& data);
     static alert_payload factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -105,7 +105,7 @@ class BC_API alert_payload {
     void set_reserved(const std::string& value);
     void set_reserved(std::string&& value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

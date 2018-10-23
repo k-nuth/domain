@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(filter_add__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(filter_add__constructor_2__always__equals_params)
 {
-    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const data = { 0x0f, 0xf0, 0x55, 0xaa };
     message::filter_add instance(data);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(data == instance.data());
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(filter_add__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(filter_add__constructor_3__always__equals_params)
 {
-    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const data = { 0x0f, 0xf0, 0x55, 0xaa };
     auto dup = data;
     message::filter_add instance(std::move(dup));
     BOOST_REQUIRE(instance.is_valid());
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(filter_add__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(filter_add__constructor_4__always__equals_params)
 {
-    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const data = { 0x0f, 0xf0, 0x55, 0xaa };
     const message::filter_add value(data);
     message::filter_add instance(value);
     BOOST_REQUIRE(instance.is_valid());
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(filter_add__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(filter_add__constructor_5__always__equals_params)
 {
-    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const data = { 0x0f, 0xf0, 0x55, 0xaa };
     message::filter_add value(data);
     message::filter_add instance(std::move(value));
     BOOST_REQUIRE(instance.is_valid());
@@ -169,21 +169,21 @@ BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(filter_add__data_accessor_1__always__returns_initialized_value)
 {
-    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const value = { 0x0f, 0xf0, 0x55, 0xaa };
     message::filter_add instance(value);
     BOOST_REQUIRE(value == instance.data());
 }
 
 BOOST_AUTO_TEST_CASE(filter_add__data_accessor_2__always__returns_initialized_value)
 {
-    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const value = { 0x0f, 0xf0, 0x55, 0xaa };
     const message::filter_add instance(value);
     BOOST_REQUIRE(value == instance.data());
 }
 
 BOOST_AUTO_TEST_CASE(filter_add__data_setter_1__roundtrip__success)
 {
-    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const value = { 0x0f, 0xf0, 0x55, 0xaa };
     message::filter_add instance;
     BOOST_REQUIRE(value != instance.data());
     instance.set_data(value);
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(filter_add__data_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(filter_add__data_setter_2__roundtrip__success)
 {
-    const data_chunk value = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const value = { 0x0f, 0xf0, 0x55, 0xaa };
     data_chunk dup = value;
     message::filter_add instance;
     BOOST_REQUIRE(value != instance.data());
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(filter_add__data_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(filter_add__operator_assign_equals__always__matches_equivalent)
 {
-    const data_chunk data = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const data = { 0x0f, 0xf0, 0x55, 0xaa };
     message::filter_add value(data);
     BOOST_REQUIRE(value.is_valid());
     message::filter_add instance;

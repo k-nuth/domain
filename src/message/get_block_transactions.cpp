@@ -36,7 +36,7 @@ const std::string get_block_transactions::command = "getblocktxn";
 uint32_t const get_block_transactions::version_minimum = version::level::bip152;
 uint32_t const get_block_transactions::version_maximum = version::level::bip152;
 
-get_block_transactions get_block_transactions::factory_from_data(uint32_t version, const data_chunk& data) {
+get_block_transactions get_block_transactions::factory_from_data(uint32_t version, data_chunk const& data) {
     get_block_transactions instance;
     instance.from_data(version, data);
     return instance;
@@ -89,7 +89,7 @@ void get_block_transactions::reset() {
     indexes_.shrink_to_fit();
 }
 
-bool get_block_transactions::from_data(uint32_t version, const data_chunk& data) {
+bool get_block_transactions::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(filter_load__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(filter_load__constructor_2__always__equals_params)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(filter_load__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(filter_load__constructor_3__always__equals_params)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     auto dup_filter = filter;
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(filter_load__constructor_3__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(filter_load__constructor_4__always__equals_params)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(filter_load__constructor_4__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(filter_load__constructor_5__always__equals_params)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(filter_load__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_bytes__failure)
 {
-    const data_chunk raw{ 0xab, 0x11 };
+    data_chunk const raw{ 0xab, 0x11 };
     message::filter_load instance;
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::maximum, raw));
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_version__failure)
         0xab
     };
 
-    const data_chunk data = expected.to_data(message::version::level::maximum);
+    data_chunk const data = expected.to_data(message::version::level::maximum);
     message::filter_load instance;
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(filter_load__filter_accessor_1__always__returns_initialized_value)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(filter_load__filter_accessor_1__always__returns_initialized
 
 BOOST_AUTO_TEST_CASE(filter_load__filter_accessor_2__always__returns_initialized_value)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(filter_load__filter_accessor_2__always__returns_initialized
 
 BOOST_AUTO_TEST_CASE(filter_load__filter_setter_1__roundtrip__success)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     message::filter_load instance;
     BOOST_REQUIRE(filter != instance.filter());
     instance.set_filter(filter);
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(filter_load__filter_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(filter_load__filter_setter_2__roundtrip__success)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     data_chunk dup = filter;
 
     message::filter_load instance;
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(filter_load__filter_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(filter_load__hash_functions_accessor__always__returns_initialized_value)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE(filter_load__hash_functions_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(filter_load__tweak_accessor__always__returns_initialized_value)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(filter_load__tweak_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(filter_load__flags_accessor__always__returns_initialized_value)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(filter_load__flags_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(filter_load__operator_assign_equals__always__matches_equivalent)
 {
-    const data_chunk filter = { 0x0f, 0xf0, 0x55, 0xaa };
+    data_chunk const filter = { 0x0f, 0xf0, 0x55, 0xaa };
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;

@@ -45,7 +45,7 @@ class BC_API not_found
     typedef std::shared_ptr<not_found> ptr;
     typedef std::shared_ptr<const not_found> const_ptr;
 
-    static not_found factory_from_data(uint32_t version, const data_chunk& data);
+    static not_found factory_from_data(uint32_t version, data_chunk const& data);
     static not_found factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -65,7 +65,7 @@ class BC_API not_found
     not_found(const not_found& other);
     not_found(not_found&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <Reader R, BITPRIM_IS_READER(R)>

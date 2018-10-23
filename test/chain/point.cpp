@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(point__factory_from_data_1__roundtrip__success)
 BOOST_AUTO_TEST_CASE(point__factory_from_data_2__roundtrip__success)
 {
     auto const raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    const data_chunk data
+    data_chunk const data
     {
         0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
         0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(point__factory_from_data_2__roundtrip__success)
 BOOST_AUTO_TEST_CASE(point__factory_from_data_3__roundtrip__success)
 {
     auto const raw = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    const data_chunk data
+    data_chunk const data
     {
         0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
         0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,

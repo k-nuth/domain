@@ -57,7 +57,7 @@ class BC_API inventory_vector {
     static uint32_t to_number(type_id type);
     static std::string to_string(type_id type);
 
-    static inventory_vector factory_from_data(uint32_t version, const data_chunk& data);
+    static inventory_vector factory_from_data(uint32_t version, data_chunk const& data);
     static inventory_vector factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -87,7 +87,7 @@ class BC_API inventory_vector {
     bool is_block_type() const;
     bool is_transaction_type() const;
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

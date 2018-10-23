@@ -42,7 +42,7 @@ class BC_API get_block_transactions {
     typedef std::shared_ptr<get_block_transactions> ptr;
     typedef std::shared_ptr<const get_block_transactions> const_ptr;
 
-    static get_block_transactions factory_from_data(uint32_t version, const data_chunk& data);
+    static get_block_transactions factory_from_data(uint32_t version, data_chunk const& data);
     static get_block_transactions factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -72,7 +72,7 @@ class BC_API get_block_transactions {
     void set_indexes(const std::vector<uint64_t>& values);
     void set_indexes(std::vector<uint64_t>&& values);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

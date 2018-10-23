@@ -39,7 +39,7 @@ const std::string header::command = "headers";
 uint32_t const header::version_minimum = version::level::minimum;
 uint32_t const header::version_maximum = version::level::maximum;
 
-header header::factory_from_data(uint32_t version, const data_chunk& data) {
+header header::factory_from_data(uint32_t version, data_chunk const& data) {
     header instance;
     instance.from_data(version, data);
     return instance;
@@ -102,7 +102,7 @@ header::header(header&& other)
     : chain::header(std::move(other)) {
 }
 
-bool header::from_data(uint32_t version, const data_chunk& data) {
+bool header::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

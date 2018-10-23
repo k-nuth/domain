@@ -59,9 +59,9 @@ bool to_stealth_prefix(uint32_t& out_prefix, const script& script)
 
 // TODO: this can be implemented using libsecp256k1 without iteration.
 // The public key must have a sign value of 0x02 (i.e. must be even y-valued).
-bool create_ephemeral_key(ec_secret& out_secret, const data_chunk& seed)
+bool create_ephemeral_key(ec_secret& out_secret, data_chunk const& seed)
 {
-    static const data_chunk magic(to_chunk("Stealth seed"));
+    static data_chunk const magic(to_chunk("Stealth seed"));
     auto nonced_seed = build_chunk({ to_array(0), seed });
     ec_compressed point;
 
@@ -82,7 +82,7 @@ bool create_ephemeral_key(ec_secret& out_secret, const data_chunk& seed)
 
 // Mine a filter into the leftmost bytes of sha256(sha256(output-script)).
 bool create_stealth_data(script& out_null_data, ec_secret& out_secret,
-    const binary& filter, const data_chunk& seed)
+    const binary& filter, data_chunk const& seed)
 {
     // Create a valid ephemeral key pair using the seed and then the script.
     return create_ephemeral_key(out_secret, seed) &&
@@ -91,7 +91,7 @@ bool create_stealth_data(script& out_null_data, ec_secret& out_secret,
 
 // Mine a filter into the leftmost bytes of sha256(sha256(output-script)).
 bool create_stealth_script(script& out_null_data, const ec_secret& secret,
-    const binary& filter, const data_chunk& seed)
+    const binary& filter, data_chunk const& seed)
 {
     // [ephemeral-public-key-hash:32][pad:0-44][nonce:4]
     static constexpr size_t max_pad_size = max_null_data_size - hash_size -

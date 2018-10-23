@@ -126,9 +126,9 @@ BOOST_AUTO_TEST_CASE(bitfield_test1)
 
 BOOST_AUTO_TEST_CASE(bitfield_test2)
 {
-    const data_chunk blocks{ { 0x8b, 0xf4, 0x1c, 0x69 } };
+    data_chunk const blocks{ { 0x8b, 0xf4, 0x1c, 0x69 } };
     const binary prefix(27, blocks);
-    const data_chunk raw_bitfield{ { 0x8b, 0xf4, 0x1c, 0x79 } };
+    data_chunk const raw_bitfield{ { 0x8b, 0xf4, 0x1c, 0x79 } };
     BOOST_REQUIRE_GE(raw_bitfield.size() * 8, prefix.size());
     const binary compare(prefix.size(), raw_bitfield);
     BOOST_REQUIRE_EQUAL(prefix, compare);
@@ -136,18 +136,18 @@ BOOST_AUTO_TEST_CASE(bitfield_test2)
 
 BOOST_AUTO_TEST_CASE(bitfield_test3)
 {
-    const data_chunk blocks{ { 0x69, 0x1c, 0xf4, 0x8b } };
+    data_chunk const blocks{ { 0x69, 0x1c, 0xf4, 0x8b } };
     const binary prefix(32, blocks);
-    const data_chunk raw_bitfield{ { 0x69, 0x1c, 0xf4, 0x8b } };
+    data_chunk const raw_bitfield{ { 0x69, 0x1c, 0xf4, 0x8b } };
     const binary compare(prefix.size(), raw_bitfield);
     BOOST_REQUIRE_EQUAL(prefix, compare);
 }
 
 BOOST_AUTO_TEST_CASE(bitfield_test4)
 {
-    const data_chunk blocks{ { 0x69, 0x1c, 0xf4, 0x8b } };
+    data_chunk const blocks{ { 0x69, 0x1c, 0xf4, 0x8b } };
     const binary prefix(29, blocks);
-    const data_chunk raw_bitfield{ { 0x69, 0x1c, 0xf4, 0x8b } };
+    data_chunk const raw_bitfield{ { 0x69, 0x1c, 0xf4, 0x8b } };
     const binary compare(prefix.size(), raw_bitfield);
     BOOST_REQUIRE_EQUAL(prefix, compare);
 }

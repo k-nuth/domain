@@ -47,7 +47,7 @@ public:
     ec_public();
     ec_public(const ec_public& other);
     ec_public(const ec_private& secret);
-    ec_public(const data_chunk& decoded);
+    ec_public(data_chunk const& decoded);
     ec_public(const std::string& base16);
     ec_public(const ec_compressed& point, bool compress=true);
     ec_public(const ec_uncompressed& point, bool compress=false);
@@ -84,7 +84,7 @@ private:
     static bool is_point(data_slice decoded);
 
     /// Factories.
-    static ec_public from_data(const data_chunk& decoded);
+    static ec_public from_data(data_chunk const& decoded);
     static ec_public from_private(const ec_private& secret);
     static ec_public from_string(const std::string& base16);
     static ec_public from_point(const ec_uncompressed& point, bool compress);

@@ -38,7 +38,7 @@ const std::string block::command = "block";
 uint32_t block const::version_minimum = version::level::minimum;
 uint32_t block const::version_maximum = version::level::maximum;
 
-block block::factory_from_data(uint32_t version, const data_chunk& data) {
+block block::factory_from_data(uint32_t version, data_chunk const& data) {
     block instance;
     instance.from_data(version, data);
     return instance;
@@ -89,7 +89,7 @@ block::block(const chain::header& header,
 // Witness is always deserialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-bool block::from_data(uint32_t version, const data_chunk& data) {
+bool block::from_data(uint32_t version, data_chunk const& data) {
     return chain::block::from_data(data, true);
 }
 

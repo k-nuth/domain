@@ -41,7 +41,7 @@ namespace machine {
 //-----------------------------------------------------------------------------
 
 // static
-operation operation::factory_from_data(const data_chunk& encoded) {
+operation operation::factory_from_data(data_chunk const& encoded) {
     operation instance;
     instance.from_data(encoded);
     return instance;
@@ -62,7 +62,7 @@ operation operation::factory_from_data(data_source& stream) {
 //    return instance;
 //}
 
-bool operation::from_data(const data_chunk& encoded) {
+bool operation::from_data(data_chunk const& encoded) {
     data_source istream(encoded);
     return from_data(istream);
 }
@@ -119,7 +119,7 @@ inline string_list split_push_token(const std::string& token) {
 
 static bool opcode_from_data_prefix(opcode& out_code,
                                     const std::string& prefix,
-                                    const data_chunk& data) {
+                                    data_chunk const& data) {
     BC_CONSTEXPR auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
     auto const size = data.size();
     out_code = operation::opcode_from_size(size);
@@ -245,7 +245,7 @@ void operation::to_data(data_sink& stream) const {
 //    sink.write_bytes(data_);
 //}
 
-static std::string opcode_to_prefix(opcode code, const data_chunk& data) {
+static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
     // If opcode is minimal for a size-based encoding, do not set a prefix.
     if (code == operation::opcode_from_size(data.size()))
         return "";

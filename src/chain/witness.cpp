@@ -77,7 +77,7 @@ witness::witness(data_chunk&& encoded, bool prefix) {
     // from_data(encoded, prefix);
 }
 
-witness::witness(const data_chunk& encoded, bool prefix) {
+witness::witness(data_chunk const& encoded, bool prefix) {
     from_data(encoded, prefix);
 }
 
@@ -109,7 +109,7 @@ bool witness::operator!=(const witness& other) const {
 //-----------------------------------------------------------------------------
 
 // static
-witness witness::factory_from_data(const data_chunk& encoded, bool prefix) {
+witness witness::factory_from_data(data_chunk const& encoded, bool prefix) {
     witness instance;
     instance.from_data(encoded, prefix);
     return instance;
@@ -130,7 +130,7 @@ witness witness::factory_from_data(data_source& stream, bool prefix) {
 //    return instance;
 //}
 
-bool witness::from_data(const data_chunk& encoded, bool prefix) {
+bool witness::from_data(data_chunk const& encoded, bool prefix) {
     data_source istream(encoded);
     return from_data(istream, prefix);
 }
@@ -185,7 +185,7 @@ bool witness::from_data(data_source& stream, bool prefix) {
 
 // private/static
 size_t witness::serialized_size(const data_stack& stack) {
-    auto const sum = [](size_t total, const data_chunk& element) {
+    auto const sum = [](size_t total, data_chunk const& element) {
         // Tokens encoded as variable integer prefixed byte array (bip144).
         auto const size = element.size();
         return total + message::variable_uint_size(size) + size;
@@ -231,7 +231,7 @@ void witness::to_data(data_sink& stream, bool prefix) const {
 //    if (prefix)
 //        sink.write_size_little_endian(stack_.size());
 //
-//    auto const serialize = [&sink](const data_chunk& element)
+//    auto const serialize = [&sink](data_chunk const& element)
 //    {
 //        // Tokens encoded as variable integer prefixed byte array (bip144).
 //        sink.write_size_little_endian(element.size());
@@ -247,7 +247,7 @@ std::string witness::to_string() const {
         return "<invalid>";
 
     std::string text;
-    auto const serialize = [&text](const data_chunk& element) {
+    auto const serialize = [&text](data_chunk const& element) {
         text += "[" + encode_base16(element) + "] ";
     };
 
@@ -271,17 +271,17 @@ size_t witness::size() const {
     return stack_.size();
 }
 
-const data_chunk& witness::front() const {
+data_chunk const& witness::front() const {
     BITCOIN_ASSERT(!stack_.empty());
     return stack_.front();
 }
 
-const data_chunk& witness::back() const {
+data_chunk const& witness::back() const {
     BITCOIN_ASSERT(!stack_.empty());
     return stack_.back();
 }
 
-const data_chunk& witness::operator[](size_t index) const {
+data_chunk const& witness::operator[](size_t index) const {
     BITCOIN_ASSERT(index < stack_.size());
     return stack_[index];
 }
@@ -312,7 +312,7 @@ const data_stack& witness::stack() const {
 
 // static
 bool witness::is_push_size(const data_stack& stack) {
-    auto const push_size = [](const data_chunk& element) {
+    auto const push_size = [](data_chunk const& element) {
         return element.size() <= max_push_data_size;
     };
 

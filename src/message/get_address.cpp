@@ -31,7 +31,7 @@ const std::string get_address::command = "getaddr";
 uint32_t const get_address::version_minimum = version::level::minimum;
 uint32_t const get_address::version_maximum = version::level::maximum;
 
-get_address get_address::factory_from_data(uint32_t version, const data_chunk& data) {
+get_address get_address::factory_from_data(uint32_t version, data_chunk const& data) {
     get_address instance;
     instance.from_data(version, data);
     return instance;
@@ -60,7 +60,7 @@ bool get_address::is_valid() const {
 void get_address::reset() {
 }
 
-bool get_address::from_data(uint32_t version, const data_chunk& data) {
+bool get_address::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

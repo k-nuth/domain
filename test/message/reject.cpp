@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(reject__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_bytes__failure)
 {
-    static const data_chunk raw{ 0xab };
+    static data_chunk const raw{ 0xab };
     message::reject instance{};
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version_maximum, raw));
 }
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
     BOOST_REQUIRE_EQUAL(false, instance.from_data( message::reject::version_minimum - 1, raw));
 }
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_malformed__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_invalid__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_obsolete__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_duplicate__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_nonstandard__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_dust__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_insufficient_fee__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_checkpoint__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_undefined__success)
         data
     );
 
-    const data_chunk raw = expected.to_data(version_maximum);
+    data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
     BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));

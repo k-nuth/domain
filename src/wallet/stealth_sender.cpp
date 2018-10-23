@@ -29,7 +29,7 @@ namespace libbitcoin {
 namespace wallet {
 
 stealth_sender::stealth_sender(const stealth_address& address,
-    const data_chunk& seed, const binary& filter, uint8_t version)
+    data_chunk const& seed, const binary& filter, uint8_t version)
   : version_(version)
 {
     ec_secret ephemeral_private;
@@ -38,7 +38,7 @@ stealth_sender::stealth_sender(const stealth_address& address,
 }
 
 stealth_sender::stealth_sender(const ec_secret& ephemeral_private,
-    const stealth_address& address, const data_chunk& seed,
+    const stealth_address& address, data_chunk const& seed,
     const binary& filter, uint8_t version)
   : version_(version)
 {
@@ -53,7 +53,7 @@ stealth_sender::operator const bool() const
 // private
 // TODO: convert to factory and make script_ and address_ const.
 void stealth_sender::initialize(const ec_secret& ephemeral_private,
-    const stealth_address& address, const data_chunk& seed,
+    const stealth_address& address, data_chunk const& seed,
     const binary& filter)
 {
     ec_compressed ephemeral_public;

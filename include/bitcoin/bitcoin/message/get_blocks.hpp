@@ -44,7 +44,7 @@ class BC_API get_blocks {
     typedef std::shared_ptr<get_blocks> ptr;
     typedef std::shared_ptr<const get_blocks> const_ptr;
 
-    static get_blocks factory_from_data(uint32_t version, const data_chunk& data);
+    static get_blocks factory_from_data(uint32_t version, data_chunk const& data);
     static get_blocks factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -72,7 +72,7 @@ class BC_API get_blocks {
     void set_stop_hash(const hash_digest& value);
     void set_stop_hash(hash_digest&& value);
 
-    virtual bool from_data(uint32_t version, const data_chunk& data);
+    virtual bool from_data(uint32_t version, data_chunk const& data);
     virtual bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

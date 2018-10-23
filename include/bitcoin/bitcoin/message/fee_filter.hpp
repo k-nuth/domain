@@ -41,7 +41,7 @@ class BC_API fee_filter {
     typedef std::shared_ptr<fee_filter> ptr;
     typedef std::shared_ptr<const fee_filter> const_ptr;
 
-    static fee_filter factory_from_data(uint32_t version, const data_chunk& data);
+    static fee_filter factory_from_data(uint32_t version, data_chunk const& data);
     static fee_filter factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -63,7 +63,7 @@ class BC_API fee_filter {
     uint64_t minimum_fee() const;
     void set_minimum_fee(uint64_t value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

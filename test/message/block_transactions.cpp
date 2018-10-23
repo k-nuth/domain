@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_bytes__failure)
 {
-    const data_chunk raw{ 0xab, 0xcd };
+    data_chunk const raw{ 0xab, 0xcd };
     message::block_transactions instance{};
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(

@@ -128,7 +128,7 @@ bool header::operator!=(const header& other) const {
 //-----------------------------------------------------------------------------
 
 // static
-header header::factory_from_data(const data_chunk& data, bool wire) {
+header header::factory_from_data(data_chunk const& data, bool wire) {
     header instance;
     instance.from_data(data, wire);
     return instance;
@@ -157,7 +157,7 @@ header header::factory_from_data(data_source& stream, bool wire) {
 //    return instance;
 //}
 
-bool header::from_data(const data_chunk& data, bool wire) {
+bool header::from_data(data_chunk const& data, bool wire) {
     data_source istream(data);
     return from_data(istream, wire);
 }

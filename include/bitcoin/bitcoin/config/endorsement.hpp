@@ -51,7 +51,7 @@ public:
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    endorsement(const data_chunk& value);
+    endorsement(data_chunk const& value);
 
     /**
      * Initialization constructor.
@@ -73,7 +73,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const data_chunk&() const;
+    operator data_chunk const&() const;
 
     /**
      * Overload cast to generic data reference.

@@ -31,7 +31,7 @@ const std::string ping::command = "ping";
 uint32_t const ping::version_minimum = version::level::minimum;
 uint32_t const ping::version_maximum = version::level::maximum;
 
-ping ping::factory_from_data(uint32_t version, const data_chunk& data) {
+ping ping::factory_from_data(uint32_t version, data_chunk const& data) {
     ping instance;
     instance.from_data(version, data);
     return instance;
@@ -66,7 +66,7 @@ ping::ping(const ping& other)
     : nonce_(other.nonce_), nonceless_(other.nonceless_), valid_(other.valid_) {
 }
 
-bool ping::from_data(uint32_t version, const data_chunk& data) {
+bool ping::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

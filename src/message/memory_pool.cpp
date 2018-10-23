@@ -31,7 +31,7 @@ const std::string memory_pool::command = "mempool";
 uint32_t const memory_pool::version_minimum = version::level::bip35;
 uint32_t const memory_pool::version_maximum = version::level::maximum;
 
-memory_pool memory_pool::factory_from_data(uint32_t version, const data_chunk& data) {
+memory_pool memory_pool::factory_from_data(uint32_t version, data_chunk const& data) {
     memory_pool instance;
     instance.from_data(version, data);
     return instance;
@@ -78,7 +78,7 @@ void memory_pool::reset() {
     insufficient_version_ = true;
 }
 
-bool memory_pool::from_data(uint32_t version, const data_chunk& data) {
+bool memory_pool::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

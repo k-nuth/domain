@@ -57,7 +57,7 @@ public:
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    script(const data_chunk& value);
+    script(data_chunk const& value);
 
     /**
      * Initialization constructor.

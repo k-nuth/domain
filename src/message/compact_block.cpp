@@ -38,7 +38,7 @@ const std::string compact_block::command = "cmpctblock";
 uint32_t const compact_block::version_minimum = version::level::bip152;
 uint32_t const compact_block::version_maximum = version::level::bip152;
 
-compact_block compact_block::factory_from_data(uint32_t version, const data_chunk& data) {
+compact_block compact_block::factory_from_data(uint32_t version, data_chunk const& data) {
     //std::cout << "compact_block::factory_from_data\n";
     compact_block instance;
     instance.from_data(version, data);
@@ -142,7 +142,7 @@ bool compact_block::from_block(message::block const& block) {
     return true;
 }
 
-bool compact_block::from_data(uint32_t version, const data_chunk& data) {
+bool compact_block::from_data(uint32_t version, data_chunk const& data) {
     //std::cout << "compact_block::from_data\n";
 
     data_source istream(data);

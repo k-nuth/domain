@@ -31,7 +31,7 @@ const std::string pong::command = "pong";
 uint32_t const pong::version_minimum = version::level::minimum;
 uint32_t const pong::version_maximum = version::level::maximum;
 
-pong pong::factory_from_data(uint32_t version, const data_chunk& data) {
+pong pong::factory_from_data(uint32_t version, data_chunk const& data) {
     pong instance;
     instance.from_data(version, data);
     return instance;
@@ -66,7 +66,7 @@ pong::pong(const pong& other)
     : nonce_(other.nonce_), valid_(other.valid_) {
 }
 
-bool pong::from_data(uint32_t version, const data_chunk& data) {
+bool pong::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

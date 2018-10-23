@@ -37,7 +37,7 @@ const std::string merkle_block::command = "merkleblock";
 uint32_t const merkle_block::version_minimum = version::level::bip37;
 uint32_t const merkle_block::version_maximum = version::level::maximum;
 
-merkle_block merkle_block::factory_from_data(uint32_t version, const data_chunk& data) {
+merkle_block merkle_block::factory_from_data(uint32_t version, data_chunk const& data) {
     merkle_block instance;
     instance.from_data(version, data);
     return instance;
@@ -63,7 +63,7 @@ merkle_block::merkle_block()
 merkle_block::merkle_block(const chain::header& header,
                            size_t total_transactions,
                            const hash_list& hashes,
-                           const data_chunk& flags)
+                           data_chunk const& flags)
     : header_(header), total_transactions_(total_transactions), hashes_(hashes), flags_(flags) {
 }
 
@@ -101,7 +101,7 @@ void merkle_block::reset() {
     flags_.shrink_to_fit();
 }
 
-bool merkle_block::from_data(uint32_t version, const data_chunk& data) {
+bool merkle_block::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
@@ -222,11 +222,11 @@ data_chunk& merkle_block::flags() {
     return flags_;
 }
 
-const data_chunk& merkle_block::flags() const {
+data_chunk const& merkle_block::flags() const {
     return flags_;
 }
 
-void merkle_block::set_flags(const data_chunk& value) {
+void merkle_block::set_flags(data_chunk const& value) {
     flags_ = value;
 }
 

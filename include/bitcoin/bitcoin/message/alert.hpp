@@ -41,7 +41,7 @@ class BC_API alert {
     typedef std::shared_ptr<alert> ptr;
     typedef std::shared_ptr<const alert> const_ptr;
 
-    static alert factory_from_data(uint32_t version, const data_chunk& data);
+    static alert factory_from_data(uint32_t version, data_chunk const& data);
     static alert factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -54,22 +54,22 @@ class BC_API alert {
     //static alert factory_from_data(uint32_t version, reader& source);
 
     alert();
-    alert(const data_chunk& payload, const data_chunk& signature);
+    alert(data_chunk const& payload, data_chunk const& signature);
     alert(data_chunk&& payload, data_chunk&& signature);
     alert(const alert& other);
     alert(alert&& other);
 
     data_chunk& payload();
-    const data_chunk& payload() const;
-    void set_payload(const data_chunk& value);
+    data_chunk const& payload() const;
+    void set_payload(data_chunk const& value);
     void set_payload(data_chunk&& value);
 
     data_chunk& signature();
-    const data_chunk& signature() const;
-    void set_signature(const data_chunk& value);
+    data_chunk const& signature() const;
+    void set_signature(data_chunk const& value);
     void set_signature(data_chunk&& value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

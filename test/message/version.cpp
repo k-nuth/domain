@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(version__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(version__from_data__insufficient_bytes__invalid)
 {
-    const data_chunk raw{ 0xab };
+    data_chunk const raw{ 0xab };
     message::version instance{};
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version_maximum, raw));

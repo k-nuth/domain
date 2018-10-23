@@ -123,7 +123,7 @@ class BC_API version {
 #endif                                //BITPRIM_CURRENCY_BCH
     };
 
-    static version factory_from_data(uint32_t version, const data_chunk& data);
+    static version factory_from_data(uint32_t version, data_chunk const& data);
     static version factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -175,7 +175,7 @@ class BC_API version {
     bool relay() const;
     void set_relay(bool relay);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

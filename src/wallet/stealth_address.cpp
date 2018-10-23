@@ -79,7 +79,7 @@ stealth_address::stealth_address(const std::string& encoded)
 {
 }
 
-stealth_address::stealth_address(const data_chunk& decoded)
+stealth_address::stealth_address(data_chunk const& decoded)
   : stealth_address(from_stealth(decoded))
 {
 }
@@ -111,7 +111,7 @@ stealth_address stealth_address::from_string(const std::string& encoded)
 }
 
 // This is the stealth address parser.
-stealth_address stealth_address::from_stealth(const data_chunk& decoded)
+stealth_address stealth_address::from_stealth(data_chunk const& decoded)
 {
     // Size is guarded until we get to N.
     auto required_size = min_address_size;
@@ -178,7 +178,7 @@ stealth_address stealth_address::from_stealth(const data_chunk& decoded)
         return{};
 
     // Deserialize the filter bytes/blocks.
-    const data_chunk raw_filter(iterator, iterator + filter_bytes);
+    data_chunk const raw_filter(iterator, iterator + filter_bytes);
     const binary filter(filter_bits, raw_filter);
     return{ filter, scan_key, spend_keys, signatures, version };
 }
@@ -220,7 +220,7 @@ stealth_address::operator const bool() const
     return valid_;
 }
 
-stealth_address::operator const data_chunk() const
+stealth_address::operator data_chunk const() const
 {
     return to_chunk();
 }

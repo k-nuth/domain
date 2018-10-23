@@ -56,7 +56,7 @@ class BC_API witness {
     witness(const data_stack& stack);
 
     witness(data_chunk&& encoded, bool prefix);
-    witness(const data_chunk& encoded, bool prefix);
+    witness(data_chunk const& encoded, bool prefix);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -72,7 +72,7 @@ class BC_API witness {
     //-------------------------------------------------------------------------
     // Prefixed data assumed valid here though caller may confirm with is_valid.
 
-    static witness factory_from_data(const data_chunk& encoded, bool prefix);
+    static witness factory_from_data(data_chunk const& encoded, bool prefix);
     static witness factory_from_data(data_source& stream, bool prefix);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -85,7 +85,7 @@ class BC_API witness {
     //static witness factory_from_data(reader& source, bool prefix);
 
     /// Deserialization invalidates the iterator.
-    bool from_data(const data_chunk& encoded, bool prefix);
+    bool from_data(data_chunk const& encoded, bool prefix);
     bool from_data(data_source& stream, bool prefix);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -142,7 +142,7 @@ class BC_API witness {
         if (prefix)
             sink.write_size_little_endian(stack_.size());
 
-        auto const serialize = [&sink](const data_chunk& element) {
+        auto const serialize = [&sink](data_chunk const& element) {
             // Tokens encoded as variable integer prefixed byte array (bip144).
             sink.write_size_little_endian(element.size());
             sink.write_bytes(element);
@@ -162,11 +162,11 @@ class BC_API witness {
     void clear();
     bool empty() const;
     size_t size() const;
-    const data_chunk& front() const;
-    const data_chunk& back() const;
+    data_chunk const& front() const;
+    data_chunk const& back() const;
     iterator begin() const;
     iterator end() const;
-    const data_chunk& operator[](size_t index) const;
+    data_chunk const& operator[](size_t index) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------

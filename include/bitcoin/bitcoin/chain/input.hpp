@@ -73,7 +73,7 @@ class BC_API input {
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static input factory_from_data(const data_chunk& data, bool wire = true, bool witness = false);
+    static input factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
     static input factory_from_data(data_source& stream, bool wire = true, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -85,7 +85,7 @@ class BC_API input {
 
     //static input factory_from_data(reader& source, bool wire=true, bool witness=false);
 
-    bool from_data(const data_chunk& data, bool wire = true, bool witness = false);
+    bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
     bool from_data(data_source& stream, bool wire = true, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>

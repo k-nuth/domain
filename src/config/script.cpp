@@ -49,7 +49,7 @@ script::script(const chain::script& value)
 {
 }
 
-script::script(const data_chunk& value)
+script::script(data_chunk const& value)
 {
     value_.from_data(value, false);
 }
@@ -65,7 +65,7 @@ script::script(const script& other)
 {
 }
 
-const data_chunk script::to_data() const
+data_chunk const script::to_data() const
 {
     return value_.to_data(false);
 }

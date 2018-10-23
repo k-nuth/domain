@@ -42,7 +42,7 @@ class BC_API verack {
     typedef std::shared_ptr<verack> ptr;
     typedef std::shared_ptr<const verack> const_ptr;
 
-    static verack factory_from_data(uint32_t version, const data_chunk& data);
+    static verack factory_from_data(uint32_t version, data_chunk const& data);
     static verack factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -57,7 +57,7 @@ class BC_API verack {
 
     verack();
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

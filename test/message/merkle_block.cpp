@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__constructor_2__always__equals_params)
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
         hash_literal("ccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd"),
     };
-    const data_chunk flags{ 0xae, 0x56, 0x0f };
+    data_chunk const flags{ 0xae, 0x56, 0x0f };
 
     message::merkle_block instance(header, count, hashes, flags);
     BOOST_REQUIRE(instance.is_valid());
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__constructor_5__always__equals_params)
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
         hash_literal("ccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd"),
     };
-    const data_chunk flags{ 0xae, 0x56, 0x0f };
+    data_chunk const flags{ 0xae, 0x56, 0x0f };
 
     message::merkle_block expected(header, count, hashes, flags);
     message::merkle_block instance(std::move(expected));
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__constructor_5__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(from_data_insufficient_data_fails)
 {
-    const data_chunk data{ 10 };
+    data_chunk const data{ 10 };
     message::merkle_block instance{};
 
     BOOST_REQUIRE(!instance.from_data(message::version::level::maximum, data));
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__hashes_setter_2__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(merkle_block__flags_accessor_1__always__returns_initialized_value)
 {
-    const data_chunk expected{ 0xae, 0x56, 0x0f };
+    data_chunk const expected{ 0xae, 0x56, 0x0f };
 
     const message::merkle_block instance(
         chain::header
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__flags_accessor_1__always__returns_initialized
 
 BOOST_AUTO_TEST_CASE(merkle_block__flags_accessor_2__always__returns_initialized_value)
 {
-    const data_chunk expected{ 0xae, 0x56, 0x0f };
+    data_chunk const expected{ 0xae, 0x56, 0x0f };
 
     const message::merkle_block instance(
         chain::header{
@@ -479,7 +479,7 @@ BOOST_AUTO_TEST_CASE(merkle_block__flags_accessor_2__always__returns_initialized
 
 BOOST_AUTO_TEST_CASE(merkle_block__flags_setter_1__roundtrip__success)
 {
-    const data_chunk expected{ 0xae, 0x56, 0x0f };
+    data_chunk const expected{ 0xae, 0x56, 0x0f };
     message::merkle_block instance;
     BOOST_REQUIRE(expected != instance.flags());
     instance.set_flags(expected);

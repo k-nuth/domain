@@ -70,7 +70,7 @@ class BC_API script {
     script(const operation::list& ops);
 
     script(data_chunk&& encoded, bool prefix);
-    script(const data_chunk& encoded, bool prefix);
+    script(data_chunk const& encoded, bool prefix);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -85,7 +85,7 @@ class BC_API script {
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static script factory_from_data(const data_chunk& encoded, bool prefix);
+    static script factory_from_data(data_chunk const& encoded, bool prefix);
     static script factory_from_data(data_source& stream, bool prefix);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -98,7 +98,7 @@ class BC_API script {
     //static script factory_from_data(reader& source, bool prefix);
 
     /// Deserialization invalidates the iterator.
-    bool from_data(const data_chunk& encoded, bool prefix);
+    bool from_data(data_chunk const& encoded, bool prefix);
     bool from_data(data_source& stream, bool prefix);
 
     template <typename R
@@ -192,7 +192,7 @@ class BC_API script {
 
     static bool check_signature(const ec_signature& signature,
                                 uint8_t sighash_type,
-                                const data_chunk& public_key,
+                                data_chunk const& public_key,
                                 const script& script_code,
                                 transaction const& tx,
                                 uint32_t input_index,
@@ -291,7 +291,7 @@ class BC_API script {
                                                          uint64_t value,
                                                          uint8_t sighash_type);
 
-    void find_and_delete_(const data_chunk& endorsement);
+    void find_and_delete_(data_chunk const& endorsement);
 
     data_chunk bytes_;
     bool valid_;

@@ -76,7 +76,7 @@ class BC_API point {
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static point factory_from_data(const data_chunk& data, bool wire = true);
+    static point factory_from_data(data_chunk const& data, bool wire = true);
     static point factory_from_data(data_source& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -88,7 +88,7 @@ class BC_API point {
 
     //static point factory_from_data(reader& source, bool wire=true);
 
-    bool from_data(const data_chunk& data, bool wire = true);
+    bool from_data(data_chunk const& data, bool wire = true);
     bool from_data(data_source& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>

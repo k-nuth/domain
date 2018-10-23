@@ -41,7 +41,7 @@ class BC_API send_compact {
     typedef std::shared_ptr<send_compact> ptr;
     typedef std::shared_ptr<const send_compact> const_ptr;
 
-    static send_compact factory_from_data(uint32_t version, const data_chunk& data);
+    static send_compact factory_from_data(uint32_t version, data_chunk const& data);
     static send_compact factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -65,7 +65,7 @@ class BC_API send_compact {
     uint64_t version() const;
     void set_version(uint64_t version);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

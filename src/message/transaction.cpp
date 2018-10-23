@@ -34,7 +34,7 @@ const std::string transaction::command = "tx";
 uint32_t transaction const::version_minimum = version::level::minimum;
 uint32_t transaction const::version_maximum = version::level::maximum;
 
-transaction transaction::factory_from_data(uint32_t version, const data_chunk& data) {
+transaction transaction::factory_from_data(uint32_t version, data_chunk const& data) {
     transaction instance;
     instance.from_data(version, data);
     return instance;
@@ -84,7 +84,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, const chain::input
 // Witness is always deserialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-bool transaction::from_data(uint32_t version, const data_chunk& data) {
+bool transaction::from_data(uint32_t version, data_chunk const& data) {
     return chain::transaction::from_data(data, true, true);
 }
 

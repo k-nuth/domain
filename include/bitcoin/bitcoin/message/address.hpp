@@ -42,7 +42,7 @@ class BC_API address {
     typedef std::shared_ptr<address> ptr;
     typedef std::shared_ptr<const address> const_ptr;
 
-    static address factory_from_data(uint32_t version, const data_chunk& data);
+    static address factory_from_data(uint32_t version, data_chunk const& data);
     static address factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -65,7 +65,7 @@ class BC_API address {
     void set_addresses(const network_address::list& value);
     void set_addresses(network_address::list&& value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

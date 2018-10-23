@@ -50,7 +50,7 @@ public:
 
     /// Constructors.
     stealth_address();
-    stealth_address(const data_chunk& decoded);
+    stealth_address(data_chunk const& decoded);
     stealth_address(const std::string& encoded);
     stealth_address(const stealth_address& other);
     stealth_address(const binary& filter, const ec_compressed& scan_key,
@@ -68,7 +68,7 @@ public:
 
     /// Cast operators.
     operator const bool() const;
-    operator const data_chunk() const;
+    operator data_chunk const() const;
 
     /// Serializer.
     std::string encoded() const;
@@ -86,7 +86,7 @@ public:
 private:
     /// Factories.
     static stealth_address from_string(const std::string& encoded);
-    static stealth_address from_stealth(const data_chunk& decoded);
+    static stealth_address from_stealth(data_chunk const& decoded);
     static stealth_address from_stealth(const binary& filter,
         const ec_compressed& scan_key, const point_list& spend_keys,
         uint8_t signatures, uint8_t version);

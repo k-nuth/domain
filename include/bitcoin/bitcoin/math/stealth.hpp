@@ -37,17 +37,17 @@ BI_API bool to_stealth_prefix(uint32_t& out_prefix,
 
 /// Create a valid stealth ephemeral private key from the provided seed.
 BI_API bool create_ephemeral_key(ec_secret& out_secret,
-    const data_chunk& seed);
+    data_chunk const& seed);
 
 /// Create a stealth null data script the specified filter prefix.
 /// Create an ephemeral secret key generated from the seed.
 BI_API bool create_stealth_data(chain::script& out_null_data,
-    ec_secret& out_secret, const binary& filter, const data_chunk& seed);
+    ec_secret& out_secret, const binary& filter, data_chunk const& seed);
 
 /// Create a stealth null data script the specified filter prefix.
 /// Use the ephemeral secret key provided by parameter.
 BI_API bool create_stealth_script(chain::script& out_null_data,
-    const ec_secret& secret, const binary& filter, const data_chunk& seed);
+    const ec_secret& secret, const binary& filter, data_chunk const& seed);
 
 /// Extract the stealth ephemeral public key from an output script.
 BI_API bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,

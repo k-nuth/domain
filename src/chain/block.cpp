@@ -216,7 +216,7 @@ bool block::operator!=(block const& other) const {
 //-----------------------------------------------------------------------------
 
 // static
-block block::factory_from_data(const data_chunk& data, bool witness) {
+block block::factory_from_data(data_chunk const& data, bool witness) {
     block instance;
     instance.from_data(data, witness_val(witness));
     return instance;
@@ -240,7 +240,7 @@ block block::factory_from_data(data_source& stream, bool witness) {
 //    return instance;
 //}
 
-bool block::from_data(const data_chunk& data, bool witness) {
+bool block::from_data(data_chunk const& data, bool witness) {
     data_source istream(data);
     return from_data(istream, witness_val(witness));
 }

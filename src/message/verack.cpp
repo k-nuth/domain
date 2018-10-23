@@ -31,7 +31,7 @@ const std::string verack::command = "verack";
 uint32_t const verack::version_minimum = version::level::minimum;
 uint32_t const verack::version_maximum = version::level::maximum;
 
-verack verack::factory_from_data(uint32_t version, const data_chunk& data) {
+verack verack::factory_from_data(uint32_t version, data_chunk const& data) {
     verack instance;
     instance.from_data(version, data);
     return instance;
@@ -60,7 +60,7 @@ bool verack::is_valid() const {
 void verack::reset() {
 }
 
-bool verack::from_data(uint32_t version, const data_chunk& data) {
+bool verack::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }

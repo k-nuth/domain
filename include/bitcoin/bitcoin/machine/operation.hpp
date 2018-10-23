@@ -55,7 +55,7 @@ class BI_API operation {
     operation(const operation& other);
 
     operation(data_chunk&& uncoded, bool minimal = true);
-    operation(const data_chunk& uncoded, bool minimal = true);
+    operation(data_chunk const& uncoded, bool minimal = true);
 
     operation(opcode code);
 
@@ -71,7 +71,7 @@ class BI_API operation {
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static operation factory_from_data(const data_chunk& encoded);
+    static operation factory_from_data(data_chunk const& encoded);
     static operation factory_from_data(data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -83,7 +83,7 @@ class BI_API operation {
 
     //static operation factory_from_data(reader& source);
 
-    bool from_data(const data_chunk& encoded);
+    bool from_data(data_chunk const& encoded);
     bool from_data(data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -155,7 +155,7 @@ class BI_API operation {
     opcode code() const;
 
     /// Get the data, empty if not a push code or if invalid.
-    const data_chunk& data() const;
+    data_chunk const& data() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
@@ -165,11 +165,11 @@ class BI_API operation {
 
     /// Compute the minimal data opcode for a given chunk of data.
     /// Caller should clear data if converting to non-payload opcode.
-    static opcode minimal_opcode_from_data(const data_chunk& data);
+    static opcode minimal_opcode_from_data(data_chunk const& data);
 
     /// Compute the nominal data opcode for a given chunk of data.
     /// Restricted to sized data, avoids conversion to numeric opcodes.
-    static opcode nominal_opcode_from_data(const data_chunk& data);
+    static opcode nominal_opcode_from_data(data_chunk const& data);
 
     /// Convert the [1..16] value to the corresponding opcode (or undefined).
     static opcode opcode_from_positive(uint8_t value);
@@ -203,12 +203,12 @@ class BI_API operation {
 
    protected:
     operation(opcode code, data_chunk&& data, bool valid);
-    operation(opcode code, const data_chunk& data, bool valid);
+    operation(opcode code, data_chunk const& data, bool valid);
 
     template <typename R>
     static uint32_t read_data_size(opcode code, R& source);
 
-    opcode opcode_from_data(const data_chunk& data, bool minimal);
+    opcode opcode_from_data(data_chunk const& data, bool minimal);
     void reset();
 
    private:

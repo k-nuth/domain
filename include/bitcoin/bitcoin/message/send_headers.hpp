@@ -41,7 +41,7 @@ class BC_API send_headers {
     typedef std::shared_ptr<send_headers> ptr;
     typedef std::shared_ptr<const send_headers> const_ptr;
 
-    static send_headers factory_from_data(uint32_t version, const data_chunk& data);
+    static send_headers factory_from_data(uint32_t version, data_chunk const& data);
     static send_headers factory_from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -58,7 +58,7 @@ class BC_API send_headers {
     send_headers(const send_headers& other);
     send_headers(send_headers&& other);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>

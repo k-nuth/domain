@@ -103,7 +103,7 @@ script::script(data_chunk&& encoded, bool prefix) {
     valid_ = true;
 }
 
-script::script(const data_chunk& encoded, bool prefix) {
+script::script(data_chunk const& encoded, bool prefix) {
     valid_ = from_data(encoded, prefix);
 }
 
@@ -140,7 +140,7 @@ bool script::operator!=(const script& other) const {
 //-----------------------------------------------------------------------------
 
 // static
-script script::factory_from_data(const data_chunk& encoded, bool prefix) {
+script script::factory_from_data(data_chunk const& encoded, bool prefix) {
     script instance;
     instance.from_data(encoded, prefix);
     return instance;
@@ -161,7 +161,7 @@ script script::factory_from_data(data_source& stream, bool prefix) {
 //    return instance;
 //}
 
-bool script::from_data(const data_chunk& encoded, bool prefix) {
+bool script::from_data(data_chunk const& encoded, bool prefix) {
     data_source istream(encoded);
     return from_data(istream, prefix);
 }
@@ -752,7 +752,7 @@ hash_digest script::generate_signature_hash(transaction const& tx,
 // static
 bool script::check_signature(const ec_signature& signature,
                              uint8_t sighash_type,
-                             const data_chunk& public_key,
+                             data_chunk const& public_key,
                              const script& script_code,
                              transaction const& tx,
                              uint32_t input_index,
@@ -1132,7 +1132,7 @@ size_t script::sigops(bool accurate) const {
 // The comparison and erase are not limited to a single operation and so can
 // erase arbitrary upstream data from the script.
 //*****************************************************************************
-void script::find_and_delete_(const data_chunk& endorsement) {
+void script::find_and_delete_(data_chunk const& endorsement) {
     // If this is empty it would produce an empty script but not operation.
     // So we test it for empty prior to operation reserialization.
     if (endorsement.empty())

@@ -105,7 +105,7 @@ bool output_point::operator!=(const output_point& other) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-output_point output_point::factory_from_data(const data_chunk& data, bool wire) {
+output_point output_point::factory_from_data(data_chunk const& data, bool wire) {
     output_point instance;
     instance.from_data(data, wire);
     return instance;

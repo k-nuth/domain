@@ -34,7 +34,7 @@ const std::string filter_load::command = "filterload";
 uint32_t const filter_load::version_minimum = version::level::bip37;
 uint32_t const filter_load::version_maximum = version::level::maximum;
 
-filter_load filter_load::factory_from_data(uint32_t version, const data_chunk& data) {
+filter_load filter_load::factory_from_data(uint32_t version, data_chunk const& data) {
     filter_load instance;
     instance.from_data(version, data);
     return instance;
@@ -57,7 +57,7 @@ filter_load::filter_load()
     : filter_(), hash_functions_(0), tweak_(0), flags_(0x00) {
 }
 
-filter_load::filter_load(const data_chunk& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
+filter_load::filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
     : filter_(filter), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }
 
@@ -85,7 +85,7 @@ void filter_load::reset() {
     flags_ = 0x00;
 }
 
-bool filter_load::from_data(uint32_t version, const data_chunk& data) {
+bool filter_load::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
@@ -157,11 +157,11 @@ data_chunk& filter_load::filter() {
     return filter_;
 }
 
-const data_chunk& filter_load::filter() const {
+data_chunk const& filter_load::filter() const {
     return filter_;
 }
 
-void filter_load::set_filter(const data_chunk& value) {
+void filter_load::set_filter(data_chunk const& value) {
     filter_ = value;
 }
 
