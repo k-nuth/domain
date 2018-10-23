@@ -43,28 +43,28 @@ header::header()
     : header(0, null_hash, null_hash, 0, 0, 0) {
 }
 
-header::header(header&& other)
-    : header(other.version_, std::move(other.previous_block_hash_), std::move(other.merkle_), other.timestamp_, other.bits_, other.nonce_) {
+header::header(header&& x) noexcept
+    : header(x.version_, std::move(x.previous_block_hash_), std::move(x.merkle_), x.timestamp_, x.bits_, x.nonce_) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = std::move(other.validation);
+    validation = std::move(x.validation);
 }
 
-header::header(header const& other)
-    : header(other.version_, other.previous_block_hash_, other.merkle_, other.timestamp_, other.bits_, other.nonce_) {
+header::header(header const& x)
+    : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    validation = other.validation;
+    validation = x.validation;
 }
 
-header::header(header&& other, hash_digest&& hash)
-    : header(other.version_, std::move(other.previous_block_hash_), std::move(other.merkle_), other.timestamp_, other.bits_, other.nonce_) {
+header::header(header&& x, hash_digest&& hash)
+    : header(x.version_, std::move(x.previous_block_hash_), std::move(x.merkle_), x.timestamp_, x.bits_, x.nonce_) {
     hash_ = std::make_shared<hash_digest>(std::move(hash));
-    validation = std::move(other.validation);
+    validation = std::move(x.validation);
 }
 
-header::header(header const& other, const hash_digest& hash)
-    : header(other.version_, other.previous_block_hash_, other.merkle_, other.timestamp_, other.bits_, other.nonce_) {
+header::header(header const& x, const hash_digest& hash)
+    : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) {
     hash_ = std::make_shared<hash_digest>(hash);
-    validation = other.validation;
+    validation = x.validation;
 }
 
 header::header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
@@ -90,36 +90,36 @@ header::header(uint32_t version, const hash_digest& previous_block_hash, const h
 // Operators.
 //-----------------------------------------------------------------------------
 
-header& header::operator=(header&& other) {
+header& header::operator=(header&& x) noexcept {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    version_ = other.version_;
-    previous_block_hash_ = std::move(other.previous_block_hash_);
-    merkle_ = std::move(other.merkle_);
-    timestamp_ = other.timestamp_;
-    bits_ = other.bits_;
-    nonce_ = other.nonce_;
-    validation = std::move(other.validation);
+    version_ = x.version_;
+    previous_block_hash_ = std::move(x.previous_block_hash_);
+    merkle_ = std::move(x.merkle_);
+    timestamp_ = x.timestamp_;
+    bits_ = x.bits_;
+    nonce_ = x.nonce_;
+    validation = std::move(x.validation);
     return *this;
 }
 
-header& header::operator=(header const& other) {
+header& header::operator=(header const& x) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    version_ = other.version_;
-    previous_block_hash_ = other.previous_block_hash_;
-    merkle_ = other.merkle_;
-    timestamp_ = other.timestamp_;
-    bits_ = other.bits_;
-    nonce_ = other.nonce_;
-    validation = other.validation;
+    version_ = x.version_;
+    previous_block_hash_ = x.previous_block_hash_;
+    merkle_ = x.merkle_;
+    timestamp_ = x.timestamp_;
+    bits_ = x.bits_;
+    nonce_ = x.nonce_;
+    validation = x.validation;
     return *this;
 }
 
-bool header::operator==(header const& other) const {
-    return (version_ == other.version_) && (previous_block_hash_ == other.previous_block_hash_) && (merkle_ == other.merkle_) && (timestamp_ == other.timestamp_) && (bits_ == other.bits_) && (nonce_ == other.nonce_);
+bool header::operator==(header const& x) const {
+    return (version_ == x.version_) && (previous_block_hash_ == x.previous_block_hash_) && (merkle_ == x.merkle_) && (timestamp_ == x.timestamp_) && (bits_ == x.bits_) && (nonce_ == x.nonce_);
 }
 
-bool header::operator!=(header const& other) const {
-    return !(*this == other);
+bool header::operator!=(header const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.

@@ -62,11 +62,11 @@ class BC_API header {
 
     header();
 
-    header(header&& other);
-    header(header const& other);
+    header(header const& x);
+    header(header&& x) noexcept;
 
-    header(header&& other, hash_digest&& hash);
-    header(header const& other, const hash_digest& hash);
+    header(header const& x, const hash_digest& hash);
+    header(header&& x, hash_digest&& hash);
 
     header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
@@ -75,11 +75,11 @@ class BC_API header {
     //-----------------------------------------------------------------------------
 
     /// This class is move and copy assignable.
-    header& operator=(header&& other);
-    header& operator=(header const& other);
+    header& operator=(header const& x);
+    header& operator=(header&& x) noexcept;
 
-    bool operator==(header const& other) const;
-    bool operator!=(header const& other) const;
+    bool operator==(header const& x) const;
+    bool operator!=(header const& x) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------
