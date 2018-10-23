@@ -63,20 +63,20 @@ class BC_API output {
 
     output();
 
-    output(output&& other);
-    output(const output& other);
+    output(const output& x);
+    output(output&& x);
 
-    output(uint64_t value, chain::script&& script);
     output(uint64_t value, const chain::script& script);
+    output(uint64_t value, chain::script&& script);
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    output& operator=(output&& other);
-    output& operator=(const output& other);
+    output& operator=(const output& x);
+    output& operator=(output&& x);
 
-    bool operator==(const output& other) const;
-    bool operator!=(const output& other) const;
+    bool operator==(const output& x) const;
+    bool operator!=(const output& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
