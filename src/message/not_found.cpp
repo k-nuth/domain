@@ -27,7 +27,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string not_found::command = "notfound";
+std::string const not_found::command = "notfound";
 uint32_t const not_found::version_minimum = version::level::bip37;
 uint32_t const not_found::version_maximum = version::level::maximum;
 

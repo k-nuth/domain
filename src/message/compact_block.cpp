@@ -34,7 +34,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string compact_block::command = "cmpctblock";
+std::string const compact_block::command = "cmpctblock";
 uint32_t const compact_block::version_minimum = version::level::bip152;
 uint32_t const compact_block::version_maximum = version::level::bip152;
 

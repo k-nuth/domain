@@ -28,7 +28,7 @@ using namespace bc::wallet;
 BOOST_AUTO_TEST_SUITE(uri_reader_tests)
 
 // Test helper that relies on bitcoin_uri.
-static bitcoin_uri parse(const std::string& uri, bool strict=true)
+static bitcoin_uri parse(std::string const& uri, bool strict=true)
 {
     return uri_reader::parse<bitcoin_uri>(uri, strict);
 }
@@ -52,32 +52,32 @@ struct custom_reader
         strict_ = strict;
     }
 
-    virtual bool set_scheme(const std::string& scheme)
+    virtual bool set_scheme(std::string const& scheme)
     {
         myscheme = scheme;
         return true;
     }
 
-    virtual bool set_authority(const std::string& authority)
+    virtual bool set_authority(std::string const& authority)
     {
         // This URI doesn't support an authority component.
         authority_ = true;
         return false;
     }
 
-    virtual bool set_path(const std::string& path)
+    virtual bool set_path(std::string const& path)
     {
         mypath = path;
         return true;
     }
 
-    virtual bool set_fragment(const std::string& fragment)
+    virtual bool set_fragment(std::string const& fragment)
     {
         myfragment = boost::in_place(fragment);
         return true;
     }
 
-    virtual bool set_parameter(const std::string& key, const std::string& value)
+    virtual bool set_parameter(std::string const& key, std::string const& value)
     {
         if (key == "myparam1")
             myparam1 = boost::in_place(value);

@@ -282,13 +282,13 @@ bool create_key_pair(encrypted_private& out_private, ec_compressed& out_point,
 // ----------------------------------------------------------------------------
 
 // This call requires an ICU build, the other excluded calls are dependencies.
-static data_chunk normal(const std::string& passphrase)
+static data_chunk normal(std::string const& passphrase)
 {
     return to_chunk(to_normal_nfc_form(passphrase));
 }
 
 static bool create_token(encrypted_token& out_token,
-    const std::string& passphrase, data_slice owner_salt,
+    std::string const& passphrase, data_slice owner_salt,
     const ek_entropy& owner_entropy,
     const byte_array<parse_encrypted_token::prefix_size>& prefix)
 {
@@ -314,7 +314,7 @@ static bool create_token(encrypted_token& out_token,
 }
 
 // The salt here is owner-supplied random bits, not the address hash.
-bool create_token(encrypted_token& out_token, const std::string& passphrase,
+bool create_token(encrypted_token& out_token, std::string const& passphrase,
     const ek_entropy& entropy)
 {
     // BIP38: If lot and sequence numbers are not being included, then
@@ -325,7 +325,7 @@ bool create_token(encrypted_token& out_token, const std::string& passphrase,
 }
 
 // The salt here is owner-supplied random bits, not the address hash.
-bool create_token(encrypted_token& out_token, const std::string& passphrase,
+bool create_token(encrypted_token& out_token, std::string const& passphrase,
     const ek_salt& salt, uint32_t lot, uint32_t sequence)
 {
     if (lot > ek_max_lot || sequence > ek_max_sequence)
@@ -343,7 +343,7 @@ bool create_token(encrypted_token& out_token, const std::string& passphrase,
 // ----------------------------------------------------------------------------
 
 bool encrypt(encrypted_private& out_private, const ec_secret& secret,
-    const std::string& passphrase, uint8_t version, bool compressed)
+    std::string const& passphrase, uint8_t version, bool compressed)
 {
     ek_salt salt;
     if ( ! address_salt(salt, secret, version, compressed))
@@ -373,7 +373,7 @@ bool encrypt(encrypted_private& out_private, const ec_secret& secret,
 // ----------------------------------------------------------------------------
 
 static bool decrypt_multiplied(ec_secret& out_secret,
-    const parse_encrypted_private& parse, const std::string& passphrase)
+    const parse_encrypted_private& parse, std::string const& passphrase)
 {
     auto secret = scrypt_token(normal(passphrase), parse.owner_salt());
 
@@ -411,7 +411,7 @@ static bool decrypt_multiplied(ec_secret& out_secret,
 }
 
 static bool decrypt_secret(ec_secret& out_secret,
-    const parse_encrypted_private& parse, const std::string& passphrase)
+    const parse_encrypted_private& parse, std::string const& passphrase)
 {
     auto encrypt1 = splice(parse.entropy(), parse.data1());
     auto encrypt2 = parse.data2();
@@ -434,7 +434,7 @@ static bool decrypt_secret(ec_secret& out_secret,
 }
 
 bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed,
-    const encrypted_private& key, const std::string& passphrase)
+    const encrypted_private& key, std::string const& passphrase)
 {
     const parse_encrypted_private parse(key);
     if ( ! parse.valid())
@@ -458,7 +458,7 @@ bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed,
 
 bool decrypt(ec_compressed& out_point, uint8_t& out_version,
     bool& out_compressed, const encrypted_public& key,
-    const std::string& passphrase)
+    std::string const& passphrase)
 {
     const parse_encrypted_public parse(key);
     if ( ! parse.valid())

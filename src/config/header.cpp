@@ -35,7 +35,7 @@ header::header()
 {
 }
 
-header::header(const std::string& hexcode)
+header::header(std::string const& hexcode)
 {
     std::stringstream(hexcode) >> *this;
 }

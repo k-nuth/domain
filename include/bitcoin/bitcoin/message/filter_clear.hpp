@@ -90,7 +90,7 @@ class BC_API filter_clear {
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

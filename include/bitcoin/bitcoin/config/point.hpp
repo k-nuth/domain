@@ -34,7 +34,7 @@ namespace config {
 class BC_API point
 {
 public:
-    static const std::string delimeter;
+    static std::string const delimeter;
 
     /**
      * Default constructor.
@@ -45,7 +45,7 @@ public:
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    point(const std::string& tuple);
+    point(std::string const& tuple);
 
     /**
      * Initialization constructor.

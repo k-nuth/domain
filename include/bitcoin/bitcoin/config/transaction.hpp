@@ -44,7 +44,7 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    transaction(const std::string& hexcode);
+    transaction(std::string const& hexcode);
 
     /**
      * Initialization constructor.

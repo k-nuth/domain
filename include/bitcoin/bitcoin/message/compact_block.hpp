@@ -183,7 +183,7 @@ class BC_API compact_block {
     bool operator==(const compact_block& other) const;
     bool operator!=(const compact_block& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

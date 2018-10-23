@@ -30,7 +30,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string alert::command = "alert";
+std::string const alert::command = "alert";
 uint32_t const alert::version_minimum = version::level::minimum;
 uint32_t const alert::version_maximum = version::level::maximum;
 

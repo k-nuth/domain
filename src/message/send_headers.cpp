@@ -27,7 +27,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string send_headers::command = "sendheaders";
+std::string const send_headers::command = "sendheaders";
 uint32_t const send_headers::version_minimum = version::level::bip130;
 uint32_t const send_headers::version_maximum = version::level::maximum;
 

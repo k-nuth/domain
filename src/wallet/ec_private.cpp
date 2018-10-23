@@ -59,7 +59,7 @@ ec_private::ec_private(const ec_private& other)
 {
 }
 
-ec_private::ec_private(const std::string& wif, uint8_t address_version)
+ec_private::ec_private(std::string const& wif, uint8_t address_version)
   : ec_private(from_string(wif, address_version))
 {
 }
@@ -98,7 +98,7 @@ bool ec_private::is_wif(data_slice decoded)
 // Factories.
 // ----------------------------------------------------------------------------
 
-ec_private ec_private::from_string(const std::string& wif,
+ec_private ec_private::from_string(std::string const& wif,
     uint8_t address_version)
 {
     data_chunk decoded;

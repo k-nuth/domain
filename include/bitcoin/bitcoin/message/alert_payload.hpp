@@ -51,7 +51,7 @@ class BC_API alert_payload {
     //static alert_payload factory_from_data(uint32_t version, reader& source);
 
     alert_payload();
-    alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, const std::vector<uint32_t>& set_cancel, uint32_t min_version, uint32_t max_version, const std::vector<std::string>& set_sub_version, uint32_t priority, const std::string& comment, const std::string& status_bar, const std::string& reserved);
+    alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, const std::vector<uint32_t>& set_cancel, uint32_t min_version, uint32_t max_version, const std::vector<std::string>& set_sub_version, uint32_t priority, std::string const& comment, std::string const& status_bar, std::string const& reserved);
     alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, std::vector<uint32_t>&& set_cancel, uint32_t min_version, uint32_t max_version, std::vector<std::string>&& set_sub_version, uint32_t priority, std::string&& comment, std::string&& status_bar, std::string&& reserved);
     alert_payload(const alert_payload& other);
     alert_payload(alert_payload&& other);
@@ -91,18 +91,18 @@ class BC_API alert_payload {
     void set_priority(uint32_t value);
 
     std::string& comment();
-    const std::string& comment() const;
-    void set_comment(const std::string& value);
+    std::string const& comment() const;
+    void set_comment(std::string const& value);
     void set_comment(std::string&& value);
 
     std::string& status_bar();
-    const std::string& status_bar() const;
-    void set_status_bar(const std::string& value);
+    std::string const& status_bar() const;
+    void set_status_bar(std::string const& value);
     void set_status_bar(std::string&& value);
 
     std::string& reserved();
-    const std::string& reserved() const;
-    void set_reserved(const std::string& value);
+    std::string const& reserved() const;
+    void set_reserved(std::string const& value);
     void set_reserved(std::string&& value);
 
     bool from_data(uint32_t version, data_chunk const& data);

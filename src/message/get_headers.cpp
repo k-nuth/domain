@@ -24,7 +24,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string get_headers::command = "getheaders";
+std::string const get_headers::command = "getheaders";
 uint32_t const get_headers::version_minimum = version::level::headers;
 uint32_t const get_headers::version_maximum = version::level::maximum;
 

@@ -35,7 +35,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string inventory::command = "inv";
+std::string const inventory::command = "inv";
 uint32_t const inventory::version_minimum = version::level::minimum;
 uint32_t const inventory::version_maximum = version::level::maximum;
 

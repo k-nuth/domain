@@ -52,8 +52,8 @@ public:
     static const uint8_t testnet_p2sh;
 
 #ifdef BITPRIM_CURRENCY_BCH
-    static const std::string cashaddr_prefix_mainnet;
-    static const std::string cashaddr_prefix_testnet;
+    static std::string const cashaddr_prefix_mainnet;
+    static std::string const cashaddr_prefix_testnet;
 #endif
 
     typedef std::vector<payment_address> list;
@@ -73,7 +73,7 @@ public:
     payment_address(const payment_address& other);
     payment_address(const payment& decoded);
     payment_address(const ec_private& secret);
-    payment_address(const std::string& address);
+    payment_address(std::string const& address);
     payment_address(short_hash&& hash, uint8_t version=mainnet_p2kh);
     payment_address(const short_hash& hash, uint8_t version=mainnet_p2kh);
     payment_address(const ec_public& point, uint8_t version=mainnet_p2kh);
@@ -111,7 +111,7 @@ private:
     static bool is_address(data_slice decoded);
 
     /// Factories.
-    static payment_address from_string(const std::string& address);
+    static payment_address from_string(std::string const& address);
 
 #ifdef BITPRIM_CURRENCY_BCH
     static payment_address from_string_cashaddr(std::string const& address);

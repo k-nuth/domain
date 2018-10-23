@@ -74,7 +74,7 @@ stealth_address::stealth_address(const stealth_address& other)
 {
 }
 
-stealth_address::stealth_address(const std::string& encoded)
+stealth_address::stealth_address(std::string const& encoded)
   : stealth_address(from_string(encoded))
 {
 }
@@ -103,7 +103,7 @@ stealth_address::stealth_address(uint8_t version, const binary& filter,
 // Factories.
 // ----------------------------------------------------------------------------
 
-stealth_address stealth_address::from_string(const std::string& encoded)
+stealth_address stealth_address::from_string(std::string const& encoded)
 {
     data_chunk decoded;
     return decode_base58(decoded, encoded) ? stealth_address(decoded) :

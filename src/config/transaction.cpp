@@ -35,7 +35,7 @@ transaction::transaction()
 {
 }
 
-transaction::transaction(const std::string& hexcode)
+transaction::transaction(std::string const& hexcode)
 {
     std::stringstream(hexcode) >> *this;
 }

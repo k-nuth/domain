@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(stealth_address__encoding__scan_mainnet__round_trips)
 
 BOOST_AUTO_TEST_CASE(stealth_address__encoding__scan_testnet__round_trips)
 {
-    const std::string encoded = "waPXhQwQE9tDugfgLkvpDs3dnkPx1RsfDjFt4zBq7EeWeATRHpyQpYrFZR8T4BQy91Vpvshm2TDER8b9ZryuZ8VSzz8ywzNzX8NqF4";
+    std::string const encoded = "waPXhQwQE9tDugfgLkvpDs3dnkPx1RsfDjFt4zBq7EeWeATRHpyQpYrFZR8T4BQy91Vpvshm2TDER8b9ZryuZ8VSzz8ywzNzX8NqF4";
     stealth_address address(encoded);
     BOOST_REQUIRE_EQUAL(address.encoded(), encoded);
     BOOST_REQUIRE_EQUAL(address.version(), 43u);

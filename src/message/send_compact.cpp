@@ -29,7 +29,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string send_compact::command = "sendcmpct";
+std::string const send_compact::command = "sendcmpct";
 uint32_t const send_compact::version_minimum = version::level::bip152;
 uint32_t const send_compact::version_maximum = version::level::bip152;
 

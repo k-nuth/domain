@@ -136,7 +136,7 @@ class BC_API version {
     //static version factory_from_data(uint32_t version, reader& source);
 
     version();
-    version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, const std::string& user_agent, uint32_t start_height, bool relay);
+    version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
     version(uint32_t value, uint64_t services, uint64_t timestamp, network_address&& address_receiver, network_address&& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
     version(const version& other);
     version(version&& other);
@@ -164,8 +164,8 @@ class BC_API version {
     void set_nonce(uint64_t nonce);
 
     std::string& user_agent();
-    const std::string& user_agent() const;
-    void set_user_agent(const std::string& agent);
+    std::string const& user_agent() const;
+    void set_user_agent(std::string const& agent);
     void set_user_agent(std::string&& agent);
 
     uint32_t start_height() const;
@@ -246,7 +246,7 @@ class BC_API version {
     bool operator==(const version& other) const;
     bool operator!=(const version& other) const;
 
-    static const std::string command;
+    static std::string const command;
     //    static const bounds version;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;

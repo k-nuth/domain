@@ -33,7 +33,7 @@ namespace config {
 using namespace boost::program_options;
 
 // point format is currently private to bx.
-static bool decode_point(chain::output_point& point, const std::string& tuple)
+static bool decode_point(chain::output_point& point, std::string const& tuple)
 {
     auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() != 2)
@@ -58,14 +58,14 @@ static std::string encode_point(const chain::output_point& point)
     return result.str();
 }
 
-const std::string point::delimeter = ":";
+std::string const point::delimeter = ":";
 
 point::point()
   : value_()
 {
 }
 
-point::point(const std::string& tuple)
+point::point(std::string const& tuple)
 {
     std::stringstream(tuple) >> *this;
 }

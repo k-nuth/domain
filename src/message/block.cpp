@@ -34,7 +34,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string block::command = "block";
+std::string const block::command = "block";
 uint32_t const block::version_minimum = version::level::minimum;
 uint32_t const block::version_maximum = version::level::maximum;
 

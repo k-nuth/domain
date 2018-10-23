@@ -44,7 +44,7 @@ public:
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    input(const std::string& tuple);
+    input(std::string const& tuple);
 
     /**
      * Initialization constructor. Only the point is retained.

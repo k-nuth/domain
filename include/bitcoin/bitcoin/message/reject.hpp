@@ -88,10 +88,10 @@ class BC_API reject {
 
     reject();
 
-    reject(reason_code code, const std::string& message, const std::string& reason);
+    reject(reason_code code, std::string const& message, std::string const& reason);
     reject(reason_code code, std::string&& message, std::string&& reason);
 
-    reject(reason_code code, const std::string& message, const std::string& reason, hash_digest const& data);
+    reject(reason_code code, std::string const& message, std::string const& reason, hash_digest const& data);
     reject(reason_code code, std::string&& message, std::string&& reason, hash_digest&& data);
 
     reject(const reject& other);
@@ -101,13 +101,13 @@ class BC_API reject {
     void set_code(reason_code value);
 
     std::string& message();
-    const std::string& message() const;
-    void set_message(const std::string& value);
+    std::string const& message() const;
+    void set_message(std::string const& value);
     void set_message(std::string&& value);
 
     std::string& reason();
-    const std::string& reason() const;
-    void set_reason(const std::string& value);
+    std::string const& reason() const;
+    void set_reason(std::string const& value);
     void set_reason(std::string&& value);
 
     hash_digest& data();
@@ -173,7 +173,7 @@ class BC_API reject {
     bool operator==(const reject& other) const;
     bool operator!=(const reject& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

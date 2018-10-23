@@ -78,7 +78,7 @@ public:
     /// Constructors.
     ec_private();
     ec_private(const ec_private& other);
-    ec_private(const std::string& wif, uint8_t version=mainnet_p2kh);
+    ec_private(std::string const& wif, uint8_t version=mainnet_p2kh);
     ec_private(const wif_compressed& wif, uint8_t version=mainnet_p2kh);
     ec_private(const wif_uncompressed& wif, uint8_t version=mainnet_p2kh);
 
@@ -118,7 +118,7 @@ private:
     static bool is_wif(data_slice decoded);
 
     /// Factories.
-    static ec_private from_string(const std::string& wif, uint8_t version);
+    static ec_private from_string(std::string const& wif, uint8_t version);
     static ec_private from_compressed(const wif_compressed& wif, uint8_t version);
     static ec_private from_uncompressed(const wif_uncompressed& wif, uint8_t version);
 

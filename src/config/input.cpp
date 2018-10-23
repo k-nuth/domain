@@ -33,7 +33,7 @@ namespace config {
 using namespace boost::program_options;
 
 // input is currently a private encoding in bx.
-static bool decode_input(chain::input& input, const std::string& tuple)
+static bool decode_input(chain::input& input, std::string const& tuple)
 {
     auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() != 2 && tokens.size() != 3)
@@ -63,7 +63,7 @@ input::input()
 {
 }
 
-input::input(const std::string& tuple)
+input::input(std::string const& tuple)
 {
     std::stringstream(tuple) >> *this;
 }

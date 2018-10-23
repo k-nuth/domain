@@ -200,7 +200,7 @@ bool script::from_data(data_source& stream, bool prefix) {
 //}
 
 // Concurrent read/write is not supported, so no critical section.
-bool script::from_string(const std::string& mnemonic) {
+bool script::from_string(std::string const& mnemonic) {
     reset();
 
     // There is strictly one operation per string token.

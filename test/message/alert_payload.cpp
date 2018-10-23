@@ -41,9 +41,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_2__always__equals_params)
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -77,9 +77,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_3__always__equals_params)
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     auto dup_set_cancel = set_cancel;
     auto dup_set_sub_version = set_sub_version;
@@ -120,9 +120,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_4__always__equals_params)
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload value(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -158,9 +158,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_5__always__equals_params)
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload value(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -400,9 +400,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_1__always__returns_initi
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -424,9 +424,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_2__always__returns_initi
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     const message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -485,9 +485,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_1__always__returns_
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -509,9 +509,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_2__always__returns_
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     const message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -561,9 +561,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_1__always__returns_initiali
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -585,9 +585,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_2__always__returns_initiali
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     const message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -599,7 +599,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_2__always__returns_initiali
 
 BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_1__roundtrip__success)
 {
-    const std::string value = "asdfa";
+    std::string const value = "asdfa";
     message::alert_payload instance;
     BOOST_REQUIRE(instance.comment() != value);
     instance.set_comment(value);
@@ -608,7 +608,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_2__roundtrip__success)
 {
-    const std::string value = "Tryertsd";
+    std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
     BOOST_REQUIRE(instance.comment() != value);
@@ -628,9 +628,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_1__always__returns_initi
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -652,9 +652,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_2__always__returns_initi
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     const message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -666,7 +666,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_2__always__returns_initi
 
 BOOST_AUTO_TEST_CASE(alert_payload__status_bar_setter_1__roundtrip__success)
 {
-    const std::string value = "asdfa";
+    std::string const value = "asdfa";
     message::alert_payload instance;
     BOOST_REQUIRE(instance.status_bar() != value);
     instance.set_status_bar(value);
@@ -675,7 +675,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__status_bar_setter_2__roundtrip__success)
 {
-    const std::string value = "Tryertsd";
+    std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
     BOOST_REQUIRE(instance.status_bar() != value);
@@ -695,9 +695,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_1__always__returns_initial
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -719,9 +719,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_2__always__returns_initial
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     const message::alert_payload instance(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,
@@ -733,7 +733,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_2__always__returns_initial
 
 BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_1__roundtrip__success)
 {
-    const std::string value = "asdfa";
+    std::string const value = "asdfa";
     message::alert_payload instance;
     BOOST_REQUIRE(instance.reserved() != value);
     instance.set_reserved(value);
@@ -742,7 +742,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_2__roundtrip__success)
 {
-    const std::string value = "Tryertsd";
+    std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
     BOOST_REQUIRE(instance.reserved() != value);
@@ -762,9 +762,9 @@ BOOST_AUTO_TEST_CASE(alert_payload__operator_assign_equals__always__matches_equi
     uint32_t const max_version = 89876u;
     const std::vector<std::string> set_sub_version = { "foo", "bar", "baz" };
     uint32_t const priority = 34323u;
-    const std::string comment = "asfgsddsa";
-    const std::string status_bar = "fgjdfhjg";
-    const std::string reserved = "utyurtevc";
+    std::string const comment = "asfgsddsa";
+    std::string const status_bar = "fgjdfhjg";
+    std::string const reserved = "utyurtevc";
 
     message::alert_payload value(version, relay_until, expiration, id,
         cancel, set_cancel, min_version, max_version, set_sub_version,

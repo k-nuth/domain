@@ -45,7 +45,7 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    ec_private(const std::string& hexcode);
+    ec_private(std::string const& hexcode);
 
     /**
      * Initialization constructor.

@@ -34,7 +34,7 @@ ek_token::ek_token()
 {
 }
 
-ek_token::ek_token(const std::string& encoded)
+ek_token::ek_token(std::string const& encoded)
   : ek_token(from_string(encoded))
 {
 }
@@ -52,7 +52,7 @@ ek_token::ek_token(const encrypted_token& value)
 // Factories.
 // ----------------------------------------------------------------------------
 
-ek_token ek_token::from_string(const std::string& encoded)
+ek_token ek_token::from_string(std::string const& encoded)
 {
     // TODO(libbitcoin): incorporate existing parser here, setting new members.
 

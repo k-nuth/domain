@@ -4379,14 +4379,14 @@ namespace detail
     void printSummary();
 
 #if !defined(DOCTEST_CONFIG_POSIX_SIGNALS) && !defined(DOCTEST_CONFIG_WINDOWS_SEH)
-    void reportFatal(const std::string&) {}
+    void reportFatal(std::string const&) {}
     struct FatalConditionHandler
     {
         void reset() {}
     };
 #else // DOCTEST_CONFIG_POSIX_SIGNALS || DOCTEST_CONFIG_WINDOWS_SEH
 
-    void reportFatal(const std::string& message) {
+    void reportFatal(std::string const& message) {
         DOCTEST_LOG_START();
 
         contextState->numAssertions += contextState->numAssertionsForCurrentTestcase;

@@ -41,7 +41,7 @@ public:
     /// Constructors.
     bitcoin_uri();
     bitcoin_uri(const bitcoin_uri& other);
-    bitcoin_uri(const std::string& uri, bool strict=true);
+    bitcoin_uri(std::string const& uri, bool strict=true);
 
     /// Operators.
     bool operator<(const bitcoin_uri& other) const;
@@ -66,28 +66,28 @@ public:
     std::string address() const;
     payment_address payment() const;
     stealth_address stealth() const;
-    std::string parameter(const std::string& key) const;
+    std::string parameter(std::string const& key) const;
 
     /// Property setters.
     void set_amount(uint64_t satoshis);
-    void set_label(const std::string& label);
-    void set_message(const std::string& message);
-    void set_r(const std::string& r);
-    bool set_address(const std::string& address);
+    void set_label(std::string const& label);
+    void set_message(std::string const& message);
+    void set_r(std::string const& r);
+    bool set_address(std::string const& address);
     void set_address(const payment_address& payment);
     void set_address(const stealth_address& stealth);
 
     /// uri_reader implementation.
     void set_strict(bool strict);
-    bool set_scheme(const std::string& scheme);
-    bool set_authority(const std::string& authority);
-    bool set_path(const std::string& path);
-    bool set_fragment(const std::string& fragment);
-    bool set_parameter(const std::string& key, const std::string& value);
+    bool set_scheme(std::string const& scheme);
+    bool set_authority(std::string const& authority);
+    bool set_path(std::string const& path);
+    bool set_fragment(std::string const& fragment);
+    bool set_parameter(std::string const& key, std::string const& value);
 
 private:
     /// Private helpers.
-    bool set_amount(const std::string& satoshis);
+    bool set_amount(std::string const& satoshis);
 
     /// Member state.
     bool strict_;

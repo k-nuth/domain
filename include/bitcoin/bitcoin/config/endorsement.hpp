@@ -45,7 +45,7 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    endorsement(const std::string& hexcode);
+    endorsement(std::string const& hexcode);
 
     /**
      * Initialization constructor.

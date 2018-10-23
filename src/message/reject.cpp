@@ -30,7 +30,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string reject::command = "reject";
+std::string const reject::command = "reject";
 uint32_t const reject::version_minimum = version::level::bip61;
 uint32_t const reject::version_maximum = version::level::maximum;
 
@@ -57,7 +57,7 @@ reject::reject()
     : code_(reason_code::undefined), message_(), reason_(), data_(null_hash) {
 }
 
-reject::reject(reason_code code, const std::string& message, const std::string& reason)
+reject::reject(reason_code code, std::string const& message, std::string const& reason)
     : reject(code, message, reason, null_hash) {
 }
 
@@ -68,7 +68,7 @@ reject::reject(reason_code code, std::string&& message, std::string&& reason)
       data_(null_hash) {
 }
 
-reject::reject(reason_code code, const std::string& message, const std::string& reason, hash_digest const& data)
+reject::reject(reason_code code, std::string const& message, std::string const& reason, hash_digest const& data)
     : code_(code),
       message_(message),
       reason_(reason),
@@ -195,11 +195,11 @@ std::string& reject::message() {
     return message_;
 }
 
-const std::string& reject::message() const {
+std::string const& reject::message() const {
     return message_;
 }
 
-void reject::set_message(const std::string& value) {
+void reject::set_message(std::string const& value) {
     message_ = value;
 }
 
@@ -211,11 +211,11 @@ std::string& reject::reason() {
     return reason_;
 }
 
-const std::string& reject::reason() const {
+std::string const& reject::reason() const {
     return reason_;
 }
 
-void reject::set_reason(const std::string& value) {
+void reject::set_reason(std::string const& value) {
     reason_ = value;
 }
 

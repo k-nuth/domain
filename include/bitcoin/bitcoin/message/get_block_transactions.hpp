@@ -121,7 +121,7 @@ class BC_API get_block_transactions {
     bool operator==(const get_block_transactions& other) const;
     bool operator!=(const get_block_transactions& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

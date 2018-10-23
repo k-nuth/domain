@@ -46,7 +46,7 @@ public:
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    output(const std::string& tuple);
+    output(std::string const& tuple);
 
     /// Parsed properties
     bool is_stealth() const;

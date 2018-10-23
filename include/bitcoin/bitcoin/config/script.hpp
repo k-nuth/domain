@@ -45,7 +45,7 @@ public:
      * Initialization constructor.
      * @param[in]  mnemonic  The value to initialize with.
      */
-    script(const std::string& mnemonic);
+    script(std::string const& mnemonic);
 
     /**
      * Initialization constructor.
@@ -81,7 +81,7 @@ public:
      * Return a pretty-printed copy of the script.
      * @return  A mnemonic-printed copy of the internal script.
      */
-    const std::string to_string() const;
+    std::string const to_string() const;
 
     /**
      * Overload cast to internal type.

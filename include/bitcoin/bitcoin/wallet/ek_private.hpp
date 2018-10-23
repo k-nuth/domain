@@ -33,7 +33,7 @@ class BC_API ek_private
 public:
     /// Constructors.
     ek_private();
-    ek_private(const std::string& encoded);
+    ek_private(std::string const& encoded);
     ek_private(const encrypted_private& key);
     ek_private(const ek_private& other);
 
@@ -57,7 +57,7 @@ public:
 
 private:
     /// Factories.
-    static ek_private from_string(const std::string& encoded);
+    static ek_private from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

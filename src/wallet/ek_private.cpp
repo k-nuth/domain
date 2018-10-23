@@ -34,7 +34,7 @@ ek_private::ek_private()
 {
 }
 
-ek_private::ek_private(const std::string& encoded)
+ek_private::ek_private(std::string const& encoded)
   : ek_private(from_string(encoded))
 {
 }
@@ -52,7 +52,7 @@ ek_private::ek_private(const encrypted_private& value)
 // Factories.
 // ----------------------------------------------------------------------------
 
-ek_private ek_private::from_string(const std::string& encoded)
+ek_private ek_private::from_string(std::string const& encoded)
 {
     // TODO(libbitcoin): incorporate existing parser here, setting new members.
 

@@ -34,7 +34,7 @@ ek_public::ek_public()
 {
 }
 
-ek_public::ek_public(const std::string& encoded)
+ek_public::ek_public(std::string const& encoded)
   : ek_public(from_string(encoded))
 {
 }
@@ -52,7 +52,7 @@ ek_public::ek_public(const encrypted_public& value)
 // Factories.
 // ----------------------------------------------------------------------------
 
-ek_public ek_public::from_string(const std::string& encoded)
+ek_public ek_public::from_string(std::string const& encoded)
 {
     // TODO(libbitcoin): incorporate existing parser here, setting new members.
 

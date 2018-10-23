@@ -43,7 +43,7 @@ public:
      * according to the  `UriReader`.
      */
     template <class UriReader>
-    static UriReader parse(const std::string& uri, bool strict=true)
+    static UriReader parse(std::string const& uri, bool strict=true)
     {
         wallet::uri parsed;
         if ( ! parsed.decode(uri, strict))
@@ -75,12 +75,12 @@ public:
 
     /// uri_reader interface.
     virtual void set_strict(bool strict) = 0;
-    virtual bool set_scheme(const std::string& scheme) = 0;
-    virtual bool set_authority(const std::string& authority) = 0;
-    virtual bool set_path(const std::string& path) = 0;
-    virtual bool set_fragment(const std::string& fragment) = 0;
-    virtual bool set_parameter(const std::string& key,
-        const std::string& value) = 0;
+    virtual bool set_scheme(std::string const& scheme) = 0;
+    virtual bool set_authority(std::string const& authority) = 0;
+    virtual bool set_path(std::string const& path) = 0;
+    virtual bool set_fragment(std::string const& fragment) = 0;
+    virtual bool set_parameter(std::string const& key,
+        std::string const& value) = 0;
 };
 
 } // namespace wallet

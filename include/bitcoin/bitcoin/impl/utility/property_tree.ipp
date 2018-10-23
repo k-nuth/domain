@@ -25,7 +25,7 @@
 namespace libbitcoin {
 namespace config {
 
-void inline add_child(pt::ptree& out_list, const std::string& name,
+void inline add_child(pt::ptree& out_list, std::string const& name,
     const pt::ptree& element, bool json)
 {
     if (json)
@@ -51,7 +51,7 @@ void inline add_child(pt::ptree& out_list, const std::string& name,
  * @returns              A new property tree containing the list.
  */
 template <typename Values>
-pt::ptree property_tree_list(const std::string& name, const Values& values,
+pt::ptree property_tree_list(std::string const& name, const Values& values,
     bool json)
 {
     pt::ptree list;
@@ -71,7 +71,7 @@ pt::ptree property_tree_list(const std::string& name, const Values& values,
  * @returns              A new property tree containing the list.
  */
 template <typename Values>
-pt::ptree property_tree_list_of_lists(const std::string& name,
+pt::ptree property_tree_list_of_lists(std::string const& name,
     const Values& values, bool json)
 {
     pt::ptree list;
@@ -90,7 +90,7 @@ pt::ptree property_tree_list_of_lists(const std::string& name,
  * @returns              A new property tree containing the list.
  */
 template <typename Values>
-pt::ptree property_value_list(const std::string& name, const Values& values,
+pt::ptree property_value_list(std::string const& name, const Values& values,
     bool json)
 {
     pt::ptree list;

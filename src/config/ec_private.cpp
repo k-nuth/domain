@@ -29,12 +29,12 @@ namespace libbitcoin {
 namespace config {
 
 // ec_secret base16 format is private to bx.
-static bool decode_secret(ec_secret& secret, const std::string& encoded)
+static bool decode_secret(ec_secret& secret, std::string const& encoded)
 {
     return decode_base16(secret, encoded) && verify(secret);
 }
 
-ec_private::ec_private(const std::string& hexcode)
+ec_private::ec_private(std::string const& hexcode)
 {
     std::stringstream(hexcode) >> *this;
 }

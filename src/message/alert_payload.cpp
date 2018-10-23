@@ -78,9 +78,9 @@ alert_payload::alert_payload(
     uint32_t max_version,
     const std::vector<std::string>& set_sub_version,
     uint32_t priority,
-    const std::string& comment,
-    const std::string& status_bar,
-    const std::string& reserved)
+    std::string const& comment,
+    std::string const& status_bar,
+    std::string const& reserved)
     : version_(version),
       relay_until_(relay_until),
       expiration_(expiration),
@@ -381,11 +381,11 @@ std::string& alert_payload::comment() {
     return comment_;
 }
 
-const std::string& alert_payload::comment() const {
+std::string const& alert_payload::comment() const {
     return comment_;
 }
 
-void alert_payload::set_comment(const std::string& value) {
+void alert_payload::set_comment(std::string const& value) {
     comment_ = value;
 }
 
@@ -397,11 +397,11 @@ std::string& alert_payload::status_bar() {
     return status_bar_;
 }
 
-const std::string& alert_payload::status_bar() const {
+std::string const& alert_payload::status_bar() const {
     return status_bar_;
 }
 
-void alert_payload::set_status_bar(const std::string& value) {
+void alert_payload::set_status_bar(std::string const& value) {
     status_bar_ = value;
 }
 
@@ -413,11 +413,11 @@ std::string& alert_payload::reserved() {
     return reserved_;
 }
 
-const std::string& alert_payload::reserved() const {
+std::string const& alert_payload::reserved() const {
     return reserved_;
 }
 
-void alert_payload::set_reserved(const std::string& value) {
+void alert_payload::set_reserved(std::string const& value) {
     reserved_ = value;
 }
 

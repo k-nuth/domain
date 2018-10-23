@@ -37,7 +37,7 @@ static_assert(max_uint8 - max_recovery_id >= magic_uncompressed, "oops!");
 
 hash_digest hash_message(data_slice message) {
     // This is a specified magic prefix.
-    static const std::string prefix("Bitcoin Signed Message:\n");
+    static std::string const prefix("Bitcoin Signed Message:\n");
 
     data_chunk data;
     data_sink ostream(data);
@@ -105,7 +105,7 @@ bool sign_message(message_signature& signature, data_slice message, const ec_pri
     return sign_message(signature, message, secret, secret.compressed());
 }
 
-bool sign_message(message_signature& signature, data_slice message, const std::string& wif) {
+bool sign_message(message_signature& signature, data_slice message, std::string const& wif) {
     ec_private secret(wif);
     return (secret &&
             sign_message(signature, message, secret, secret.compressed()));

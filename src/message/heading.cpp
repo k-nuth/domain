@@ -83,7 +83,7 @@ heading::heading()
     : magic_(0), command_(), payload_size_(0), checksum_(0) {
 }
 
-heading::heading(uint32_t magic, const std::string& command, uint32_t payload_size, uint32_t checksum)
+heading::heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum)
     : magic_(magic), command_(command), payload_size_(payload_size), checksum_(checksum) {
 }
 
@@ -231,11 +231,11 @@ std::string& heading::command() {
     return command_;
 }
 
-const std::string& heading::command() const {
+std::string const& heading::command() const {
     return command_;
 }
 
-void heading::set_command(const std::string& value) {
+void heading::set_command(std::string const& value) {
     command_ = value;
 }
 

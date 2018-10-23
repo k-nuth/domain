@@ -105,7 +105,7 @@ class BC_API transaction
     bool operator==(transaction const& other) const;
     bool operator!=(transaction const& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 };

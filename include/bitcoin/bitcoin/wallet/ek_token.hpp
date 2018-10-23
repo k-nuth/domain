@@ -35,7 +35,7 @@ class BC_API ek_token
 public:
     /// Constructors.
     ek_token();
-    ek_token(const std::string& encoded);
+    ek_token(std::string const& encoded);
     ek_token(const encrypted_token& key);
     ek_token(const ek_token& other);
 
@@ -59,7 +59,7 @@ public:
 
 private:
     /// Factories.
-    static ek_token from_string(const std::string& encoded);
+    static ek_token from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

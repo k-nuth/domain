@@ -130,7 +130,7 @@ class BC_API filter_load {
     bool operator==(const filter_load& other) const;
     bool operator!=(const filter_load& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

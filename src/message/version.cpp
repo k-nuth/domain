@@ -28,7 +28,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string version::command = "version";
+std::string const version::command = "version";
 //const bounds message::version::version = { level::minimum, level::maximum };
 uint32_t const message::version::version_minimum = level::minimum;
 uint32_t const message::version::version_maximum = level::maximum;
@@ -56,7 +56,7 @@ version::version()
     : value_(0), services_(0), timestamp_(0), address_receiver_(), address_sender_(), nonce_(0), user_agent_(), start_height_(0), relay_(false) {
 }
 
-version::version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, const std::string& user_agent, uint32_t start_height, bool relay)
+version::version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay)
     : value_(value), services_(services), timestamp_(timestamp), address_receiver_(address_receiver), address_sender_(address_sender), nonce_(nonce), user_agent_(user_agent), start_height_(start_height), relay_(relay) {
 }
 
@@ -244,11 +244,11 @@ std::string& version::user_agent() {
     return user_agent_;
 }
 
-const std::string& version::user_agent() const {
+std::string const& version::user_agent() const {
     return user_agent_;
 }
 
-void version::set_user_agent(const std::string& agent) {
+void version::set_user_agent(std::string const& agent) {
     user_agent_ = agent;
 }
 

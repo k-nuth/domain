@@ -32,7 +32,7 @@ namespace config {
 
 // endorsement format is currently private to bx.
 static bool decode_endorsement(bc::endorsement& endorsement,
-    const std::string& encoded)
+    std::string const& encoded)
 {
     bc::endorsement decoded;
     if ( ! decode_base16(decoded, encoded) ||
@@ -53,7 +53,7 @@ endorsement::endorsement()
 {
 }
 
-endorsement::endorsement(const std::string& hexcode)
+endorsement::endorsement(std::string const& hexcode)
 {
     std::stringstream(hexcode) >> *this;
 }

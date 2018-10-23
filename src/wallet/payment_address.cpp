@@ -54,8 +54,8 @@ const uint8_t payment_address::testnet_p2kh = 0x6f;
 const uint8_t payment_address::testnet_p2sh = 0xc4;
 
 #ifdef BITPRIM_CURRENCY_BCH
-const std::string payment_address::cashaddr_prefix_mainnet = "bitcoincash";
-const std::string payment_address::cashaddr_prefix_testnet = "bchtest";
+std::string const payment_address::cashaddr_prefix_mainnet = "bitcoincash";
+std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
 #endif
 
 payment_address::payment_address()
@@ -79,7 +79,7 @@ payment_address::payment_address(const payment& decoded)
 {
 }
 
-payment_address::payment_address(const std::string& address)
+payment_address::payment_address(std::string const& address)
   : payment_address(from_string(address))
 {
 }
@@ -233,7 +233,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 
 #endif //BITPRIM_CURRENCY_BCH
 
-payment_address payment_address::from_string(const std::string& address) {
+payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
     if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
 #ifdef BITPRIM_CURRENCY_BCH

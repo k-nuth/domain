@@ -41,7 +41,7 @@ output::output()
 {
 }
 
-output::output(const std::string& tuple)
+output::output(std::string const& tuple)
   : output()
 {
     std::stringstream(tuple) >> *this;

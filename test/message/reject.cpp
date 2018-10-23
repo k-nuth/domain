@@ -29,7 +29,7 @@ using namespace bc;
 // tx : nonstandard : too-long-mempool-chain : <empty>
 #define MALFORMED_REJECT "0274784016746f6f2d6c6f6e672d6d656d706f6f6c2d636861696e"
 
-static const std::string reason_text = "My Reason...";
+static std::string const reason_text = "My Reason...";
 static auto const version_maximum = message::version::level::maximum;
 
 static hash_digest const data

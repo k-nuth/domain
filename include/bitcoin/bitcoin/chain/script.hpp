@@ -133,7 +133,7 @@ public:
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list&& ops);
     void from_operations(operation::list const& ops);
-    bool from_string(const std::string& mnemonic);
+    bool from_string(std::string const& mnemonic);
 
     /// A script object is valid if the byte count matches the prefix.
     bool is_valid() const;

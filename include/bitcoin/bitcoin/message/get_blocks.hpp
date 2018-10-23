@@ -128,7 +128,7 @@ class BC_API get_blocks {
     bool operator==(const get_blocks& other) const;
     bool operator!=(const get_blocks& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

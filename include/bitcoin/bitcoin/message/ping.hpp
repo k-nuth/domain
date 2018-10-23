@@ -105,7 +105,7 @@ class BC_API ping {
     bool operator==(const ping& other) const;
     bool operator!=(const ping& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

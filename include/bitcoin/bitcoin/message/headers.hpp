@@ -129,7 +129,7 @@ class BC_API headers {
     bool operator==(headers const& other) const;
     bool operator!=(headers const& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 

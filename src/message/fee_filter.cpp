@@ -27,7 +27,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string fee_filter::command = "feefilter";
+std::string const fee_filter::command = "feefilter";
 uint32_t const fee_filter::version_minimum = version::level::bip133;
 uint32_t const fee_filter::version_maximum = version::level::bip133;
 

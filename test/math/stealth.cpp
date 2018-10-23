@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(stealth_round_trip)
 
 BOOST_AUTO_TEST_CASE(verify_string_constructor)
 {
-    const std::string value = "01100110000";
+    std::string const value = "01100110000";
     binary prefix(value);
     BOOST_REQUIRE_EQUAL(value.size(), prefix.size());
     for (size_t i = 0; i < value.size(); ++i)

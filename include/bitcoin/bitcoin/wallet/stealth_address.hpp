@@ -51,7 +51,7 @@ public:
     /// Constructors.
     stealth_address();
     stealth_address(data_chunk const& decoded);
-    stealth_address(const std::string& encoded);
+    stealth_address(std::string const& encoded);
     stealth_address(const stealth_address& other);
     stealth_address(const binary& filter, const ec_compressed& scan_key,
         const point_list& spend_keys, uint8_t signatures=0,
@@ -85,7 +85,7 @@ public:
 
 private:
     /// Factories.
-    static stealth_address from_string(const std::string& encoded);
+    static stealth_address from_string(std::string const& encoded);
     static stealth_address from_stealth(data_chunk const& decoded);
     static stealth_address from_stealth(const binary& filter,
         const ec_compressed& scan_key, const point_list& spend_keys,

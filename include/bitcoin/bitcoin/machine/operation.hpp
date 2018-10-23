@@ -109,7 +109,7 @@ class BI_API operation {
 
     //bool from_data(reader& source);
 
-    bool from_string(const std::string& mnemonic);
+    bool from_string(std::string const& mnemonic);
 
     bool is_valid() const;
 

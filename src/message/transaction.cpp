@@ -30,7 +30,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string transaction::command = "tx";
+std::string const transaction::command = "tx";
 uint32_t const transaction::version_minimum = version::level::minimum;
 uint32_t const transaction::version_maximum = version::level::maximum;
 

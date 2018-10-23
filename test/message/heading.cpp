@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(heading__constructor_1__always__initialized_invalid)
 BOOST_AUTO_TEST_CASE(heading__constructor_2__always__equals_params)
 {
     uint32_t magic = 123u;
-    const std::string command = "foo";
+    std::string const command = "foo";
     uint32_t payload_size = 3454u;
     uint32_t checksum = 35746u;
     heading instance(magic, command, payload_size, checksum);
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(heading__constructor_2__always__equals_params)
 BOOST_AUTO_TEST_CASE(heading__constructor_3__always__equals_params)
 {
     uint32_t magic = 123u;
-    const std::string command = "foo";
+    std::string const command = "foo";
     uint32_t payload_size = 3454u;
     uint32_t checksum = 35746u;
     heading instance(magic, "foo", payload_size, checksum);
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(heading__constructor_4__always__equals_params)
 BOOST_AUTO_TEST_CASE(heading__constructor_5__always__equals_params)
 {
     uint32_t magic = 123u;
-    const std::string command = "foo";
+    std::string const command = "foo";
     uint32_t payload_size = 3454u;
     uint32_t checksum = 35746u;
     heading value(magic, command, payload_size, checksum);
@@ -182,21 +182,21 @@ BOOST_AUTO_TEST_CASE(heading__magic_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(heading__command_accessor_1__always__returns_initialized_value)
 {
-    const std::string expected = "asdge";
+    std::string const expected = "asdge";
     message::heading instance(545u, expected, 4356u, 7923u);
     BOOST_REQUIRE_EQUAL(expected, instance.command());
 }
 
 BOOST_AUTO_TEST_CASE(heading__command_accessor_2__always__returns_initialized_value)
 {
-    const std::string expected = "asdge";
+    std::string const expected = "asdge";
     const message::heading instance(545u, expected, 4356u, 7923u);
     BOOST_REQUIRE_EQUAL(expected, instance.command());
 }
 
 BOOST_AUTO_TEST_CASE(heading__command_setter_1__roundtrip__success)
 {
-    const std::string expected = "gdasd";
+    std::string const expected = "gdasd";
     message::heading instance;
     BOOST_REQUIRE(expected != instance.command());
     instance.set_command(expected);

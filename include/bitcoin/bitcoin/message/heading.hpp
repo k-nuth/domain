@@ -90,7 +90,7 @@ class BC_API heading {
     //static heading factory_from_data(reader& source);
 
     heading();
-    heading(uint32_t magic, const std::string& command, uint32_t payload_size, uint32_t checksum);
+    heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum);
     heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum);
     heading(const heading& other);
     heading(heading&& other);
@@ -99,8 +99,8 @@ class BC_API heading {
     void set_magic(uint32_t value);
 
     std::string& command();
-    const std::string& command() const;
-    void set_command(const std::string& value);
+    std::string const& command() const;
+    void set_command(std::string const& value);
     void set_command(std::string&& value);
 
     uint32_t payload_size() const;

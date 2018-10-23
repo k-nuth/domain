@@ -33,7 +33,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string merkle_block::command = "merkleblock";
+std::string const merkle_block::command = "merkleblock";
 uint32_t const merkle_block::version_minimum = version::level::bip37;
 uint32_t const merkle_block::version_maximum = version::level::maximum;
 

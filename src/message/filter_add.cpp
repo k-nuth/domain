@@ -30,7 +30,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string filter_add::command = "filteradd";
+std::string const filter_add::command = "filteradd";
 uint32_t const filter_add::version_minimum = version::level::bip37;
 uint32_t const filter_add::version_maximum = version::level::maximum;
 

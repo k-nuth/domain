@@ -30,7 +30,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string block_transactions::command = "blocktxn";
+std::string const block_transactions::command = "blocktxn";
 uint32_t const block_transactions::version_minimum = version::level::bip152;
 uint32_t const block_transactions::version_maximum = version::level::bip152;
 

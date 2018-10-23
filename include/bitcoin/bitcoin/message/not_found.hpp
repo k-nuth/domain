@@ -92,7 +92,7 @@ class BC_API not_found
     bool operator==(const not_found& other) const;
     bool operator!=(const not_found& other) const;
 
-    static const std::string command;
+    static std::string const command;
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 };

@@ -896,7 +896,7 @@ BOOST_AUTO_TEST_CASE(version__nonce_setter__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(version__user_agent_accessor__always__returns_initialized_value)
 {
-    const std::string expected = "MyUseRAgenT";
+    std::string const expected = "MyUseRAgenT";
     const message::version instance
     (
         210u,
@@ -935,7 +935,7 @@ BOOST_AUTO_TEST_CASE(version__user_agent_accessor__always__returns_initialized_v
 
 BOOST_AUTO_TEST_CASE(version__user_agent_setter_1__roundtrip__success)
 {
-    const std::string expected = "MyUseRAgenT";
+    std::string const expected = "MyUseRAgenT";
     message::version instance;
     instance.set_user_agent(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.user_agent());

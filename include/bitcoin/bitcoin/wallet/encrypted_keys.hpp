@@ -136,7 +136,7 @@ BC_API bool create_key_pair(encrypted_private& out_private,
  * @return false if the token could not be created from the entropy.
  */
 BC_API bool create_token(encrypted_token& out_token,
-    const std::string& passphrase, const ek_entropy& entropy);
+    std::string const& passphrase, const ek_entropy& entropy);
 
 /**
  * Create an intermediate passphrase for subsequent key pair generation.
@@ -149,7 +149,7 @@ BC_API bool create_token(encrypted_token& out_token,
  * could not be created from the entropy.
  */
 BC_API bool create_token(encrypted_token& out_token,
-    const std::string& passphrase, const ek_salt& salt, uint32_t lot,
+    std::string const& passphrase, const ek_salt& salt, uint32_t lot,
     uint32_t sequence);
 
 /**
@@ -162,7 +162,7 @@ BC_API bool create_token(encrypted_token& out_token,
  * @return false if the secret could not be converted to a public key.
  */
 BC_API bool encrypt(encrypted_private& out_private, const ec_secret& secret,
-    const std::string& passphrase, uint8_t version, bool compressed=true);
+    std::string const& passphrase, uint8_t version, bool compressed=true);
 
 /**
  * Decrypt the ec secret associated with the encrypted private key.
@@ -175,7 +175,7 @@ BC_API bool encrypt(encrypted_private& out_private, const ec_secret& secret,
  */
 BC_API bool decrypt(ec_secret& out_secret, uint8_t& out_version,
     bool& out_compressed, const encrypted_private& key,
-    const std::string& passphrase);
+    std::string const& passphrase);
 
 /**
  * DEPRECATED
@@ -189,7 +189,7 @@ BC_API bool decrypt(ec_secret& out_secret, uint8_t& out_version,
  */
 BC_API bool decrypt(ec_compressed& out_point, uint8_t& out_version,
     bool& out_compressed, const encrypted_public& key,
-    const std::string& passphrase);
+    std::string const& passphrase);
 
 #endif // WITH_ICU
 

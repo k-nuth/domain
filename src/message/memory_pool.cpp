@@ -27,7 +27,7 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string memory_pool::command = "mempool";
+std::string const memory_pool::command = "mempool";
 uint32_t const memory_pool::version_minimum = version::level::bip35;
 uint32_t const memory_pool::version_maximum = version::level::maximum;
 

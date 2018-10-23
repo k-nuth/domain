@@ -55,7 +55,7 @@ BC_API bool sign_message(message_signature& signature, data_slice message, const
  * This should be base64 encoded for presentation to the user.
  * @return true if wif is valid and signature encoding is successful.
  */
-BC_API bool sign_message(message_signature& out_signature, data_slice message, const std::string& wif);
+BC_API bool sign_message(message_signature& out_signature, data_slice message, std::string const& wif);
 
 /**
  * Signs a message using deterministic signature.
