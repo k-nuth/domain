@@ -50,16 +50,6 @@ header::header()
     , validation{} 
 {}
 
-// header::header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
-//     : version_(version),
-//       previous_block_hash_(previous_block_hash),
-//       merkle_(merkle),
-//       timestamp_(timestamp),
-//       bits_(bits),
-//       nonce_(nonce),
-//       validation{} 
-// {}
-
 header::header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
     : version_(version)
     , previous_block_hash_(previous_block_hash)
@@ -390,8 +380,9 @@ hash_digest header::litecoin_proof_of_work_hash() const {
 uint256_t header::proof(uint32_t bits) {
     auto const header_bits = compact(bits);
 
-    if (header_bits.is_overflowed())
+    if (header_bits.is_overflowed()) {
         return 0;
+    }
 
     uint256_t target(header_bits);
 
@@ -431,14 +422,16 @@ bool header::is_valid_proof_of_work(bool retarget) const {
     auto const bits = compact(bits_);
     static const uint256_t pow_limit(compact{work_limit(retarget)});
 
-    if (bits.is_overflowed())
+    if (bits.is_overflowed()) {
         return false;
+    }
 
     uint256_t target(bits);
 
     // Ensure claimed work is within limits.
-    if (target < 1 || target > pow_limit)
+    if (target < 1 || target > pow_limit) {
         return false;
+    }
 
         // Ensure actual work is at least claimed amount (smaller is more work).
 #ifdef BITPRIM_CURRENCY_LTC
@@ -452,34 +445,36 @@ bool header::is_valid_proof_of_work(bool retarget) const {
 //-----------------------------------------------------------------------------
 
 code header::check(bool retarget) const {
-    if (!is_valid_proof_of_work(retarget))
+    if (!is_valid_proof_of_work(retarget)) {
         return error::invalid_proof_of_work;
 
-    else if (!is_valid_timestamp())
+    } else if (!is_valid_timestamp()) {
         return error::futuristic_timestamp;
 
-    else
+    } else {
         return error::success;
+    }
 }
 
 code header::accept(const chain_state& state) const {
-    if (bits_ != state.work_required())
+    if (bits_ != state.work_required()) {
         return error::incorrect_proof_of_work;
 
-    else if (state.is_checkpoint_conflict(hash()))
+    } else if (state.is_checkpoint_conflict(hash())) {
         return error::checkpoints_failed;
 
-    else if (state.is_under_checkpoint())
+    } else if (state.is_under_checkpoint()) {
         return error::success;
 
-    else if (version_ < state.minimum_version())
+    } else if (version_ < state.minimum_version()) {
         return error::old_version_block;
 
-    else if (timestamp_ <= state.median_time_past())
+    } else if (timestamp_ <= state.median_time_past()) {
         return error::timestamp_too_early;
 
-    else
+    } else {
         return error::success;
+    }
 }
 
 }  // namespace chain
