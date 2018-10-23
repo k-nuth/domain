@@ -141,14 +141,9 @@ void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const {
 //}
 
 size_t prefilled_transaction::serialized_size(uint32_t version) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
     // TODO: serialize size should use witness for ! BCH
     return message::variable_uint_size(index_) +
-           transaction_.serialized_size(/*wire*/ true, witness, /*unconfirmed*/ false);
+           transaction_.serialized_size(/*wire*/ true, witness_default(), /*unconfirmed*/ false);
 }
 
 uint64_t prefilled_transaction::index() const {

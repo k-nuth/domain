@@ -124,20 +124,14 @@ bool input::operator!=(const input& other) const {
 //-----------------------------------------------------------------------------
 
 input input::factory_from_data(const data_chunk& data, bool wire, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     input instance;
-    instance.from_data(data, wire, witness);
+    instance.from_data(data, wire, witness_val(witness));
     return instance;
 }
 
 input input::factory_from_data(data_source& stream, bool wire, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     input instance;
-    instance.from_data(stream, wire, witness);
+    instance.from_data(stream, wire, witness_val(witness));
     return instance;
 }
 
@@ -152,19 +146,13 @@ input input::factory_from_data(data_source& stream, bool wire, bool witness) {
 //}
 
 bool input::from_data(const data_chunk& data, bool wire, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     data_source istream(data);
-    return from_data(istream, wire, witness);
+    return from_data(istream, wire, witness_val(witness));
 }
 
 bool input::from_data(data_source& stream, bool wire, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     istream_reader stream_r(stream);
-    return from_data(stream_r, wire, witness);
+    return from_data(stream_r, wire, witness_val(witness));
 }
 
 //bool input::from_data(reader& source, bool wire, bool witness)
@@ -212,25 +200,19 @@ bool input::is_valid() const {
 //-----------------------------------------------------------------------------
 
 data_chunk input::to_data(bool wire, bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     data_chunk data;
-    const auto size = serialized_size(wire, witness);
+    const auto size = serialized_size(wire, witness_val(witness));
     data.reserve(size);
     data_sink ostream(data);
-    to_data(ostream, wire, witness);
+    to_data(ostream, wire, witness_val(witness));
     ostream.flush();
     BITCOIN_ASSERT(data.size() == size);
     return data;
 }
 
 void input::to_data(data_sink& stream, bool wire, bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     ostream_writer sink_w(stream);
-    to_data(sink_w, wire, witness);
+    to_data(sink_w, wire, witness_val(witness));
 }
 
 //void input::to_data(writer& sink, bool wire, bool witness) const
@@ -256,16 +238,14 @@ void input::to_data(data_sink& stream, bool wire, bool witness) const {
 //-----------------------------------------------------------------------------
 
 size_t input::serialized_size(bool wire, bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#else
+#ifndef BITPRIM_CURRENCY_BCH
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
 #endif
 
     // Witness size added in both contexts despite that tx writes wire witness.
     // Prefix is written for both wire and store/other contexts.
-    return previous_output_.serialized_size(wire) + script_.serialized_size(true) + (witness ? witness_.serialized_size(true) : 0) + sizeof(sequence_);
+    return previous_output_.serialized_size(wire) + script_.serialized_size(true) + (witness_val(witness) ? witness_.serialized_size(true) : 0) + sizeof(sequence_);
 }
 
 // Accessors.

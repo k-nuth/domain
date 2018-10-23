@@ -217,21 +217,15 @@ bool block::operator!=(const block& other) const {
 
 // static
 block block::factory_from_data(const data_chunk& data, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     block instance;
-    instance.from_data(data, witness);
+    instance.from_data(data, witness_val(witness));
     return instance;
 }
 
 // static
 block block::factory_from_data(data_source& stream, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     block instance;
-    instance.from_data(stream, witness);
+    instance.from_data(stream, witness_val(witness));
     return instance;
 }
 
@@ -247,19 +241,13 @@ block block::factory_from_data(data_source& stream, bool witness) {
 //}
 
 bool block::from_data(const data_chunk& data, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     data_source istream(data);
-    return from_data(istream, witness);
+    return from_data(istream, witness_val(witness));
 }
 
 bool block::from_data(data_source& stream, bool witness) {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     istream_reader stream_r(stream);
-    return from_data(stream_r, witness);
+    return from_data(stream_r, witness_val(witness));
 }
 
 // Full block deserialization is always canonical encoding.
@@ -313,11 +301,8 @@ bool block::is_valid() const {
 //-----------------------------------------------------------------------------
 
 data_chunk block::to_data(bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     data_chunk data;
-    const auto size = serialized_size(witness);
+    const auto size = serialized_size(witness_val(witness));
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream);
@@ -327,11 +312,8 @@ data_chunk block::to_data(bool witness) const {
 }
 
 void block::to_data(data_sink& stream, bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     ostream_writer sink_w(stream);
-    to_data(sink_w, witness);
+    to_data(sink_w, witness_val(witness));
 }
 
 // Full block serialization is always canonical encoding.
@@ -351,13 +333,10 @@ void block::to_data(data_sink& stream, bool witness) const {
 //}
 
 hash_list block::to_hashes(bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     hash_list out;
     out.reserve(transactions_.size());
     const auto to_hash = [&out, witness](const transaction& tx) {
-        out.push_back(tx.hash(witness));
+        out.push_back(tx.hash(witness_val(witness)));
     };
 
     // Hash ordering matters, don't use std::transform here.
@@ -370,23 +349,20 @@ hash_list block::to_hashes(bool witness) const {
 
 // Full block serialization is always canonical encoding.
 size_t block::serialized_size(bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     size_t value;
 
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (witness && total_size_ != boost::none) {
+    if (witness_val(witness) && total_size_ != boost::none) {
         value = total_size_.get();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;
     }
 
-    if (!witness && base_size_ != boost::none) {
+    if (!witness_val(witness) && base_size_ != boost::none) {
         value = base_size_.get();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
@@ -397,7 +373,7 @@ size_t block::serialized_size(bool witness) const {
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     const auto sum = [witness](size_t total, const transaction& tx) {
-        return safe_add(total, tx.serialized_size(true, witness));
+        return safe_add(total, tx.serialized_size(true, witness_val(witness)));
     };
 
     const auto& txs = transactions_;
@@ -405,7 +381,7 @@ size_t block::serialized_size(bool witness) const {
             message::variable_uint_size(transactions_.size()) +
             std::accumulate(txs.begin(), txs.end(), size_t(0), sum);
 
-    if (witness)
+    if (witness_val(witness))
         total_size_ = value;
     else
         base_size_ = value;
@@ -677,14 +653,11 @@ bool block::is_distinct_transaction_set() const {
 }
 
 hash_digest block::generate_merkle_root(bool witness) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    witness = false;
-#endif
     if (transactions_.empty())
         return null_hash;
 
     hash_list update;
-    auto merkle = to_hashes(witness);
+    auto merkle = to_hashes(witness_val(witness));
 
     // Initial capacity is half of the original list (clear doesn't reset).
     update.reserve((merkle.size() + 1) / 2);

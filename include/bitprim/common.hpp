@@ -22,6 +22,15 @@
 namespace libbitcoin {
 
 constexpr inline
+bool witness_default() {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#else
+    return true;
+#endif
+}
+
+constexpr inline
 bool witness_val(bool x) {
 #ifdef BITPRIM_CURRENCY_BCH
     return false;

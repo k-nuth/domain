@@ -105,11 +105,8 @@ class BC_API block {
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static block factory_from_data(R& source, bool witness = false) {
-#ifdef BITPRIM_CURRENCY_BCH
-        witness = false;
-#endif
         block instance;
-        instance.from_data(source, witness);
+        instance.from_data(source, witness_val(witness));
         return instance;
     }
 
@@ -120,9 +117,6 @@ class BC_API block {
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
-#ifdef BITPRIM_CURRENCY_BCH
-        witness = false;
-#endif
         validation.start_deserialize = asio::steady_clock::now();
         reset();
 
@@ -139,11 +133,11 @@ class BC_API block {
 
         // Order is required, explicit loop allows early termination.
         for (auto& tx : transactions_)
-            if (!tx.from_data(source, true, witness))
+            if (!tx.from_data(source, true, witness_val(witness)))
                 break;
 
         // TODO: optimize by having reader skip witness data.
-        if (!witness)
+        if (!witness_val(witness))
             strip_witness();
 
         if (!source)
@@ -165,13 +159,10 @@ class BC_API block {
 
     template <Writer W>
     void to_data(W& sink, bool witness = false) const {
-#ifdef BITPRIM_CURRENCY_BCH
-        witness = false;
-#endif
         header_.to_data(sink, true);
         sink.write_size_little_endian(transactions_.size());
         const auto to = [&sink, witness](const transaction& tx) {
-            tx.to_data(sink, true, witness);
+            tx.to_data(sink, true, witness_val(witness));
         };
 
         std::for_each(transactions_.begin(), transactions_.end(), to);

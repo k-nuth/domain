@@ -87,15 +87,10 @@ class BC_API block_transactions {
             source.invalidate();
         else
             transactions_.resize(count);
-#ifdef BITPRIM_CURRENCY_BCH
-        bool witness = false;
-#else
-        bool witness = true;
-#endif
 
         // Order is required.
         for (auto& tx : transactions_)
-            if (!tx.from_data(source, true, witness))
+            if (!tx.from_data(source, true, witness_default()))
                 break;
 
         if (version < block_transactions::version_minimum)
@@ -116,13 +111,8 @@ class BC_API block_transactions {
         sink.write_hash(block_hash_);
         sink.write_variable_little_endian(transactions_.size());
 
-#ifdef BITPRIM_CURRENCY_BCH
-        bool witness = false;
-#else
-        bool witness = true;
-#endif
         for (const auto& element : transactions_) {
-            element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
+            element.to_data(sink, /*wire*/ true, witness_default(), /*unconfirmed*/ false);
         }
     }
 

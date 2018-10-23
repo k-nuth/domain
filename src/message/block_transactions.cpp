@@ -161,16 +161,10 @@ void block_transactions::to_data(uint32_t version, data_sink& stream) const {
 //}
 
 size_t block_transactions::serialized_size(uint32_t version) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-
     auto size = hash_size + message::variable_uint_size(transactions_.size());
 
     for (const auto& element : transactions_)
-        size += element.serialized_size(/*wire*/ true, witness, /*unconfirmed*/ false);
+        size += element.serialized_size(/*wire*/ true, witness_default(), /*unconfirmed*/ false);
 
     return size;
 }

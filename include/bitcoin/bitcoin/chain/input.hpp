@@ -78,11 +78,8 @@ class BC_API input {
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static input factory_from_data(R& source, bool wire = true, bool witness = false) {
-#ifdef BITPRIM_CURRENCY_BCH
-        witness = false;
-#endif
         input instance;
-        instance.from_data(source, wire, witness);
+        instance.from_data(source, wire, witness_val(witness));
         return instance;
     }
 
@@ -93,9 +90,7 @@ class BC_API input {
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool witness = false) {
-#ifdef BITPRIM_CURRENCY_BCH
-        witness = false;
-#else
+#ifndef BITPRIM_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -108,7 +103,7 @@ class BC_API input {
         script_.from_data(source, true);
 
         // Transaction from_data handles the discontiguous wire witness decoding.
-        if (witness && !wire)
+        if (witness_val(witness) && !wire)
             witness_.from_data(source, true);
 
         sequence_ = source.read_4_bytes_little_endian();
@@ -131,9 +126,7 @@ class BC_API input {
 
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool witness = false) const {
-#ifdef BITPRIM_CURRENCY_BCH
-        witness = false;
-#else
+#ifndef BITPRIM_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -142,7 +135,7 @@ class BC_API input {
         script_.to_data(sink, true);
 
         // Transaction to_data handles the discontiguous wire witness encoding.
-        if (witness && !wire)
+        if (witness_val(witness) && !wire)
             witness_.to_data(sink, true);
 
         sink.write_4_bytes_little_endian(sequence_);
