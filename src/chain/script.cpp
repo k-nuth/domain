@@ -952,7 +952,7 @@ operation::list script::to_pay_public_key_pattern(data_slice point) {
         {opcode::checksig}};
 }
 
-operation::list script::to_pay_key_hash_pattern(const short_hash& hash) {
+operation::list script::to_pay_key_hash_pattern(short_hash const& hash) {
     return operation::list{
         {opcode::dup},
         {opcode::hash160},
@@ -961,7 +961,7 @@ operation::list script::to_pay_key_hash_pattern(const short_hash& hash) {
         {opcode::checksig}};
 }
 
-operation::list script::to_pay_script_hash_pattern(const short_hash& hash) {
+operation::list script::to_pay_script_hash_pattern(short_hash const& hash) {
     return operation::list{
         {opcode::hash160},
         {to_chunk(hash)},

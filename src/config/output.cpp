@@ -67,7 +67,7 @@ const chain::script& output::script() const
     return script_;
 }
 
-const short_hash& output::pay_to_hash() const
+short_hash const& output::pay_to_hash() const
 {
     return pay_to_hash_;
 }

@@ -104,7 +104,7 @@ payment_address::payment_address(short_hash&& hash, uint8_t version)
 {
 }
 
-payment_address::payment_address(const short_hash& hash, uint8_t version)
+payment_address::payment_address(short_hash const& hash, uint8_t version)
   : valid_(true), version_(version), hash_(hash)
 {
 }
@@ -291,7 +291,7 @@ payment_address::operator const bool() const
     return valid_;
 }
 
-payment_address::operator const short_hash&() const
+payment_address::operator short_hash const&() const
 {
     return hash_;
 }
@@ -380,7 +380,7 @@ uint8_t payment_address::version() const
     return version_;
 }
 
-const short_hash& payment_address::hash() const
+short_hash const& payment_address::hash() const
 {
     return hash_;
 }

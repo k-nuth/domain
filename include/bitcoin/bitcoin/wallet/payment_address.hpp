@@ -75,7 +75,7 @@ public:
     payment_address(const ec_private& secret);
     payment_address(std::string const& address);
     payment_address(short_hash&& hash, uint8_t version=mainnet_p2kh);
-    payment_address(const short_hash& hash, uint8_t version=mainnet_p2kh);
+    payment_address(short_hash const& hash, uint8_t version=mainnet_p2kh);
     payment_address(const ec_public& point, uint8_t version=mainnet_p2kh);
     payment_address(const chain::script& script, uint8_t version=mainnet_p2sh);
 
@@ -90,7 +90,7 @@ public:
 
     /// Cast operators.
     operator const bool() const;
-    operator const short_hash&() const;
+    operator short_hash const&() const;
 
     /// Serializer.
     std::string encoded() const;
@@ -101,7 +101,7 @@ public:
     
     /// Accessors.
     uint8_t version() const;
-    const short_hash& hash() const;
+    short_hash const& hash() const;
 
     /// Methods.
     payment to_payment() const;

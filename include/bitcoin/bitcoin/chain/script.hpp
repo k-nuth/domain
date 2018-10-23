@@ -237,8 +237,8 @@ public:
     /// Stack factories.
     static operation::list to_null_data_pattern(data_slice data);
     static operation::list to_pay_public_key_pattern(data_slice point);
-    static operation::list to_pay_key_hash_pattern(const short_hash& hash);
-    static operation::list to_pay_script_hash_pattern(const short_hash& hash);
+    static operation::list to_pay_key_hash_pattern(short_hash const& hash);
+    static operation::list to_pay_script_hash_pattern(short_hash const& hash);
     static operation::list to_pay_multisig_pattern(uint8_t signatures, const point_list& points);
     static operation::list to_pay_multisig_pattern(uint8_t signatures, const data_stack& points);
 

@@ -53,7 +53,7 @@ public:
     uint64_t amount() const;
     uint8_t version() const;
     const chain::script& script() const;
-    const short_hash& pay_to_hash() const;
+    short_hash const& pay_to_hash() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
