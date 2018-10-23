@@ -69,7 +69,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    script(const script& other);
+    script(script const& other);
 
     /**
      * Serialize the script to bytes according to the wire protocol.
@@ -105,7 +105,7 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const script& argument);
+        script const& argument);
 
 private:
 

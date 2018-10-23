@@ -63,7 +63,7 @@ public:
 
     script();
 
-    script(const script& x);
+    script(script const& x);
     script(script&& x);
 
     script(const operation::list& ops);
@@ -76,11 +76,11 @@ public:
     //-------------------------------------------------------------------------
 
     /// This class is move assignable and copy assignable.
-    script& operator=(const script& x);
+    script& operator=(script const& x);
     script& operator=(script&& x);
 
-    bool operator==(const script& x) const;
-    bool operator!=(const script& x) const;
+    bool operator==(script const& x) const;
+    bool operator!=(script const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -184,7 +184,7 @@ public:
 
     static hash_digest generate_signature_hash(transaction const& tx,
                                                uint32_t input_index,
-                                               const script& script_code,
+                                               script const& script_code,
                                                uint8_t sighash_type,
                                                script_version version = script_version::unversioned,
                                                uint64_t value = max_uint64);
@@ -192,13 +192,13 @@ public:
     static bool check_signature(const ec_signature& signature,
                                 uint8_t sighash_type,
                                 data_chunk const& public_key,
-                                const script& script_code,
+                                script const& script_code,
                                 transaction const& tx,
                                 uint32_t input_index,
                                 script_version version = script_version::unversioned,
                                 uint64_t value = max_uint64);
 
-    static bool create_endorsement(endorsement& out, const ec_secret& secret, const script& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
+    static bool create_endorsement(endorsement& out, const ec_secret& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
@@ -263,7 +263,7 @@ public:
     static code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
     // TODO(libbitcoin): move back to private.
-    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value);
+    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, const witness& input_witness, script const& prevout_script, uint64_t value);
 
 protected:
     // So that input and output may call reset from their own.
@@ -280,12 +280,12 @@ private:
     static hash_digest generate_unversioned_signature_hash(
         transaction const& tx,
         uint32_t input_index,
-        const script& script_code,
+        script const& script_code,
         uint8_t sighash_type);
 
     static hash_digest generate_version_0_signature_hash(transaction const& tx,
                                                          uint32_t input_index,
-                                                         const script& script_code,
+                                                         script const& script_code,
                                                          uint64_t value,
                                                          uint8_t sighash_type);
 

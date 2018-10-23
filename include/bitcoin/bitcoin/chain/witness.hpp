@@ -181,13 +181,13 @@ class BC_API witness {
     static bool is_reserved_pattern(const data_stack& stack);
 
     bool extract_sigop_script(script& out_script,
-                              const script& program_script) const;
-    bool extract_embedded_script(script& out_script, data_stack& out_stack, const script& program_script) const;
+                              script const& program_script) const;
+    bool extract_embedded_script(script& out_script, data_stack& out_stack, script const& program_script) const;
 
     // Validation.
     //-------------------------------------------------------------------------
 
-    code verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& program_script, uint64_t value) const;
+    code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& program_script, uint64_t value) const;
 
    protected:
     // So that input may call reset from its own.

@@ -60,12 +60,12 @@ script::script(const std::vector<std::string>& tokens)
     std::stringstream(mnemonic) >> *this;
 }
 
-script::script(const script& other)
+script::script(script const& other)
   : script(other.value_)
 {
 }
 
-data_chunk const script::to_data() const
+data_chunk script const::to_data() const
 {
     return value_.to_data(false);
 }
@@ -96,7 +96,7 @@ std::istream& operator>>(std::istream& input, script& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const script& argument)
+std::ostream& operator<<(std::ostream& output, script const& argument)
 {
     static constexpr auto flags = machine::rule_fork::all_rules;
     output << argument.value_.to_string(flags);

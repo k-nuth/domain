@@ -34,7 +34,7 @@ namespace libbitcoin {
 using namespace bc::chain;
 using namespace bc::machine;
 
-bool is_stealth_script(const script& script)
+bool is_stealth_script(script const& script)
 {
     if (script.pattern() != script_pattern::null_data)
         return false;
@@ -43,7 +43,7 @@ bool is_stealth_script(const script& script)
     return (script[1].data().size() >= hash_size);
 }
 
-bool to_stealth_prefix(uint32_t& out_prefix, const script& script)
+bool to_stealth_prefix(uint32_t& out_prefix, script const& script)
 {
     if ( ! is_stealth_script(script))
         return false;
@@ -147,7 +147,7 @@ bool create_stealth_script(script& out_null_data, const ec_secret& secret,
 }
 
 bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
-    const script& script)
+    script const& script)
 {
     if ( ! is_stealth_script(script))
         return false;
@@ -163,7 +163,7 @@ bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
 }
 
 bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
-    const script& script)
+    script const& script)
 {
     if ( ! is_stealth_script(script))
         return false;

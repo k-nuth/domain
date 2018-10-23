@@ -342,7 +342,7 @@ operation::list witness::to_pay_key_hash(data_chunk&& program) {
 // The return script is useful only for sigop counting.
 // Returns true if is a witness program - even if potentially invalid.
 bool witness::extract_sigop_script(script& out_script,
-                                   const script& program_script) const {
+                                   script const& program_script) const {
     out_script.clear();
 
     switch (program_script.version()) {
@@ -375,7 +375,7 @@ bool witness::extract_sigop_script(script& out_script,
 // Extract P2WPKH or P2WSH script as indicated by program script.
 bool witness::extract_embedded_script(script& out_script,
                                       data_stack& out_stack,
-                                      const script& program_script) const {
+                                      script const& program_script) const {
     switch (program_script.version()) {
         // The v0 program size must be either 20 or 32 bytes (bip141).
         case script_version::zero: {
@@ -431,7 +431,7 @@ bool witness::extract_embedded_script(script& out_script,
 // static
 // The program script is either a prevout script or an emedded script.
 // It validates this witness, from which the witness script is derived.
-code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& program_script, uint64_t value) const {
+code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& program_script, uint64_t value) const {
     auto const version = program_script.version();
 
     switch (version) {

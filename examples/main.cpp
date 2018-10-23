@@ -197,7 +197,7 @@ int bc::main(int argc, char* argv[]) {
 //    auto block const = bc::chain::block::genesis_mainnet();
 //    auto const& tx = block.transactions().front();
 //    auto const& input = tx.inputs().front();
-//    auto const script = input.script().to_data(false);
+//    auto script const = input.script().to_data(false);
 //    std::string message(script.begin() + sizeof(uint64_t), script.end());
 //    bc::cout << message << std::endl;
 //

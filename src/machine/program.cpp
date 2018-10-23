@@ -63,7 +63,7 @@ program::program()
     reserve_stacks();
 }
 
-program::program(const script& script)
+program::program(script const& script)
   : script_(script),
     transaction_(default_tx_),
     input_index_(0),
@@ -77,7 +77,7 @@ program::program(const script& script)
     reserve_stacks();
 }
 
-program::program(const script& script, const chain::transaction& transaction,
+program::program(script const& script, const chain::transaction& transaction,
     uint32_t input_index, uint32_t forks)
   : script_(script),
     transaction_(transaction),
@@ -93,7 +93,7 @@ program::program(const script& script, const chain::transaction& transaction,
 }
 
 // Condition, alternate, jump and operation_count are not copied.
-program::program(const script& script, const chain::transaction& transaction,
+program::program(script const& script, const chain::transaction& transaction,
     uint32_t input_index, uint32_t forks, data_stack&& stack, uint64_t value,
     script_version version)
   : script_(script),
@@ -112,7 +112,7 @@ program::program(const script& script, const chain::transaction& transaction,
 
 
 // Condition, alternate, jump and operation_count are not copied.
-program::program(const script& script, const program& other)
+program::program(script const& script, const program& other)
   : script_(script),
     transaction_(other.transaction_),
     input_index_(other.input_index_),
@@ -128,7 +128,7 @@ program::program(const script& script, const program& other)
 }
 
 // Condition, alternate, jump and operation_count are not moved.
-program::program(const script& script, program&& other, bool)
+program::program(script const& script, program&& other, bool)
   : script_(script),
     transaction_(other.transaction_),
     input_index_(other.input_index_),
