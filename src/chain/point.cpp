@@ -157,7 +157,7 @@ bool point::from_data(data_source& stream, bool wire) {
 //            index_ = null_index;
 //    }
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

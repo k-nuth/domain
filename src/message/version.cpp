@@ -129,7 +129,7 @@ bool version::from_data(uint32_t version, data_source& stream) {
 //    relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() ||
 //        (self_bip37 && source.read_byte() != 0);
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

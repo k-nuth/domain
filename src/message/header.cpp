@@ -114,7 +114,7 @@ bool header::from_data(uint32_t version, data_source& stream) {
 
 //bool header::from_data(uint32_t version, reader& source)
 //{
-//    if (!chain::header::from_data(source))
+//    if ( ! chain::header::from_data(source))
 //        return false;
 //
 //    // The header message must trail a zero byte (yes, it's stoopid).
@@ -122,7 +122,7 @@ bool header::from_data(uint32_t version, data_source& stream) {
 //    if (version != version::level::canonical && source.read_byte() != 0x00)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

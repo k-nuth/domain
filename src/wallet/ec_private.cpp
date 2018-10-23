@@ -88,7 +88,7 @@ bool ec_private::is_wif(data_slice decoded)
     if (size != wif_compressed_size && size != wif_uncompressed_size)
         return false;
 
-    if (!verify_checksum(decoded))
+    if ( ! verify_checksum(decoded))
         return false;
 
     return (size == wif_uncompressed_size) ||
@@ -102,7 +102,7 @@ ec_private ec_private::from_string(const std::string& wif,
     uint8_t address_version)
 {
     data_chunk decoded;
-    if (!decode_base58(decoded, wif) || !is_wif(decoded))
+    if ( ! decode_base58(decoded, wif) || !is_wif(decoded))
         return ec_private();
 
     auto const compressed = decoded.size() == wif_compressed_size;
@@ -114,7 +114,7 @@ ec_private ec_private::from_string(const std::string& wif,
 ec_private ec_private::from_compressed(const wif_compressed& wif,
     uint8_t address_version)
 {
-    if (!is_wif(wif))
+    if ( ! is_wif(wif))
         return ec_private();
 
     const uint16_t version = to_version(address_version, wif.front());
@@ -125,7 +125,7 @@ ec_private ec_private::from_compressed(const wif_compressed& wif,
 ec_private ec_private::from_uncompressed(const wif_uncompressed& wif,
     uint8_t address_version)
 {
-    if (!is_wif(wif))
+    if ( ! is_wif(wif))
         return ec_private();
 
     const uint16_t version = to_version(address_version, wif.front());
@@ -246,7 +246,7 @@ std::istream& operator>>(std::istream& in, ec_private& to)
     in >> value;
     to = ec_private(value);
 
-    if (!to)
+    if ( ! to)
     {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));

@@ -57,7 +57,7 @@ bool stealth_receiver::derive_address(payment_address& out_address,
     const ec_compressed& ephemeral_public) const
 {
     ec_compressed receiver_public;
-    if (!uncover_stealth(receiver_public, ephemeral_public, scan_private_,
+    if ( ! uncover_stealth(receiver_public, ephemeral_public, scan_private_,
         spend_public_))
         return false;
 

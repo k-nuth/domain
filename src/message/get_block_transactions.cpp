@@ -115,7 +115,7 @@ bool get_block_transactions::from_data(uint32_t version, data_source& stream) {
 //    for (size_t position = 0; position < count && source; ++position)
 //        indexes_.push_back(source.read_size_little_endian());
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

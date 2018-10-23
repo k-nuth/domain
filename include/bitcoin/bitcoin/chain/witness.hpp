@@ -119,7 +119,7 @@ class BC_API witness {
                 stack_.push_back(read_element(source));
         }
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

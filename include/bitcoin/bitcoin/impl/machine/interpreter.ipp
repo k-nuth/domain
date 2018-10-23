@@ -144,7 +144,7 @@ inline interpreter::result interpreter::op_verify(program& program)
     if (program.empty())
         return error::op_verify1;
 
-    if (!program.stack_true(false))
+    if ( ! program.stack_true(false))
         return error::op_verify2;
 
     program.pop();
@@ -308,7 +308,7 @@ inline interpreter::result interpreter::op_over(program& program)
 inline interpreter::result interpreter::op_pick(program& program)
 {
     program::stack_iterator position;
-    if (!program.pop_position(position))
+    if ( ! program.pop_position(position))
         return error::op_pick;
 
     program.push_copy(*position);
@@ -318,7 +318,7 @@ inline interpreter::result interpreter::op_pick(program& program)
 inline interpreter::result interpreter::op_roll(program& program)
 {
     program::stack_iterator position;
-    if (!program.pop_position(position))
+    if ( ! program.pop_position(position))
         return error::op_roll;
 
     auto copy = *position;
@@ -392,7 +392,7 @@ inline interpreter::result interpreter::op_equal_verify(program& program)
 inline interpreter::result interpreter::op_add1(program& program)
 {
     number number;
-    if (!program.pop(number))
+    if ( ! program.pop(number))
         return error::op_add1;
 
     number += 1;
@@ -403,7 +403,7 @@ inline interpreter::result interpreter::op_add1(program& program)
 inline interpreter::result interpreter::op_sub1(program& program)
 {
     number number;
-    if (!program.pop(number))
+    if ( ! program.pop(number))
         return error::op_sub1;
 
     number -= 1;
@@ -414,7 +414,7 @@ inline interpreter::result interpreter::op_sub1(program& program)
 inline interpreter::result interpreter::op_negate(program& program)
 {
     number number;
-    if (!program.pop(number))
+    if ( ! program.pop(number))
         return error::op_negate;
 
     number = -number;
@@ -425,7 +425,7 @@ inline interpreter::result interpreter::op_negate(program& program)
 inline interpreter::result interpreter::op_abs(program& program)
 {
     number number;
-    if (!program.pop(number))
+    if ( ! program.pop(number))
         return error::op_abs;
 
     if (number < 0)
@@ -438,7 +438,7 @@ inline interpreter::result interpreter::op_abs(program& program)
 inline interpreter::result interpreter::op_not(program& program)
 {
     number number;
-    if (!program.pop(number))
+    if ( ! program.pop(number))
         return error::op_not;
 
     program.push(number.is_false());
@@ -448,7 +448,7 @@ inline interpreter::result interpreter::op_not(program& program)
 inline interpreter::result interpreter::op_nonzero(program& program)
 {
     number number;
-    if (!program.pop(number))
+    if ( ! program.pop(number))
         return error::op_nonzero;
 
     program.push(number.is_true());
@@ -458,7 +458,7 @@ inline interpreter::result interpreter::op_nonzero(program& program)
 inline interpreter::result interpreter::op_add(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_add;
 
     auto const result = first + second;
@@ -469,7 +469,7 @@ inline interpreter::result interpreter::op_add(program& program)
 inline interpreter::result interpreter::op_sub(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_sub;
 
     auto const result = second - first;
@@ -480,7 +480,7 @@ inline interpreter::result interpreter::op_sub(program& program)
 inline interpreter::result interpreter::op_bool_and(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_bool_and;
 
     program.push(first.is_true() && second.is_true());
@@ -490,7 +490,7 @@ inline interpreter::result interpreter::op_bool_and(program& program)
 inline interpreter::result interpreter::op_bool_or(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_bool_or;
 
     program.push(first.is_true() || second.is_true());
@@ -500,7 +500,7 @@ inline interpreter::result interpreter::op_bool_or(program& program)
 inline interpreter::result interpreter::op_num_equal(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_num_equal;
 
     program.push(first == second);
@@ -510,7 +510,7 @@ inline interpreter::result interpreter::op_num_equal(program& program)
 inline interpreter::result interpreter::op_num_equal_verify(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_num_equal_verify1;
 
     return (first == second) ? error::success :
@@ -520,7 +520,7 @@ inline interpreter::result interpreter::op_num_equal_verify(program& program)
 inline interpreter::result interpreter::op_num_not_equal(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_num_not_equal;
 
     program.push(first != second);
@@ -530,7 +530,7 @@ inline interpreter::result interpreter::op_num_not_equal(program& program)
 inline interpreter::result interpreter::op_less_than(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_less_than;
 
     program.push(second < first);
@@ -540,7 +540,7 @@ inline interpreter::result interpreter::op_less_than(program& program)
 inline interpreter::result interpreter::op_greater_than(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_greater_than;
 
     program.push(second > first);
@@ -550,7 +550,7 @@ inline interpreter::result interpreter::op_greater_than(program& program)
 inline interpreter::result interpreter::op_less_than_or_equal(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_less_than_or_equal;
 
     program.push(second <= first);
@@ -561,7 +561,7 @@ inline interpreter::result interpreter::op_greater_than_or_equal(
     program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_greater_than_or_equal;
 
     program.push(second >= first);
@@ -571,7 +571,7 @@ inline interpreter::result interpreter::op_greater_than_or_equal(
 inline interpreter::result interpreter::op_min(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_min;
 
     program.push_move(second < first ? second.data() : first.data());
@@ -581,7 +581,7 @@ inline interpreter::result interpreter::op_min(program& program)
 inline interpreter::result interpreter::op_max(program& program)
 {
     number first, second;
-    if (!program.pop_binary(first, second))
+    if ( ! program.pop_binary(first, second))
         return error::op_max;
 
     program.push_move(second > first ? second.data() : first.data());
@@ -591,7 +591,7 @@ inline interpreter::result interpreter::op_max(program& program)
 inline interpreter::result interpreter::op_within(program& program)
 {
     number first, second, third;
-    if (!program.pop_ternary(first, second, third))
+    if ( ! program.pop_ternary(first, second, third))
         return error::op_within;
 
     program.push(second <= third && third < first);
@@ -668,15 +668,15 @@ inline interpreter::result interpreter::op_check_sig_verify(program& program)
     chain::script script_code(program.subscript());
 
     // BIP143: find and delete of the signature is not applied for v0.
-    if (!(bip143 && program.version() == script_version::zero))
+    if ( ! (bip143 && program.version() == script_version::zero))
         script_code.find_and_delete({ endorsement });
 
     // BIP62: An empty endorsement is not considered lax encoding.
-    if (!parse_endorsement(sighash, distinguished, std::move(endorsement)))
+    if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement)))
         return error::invalid_signature_encoding;
 
     // Parse DER signature into an EC signature.
-    if (!parse_signature(signature, distinguished, bip66))
+    if ( ! parse_signature(signature, distinguished, bip66))
         return bip66 ? error::invalid_signature_lax_encoding :
             error::invalid_signature_encoding;
 
@@ -705,26 +705,26 @@ inline interpreter::result interpreter::op_check_multisig_verify(
     program& program)
 {
     int32_t key_count;
-    if (!program.pop(key_count))
+    if ( ! program.pop(key_count))
         return error::op_check_multisig_verify1;
 
     // Multisig script public keys are counted as op codes.
-    if (!program.increment_operation_count(key_count))
+    if ( ! program.increment_operation_count(key_count))
         return error::op_check_multisig_verify2;
 
     data_stack public_keys;
-    if (!program.pop(public_keys, key_count))
+    if ( ! program.pop(public_keys, key_count))
         return error::op_check_multisig_verify3;
 
     int32_t signature_count;
-    if (!program.pop(signature_count))
+    if ( ! program.pop(signature_count))
         return error::op_check_multisig_verify4;
 
     if (signature_count < 0 || signature_count > key_count)
         return error::op_check_multisig_verify5;
 
     data_stack endorsements;
-    if (!program.pop(endorsements, signature_count))
+    if ( ! program.pop(endorsements, signature_count))
         return error::op_check_multisig_verify6;
 
     if (program.empty())
@@ -733,7 +733,7 @@ inline interpreter::result interpreter::op_check_multisig_verify(
     //*************************************************************************
     // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147.
     //*************************************************************************
-    if (!program.pop().empty() && chain::script::is_enabled(program.forks(),
+    if ( ! program.pop().empty() && chain::script::is_enabled(program.forks(),
         rule_fork::bip147_rule))
         return error::op_check_multisig_verify8;
 
@@ -748,7 +748,7 @@ inline interpreter::result interpreter::op_check_multisig_verify(
     chain::script script_code(program.subscript());
 
     // BIP143: find and delete of the signature is not applied for v0.
-    if (!(bip143 && program.version() == script_version::zero))
+    if ( ! (bip143 && program.version() == script_version::zero))
         script_code.find_and_delete(endorsements);
 
     // The exact number of signatures are required and must be in order.
@@ -757,11 +757,11 @@ inline interpreter::result interpreter::op_check_multisig_verify(
     for (auto& endorsement: endorsements)
     {
         // BIP62: An empty endorsement is not considered lax encoding.
-        if (!parse_endorsement(sighash, distinguished, std::move(endorsement)))
+        if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement)))
             return error::invalid_signature_encoding;
 
         // Parse DER signature into an EC signature.
-        if (!parse_signature(signature, distinguished, bip66))
+        if ( ! parse_signature(signature, distinguished, bip66))
             return bip66 ? error::invalid_signature_lax_encoding :
                 error::invalid_signature_encoding;
 
@@ -800,7 +800,7 @@ inline interpreter::result interpreter::op_check_locktime_verify(
     program& program)
 {
     // BIP65: nop2 subsumed by checklocktimeverify when bip65 fork is active.
-    if (!chain::script::is_enabled(program.forks(), rule_fork::bip65_rule))
+    if ( ! chain::script::is_enabled(program.forks(), rule_fork::bip65_rule))
         return op_nop(opcode::nop2);
 
     auto const& tx = program.transaction();
@@ -816,7 +816,7 @@ inline interpreter::result interpreter::op_check_locktime_verify(
     // BIP65: the stack is empty.
     // BIP65: extend the (signed) script number range to 5 bytes.
     number stack;
-    if (!program.top(stack, max_check_locktime_verify_number_size))
+    if ( ! program.top(stack, max_check_locktime_verify_number_size))
         return error::op_check_locktime_verify3;
 
     // BIP65: the top stack item is negative.
@@ -840,7 +840,7 @@ inline interpreter::result interpreter::op_check_sequence_verify(
     program& program)
 {
     // BIP112: nop3 subsumed by checksequenceverify when bip112 fork is active.
-    if (!chain::script::is_enabled(program.forks(), rule_fork::bip112_rule))
+    if ( ! chain::script::is_enabled(program.forks(), rule_fork::bip112_rule))
         return op_nop(opcode::nop3);
 
     auto const& tx = program.transaction();
@@ -852,7 +852,7 @@ inline interpreter::result interpreter::op_check_sequence_verify(
     // BIP112: the stack is empty.
     // BIP112: extend the (signed) script number range to 5 bytes.
     number stack;
-    if (!program.top(stack, max_check_sequence_verify_number_size))
+    if ( ! program.top(stack, max_check_sequence_verify_number_size))
         return error::op_check_sequence_verify2;
 
     // BIP112: the top stack item is negative.

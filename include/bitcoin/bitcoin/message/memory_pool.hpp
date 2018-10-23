@@ -71,7 +71,7 @@ class BC_API memory_pool {
         if (version < memory_pool::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

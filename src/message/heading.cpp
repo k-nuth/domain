@@ -129,7 +129,7 @@ bool heading::from_data(data_source& stream) {
 //    payload_size_ = source.read_4_bytes_little_endian();
 //    checksum_ = source.read_4_bytes_little_endian();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

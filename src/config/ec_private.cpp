@@ -54,7 +54,7 @@ std::istream& operator>>(std::istream& input, ec_private& argument)
     std::string hexcode;
     input >> hexcode;
 
-    if (!decode_secret(argument.value_, hexcode))
+    if ( ! decode_secret(argument.value_, hexcode))
     {
         BOOST_THROW_EXCEPTION(boost::program_options::invalid_option_value(hexcode));
     }

@@ -98,7 +98,7 @@ class BC_API inventory_vector {
         type_ = inventory_vector::to_type(raw_type);
         hash_ = source.read_hash();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

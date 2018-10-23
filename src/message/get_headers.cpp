@@ -77,13 +77,13 @@ bool get_headers::from_data(uint32_t version, data_source& stream) {
 
 //bool get_headers::from_data(uint32_t version, reader& source)
 //{
-//    if (!get_blocks::from_data(version, source))
+//    if ( ! get_blocks::from_data(version, source))
 //        return false;
 //
 //    if (version < get_headers::version_minimum)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

@@ -93,13 +93,13 @@ class BC_API headers {
 
         // Order is required.
         for (auto& element : elements_)
-            if (!element.from_data(version, source))
+            if ( ! element.from_data(version, source))
                 break;
 
         if (version < headers::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

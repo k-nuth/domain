@@ -263,10 +263,10 @@ bool transaction::from_data(data_source& stream, bool wire, bool witness, bool u
 ////     }
 //
 ////     // TODO(libbitcoin): optimize by having reader skip witness data.
-////     if (!witness_val(witness))
+////     if ( ! witness_val(witness))
 ////         strip_witness();
 //
-////     if (!source)
+////     if ( ! source)
 ////         reset();
 //
 ////     return source;
@@ -490,7 +490,7 @@ hash_digest transaction::hash(bool witness) const {
     hash_mutex_.lock_upgrade();
 
     if (witness_val(witness)) {
-        if (!witness_hash_) {
+        if ( ! witness_hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock();
 
@@ -502,7 +502,7 @@ hash_digest transaction::hash(bool witness) const {
             //-----------------------------------------------------------------
         }
     } else {
-        if (!hash_) {
+        if ( ! hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock();
             hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data(true)));
@@ -523,7 +523,7 @@ hash_digest transaction::outputs_hash() const {
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if (!outputs_hash_) {
+    if ( ! outputs_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
         outputs_hash_ = std::make_shared<hash_digest>(
@@ -544,7 +544,7 @@ hash_digest transaction::inpoints_hash() const {
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if (!inpoints_hash_) {
+    if ( ! inpoints_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
         inpoints_hash_ = std::make_shared<hash_digest>(
@@ -565,7 +565,7 @@ hash_digest transaction::sequences_hash() const {
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if (!sequences_hash_) {
+    if ( ! sequences_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
         sequences_hash_ = std::make_shared<hash_digest>(
@@ -613,7 +613,7 @@ bool transaction::is_coinbase() const {
 
 // True if coinbase and has invalid input[0] script size.
 bool transaction::is_oversized_coinbase() const {
-    if (!is_coinbase())
+    if ( ! is_coinbase())
         return false;
 
     auto const script_size = inputs_.front().script().serialized_size(false);
@@ -904,7 +904,7 @@ code transaction::connect_input(const chain_state& state,
     auto const& prevout = inputs_[input_index].previous_output().validation;
 
     // Verify that the previous output cache has been populated.
-    if (!prevout.cache.is_valid())
+    if ( ! prevout.cache.is_valid())
         return error::missing_previous_output;
 
     auto const forks = state.enabled_forks();
@@ -928,7 +928,7 @@ code transaction::check(bool transaction_pool, bool retarget) const {
     else if (total_output_value() > max_money(retarget))
         return error::spend_overflow;
 
-    else if (!transaction_pool && is_oversized_coinbase())
+    else if ( ! transaction_pool && is_oversized_coinbase())
         return error::invalid_coinbase_script_size;
 
     else if (transaction_pool && is_coinbase())
@@ -977,7 +977,7 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
         return error::premature_validation;
 
     // A segregated tx should appear empty if bip141 is not enabled.
-    else if (!bip141 && is_segregated())
+    else if ( ! bip141 && is_segregated())
         return error::empty_transaction;
 
     else if (transaction_pool && !is_final(state.height(),
@@ -1001,7 +1001,7 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
 
     // This relates height to maturity of spent coinbase. Since reorg is the
     // only way to decrease height and reorg invalidates, this is cache safe.
-    else if (!is_mature(state.height()))
+    else if ( ! is_mature(state.height()))
         return error::coinbase_maturity;
 
     else if (is_overspent())

@@ -124,7 +124,7 @@ class BC_API script {
             bytes_ = source.read_bytes();
         }
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

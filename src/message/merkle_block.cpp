@@ -115,7 +115,7 @@ bool merkle_block::from_data(uint32_t version, data_source& stream) {
 //{
 //    reset();
 //
-//    if (!header_.from_data(source))
+//    if ( ! header_.from_data(source))
 //        return false;
 //
 //    total_transactions_ = source.read_4_bytes_little_endian();
@@ -135,7 +135,7 @@ bool merkle_block::from_data(uint32_t version, data_source& stream) {
 //    if (version < merkle_block::version_minimum)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

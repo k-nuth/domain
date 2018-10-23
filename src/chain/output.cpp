@@ -148,13 +148,13 @@ bool output::from_data(data_source& stream, bool wire) {
 //{
 //    reset();
 //
-//    if (!wire)
+//    if ( ! wire)
 //        validation.spender_height = source.read_4_bytes_little_endian();
 //
 //    value_ = source.read_8_bytes_little_endian();
 //    script_.from_data(source, true);
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;
@@ -192,7 +192,7 @@ void output::to_data(data_sink& stream, bool wire) const {
 
 //void output::to_data(writer& sink, bool wire, bool) const
 //{
-//    if (!wire)
+//    if ( ! wire)
 //    {
 //        auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
 //        sink.write_4_bytes_little_endian(height32);
@@ -277,7 +277,7 @@ payment_address::list output::addresses(uint8_t p2kh_version,
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (!addresses_) {
+    if ( ! addresses_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
         addresses_ = std::make_shared<payment_address::list>(
@@ -316,7 +316,7 @@ bool output::is_dust(uint64_t minimum_value) const {
 bool output::extract_committed_hash(hash_digest& out) const {
     auto const& ops = script_.operations();
 
-    if (!script::is_commitment_pattern(ops))
+    if ( ! script::is_commitment_pattern(ops))
         return false;
 
     // The four byte offset for the witness commitment hash (bip141).

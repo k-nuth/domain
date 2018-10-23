@@ -64,13 +64,13 @@ class BC_API get_headers
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     {
-        if (!get_blocks::from_data(version, source))
+        if ( ! get_blocks::from_data(version, source))
             return false;
 
         if (version < get_headers::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

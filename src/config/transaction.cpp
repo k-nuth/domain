@@ -65,7 +65,7 @@ std::istream& operator>>(std::istream& input, transaction& argument)
     std::string hexcode;
     input >> hexcode;
 
-    if (!argument.value_.from_data(base16(hexcode)))
+    if ( ! argument.value_.from_data(base16(hexcode)))
     {
         BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
     }

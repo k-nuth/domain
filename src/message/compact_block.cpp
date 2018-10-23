@@ -162,7 +162,7 @@ bool compact_block::from_data(uint32_t version, data_source& stream) {
 //
 //    reset();
 //
-//    if (!header_.from_data(source))
+//    if ( ! header_.from_data(source))
 //        return false;
 //
 //    nonce_ = source.read_8_bytes_little_endian();
@@ -194,13 +194,13 @@ bool compact_block::from_data(uint32_t version, data_source& stream) {
 //    // NOTE: Witness flag is controlled by prefilled tx
 //    // Order is required.
 //    for (auto& tx : transactions_)
-//        if (!tx.from_data(version, source))
+//        if ( ! tx.from_data(version, source))
 //            break;
 //
 //    if (version < compact_block::version_minimum)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

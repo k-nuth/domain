@@ -101,7 +101,7 @@ bool alert::from_data(uint32_t version, data_source& stream) {
 //    payload_ = source.read_bytes(source.read_size_little_endian());
 //    signature_ = source.read_bytes(source.read_size_little_endian());
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

@@ -120,7 +120,7 @@ class BC_API block {
         validation.start_deserialize = asio::steady_clock::now();
         reset();
 
-        if (!header_.from_data(source, true))
+        if ( ! header_.from_data(source, true))
             return false;
 
         auto const count = source.read_size_little_endian();
@@ -133,14 +133,14 @@ class BC_API block {
 
         // Order is required, explicit loop allows early termination.
         for (auto& tx : transactions_)
-            if (!tx.from_data(source, true, witness_val(witness)))
+            if ( ! tx.from_data(source, true, witness_val(witness)))
                 break;
 
         // TODO(libbitcoin): optimize by having reader skip witness data.
-        if (!witness_val(witness))
+        if ( ! witness_val(witness))
             strip_witness();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         validation.end_deserialize = asio::steady_clock::now();

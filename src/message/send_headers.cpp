@@ -105,7 +105,7 @@ bool send_headers::from_data(uint32_t version, data_source& stream) {
 //        source.invalidate();
 //    }
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

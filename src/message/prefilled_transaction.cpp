@@ -107,7 +107,7 @@ bool prefilled_transaction::from_data(uint32_t version, data_source& stream) {
 //    index_ = source.read_variable_little_endian();
 //    transaction_.from_data(source, true, witness);
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

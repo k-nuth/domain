@@ -121,7 +121,7 @@ std::istream& operator>>(std::istream& in, ek_token& to)
     in >> value;
     to = ek_token(value);
 
-    if (!to)
+    if ( ! to)
     {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));

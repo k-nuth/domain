@@ -99,7 +99,7 @@ class BC_API filter_load {
         if (version < filter_load::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

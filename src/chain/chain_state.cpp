@@ -270,7 +270,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     // bip30 is active for all but two mainnet blocks that violate the rule.
     // These two blocks each have a coinbase transaction that exctly duplicates
     // another that is not spent by the arrival of the corresponding duplicate.
-    if (!is_bip30_exception({ values.hash, height }, mainnet))
+    if ( ! is_bip30_exception({ values.hash, height }, mainnet))
     {
         result.forks |= (rule_fork::bip30_rule & forks);
     }
@@ -397,7 +397,7 @@ size_t chain_state::timestamp_count(size_t height, uint32_t) {
 
 size_t chain_state::retarget_height(size_t height, uint32_t forks)
 {
-    if (!script::is_enabled(forks, rule_fork::retarget))
+    if ( ! script::is_enabled(forks, rule_fork::retarget))
         return map::unrequested;
 
     // Height must be a positive multiple of interval, so underflow safe.
@@ -469,7 +469,7 @@ size_t chain_state::daa_height(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const mainnet = retarget && !testnet;
 
-    if (!mainnet && !testnet) {
+    if ( ! mainnet && !testnet) {
         // Regtest activate at block 0
         return true;
     }
@@ -486,7 +486,7 @@ bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const mainnet = retarget && !testnet;
 
-    if (!mainnet && !testnet) {
+    if ( ! mainnet && !testnet) {
         // Regtest activate at block 0
         return true;
     }
@@ -502,7 +502,7 @@ bool chain_state::is_daa_enabled(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const mainnet = retarget && !testnet;
 
-    if (!mainnet && !testnet) {
+    if ( ! mainnet && !testnet) {
         // Regtest activate at block 0
         return true;
     }
@@ -658,7 +658,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
         return{};
 
     // Regtest bypasses all retargeting.
-    if (!script::is_enabled(forks, rule_fork::retarget))
+    if ( ! script::is_enabled(forks, rule_fork::retarget))
         return bits_high(values);
 
     auto last_time_span = median_time_past(values, 0, true);

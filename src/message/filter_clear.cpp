@@ -98,7 +98,7 @@ bool filter_clear::from_data(uint32_t version, data_source& stream) {
 //    if (version < filter_clear::version_minimum)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

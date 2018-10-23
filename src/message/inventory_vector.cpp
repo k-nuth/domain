@@ -131,7 +131,7 @@ bool inventory_vector::from_data(uint32_t version, data_source& stream) {
 //    type_ = inventory_vector::to_type(raw_type);
 //    hash_ = source.read_hash();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

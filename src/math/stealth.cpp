@@ -45,7 +45,7 @@ bool is_stealth_script(const script& script)
 
 bool to_stealth_prefix(uint32_t& out_prefix, const script& script)
 {
-    if (!is_stealth_script(script))
+    if ( ! is_stealth_script(script))
         return false;
 
     // A stealth prefix is the full 32 bits (prefix to the hash).
@@ -108,7 +108,7 @@ bool create_stealth_script(script& out_null_data, const ec_secret& secret,
 
     // Obtain the ephemeral public key from the provided ephemeral secret key.
     ec_compressed point;
-    if (!secret_to_public(point, secret) || !is_even_key(point))
+    if ( ! secret_to_public(point, secret) || !is_even_key(point))
         return false;
 
     // Copy the unsigned portion of the ephemeral public key into data.
@@ -149,7 +149,7 @@ bool create_stealth_script(script& out_null_data, const ec_secret& secret,
 bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
     const script& script)
 {
-    if (!is_stealth_script(script))
+    if ( ! is_stealth_script(script))
         return false;
 
     // The sign of the ephemeral public key is fixed by convention.
@@ -165,7 +165,7 @@ bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
 bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
     const script& script)
 {
-    if (!is_stealth_script(script))
+    if ( ! is_stealth_script(script))
         return false;
 
     auto const& data = script[1].data();
@@ -177,7 +177,7 @@ bool shared_secret(ec_secret& out_shared, const ec_secret& secret,
     const ec_compressed& point)
 {
     auto copy = point;
-    if (!ec_multiply(copy, secret))
+    if ( ! ec_multiply(copy, secret))
         return false;
 
     out_shared = sha256_hash(copy);
@@ -189,11 +189,11 @@ bool uncover_stealth(ec_compressed& out_stealth,
     const ec_compressed& spend)
 {
     ec_secret shared;
-    if (!shared_secret(shared, scan_or_ophemeral, ephemeral_or_scan))
+    if ( ! shared_secret(shared, scan_or_ophemeral, ephemeral_or_scan))
         return false;
 
     auto copy = spend;
-    if (!ec_add(copy, shared))
+    if ( ! ec_add(copy, shared))
         return false;
 
     out_stealth = copy;
@@ -205,11 +205,11 @@ bool uncover_stealth(ec_secret& out_stealth,
     const ec_secret& spend)
 {
     ec_secret shared;
-    if (!shared_secret(shared, scan_or_ephemeral, ephemeral_or_scan))
+    if ( ! shared_secret(shared, scan_or_ephemeral, ephemeral_or_scan))
         return false;
 
     auto copy = spend;
-    if (!ec_add(copy, shared))
+    if ( ! ec_add(copy, shared))
         return false;
 
     out_stealth = copy;

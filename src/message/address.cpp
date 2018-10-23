@@ -104,10 +104,10 @@ bool address::from_data(uint32_t version, data_source& stream) {
 //        addresses_.resize(count);
 //
 //    for (auto& address: addresses_)
-//        if (!address.from_data(version, source, true))
+//        if ( ! address.from_data(version, source, true))
 //            break;
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

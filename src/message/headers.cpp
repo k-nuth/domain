@@ -118,13 +118,13 @@ bool headers::from_data(uint32_t version, data_source& stream) {
 //
 //    // Order is required.
 //    for (auto& element: elements_)
-//        if (!element.from_data(version, source))
+//        if ( ! element.from_data(version, source))
 //            break;
 //
 //    if (version < headers::version_minimum)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

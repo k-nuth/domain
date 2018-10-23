@@ -176,10 +176,10 @@ bool header::from_data(data_source& stream, bool wire) {
 //    bits_ = source.read_4_bytes_little_endian();
 //    nonce_ = source.read_4_bytes_little_endian();
 //
-//    if (!wire)
+//    if ( ! wire)
 //        validation.median_time_past = source.read_4_bytes_little_endian();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;
@@ -239,7 +239,7 @@ void header::to_data(data_sink& stream, bool wire) const {
 //    sink.write_4_bytes_little_endian(bits_);
 //    sink.write_4_bytes_little_endian(nonce_);
 //
-//    if (!wire)
+//    if ( ! wire)
 //        sink.write_4_bytes_little_endian(validation.median_time_past);
 //}
 
@@ -356,7 +356,7 @@ hash_digest header::hash() const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (!hash_) {
+    if ( ! hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
         hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data()));
@@ -445,11 +445,11 @@ bool header::is_valid_proof_of_work(bool retarget) const {
 //-----------------------------------------------------------------------------
 
 code header::check(bool retarget) const {
-    if (!is_valid_proof_of_work(retarget)) {
+    if ( ! is_valid_proof_of_work(retarget)) {
         return error::invalid_proof_of_work;
     } 
     
-    if (!is_valid_timestamp()) {
+    if ( ! is_valid_timestamp()) {
         return error::futuristic_timestamp;
     } 
     

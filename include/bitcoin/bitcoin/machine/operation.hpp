@@ -101,7 +101,7 @@ class BI_API operation {
         else
             data_ = source.read_bytes(size);
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return valid_;

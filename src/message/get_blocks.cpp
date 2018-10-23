@@ -111,7 +111,7 @@ bool get_blocks::from_data(uint32_t version, data_source& stream) {
 //
 //    stop_hash_ = source.read_hash();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

@@ -193,7 +193,7 @@ bool script::from_data(data_source& stream, bool prefix) {
 //        bytes_ = source.read_bytes();
 //    }
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;
@@ -210,7 +210,7 @@ bool script::from_string(const std::string& mnemonic) {
 
     // Create an op list from the split tokens, one operation per token.
     for (size_t index = 0; index < ops.size(); ++index)
-        if (!ops[index].from_string(tokens[index]))
+        if ( ! ops[index].from_string(tokens[index]))
             return false;
 
     from_operations(ops);
@@ -779,7 +779,7 @@ bool script::create_endorsement(endorsement& out, const ec_secret& secret, const
 
     // Create the EC signature and encode as DER.
     ec_signature signature;
-    if (!sign(signature, secret, sighash) || !encode_signature(out, signature))
+    if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature))
         return false;
 
     // Add the sighash type to the end of the DER signature -> endorsement.
@@ -881,7 +881,7 @@ bool script::is_pay_multisig_pattern(const operation::list& ops) {
         return false;
 
     for (auto op = ops.begin() + 1; op != ops.end() - 2; ++op)
-        if (!is_public_key(op->data()))
+        if ( ! is_public_key(op->data()))
             return false;
 
     return true;
@@ -944,7 +944,7 @@ operation::list script::to_null_data_pattern(data_slice data) {
 }
 
 operation::list script::to_pay_public_key_pattern(data_slice point) {
-    if (!is_public_key(point))
+    if ( ! is_public_key(point))
         return {};
 
     return operation::list{
@@ -1006,7 +1006,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
     ops.emplace_back(op_m);
 
     for (auto const point : points) {
-        if (!is_public_key(point))
+        if ( ! is_public_key(point))
             return {};
 
         ops.emplace_back(point);
@@ -1030,7 +1030,7 @@ script_version script::version() const {
     // The first operations access must be method-based to guarantee the cache.
     auto const& ops = operations();
 
-    if (!is_witness_program_pattern(ops))
+    if ( ! is_witness_program_pattern(ops))
         return script_version::unversioned;
 
     // Version 0 is specified, others are reserved (bip141).
@@ -1216,13 +1216,13 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
         return ec;
 
     // This precludes bare witness programs of -0 (undocumented).
-    if (!prevout.stack_result(false))
+    if ( ! prevout.stack_result(false))
         return error::stack_false;
 
     // Triggered by output script push of version and witness program (bip141).
     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
         // The input script must be empty (bip141).
-        if (!input_script.empty())
+        if ( ! input_script.empty())
             return error::dirty_witness;
 
         // This is a valid witness script so validate it.
@@ -1233,7 +1233,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
 
     // p2sh and p2w are mutually exclusive.
     else if (prevout_script.is_pay_to_script_hash(forks)) {
-        if (!is_relaxed_push(input_script.operations()))
+        if ( ! is_relaxed_push(input_script.operations()))
             return error::invalid_script_embed;
 
         // Embedded script must be at the top of the stack (bip16).
@@ -1244,7 +1244,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
             return ec;
 
         // This precludes embedded witness programs of -0 (undocumented).
-        if (!embedded.stack_result(false))
+        if ( ! embedded.stack_result(false))
             return error::stack_false;
 
         // Triggered by embedded push of version and witness program (bip141).
@@ -1261,7 +1261,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
     }
 
     // Witness must be empty if no bip141 or valid witness program (bip141).
-    if (!witnessed && !input_witness.empty())
+    if ( ! witnessed && !input_witness.empty())
         return error::unexpected_witness;
 
     return error::success;

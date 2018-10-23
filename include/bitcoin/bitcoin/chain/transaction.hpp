@@ -229,10 +229,10 @@ class BC_API transaction {
         }
 
         // TODO(libbitcoin): optimize by having reader skip witness data.
-        if (!witness_val(witness))
+        if ( ! witness_val(witness))
             strip_witness();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

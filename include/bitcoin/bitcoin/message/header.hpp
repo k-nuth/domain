@@ -73,7 +73,7 @@ class BC_API header
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
-        if (!chain::header::from_data(source))
+        if ( ! chain::header::from_data(source))
             return false;
 
         // The header message must trail a zero byte (yes, it's stoopid).
@@ -81,7 +81,7 @@ class BC_API header
         if (version != version::level::canonical && source.read_byte() != 0x00)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

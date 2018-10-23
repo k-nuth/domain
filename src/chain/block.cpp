@@ -259,7 +259,7 @@ bool block::from_data(data_source& stream, bool witness) {
 //    validation.start_deserialize = asio::steady_clock::now();
 //    reset();
 //
-//    if (!header_.from_data(source, true))
+//    if ( ! header_.from_data(source, true))
 //        return false;
 //
 //    auto const count = source.read_size_little_endian();
@@ -272,14 +272,14 @@ bool block::from_data(data_source& stream, bool witness) {
 //
 //    // Order is required, explicit loop allows early termination.
 //    for (auto& tx: transactions_)
-//        if (!tx.from_data(source, true, witness))
+//        if ( ! tx.from_data(source, true, witness))
 //            break;
 //
 //    // TODO(libbitcoin): optimize by having reader skip witness data.
-//    if (!witness)
+//    if ( ! witness)
 //        strip_witness();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    validation.end_deserialize = asio::steady_clock::now();
@@ -362,7 +362,7 @@ size_t block::serialized_size(bool witness) const {
         return value;
     }
 
-    if (!witness_val(witness) && base_size_ != boost::none) {
+    if ( ! witness_val(witness) && base_size_ != boost::none) {
         value = base_size_.get();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
@@ -871,7 +871,7 @@ code block::check() const {
     else if (transactions_.empty())
         return error::empty_block;
 
-    else if (!transactions_.front().is_coinbase())
+    else if ( ! transactions_.front().is_coinbase())
         return error::first_not_coinbase;
 
     else if (is_extra_coinbases())
@@ -882,7 +882,7 @@ code block::check() const {
         return error::forward_reference;
 
     // This is subset of is_internal_double_spend if collisions cannot happen.
-    ////else if (!is_distinct_transaction_set())
+    ////else if ( ! is_distinct_transaction_set())
     ////    return error::internal_duplicate;
 
     // TODO(libbitcoin): determinable from tx pool graph.
@@ -890,7 +890,7 @@ code block::check() const {
         return error::block_internal_double_spend;
 
     // TODO(libbitcoin): relates height to tx.hash(false) (pool cache).
-    else if (!is_valid_merkle_root())
+    else if ( ! is_valid_merkle_root())
         return error::merkle_mismatch;
 
     // We cannot know if bip16 is enabled at this point so we disable it.
@@ -934,7 +934,7 @@ code block::accept(chain_state const& state, bool transactions) const {
 
         //In Bitcoin Cash, block size check is now dependent on the Blockchain state.
 #if defined(BITPRIM_CURRENCY_BCH)
-    else if (!state.is_monolith_enabled() && serialized_size() > max_block_size_old)
+    else if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old)
         return error::block_size_limit;
 #endif
 
@@ -950,11 +950,11 @@ code block::accept(chain_state const& state, bool transactions) const {
         return error::coinbase_height_mismatch;
 
     // TODO(libbitcoin): relates height to total of tx.fee (pool cach).
-    else if (!is_valid_coinbase_claim(state.height()))
+    else if ( ! is_valid_coinbase_claim(state.height()))
         return error::coinbase_value_limit;
 
     // TODO(libbitcoin): relates median time past to tx.locktime (pool cache min tx.time).
-    else if (!is_final(state.height(), block_time))
+    else if ( ! is_final(state.height(), block_time))
         return error::block_non_final;
 
     // TODO(libbitcoin): relates height to tx.hash(true) (pool cache).

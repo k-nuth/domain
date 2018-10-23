@@ -30,7 +30,7 @@ code interpreter::run(program& program)
 {
     code ec;
 
-    if (!program.is_valid())
+    if ( ! program.is_valid())
         return error::invalid_script;
 
     for (auto const& op: program)
@@ -41,7 +41,7 @@ code interpreter::run(program& program)
         if (op.is_disabled())
             return error::op_disabled;
 
-        if (!program.increment_operation_count(op))
+        if ( ! program.increment_operation_count(op))
             return error::invalid_operation_count;
 
         if (program.if_(op))

@@ -97,7 +97,7 @@ class BC_API compact_block {
 
         reset();
 
-        if (!header_.from_data(source))
+        if ( ! header_.from_data(source))
             return false;
 
         nonce_ = source.read_8_bytes_little_endian();
@@ -129,13 +129,13 @@ class BC_API compact_block {
         // NOTE: Witness flag is controlled by prefilled tx
         // Order is required.
         for (auto& tx : transactions_)
-            if (!tx.from_data(version, source))
+            if ( ! tx.from_data(version, source))
                 break;
 
         if (version < compact_block::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

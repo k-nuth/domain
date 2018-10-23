@@ -83,7 +83,7 @@ bool pong::from_data(uint32_t version, data_source& stream) {
 //    valid_ = true;
 //    nonce_ = source.read_8_bytes_little_endian();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

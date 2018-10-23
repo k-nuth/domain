@@ -114,20 +114,20 @@ std::istream& operator>>(std::istream& input, output& argument)
         }
 
         data_chunk seed;
-        if (!decode_base16(seed, tokens[2]) || seed.size() < minimum_seed_size)
+        if ( ! decode_base16(seed, tokens[2]) || seed.size() < minimum_seed_size)
         {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 
         ec_secret ephemeral_secret;
-        if (!create_stealth_data(argument.script_, ephemeral_secret,
+        if ( ! create_stealth_data(argument.script_, ephemeral_secret,
             stealth.filter(), seed))
         {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 
         ec_compressed stealth_key;
-        if (!uncover_stealth(stealth_key, stealth.scan_key(), ephemeral_secret,
+        if ( ! uncover_stealth(stealth_key, stealth.scan_key(), ephemeral_secret,
             stealth.spend_keys().front()))
         {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
@@ -143,7 +143,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     // Note that it is possible for a base16 encoded script to be interpreted
     // as an address above. That is unlikely but considered intended behavior.
     data_chunk decoded;
-    if (!decode_base16(decoded, target))
+    if ( ! decode_base16(decoded, target))
     {
         BOOST_THROW_EXCEPTION(invalid_option_value(target));
     }

@@ -95,7 +95,7 @@ class BC_API get_blocks {
 
         stop_hash_ = source.read_hash();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

@@ -107,7 +107,7 @@ class BC_API point {
                 index_ = null_index;
         }
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

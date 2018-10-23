@@ -91,7 +91,7 @@ class BC_API get_block_transactions {
         for (size_t position = 0; position < count && source; ++position)
             indexes_.push_back(source.read_size_little_endian());
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

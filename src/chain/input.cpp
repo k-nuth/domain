@@ -166,7 +166,7 @@ bool input::from_data(data_source& stream, bool wire, bool witness) {
 //
 //    reset();
 //
-//    if (!previous_output_.from_data(source, wire))
+//    if ( ! previous_output_.from_data(source, wire))
 //        return false;
 //
 //    script_.from_data(source, true);
@@ -177,7 +177,7 @@ bool input::from_data(data_source& stream, bool wire, bool witness) {
 //
 //    sequence_ = source.read_4_bytes_little_endian();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;
@@ -339,7 +339,7 @@ payment_address::list input::addresses() const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (!addresses_) {
+    if ( ! addresses_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
 
@@ -437,7 +437,7 @@ bool input::extract_embedded_script(chain::script& out) const {
     auto const& prevout_script = previous_output_.validation.cache.script();
 
     // There are no embedded sigops when the prevout script is not p2sh.
-    if (!prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule))
+    if ( ! prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule))
         return false;
 
     // There are no embedded sigops when the input script is not push only.
@@ -453,7 +453,7 @@ bool input::extract_embedded_script(chain::script& out) const {
 bool input::extract_reserved_hash(hash_digest& out) const {
     auto const& stack = witness_.stack();
 
-    if (!witness::is_reserved_pattern(stack))
+    if ( ! witness::is_reserved_pattern(stack))
         return false;
 
     std::copy_n(stack.front().begin(), hash_size, out.begin());

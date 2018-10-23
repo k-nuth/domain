@@ -72,7 +72,7 @@ class BC_API pong {
         valid_ = true;
         nonce_ = source.read_8_bytes_little_endian();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

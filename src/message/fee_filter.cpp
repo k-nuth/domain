@@ -99,7 +99,7 @@ bool fee_filter::from_data(uint32_t version, data_source& stream) {
 //    if (version < fee_filter::version_minimum)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

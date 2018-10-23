@@ -106,7 +106,7 @@ bool filter_add::from_data(uint32_t version, data_source& stream) {
 //    if (version < filter_add::version_minimum)
 //        source.invalidate();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

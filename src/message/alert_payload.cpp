@@ -220,7 +220,7 @@ bool alert_payload::from_data(uint32_t version, data_source& stream) {
 //    status_bar_ = source.read_string();
 //    reserved_ = source.read_string();
 //
-//    if (!source)
+//    if ( ! source)
 //        reset();
 //
 //    return source;

@@ -94,10 +94,10 @@ class BC_API inventory {
 
         // Order is required.
         for (auto& inventory : inventories_)
-            if (!inventory.from_data(version, source))
+            if ( ! inventory.from_data(version, source))
                 break;
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

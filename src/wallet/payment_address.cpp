@@ -138,7 +138,7 @@ bool ConvertBits(O &out, I it, I end) {
     }
 
     // We have remaining bits to encode but do not pad.
-    if (!pad && bits) {
+    if ( ! pad && bits) {
         return false;
     }
 
@@ -247,7 +247,7 @@ payment_address payment_address::from_string(const std::string& address) {
 
 payment_address payment_address::from_payment(const payment& decoded)
 {
-    if (!is_address(decoded))
+    if ( ! is_address(decoded))
         return{};
 
     auto const hash = slice<1, short_hash_size + 1>(decoded);
@@ -256,7 +256,7 @@ payment_address payment_address::from_payment(const payment& decoded)
 
 payment_address payment_address::from_private(const ec_private& secret)
 {
-    if (!secret)
+    if ( ! secret)
         return{};
 
     return{ secret.to_public(), secret.payment_version() };
@@ -265,11 +265,11 @@ payment_address payment_address::from_private(const ec_private& secret)
 payment_address payment_address::from_public(const ec_public& point,
     uint8_t version)
 {
-    if (!point)
+    if ( ! point)
         return{};
 
     data_chunk data;
-    if (!point.to_data(data))
+    if ( ! point.to_data(data))
         return{};
 
     return{ bitcoin_short_hash(data), version };
@@ -426,7 +426,7 @@ std::istream& operator>>(std::istream& in, payment_address& to)
     in >> value;
     to = payment_address(value);
 
-    if (!to)
+    if ( ! to)
     {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
