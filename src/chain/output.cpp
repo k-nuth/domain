@@ -49,18 +49,18 @@ output::output()
       validation{} {
 }
 
-output::output(output&& other)
-    : addresses_(other.addresses_cache()),
-      value_(other.value_),
-      script_(std::move(other.script_)),
-      validation(other.validation) {
+output::output(output&& x)
+    : addresses_(x.addresses_cache()),
+      value_(x.value_),
+      script_(std::move(x.script_)),
+      validation(x.validation) {
 }
 
-output::output(const output& other)
-    : addresses_(other.addresses_cache()),
-      value_(other.value_),
-      script_(other.script_),
-      validation(other.validation) {
+output::output(const output& x)
+    : addresses_(x.addresses_cache()),
+      value_(x.value_),
+      script_(x.script_),
+      validation(x.validation) {
 }
 
 output::output(uint64_t value, chain::script&& script)
@@ -88,28 +88,28 @@ output::addresses_ptr output::addresses_cache() const {
 // Operators.
 //-----------------------------------------------------------------------------
 
-output& output::operator=(output&& other) {
-    addresses_ = other.addresses_cache();
-    value_ = other.value_;
-    script_ = std::move(other.script_);
-    validation = std::move(other.validation);
+output& output::operator=(output&& x) {
+    addresses_ = x.addresses_cache();
+    value_ = x.value_;
+    script_ = std::move(x.script_);
+    validation = std::move(x.validation);
     return *this;
 }
 
-output& output::operator=(const output& other) {
-    addresses_ = other.addresses_cache();
-    value_ = other.value_;
-    script_ = other.script_;
-    validation = other.validation;
+output& output::operator=(const output& x) {
+    addresses_ = x.addresses_cache();
+    value_ = x.value_;
+    script_ = x.script_;
+    validation = x.validation;
     return *this;
 }
 
-bool output::operator==(const output& other) const {
-    return (value_ == other.value_) && (script_ == other.script_);
+bool output::operator==(const output& x) const {
+    return (value_ == x.value_) && (script_ == x.script_);
 }
 
-bool output::operator!=(const output& other) const {
-    return !(*this == other);
+bool output::operator!=(const output& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.
@@ -308,9 +308,9 @@ size_t output::signature_operations(bool bip141) const {
     return script_.sigops(false) * sigops_factor;
 }
 
-bool output::is_dust(uint64_t minimum_value) const {
+bool output::is_dust(uint64_t minimum_output_value) const {
     // If provably unspendable it does not expand the unspent output set.
-    return value_ < minimum_value && !script_.is_unspendable();
+    return value_ < minimum_output_value && !script_.is_unspendable();
 }
 
 bool output::extract_committed_hash(hash_digest& out) const {
