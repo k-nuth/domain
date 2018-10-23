@@ -158,14 +158,12 @@ public:
 
     hash_digest const& previous_block_hash() const;
     void set_previous_block_hash(hash_digest const& value);
-    void set_previous_block_hash(hash_digest&& value);
 
     // Deprecated (unsafe).
     hash_digest& merkle();
 
     hash_digest const& merkle() const;
     void set_merkle(hash_digest const& value);
-    void set_merkle(hash_digest&& value);
 
     uint32_t timestamp() const;
     void set_timestamp(uint32_t value);

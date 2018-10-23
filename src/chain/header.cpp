@@ -280,11 +280,6 @@ void header::set_previous_block_hash(hash_digest const& value) {
     invalidate_cache();
 }
 
-void header::set_previous_block_hash(hash_digest&& value) {
-    previous_block_hash_ = value;
-    invalidate_cache();
-}
-
 hash_digest& header::merkle() {
     return merkle_;
 }
@@ -294,11 +289,6 @@ hash_digest const& header::merkle() const {
 }
 
 void header::set_merkle(hash_digest const& value) {
-    merkle_ = value;
-    invalidate_cache();
-}
-
-void header::set_merkle(hash_digest&& value) {
     merkle_ = value;
     invalidate_cache();
 }
