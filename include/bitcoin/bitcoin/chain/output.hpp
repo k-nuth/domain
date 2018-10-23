@@ -63,8 +63,8 @@ public:
 
     output();
 
-    output(const output& x);
-    output(output&& x);
+    output(output const& x);
+    output(output&& x) noexcept;
 
     output(uint64_t value, chain::script const& script);
     output(uint64_t value, chain::script&& script);
@@ -72,11 +72,11 @@ public:
     // Operators.
     //-------------------------------------------------------------------------
 
-    output& operator=(const output& x);
-    output& operator=(output&& x);
+    output& operator=(output const& x);
+    output& operator=(output&& x) noexcept;
 
-    bool operator==(const output& x) const;
-    bool operator!=(const output& x) const;
+    bool operator==(output const& x) const;
+    bool operator!=(output const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------

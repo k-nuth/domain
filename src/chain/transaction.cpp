@@ -382,7 +382,7 @@ size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) c
         return size + input.serialized_size(wire, witness_val(witness));
     };
 
-    auto const outs = [wire](size_t size, const output& output) {
+    auto const outs = [wire](size_t size, output const& output) {
         return size + output.serialized_size(wire);
     };
 
@@ -439,11 +439,11 @@ output::list& transaction::outputs() {
     return outputs_;
 }
 
-const output::list& transaction::outputs() const {
+output const::list& transaction::outputs() const {
     return outputs_;
 }
 
-void transaction::set_outputs(const output::list& value) {
+void transaction::set_outputs(output const::list& value) {
     outputs_ = value;
     invalidate_cache();
     outputs_hash_.reset();
@@ -729,7 +729,7 @@ uint64_t transaction::total_output_value() const {
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
-    auto const sum = [](uint64_t total, const output& output) {
+    auto const sum = [](uint64_t total, output const& output) {
         return ceiling_add(total, output.value());
     };
 
@@ -771,7 +771,7 @@ size_t transaction::signature_operations(bool bip16, bool bip141) const {
         return ceiling_add(total, input.signature_operations(bip16, bip141));
     };
 
-    auto const out = [bip141](size_t total, const output& output) {
+    auto const out = [bip141](size_t total, output const& output) {
         return ceiling_add(total, output.signature_operations(bip141));
     };
 
@@ -856,7 +856,7 @@ bool transaction::is_double_spend(bool include_unconfirmed) const {
 }
 
 bool transaction::is_dusty(uint64_t minimum_output_value) const {
-    auto const dust = [minimum_output_value](const output& output) {
+    auto const dust = [minimum_output_value](output const& output) {
         return output.is_dust(minimum_output_value);
     };
 

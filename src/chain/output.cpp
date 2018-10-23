@@ -35,45 +35,44 @@ namespace chain {
 using namespace bc::wallet;
 
 // This is a consensus critical value that must be set on reset.
-uint64_t const output::not_found = sighash_null_value;
+uint64_t output const::not_found = sighash_null_value;
 
 // This is a non-consensus sentinel used to indicate an output is unspent.
-uint32_t const output::validation::not_spent = max_uint32;
+uint32_t output const::validation::not_spent = max_uint32;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
 output::output()
     : value_(not_found),
-      script_{},
-      validation{} {
-}
+      validation{} 
+{}
 
-output::output(output&& x)
+output::output(output&& x) noexcept
     : addresses_(x.addresses_cache()),
       value_(x.value_),
       script_(std::move(x.script_)),
-      validation(x.validation) {
-}
+      validation(x.validation) 
+{}
 
-output::output(const output& x)
+output::output(output const& x)
     : addresses_(x.addresses_cache()),
       value_(x.value_),
       script_(x.script_),
-      validation(x.validation) {
-}
+      validation(x.validation) 
+{}
 
 output::output(uint64_t value, chain::script&& script)
     : value_(value),
       script_(std::move(script)),
-      validation{} {
-}
+      validation{} 
+{}
 
 output::output(uint64_t value, chain::script const& script)
     : value_(value),
       script_(script),
-      validation{} {
-}
+      validation{} 
+{}
 
 // Private cache access for copy/move construction.
 output::addresses_ptr output::addresses_cache() const {
@@ -88,7 +87,7 @@ output::addresses_ptr output::addresses_cache() const {
 // Operators.
 //-----------------------------------------------------------------------------
 
-output& output::operator=(output&& x) {
+output& output::operator=(output&& x) noexcept {
     addresses_ = x.addresses_cache();
     value_ = x.value_;
     script_ = std::move(x.script_);
@@ -96,7 +95,7 @@ output& output::operator=(output&& x) {
     return *this;
 }
 
-output& output::operator=(const output& x) {
+output& output::operator=(output const& x) {
     addresses_ = x.addresses_cache();
     value_ = x.value_;
     script_ = x.script_;
@@ -104,11 +103,11 @@ output& output::operator=(const output& x) {
     return *this;
 }
 
-bool output::operator==(const output& x) const {
+bool output::operator==(output const& x) const {
     return (value_ == x.value_) && (script_ == x.script_);
 }
 
-bool output::operator!=(const output& x) const {
+bool output::operator!=(output const& x) const {
     return !(*this == x);
 }
 

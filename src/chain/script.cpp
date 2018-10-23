@@ -597,7 +597,7 @@ hash_digest script::generate_unversioned_signature_hash(transaction const& tx,
 //-----------------------------------------------------------------------------
 
 hash_digest script::to_outputs(transaction const& tx) {
-    auto const sum = [&](size_t total, const output& output) {
+    auto const sum = [&](size_t total, output const& output) {
         return total + output.serialized_size();
     };
 
@@ -608,7 +608,7 @@ hash_digest script::to_outputs(transaction const& tx) {
     data_sink ostream(data);
     ostream_writer sink_w(ostream);
 
-    auto const write = [&](const output& output) {
+    auto const write = [&](output const& output) {
         output.to_data(sink_w, true);
     };
 
