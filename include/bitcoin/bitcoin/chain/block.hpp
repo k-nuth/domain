@@ -85,7 +85,7 @@ class BC_API block {
     block(block const& other);
 
     block(chain::header&& header, transaction::list&& transactions);
-    block(chain::header const& header, transaction const::list& transactions);
+    block(chain::header const& header, transaction::list const& transactions);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -186,8 +186,8 @@ class BC_API block {
     // deprecated (unsafe)
     transaction::list& transactions();
 
-    transaction const::list& transactions() const;
-    void set_transactions(transaction const::list& value);
+    transaction::list const& transactions() const;
+    void set_transactions(transaction::list const& value);
     void set_transactions(transaction::list&& value);
 
     hash_digest hash() const;

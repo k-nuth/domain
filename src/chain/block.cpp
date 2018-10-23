@@ -185,7 +185,7 @@ block::block(block&& other)
 
 // TODO: deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header,
-             transaction const::list& transactions)
+             transaction::list const& transactions)
     : header_(header), transactions_(transactions), validation{} {
 }
 
@@ -416,12 +416,12 @@ transaction::list& block::transactions() {
     return transactions_;
 }
 
-transaction const::list& block::transactions() const {
+transaction::list const& block::transactions() const {
     return transactions_;
 }
 
 // TODO: see set_header comments.
-void block::set_transactions(transaction const::list& value) {
+void block::set_transactions(transaction::list const& value) {
     transactions_ = value;
     segregated_ = boost::none;
     total_inputs_ = boost::none;
