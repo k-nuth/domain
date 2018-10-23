@@ -45,7 +45,7 @@ namespace message {
 class BC_API headers {
    public:
     typedef std::shared_ptr<headers> ptr;
-    typedef std::shared_ptr<const headers> const_ptr;
+    typedef std::shared_ptr<headers const> const_ptr;
 
     static headers factory_from_data(uint32_t version, data_chunk const& data);
     static headers factory_from_data(uint32_t version, data_source& stream);
@@ -60,15 +60,15 @@ class BC_API headers {
     //static headers factory_from_data(uint32_t version, reader& source);
 
     headers();
-    headers(header const::list& values);
+    headers(header::list const& values);
     headers(header::list&& values);
-    headers(const std::initializer_list<header>& values);
-    headers(const headers& other);
+    headers(std::initializer_list<header> const& values);
+    headers(headers const& other);
     headers(headers&& other);
 
     header::list& elements();
-    header const::list& elements() const;
-    void set_elements(header const::list& values);
+    header::list const& elements() const;
+    void set_elements(header::list const& values);
     void set_elements(header::list&& values);
 
     bool is_sequential() const;
@@ -124,10 +124,10 @@ class BC_API headers {
 
     // This class is move assignable but not copy assignable.
     headers& operator=(headers&& other);
-    void operator=(const headers&) = delete;
+    void operator=(headers const&) = delete;
 
-    bool operator==(const headers& other) const;
-    bool operator!=(const headers& other) const;
+    bool operator==(headers const& other) const;
+    bool operator!=(headers const& other) const;
 
     static const std::string command;
     static uint32_t const version_minimum;

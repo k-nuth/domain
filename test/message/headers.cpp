@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_1__always__initialized_invalid)
 
 BOOST_AUTO_TEST_CASE(headers__constructor_2__always__equals_params)
 {
-    header const::list expected
+    header::list const expected
     {
         header(
             10u,
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_2__always__equals_params)
 
 BOOST_AUTO_TEST_CASE(headers__constructor_3__always__equals_params)
 {
-    header const::list expected
+    header::list const expected
     {
         header(
             10u,
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(headers__elements_accessor_1__always__returns_initialized_value)
 {
-    header const::list expected
+    header::list const expected
     {
         header(
             10u,
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(headers__elements_accessor_1__always__returns_initialized_v
 
 BOOST_AUTO_TEST_CASE(headers__elements_accessor_2__always__returns_initialized_value)
 {
-    header const::list expected
+    header::list const expected
     {
         header(
             10u,
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(headers__elements_accessor_2__always__returns_initialized_v
 
 BOOST_AUTO_TEST_CASE(headers__command_setter_1__roundtrip__success)
 {
-    header const::list expected
+    header::list const expected
     {
         header(
             10u,

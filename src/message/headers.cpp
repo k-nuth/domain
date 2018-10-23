@@ -65,7 +65,7 @@ headers::headers()
 }
 
 // Uses headers copy assignment.
-headers::headers(header const::list& values)
+headers::headers(header::list const& values)
     : elements_(values) {
 }
 
@@ -73,11 +73,11 @@ headers::headers(header::list&& values)
     : elements_(std::move(values)) {
 }
 
-headers::headers(const std::initializer_list<header>& values)
+headers::headers(std::initializer_list<header> const& values)
     : elements_(values) {
 }
 
-headers::headers(const headers& other)
+headers::headers(headers const& other)
     : headers(other.elements_) {
 }
 
@@ -200,11 +200,11 @@ header::list& headers::elements() {
     return elements_;
 }
 
-header const::list& headers::elements() const {
+header::list const& headers::elements() const {
     return elements_;
 }
 
-void headers::set_elements(header const::list& values) {
+void headers::set_elements(header::list const& values) {
     elements_ = values;
 }
 
@@ -217,11 +217,11 @@ headers& headers::operator=(headers&& other) {
     return *this;
 }
 
-bool headers::operator==(const headers& other) const {
+bool headers::operator==(headers const& other) const {
     return (elements_ == other.elements_);
 }
 
-bool headers::operator!=(const headers& other) const {
+bool headers::operator!=(headers const& other) const {
     return !(*this == other);
 }
 

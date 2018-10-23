@@ -36,8 +36,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string header::command = "headers";
-uint32_t header const::version_minimum = version::level::minimum;
-uint32_t header const::version_maximum = version::level::maximum;
+uint32_t const header::version_minimum = version::level::minimum;
+uint32_t const header::version_maximum = version::level::maximum;
 
 header header::factory_from_data(uint32_t version, data_chunk const& data) {
     header instance;
