@@ -447,34 +447,38 @@ bool header::is_valid_proof_of_work(bool retarget) const {
 code header::check(bool retarget) const {
     if (!is_valid_proof_of_work(retarget)) {
         return error::invalid_proof_of_work;
-
-    } else if (!is_valid_timestamp()) {
+    } 
+    
+    if (!is_valid_timestamp()) {
         return error::futuristic_timestamp;
-
-    } else {
-        return error::success;
-    }
+    } 
+    
+    return error::success;
+    
 }
 
 code header::accept(const chain_state& state) const {
     if (bits_ != state.work_required()) {
         return error::incorrect_proof_of_work;
-
-    } else if (state.is_checkpoint_conflict(hash())) {
+    } 
+    
+    if (state.is_checkpoint_conflict(hash())) {
         return error::checkpoints_failed;
-
-    } else if (state.is_under_checkpoint()) {
+    } 
+    
+    if (state.is_under_checkpoint()) {
         return error::success;
-
-    } else if (version_ < state.minimum_version()) {
+    } 
+    
+    if (version_ < state.minimum_version()) {
         return error::old_version_block;
-
-    } else if (timestamp_ <= state.median_time_past()) {
+    } 
+    
+    if (timestamp_ <= state.median_time_past()) {
         return error::timestamp_too_early;
-
-    } else {
-        return error::success;
     }
+
+    return error::success;
 }
 
 }  // namespace chain
