@@ -137,7 +137,7 @@ transaction::transaction(transaction const& x, hash_digest const& hash)
     // validation = x.validation;
 }
 
-transaction::transaction(transaction&& x, hash_digest&& hash)
+transaction::transaction(transaction&& x, hash_digest const& hash)
     // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_), x.cached_sigops_, x.cached_fees_, x.cached_is_standard_) 
 
     : version_(x.version_)
@@ -378,7 +378,7 @@ size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) c
 
     // Returns space for the witness although not serialized by input.
     // Returns witness space if specified even if input not segregated.
-    auto const ins = [wire, witness](size_t size, const input& input) {
+    auto const ins = [wire, witness](size_t size, input const& input) {
         return size + input.serialized_size(wire, witness_val(witness));
     };
 
@@ -415,11 +415,11 @@ input::list& transaction::inputs() {
     return inputs_;
 }
 
-const input::list& transaction::inputs() const {
+input::list const& transaction::inputs() const {
     return inputs_;
 }
 
-void transaction::set_inputs(const input::list& value) {
+void transaction::set_inputs(input::list const& value) {
     inputs_ = value;
     invalidate_cache();
     inpoints_hash_.reset();
@@ -632,7 +632,7 @@ bool transaction::is_null_non_coinbase() const {
         return false;
     }
 
-    auto const invalid = [](const input& input) {
+    auto const invalid = [](input const& input) {
         return input.previous_output().is_null();
     };
 
@@ -641,7 +641,7 @@ bool transaction::is_null_non_coinbase() const {
 
 // private
 bool transaction::all_inputs_final() const {
-    auto const finalized = [](const input& input) {
+    auto const finalized = [](input const& input) {
         return input.is_final();
     };
 
@@ -662,7 +662,7 @@ bool transaction::is_locked(size_t block_height,
         return false;
     }
 
-    auto const locked = [block_height, median_time_past](const input& input) {
+    auto const locked = [block_height, median_time_past](input const& input) {
         return input.is_locked(block_height, median_time_past);
     };
 
@@ -694,7 +694,7 @@ uint64_t transaction::total_input_value() const {
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
-    auto const sum = [](uint64_t total, const input& input) {
+    auto const sum = [](uint64_t total, input const& input) {
         auto const& prevout = input.previous_output().validation.cache;
         auto const missing = !prevout.is_valid();
 
@@ -766,7 +766,7 @@ size_t transaction::signature_operations(bool bip16, bool bip141) const {
 #ifdef BITPRIM_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
-    auto const in = [bip16, bip141](size_t total, const input& input) {
+    auto const in = [bip16, bip141](size_t total, input const& input) {
         // This includes BIP16 p2sh additional sigops if prevout is cached.
         return ceiling_add(total, input.signature_operations(bip16, bip141));
     };
@@ -786,7 +786,7 @@ size_t transaction::weight() const {
 }
 
 bool transaction::is_missing_previous_outputs() const {
-    auto const missing = [](const input& input) {
+    auto const missing = [](input const& input) {
         auto const& prevout = input.previous_output();
         auto const coinbase = prevout.is_null();
         auto const missing = !prevout.validation.cache.is_valid();
@@ -800,7 +800,7 @@ bool transaction::is_missing_previous_outputs() const {
 point::list transaction::previous_outputs() const {
     point::list prevouts;
     prevouts.reserve(inputs_.size());
-    auto const pointer = [&prevouts](const input& input) {
+    auto const pointer = [&prevouts](input const& input) {
         prevouts.push_back(input.previous_output());
     };
 
@@ -812,7 +812,7 @@ point::list transaction::previous_outputs() const {
 point::list transaction::missing_previous_outputs() const {
     point::list prevouts;
     prevouts.reserve(inputs_.size());
-    auto const accumulator = [&prevouts](const input& input) {
+    auto const accumulator = [&prevouts](input const& input) {
         auto const& prevout = input.previous_output();
         auto const missing = !prevout.validation.cache.is_valid();
 
@@ -830,7 +830,7 @@ hash_list transaction::missing_previous_transactions() const {
     auto const points = missing_previous_outputs();
     hash_list hashes;
     hashes.reserve(points.size());
-    auto const hasher = [&hashes](const output_point& point) {
+    auto const hasher = [&hashes](output_point const& point) {
         return point.hash();
     };
 
@@ -847,7 +847,7 @@ bool transaction::is_internal_double_spend() const {
 }
 
 bool transaction::is_double_spend(bool include_unconfirmed) const {
-    auto const spent = [include_unconfirmed](const input& input) {
+    auto const spent = [include_unconfirmed](input const& input) {
         auto const& prevout = input.previous_output().validation;
         return prevout.spent && (include_unconfirmed || prevout.confirmed);
     };
@@ -864,7 +864,7 @@ bool transaction::is_dusty(uint64_t minimum_output_value) const {
 }
 
 bool transaction::is_mature(size_t height) const {
-    auto const mature = [height](const input& input) {
+    auto const mature = [height](input const& input) {
         return input.previous_output().is_mature(height);
     };
 
@@ -891,7 +891,7 @@ bool transaction::is_segregated() const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    auto const segregated = [](const input& input) {
+    auto const segregated = [](input const& input) {
         return input.is_segregated();
     };
 

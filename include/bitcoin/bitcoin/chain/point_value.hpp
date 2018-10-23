@@ -41,7 +41,7 @@ public:
     point_value(point_value&& other);
     point_value(const point_value& other);
     point_value(point&& instance, uint64_t value);
-    point_value(const point& instance, uint64_t value);
+    point_value(point const& instance, uint64_t value);
 
     // Operators.
     //-------------------------------------------------------------------------

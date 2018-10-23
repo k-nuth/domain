@@ -54,10 +54,8 @@ public:
     //static block_transactions factory_from_data(uint32_t version, reader& source);
 
     block_transactions();
-    block_transactions(hash_digest const& block_hash,
-                       chain::transaction::list const& transactions);
-    block_transactions(hash_digest&& block_hash,
-                       chain::transaction::list&& transactions);
+    block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
+    block_transactions(hash_digest&& block_hash, chain::transaction::list&& transactions);
     block_transactions(const block_transactions& other);
     block_transactions(block_transactions&& other);
 

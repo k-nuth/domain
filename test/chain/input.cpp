@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_1__always__returns_default_initialized)
 
 BOOST_AUTO_TEST_CASE(input__constructor_2__valid_input__returns_input_initialized)
 {
-    const output_point previous_output{ null_hash, 5434u };
+    output_point const previous_output{ null_hash, 5434u };
     script script;
     BOOST_REQUIRE(script.from_data(to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
 
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_2__valid_input__returns_input_initialize
 
 BOOST_AUTO_TEST_CASE(input__constructor_3__valid_input__returns_input_initialized)
 {
-    const output_point previous_output{ null_hash, 5434u };
+    output_point const previous_output{ null_hash, 5434u };
     script script;
     BOOST_REQUIRE(script.from_data(to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
 
@@ -152,13 +152,13 @@ BOOST_AUTO_TEST_CASE(input__factory_from_data_3__valid_input__success)
 
 BOOST_AUTO_TEST_CASE(input__is_final__max_input_sequence__true)
 {
-    const input instance({}, {}, max_input_sequence);
+    input const instance({}, {}, max_input_sequence);
     BOOST_REQUIRE(instance.is_final());
 }
 
 BOOST_AUTO_TEST_CASE(input__is_final__sequence_zero__false)
 {
-    const input instance({}, {}, 0);
+    input const instance({}, {}, 0);
     BOOST_REQUIRE(!instance.is_final());
 }
 
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(input__signature_operations__bip16_active_cache_empty__retu
 
 BOOST_AUTO_TEST_CASE(input__previous_output_setter_1__roundtrip__success)
 {
-    const output_point value
+    output_point const value
     {
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         5434u
@@ -284,7 +284,7 @@ BOOST_AUTO_TEST_CASE(input__previous_output_setter_1__roundtrip__success)
 
 BOOST_AUTO_TEST_CASE(input__previous_output_setter_2__roundtrip__success)
 {
-    const output_point value
+    output_point const value
     {
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         5434u

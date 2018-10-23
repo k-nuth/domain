@@ -52,8 +52,8 @@ point::point(hash_digest const& hash, uint32_t index)
     : hash_(hash), index_(index), valid_(true) {
 }
 
-point::point(hash_digest&& hash, uint32_t index)
-    : hash_(std::move(hash)), index_(index), valid_(true) {
+point::point(point const& x)
+    : point(x.hash_, x.index_, x.valid_) {
 }
 
 // protected
@@ -61,46 +61,27 @@ point::point(hash_digest const& hash, uint32_t index, bool valid)
     : hash_(hash), index_(index), valid_(valid) {
 }
 
-// protected
-point::point(hash_digest&& hash, uint32_t index, bool valid)
-    : hash_(std::move(hash)), index_(index), valid_(valid) {
-}
-
-point::point(const point& other)
-    : point(other.hash_, other.index_, other.valid_) {
-}
-
-point::point(point&& other)
-    : point(std::move(other.hash_), other.index_, other.valid_) {
+point& point::operator=(point const& x) {
+    hash_ = x.hash_;
+    index_ = x.index_;
+    return *this;
 }
 
 // Operators.
 //-----------------------------------------------------------------------------
 
-point& point::operator=(point&& other) {
-    hash_ = std::move(other.hash_);
-    index_ = other.index_;
-    return *this;
-}
-
-point& point::operator=(const point& other) {
-    hash_ = other.hash_;
-    index_ = other.index_;
-    return *this;
-}
-
 // This arbitrary order is produced to support set uniqueness determinations.
-bool point::operator<(const point& other) const {
+bool point::operator<(point const& x) const {
     // The index is primary only because its comparisons are simpler.
-    return index_ == other.index_ ? hash_ < other.hash_ : index_ < other.index_;
+    return index_ == x.index_ ? hash_ < x.hash_ : index_ < x.index_;
 }
 
-bool point::operator==(const point& other) const {
-    return (hash_ == other.hash_) && (index_ == other.index_);
+bool point::operator==(point const& x) const {
+    return (hash_ == x.hash_) && (index_ == x.index_);
 }
 
-bool point::operator!=(const point& other) const {
-    return !(*this == other);
+bool point::operator!=(point const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.
@@ -120,14 +101,6 @@ point point::factory_from_data(data_source& stream, bool wire) {
     return instance;
 }
 
-// static
-//point point::factory_from_data(reader& source, bool wire)
-//{
-//    point instance;
-//    instance.from_data(source, wire);
-//    return instance;
-//}
-
 bool point::from_data(data_chunk const& data, bool wire) {
     data_source istream(data);
     return from_data(istream, wire);
@@ -137,31 +110,6 @@ bool point::from_data(data_source& stream, bool wire) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire);
 }
-
-//bool point::from_data(reader& source, bool wire)
-//{
-//    reset();
-//
-//    valid_ = true;
-//    hash_ = source.read_hash();
-//
-//    if (wire)
-//    {
-//        index_ = source.read_4_bytes_little_endian();
-//    }
-//    else
-//    {
-//        index_ = source.read_2_bytes_little_endian();
-//
-//        if (index_ == max_uint16)
-//            index_ = null_index;
-//    }
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
 
 // protected
 void point::reset() {
@@ -192,21 +140,6 @@ void point::to_data(data_sink& stream, bool wire) const {
     ostream_writer sink_w(stream);
     to_data(sink_w, wire);
 }
-
-//void point::to_data(writer& sink, bool wire) const
-//{
-//    sink.write_hash(hash_);
-//
-//    if (wire)
-//    {
-//        sink.write_4_bytes_little_endian(index_);
-//    }
-//    else
-//    {
-//        BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
-//        sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
-//    }
-//}
 
 // Iterator.
 //-----------------------------------------------------------------------------
@@ -242,12 +175,6 @@ void point::set_hash(hash_digest const& value) {
     // This is no longer a default instance, so valid.
     valid_ = true;
     hash_ = value;
-}
-
-void point::set_hash(hash_digest&& value) {
-    // This is no longer a default instance, so valid.
-    valid_ = true;
-    hash_ = std::move(value);
 }
 
 uint32_t point::index() const {

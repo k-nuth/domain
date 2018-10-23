@@ -73,7 +73,7 @@ input::input(const chain::input& value)
 {
 }
 
-input::input(const input& other)
+input::input(input const& other)
   : input(other.value_)
 {
 }
@@ -101,7 +101,7 @@ std::istream& operator>>(std::istream& stream, input& argument)
     return stream;
 }
 
-std::ostream& operator<<(std::ostream& output, const input& argument)
+std::ostream& operator<<(std::ostream& output, input const& argument)
 {
     output << encode_input(argument.value_);
     return output;

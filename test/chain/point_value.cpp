@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(point_value__constructor4__always__expected)
 
 BOOST_AUTO_TEST_CASE(point_value__constructor5__always__expected)
 {
-    static const point foo{ hash1, 42 };
+    static point const foo{ hash1, 42 };
     static const point_value instance(foo, 34);
     BOOST_REQUIRE(instance.hash() == hash1);
     BOOST_REQUIRE_EQUAL(instance.index(), 42u);

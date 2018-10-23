@@ -235,20 +235,21 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 
 payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
-    if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
+    if ( ! decode_base58(decoded, address) || ! is_address(decoded)) {
 #ifdef BITPRIM_CURRENCY_BCH
-    return from_string_cashaddr(address);
+        return from_string_cashaddr(address);
 #else
-    return{};
+        return{};
 #endif //BITPRIM_CURRENCY_BCH
     }
-    return{ decoded };
+
+    return {decoded};
 }
 
-payment_address payment_address::from_payment(const payment& decoded)
-{
-    if ( ! is_address(decoded))
+payment_address payment_address::from_payment(const payment& decoded) {
+    if ( ! is_address(decoded)) {
         return{};
+    }
 
     auto const hash = slice<1, short_hash_size + 1>(decoded);
     return{ hash, decoded.front() };
@@ -257,29 +258,26 @@ payment_address payment_address::from_payment(const payment& decoded)
 payment_address payment_address::from_private(const ec_private& secret)
 {
     if ( ! secret) {
-        return{}
-};
+        return{};
+    }
 
     return{ secret.to_public(), secret.payment_version() };
 }
 
-payment_address payment_address::from_public(const ec_public& point,
-    uint8_t version)
-{
+payment_address payment_address::from_public(const ec_public& point, uint8_t version) {
     if ( ! point) {
-        return{}
-};
+        return{};
+    }
 
     data_chunk data;
-    if ( ! point.to_data(data))
+    if ( ! point.to_data(data)) {
         return{};
+    }
 
-    return{ bitcoin_short_hash(data), version };
+    return {bitcoin_short_hash(data), version};
 }
 
-payment_address payment_address::from_script(chain::script const& script,
-    uint8_t version)
-{
+payment_address payment_address::from_script(chain::script const& script, uint8_t version) {
     // Working around VC++ CTP compiler break here.
     auto const data = script.to_data(false);
     return{ bitcoin_short_hash(data), version };
@@ -288,13 +286,11 @@ payment_address payment_address::from_script(chain::script const& script,
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-payment_address::operator const bool() const
-{
+payment_address::operator const bool() const {
     return valid_;
 }
 
-payment_address::operator short_hash const&() const
-{
+payment_address::operator short_hash const&() const {
     return hash_;
 }
 
@@ -447,40 +443,28 @@ std::ostream& operator<<(std::ostream& out, const payment_address& of)
 // ----------------------------------------------------------------------------
 
 // Context free input extraction is provably ambiguous (see extract_input).
-payment_address::list payment_address::extract(chain::script const& script,
-    uint8_t p2kh_version, uint8_t p2sh_version)
-{
+payment_address::list payment_address::extract(chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version) {
     auto const input = extract_input(script, p2kh_version, p2sh_version);
-    return input.empty() ? extract_output(script, p2kh_version, p2sh_version) :
-        input;
+    return input.empty() ? extract_output(script, p2kh_version, p2sh_version) : input;
 }
 
 // Context free input extraction is provably ambiguous. See inline comments.
-payment_address::list payment_address::extract_input(
-    chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version)
-{
+payment_address::list payment_address::extract_input(chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version) {
     // A sign_key_hash result always implies sign_script_hash as well.
     auto const pattern = script.input_pattern();
 
-    switch (pattern)
-    {
+    switch (pattern) {
         // Given lack of context (prevout) sign_key_hash is always ambiguous
         // with sign_script_hash, so return both potentially-correct addresses.
         // A server can differentiate by extracting from the previous output.
-        case script_pattern::sign_key_hash:
-        {
-            return
-            {
+        case script_pattern::sign_key_hash: {
+            return {
                 { ec_public{ script[1].data() }, p2kh_version },
                 { bitcoin_short_hash(script.back().data()), p2sh_version }
             };
         }
-        case script_pattern::sign_script_hash:
-        {
-            return
-            {
-                { bitcoin_short_hash(script.back().data()), p2sh_version }
-            };
+        case script_pattern::sign_script_hash: {
+            return {{ bitcoin_short_hash(script.back().data()), p2sh_version }};
         }
 
         // There is no address in sign_public_key script (signature only)

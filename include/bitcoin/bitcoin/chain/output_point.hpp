@@ -32,8 +32,7 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API output_point
-    : public point {
+class BC_API output_point : public point {
 public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation_type {
@@ -63,29 +62,26 @@ public:
     //-------------------------------------------------------------------------
 
     output_point();
-
-    output_point(point&& other);
-    output_point(const point& value);
-
-    output_point(output_point&& other);
-    output_point(const output_point& other);
-
-    output_point(hash_digest&& hash, uint32_t index);
     output_point(hash_digest const& hash, uint32_t index);
+
+    output_point(point const& x);
+    output_point(output_point const& x) = default;
+    // output_point(output_point&& x) noexcept;
+    output_point(output_point&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
     // This class is move assignable and copy assignable.
 
-    output_point& operator=(point&& other);
-    output_point& operator=(const point&);
-    output_point& operator=(output_point&& other);
-    output_point& operator=(const output_point&);
+    output_point& operator=(point const&);
+    output_point& operator=(output_point const&) = default;
+    // output_point& operator=(output_point&& x) noexcept;
+    output_point& operator=(output_point&& x) = default;
 
-    bool operator==(const point& other) const;
-    bool operator!=(const point& other) const;
-    bool operator==(const output_point& other) const;
-    bool operator!=(const output_point& other) const;
+    bool operator==(point const& x) const;
+    bool operator!=(point const& x) const;
+    bool operator==(output_point const& x) const;
+    bool operator!=(output_point const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------

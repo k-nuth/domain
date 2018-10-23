@@ -32,74 +32,53 @@ namespace chain {
 //-----------------------------------------------------------------------------
 
 output_point::output_point()
-    : point{}, validation{} {
-}
-
-output_point::output_point(point&& value)
-    : point(std::move(value)), validation{} {
-}
-
-output_point::output_point(const point& value)
-    : point(value), validation{} {
-}
-
-output_point::output_point(const output_point& other)
-    : point(other), validation(other.validation) {
-}
-
-output_point::output_point(output_point&& other)
-    : point(std::move(other)), validation(std::move(other.validation)) {
-}
-
-output_point::output_point(hash_digest&& hash, uint32_t index)
-    : point({std::move(hash), index}), validation{} {
-}
+    : validation{} 
+{}
 
 output_point::output_point(hash_digest const& hash, uint32_t index)
-    : point(hash, index), validation{} {
-}
+    : point(hash, index)
+    , validation{} 
+{}
+
+output_point::output_point(point const& x)
+    : point(x)
+    , validation{} 
+{}
+
+// output_point::output_point(output_point&& x) noexcept
+//     : point(x)
+//     , validation(std::move(x.validation))
+// {}
 
 // Operators.
 //-----------------------------------------------------------------------------
 
-output_point& output_point::operator=(point&& other) {
+output_point& output_point::operator=(point const& x) {
     reset();
-    point::operator=(std::move(other));
+    point::operator=(x);
     return *this;
 }
 
-output_point& output_point::operator=(const point& other) {
-    reset();
-    point::operator=(other);
-    return *this;
+// output_point& output_point::operator=(output_point&& x) noexcept {
+//     point::operator=(x);
+//     validation = std::move(x.validation);
+//     return *this;
+// }
+
+bool output_point::operator==(point const& x) const {
+    return point::operator==(x);
 }
 
-output_point& output_point::operator=(output_point&& other) {
-    point::operator=(std::move(other));
-    validation = std::move(other.validation);
-    return *this;
+bool output_point::operator!=(point const& x) const {
+    return point::operator!=(x);
 }
 
-output_point& output_point::operator=(const output_point& other) {
-    point::operator=(other);
-    validation = other.validation;
-    return *this;
+bool output_point::operator==(output_point const& x) const {
+    return point::operator==(x);
 }
 
-bool output_point::operator==(const point& other) const {
-    return point::operator==(other);
-}
-
-bool output_point::operator!=(const point& other) const {
-    return point::operator!=(other);
-}
-
-bool output_point::operator==(const output_point& other) const {
-    return point::operator==(other);
-}
-
-bool output_point::operator!=(const output_point& other) const {
-    return !(*this == other);
+bool output_point::operator!=(output_point const& x) const {
+    return !(*this == x);
 }
 
 // Deserialization.
@@ -132,7 +111,7 @@ bool output_point::is_mature(size_t height) const {
     // Coinbase (null) inputs and those with non-coinbase prevouts are mature.
     if ( ! validation.coinbase || is_null()) {
         return true;
-}
+    }
 
     // The (non-coinbase) input refers to a coinbase output, so validate depth.
     return floor_subtract(height, validation.height) >= coinbase_maturity;

@@ -44,7 +44,7 @@ point_iterator::point_iterator(const point_iterator& other)
 {
 }
 
-point_iterator::point_iterator(const point& value, unsigned index)
+point_iterator::point_iterator(point const& value, unsigned index)
   : point_(value), current_(index)
 {
 }

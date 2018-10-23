@@ -703,7 +703,7 @@ size_t block::non_coinbase_input_count() const {
 //*****************************************************************************
 bool block::is_forward_reference() const {
     std::unordered_map<hash_digest, bool> hashes(transactions_.size());
-    auto const is_forward = [&hashes](const input& input) {
+    auto const is_forward = [&hashes](input const& input) {
         return hashes.count(input.previous_output().hash()) != 0;
     };
 
@@ -784,7 +784,7 @@ bool block::is_valid_witness_commitment() const {
 #endif
     if (transactions_.empty() || transactions_.front().inputs().empty()) {
         return false;
-}
+    }
 
     hash_digest reserved, committed;
     auto const& coinbase = transactions_.front();
@@ -793,9 +793,10 @@ bool block::is_valid_witness_commitment() const {
     if (coinbase.inputs().front().extract_reserved_hash(reserved)) {
         for (auto const& output : reverse(coinbase.outputs())) {
             if (output.extract_committed_hash(committed)) {
-                return committed == bitcoin_hash(
-                                        build_chunk({generate_merkle_root(true), reserved}));
-}
+                return committed == bitcoin_hash(build_chunk({generate_merkle_root(true), reserved}));
+            }
+        }
+    }
 
     // If no txs in block are segregated the commitment is optional (bip141).
     return !is_segregated();
@@ -840,7 +841,8 @@ code block::check_transactions() const {
     for (auto const& tx : transactions_) {
         if ((ec = tx.check(false))) {
             return ec;
-}
+        }
+    }
 
     return error::success;
 }
@@ -851,7 +853,8 @@ code block::accept_transactions(const chain_state& state) const {
     for (auto const& tx : transactions_) {
         if ((ec = tx.accept(state, false))) {
             return ec;
-}
+        }
+    }
 
     return error::success;
 }
@@ -862,7 +865,8 @@ code block::connect_transactions(const chain_state& state) const {
     for (auto const& tx : transactions_) {
         if ((ec = tx.connect(state))) {
             return ec;
-}
+        }
+    }
 
     return error::success;
 }
@@ -1003,10 +1007,9 @@ code block::connect(const chain_state& state) const {
 
     if (state.is_under_checkpoint()) {
         return error::success;
-
     } else {
         return connect_transactions(state);
-}
+    }
 }
 
 }  // namespace chain

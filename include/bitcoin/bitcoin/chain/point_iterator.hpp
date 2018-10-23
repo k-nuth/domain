@@ -46,7 +46,7 @@ public:
     //-------------------------------------------------------------------------
 
     point_iterator(const point_iterator& other);
-    point_iterator(const point& value, unsigned index=0);
+    point_iterator(point const& value, unsigned index=0);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -75,7 +75,7 @@ protected:
 private:
     uint8_t current() const;
 
-    const point& point_;
+    point const& point_;
     unsigned current_;
 };
 

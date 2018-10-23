@@ -53,7 +53,7 @@ input::input(input&& other)
       sequence_(other.sequence_) {
 }
 
-input::input(const input& other)
+input::input(input const& other)
     : addresses_(other.addresses_cache()),
       previous_output_(other.previous_output_),
       script_(std::move(other.script_)),
@@ -67,7 +67,7 @@ input::input(output_point&& previous_output, chain::script&& script, uint32_t se
       sequence_(sequence) {
 }
 
-input::input(const output_point& previous_output, chain::script const& script, uint32_t sequence)
+input::input(output_point const& previous_output, chain::script const& script, uint32_t sequence)
     : previous_output_(previous_output),
       script_(script),
       sequence_(sequence) {
@@ -87,7 +87,7 @@ input::input(output_point&& previous_output, chain::script&& script, chain::witn
     : previous_output_(std::move(previous_output)), script_(std::move(script)), witness_(std::move(witness)), sequence_(sequence) {
 }
 
-input::input(const output_point& previous_output, chain::script const& script, const chain::witness& witness, uint32_t sequence)
+input::input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
     : previous_output_(previous_output), script_(script), witness_(witness), sequence_(sequence) {
 }
 
@@ -103,7 +103,7 @@ input& input::operator=(input&& other) {
     return *this;
 }
 
-input& input::operator=(const input& other) {
+input& input::operator=(input const& other) {
     addresses_ = other.addresses_cache();
     previous_output_ = other.previous_output_;
     script_ = other.script_;
@@ -112,11 +112,11 @@ input& input::operator=(const input& other) {
     return *this;
 }
 
-bool input::operator==(const input& other) const {
+bool input::operator==(input const& other) const {
     return (sequence_ == other.sequence_) && (previous_output_ == other.previous_output_) && (script_ == other.script_) && (witness_ == other.witness_);
 }
 
-bool input::operator!=(const input& other) const {
+bool input::operator!=(input const& other) const {
     return !(*this == other);
 }
 
@@ -255,11 +255,11 @@ output_point& input::previous_output() {
     return previous_output_;
 }
 
-const output_point& input::previous_output() const {
+output_point const& input::previous_output() const {
     return previous_output_;
 }
 
-void input::set_previous_output(const output_point& value) {
+void input::set_previous_output(output_point const& value) {
     previous_output_ = value;
 }
 
@@ -285,7 +285,7 @@ void input::set_script(chain::script&& value) {
     invalidate_cache();
 }
 
-const chain::witness& input::witness() const {
+chain::witness const& input::witness() const {
     return witness_;
 }
 
@@ -293,7 +293,7 @@ chain::witness& input::witness() {
     return witness_;
 }
 
-void input::set_witness(const chain::witness& value) {
+void input::set_witness(chain::witness const& value) {
     witness_ = value;
     invalidate_cache();
 }

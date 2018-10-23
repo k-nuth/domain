@@ -99,8 +99,8 @@ inline void read_witnesses(R& source, input::list& inputs) {
 
 // Witness count is not written as it is inferred from input count.
 template <typename W>
-inline void write_witnesses(W& sink, const input::list& inputs) {
-    auto const serialize = [&sink](const input& input) {
+inline void write_witnesses(W& sink, input::list const& inputs) {
+    auto const serialize = [&sink](input const& input) {
         input.witness().to_data(sink, true);
     };
 
@@ -142,7 +142,7 @@ public:
     transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
     transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
     transaction(transaction const& x, hash_digest const& hash);
-    transaction(transaction&& x, hash_digest&& hash);
+    transaction(transaction&& x, hash_digest const& hash);
 
     transaction(transaction const& x);
     transaction(transaction&& x) noexcept;

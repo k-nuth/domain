@@ -619,7 +619,7 @@ hash_digest script::to_outputs(transaction const& tx) {
 }
 
 hash_digest script::to_inpoints(transaction const& tx) {
-    auto const sum = [&](size_t total, const input& input) {
+    auto const sum = [&](size_t total, input const& input) {
         return total + input.previous_output().serialized_size();
     };
 
@@ -630,7 +630,7 @@ hash_digest script::to_inpoints(transaction const& tx) {
     data_sink ostream(data);
     ostream_writer sink_w(ostream);
 
-    auto const write = [&](const input& input) {
+    auto const write = [&](input const& input) {
         input.previous_output().to_data(sink_w);
     };
 
@@ -641,7 +641,7 @@ hash_digest script::to_inpoints(transaction const& tx) {
 }
 
 hash_digest script::to_sequences(transaction const& tx) {
-    auto const sum = [&](size_t total, const input& input) {
+    auto const sum = [&](size_t total, input const& input) {
         return total + sizeof(uint32_t);
     };
 
@@ -652,7 +652,7 @@ hash_digest script::to_sequences(transaction const& tx) {
     data_sink ostream(data);
     ostream_writer sink_w(ostream);
 
-    auto const write = [&](const input& input) {
+    auto const write = [&](input const& input) {
         sink_w.write_4_bytes_little_endian(input.sequence());
     };
 
@@ -996,8 +996,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
 // This supports up to 16 signatures, however check_multisig is limited to 20.
 // The embedded script is limited to 520 bytes, an effective limit of 15 for
 // p2sh multisig, which can be as low as 7 when using all uncompressed keys.
-operation::list script::to_pay_multisig_pattern(uint8_t signatures,
-                                                data_stack const& points) {
+operation::list script::to_pay_multisig_pattern(uint8_t signatures, data_stack const& points) {
     static constexpr auto op_81 = static_cast<uint8_t>(opcode::push_positive_1);
     static constexpr auto op_96 = static_cast<uint8_t>(opcode::push_positive_16);
     static constexpr auto zero = op_81 - 1;

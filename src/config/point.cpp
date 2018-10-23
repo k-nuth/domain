@@ -62,8 +62,7 @@ std::string const point::delimeter = ":";
 
 point::point()
   : value_()
-{
-}
+{}
 
 point::point(std::string const& tuple)
 {
@@ -75,7 +74,7 @@ point::point(const chain::output_point& value)
 {
 }
 
-point::point(const point& other)
+point::point(point const& other)
   : point(other.value_)
 {
 }
@@ -98,7 +97,7 @@ std::istream& operator>>(std::istream& input, point& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const point& argument)
+std::ostream& operator<<(std::ostream& output, point const& argument)
 {
     output << encode_point(argument.value_);
     return output;

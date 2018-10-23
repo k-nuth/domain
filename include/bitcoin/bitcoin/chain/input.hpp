@@ -45,7 +45,7 @@ namespace chain {
 
 class BC_API input {
 public:
-    typedef std::vector<input> list;
+    using list = std::vector<input>;
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -53,22 +53,22 @@ public:
     input();
 
     input(input&& other);
-    input(const input& other);
+    input(input const& other);
 
     input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
-    input(const output_point& previous_output, chain::script const& script, uint32_t sequence);
+    input(output_point const& previous_output, chain::script const& script, uint32_t sequence);
 
     input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
-    input(const output_point& previous_output, chain::script const& script, const chain::witness& witness, uint32_t sequence);
+    input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
 
     // Operators.
     //-------------------------------------------------------------------------
 
     input& operator=(input&& other);
-    input& operator=(const input& other);
+    input& operator=(input const& other);
 
-    bool operator==(const input& other) const;
-    bool operator!=(const input& other) const;
+    bool operator==(input const& other) const;
+    bool operator!=(input const& other) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -150,8 +150,8 @@ public:
     size_t serialized_size(bool wire = true, bool witness = false) const;
 
     output_point& previous_output();
-    const output_point& previous_output() const;
-    void set_previous_output(const output_point& value);
+    output_point const& previous_output() const;
+    void set_previous_output(output_point const& value);
     void set_previous_output(output_point&& value);
 
     // Deprecated (unsafe).
@@ -164,8 +164,8 @@ public:
     // Deprecated (unsafe).
     chain::witness& witness();
 
-    const chain::witness& witness() const;
-    void set_witness(const chain::witness& value);
+    chain::witness const& witness() const;
+    void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
 
     uint32_t sequence() const;
@@ -192,8 +192,7 @@ public:
     size_t signature_operations(bool bip16, bool bip141) const;
     bool extract_reserved_hash(hash_digest& out) const;
     bool extract_embedded_script(chain::script& out) const;
-    bool extract_witness_script(chain::script& out,
-                                chain::script const& prevout) const;
+    bool extract_witness_script(chain::script& out, chain::script const& prevout) const;
 
 protected:
     void reset();

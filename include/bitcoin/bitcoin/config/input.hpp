@@ -56,7 +56,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    input(const input& other);
+    input(input const& other);
 
     /**
      * Initialization constructor. Aspects of the input other than the point
@@ -86,7 +86,7 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const input& argument);
+        input const& argument);
 
 private:
 

@@ -48,30 +48,24 @@ public:
     /// This value is serialized and defined by consensus, not implementation.
     static uint32_t const null_index;
 
-    typedef std::vector<point> list;
-    typedef std::vector<uint32_t> indexes;
+    using list = std::vector<point>;
+    using indexes = std::vector<uint32_t>;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
     point();
-
-    point(point&& other);
-    point(const point& other);
-
-    point(hash_digest&& hash, uint32_t index);
     point(hash_digest const& hash, uint32_t index);
+
+    point(point const& x);
+    point& operator=(point const& x);
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    /// This class is move assignable and copy assignable.
-    point& operator=(point&& other);
-    point& operator=(const point& other);
-
-    bool operator<(const point& other) const;
-    bool operator==(const point& other) const;
-    bool operator!=(const point& other) const;
+    bool operator==(point const& x) const;
+    bool operator!=(point const& x) const;
+    bool operator<(point const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -103,12 +97,14 @@ public:
         } else {
             index_ = source.read_2_bytes_little_endian();
 
-            if (index_ == max_uint16)
+            if (index_ == max_uint16) {
                 index_ = null_index;
+            }
         }
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+        }
 
         return source;
     }
@@ -153,7 +149,6 @@ public:
     hash_digest& hash();
 
     hash_digest const& hash() const;
-    void set_hash(hash_digest&& value);
     void set_hash(hash_digest const& value);
 
     uint32_t index() const;
@@ -171,7 +166,6 @@ public:
     bool is_null() const;
 
 protected:
-    point(hash_digest&& hash, uint32_t index, bool valid);
     point(hash_digest const& hash, uint32_t index, bool valid);
     void reset();
 
