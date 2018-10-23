@@ -82,7 +82,7 @@ script::script(script const& other)
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
 }
 
-script::script(const operation::list& ops) {
+script::script(operation::list const& ops) {
     from_operations(ops);
 }
 
@@ -227,7 +227,7 @@ void script::from_operations(operation::list&& ops) {
 }
 
 // Concurrent read/write is not supported, so no critical section.
-void script::from_operations(const operation::list& ops) {
+void script::from_operations(operation::list const& ops) {
     ////reset();
     bytes_ = operations_to_data(ops);
     operations_ = ops;
@@ -236,7 +236,7 @@ void script::from_operations(const operation::list& ops) {
 }
 
 // private/static
-data_chunk script::operations_to_data(const operation::list& ops) {
+data_chunk script::operations_to_data(operation::list const& ops) {
     data_chunk out;
     auto const size = serialized_size(ops);
     out.reserve(size);
@@ -251,7 +251,7 @@ data_chunk script::operations_to_data(const operation::list& ops) {
 }
 
 // private/static
-size_t script::serialized_size(const operation::list& ops) {
+size_t script::serialized_size(operation::list const& ops) {
     auto const op_size = [](size_t total, const operation& op) {
         return total + op.serialized_size();
     };
@@ -376,7 +376,7 @@ size_t script::serialized_size(bool prefix) const {
 }
 
 // protected
-const operation::list& script::operations() const {
+operation::list const& script::operations() const {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
@@ -791,7 +791,7 @@ bool script::create_endorsement(endorsement& out, const ec_secret& secret, scrip
 // Utilities (static).
 //-----------------------------------------------------------------------------
 
-bool script::is_push_only(const operation::list& ops) {
+bool script::is_push_only(operation::list const& ops) {
     auto const push = [](const operation& op) {
         return op.is_push();
     };
@@ -802,7 +802,7 @@ bool script::is_push_only(const operation::list& ops) {
 //*****************************************************************************
 // CONSENSUS: this pattern is used to activate bip16 validation rules.
 //*****************************************************************************
-bool script::is_relaxed_push(const operation::list& ops) {
+bool script::is_relaxed_push(operation::list const& ops) {
     auto const push = [&](const operation& op) {
         return op.is_relaxed_push();
     };
@@ -815,14 +815,14 @@ bool script::is_relaxed_push(const operation::list& ops) {
 // indicates the height size. This is inconsistent with an extreme future where
 // the size byte overflows. However satoshi actually requires nominal encoding.
 //*****************************************************************************
-bool script::is_coinbase_pattern(const operation::list& ops, size_t height) {
+bool script::is_coinbase_pattern(operation::list const& ops, size_t height) {
     return !ops.empty() && ops[0].is_nominal_push() && ops[0].data() == number(height).data();
 }
 
 //*****************************************************************************
 // CONSENSUS: this pattern is used to commit to bip141 witness data.
 //*****************************************************************************
-bool script::is_commitment_pattern(const operation::list& ops) {
+bool script::is_commitment_pattern(operation::list const& ops) {
     static auto header const = to_big_endian(witness_head);
 
     // Bytes after commitment are optional with no consensus meaning (bip141).
@@ -833,14 +833,14 @@ bool script::is_commitment_pattern(const operation::list& ops) {
 //*****************************************************************************
 // CONSENSUS: this pattern is used in bip141 validation rules.
 //*****************************************************************************
-bool script::is_witness_program_pattern(const operation::list& ops) {
+bool script::is_witness_program_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].is_version() && ops[1].data().size() >= min_witness_program && ops[1].data().size() <= max_witness_program;
 }
 
 // The satoshi client tests for 83 bytes total. This allows for the waste of
 // one byte to represent up to 75 bytes using the push_one_size opcode.
 // It also allows any number of push ops and limits it to 0 value and 1 per tx.
-////bool script::is_null_data_pattern(const operation::list& ops)
+////bool script::is_null_data_pattern(operation::list const& ops)
 ////{
 ////    static constexpr auto op_76 = static_cast<uint8_t>(opcode::push_one_size);
 ////
@@ -851,7 +851,7 @@ bool script::is_witness_program_pattern(const operation::list& ops) {
 ////}
 
 // The satoshi client enables configurable data size for policy.
-bool script::is_null_data_pattern(const operation::list& ops) {
+bool script::is_null_data_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].code() == opcode::return_ && ops[1].is_minimal_push() && ops[1].data().size() <= max_null_data_size;
 }
 
@@ -859,7 +859,7 @@ bool script::is_null_data_pattern(const operation::list& ops) {
 // The current 16 (or 20) limit does not affect server indexing because bare
 // multisig is not indexable and p2sh multisig is byte-limited to 15 sigs.
 // The satoshi client policy limit is 3 signatures for bare multisig.
-bool script::is_pay_multisig_pattern(const operation::list& ops) {
+bool script::is_pay_multisig_pattern(operation::list const& ops) {
     static constexpr auto op_1 = static_cast<uint8_t>(opcode::push_positive_1);
     static constexpr auto op_16 = static_cast<uint8_t>(opcode::push_positive_16);
 
@@ -888,49 +888,49 @@ bool script::is_pay_multisig_pattern(const operation::list& ops) {
 }
 
 // The satoshi client considers this non-standard for policy.
-bool script::is_pay_public_key_pattern(const operation::list& ops) {
+bool script::is_pay_public_key_pattern(operation::list const& ops) {
     return ops.size() == 2 && is_public_key(ops[0].data()) && ops[1].code() == opcode::checksig;
 }
 
-bool script::is_pay_key_hash_pattern(const operation::list& ops) {
+bool script::is_pay_key_hash_pattern(operation::list const& ops) {
     return ops.size() == 5 && ops[0].code() == opcode::dup && ops[1].code() == opcode::hash160 && ops[2].data().size() == short_hash_size && ops[3].code() == opcode::equalverify && ops[4].code() == opcode::checksig;
 }
 
 //*****************************************************************************
 // CONSENSUS: this pattern is used to activate bip16 validation rules.
 //*****************************************************************************
-bool script::is_pay_script_hash_pattern(const operation::list& ops) {
+bool script::is_pay_script_hash_pattern(operation::list const& ops) {
     return ops.size() == 3 && ops[0].code() == opcode::hash160 && ops[1].code() == opcode::push_size_20 && ops[2].code() == opcode::equal;
 }
 
 //*****************************************************************************
 // CONSENSUS: this pattern is used to activate bip141 validation rules.
 //*****************************************************************************
-bool script::is_pay_witness_script_hash_pattern(const operation::list& ops) {
+bool script::is_pay_witness_script_hash_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].code() == opcode::push_size_0 && ops[1].code() == opcode::push_size_32;
 }
 
 // The first push is based on wacky satoshi op_check_multisig behavior that
 // we must perpetuate, though it's appearance here is policy not consensus.
 // Limiting to push_size_0 eliminates pattern ambiguity with little downside.
-bool script::is_sign_multisig_pattern(const operation::list& ops) {
+bool script::is_sign_multisig_pattern(operation::list const& ops) {
     return ops.size() >= 2 && ops[0].code() == opcode::push_size_0 && std::all_of(ops.begin() + 1, ops.end(), [](const operation& op) { return is_endorsement(op.data()); });
 }
 
-bool script::is_sign_public_key_pattern(const operation::list& ops) {
+bool script::is_sign_public_key_pattern(operation::list const& ops) {
     return ops.size() == 1 && is_endorsement(ops[0].data());
 }
 
 //*****************************************************************************
 // CONSENSUS: this pattern is used to activate bip141 validation rules.
 //*****************************************************************************
-bool script::is_sign_key_hash_pattern(const operation::list& ops) {
+bool script::is_sign_key_hash_pattern(operation::list const& ops) {
     return ops.size() == 2 && is_endorsement(ops[0].data()) && is_public_key(ops[1].data());
 }
 
 // Ambiguous with is_sign_key_hash when second/last op is a public key.
 // Ambiguous with is_sign_public_key_pattern when only op is an endorsement.
-bool script::is_sign_script_hash_pattern(const operation::list& ops) {
+bool script::is_sign_script_hash_pattern(operation::list const& ops) {
     return !ops.empty() && is_push_only(ops) && !ops.back().data().empty();
 }
 

@@ -66,7 +66,7 @@ public:
     script(script const& x);
     script(script&& x);
 
-    script(const operation::list& ops);
+    script(operation::list const& ops);
     script(operation::list&& ops);
 
     script(data_chunk const& encoded, bool prefix);
@@ -132,7 +132,7 @@ public:
 
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list&& ops);
-    void from_operations(const operation::list& ops);
+    void from_operations(operation::list const& ops);
     bool from_string(const std::string& mnemonic);
 
     /// A script object is valid if the byte count matches the prefix.
@@ -177,7 +177,7 @@ public:
     //-------------------------------------------------------------------------
 
     size_t serialized_size(bool prefix) const;
-    const operation::list& operations() const;
+    operation::list const& operations() const;
 
     // Signing.
     //-------------------------------------------------------------------------
@@ -214,25 +214,25 @@ public:
     }
 
     /// Consensus patterns.
-    static bool is_push_only(const operation::list& ops);
-    static bool is_relaxed_push(const operation::list& ops);
-    static bool is_coinbase_pattern(const operation::list& ops, size_t height);
-    static bool is_commitment_pattern(const operation::list& ops);
-    static bool is_witness_program_pattern(const operation::list& ops);
+    static bool is_push_only(operation::list const& ops);
+    static bool is_relaxed_push(operation::list const& ops);
+    static bool is_coinbase_pattern(operation::list const& ops, size_t height);
+    static bool is_commitment_pattern(operation::list const& ops);
+    static bool is_witness_program_pattern(operation::list const& ops);
 
     /// Common output patterns (psh and pwsh are also consensus).
-    static bool is_null_data_pattern(const operation::list& ops);
-    static bool is_pay_multisig_pattern(const operation::list& ops);
-    static bool is_pay_public_key_pattern(const operation::list& ops);
-    static bool is_pay_key_hash_pattern(const operation::list& ops);
-    static bool is_pay_script_hash_pattern(const operation::list& ops);
-    static bool is_pay_witness_script_hash_pattern(const operation::list& ops);
+    static bool is_null_data_pattern(operation::list const& ops);
+    static bool is_pay_multisig_pattern(operation::list const& ops);
+    static bool is_pay_public_key_pattern(operation::list const& ops);
+    static bool is_pay_key_hash_pattern(operation::list const& ops);
+    static bool is_pay_script_hash_pattern(operation::list const& ops);
+    static bool is_pay_witness_script_hash_pattern(operation::list const& ops);
 
     /// Common input patterns (skh is also consensus).
-    static bool is_sign_multisig_pattern(const operation::list& ops);
-    static bool is_sign_public_key_pattern(const operation::list& ops);
-    static bool is_sign_key_hash_pattern(const operation::list& ops);
-    static bool is_sign_script_hash_pattern(const operation::list& ops);
+    static bool is_sign_multisig_pattern(operation::list const& ops);
+    static bool is_sign_public_key_pattern(operation::list const& ops);
+    static bool is_sign_key_hash_pattern(operation::list const& ops);
+    static bool is_sign_script_hash_pattern(operation::list const& ops);
 
     /// Stack factories.
     static operation::list to_null_data_pattern(data_slice data);
@@ -275,8 +275,8 @@ protected:
     bool is_pay_to_script_hash(uint32_t forks) const;
 
 private:
-    static size_t serialized_size(const operation::list& ops);
-    static data_chunk operations_to_data(const operation::list& ops);
+    static size_t serialized_size(operation::list const& ops);
+    static data_chunk operations_to_data(operation::list const& ops);
     static hash_digest generate_unversioned_signature_hash(
         transaction const& tx,
         uint32_t input_index,
