@@ -64,7 +64,7 @@ inline interpreter::result interpreter::op_push_number(program& program,
 }
 
 inline interpreter::result interpreter::op_push_size(program& program,
-    const operation& op)
+    operation const& op)
 {
     if (op.data().size() > op_75)
         return error::op_push_size;
@@ -644,7 +644,7 @@ inline interpreter::result interpreter::op_hash256(program& program)
 }
 
 inline interpreter::result interpreter::op_codeseparator(program& program,
-    const operation& op)
+    operation const& op)
 {
     return program.set_jump_register(op, + 1) ? error::success :
         error::op_code_seperator;
@@ -888,7 +888,7 @@ inline interpreter::result interpreter::op_check_sequence_verify(
 }
 
 // It is expected that the compiler will produce a very efficient jump table.
-inline interpreter::result interpreter::run_op(const operation& op,
+inline interpreter::result interpreter::run_op(operation const& op,
     program& program)
 {
     auto const code = op.code();

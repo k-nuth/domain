@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(operation__constructor_3__valid_input__returns_input_initia
 
 BOOST_AUTO_TEST_CASE(operation__constructor_4__valid_input__returns_input_initialized)
 {
-    const operation expected(to_chunk(base16_literal("23156214")));
+    operation const expected(to_chunk(base16_literal("23156214")));
     operation instance(expected);
 
     BOOST_REQUIRE(instance.is_valid());

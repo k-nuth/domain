@@ -86,10 +86,10 @@ public:
 
     /// Instructions.
     code evaluate();
-    code evaluate(const operation& op);
-    bool increment_operation_count(const operation& op);
+    code evaluate(operation const& op);
+    bool increment_operation_count(operation const& op);
     bool increment_operation_count(int32_t public_keys);
-    bool set_jump_register(const operation& op, int32_t offset);
+    bool set_jump_register(operation const& op, int32_t offset);
 
     // Primary stack.
     //-------------------------------------------------------------------------
@@ -119,7 +119,7 @@ public:
     bool stack_true(bool clean) const;
     bool stack_result(bool clean) const;
     bool is_stack_overflow() const;
-    bool if_(const operation& op) const;
+    bool if_(operation const& op) const;
     const value_type& item(size_t index) /*const*/;
     bool top(number& out_number, size_t maxiumum_size=max_number_size) /*const*/;
     stack_iterator position(size_t index) /*const*/;

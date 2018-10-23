@@ -240,7 +240,7 @@ data_chunk script::operations_to_data(operation::list const& ops) {
     data_chunk out;
     auto const size = serialized_size(ops);
     out.reserve(size);
-    auto const concatenate = [&out](const operation& op) {
+    auto const concatenate = [&out](operation const& op) {
         auto bytes = op.to_data();
         std::move(bytes.begin(), bytes.end(), std::back_inserter(out));
     };
@@ -252,7 +252,7 @@ data_chunk script::operations_to_data(operation::list const& ops) {
 
 // private/static
 size_t script::serialized_size(operation::list const& ops) {
-    auto const op_size = [](size_t total, const operation& op) {
+    auto const op_size = [](size_t total, operation const& op) {
         return total + op.serialized_size();
     };
 
@@ -340,17 +340,17 @@ size_t script::size() const {
     return operations().size();
 }
 
-const operation& script::front() const {
+operation const& script::front() const {
     BITCOIN_ASSERT(!operations().empty());
     return operations().front();
 }
 
-const operation& script::back() const {
+operation const& script::back() const {
     BITCOIN_ASSERT(!operations().empty());
     return operations().back();
 }
 
-const operation& script::operator[](size_t index) const {
+operation const& script::operator[](size_t index) const {
     BITCOIN_ASSERT(index < operations().size());
     return operations()[index];
 }
@@ -792,7 +792,7 @@ bool script::create_endorsement(endorsement& out, const ec_secret& secret, scrip
 //-----------------------------------------------------------------------------
 
 bool script::is_push_only(operation::list const& ops) {
-    auto const push = [](const operation& op) {
+    auto const push = [](operation const& op) {
         return op.is_push();
     };
 
@@ -803,7 +803,7 @@ bool script::is_push_only(operation::list const& ops) {
 // CONSENSUS: this pattern is used to activate bip16 validation rules.
 //*****************************************************************************
 bool script::is_relaxed_push(operation::list const& ops) {
-    auto const push = [&](const operation& op) {
+    auto const push = [&](operation const& op) {
         return op.is_relaxed_push();
     };
 
@@ -914,7 +914,7 @@ bool script::is_pay_witness_script_hash_pattern(operation::list const& ops) {
 // we must perpetuate, though it's appearance here is policy not consensus.
 // Limiting to push_size_0 eliminates pattern ambiguity with little downside.
 bool script::is_sign_multisig_pattern(operation::list const& ops) {
-    return ops.size() >= 2 && ops[0].code() == opcode::push_size_0 && std::all_of(ops.begin() + 1, ops.end(), [](const operation& op) { return is_endorsement(op.data()); });
+    return ops.size() >= 2 && ops[0].code() == opcode::push_size_0 && std::all_of(ops.begin() + 1, ops.end(), [](operation const& op) { return is_endorsement(op.data()); });
 }
 
 bool script::is_sign_public_key_pattern(operation::list const& ops) {

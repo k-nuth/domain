@@ -99,7 +99,7 @@ inline bool operation_overflow(size_t count)
     return count > max_counted_ops;
 }
 
-inline bool program::increment_operation_count(const operation& op)
+inline bool program::increment_operation_count(operation const& op)
 {
     // Addition is safe due to script size validation.
     if (operation::is_counted(op.code()))
@@ -121,12 +121,12 @@ inline bool program::increment_operation_count(int32_t public_keys)
     return !operation_overflow(operation_count_);
 }
 
-inline bool program::set_jump_register(const operation& op, int32_t offset)
+inline bool program::set_jump_register(operation const& op, int32_t offset)
 {
     if (script_.empty())
         return false;
 
-    auto const finder = [&op](const operation& operation)
+    auto const finder = [&op](operation const& operation)
     {
         return &operation == &op;
     };
@@ -314,7 +314,7 @@ inline bool program::is_stack_overflow() const
     return size() + alternate_.size() > max_stack_size;
 }
 
-inline bool program::if_(const operation& op) const
+inline bool program::if_(operation const& op) const
 {
     // Skip operation if failed and the operator is unconditional.
     return op.is_conditional() || succeeded();

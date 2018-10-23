@@ -42,7 +42,7 @@ public:
     static result op_disabled(opcode);
     static result op_reserved(opcode);
     static result op_push_number(program& program, uint8_t value);
-    static result op_push_size(program& program, const operation& op);
+    static result op_push_size(program& program, operation const& op);
     static result op_push_data(program& program, data_chunk const& data,
         uint32_t size_limit);
 
@@ -102,7 +102,7 @@ public:
     static result op_sha256(program& program);
     static result op_hash160(program& program);
     static result op_hash256(program& program);
-    static result op_codeseparator(program& program, const operation& op);
+    static result op_codeseparator(program& program, operation const& op);
     static result op_check_sig_verify(program& program);
     static result op_check_sig(program& program);
     static result op_check_multisig_verify(program& program);
@@ -115,10 +115,10 @@ public:
 
     /// Run individual operations (idependent of the script).
     /// For best performance use script runner for a sequence of operations.
-    static code run(const operation& op, program& program);
+    static code run(operation const& op, program& program);
 
 private:
-    static result run_op(const operation& op, program& program);
+    static result run_op(operation const& op, program& program);
 };
 
 } // namespace machine

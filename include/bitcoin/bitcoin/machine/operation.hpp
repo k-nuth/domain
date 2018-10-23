@@ -52,7 +52,7 @@ class BI_API operation {
     operation();
 
     operation(operation&& other);
-    operation(const operation& other);
+    operation(operation const& other);
 
     operation(data_chunk&& uncoded, bool minimal = true);
     operation(data_chunk const& uncoded, bool minimal = true);
@@ -63,10 +63,10 @@ class BI_API operation {
     //-------------------------------------------------------------------------
 
     operation& operator=(operation&& other);
-    operation& operator=(const operation& other);
+    operation& operator=(operation const& other);
 
-    bool operator==(const operation& other) const;
-    bool operator!=(const operation& other) const;
+    bool operator==(operation const& other) const;
+    bool operator!=(operation const& other) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------

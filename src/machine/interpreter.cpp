@@ -57,7 +57,7 @@ code interpreter::run(program& program)
     return program.closed() ? error::success : error::invalid_stack_scope;
 }
 
-code interpreter::run(const operation& op, program& program)
+code interpreter::run(operation const& op, program& program)
 {
     return run_op(op, program);
 }

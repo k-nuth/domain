@@ -167,11 +167,11 @@ public:
     void clear();
     bool empty() const;
     size_t size() const;
-    const operation& front() const;
-    const operation& back() const;
+    operation const& front() const;
+    operation const& back() const;
     operation::iterator begin() const;
     operation::iterator end() const;
-    const operation& operator[](size_t index) const;
+    operation const& operator[](size_t index) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------

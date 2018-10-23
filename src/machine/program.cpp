@@ -151,7 +151,7 @@ code program::evaluate()
     return interpreter::run(*this);
 }
 
-code program::evaluate(const operation& op)
+code program::evaluate(operation const& op)
 {
     return interpreter::run(op, *this);
 }
