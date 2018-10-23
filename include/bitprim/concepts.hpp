@@ -25,7 +25,7 @@
 namespace bitprim {
 
 template <typename R, bool result = std::is_same<decltype(((R*)nullptr)->read_size_little_endian()), size_t>::value>    //NOLINT
-constexpr bool is_reader_helper(int) { 
+constexpr bool is_reader_helper(int /*unused*/) { 
     return result;
 }
 
