@@ -62,8 +62,8 @@ public:
 
     header();
     header(header const& x);
-    header(header const& x, const hash_digest& hash);
-    header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
+    header(header const& x, hash_digest const& hash);
+    header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
     // Operators.
     //-----------------------------------------------------------------------------
@@ -156,15 +156,15 @@ public:
     // Deprecated (unsafe).
     hash_digest& previous_block_hash();
 
-    const hash_digest& previous_block_hash() const;
-    void set_previous_block_hash(const hash_digest& value);
+    hash_digest const& previous_block_hash() const;
+    void set_previous_block_hash(hash_digest const& value);
     void set_previous_block_hash(hash_digest&& value);
 
     // Deprecated (unsafe).
     hash_digest& merkle();
 
-    const hash_digest& merkle() const;
-    void set_merkle(const hash_digest& value);
+    hash_digest const& merkle() const;
+    void set_merkle(hash_digest const& value);
     void set_merkle(hash_digest&& value);
 
     uint32_t timestamp() const;

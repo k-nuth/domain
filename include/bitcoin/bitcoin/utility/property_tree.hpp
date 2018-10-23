@@ -193,7 +193,7 @@ BC_API pt::ptree property_tree(const wallet::wrapped_data& wrapper);
  * @param[in]  index   The tx index.
  * @returns            A new property list containing the list.
  */
-BC_API pt::ptree property_list(const hash_digest& hash, size_t height,
+BC_API pt::ptree property_list(hash_digest const& hash, size_t height,
     size_t index);
 
 /**
@@ -203,7 +203,7 @@ BC_API pt::ptree property_list(const hash_digest& hash, size_t height,
  * @param[in]  index   The tx index.
  * @returns            A new property tree containing the list.
  */
-BC_API pt::ptree property_tree(const hash_digest& hash, size_t height,
+BC_API pt::ptree property_tree(hash_digest const& hash, size_t height,
     size_t index);
 
 /**

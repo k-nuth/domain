@@ -32,7 +32,7 @@ using namespace bc;
 static const std::string reason_text = "My Reason...";
 static auto const version_maximum = message::version::level::maximum;
 
-static const hash_digest data
+static hash_digest const data
 {
     {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,

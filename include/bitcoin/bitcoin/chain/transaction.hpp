@@ -143,7 +143,7 @@ class BC_API transaction {
     transaction(transaction const& other);
 
     transaction(transaction&& other, hash_digest&& hash);
-    transaction(transaction const& other, const hash_digest& hash);
+    transaction(transaction const& other, hash_digest const& hash);
 
     transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
     transaction(uint32_t version, uint32_t locktime, const ins& inputs, const outs& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);

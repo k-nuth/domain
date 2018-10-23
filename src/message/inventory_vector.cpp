@@ -83,7 +83,7 @@ inventory_vector::inventory_vector()
     : inventory_vector(type_id::error, null_hash) {
 }
 
-inventory_vector::inventory_vector(type_id type, const hash_digest& hash)
+inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
     : type_(type), hash_(hash) {
 }
 
@@ -188,11 +188,11 @@ hash_digest& inventory_vector::hash() {
     return hash_;
 }
 
-const hash_digest& inventory_vector::hash() const {
+hash_digest const& inventory_vector::hash() const {
     return hash_;
 }
 
-void inventory_vector::set_hash(const hash_digest& value) {
+void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = value;
 }
 

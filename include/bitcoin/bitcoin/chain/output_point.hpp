@@ -71,7 +71,7 @@ class BC_API output_point
     output_point(const output_point& other);
 
     output_point(hash_digest&& hash, uint32_t index);
-    output_point(const hash_digest& hash, uint32_t index);
+    output_point(hash_digest const& hash, uint32_t index);
 
     // Operators.
     //-------------------------------------------------------------------------

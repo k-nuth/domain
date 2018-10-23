@@ -69,8 +69,8 @@ header::header()
 }
 
 header::header(uint32_t version,
-               const hash_digest& previous_block_hash,
-               const hash_digest& merkle,
+               hash_digest const& previous_block_hash,
+               hash_digest const& merkle,
                uint32_t timestamp,
                uint32_t bits,
                uint32_t nonce)

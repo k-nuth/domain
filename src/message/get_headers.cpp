@@ -51,7 +51,7 @@ get_headers::get_headers()
     : get_blocks() {
 }
 
-get_headers::get_headers(const hash_list& start, const hash_digest& stop)
+get_headers::get_headers(const hash_list& start, hash_digest const& stop)
     : get_blocks(start, stop) {
 }
 

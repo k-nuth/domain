@@ -71,7 +71,7 @@ class BC_API inventory_vector {
     static size_t satoshi_fixed_size(uint32_t version);
 
     inventory_vector();
-    inventory_vector(type_id type, const hash_digest& hash);
+    inventory_vector(type_id type, hash_digest const& hash);
     inventory_vector(type_id type, hash_digest&& hash);
     inventory_vector(const inventory_vector& other);
     inventory_vector(inventory_vector&& other);
@@ -80,8 +80,8 @@ class BC_API inventory_vector {
     void set_type(type_id value);
 
     hash_digest& hash();
-    const hash_digest& hash() const;
-    void set_hash(const hash_digest& value);
+    hash_digest const& hash() const;
+    void set_hash(hash_digest const& value);
     void set_hash(hash_digest&& value);
 
     bool is_block_type() const;

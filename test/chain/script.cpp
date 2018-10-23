@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_SUITE(script_tests)
 BOOST_AUTO_TEST_CASE(script__one_hash__literal__same)
 {
     static auto const hash_one = hash_literal("0000000000000000000000000000000000000000000000000000000000000001");
-    static const hash_digest one_hash{ { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+    static hash_digest const one_hash{ { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
     BOOST_REQUIRE(one_hash == hash_one);
 }
 

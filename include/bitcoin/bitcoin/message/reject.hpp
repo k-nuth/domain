@@ -91,7 +91,7 @@ class BC_API reject {
     reject(reason_code code, const std::string& message, const std::string& reason);
     reject(reason_code code, std::string&& message, std::string&& reason);
 
-    reject(reason_code code, const std::string& message, const std::string& reason, const hash_digest& data);
+    reject(reason_code code, const std::string& message, const std::string& reason, hash_digest const& data);
     reject(reason_code code, std::string&& message, std::string&& reason, hash_digest&& data);
 
     reject(const reject& other);
@@ -111,8 +111,8 @@ class BC_API reject {
     void set_reason(std::string&& value);
 
     hash_digest& data();
-    const hash_digest& data() const;
-    void set_data(const hash_digest& value);
+    hash_digest const& data() const;
+    void set_data(hash_digest const& value);
     void set_data(hash_digest&& value);
 
     bool from_data(uint32_t version, data_chunk const& data);

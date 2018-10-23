@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__constructor_1__always__invalid)
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__constructor_2__always__equals_params)
 {
-    const hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = { 1u, 3454u, 4234u, 75123u, 455323u };
 
     message::get_block_transactions instance(hash, indexes);
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_3__valid_input__s
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_accessor_1__always__returns_initialized_value)
 {
-    const hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = { 1u, 3454u, 4234u, 75123u, 455323u };
     message::get_block_transactions instance(hash, indexes);
     BOOST_REQUIRE(hash == instance.block_hash());
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_accessor_1__always__retu
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_accessor_2__always__returns_initialized_value)
 {
-    const hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = { 1u, 3454u, 4234u, 75123u, 455323u };
     const message::get_block_transactions instance(hash, indexes);
     BOOST_REQUIRE(hash == instance.block_hash());
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_accessor_2__always__retu
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_setter_1__roundtrip__success)
 {
-    const hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::get_block_transactions instance;
     BOOST_REQUIRE(hash != instance.block_hash());
     instance.set_block_hash(hash);
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_setter_2__roundtrip__suc
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_accessor_1__always__returns_initialized_value)
 {
-    const hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = { 1u, 3454u, 4234u, 75123u, 455323u };
     message::get_block_transactions instance(hash, indexes);
     BOOST_REQUIRE(indexes == instance.indexes());
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_accessor_1__always__returns
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_accessor_2__always__returns_initialized_value)
 {
-    const hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = { 1u, 3454u, 4234u, 75123u, 455323u };
     const message::get_block_transactions instance(hash, indexes);
     BOOST_REQUIRE(indexes == instance.indexes());
@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_setter_2__roundtrip__succes
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__operator_assign_equals__always__matches_equivalent)
 {
-    const hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = { 1u, 3454u, 4234u, 75123u, 455323u };
     message::get_block_transactions value(hash, indexes);
 

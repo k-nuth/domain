@@ -41,7 +41,7 @@ static bool decode_point(chain::output_point& point, const std::string& tuple)
 
     // validate and deserialize the transaction hash
     const hash256 digest(tokens[0]);
-    const hash_digest& txhash = digest;
+    hash_digest const& txhash = digest;
 
     // copy the input point values
     std::copy(txhash.begin(), txhash.end(), point.hash().begin());

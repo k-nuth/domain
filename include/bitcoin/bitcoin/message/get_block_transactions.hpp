@@ -55,7 +55,7 @@ class BC_API get_block_transactions {
     //static get_block_transactions factory_from_data(uint32_t version, reader& source);
 
     get_block_transactions();
-    get_block_transactions(const hash_digest& block_hash,
+    get_block_transactions(hash_digest const& block_hash,
                            const std::vector<uint64_t>& indexes);
     get_block_transactions(hash_digest&& block_hash,
                            std::vector<uint64_t>&& indexes);
@@ -63,8 +63,8 @@ class BC_API get_block_transactions {
     get_block_transactions(get_block_transactions&& other);
 
     hash_digest& block_hash();
-    const hash_digest& block_hash() const;
-    void set_block_hash(const hash_digest& value);
+    hash_digest const& block_hash() const;
+    void set_block_hash(hash_digest const& value);
     void set_block_hash(hash_digest&& value);
 
     std::vector<uint64_t>& indexes();

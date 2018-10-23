@@ -53,7 +53,7 @@ private:
 
     const ek_entropy entropy_;
     const one_byte sign_;
-    const hash_digest data_;
+    hash_digest const data_;
 };
 
 } // namespace wallet

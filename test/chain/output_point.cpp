@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(output_point__from_data__insufficient_bytes__failure)
 BOOST_AUTO_TEST_CASE(output_point__from_data__roundtrip__success)
 {
     static uint32_t const index = 53213u;
-    static const hash_digest hash
+    static hash_digest const hash
     {
         {
             0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,

@@ -73,7 +73,7 @@ inventory::inventory(inventory_vector::list&& values)
 inventory::inventory(const hash_list& hashes, type_id type) {
     inventories_.clear();
     inventories_.reserve(hashes.size());
-    auto const map = [type, this](const hash_digest& hash) {
+    auto const map = [type, this](hash_digest const& hash) {
         inventories_.emplace_back(type, hash);
     };
 

@@ -56,7 +56,7 @@ get_blocks::get_blocks()
     : start_hashes_(), stop_hash_(null_hash) {
 }
 
-get_blocks::get_blocks(const hash_list& start, const hash_digest& stop)
+get_blocks::get_blocks(const hash_list& start, hash_digest const& stop)
     : start_hashes_(start), stop_hash_(stop) {
 }
 
@@ -169,11 +169,11 @@ hash_digest& get_blocks::stop_hash() {
     return stop_hash_;
 }
 
-const hash_digest& get_blocks::stop_hash() const {
+hash_digest const& get_blocks::stop_hash() const {
     return stop_hash_;
 }
 
-void get_blocks::set_stop_hash(const hash_digest& value) {
+void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
 }
 

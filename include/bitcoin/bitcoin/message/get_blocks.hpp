@@ -57,7 +57,7 @@ class BC_API get_blocks {
     //static get_blocks factory_from_data(uint32_t version, reader& source);
 
     get_blocks();
-    get_blocks(const hash_list& start, const hash_digest& stop);
+    get_blocks(const hash_list& start, hash_digest const& stop);
     get_blocks(hash_list&& start, hash_digest&& stop);
     get_blocks(const get_blocks& other);
     get_blocks(get_blocks&& other);
@@ -68,8 +68,8 @@ class BC_API get_blocks {
     void set_start_hashes(hash_list&& value);
 
     hash_digest& stop_hash();
-    const hash_digest& stop_hash() const;
-    void set_stop_hash(const hash_digest& value);
+    hash_digest const& stop_hash() const;
+    void set_stop_hash(hash_digest const& value);
     void set_stop_hash(hash_digest&& value);
 
     virtual bool from_data(uint32_t version, data_chunk const& data);

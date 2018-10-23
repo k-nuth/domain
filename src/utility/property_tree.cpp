@@ -259,7 +259,7 @@ ptree property_tree(const wallet::wrapped_data& wrapper)
 
 // metadata
 
-ptree property_list(const hash_digest& hash, size_t height, size_t index)
+ptree property_list(hash_digest const& hash, size_t height, size_t index)
 {
     ptree tree;
     tree.put("hash", hash256(hash));
@@ -268,7 +268,7 @@ ptree property_list(const hash_digest& hash, size_t height, size_t index)
     return tree;
 }
 
-ptree property_tree(const hash_digest& hash, size_t height, size_t index)
+ptree property_tree(hash_digest const& hash, size_t height, size_t index)
 {
     ptree tree;
     tree.add_child("metadata", property_list(hash, height, index));

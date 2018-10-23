@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_6__valid_input__returns_input_init
     auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction expected;
     BOOST_REQUIRE(expected.from_data(raw_tx));
-    const hash_digest expected_hash = hash_literal(TX1_HASH);
+    hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(expected, expected_hash);
     BOOST_REQUIRE(instance.is_valid());
@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_7__valid_input__returns_input_init
     chain::transaction expected;
 
     BOOST_REQUIRE(expected.from_data(raw_tx));
-    const hash_digest expected_hash = hash_literal(TX1_HASH);
+    hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(std::move(expected), expected_hash);
     BOOST_REQUIRE(instance.is_valid());
@@ -594,7 +594,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_1__success)
 
 BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_2__success)
 {
-    static const hash_digest tx_hash = hash_literal(TX4_HASH);
+    static hash_digest const tx_hash = hash_literal(TX4_HASH);
     static data_chunk const raw_tx = to_chunk(base16_literal(TX4));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
 

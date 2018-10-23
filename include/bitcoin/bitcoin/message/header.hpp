@@ -61,7 +61,7 @@ class BC_API header
     static size_t satoshi_fixed_size(uint32_t version);
 
     header();
-    header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
+    header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(uint32_t version, hash_digest&& previous_block_hash, hash_digest&& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(chain::header const& other);
     header(chain::header&& other);

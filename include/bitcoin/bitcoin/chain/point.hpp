@@ -60,7 +60,7 @@ class BC_API point {
     point(const point& other);
 
     point(hash_digest&& hash, uint32_t index);
-    point(const hash_digest& hash, uint32_t index);
+    point(hash_digest const& hash, uint32_t index);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -152,9 +152,9 @@ class BC_API point {
     // deprecated (unsafe)
     hash_digest& hash();
 
-    const hash_digest& hash() const;
+    hash_digest const& hash() const;
     void set_hash(hash_digest&& value);
-    void set_hash(const hash_digest& value);
+    void set_hash(hash_digest const& value);
 
     uint32_t index() const;
     void set_index(uint32_t value);
@@ -172,7 +172,7 @@ class BC_API point {
 
    protected:
     point(hash_digest&& hash, uint32_t index, bool valid);
-    point(const hash_digest& hash, uint32_t index, bool valid);
+    point(hash_digest const& hash, uint32_t index, bool valid);
     void reset();
 
    private:

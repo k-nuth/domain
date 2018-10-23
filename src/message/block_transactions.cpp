@@ -57,7 +57,7 @@ block_transactions::block_transactions()
     : block_hash_(null_hash), transactions_() {
 }
 
-block_transactions::block_transactions(const hash_digest& block_hash,
+block_transactions::block_transactions(hash_digest const& block_hash,
                                        const chain::transaction::list& transactions)
     : block_hash_(block_hash), transactions_(transactions) {
 }
@@ -173,11 +173,11 @@ hash_digest& block_transactions::block_hash() {
     return block_hash_;
 }
 
-const hash_digest& block_transactions::block_hash() const {
+hash_digest const& block_transactions::block_hash() const {
     return block_hash_;
 }
 
-void block_transactions::set_block_hash(const hash_digest& value) {
+void block_transactions::set_block_hash(hash_digest const& value) {
     block_hash_ = value;
 }
 

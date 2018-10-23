@@ -76,7 +76,7 @@ inline bool is_bip30_exception(const checkpoint& check, bool mainnet)
          (check == mainnet_bip30_exception_checkpoint2));
 }
 
-inline bool allow_collisions(const hash_digest& hash, bool mainnet,
+inline bool allow_collisions(hash_digest const& hash, bool mainnet,
     bool testnet)
 {
     auto const regtest = !mainnet && !testnet;
@@ -95,7 +95,7 @@ inline bool allow_collisions(size_t height, bool mainnet, bool testnet)
         (regtest && height == regtest_bip34_active_checkpoint.height());
 }
 
-inline bool bip9_bit0_active(const hash_digest& hash, bool mainnet,
+inline bool bip9_bit0_active(hash_digest const& hash, bool mainnet,
     bool testnet)
 {
     auto const regtest = !mainnet && !testnet;
@@ -114,7 +114,7 @@ inline bool bip9_bit0_active(size_t height, bool mainnet, bool testnet)
         (regtest && height == regtest_bip9_bit0_active_checkpoint.height());
 }
 
-inline bool bip9_bit1_active(const hash_digest& hash, bool mainnet,
+inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet,
     bool testnet)
 {
 #ifdef BITPRIM_CURRENCY_BCH
@@ -1175,7 +1175,7 @@ bool chain_state::is_enabled(rule_fork fork) const {
     return script::is_enabled(active_.forks, fork);
 }
 
-bool chain_state::is_checkpoint_conflict(const hash_digest& hash) const {
+bool chain_state::is_checkpoint_conflict(hash_digest const& hash) const {
     return !checkpoint::validate(hash, data_.height, checkpoints_);
 }
 

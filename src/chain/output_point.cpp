@@ -55,7 +55,7 @@ output_point::output_point(hash_digest&& hash, uint32_t index)
     : point({std::move(hash), index}), validation{} {
 }
 
-output_point::output_point(const hash_digest& hash, uint32_t index)
+output_point::output_point(hash_digest const& hash, uint32_t index)
     : point(hash, index), validation{} {
 }
 

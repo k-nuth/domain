@@ -48,7 +48,7 @@ point::point()
     : hash_(null_hash), index_(0), valid_(false) {
 }
 
-point::point(const hash_digest& hash, uint32_t index)
+point::point(hash_digest const& hash, uint32_t index)
     : hash_(hash), index_(index), valid_(true) {
 }
 
@@ -57,7 +57,7 @@ point::point(hash_digest&& hash, uint32_t index)
 }
 
 // protected
-point::point(const hash_digest& hash, uint32_t index, bool valid)
+point::point(hash_digest const& hash, uint32_t index, bool valid)
     : hash_(hash), index_(index), valid_(valid) {
 }
 
@@ -234,11 +234,11 @@ hash_digest& point::hash() {
     return hash_;
 }
 
-const hash_digest& point::hash() const {
+hash_digest const& point::hash() const {
     return hash_;
 }
 
-void point::set_hash(const hash_digest& value) {
+void point::set_hash(hash_digest const& value) {
     // This is no longer a default instance, so valid.
     valid_ = true;
     hash_ = value;

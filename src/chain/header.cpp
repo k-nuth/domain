@@ -50,7 +50,7 @@ header::header()
     , validation{} 
 {}
 
-header::header(uint32_t version, const hash_digest& previous_block_hash, const hash_digest& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
+header::header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
     : version_(version)
     , previous_block_hash_(previous_block_hash)
     , merkle_(merkle)
@@ -76,7 +76,7 @@ header::header(header const& x)
     validation = x.validation;
 }
 
-header::header(header const& x, const hash_digest& hash)
+header::header(header const& x, hash_digest const& hash)
     // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) 
     : version_(x.version_)
     , previous_block_hash_(x.previous_block_hash_)
@@ -271,11 +271,11 @@ hash_digest& header::previous_block_hash() {
     return previous_block_hash_;
 }
 
-const hash_digest& header::previous_block_hash() const {
+hash_digest const& header::previous_block_hash() const {
     return previous_block_hash_;
 }
 
-void header::set_previous_block_hash(const hash_digest& value) {
+void header::set_previous_block_hash(hash_digest const& value) {
     previous_block_hash_ = value;
     invalidate_cache();
 }
@@ -289,11 +289,11 @@ hash_digest& header::merkle() {
     return merkle_;
 }
 
-const hash_digest& header::merkle() const {
+hash_digest const& header::merkle() const {
     return merkle_;
 }
 
-void header::set_merkle(const hash_digest& value) {
+void header::set_merkle(hash_digest const& value) {
     merkle_ = value;
     invalidate_cache();
 }

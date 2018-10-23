@@ -163,7 +163,7 @@ public:
     bool is_enabled(machine::rule_fork fork) const;
 
     /// Determine if this block hash fails a checkpoint at this height.
-    bool is_checkpoint_conflict(const hash_digest& hash) const;
+    bool is_checkpoint_conflict(hash_digest const& hash) const;
 
     /// This block height is less than or equal to that of the top checkpoint.
     bool is_under_checkpoint() const;

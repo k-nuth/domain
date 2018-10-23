@@ -134,7 +134,7 @@ transaction::transaction(transaction&& other, hash_digest&& hash)
     validation = std::move(other.validation);
 }
 
-transaction::transaction(transaction const& other, const hash_digest& hash)
+transaction::transaction(transaction const& other, hash_digest const& hash)
     : transaction(other.version_, other.locktime_, other.inputs_, other.outputs_, other.cached_sigops_, other.cached_fees_, other.cached_is_standard_) {
     hash_ = std::make_shared<hash_digest>(hash);
     validation = other.validation;

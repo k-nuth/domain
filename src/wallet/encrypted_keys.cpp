@@ -107,7 +107,7 @@ static hash_digest point_hash(const ec_compressed& point)
     return slice<1, ec_compressed_size>(point);
 }
 
-static one_byte point_sign(uint8_t byte, const hash_digest& hash)
+static one_byte point_sign(uint8_t byte, hash_digest const& hash)
 {
     static constexpr uint8_t low_bit_mask = 0x01;
     const uint8_t last_byte = hash.back();
@@ -116,7 +116,7 @@ static one_byte point_sign(uint8_t byte, const hash_digest& hash)
     return to_array(sign_byte);
 }
 
-static one_byte point_sign(const one_byte& single, const hash_digest& hash)
+static one_byte point_sign(const one_byte& single, hash_digest const& hash)
 {
     return point_sign(single.front(), hash);
 }
@@ -176,7 +176,7 @@ static one_byte set_flags(bool compressed)
 
 static void create_private_key(encrypted_private& out_private,
     const one_byte& flags, const ek_salt& salt, const ek_entropy& entropy,
-    const hash_digest& derived1, const hash_digest& derived2,
+    hash_digest const& derived1, hash_digest const& derived2,
     const ek_seed& seed, uint8_t version)
 {
     auto const prefix = parse_encrypted_private::prefix_factory(version, true);
@@ -203,7 +203,7 @@ static void create_private_key(encrypted_private& out_private,
 
 static bool create_public_key(encrypted_public& out_public,
     const one_byte& flags, const ek_salt& salt, const ek_entropy& entropy,
-    const hash_digest& derived1, const hash_digest& derived2,
+    hash_digest const& derived1, hash_digest const& derived2,
     const ec_secret& secret, uint8_t version)
 {
     ec_compressed point;

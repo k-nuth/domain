@@ -68,7 +68,7 @@ reject::reject(reason_code code, std::string&& message, std::string&& reason)
       data_(null_hash) {
 }
 
-reject::reject(reason_code code, const std::string& message, const std::string& reason, const hash_digest& data)
+reject::reject(reason_code code, const std::string& message, const std::string& reason, hash_digest const& data)
     : code_(code),
       message_(message),
       reason_(reason),
@@ -227,11 +227,11 @@ hash_digest& reject::data() {
     return data_;
 }
 
-const hash_digest& reject::data() const {
+hash_digest const& reject::data() const {
     return data_;
 }
 
-void reject::set_data(const hash_digest& value) {
+void reject::set_data(hash_digest const& value) {
     data_ = value;
 }
 
