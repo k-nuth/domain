@@ -31,8 +31,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string transaction::command = "tx";
-uint32_t transaction const::version_minimum = version::level::minimum;
-uint32_t transaction const::version_maximum = version::level::maximum;
+uint32_t const transaction::version_minimum = version::level::minimum;
+uint32_t const transaction::version_maximum = version::level::maximum;
 
 transaction transaction::factory_from_data(uint32_t version, data_chunk const& data) {
     transaction instance;

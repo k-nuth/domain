@@ -35,8 +35,8 @@ namespace libbitcoin {
 namespace message {
 
 const std::string block::command = "block";
-uint32_t block const::version_minimum = version::level::minimum;
-uint32_t block const::version_maximum = version::level::maximum;
+uint32_t const block::version_minimum = version::level::minimum;
+uint32_t const block::version_maximum = version::level::maximum;
 
 block block::factory_from_data(uint32_t version, data_chunk const& data) {
     block instance;
