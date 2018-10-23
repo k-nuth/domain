@@ -49,7 +49,7 @@ hash_digest hash_message(data_slice message) {
     return bitcoin_hash(data);
 }
 
-static bool recover(short_hash& out_hash, bool compressed, const ec_signature& compact, uint8_t recovery_id, hash_digest const& message_digest) {
+static bool recover(short_hash& out_hash, bool compressed, ec_signature const& compact, uint8_t recovery_id, hash_digest const& message_digest) {
     const recoverable_signature recoverable{
         compact,
         recovery_id};

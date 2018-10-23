@@ -189,7 +189,7 @@ public:
                                                script_version version = script_version::unversioned,
                                                uint64_t value = max_uint64);
 
-    static bool check_signature(const ec_signature& signature,
+    static bool check_signature(ec_signature const& signature,
                                 uint8_t sighash_type,
                                 data_chunk const& public_key,
                                 script const& script_code,

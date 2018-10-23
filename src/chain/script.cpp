@@ -750,7 +750,7 @@ hash_digest script::generate_signature_hash(transaction const& tx,
 }
 
 // static
-bool script::check_signature(const ec_signature& signature,
+bool script::check_signature(ec_signature const& signature,
                              uint8_t sighash_type,
                              data_chunk const& public_key,
                              script const& script_code,
