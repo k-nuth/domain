@@ -52,7 +52,7 @@ class transaction;
 class witness;
 
 class BC_API script {
-   public:
+public:
     typedef machine::operation operation;
     typedef machine::rule_fork rule_fork;
     typedef machine::script_pattern script_pattern;
@@ -63,24 +63,24 @@ class BC_API script {
 
     script();
 
-    script(script&& other);
-    script(const script& other);
+    script(const script& x);
+    script(script&& x);
 
-    script(operation::list&& ops);
     script(const operation::list& ops);
+    script(operation::list&& ops);
 
-    script(data_chunk&& encoded, bool prefix);
     script(data_chunk const& encoded, bool prefix);
+    script(data_chunk&& encoded, bool prefix);
 
     // Operators.
     //-------------------------------------------------------------------------
 
     /// This class is move assignable and copy assignable.
-    script& operator=(script&& other);
-    script& operator=(const script& other);
+    script& operator=(const script& x);
+    script& operator=(script&& x);
 
-    bool operator==(const script& other) const;
-    bool operator!=(const script& other) const;
+    bool operator==(const script& x) const;
+    bool operator!=(const script& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -101,9 +101,7 @@ class BC_API script {
     bool from_data(data_chunk const& encoded, bool prefix);
     bool from_data(data_source& stream, bool prefix);
 
-    template <typename R
-              // , typename = std::enable_if_t< ! std::is_same<R, data_chunk>::value>
-              >
+    template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
         static_assert(!std::is_same<R, data_chunk>::value, "");
         // static_assert(   std::is_same<R, data_chunk>::value, "");
@@ -152,8 +150,9 @@ class BC_API script {
     template <Writer W>
     void to_data(W& sink, bool prefix) const {
         // TODO(libbitcoin): optimize by always storing the prefixed serialization.
-        if (prefix)
+        if (prefix) {
             sink.write_variable_little_endian(serialized_size(false));
+        }
 
         sink.write_bytes(bytes_);
     }
@@ -240,10 +239,8 @@ class BC_API script {
     static operation::list to_pay_public_key_pattern(data_slice point);
     static operation::list to_pay_key_hash_pattern(const short_hash& hash);
     static operation::list to_pay_script_hash_pattern(const short_hash& hash);
-    static operation::list to_pay_multisig_pattern(uint8_t signatures,
-                                                   const point_list& points);
-    static operation::list to_pay_multisig_pattern(uint8_t signatures,
-                                                   const data_stack& points);
+    static operation::list to_pay_multisig_pattern(uint8_t signatures, const point_list& points);
+    static operation::list to_pay_multisig_pattern(uint8_t signatures, const data_stack& points);
 
     // Utilities (non-static).
     //-------------------------------------------------------------------------
@@ -268,7 +265,7 @@ class BC_API script {
     // TODO(libbitcoin): move back to private.
     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, const script& input_script, const witness& input_witness, const script& prevout_script, uint64_t value);
 
-   protected:
+protected:
     // So that input and output may call reset from their own.
     friend class input;
     friend class output;
@@ -277,7 +274,7 @@ class BC_API script {
     bool is_pay_to_witness(uint32_t forks) const;
     bool is_pay_to_script_hash(uint32_t forks) const;
 
-   private:
+private:
     static size_t serialized_size(const operation::list& ops);
     static data_chunk operations_to_data(const operation::list& ops);
     static hash_digest generate_unversioned_signature_hash(
@@ -285,6 +282,7 @@ class BC_API script {
         uint32_t input_index,
         const script& script_code,
         uint8_t sighash_type);
+
     static hash_digest generate_version_0_signature_hash(transaction const& tx,
                                                          uint32_t input_index,
                                                          const script& script_code,
