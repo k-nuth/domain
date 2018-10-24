@@ -32,7 +32,7 @@ namespace keoken {
 namespace message {
 
 class BC_API send_tokens {
-   public:
+public:
     static const uint16_t version = 0;
     static const uint16_t type = 1;
 
@@ -86,7 +86,7 @@ class BC_API send_tokens {
     amount_t amount() const;
     void set_amount(amount_t x);
 
-   private:
+private:
     asset_id_t asset_id_;
     amount_t amount_;
 };

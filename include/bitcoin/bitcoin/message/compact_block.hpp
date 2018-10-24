@@ -39,7 +39,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API compact_block {
-   public:
+public:
     typedef std::shared_ptr<compact_block> ptr;
     typedef std::shared_ptr<const compact_block> const_ptr;
 
@@ -186,7 +186,7 @@ class BC_API compact_block {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     chain::header header_;
     uint64_t nonce_;
     short_id_list short_ids_;

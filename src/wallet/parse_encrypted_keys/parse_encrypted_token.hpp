@@ -34,7 +34,7 @@ namespace wallet {
 // Swap not defined.
 class parse_encrypted_token
     : public parse_encrypted_prefix<8u> {
-   public:
+public:
     static byte_array<prefix_size> prefix_factory(bool lot_sequence);
 
     explicit parse_encrypted_token(const encrypted_token& value);
@@ -44,7 +44,7 @@ class parse_encrypted_token
     ek_entropy entropy() const;
     one_byte sign() const;
 
-   private:
+private:
     bool verify_context() const;
     bool verify_magic() const;
 

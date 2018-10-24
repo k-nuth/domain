@@ -38,7 +38,7 @@ namespace wallet {
 /// The object is not constant, setters can change state after construction.
 class BC_API bitcoin_uri
     : public uri_reader {
-   public:
+public:
     /// Constructors.
     bitcoin_uri();
     bitcoin_uri(const bitcoin_uri& x);
@@ -86,7 +86,7 @@ class BC_API bitcoin_uri
     bool set_fragment(std::string const& fragment);
     bool set_parameter(std::string const& key, std::string const& value);
 
-   private:
+private:
     /// Private helpers.
     bool set_amount(std::string const& satoshis);
 

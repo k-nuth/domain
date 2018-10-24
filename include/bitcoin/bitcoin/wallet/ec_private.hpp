@@ -44,7 +44,7 @@ typedef byte_array<wif_compressed_size> wif_compressed;
 
 /// Use to pass an ec secret with compresson and version information.
 class BC_API ec_private {
-   public:
+public:
     static const uint8_t compressed_sentinel;
 
     // WIF carries a compression flag for payment address generation but
@@ -109,7 +109,7 @@ class BC_API ec_private {
     ec_public to_public() const;
     payment_address to_payment_address() const;
 
-   private:
+private:
     /// Validators.
     static bool is_wif(data_slice decoded);
 

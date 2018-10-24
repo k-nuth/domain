@@ -33,7 +33,7 @@ namespace wallet {
 // Swap not defined.
 class parse_encrypted_private
     : public parse_encrypted_key<2u> {
-   public:
+public:
     static byte_array<prefix_size> prefix_factory(uint8_t address,
                                                   bool multiplied);
 
@@ -45,7 +45,7 @@ class parse_encrypted_private
     quarter_hash data1() const;
     half_hash data2() const;
 
-   private:
+private:
     bool verify_magic() const;
 
     static constexpr uint8_t default_context_ = 0x42;

@@ -42,7 +42,7 @@ namespace message {
 
 class BC_API block
     : public chain::block {
-   public:
+public:
     typedef std::shared_ptr<block> ptr;
     typedef std::shared_ptr<block const> const_ptr;
     typedef std::vector<ptr> ptr_list;

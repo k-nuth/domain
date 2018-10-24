@@ -32,7 +32,7 @@ namespace config {
  * Serialization helper to convert between base16 string and ec_secret.
  */
 class BC_API ec_private {
-   public:
+public:
     /**
      * Default constructor.
      */
@@ -75,7 +75,7 @@ class BC_API ec_private {
     friend std::ostream& operator<<(std::ostream& output,
                                     const ec_private& argument);
 
-   private:
+private:
     /**
      * The state of this object.
      */

@@ -38,7 +38,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API inventory_vector {
-   public:
+public:
     typedef std::vector<inventory_vector> list;
 
     enum class type_id : uint32_t {
@@ -126,7 +126,7 @@ class BC_API inventory_vector {
     bool operator==(inventory_vector const& x) const;
     bool operator!=(inventory_vector const& x) const;
 
-   private:
+private:
     type_id type_;
     hash_digest hash_;
 };

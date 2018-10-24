@@ -43,7 +43,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API point {
-   public:
+public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
     static constexpr uint32_t null_index = no_previous_output;
@@ -200,11 +200,11 @@ class BC_API point {
     // constexpr
     bool is_null() const;
 
-   protected:
+protected:
     // point(hash_digest const& hash, uint32_t index, bool valid);
     void reset();
 
-   private:
+private:
     hash_digest hash_;
     uint32_t index_;
     bool valid_;

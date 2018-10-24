@@ -34,7 +34,7 @@ namespace wallet {
 template <size_t PrefixSize>
 class parse_encrypted_key
     : public parse_encrypted_prefix<PrefixSize> {
-   public:
+public:
     parse_encrypted_key(const byte_array<PrefixSize>& prefix,
                         const one_byte& flags,
                         const ek_salt& salt,
@@ -48,7 +48,7 @@ class parse_encrypted_key
     ek_salt salt() const;
     ek_entropy entropy() const;
 
-   private:
+private:
     const one_byte flags_;
     const ek_salt salt_;
     const ek_entropy entropy_;

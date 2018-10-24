@@ -38,7 +38,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API address {
-   public:
+public:
     typedef std::shared_ptr<address> ptr;
     typedef std::shared_ptr<const address> const_ptr;
 
@@ -120,7 +120,7 @@ class BC_API address {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     network_address::list addresses_;
 };
 

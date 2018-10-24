@@ -51,7 +51,7 @@ class transaction;
 class witness;
 
 class BC_API script {
-   public:
+public:
     typedef machine::operation operation;
     typedef machine::rule_fork rule_fork;
     typedef machine::script_pattern script_pattern;
@@ -264,7 +264,7 @@ class BC_API script {
     // TODO(libbitcoin): move back to private.
     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
 
-   protected:
+protected:
     // So that input and output may call reset from their own.
     friend class input;
     friend class output;
@@ -273,7 +273,7 @@ class BC_API script {
     bool is_pay_to_witness(uint32_t forks) const;
     bool is_pay_to_script_hash(uint32_t forks) const;
 
-   private:
+private:
     static size_t serialized_size(operation::list const& ops);
     static data_chunk operations_to_data(operation::list const& ops);
     static hash_digest generate_unversioned_signature_hash(

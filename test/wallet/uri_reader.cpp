@@ -88,7 +88,7 @@ struct custom_reader
     boost::optional<std::string> myparam1;
     boost::optional<std::string> myparam2;
 
-   private:
+private:
     bool strict_;
     bool authority_;
 };

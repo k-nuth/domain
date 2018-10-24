@@ -32,7 +32,7 @@ namespace keoken {
 namespace message {
 
 class BC_API create_asset {
-   public:
+public:
     static const uint16_t version = 0;
     static const uint16_t type = 0;
     static const size_t max_name_size = 32u + 1u;  //32 real chars plus null-terminated
@@ -88,7 +88,7 @@ class BC_API create_asset {
     amount_t amount() const;
     void set_amount(amount_t x);
 
-   private:
+private:
     // char name[17];      // 16 + 1. minus the \0 termination
     std::string name_;
     amount_t amount_;  //NOLINT

@@ -35,7 +35,7 @@ namespace config {
  * a vector of chain::output.
  */
 class BC_API output {
-   public:
+public:
     /**
      * Default constructor.
      */
@@ -62,7 +62,7 @@ class BC_API output {
      */
     friend std::istream& operator>>(std::istream& input, output& argument);
 
-   private:
+private:
     /**
      * The transaction output state of this object.
      * This data is translated to an output given expected version information.

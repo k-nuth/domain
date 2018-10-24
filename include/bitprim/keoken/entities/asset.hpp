@@ -31,7 +31,7 @@ namespace keoken {
 namespace entities {
 
 class BC_API asset {
-   public:
+public:
     asset(asset_id_t id, std::string name, amount_t amount, bc::wallet::payment_address owner);
 
     // Semiregular.
@@ -65,7 +65,7 @@ class BC_API asset {
     bc::wallet::payment_address const& owner() const;
     // void set_owner(bc::::wallet::payment_address x);
 
-   private:
+private:
     asset_id_t id_;
     std::string name_;
     amount_t amount_;

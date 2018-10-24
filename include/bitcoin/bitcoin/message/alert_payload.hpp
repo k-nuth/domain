@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API alert_payload {
-   public:
+public:
     static alert_payload factory_from_data(uint32_t version, data_chunk const& data);
     static alert_payload factory_from_data(uint32_t version, data_source& stream);
 
@@ -183,7 +183,7 @@ class BC_API alert_payload {
 
     static const ec_uncompressed satoshi_public_key;
 
-   private:
+private:
     uint32_t version_;
     uint64_t relay_until_;
     uint64_t expiration_;

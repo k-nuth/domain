@@ -30,7 +30,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API points_value {
-   public:
+public:
     /// A set of valued points.
     point_value::list points;
 

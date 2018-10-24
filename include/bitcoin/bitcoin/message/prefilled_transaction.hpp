@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API prefilled_transaction {
-   public:
+public:
     typedef std::vector<prefilled_transaction> list;
     typedef std::shared_ptr<const prefilled_transaction> const_ptr;
 
@@ -104,7 +104,7 @@ class BC_API prefilled_transaction {
     bool operator==(const prefilled_transaction& x) const;
     bool operator!=(const prefilled_transaction& x) const;
 
-   private:
+private:
     uint64_t index_;
     chain::transaction transaction_;
 };

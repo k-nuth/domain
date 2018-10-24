@@ -42,7 +42,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API output {
-   public:
+public:
     typedef std::vector<output> list;
 
     /// This is a sentinel used in .value to indicate not found in store.
@@ -170,11 +170,11 @@ class BC_API output {
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-   protected:
+protected:
     void reset();
     void invalidate_cache() const;
 
-   private:
+private:
     typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
 
     addresses_ptr addresses_cache() const;

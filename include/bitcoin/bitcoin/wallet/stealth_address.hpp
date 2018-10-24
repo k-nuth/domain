@@ -35,7 +35,7 @@ namespace wallet {
 
 /// A class for working with stealth payment addresses.
 class BC_API stealth_address {
-   public:
+public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
     static const uint8_t mainnet_p2kh;
 
@@ -81,7 +81,7 @@ class BC_API stealth_address {
     /// Methods.
     data_chunk to_chunk() const;
 
-   private:
+private:
     /// Factories.
     static stealth_address from_string(std::string const& encoded);
     static stealth_address from_stealth(data_chunk const& decoded);

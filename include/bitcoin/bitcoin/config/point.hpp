@@ -33,7 +33,7 @@ namespace config {
  * Serialization helper to convert between text and an output_point.
  */
 class BC_API point {
-   public:
+public:
     static std::string const delimeter;
 
     /**
@@ -82,7 +82,7 @@ class BC_API point {
     friend std::ostream& operator<<(std::ostream& output,
                                     point const& argument);
 
-   private:
+private:
     /**
      * The state of this object.
      */

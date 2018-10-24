@@ -32,7 +32,7 @@ namespace wallet {
 
 /// This class does not support multisignature stealth addresses.
 class BC_API stealth_receiver {
-   public:
+public:
     /// Constructors.
     stealth_receiver(ec_secret const& scan_private,
                      ec_secret const& spend_private,
@@ -53,7 +53,7 @@ class BC_API stealth_receiver {
     bool derive_private(ec_secret& out_private,
                         const ec_compressed& ephemeral_public) const;
 
-   private:
+private:
     const uint8_t version_;
     ec_secret const scan_private_;
     ec_secret const spend_private_;

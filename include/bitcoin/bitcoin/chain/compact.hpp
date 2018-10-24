@@ -29,7 +29,7 @@ namespace chain {
 
 /// A signed but zero-floored scientific notation in 32 bits.
 class BC_API compact {
-   public:
+public:
     /// Construct a normal form compact number from a 32 bit compact number.
     explicit compact(uint32_t compact);
 
@@ -53,7 +53,7 @@ class BC_API compact {
     /// This is either saved or generated from the construction parameter.
     operator uint256_t const&() const;
 
-   private:
+private:
     static bool from_compact(uint256_t& out, uint32_t compact);
     static uint32_t from_big(uint256_t const& big);
 

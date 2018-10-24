@@ -109,7 +109,7 @@ inline void write_witnesses(W& sink, input::list const& inputs) {
 }  // namespace detail
 
 class BC_API transaction {
-   public:
+public:
     typedef input::list ins;
     typedef output::list outs;
     typedef std::vector<transaction> list;
@@ -369,12 +369,12 @@ class BC_API transaction {
 
     bool is_standard() const;
 
-   protected:
+protected:
     void reset();
     void invalidate_cache() const;
     bool all_inputs_final() const;
 
-   private:
+private:
     uint32_t version_;
     uint32_t locktime_;
     input::list inputs_;

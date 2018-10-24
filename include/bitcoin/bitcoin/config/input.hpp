@@ -33,7 +33,7 @@ namespace config {
  * Serialization helper stub for chain::input.
  */
 class BC_API input {
-   public:
+public:
     /**
      * Default constructor.
      */
@@ -87,7 +87,7 @@ class BC_API input {
     friend std::ostream& operator<<(std::ostream& output,
                                     input const& argument);
 
-   private:
+private:
     /**
      * The state of this object.
      */

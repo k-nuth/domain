@@ -40,7 +40,7 @@ namespace message {
 
 // The checksum is ignored by the version command.
 class BC_API version {
-   public:
+public:
     typedef std::shared_ptr<version> ptr;
     typedef std::shared_ptr<const version> const_ptr;
 
@@ -251,7 +251,7 @@ class BC_API version {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     uint32_t value_;
     uint64_t services_;
     uint64_t timestamp_;

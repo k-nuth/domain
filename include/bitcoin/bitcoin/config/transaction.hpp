@@ -33,7 +33,7 @@ namespace config {
  * transaction.
  */
 class BC_API transaction {
-   public:
+public:
     /**
      * Default constructor.
      */
@@ -87,7 +87,7 @@ class BC_API transaction {
     friend std::ostream& operator<<(std::ostream& output,
                                     transaction const& argument);
 
-   private:
+private:
     /**
      * The state of this object's transaction data.
      */

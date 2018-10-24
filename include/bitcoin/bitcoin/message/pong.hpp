@@ -38,7 +38,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API pong {
-   public:
+public:
     typedef std::shared_ptr<pong> ptr;
     typedef std::shared_ptr<const pong> const_ptr;
 
@@ -104,7 +104,7 @@ class BC_API pong {
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-   private:
+private:
     uint64_t nonce_;
     bool valid_;
 };

@@ -677,7 +677,7 @@ class DOCTEST_INTERFACE String {
     void setOnHeap() { *reinterpret_cast<unsigned char*>(&buf[last]) = 128; }
     void setLast(unsigned in = last) { buf[last] = char(in); }
 
-   public:
+public:
     String() {
         buf[0] = '\0';
         setLast();
@@ -879,7 +879,7 @@ struct ForEachType<Typelist<Head, Tail>, Callable> : public ForEachType<Tail, Ca
 // Recursion end
 template <class Head, class Callable>
 struct ForEachType<Typelist<Head, NullType>, Callable> {
-   public:
+public:
     enum {
         value = 0
     };
@@ -901,10 +901,10 @@ const char* type_to_string() {
 
 template <typename T1 = detail::NullType, typename T2 = detail::NullType, typename T3 = detail::NullType, typename T4 = detail::NullType, typename T5 = detail::NullType, typename T6 = detail::NullType, typename T7 = detail::NullType, typename T8 = detail::NullType, typename T9 = detail::NullType, typename T10 = detail::NullType, typename T11 = detail::NullType, typename T12 = detail::NullType, typename T13 = detail::NullType, typename T14 = detail::NullType, typename T15 = detail::NullType, typename T16 = detail::NullType, typename T17 = detail::NullType, typename T18 = detail::NullType, typename T19 = detail::NullType, typename T20 = detail::NullType, typename T21 = detail::NullType, typename T22 = detail::NullType, typename T23 = detail::NullType, typename T24 = detail::NullType, typename T25 = detail::NullType, typename T26 = detail::NullType, typename T27 = detail::NullType, typename T28 = detail::NullType, typename T29 = detail::NullType, typename T30 = detail::NullType, typename T31 = detail::NullType, typename T32 = detail::NullType, typename T33 = detail::NullType, typename T34 = detail::NullType, typename T35 = detail::NullType, typename T36 = detail::NullType, typename T37 = detail::NullType, typename T38 = detail::NullType, typename T39 = detail::NullType, typename T40 = detail::NullType, typename T41 = detail::NullType, typename T42 = detail::NullType, typename T43 = detail::NullType, typename T44 = detail::NullType, typename T45 = detail::NullType, typename T46 = detail::NullType, typename T47 = detail::NullType, typename T48 = detail::NullType, typename T49 = detail::NullType, typename T50 = detail::NullType, typename T51 = detail::NullType, typename T52 = detail::NullType, typename T53 = detail::NullType, typename T54 = detail::NullType, typename T55 = detail::NullType, typename T56 = detail::NullType, typename T57 = detail::NullType, typename T58 = detail::NullType, typename T59 = detail::NullType, typename T60 = detail::NullType>
 struct Types {
-   private:
+private:
     typedef typename Types<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60>::Result TailResult;
 
-   public:
+public:
     typedef detail::Typelist<T1, TailResult> Result;
 };
 
@@ -967,7 +967,7 @@ DOCTEST_INTERFACE String toString(std::nullptr_t in);
 #endif  // DOCTEST_CONFIG_WITH_NULLPTR
 
 class DOCTEST_INTERFACE Approx {
-   public:
+public:
     explicit Approx(double value);
 
     Approx operator()(double value) const {
@@ -1053,7 +1053,7 @@ class DOCTEST_INTERFACE Approx {
 
     String toString() const;
 
-   private:
+private:
     double m_epsilon;
     double m_scale;
     double m_value;
@@ -1647,7 +1647,7 @@ struct DOCTEST_INTERFACE IExceptionTranslator {
 template <typename T>
 class ExceptionTranslator : public IExceptionTranslator  //!OCLINT destructor of virtual class
 {
-   public:
+public:
     explicit ExceptionTranslator(String (*translateFunction)(T))
         : m_translateFunction(translateFunction) {}
 
@@ -1666,7 +1666,7 @@ class ExceptionTranslator : public IExceptionTranslator  //!OCLINT destructor of
         return false;
     }
 
-   protected:
+protected:
     String (*m_translateFunction)(T);
 };
 
@@ -1801,7 +1801,7 @@ class ContextBuilder {
 
     ContextBuilder& operator=(const ContextBuilder&);  // NOLINT
 
-   public:
+public:
     // cppcheck-suppress uninitMemberVar
     DOCTEST_NOINLINE ContextBuilder()  // NOLINT
         : numCaptures(0), head(0), tail(0) {}
@@ -1856,7 +1856,7 @@ class ContextScope : public IContextScope {
     ContextBuilder contextBuilder;
     bool built;
 
-   public:
+public:
     DOCTEST_NOINLINE explicit ContextScope(ContextBuilder& temp)
         : contextBuilder(temp), built(false) {
         addToContexts(this);
@@ -1880,7 +1880,7 @@ class DOCTEST_INTERFACE MessageBuilder {
     int m_line;
     assertType::Enum m_severity;
 
-   public:
+public:
     MessageBuilder(const char* file, int line, assertType::Enum severity);
     ~MessageBuilder();
 
@@ -1981,7 +1981,7 @@ class DOCTEST_INTERFACE Context {
 
 #endif  // DOCTEST_CONFIG_DISABLE
 
-   public:
+public:
     explicit Context(int argc = 0, const char* const* argv = 0);
 
     ~Context();
@@ -3920,7 +3920,7 @@ UInt64 getCurrentTicks() {
 #endif  // DOCTEST_PLATFORM_WINDOWS
 
 class Timer {
-   public:
+public:
     Timer()
         : m_ticks(0) {}
     void start() { m_ticks = getCurrentTicks(); }
@@ -3932,7 +3932,7 @@ class Timer {
     }
     double getElapsedSeconds() const { return getElapsedMicroseconds() / 1000000.0; }
 
-   private:
+private:
     UInt64 m_ticks;
 };
 
@@ -4362,7 +4362,7 @@ struct FatalConditionHandler {
 
     ~FatalConditionHandler() { reset(); }
 
-   private:
+private:
     static bool isSet;
     static ULONG guaranteeSize;
     static PVOID exceptionHandlerHandle;

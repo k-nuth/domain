@@ -32,7 +32,7 @@ namespace libbitcoin {
 namespace machine {
 
 class BC_API interpreter {
-   public:
+public:
     typedef error::error_code_t result;
 
     // Operations (shared).
@@ -116,7 +116,7 @@ class BC_API interpreter {
     /// For best performance use script runner for a sequence of operations.
     static code run(operation const& op, program& program);
 
-   private:
+private:
     static result run_op(operation const& op, program& program);
 };
 

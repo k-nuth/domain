@@ -41,7 +41,7 @@ namespace message {
 
 class BC_API not_found
     : public inventory {
-   public:
+public:
     typedef std::shared_ptr<not_found> ptr;
     typedef std::shared_ptr<const not_found> const_ptr;
 

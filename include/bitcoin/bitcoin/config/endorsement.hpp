@@ -34,7 +34,7 @@ namespace config {
  * Serialization helper to convert between endorsement string and data_chunk.
  */
 class BC_API endorsement {
-   public:
+public:
     /**
      * Default constructor.
      */
@@ -97,7 +97,7 @@ class BC_API endorsement {
     friend std::ostream& operator<<(std::ostream& output,
                                     const endorsement& argument);
 
-   private:
+private:
     /**
      * The state of this object.
      */

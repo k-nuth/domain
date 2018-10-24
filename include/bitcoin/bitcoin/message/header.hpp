@@ -39,7 +39,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API header : public chain::header {
-   public:
+public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
     typedef std::shared_ptr<header const> const_ptr;

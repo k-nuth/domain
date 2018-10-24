@@ -33,7 +33,7 @@ namespace config {
  * header.
  */
 class BC_API header {
-   public:
+public:
     /**
      * Default constructor.
      */
@@ -80,7 +80,7 @@ class BC_API header {
     friend std::ostream& operator<<(std::ostream& output,
                                     header const& argument);
 
-   private:
+private:
     /**
      * The state of this object's header data.
      */

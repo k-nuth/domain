@@ -45,7 +45,7 @@ struct BC_API select_outputs {
                        uint64_t minimum_value,
                        algorithm option = algorithm::greedy);
 
-   private:
+private:
     static void greedy(chain::points_value& out,
                        const chain::points_value& unspent,
                        uint64_t minimum_value);

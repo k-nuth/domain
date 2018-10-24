@@ -35,7 +35,7 @@ namespace libbitcoin {
 namespace machine {
 
 class BC_API program {
-   public:
+public:
     typedef data_stack::value_type value_type;
     typedef operation::iterator op_iterator;
 
@@ -139,7 +139,7 @@ class BC_API program {
     bool closed() const;
     bool succeeded() const;
 
-   private:
+private:
     // A space-efficient dynamic bitset (specialized).
     typedef std::vector<bool> bool_stack;
 

@@ -44,7 +44,7 @@ typedef byte_array<payment_size> payment;
 
 /// A class for working with non-stealth payment addresses.
 class BC_API payment_address {
-   public:
+public:
     static const uint8_t mainnet_p2kh;
     static const uint8_t mainnet_p2sh;
 
@@ -109,7 +109,7 @@ class BC_API payment_address {
     /// Methods.
     payment to_payment() const;
 
-   private:
+private:
     /// Validators.
     static bool is_address(data_slice decoded);
 

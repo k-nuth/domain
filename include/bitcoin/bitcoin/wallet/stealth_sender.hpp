@@ -34,7 +34,7 @@ namespace wallet {
 
 /// This class does not support multisignature stealth addresses.
 class BC_API stealth_sender {
-   public:
+public:
     /// Constructors.
     /// Generate a send address from the stealth address.
     stealth_sender(const stealth_address& address, data_chunk const& seed, const binary& filter, uint8_t version = payment_address::mainnet_p2kh);
@@ -55,7 +55,7 @@ class BC_API stealth_sender {
     /// The bitcoin payment address to which the payment will be made.
     const wallet::payment_address& payment_address() const;
 
-   private:
+private:
     void initialize(ec_secret const& ephemeral_private,
                     const stealth_address& address,
                     data_chunk const& seed,

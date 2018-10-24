@@ -36,7 +36,7 @@ namespace message {
 
 class BC_API get_headers
     : public get_blocks {
-   public:
+public:
     typedef std::shared_ptr<get_headers> ptr;
     typedef std::shared_ptr<const get_headers> const_ptr;
 

@@ -38,7 +38,7 @@ class block;
 class header;
 
 class BC_API chain_state {
-   public:
+public:
     typedef std::deque<uint32_t> bitss;
     typedef std::deque<uint32_t> versions;
     typedef std::deque<uint32_t> timestamps;
@@ -191,7 +191,7 @@ class BC_API chain_state {
     bool is_replay_protection_enabled() const;
 #endif  //BITPRIM_CURRENCY_BCH
 
-   protected:
+protected:
     struct activations {
         // The forks that are active at this height.
         uint32_t forks;
@@ -213,7 +213,7 @@ class BC_API chain_state {
     //    static uint32_t work_required(data const& values, uint32_t forks, bool bitcoin_cash = false);
     static uint32_t work_required(data const& values, uint32_t forks);
 
-   private:
+private:
     static size_t bits_count(size_t height, uint32_t forks);
     static size_t version_count(size_t height, uint32_t forks);
     static size_t timestamp_count(size_t height, uint32_t forks);

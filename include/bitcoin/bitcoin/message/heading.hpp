@@ -73,7 +73,7 @@ enum class message_type {
 };
 
 class BC_API heading {
-   public:
+public:
     static size_t maximum_size();
     static size_t maximum_payload_size(uint32_t version, bool witness);
     static size_t satoshi_fixed_size();
@@ -151,7 +151,7 @@ class BC_API heading {
     bool operator==(const heading& x) const;
     bool operator!=(const heading& x) const;
 
-   private:
+private:
     uint32_t magic_;
     std::string command_;
     uint32_t payload_size_;

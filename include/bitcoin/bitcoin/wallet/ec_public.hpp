@@ -37,7 +37,7 @@ class payment_address;
 /// Use to pass an ec point as either ec_compressed or ec_uncompressed.
 /// ec_public doesn't carry a version for address creation or base58 encoding.
 class BC_API ec_public {
-   public:
+public:
     static const uint8_t compressed_even;
     static const uint8_t compressed_odd;
     static const uint8_t uncompressed;
@@ -79,7 +79,7 @@ class BC_API ec_public {
     bool to_uncompressed(ec_uncompressed& out) const;
     payment_address to_payment_address(uint8_t version = mainnet_p2kh) const;
 
-   private:
+private:
     /// Validators.
     static bool is_point(data_slice decoded);
 

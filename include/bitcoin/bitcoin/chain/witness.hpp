@@ -40,7 +40,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API witness {
-   public:
+public:
     typedef machine::operation operation;
     typedef data_stack::const_iterator iterator;
 
@@ -189,13 +189,13 @@ class BC_API witness {
 
     code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& program_script, uint64_t value) const;
 
-   protected:
+protected:
     // So that input may call reset from its own.
     friend class input;
 
     void reset();
 
-   private:
+private:
     static size_t serialized_size(data_stack const& stack);
     static operation::list to_pay_key_hash(data_chunk&& program);
 

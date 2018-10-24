@@ -30,7 +30,7 @@ namespace chain {
 
 /// A valued point, does not implement specialized serialization methods.
 class BC_API point_value : public point {
-   public:
+public:
     typedef std::vector<point_value> list;
 
     // Constructors.
@@ -60,7 +60,7 @@ class BC_API point_value : public point {
     uint64_t value() const;
     void set_value(uint64_t value);
 
-   private:
+private:
     uint64_t value_;
 };
 

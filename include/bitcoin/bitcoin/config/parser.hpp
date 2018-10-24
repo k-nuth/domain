@@ -47,7 +47,7 @@ enum class load_error {
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
 class BC_API parser {
-   public:
+public:
     static std::string format_invalid_parameter(std::string const& message);
 
     static bool get_option(variables_map& variables, std::string const& name);
@@ -66,7 +66,7 @@ class BC_API parser {
     /// Load configuration file settings.
     virtual options_metadata load_settings() = 0;
 
-   protected:
+protected:
     virtual void load_command_variables(variables_map& variables, int argc, const char* argv[]);
 
     virtual
