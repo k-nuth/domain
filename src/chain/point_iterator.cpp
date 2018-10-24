@@ -61,8 +61,9 @@ point_iterator::operator bool() const
 // private
 uint8_t point_iterator::current() const
 {
-    if (current_ < hash_size)
+    if (current_ < hash_size) {
         return point_.hash()[current_];
+}
 
     // TODO(libbitcoin): move the little-endian iterator into endian.hpp.
     auto const position = current_ - hash_size;
@@ -133,8 +134,9 @@ bool point_iterator::operator!=(const point_iterator& x) const
 
 void point_iterator::increment()
 {
-    if (current_ < point_size)
+    if (current_ < point_size) {
         current_++;
+}
 }
 
 void point_iterator::decrement()
