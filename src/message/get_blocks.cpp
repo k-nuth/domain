@@ -187,8 +187,9 @@ bool get_blocks::operator==(const get_blocks& x) const {
     auto result = (start_hashes_.size() == x.start_hashes_.size()) &&
                   (stop_hash_ == x.stop_hash_);
 
-    for (size_t i = 0; i < start_hashes_.size() && result; i++)
+    for (size_t i = 0; i < start_hashes_.size() && result; i++) {
         result = (start_hashes_[i] == x.start_hashes_[i]);
+}
 
     return result;
 }

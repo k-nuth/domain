@@ -35,16 +35,18 @@ using namespace bc::chain;
 using namespace bc::machine;
 
 bool is_stealth_script(script const& script) {
-    if (script.pattern() != script_pattern::null_data)
+    if (script.pattern() != script_pattern::null_data) {
         return false;
+}
 
     BITCOIN_ASSERT(script.size() == 2);
     return (script[1].data().size() >= hash_size);
 }
 
 bool to_stealth_prefix(uint32_t& out_prefix, script const& script) {
-    if ( ! is_stealth_script(script))
+    if ( ! is_stealth_script(script)) {
         return false;
+}
 
     // A stealth prefix is the full 32 bits (prefix to the hash).
     // A stealth filter is a leftmost substring of the stealth prefix.
@@ -68,8 +70,9 @@ bool create_ephemeral_key(ec_secret& out_secret, data_chunk const& seed) {
         nonced_seed[0] = nonce;
         out_secret = hmac_sha256_hash(nonced_seed, magic);
 
-        if (secret_to_public(point, out_secret) && is_even_key(point))
+        if (secret_to_public(point, out_secret) && is_even_key(point)) {
             return true;
+}
     }
 
     out_secret = null_hash;
@@ -100,8 +103,9 @@ bool create_stealth_script(script& out_null_data, ec_secret const& secret, const
 
     // Obtain the ephemeral public key from the provided ephemeral secret key.
     ec_compressed point;
-    if ( ! secret_to_public(point, secret) || !is_even_key(point))
+    if ( ! secret_to_public(point, secret) || !is_even_key(point)) {
         return false;
+}
 
     // Copy the unsigned portion of the ephemeral public key into data.
     std::copy_n(point.begin() + 1, ec_compressed_size - 1, data.begin());
@@ -138,8 +142,9 @@ bool create_stealth_script(script& out_null_data, ec_secret const& secret, const
 
 bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
                            script const& script) {
-    if ( ! is_stealth_script(script))
+    if ( ! is_stealth_script(script)) {
         return false;
+}
 
     // The sign of the ephemeral public key is fixed by convention.
     // This requires the spender to generate a compliant (y-even) key.
@@ -153,8 +158,9 @@ bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
 
 bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
                            script const& script) {
-    if ( ! is_stealth_script(script))
+    if ( ! is_stealth_script(script)) {
         return false;
+}
 
     auto const& data = script[1].data();
     std::copy_n(data.begin(), hash_size, out_unsigned_ephemeral_key.begin());
@@ -163,8 +169,9 @@ bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
 
 bool shared_secret(ec_secret& out_shared, ec_secret const& secret, const ec_compressed& point) {
     auto copy = point;
-    if ( ! ec_multiply(copy, secret))
+    if ( ! ec_multiply(copy, secret)) {
         return false;
+}
 
     out_shared = sha256_hash(copy);
     return true;
@@ -175,12 +182,14 @@ bool uncover_stealth(ec_compressed& out_stealth,
                      ec_secret const& scan_or_ophemeral,
                      const ec_compressed& spend) {
     ec_secret shared;
-    if ( ! shared_secret(shared, scan_or_ophemeral, ephemeral_or_scan))
+    if ( ! shared_secret(shared, scan_or_ophemeral, ephemeral_or_scan)) {
         return false;
+}
 
     auto copy = spend;
-    if ( ! ec_add(copy, shared))
+    if ( ! ec_add(copy, shared)) {
         return false;
+}
 
     out_stealth = copy;
     return true;
@@ -191,12 +200,14 @@ bool uncover_stealth(ec_secret& out_stealth,
                      ec_secret const& scan_or_ephemeral,
                      ec_secret const& spend) {
     ec_secret shared;
-    if ( ! shared_secret(shared, scan_or_ephemeral, ephemeral_or_scan))
+    if ( ! shared_secret(shared, scan_or_ephemeral, ephemeral_or_scan)) {
         return false;
+}
 
     auto copy = spend;
-    if ( ! ec_add(copy, shared))
+    if ( ! ec_add(copy, shared)) {
         return false;
+}
 
     out_stealth = copy;
     return true;

@@ -103,8 +103,9 @@ stealth_address stealth_address::from_string(std::string const& encoded) {
 stealth_address stealth_address::from_stealth(data_chunk const& decoded) {
     // Size is guarded until we get to N.
     auto required_size = min_address_size;
-    if (decoded.size() < required_size || !verify_checksum(decoded))
+    if (decoded.size() < required_size || !verify_checksum(decoded)) {
         return {};
+    }
 
     // [version:1 = 0x2a]
     auto iterator = decoded.begin();
@@ -113,8 +114,9 @@ stealth_address stealth_address::from_stealth(data_chunk const& decoded) {
     // [options:1]
     ++iterator;
     auto const options = *iterator;
-    if (options > reuse_key_flag)
+    if (options > reuse_key_flag) {
         return {};
+    }
 
     // [scan_pubkey:33]
     ++iterator;
@@ -129,13 +131,15 @@ stealth_address stealth_address::from_stealth(data_chunk const& decoded) {
 
     // Adjust and retest required size. for pubkey list.
     required_size += number_spend_pubkeys * ec_compressed_size;
-    if (decoded.size() < required_size)
+    if (decoded.size() < required_size) {
         return {};
+    }
 
     // We don't explicitly save 'reuse', instead we add to spend_keys_.
     point_list spend_keys;
-    if (options == reuse_key_flag)
+    if (options == reuse_key_flag) {
         spend_keys.push_back(scan_key);
+}
 
     // [spend_pubkey_1:33]..[spend_pubkey_N:33]
     ec_compressed point;
@@ -152,8 +156,9 @@ stealth_address stealth_address::from_stealth(data_chunk const& decoded) {
 
     // [prefix_number_bits:1]
     auto const filter_bits = *iterator;
-    if (filter_bits > max_filter_bits)
+    if (filter_bits > max_filter_bits) {
         return {};
+    }
 
     // [prefix:prefix_number_bits / 8, round up]
     ++iterator;
@@ -161,8 +166,9 @@ stealth_address stealth_address::from_stealth(data_chunk const& decoded) {
 
     // Adjust and retest required size.
     required_size += filter_bytes;
-    if (decoded.size() != required_size)
+    if (decoded.size() != required_size) {
         return {};
+    }
 
     // Deserialize the filter bytes/blocks.
     data_chunk const raw_filter(iterator, iterator + filter_bytes);
@@ -178,18 +184,21 @@ stealth_address stealth_address::from_stealth(const binary& filter,
                                               uint8_t version) {
     // Ensure there is at least one spend key.
     auto spenders = spend_keys;
-    if (spenders.empty())
+    if (spenders.empty()) {
         spenders.push_back(scan_key);
+}
 
     // Guard against too many keys.
     auto const spend_keys_size = spenders.size();
-    if (spend_keys_size > max_spend_key_count)
+    if (spend_keys_size > max_spend_key_count) {
         return {};
+    };
 
     // Guard against prefix too long.
     auto prefix_number_bits = filter.size();
-    if (prefix_number_bits > max_filter_bits)
+    if (prefix_number_bits > max_filter_bits) {
         return {};
+    }
 
     // Coerce signatures to a valid range.
     auto const maximum = signatures == 0 || signatures > spend_keys_size;
@@ -253,15 +262,18 @@ data_chunk stealth_address::to_chunk() const {
     auto number_spend_pubkeys = static_cast<uint8_t>(spend_keys_.size());
 
     // Adjust for key reuse.
-    if (reuse_key())
+    if (reuse_key()) {
         --number_spend_pubkeys;
+}
 
     address.push_back(number_spend_pubkeys);
 
     // Serialize the spend keys, excluding any that match the scan key.
-    for (auto const& key : spend_keys_)
-        if (key != scan_key_)
+    for (auto const& key : spend_keys_) {
+        if (key != scan_key_) {
             extend_data(address, key);
+        }
+    }
 
     address.push_back(signatures_);
 

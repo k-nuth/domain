@@ -89,16 +89,18 @@ ptree property_list(const chain::input& tx_input) {
     // This will have default versioning, but the address version is unused.
     auto const address = tx_input.address();
 
-    if (address)
+    if (address) {
         tree.put("address_hash", hash160(address.hash()));
+}
 
     tree.put("previous_output.hash", hash256(tx_input.previous_output().hash()));
     tree.put("previous_output.index", tx_input.previous_output().index());
     tree.put("script", tx_input.script().to_string(rule_fork::all_rules));
     tree.put("sequence", tx_input.sequence());
 
-    if (tx_input.is_segregated())
+    if (tx_input.is_segregated()) {
         tree.put("witness", tx_input.witness().to_string());
+}
 
     return tree;
 }
@@ -143,8 +145,9 @@ ptree property_list(const chain::output& tx_output) {
     // This will have default versioning, but the address version is unused.
     auto const address = tx_output.address();
 
-    if (address)
+    if (address) {
         tree.put("address_hash", hash160(address.hash()));
+}
 
     tree.put("script", tx_output.script().to_string(rule_fork::all_rules));
 
@@ -258,8 +261,9 @@ ptree property_tree(hash_digest const& hash, size_t height, size_t index) {
 ptree property_tree(const settings_list& settings) {
     ptree list;
 
-    for (auto const& setting : settings)
+    for (auto const& setting : settings) {
         list.put(setting.first, setting.second);
+}
 
     ptree tree;
     tree.add_child("settings", list);

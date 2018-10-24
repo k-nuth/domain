@@ -239,11 +239,13 @@ bool merkle_block::operator==(const merkle_block& x) const {
                   (hashes_.size() == x.hashes_.size()) &&
                   (flags_.size() == x.flags_.size());
 
-    for (size_t i = 0; i < hashes_.size() && result; i++)
+    for (size_t i = 0; i < hashes_.size() && result; i++) {
         result = (hashes_[i] == x.hashes_[i]);
+}
 
-    for (size_t i = 0; i < flags_.size() && result; i++)
+    for (size_t i = 0; i < flags_.size() && result; i++) {
         result = (flags_[i] == x.flags_[i]);
+}
 
     return result;
 }

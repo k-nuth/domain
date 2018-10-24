@@ -34,8 +34,9 @@ void select_outputs::greedy(points_value& out, const points_value& unspent, uint
     out.points.clear();
 
     // The minimum required value does not exist.
-    if (unspent.value() < minimum_value)
+    if (unspent.value() < minimum_value) {
         return;
+}
 
     // Optimization for simple case not requiring search.
     if (unspent.points.size() == 1) {
@@ -76,8 +77,9 @@ void select_outputs::greedy(points_value& out, const points_value& unspent, uint
     for (auto point = copy.begin(); point != copy.end(); ++point) {
         out.points.push_back(*point);
 
-        if (out.value() >= minimum_value)
+        if (out.value() >= minimum_value) {
             return;
+}
     }
 
     BITCOIN_ASSERT_MSG(false, "unreachable code reached");
@@ -88,9 +90,11 @@ void select_outputs::individual(points_value& out, const points_value& unspent, 
     out.points.reserve(unspent.points.size());
 
     // Select all individual points that satisfy the minimum.
-    for (auto const& point : unspent.points)
-        if (point.value() >= minimum_value)
+    for (auto const& point : unspent.points) {
+        if (point.value() >= minimum_value) {
             out.points.push_back(point);
+        }
+    }
 
     auto const lesser = [](point_value const& left, point_value const& right) {
         return left.value() < right.value();

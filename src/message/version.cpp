@@ -178,8 +178,9 @@ size_t version::serialized_size(uint32_t version) const {
         message::variable_uint_size(user_agent_.size()) + user_agent_.size() +
         sizeof(start_height_);
 
-    if (value_ >= level::bip37)
+    if (value_ >= level::bip37) {
         size += sizeof(uint8_t);
+}
 
     return size;
 }

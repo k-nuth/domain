@@ -161,9 +161,11 @@ void inventory::to_data(uint32_t version, data_sink& stream) const {
 void inventory::to_hashes(hash_list& out, type_id type) const {
     out.reserve(inventories_.size());
 
-    for (auto const& element : inventories_)
-        if (element.type() == type)
+    for (auto const& element : inventories_) {
+        if (element.type() == type) {
             out.push_back(element.hash());
+        }
+    }
 
     out.shrink_to_fit();
 }
@@ -171,9 +173,11 @@ void inventory::to_hashes(hash_list& out, type_id type) const {
 void inventory::reduce(inventory_vector::list& out, type_id type) const {
     out.reserve(inventories_.size());
 
-    for (auto const& inventory : inventories_)
-        if (inventory.type() == type)
+    for (auto const& inventory : inventories_) {
+        if (inventory.type() == type) {
             out.push_back(inventory);
+        }
+    }
 
     out.shrink_to_fit();
 }

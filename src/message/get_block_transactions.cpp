@@ -148,8 +148,9 @@ void get_block_transactions::to_data(uint32_t version, data_sink& stream) const 
 size_t get_block_transactions::serialized_size(uint32_t version) const {
     auto size = hash_size + message::variable_uint_size(indexes_.size());
 
-    for (auto const& element : indexes_)
+    for (auto const& element : indexes_) {
         size += message::variable_uint_size(element);
+}
 
     return size;
 }

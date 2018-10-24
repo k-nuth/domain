@@ -155,14 +155,16 @@ void headers::to_data(uint32_t version, data_sink& stream) const {
 //}
 
 bool headers::is_sequential() const {
-    if (elements_.empty())
+    if (elements_.empty()) {
         return true;
+}
 
     auto previous = elements_.front().hash();
 
     for (auto it = elements_.begin() + 1; it != elements_.end(); ++it) {
-        if (it->previous_block_hash() != previous)
+        if (it->previous_block_hash() != previous) {
             return false;
+}
 
         previous = it->hash();
     }

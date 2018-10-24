@@ -37,8 +37,9 @@ using namespace boost::program_options;
 // point format is currently private to bx.
 static bool decode_point(chain::output_point& point, std::string const& tuple) {
     auto const tokens = split(tuple, point::delimeter);
-    if (tokens.size() != 2)
+    if (tokens.size() != 2) {
         return false;
+}
 
     // validate and deserialize the transaction hash
     const hash256 digest(tokens[0]);

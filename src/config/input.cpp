@@ -37,14 +37,16 @@ using namespace boost::program_options;
 // input is currently a private encoding in bx.
 static bool decode_input(chain::input& input, std::string const& tuple) {
     auto const tokens = split(tuple, point::delimeter);
-    if (tokens.size() != 2 && tokens.size() != 3)
+    if (tokens.size() != 2 && tokens.size() != 3) {
         return false;
+}
 
     input.set_sequence(max_input_sequence);
     input.set_previous_output(point(tokens[0] + ":" + tokens[1]));
 
-    if (tokens.size() == 3)
+    if (tokens.size() == 3) {
         input.set_sequence(deserialize<uint32_t>(tokens[2], true));
+}
 
     return true;
 }

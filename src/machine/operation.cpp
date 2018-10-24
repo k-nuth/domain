@@ -185,8 +185,9 @@ bool operation::from_string(std::string const& mnemonic) {
         valid_ = true;
     }
 
-    if ( ! valid_)
+    if ( ! valid_) {
         reset();
+}
 
     return valid_;
 }
@@ -247,8 +248,9 @@ void operation::to_data(data_sink& stream) const {
 
 static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
     // If opcode is minimal for a size-based encoding, do not set a prefix.
-    if (code == operation::opcode_from_size(data.size()))
+    if (code == operation::opcode_from_size(data.size())) {
         return "";
+}
 
     switch (code) {
         case opcode::push_one_size:
@@ -264,11 +266,13 @@ static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
 
 // The removal of spaces in v3 data is a compatability break with our v2.
 std::string operation::to_string(uint32_t active_forks) const {
-    if ( ! valid_)
+    if ( ! valid_) {
         return "<invalid>";
+}
 
-    if (data_.empty())
+    if (data_.empty()) {
         return opcode_to_string(code_, active_forks);
+}
 
     // Data encoding uses single token with explicit size prefix as required.
     return "[" + opcode_to_prefix(code_, data_) + encode_base16(data_) + "]";

@@ -35,8 +35,9 @@ stealth_sender::stealth_sender(const stealth_address& address,
                                uint8_t version)
     : version_(version) {
     ec_secret ephemeral_private;
-    if (create_ephemeral_key(ephemeral_private, seed))
+    if (create_ephemeral_key(ephemeral_private, seed)) {
         initialize(ephemeral_private, address, seed, filter);
+}
 }
 
 stealth_sender::stealth_sender(ec_secret const& ephemeral_private,
@@ -59,20 +60,23 @@ void stealth_sender::initialize(ec_secret const& ephemeral_private,
                                 data_chunk const& seed,
                                 const binary& filter) {
     ec_compressed ephemeral_public;
-    if ( ! secret_to_public(ephemeral_public, ephemeral_private))
+    if ( ! secret_to_public(ephemeral_public, ephemeral_private)) {
         return;
+    }
 
     auto const& spend_keys = address.spend_keys();
-    if (spend_keys.size() != 1)
+    if (spend_keys.size() != 1) {
         return;
+    }
 
     ec_compressed sender_public;
-    if ( ! uncover_stealth(sender_public, address.scan_key(), ephemeral_private,
-                         spend_keys.front()))
+    if ( ! uncover_stealth(sender_public, address.scan_key(), ephemeral_private, spend_keys.front())) {
         return;
+    }
 
-    if (create_stealth_script(script_, ephemeral_private, filter, seed))
+    if (create_stealth_script(script_, ephemeral_private, filter, seed)) {
         address_ = {sender_public, version_};
+    }
 }
 
 // Will be invalid if construct fails.

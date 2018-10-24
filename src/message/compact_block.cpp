@@ -258,8 +258,9 @@ size_t compact_block::serialized_size(uint32_t version) const {
                 message::variable_uint_size(transactions_.size()) + 8u;
 
     // NOTE: Witness flag is controlled by prefilled tx
-    for (auto const& tx : transactions_)
+    for (auto const& tx : transactions_) {
         size += tx.serialized_size(version);
+}
 
     return size;
 }

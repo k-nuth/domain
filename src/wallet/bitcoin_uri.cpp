@@ -158,8 +158,9 @@ void bitcoin_uri::set_address(const stealth_address& stealth) {
 
 bool bitcoin_uri::set_amount(std::string const& satoshis) {
     uint64_t decoded;
-    if ( ! decode_base10(decoded, satoshis, btc_decimal_places, strict_))
+    if ( ! decode_base10(decoded, satoshis, btc_decimal_places, strict_)) {
         return false;
+}
 
     // Normalize the encoding for string-based getter (parameter).
     set_amount(decoded);
@@ -203,15 +204,17 @@ bool bitcoin_uri::set_parameter(std::string const& key,
         return key.substr(0, parameter_req_length) == parameter_req_;
     };
 
-    if (key == parameter_amount)
+    if (key == parameter_amount) {
         return set_amount(value);
+}
 
-    if (key == parameter_label)
+    if (key == parameter_label) {
         set_label(value);
-    else if (key == parameter_message)
+    } else if (key == parameter_message) {
         set_message(value);
-    else if (key == parameter_r)
+    } else if (key == parameter_r) {
         set_r(value);
+}
 
     // Fail on any required parameter that we don't support.
     return !required(key);

@@ -55,16 +55,18 @@ inline std::string read_null_terminated_string_unlimited(bc::reader& source) {
 }
 
 inline boost::optional<std::string> read_null_terminated_string(bc::reader& source, size_t max) {
-    if (max == 0)
+    if (max == 0) {
         return boost::none;
+}
 
     std::string res;
 
     auto b = source.read_byte();
     while (source && b != 0) {
         res.push_back(b);
-        if (res.size() >= max)
+        if (res.size() >= max) {
             return boost::none;
+}
         b = source.read_byte();
     }
 

@@ -56,24 +56,27 @@ static bool recover(short_hash& out_hash, bool compressed, ec_signature const& c
 
     if (compressed) {
         ec_compressed point;
-        if ( ! recover_public(point, recoverable, message_digest))
+        if ( ! recover_public(point, recoverable, message_digest)) {
             return false;
+}
 
         out_hash = bitcoin_short_hash(point);
         return true;
     }
 
     ec_uncompressed point;
-    if ( ! recover_public(point, recoverable, message_digest))
+    if ( ! recover_public(point, recoverable, message_digest)) {
         return false;
+}
 
     out_hash = bitcoin_short_hash(point);
     return true;
 }
 
 bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id, bool compressed) {
-    if (recovery_id > max_recovery_id)
+    if (recovery_id > max_recovery_id) {
         return false;
+}
 
     // Offset the recovery id with sentinels to indication compression state.
     auto const increment = compressed ? magic_compressed : magic_uncompressed;
@@ -84,8 +87,9 @@ bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id, bool compress
 bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed, uint8_t magic) {
     // Magic less offsets cannot exceed recovery id range [0, max_recovery_id].
     if (magic < magic_uncompressed ||
-        magic > magic_compressed + max_recovery_id)
+        magic > magic_compressed + max_recovery_id) {
         return false;
+}
 
     // Subtract smaller sentinel (guarded above).
     auto recovery_id = magic - magic_uncompressed;
@@ -94,8 +98,9 @@ bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed, uint8_
     out_compressed = recovery_id >= magic_differential;
 
     // If compression is indicated subtract differential (guarded above).
-    if (out_compressed)
+    if (out_compressed) {
         recovery_id -= magic_differential;
+}
 
     out_recovery_id = safe_to_unsigned<uint8_t>(recovery_id);
     return true;
@@ -113,12 +118,14 @@ bool sign_message(message_signature& signature, data_slice message, std::string 
 
 bool sign_message(message_signature& signature, data_slice message, ec_secret const& secret, bool compressed) {
     recoverable_signature recoverable;
-    if ( ! sign_recoverable(recoverable, secret, hash_message(message)))
+    if ( ! sign_recoverable(recoverable, secret, hash_message(message))) {
         return false;
+}
 
     uint8_t magic;
-    if ( ! recovery_id_to_magic(magic, recoverable.recovery_id, compressed))
+    if ( ! recovery_id_to_magic(magic, recoverable.recovery_id, compressed)) {
         return false;
+}
 
     signature = splice(to_array(magic), recoverable.signature);
     return true;
@@ -130,8 +137,9 @@ bool verify_message(data_slice message, const payment_address& address, const me
 
     bool compressed;
     uint8_t recovery_id;
-    if ( ! magic_to_recovery_id(recovery_id, compressed, magic))
+    if ( ! magic_to_recovery_id(recovery_id, compressed, magic)) {
         return false;
+}
 
     short_hash hash;
     auto const message_digest = hash_message(message);

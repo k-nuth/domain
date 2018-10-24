@@ -61,18 +61,18 @@ public:
     //-------------------------------------------------------------------------
 
     static send_tokens factory_from_data(bc::data_chunk const& data);
-    static send_tokens factory_from_data(data_source& stream);
+    static send_tokens factory_from_data(bc::data_source& stream);
     static send_tokens factory_from_data(bc::reader& source);
 
     bool from_data(bc::data_chunk const& data);
-    bool from_data(data_source& stream);
+    bool from_data(bc::data_source& stream);
     bool from_data(bc::reader& source);
 
     // Serialization.
     //-------------------------------------------------------------------------
 
     bc::data_chunk to_data() const;
-    void to_data(data_sink& stream) const;
+    void to_data(libbitcoin::data_sink& stream) const;
     void to_data(bc::writer& sink) const;
 
     // Properties (size, accessors, cache).
