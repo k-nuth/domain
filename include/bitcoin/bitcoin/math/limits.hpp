@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <limits>
+
 #include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 

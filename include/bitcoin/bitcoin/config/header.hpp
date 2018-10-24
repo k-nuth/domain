@@ -21,8 +21,9 @@
 
 #include <iostream>
 #include <string>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/header.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
 namespace config {
@@ -31,10 +32,8 @@ namespace config {
  * Serialization helper to convert between serialized and deserialized satoshi
  * header.
  */
-class BC_API header
-{
-public:
-
+class BC_API header {
+   public:
     /**
      * Default constructor.
      */
@@ -79,17 +78,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        header const& argument);
+                                    header const& argument);
 
-private:
-
+   private:
     /**
      * The state of this object's header data.
      */
     chain::header value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

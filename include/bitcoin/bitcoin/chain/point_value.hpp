@@ -30,7 +30,7 @@ namespace chain {
 
 /// A valued point, does not implement specialized serialization methods.
 class BC_API point_value : public point {
-public:
+   public:
     typedef std::vector<point_value> list;
 
     // Constructors.
@@ -52,8 +52,7 @@ public:
     bool operator!=(point_value const& x) const;
 
     // Swap implementation required to properly handle base class.
-    friend 
-    void swap(point_value& left, point_value& right);
+    friend void swap(point_value& left, point_value& right);
 
     // Properties (accessors).
     //-------------------------------------------------------------------------
@@ -61,11 +60,11 @@ public:
     uint64_t value() const;
     void set_value(uint64_t value);
 
-private:
+   private:
     uint64_t value_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

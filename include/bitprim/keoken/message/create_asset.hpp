@@ -32,10 +32,10 @@ namespace keoken {
 namespace message {
 
 class BC_API create_asset {
-public:
+   public:
     static const uint16_t version = 0;
     static const uint16_t type = 0;
-    static const size_t max_name_size = 32u + 1u;   //32 real chars plus null-terminated
+    static const size_t max_name_size = 32u + 1u;  //32 real chars plus null-terminated
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -54,11 +54,9 @@ public:
     // Regular.
     //-------------------------------------------------------------------------
 
-    friend
-    bool operator==(create_asset const& a, create_asset const& b);
-    
-    friend
-    bool operator!=(create_asset const& a, create_asset const& b);
+    friend bool operator==(create_asset const& a, create_asset const& b);
+
+    friend bool operator!=(create_asset const& a, create_asset const& b);
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -90,14 +88,14 @@ public:
     amount_t amount() const;
     void set_amount(amount_t x);
 
-private:
+   private:
     // char name[17];      // 16 + 1. minus the \0 termination
     std::string name_;
-    amount_t amount_;       //NOLINT
+    amount_t amount_;  //NOLINT
 };
 
-} // namespace message
-} // namespace keoken
-} // namespace bitprim
+}  // namespace message
+}  // namespace keoken
+}  // namespace bitprim
 
-#endif //BITPRIM_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
+#endif  //BITPRIM_KEOKEN_MESSAGE_CREATE_ASSET_HPP_

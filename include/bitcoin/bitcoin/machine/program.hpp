@@ -25,18 +25,17 @@
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/infrastructure/machine/number.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/infrastructure/machine/script_version.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
 namespace machine {
 
-class BC_API program
-{
-public:
+class BC_API program {
+   public:
     typedef data_stack::value_type value_type;
     typedef operation::iterator op_iterator;
 
@@ -57,13 +56,10 @@ public:
     program(chain::script const& script);
 
     /// Create an instance with empty stacks, value unused/max (input run).
-    program(chain::script const& script, chain::transaction const& transaction,
-        uint32_t input_index, uint32_t forks);
+    program(chain::script const& script, chain::transaction const& transaction, uint32_t input_index, uint32_t forks);
 
     /// Create an instance with initialized stack (witness run, v0 by default).
-    program(chain::script const& script, chain::transaction const& transaction,
-        uint32_t input_index, uint32_t forks, data_stack&& stack,
-        uint64_t value, script_version version=script_version::zero);
+    program(chain::script const& script, chain::transaction const& transaction, uint32_t input_index, uint32_t forks, data_stack&& stack, uint64_t value, script_version version = script_version::zero);
 
     /// Create using copied tx, input, forks, value, stack (prevout run).
     program(chain::script const& script, const program& x);
@@ -103,7 +99,7 @@ public:
     /// Primary pop.
     data_chunk pop();
     bool pop(int32_t& out_value);
-    bool pop(number& out_number, size_t maxiumum_size=max_number_size);
+    bool pop(number& out_number, size_t maxiumum_size = max_number_size);
     bool pop_binary(number& first, number& second);
     bool pop_ternary(number& first, number& second, number& third);
     bool pop_position(stack_iterator& out_position);
@@ -122,7 +118,7 @@ public:
     bool is_stack_overflow() const;
     bool if_(operation const& op) const;
     const value_type& item(size_t index) /*const*/;
-    bool top(number& out_number, size_t maxiumum_size=max_number_size) /*const*/;
+    bool top(number& out_number, size_t maxiumum_size = max_number_size) /*const*/;
     stack_iterator position(size_t index) /*const*/;
     operation::list subscript() const;
     size_t size() const;
@@ -143,7 +139,7 @@ public:
     bool closed() const;
     bool succeeded() const;
 
-private:
+   private:
     // A space-efficient dynamic bitset (specialized).
     typedef std::vector<bool> bool_stack;
 
@@ -165,9 +161,8 @@ private:
     bool_stack condition_;
 };
 
-} // namespace machine
-} // namespace libbitcoin
-
+}  // namespace machine
+}  // namespace libbitcoin
 
 #include <bitcoin/bitcoin/impl/machine/program.ipp>
 

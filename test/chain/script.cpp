@@ -18,8 +18,8 @@
  */
 #include <boost/test/unit_test.hpp>
 
-#include <sstream>
 #include <bitcoin/bitcoin.hpp>
+#include <sstream>
 #include "script.hpp"
 
 using namespace bc;
@@ -37,60 +37,59 @@ using namespace bc::machine;
 #define SCRIPT_3_OF_3_MULTISIG "3 [03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] [02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] [03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] 3 checkmultisig"
 #define SCRIPT_4_OF_3_MULTISIG "4 [03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] [02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] [03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] 3 checkmultisig"
 
-#define SCRIPT_16_OF_16_MULTISIG \
-"16 " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"16 checkmultisig"
+#define SCRIPT_16_OF_16_MULTISIG                                            \
+    "16 "                                                                   \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "16 checkmultisig"
 
-#define SCRIPT_17_OF_17_MULTISIG \
-"[17] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
-"[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
-"[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
-"16 checkmultisig"
+#define SCRIPT_17_OF_17_MULTISIG                                            \
+    "[17] "                                                                 \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934] " \
+    "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864] " \
+    "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c] " \
+    "16 checkmultisig"
 
 // Test helpers.
 //------------------------------------------------------------------------------
 
-transaction new_tx(const script_test& test)
-{
+transaction new_tx(const script_test& test) {
     // Parse input script from string.
     script input_script;
-    if ( ! input_script.from_string(test.input))
+    if (!input_script.from_string(test.input))
         return {};
 
     // Parse output script from string.
     script output_script;
-    if ( ! output_script.from_string(test.output))
+    if (!output_script.from_string(test.output))
         return {};
 
     // Assign output script to input's prevout validation metadata.
@@ -98,34 +97,25 @@ transaction new_tx(const script_test& test)
     outpoint.validation.cache.set_script(std::move(output_script));
 
     // Cosntruct transaction with one input and no outputs.
-    return transaction
-    {
+    return transaction{
         test.version,
         test.locktime,
-        input::list
-        {
-            input
-            {
+        input::list{
+            input{
                 std::move(outpoint),
                 std::move(input_script),
-                test.input_sequence
-            }
-        },
-        output::list
-        {
-        }
-    };
+                test.input_sequence}},
+        output::list{}};
 }
 
-std::string test_name(const script_test& test)
-{
+std::string test_name(const script_test& test) {
     std::stringstream out;
     out << "input: \"" << test.input << "\" "
         << "prevout: \"" << test.output << "\" "
         << "("
-            << test.input_sequence << ", "
-            << test.locktime << ", "
-            << test.version
+        << test.input_sequence << ", "
+        << test.locktime << ", "
+        << test.version
         << ")";
     return out.str();
 }
@@ -135,31 +125,27 @@ BOOST_AUTO_TEST_SUITE(script_tests)
 // Serialization tests.
 //------------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(script__one_hash__literal__same)
-{
+BOOST_AUTO_TEST_CASE(script__one_hash__literal__same) {
     static auto const hash_one = hash_literal("0000000000000000000000000000000000000000000000000000000000000001");
-    static hash_digest const one_hash{ { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+    static hash_digest const one_hash{{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
     BOOST_REQUIRE(one_hash == hash_one);
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__testnet_119058_invalid_op_codes__success)
-{
+BOOST_AUTO_TEST_CASE(script__from_data__testnet_119058_invalid_op_codes__success) {
     auto const raw_script = to_chunk(base16_literal("0130323066643366303435313438356531306633383837363437356630643265396130393739343332353534313766653139316438623963623230653430643863333030326431373463336539306366323433393231383761313037623634373337633937333135633932393264653431373731636565613062323563633534353732653302ae"));
 
     script parsed;
     BOOST_REQUIRE(parsed.from_data(raw_script, false));
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__parse__success)
-{
+BOOST_AUTO_TEST_CASE(script__from_data__parse__success) {
     auto const raw_script = to_chunk(base16_literal("3045022100ff1fc58dbd608e5e05846a8e6b45a46ad49878aef6879ad1a7cf4c5a7f853683022074a6a10f6053ab3cddc5620d169c7374cd42c1416c51b9744db2c8d9febfb84d01"));
 
     script parsed;
     BOOST_REQUIRE(parsed.from_data(raw_script, true));
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__to_data__roundtrips)
-{
+BOOST_AUTO_TEST_CASE(script__from_data__to_data__roundtrips) {
     auto const normal_output_script = to_chunk(base16_literal("76a91406ccef231c2db72526df9338894ccf9355e8f12188ac"));
 
     script out_script;
@@ -169,8 +155,7 @@ BOOST_AUTO_TEST_CASE(script__from_data__to_data__roundtrips)
     BOOST_REQUIRE(roundtrip == normal_output_script);
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__to_data_weird__roundtrips)
-{
+BOOST_AUTO_TEST_CASE(script__from_data__to_data_weird__roundtrips) {
     auto const weird_raw_script = to_chunk(base16_literal(
         "0c49206c69656b20636174732e483045022100c7387f64e1f4"
         "cf654cae3b28a15f7572106d6c1319ddcdc878e636ccb83845"
@@ -197,23 +182,20 @@ BOOST_AUTO_TEST_CASE(script__from_data__to_data_weird__roundtrips)
     BOOST_REQUIRE(roundtrip_result == weird_raw_script);
 }
 
-BOOST_AUTO_TEST_CASE(script__factory_from_data_chunk_test)
-{
+BOOST_AUTO_TEST_CASE(script__factory_from_data_chunk_test) {
     auto const raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     auto const instance = script::factory_from_data(raw, false);
     BOOST_REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(script__factory_from_data_stream_test)
-{
+BOOST_AUTO_TEST_CASE(script__factory_from_data_stream_test) {
     auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     data_source istream(raw);
     auto instance = script::factory_from_data(istream, false);
     BOOST_REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(script__factory_from_data_reader_test)
-{
+BOOST_AUTO_TEST_CASE(script__factory_from_data_reader_test) {
     auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     data_source istream(raw);
     istream_reader source(istream);
@@ -221,8 +203,7 @@ BOOST_AUTO_TEST_CASE(script__factory_from_data_reader_test)
     BOOST_REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__first_byte_invalid_wire_code__success)
-{
+BOOST_AUTO_TEST_CASE(script__from_data__first_byte_invalid_wire_code__success) {
     auto const raw = to_chunk(base16_literal(
         "bb566a54e38193e381aee4b896e7958ce381afe496e4babae381abe38288e381"
         "a3e381a6e7ac91e9a194e38292e5a5aae3828fe3828ce3828be7bea9e58b99e3"
@@ -232,8 +213,7 @@ BOOST_AUTO_TEST_CASE(script__from_data__first_byte_invalid_wire_code__success)
     BOOST_REQUIRE(instance.from_data(raw, false));
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__internal_invalid_wire_code__success)
-{
+BOOST_AUTO_TEST_CASE(script__from_data__internal_invalid_wire_code__success) {
     auto const raw = to_chunk(base16_literal(
         "566a54e38193e381aee4b896e7958ce381afe4bb96e4babae381abe38288e381"
         "a3e381a6e7ac91e9a194e38292e5a5aae3828fe3828ce3828be7bea9e58b99e3"
@@ -243,15 +223,13 @@ BOOST_AUTO_TEST_CASE(script__from_data__internal_invalid_wire_code__success)
     BOOST_REQUIRE(instance.from_data(raw, false));
 }
 
-BOOST_AUTO_TEST_CASE(script__from_string__empty__success)
-{
+BOOST_AUTO_TEST_CASE(script__from_string__empty__success) {
     script instance;
     BOOST_REQUIRE(instance.from_string(""));
     BOOST_REQUIRE(instance.operations().empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__from_string__two_of_three_multisig__success)
-{
+BOOST_AUTO_TEST_CASE(script__from_string__two_of_three_multisig__success) {
     script instance;
     BOOST_REQUIRE(instance.from_string(SCRIPT_2_OF_3_MULTISIG));
     auto const& ops = instance.operations();
@@ -264,27 +242,23 @@ BOOST_AUTO_TEST_CASE(script__from_string__two_of_three_multisig__success)
     BOOST_REQUIRE(ops[5] == opcode::checkmultisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__empty__default__true)
-{
+BOOST_AUTO_TEST_CASE(script__empty__default__true) {
     script instance;
     BOOST_REQUIRE(instance.empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__empty__empty_operations__true)
-{
+BOOST_AUTO_TEST_CASE(script__empty__empty_operations__true) {
     script instance(operation::list{});
     BOOST_REQUIRE(instance.empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__empty__non_empty__false)
-{
-    script instance(script::to_null_data_pattern(data_chunk{ 42u }));
+BOOST_AUTO_TEST_CASE(script__empty__non_empty__false) {
+    script instance(script::to_null_data_pattern(data_chunk{42u}));
     BOOST_REQUIRE(!instance.empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__clear__non_empty__empty)
-{
-    script instance(script::to_null_data_pattern(data_chunk{ 42u }));
+BOOST_AUTO_TEST_CASE(script__clear__non_empty__empty) {
+    script instance(script::to_null_data_pattern(data_chunk{42u}));
     BOOST_REQUIRE(!instance.empty());
 
     instance.clear();
@@ -296,8 +270,7 @@ BOOST_AUTO_TEST_CASE(script__clear__non_empty__empty)
 
 // null_data
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_return_only__non_standard)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__null_data_return_only__non_standard) {
     script instance;
     instance.from_string(SCRIPT_RETURN);
     BOOST_REQUIRE(instance.is_valid());
@@ -306,8 +279,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__null_data_return_only__non_standard)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::non_standard);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_empty__null_data)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__null_data_empty__null_data) {
     script instance;
     instance.from_string(SCRIPT_RETURN_EMPTY);
     BOOST_REQUIRE(instance.is_valid());
@@ -316,8 +288,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__null_data_empty__null_data)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::null_data);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_80_bytes__null_data)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__null_data_80_bytes__null_data) {
     script instance;
     instance.from_string(SCRIPT_RETURN_80);
     BOOST_REQUIRE(instance.is_valid());
@@ -326,8 +297,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__null_data_80_bytes__null_data)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::null_data);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_81_bytes__non_standard)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__null_data_81_bytes__non_standard) {
     script instance;
     instance.from_string(SCRIPT_RETURN_81);
     BOOST_REQUIRE(instance.is_valid());
@@ -338,8 +308,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__null_data_81_bytes__non_standard)
 
 // pay_multisig
 
-BOOST_AUTO_TEST_CASE(script__pattern__0_of_3_multisig__non_standard)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__0_of_3_multisig__non_standard) {
     script instance;
     instance.from_string(SCRIPT_0_OF_3_MULTISIG);
     BOOST_REQUIRE(instance.is_valid());
@@ -348,8 +317,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__0_of_3_multisig__non_standard)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::non_standard);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__1_of_3_multisig__pay_multisig)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__1_of_3_multisig__pay_multisig) {
     script instance;
     instance.from_string(SCRIPT_1_OF_3_MULTISIG);
     BOOST_REQUIRE(instance.is_valid());
@@ -358,8 +326,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__1_of_3_multisig__pay_multisig)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__2_of_3_multisig__pay_multisig)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__2_of_3_multisig__pay_multisig) {
     script instance;
     instance.from_string(SCRIPT_2_OF_3_MULTISIG);
     BOOST_REQUIRE(instance.is_valid());
@@ -368,8 +335,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__2_of_3_multisig__pay_multisig)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__3_of_3_multisig__pay_multisig)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__3_of_3_multisig__pay_multisig) {
     script instance;
     instance.from_string(SCRIPT_3_OF_3_MULTISIG);
     BOOST_REQUIRE(instance.is_valid());
@@ -378,8 +344,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__3_of_3_multisig__pay_multisig)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__4_of_3_multisig__non_standard)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__4_of_3_multisig__non_standard) {
     script instance;
     instance.from_string(SCRIPT_4_OF_3_MULTISIG);
     BOOST_REQUIRE(instance.is_valid());
@@ -388,8 +353,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__4_of_3_multisig__non_standard)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::non_standard);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__16_of_16_multisig__pay_multisig)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__16_of_16_multisig__pay_multisig) {
     script instance;
     instance.from_string(SCRIPT_16_OF_16_MULTISIG);
     BOOST_REQUIRE(instance.is_valid());
@@ -398,8 +362,7 @@ BOOST_AUTO_TEST_CASE(script__pattern__16_of_16_multisig__pay_multisig)
     BOOST_REQUIRE(instance.pattern() == machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__17_of_17_multisig__non_standard)
-{
+BOOST_AUTO_TEST_CASE(script__pattern__17_of_17_multisig__non_standard) {
     script instance;
     instance.from_string(SCRIPT_17_OF_17_MULTISIG);
     BOOST_REQUIRE(instance.is_valid());
@@ -413,10 +376,8 @@ BOOST_AUTO_TEST_CASE(script__pattern__17_of_17_multisig__non_standard)
 
 // bip16
 
-BOOST_AUTO_TEST_CASE(script__bip16__valid)
-{
-    for (auto const& test: valid_bip16_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip16__valid) {
+    for (auto const& test : valid_bip16_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -428,10 +389,8 @@ BOOST_AUTO_TEST_CASE(script__bip16__valid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__bip16__invalid)
-{
-    for (auto const& test: invalid_bip16_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip16__invalid) {
+    for (auto const& test : invalid_bip16_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -443,10 +402,8 @@ BOOST_AUTO_TEST_CASE(script__bip16__invalid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__bip16__invalidated)
-{
-    for (auto const& test: invalidated_bip16_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip16__invalidated) {
+    for (auto const& test : invalidated_bip16_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -460,10 +417,8 @@ BOOST_AUTO_TEST_CASE(script__bip16__invalidated)
 
 // bip65
 
-BOOST_AUTO_TEST_CASE(script__bip65__valid)
-{
-    for (auto const& test: valid_bip65_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip65__valid) {
+    for (auto const& test : valid_bip65_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -475,10 +430,8 @@ BOOST_AUTO_TEST_CASE(script__bip65__valid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__bip65__invalid)
-{
-    for (auto const& test: invalid_bip65_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip65__invalid) {
+    for (auto const& test : invalid_bip65_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -490,10 +443,8 @@ BOOST_AUTO_TEST_CASE(script__bip65__invalid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__bip65__invalidated)
-{
-    for (auto const& test: invalidated_bip65_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip65__invalidated) {
+    for (auto const& test : invalidated_bip65_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -507,10 +458,8 @@ BOOST_AUTO_TEST_CASE(script__bip65__invalidated)
 
 // bip112
 
-BOOST_AUTO_TEST_CASE(script__bip112__valid)
-{
-    for (auto const& test: valid_bip112_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip112__valid) {
+    for (auto const& test : valid_bip112_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -522,10 +471,8 @@ BOOST_AUTO_TEST_CASE(script__bip112__valid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__bip112__invalid)
-{
-    for (auto const& test: invalid_bip112_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip112__invalid) {
+    for (auto const& test : invalid_bip112_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -537,10 +484,8 @@ BOOST_AUTO_TEST_CASE(script__bip112__invalid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__bip112__invalidated)
-{
-    for (auto const& test: invalidated_bip112_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__bip112__invalidated) {
+    for (auto const& test : invalidated_bip112_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -554,10 +499,8 @@ BOOST_AUTO_TEST_CASE(script__bip112__invalidated)
 
 // context free: multisig
 
-BOOST_AUTO_TEST_CASE(script__multisig__valid)
-{
-    for (auto const& test: valid_multisig_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__multisig__valid) {
+    for (auto const& test : valid_multisig_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -570,10 +513,8 @@ BOOST_AUTO_TEST_CASE(script__multisig__valid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__multisig__invalid)
-{
-    for (auto const& test: invalid_multisig_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__multisig__invalid) {
+    for (auto const& test : invalid_multisig_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -588,10 +529,8 @@ BOOST_AUTO_TEST_CASE(script__multisig__invalid)
 
 // context free: other
 
-BOOST_AUTO_TEST_CASE(script__context_free__valid)
-{
-    for (auto const& test: valid_context_free_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__context_free__valid) {
+    for (auto const& test : valid_context_free_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -602,10 +541,8 @@ BOOST_AUTO_TEST_CASE(script__context_free__valid)
     }
 }
 
-BOOST_AUTO_TEST_CASE(script__context_free__invalid)
-{
-    for (auto const& test: invalid_context_free_scripts)
-    {
+BOOST_AUTO_TEST_CASE(script__context_free__invalid) {
+    for (auto const& test : invalid_context_free_scripts) {
         auto const tx = new_tx(test);
         auto const name = test_name(test);
         BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
@@ -619,8 +556,7 @@ BOOST_AUTO_TEST_CASE(script__context_free__invalid)
 // Checksig tests.
 //------------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(script__checksig__single__uses_one_hash)
-{
+BOOST_AUTO_TEST_CASE(script__checksig__single__uses_one_hash) {
     // input 315ac7d4c26d69668129cc352851d9389b4a6868f1509c6c8b66bead11e2619f:1
     data_chunk tx_data;
     decode_base16(tx_data, "0100000002dc38e9359bd7da3b58386204e186d9408685f427f5e513666db735aa8a6b2169000000006a47304402205d8feeb312478e468d0b514e63e113958d7214fa572acd87079a7f0cc026fc5c02200fa76ea05bf243af6d0f9177f241caf606d01fcfd5e62d6befbca24e569e5c27032102100a1a9ca2c18932d6577c58f225580184d0e08226d41959874ac963e3c1b2feffffffffdc38e9359bd7da3b58386204e186d9408685f427f5e513666db735aa8a6b2169010000006b4830450220087ede38729e6d35e4f515505018e659222031273b7366920f393ee3ab17bc1e022100ca43164b757d1a6d1235f13200d4b5f76dd8fda4ec9fc28546b2df5b1211e8df03210275983913e60093b767e85597ca9397fb2f418e57f998d6afbbc536116085b1cbffffffff0140899500000000001976a914fcc9b36d38cf55d7d5b4ee4dddb6b2c17612f48c88ac00000000");
@@ -646,8 +582,7 @@ BOOST_AUTO_TEST_CASE(script__checksig__single__uses_one_hash)
     BOOST_REQUIRE(script::check_signature(signature, sighash_algorithm::single, pubkey, script_code, parent_tx, index));
 }
 
-BOOST_AUTO_TEST_CASE(script__checksig__normal__success)
-{
+BOOST_AUTO_TEST_CASE(script__checksig__normal__success) {
     // input 315ac7d4c26d69668129cc352851d9389b4a6868f1509c6c8b66bead11e2619f:0
     data_chunk tx_data;
     decode_base16(tx_data, "0100000002dc38e9359bd7da3b58386204e186d9408685f427f5e513666db735aa8a6b2169000000006a47304402205d8feeb312478e468d0b514e63e113958d7214fa572acd87079a7f0cc026fc5c02200fa76ea05bf243af6d0f9177f241caf606d01fcfd5e62d6befbca24e569e5c27032102100a1a9ca2c18932d6577c58f225580184d0e08226d41959874ac963e3c1b2feffffffffdc38e9359bd7da3b58386204e186d9408685f427f5e513666db735aa8a6b2169010000006b4830450220087ede38729e6d35e4f515505018e659222031273b7366920f393ee3ab17bc1e022100ca43164b757d1a6d1235f13200d4b5f76dd8fda4ec9fc28546b2df5b1211e8df03210275983913e60093b767e85597ca9397fb2f418e57f998d6afbbc536116085b1cbffffffff0140899500000000001976a914fcc9b36d38cf55d7d5b4ee4dddb6b2c17612f48c88ac00000000");
@@ -672,8 +607,7 @@ BOOST_AUTO_TEST_CASE(script__checksig__normal__success)
     BOOST_REQUIRE(script::check_signature(signature, sighash_algorithm::single, pubkey, script_code, parent_tx, index));
 }
 
-BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_single_output__expected)
-{
+BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_single_output__expected) {
     data_chunk tx_data;
     decode_base16(tx_data, "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970100000000ffffffff01905f0100000000001976a91418c0bd8d1818f1bf99cb1df2269c645318ef7b7388ac00000000");
     transaction new_tx;
@@ -694,8 +628,7 @@ BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_single_output__exp
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
-BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_no_output__expected)
-{
+BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_no_output__expected) {
     data_chunk tx_data;
     decode_base16(tx_data, "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970000000000ffffffff0000000000");
     transaction new_tx;
@@ -716,8 +649,7 @@ BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_no_output__expecte
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
-BOOST_AUTO_TEST_CASE(script__generate_signature_hash__all__expected)
-{
+BOOST_AUTO_TEST_CASE(script__generate_signature_hash__all__expected) {
     data_chunk tx_data;
     decode_base16(tx_data, "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970000000000ffffffff0000000000");
     transaction new_tx;
@@ -738,8 +670,7 @@ BOOST_AUTO_TEST_CASE(script__generate_signature_hash__all__expected)
 // Ad-hoc test cases.
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid) {
     //// DEBUG [blockchain] Verify failed [290329] : stack false (find and delete).
     //// libconsensus : false
     //// forks        : 1073742030
@@ -777,8 +708,7 @@ BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid)
     BOOST_REQUIRE_EQUAL(result.value(), error::success);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid) {
     //// DEBUG [blockchain] Input validation failed (stack false)
     //// libconsensus : false
     //// forks        : 62
@@ -814,8 +744,7 @@ BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid)
 
 #ifndef BITPRIM_CURRENCY_BCH
 // SEGWIT TESTS
-BOOST_AUTO_TEST_CASE(script__native__block_481824_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__block_481824_tx__valid) {
     //// DEBUG [blockchain] Verify failed [481824] : stack false
     //// libconsensus : false
     //// forks        : 1073758206
@@ -852,8 +781,7 @@ BOOST_AUTO_TEST_CASE(script__native__block_481824_tx__valid)
     BOOST_REQUIRE_EQUAL(result.value(), error::success);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__testnet_block_892321_tx_missing_witness__invalid_witness)
-{
+BOOST_AUTO_TEST_CASE(script__native__testnet_block_892321_tx_missing_witness__invalid_witness) {
     //// DEBUG [blockchain] Verify failed [892321] : invalid witness
     //// libconsensus : false
     //// forks        : 1073758207
@@ -892,8 +820,7 @@ BOOST_AUTO_TEST_CASE(script__native__testnet_block_892321_tx_missing_witness__in
 // bip143 test cases.
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wpkh_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wpkh_tx__valid) {
     transaction tx;
     data_chunk decoded_tx;
     data_chunk decoded_script;
@@ -938,8 +865,7 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wpkh_tx__valid)
     BOOST_REQUIRE_EQUAL(result1.value(), error::unexpected_witness);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__bip143_p2sh_p2wpkh_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__bip143_p2sh_p2wpkh_tx__valid) {
     transaction tx;
     data_chunk decoded_tx;
     data_chunk decoded_script;
@@ -970,8 +896,7 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_p2sh_p2wpkh_tx__valid)
     BOOST_REQUIRE_EQUAL(result0.value(), error::stack_false);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_1_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_1_tx__valid) {
     transaction tx;
     data_chunk decoded_tx;
     data_chunk decoded_script;
@@ -1012,8 +937,7 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_1_tx__valid)
     BOOST_REQUIRE_EQUAL(result1.value(), error::unexpected_witness);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_2_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_2_tx__valid) {
     transaction tx;
     data_chunk decoded_tx;
     data_chunk decoded_script;
@@ -1090,8 +1014,7 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_2_tx__valid)
     BOOST_REQUIRE_EQUAL(result1.value(), error::success);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__bip143_p2sh_p2wsh_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__bip143_p2sh_p2wsh_tx__valid) {
     transaction tx;
     data_chunk decoded_tx;
     data_chunk decoded_script;
@@ -1122,8 +1045,7 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_p2sh_p2wsh_tx__valid)
     BOOST_REQUIRE_EQUAL(result0.value(), error::stack_false);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__bip143_no_find_and_delete_tx__valid)
-{
+BOOST_AUTO_TEST_CASE(script__native__bip143_no_find_and_delete_tx__valid) {
     transaction tx;
     data_chunk decoded_tx;
     data_chunk decoded_script;

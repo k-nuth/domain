@@ -80,16 +80,14 @@ inventory_vector inventory_vector::factory_from_data(uint32_t version, data_sour
 //}
 
 inventory_vector::inventory_vector()
-    : type_(type_id::error), hash_(null_hash) 
-{}
+    : type_(type_id::error), hash_(null_hash) {}
 
 inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
     : type_(type), hash_(hash) {
 }
 
 inventory_vector::inventory_vector(inventory_vector const& x)
-    : type_(x.type_), hash_(x.hash_) 
-{}
+    : type_(x.type_), hash_(x.hash_) {}
 
 bool inventory_vector::is_valid() const {
     return (type_ != type_id::error) || (hash_ != null_hash);
@@ -103,7 +101,7 @@ void inventory_vector::reset() {
 void inventory_vector::to_witness() {
     if (type_ == type_id::block || type_ == type_id::transaction) {
         type_ = to_type(to_number(type_) | to_number(type_id::witness));
-}
+    }
 }
 
 bool inventory_vector::from_data(uint32_t version, data_chunk const& data) {

@@ -44,7 +44,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API header {
-public:
+   public:
     typedef std::vector<header> list;
     typedef std::shared_ptr<header> ptr;
     typedef std::shared_ptr<header const> const_ptr;
@@ -107,11 +107,11 @@ public:
         bits_ = source.read_4_bytes_little_endian();
         nonce_ = source.read_4_bytes_little_endian();
 
-        if ( ! wire) {
+        if (!wire) {
             validation.median_time_past = source.read_4_bytes_little_endian();
         }
 
-        if ( ! source) {
+        if (!source) {
             reset();
         }
 
@@ -138,7 +138,7 @@ public:
         sink.write_4_bytes_little_endian(bits_);
         sink.write_4_bytes_little_endian(nonce_);
 
-        if ( ! wire) {
+        if (!wire) {
             sink.write_4_bytes_little_endian(validation.median_time_past);
         }
     }
@@ -195,14 +195,14 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-protected:
+   protected:
     // So that block may call reset from its own.
     friend class block;
 
     void reset();
     void invalidate_cache() const;
 
-private:
+   private:
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
 

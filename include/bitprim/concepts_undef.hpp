@@ -22,4 +22,4 @@
 #undef Reader
 #undef Writer
 
-#endif //BITPRIM_CONCEPTS_HPP_
+#endif  //BITPRIM_CONCEPTS_HPP_

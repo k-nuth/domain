@@ -20,10 +20,9 @@
 #define LIBBITCOIN_MESSAGE_MESSAGES_HPP
 
 #include <algorithm>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
-#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/bitcoin/message/address.hpp>
 #include <bitcoin/bitcoin/message/alert.hpp>
 #include <bitcoin/bitcoin/message/alert_payload.hpp>
@@ -45,7 +44,6 @@
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/bitcoin/message/memory_pool.hpp>
 #include <bitcoin/bitcoin/message/merkle_block.hpp>
-#include <bitcoin/infrastructure/message/network_address.hpp>
 #include <bitcoin/bitcoin/message/not_found.hpp>
 #include <bitcoin/bitcoin/message/ping.hpp>
 #include <bitcoin/bitcoin/message/pong.hpp>
@@ -55,8 +53,10 @@
 #include <bitcoin/bitcoin/message/transaction.hpp>
 #include <bitcoin/bitcoin/message/verack.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
+#include <bitcoin/infrastructure/message/network_address.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 
 // Minimum current libbitcoin protocol version:     31402
 // Minimum current satoshi client protocol version: 31800
@@ -107,14 +107,14 @@
 namespace libbitcoin {
 
 #define DECLARE_MESSAGE_POINTER_TYPES(type) \
-typedef message::type::ptr type##_ptr; \
-typedef message::type::const_ptr type##_const_ptr
+    typedef message::type::ptr type##_ptr;  \
+    typedef message::type::const_ptr type##_const_ptr
 
-#define DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES(type) \
-typedef message::type::ptr_list type##_ptr_list; \
-typedef message::type::const_ptr_list type##_const_ptr_list; \
-typedef message::type::const_ptr_list_ptr type##_const_ptr_list_ptr; \
-typedef message::type::const_ptr_list_const_ptr type##_const_ptr_list_const_ptr
+#define DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES(type)                 \
+    typedef message::type::ptr_list type##_ptr_list;                     \
+    typedef message::type::const_ptr_list type##_const_ptr_list;         \
+    typedef message::type::const_ptr_list_ptr type##_const_ptr_list_ptr; \
+    typedef message::type::const_ptr_list_const_ptr type##_const_ptr_list_const_ptr
 
 // HACK: declare these in bc namespace to reduce length.
 DECLARE_MESSAGE_POINTER_TYPES(address);
@@ -151,9 +151,7 @@ namespace message {
 
 /// Serialize a message object to the Bitcoin wire protocol encoding.
 template <typename Message>
-data_chunk serialize(uint32_t version, const Message& packet,
-    uint32_t magic)
-{
+data_chunk serialize(uint32_t version, const Message& packet, uint32_t magic) {
     auto const heading_size = heading::satoshi_fixed_size();
     auto const payload_size = packet.serialized_size(version);
     auto const message_size = heading_size + payload_size;
@@ -191,7 +189,7 @@ data_chunk serialize(uint32_t version, const Message& packet,
 
 BC_API size_t variable_uint_size(uint64_t value);
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

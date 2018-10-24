@@ -20,7 +20,6 @@
 
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
-
 namespace bitprim {
 namespace keoken {
 namespace message {
@@ -35,7 +34,7 @@ void to_data(bc::writer& sink, uint16_t version, uint16_t type) {
     sink.write_2_bytes_big_endian(type);
 }
 
-} // namespace base
-} // namespace message
-} // namespace keoken
-} // namespace bitprim
+}  // namespace base
+}  // namespace message
+}  // namespace keoken
+}  // namespace bitprim

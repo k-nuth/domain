@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 
@@ -41,100 +41,80 @@ static auto const version_maximum = message::version::level::maximum;
 
 BOOST_AUTO_TEST_SUITE(version_tests)
 
-BOOST_AUTO_TEST_CASE(version__factory__therealbitcoin_dot_org__valid)
-{
+BOOST_AUTO_TEST_CASE(version__factory__therealbitcoin_dot_org__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_THEREALBITCOIN_1));
     auto const version = message::version::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__anarchistprime1__valid)
-{
+BOOST_AUTO_TEST_CASE(version__factory__anarchistprime1__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_1));
     auto const version = message::version::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__anarchistprime2__valid)
-{
+BOOST_AUTO_TEST_CASE(version__factory__anarchistprime2__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_2));
     auto const version = message::version::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__falcon1__valid)
-{
+BOOST_AUTO_TEST_CASE(version__factory__falcon1__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_FALCON_1));
     auto const version = message::version::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__falcon2__valid)
-{
+BOOST_AUTO_TEST_CASE(version__factory__falcon2__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_FALCON_2));
     auto const version = message::version::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__satoshi1__valid)
-{
+BOOST_AUTO_TEST_CASE(version__factory__satoshi1__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_SATOSHI_1));
     auto const version = message::version::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_1__always__invalid)
-{
+BOOST_AUTO_TEST_CASE(version__constructor_1__always__invalid) {
     message::version instance;
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
     BOOST_REQUIRE_EQUAL(false, instance.address_receiver().is_valid());
     BOOST_REQUIRE_EQUAL(false, instance.address_sender().is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_2__always__equals_params)
-{
+BOOST_AUTO_TEST_CASE(version__constructor_2__always__equals_params) {
     uint32_t value = 45624u;
     uint64_t services = 263546u;
     uint64_t timestamp = 7668534u;
 
-    message::network_address receiver
-    {
+    message::network_address receiver{
         734678u,
         5357534u,
-        {
-            {
-                0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-            }
-        },
-        123u
-    };
+        {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+          0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+        123u};
 
-    message::network_address sender
-    {
+    message::network_address sender{
         46324u,
         156u,
-        {
-            {
-                0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-            }
-        },
-        351u
-    };
+        {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+          0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+        351u};
 
     uint64_t nonce = 335743u;
     std::string agent = "sdashgdfafh";
     uint32_t height = 1246323u;
     auto const relay = true;
 
-    message::version instance(value, services, timestamp, receiver, sender,  nonce, agent, height, relay);
+    message::version instance(value, services, timestamp, receiver, sender, nonce, agent, height, relay);
 
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(value, instance.value());
@@ -148,37 +128,24 @@ BOOST_AUTO_TEST_CASE(version__constructor_2__always__equals_params)
     BOOST_REQUIRE_EQUAL(relay, instance.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_3__always__equals_params)
-{
+BOOST_AUTO_TEST_CASE(version__constructor_3__always__equals_params) {
     uint32_t value = 45624u;
     uint64_t services = 263546u;
     uint64_t timestamp = 7668534u;
 
-    message::network_address receiver
-    {
+    message::network_address receiver{
         734678u,
         5357534u,
-        {
-            {
-                0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-            }
-        },
-        123u
-    };
+        {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+          0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+        123u};
 
-    message::network_address sender
-    {
+    message::network_address sender{
         46324u,
         156u,
-        {
-            {
-                0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-            }
-        },
-        351u
-    };
+        {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+          0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+        351u};
 
     uint64_t nonce = 335743u;
     std::string agent = "sdashgdfafh";
@@ -193,37 +160,24 @@ BOOST_AUTO_TEST_CASE(version__constructor_3__always__equals_params)
     BOOST_REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_4__always__equals_params)
-{
+BOOST_AUTO_TEST_CASE(version__constructor_4__always__equals_params) {
     uint32_t value = 45624u;
     uint64_t services = 263546u;
     uint64_t timestamp = 7668534u;
 
-    message::network_address receiver
-    {
+    message::network_address receiver{
         734678u,
         5357534u,
-        {
-            {
-                0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-            }
-        },
-        123u
-    };
+        {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+          0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+        123u};
 
-    message::network_address sender
-    {
+    message::network_address sender{
         46324u,
         156u,
-        {
-            {
-                0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-            }
-        },
-        351u
-    };
+        {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+          0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+        351u};
 
     uint64_t nonce = 335743u;
     std::string agent = "sdashgdfafh";
@@ -240,37 +194,24 @@ BOOST_AUTO_TEST_CASE(version__constructor_4__always__equals_params)
     BOOST_REQUIRE(beta == alpha);
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_5__always__equals_params)
-{
+BOOST_AUTO_TEST_CASE(version__constructor_5__always__equals_params) {
     uint32_t value = 45624u;
     uint64_t services = 263546u;
     uint64_t timestamp = 7668534u;
 
-    message::network_address receiver
-    {
+    message::network_address receiver{
         734678u,
         5357534u,
-        {
-            {
-                0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-            }
-        },
-        123u
-    };
+        {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+          0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+        123u};
 
-    message::network_address sender
-    {
+    message::network_address sender{
         46324u,
         156u,
-        {
-            {
-                0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-            }
-        },
-        351u
-    };
+        {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+          0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+        351u};
 
     uint64_t nonce = 335743u;
     std::string agent = "sdashgdfafh";
@@ -296,135 +237,89 @@ BOOST_AUTO_TEST_CASE(version__constructor_5__always__equals_params)
     BOOST_REQUIRE_EQUAL(relay, beta.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__from_data__insufficient_bytes__invalid)
-{
-    data_chunk const raw{ 0xab };
+BOOST_AUTO_TEST_CASE(version__from_data__insufficient_bytes__invalid) {
+    data_chunk const raw{0xab};
     message::version instance{};
 
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version_maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(version__from_data__mismatched_sender_services__invalid)
-{
+BOOST_AUTO_TEST_CASE(version__from_data__mismatched_sender_services__invalid) {
     uint64_t sender_services = 1515u;
-    const message::version expected
-    (
+    const message::version expected(
         210u,
         sender_services,
         979797u,
-        message::network_address
-        {
+        message::network_address{
             734678u,
             5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        message::network_address
-        {
+            {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+              0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+            123u},
+        message::network_address{
             46324u,
             sender_services + 1,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+            {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+              0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+            351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     auto const data = expected.to_data(version_maximum);
     auto const result = message::version::factory_from_data(version_maximum, data);
 
     // HACK: disabled check due to inconsistent node implementation.
-    BOOST_REQUIRE(/*!*/result.is_valid());
+    BOOST_REQUIRE(/*!*/ result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__from_data__version_meets_bip37__success)
-{
+BOOST_AUTO_TEST_CASE(version__from_data__version_meets_bip37__success) {
     auto const sender_services = 1515u;
-    const message::version expected
-    {
+    const message::version expected{
         message::version::level::bip37,
         sender_services,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            sender_services,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         sender_services,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        true
-    };
+        true};
 
     auto const data = expected.to_data(version_maximum);
     auto const result = message::version::factory_from_data(version_maximum, data);
     BOOST_REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory_from_data_1__valid_input__success)
-{
+BOOST_AUTO_TEST_CASE(version__factory_from_data_1__valid_input__success) {
     auto const sender_services = 1515u;
-    const message::version expected
-    {
+    const message::version expected{
         210u,
         sender_services,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            sender_services,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         sender_services,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        true
-    };
+        true};
 
     auto const data = expected.to_data(version_maximum);
     auto const result = message::version::factory_from_data(version_maximum, data);
@@ -434,41 +329,26 @@ BOOST_AUTO_TEST_CASE(version__factory_from_data_1__valid_input__success)
     BOOST_REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(version__factory_from_data_2__valid_input__success)
-{
+BOOST_AUTO_TEST_CASE(version__factory_from_data_2__valid_input__success) {
     auto const sender_services = 1515u;
-    const message::version expected
-    (
+    const message::version expected(
         210u,
         sender_services,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            sender_services,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         sender_services,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        true
-    );
+        true);
 
     auto const data = expected.to_data(version_maximum);
     data_source istream(data);
@@ -479,42 +359,26 @@ BOOST_AUTO_TEST_CASE(version__factory_from_data_2__valid_input__success)
     BOOST_REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(version__factory_from_data_3__valid_input__success)
-{
+BOOST_AUTO_TEST_CASE(version__factory_from_data_3__valid_input__success) {
     auto const sender_services = 1515u;
-    const message::version expected
-    (
+    const message::version expected(
         210u,
         sender_services,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            sender_services,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         sender_services,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        true
-    );
-
+        true);
 
     auto const data = expected.to_data(version_maximum);
     data_source istream(data);
@@ -536,184 +400,121 @@ BOOST_AUTO_TEST_CASE(version__factory_from_data_3__valid_input__success)
     BOOST_REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(version__value_accessor__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(version__value_accessor__returns_initialized_value) {
     uint32_t const expected = 210u;
-    const message::version instance
-    (
+    const message::version instance(
         expected,
         1515u,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE_EQUAL(expected, instance.value());
 }
 
-BOOST_AUTO_TEST_CASE(version__value_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__value_setter__roundtrip__success) {
     uint32_t const expected = 210u;
     message::version instance;
     instance.set_value(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.value());
 }
 
-BOOST_AUTO_TEST_CASE(version__services_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(version__services_accessor__always__returns_initialized_value) {
     uint64_t const expected = 1515u;
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         expected,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE_EQUAL(expected, instance.services());
 }
 
-BOOST_AUTO_TEST_CASE(version__services_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__services_setter__roundtrip__success) {
     uint64_t const expected = 1515u;
     message::version instance;
     instance.set_services(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.services());
 }
 
-BOOST_AUTO_TEST_CASE(version__timestamp_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(version__timestamp_accessor__always__returns_initialized_value) {
     uint64_t const expected = 979797u;
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         1515u,
         expected,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE_EQUAL(expected, instance.timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(version__timestamp_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__timestamp_setter__roundtrip__success) {
     uint64_t const expected = 979797u;
     message::version instance;
     instance.set_timestamp(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(version__address_receiver_accessor__always__returns_initialized_value)
-{
-    const message::network_address expected
-    {
+BOOST_AUTO_TEST_CASE(version__address_receiver_accessor__always__returns_initialized_value) {
+    const message::network_address expected{
         734678u,
         5357534u,
-        {
-            {
-                0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-            }
-        },
-        123u
-    };
+        {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+          0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+        123u};
 
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         1515u,
         979797u,
         expected,
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE(expected == instance.address_receiver());
 }
@@ -741,64 +542,42 @@ BOOST_AUTO_TEST_CASE(version__address_receiver_accessor__always__returns_initial
 //    BOOST_REQUIRE(result.is_valid());
 //}
 
-BOOST_AUTO_TEST_CASE(version__address_receiver_setter_2__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__address_receiver_setter_2__roundtrip__success) {
     message::version instance;
     BOOST_REQUIRE(!instance.address_receiver().is_valid());
-    instance.set_address_receiver(message::network_address
-    {
+    instance.set_address_receiver(message::network_address{
         734678u,
         5357534u,
-        {
-            {
-                0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-            }
-        },
-        123u
-    });
+        {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+          0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+        123u});
 
     const message::network_address result = instance.address_receiver();
     BOOST_REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__address_sender_accessor__always__returns_initialized_value)
-{
-    const message::network_address expected
-    {
+BOOST_AUTO_TEST_CASE(version__address_sender_accessor__always__returns_initialized_value) {
+    const message::network_address expected{
         46324u,
         1515u,
-        {
-            {
-                0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-            }
-        },
-        351u
-    };
+        {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+          0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+        351u};
 
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         1515u,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
         expected,
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE(expected == instance.address_sender());
 }
@@ -826,123 +605,83 @@ BOOST_AUTO_TEST_CASE(version__address_sender_accessor__always__returns_initializ
 //    BOOST_REQUIRE(result.is_valid());
 //}
 
-BOOST_AUTO_TEST_CASE(version__address_sender_setter_2__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__address_sender_setter_2__roundtrip__success) {
     message::version instance;
     BOOST_REQUIRE(!instance.address_sender().is_valid());
-    instance.set_address_sender(message::network_address
-    {
+    instance.set_address_sender(message::network_address{
         46324u,
         1515u,
-        {
-            {
-                0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-            }
-        },
-        351u
-    });
+        {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+          0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+        351u});
 
     const message::network_address result = instance.address_sender();
     BOOST_REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__nonce_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(version__nonce_accessor__always__returns_initialized_value) {
     uint64_t const expected = 13626u;
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         1515u,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         expected,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE_EQUAL(expected, instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(version__nonce_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__nonce_setter__roundtrip__success) {
     uint64_t const expected = 13626u;
     message::version instance;
     instance.set_nonce(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(version__user_agent_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(version__user_agent_accessor__always__returns_initialized_value) {
     std::string const expected = "MyUseRAgenT";
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         1515u,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         expected,
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE_EQUAL(expected, instance.user_agent());
 }
 
-BOOST_AUTO_TEST_CASE(version__user_agent_setter_1__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__user_agent_setter_1__roundtrip__success) {
     std::string const expected = "MyUseRAgenT";
     message::version instance;
     instance.set_user_agent(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.user_agent());
 }
 
-BOOST_AUTO_TEST_CASE(version__user_agent_setter_2__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__user_agent_setter_2__roundtrip__success) {
     std::string expected = "MyUseRAgenT";
     message::version instance;
     BOOST_REQUIRE(instance.user_agent().empty());
@@ -950,136 +689,89 @@ BOOST_AUTO_TEST_CASE(version__user_agent_setter_2__roundtrip__success)
     BOOST_REQUIRE_EQUAL(false, instance.user_agent().empty());
 }
 
-BOOST_AUTO_TEST_CASE(version__start_height_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(version__start_height_accessor__always__returns_initialized_value) {
     uint32_t const expected = 514u;
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         1515u,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         expected,
-        false
-    );
+        false);
 
     BOOST_REQUIRE_EQUAL(expected, instance.start_height());
 }
 
-BOOST_AUTO_TEST_CASE(version__start_height_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__start_height_setter__roundtrip__success) {
     uint32_t const expected = 514u;
     message::version instance;
     instance.set_start_height(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.start_height());
 }
 
-BOOST_AUTO_TEST_CASE(version__relay_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(version__relay_accessor__always__returns_initialized_value) {
     const bool expected = true;
-    const message::version instance
-    (
+    const message::version instance(
         210u,
         1515u,
         979797u,
-        {
-            734678u,
-            5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        {
-            46324u,
-            1515u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+        {734678u,
+         5357534u,
+         {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+           0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+         123u},
+        {46324u,
+         1515u,
+         {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+           0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+         351u},
         13626u,
         "my agent",
         100u,
-        expected
-    );
+        expected);
 
     BOOST_REQUIRE_EQUAL(expected, instance.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__relay_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(version__relay_setter__roundtrip__success) {
     const bool expected = true;
     message::version instance;
     instance.set_relay(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_assign_equals__always__matches_equivalent)
-{
-    message::version value
-    (
+BOOST_AUTO_TEST_CASE(version__operator_assign_equals__always__matches_equivalent) {
+    message::version value(
         210u,
         15234u,
         979797u,
-        message::network_address
-        {
+        message::network_address{
             734678u,
             5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        message::network_address
-        {
+            {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+              0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+            123u},
+        message::network_address{
             46324u,
             57835u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+            {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+              0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+            351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     BOOST_REQUIRE(value.is_valid());
 
@@ -1088,165 +780,105 @@ BOOST_AUTO_TEST_CASE(version__operator_assign_equals__always__matches_equivalent
     BOOST_REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_boolean_equals__duplicates__returns_true)
-{
-    const message::version expected
-    (
+BOOST_AUTO_TEST_CASE(version__operator_boolean_equals__duplicates__returns_true) {
+    const message::version expected(
         210u,
         15234u,
         979797u,
-        message::network_address
-        {
+        message::network_address{
             734678u,
             5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        message::network_address
-        {
+            {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+              0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+            123u},
+        message::network_address{
             46324u,
             57835u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+            {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+              0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+            351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     message::version instance(expected);
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_boolean_equals__differs__returns_false)
-{
-    const message::version expected
-    (
+BOOST_AUTO_TEST_CASE(version__operator_boolean_equals__differs__returns_false) {
+    const message::version expected(
         210u,
         15234u,
         979797u,
-        message::network_address
-        {
+        message::network_address{
             734678u,
             5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        message::network_address
-        {
+            {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+              0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+            123u},
+        message::network_address{
             46324u,
             57835u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+            {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+              0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+            351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     message::version instance;
     BOOST_REQUIRE_EQUAL(false, instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_boolean_not_equals__duplicates__returns_false)
-{
-    const message::version expected
-    (
+BOOST_AUTO_TEST_CASE(version__operator_boolean_not_equals__duplicates__returns_false) {
+    const message::version expected(
         210u,
         15234u,
         979797u,
-        message::network_address
-        {
+        message::network_address{
             734678u,
             5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        message::network_address
-        {
+            {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+              0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+            123u},
+        message::network_address{
             46324u,
             57835u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+            {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+              0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+            351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     message::version instance(expected);
     BOOST_REQUIRE_EQUAL(false, instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_boolean_not_equals__differs__returns_true)
-{
-    const message::version expected
-    (
+BOOST_AUTO_TEST_CASE(version__operator_boolean_not_equals__differs__returns_true) {
+    const message::version expected(
         210u,
         15234u,
         979797u,
-        message::network_address
-        {
+        message::network_address{
             734678u,
             5357534u,
-            {
-                {
-                    0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
-                    0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55
-                }
-            },
-            123u
-        },
-        message::network_address
-        {
+            {{0x47, 0x81, 0x6a, 0x40, 0xbb, 0x92, 0xbd, 0xb4,
+              0xe0, 0xb8, 0x25, 0x68, 0x61, 0xf9, 0x6a, 0x55}},
+            123u},
+        message::network_address{
             46324u,
             57835u,
-            {
-                {
-                    0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
-                    0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88
-                }
-            },
-            351u
-        },
+            {{0xab, 0xcd, 0x6a, 0x40, 0x33, 0x92, 0x77, 0xb4,
+              0xe0, 0xb8, 0xda, 0x43, 0x61, 0x66, 0x6a, 0x88}},
+            351u},
         13626u,
         "my agent",
         100u,
-        false
-    );
+        false);
 
     message::version instance;
     BOOST_REQUIRE(instance != expected);

@@ -42,7 +42,7 @@ namespace message {
 
 class BC_API transaction
     : public chain::transaction {
-public:
+   public:
     typedef std::shared_ptr<transaction> ptr;
     typedef std::shared_ptr<transaction const> const_ptr;
     typedef std::vector<ptr> ptr_list;

@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API filter_clear {
-public:
+   public:
     typedef std::shared_ptr<filter_clear> ptr;
     typedef std::shared_ptr<const filter_clear> const_ptr;
 
@@ -71,7 +71,7 @@ public:
         if (version < filter_clear::version_minimum)
             source.invalidate();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -94,10 +94,10 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-protected:
+   protected:
     filter_clear(bool insufficient_version);
 
-private:
+   private:
     bool insufficient_version_;
 };
 

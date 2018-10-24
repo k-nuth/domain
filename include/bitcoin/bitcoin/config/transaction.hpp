@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -31,10 +32,8 @@ namespace config {
  * Serialization helper to convert between serialized and deserialized satoshi
  * transaction.
  */
-class BC_API transaction
-{
-public:
-
+class BC_API transaction {
+   public:
     /**
      * Default constructor.
      */
@@ -77,7 +76,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        transaction& argument);
+                                    transaction& argument);
 
     /**
      * Overload stream out.
@@ -86,17 +85,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        transaction const& argument);
+                                    transaction const& argument);
 
-private:
-
+   private:
     /**
      * The state of this object's transaction data.
      */
     chain::transaction value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

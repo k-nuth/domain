@@ -20,9 +20,9 @@
 #define LIBBITCOIN_ENDORSEMENT_HPP
 
 #include <array>
+#include <cstdint>
 #include <iostream>
 #include <string>
-#include <cstdint>
 
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/define.hpp>
@@ -33,10 +33,8 @@ namespace config {
 /**
  * Serialization helper to convert between endorsement string and data_chunk.
  */
-class BC_API endorsement
-{
-public:
-
+class BC_API endorsement {
+   public:
     /**
      * Default constructor.
      */
@@ -58,10 +56,9 @@ public:
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    template<size_t Size>
+    template <size_t Size>
     endorsement(const byte_array<Size>& value)
-      : value_(value.begin(), value.end())
-    {
+        : value_(value.begin(), value.end()) {
     }
 
     /**
@@ -89,7 +86,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        endorsement& argument);
+                                    endorsement& argument);
 
     /**
      * Overload stream out.
@@ -98,17 +95,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const endorsement& argument);
+                                    const endorsement& argument);
 
-private:
-
+   private:
     /**
      * The state of this object.
      */
     data_chunk value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

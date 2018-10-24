@@ -32,7 +32,7 @@ class point;
 
 /// A point iterator for store serialization (does not support wire).
 class BC_API point_iterator {
-public:
+   public:
     typedef uint8_t pointer;
     typedef uint8_t reference;
     typedef uint8_t value_type;
@@ -46,7 +46,7 @@ public:
     //-------------------------------------------------------------------------
 
     point_iterator(const point_iterator& x);
-    point_iterator(point const& value, unsigned index=0);
+    point_iterator(point const& value, unsigned index = 0);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -66,20 +66,20 @@ public:
     /// The iterator may only be assigned to another of the same point.
     point_iterator& operator=(const point_iterator& x);
 
-protected:
+   protected:
     void increment();
     void decrement();
     point_iterator increase(unsigned value) const;
     point_iterator decrease(unsigned value) const;
 
-private:
+   private:
     uint8_t current() const;
 
     point const& point_;
     unsigned current_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

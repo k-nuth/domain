@@ -23,8 +23,8 @@
 #include <iostream>
 #include <string>
 
-#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 
 namespace libbitcoin {
@@ -34,10 +34,8 @@ namespace config {
  * Serialization helper to convert between a base58-string:number and
  * a vector of chain::output.
  */
-class BC_API output
-{
-public:
-
+class BC_API output {
+   public:
     /**
      * Default constructor.
      */
@@ -64,8 +62,7 @@ public:
      */
     friend std::istream& operator>>(std::istream& input, output& argument);
 
-private:
-
+   private:
     /**
      * The transaction output state of this object.
      * This data is translated to an output given expected version information.
@@ -77,7 +74,7 @@ private:
     short_hash pay_to_hash_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

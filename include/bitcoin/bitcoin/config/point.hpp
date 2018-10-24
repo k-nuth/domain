@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output_point.hpp>
 #include <bitcoin/bitcoin/define.hpp>
@@ -31,9 +32,8 @@ namespace config {
 /**
  * Serialization helper to convert between text and an output_point.
  */
-class BC_API point
-{
-public:
+class BC_API point {
+   public:
     static std::string const delimeter;
 
     /**
@@ -80,17 +80,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        point const& argument);
+                                    point const& argument);
 
-private:
-
+   private:
     /**
      * The state of this object.
      */
     chain::output_point value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

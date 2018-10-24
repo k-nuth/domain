@@ -16,21 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 
 BOOST_AUTO_TEST_SUITE(send_compact_tests)
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_1__always__invalid)
-{
+BOOST_AUTO_TEST_CASE(send_compact__constructor_1__always__invalid) {
     message::send_compact instance;
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_2__always__equals_params)
-{
+BOOST_AUTO_TEST_CASE(send_compact__constructor_2__always__equals_params) {
     bool mode = true;
     uint64_t version = 1245436u;
     message::send_compact instance(mode, version);
@@ -38,15 +36,13 @@ BOOST_AUTO_TEST_CASE(send_compact__constructor_2__always__equals_params)
     BOOST_REQUIRE_EQUAL(version, instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_3__always__equals_params)
-{
+BOOST_AUTO_TEST_CASE(send_compact__constructor_3__always__equals_params) {
     const message::send_compact expected(true, 1245436u);
     message::send_compact instance(expected);
     BOOST_REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_4__always__equals_params)
-{
+BOOST_AUTO_TEST_CASE(send_compact__constructor_4__always__equals_params) {
     bool mode = true;
     uint64_t version = 1245436u;
     message::send_compact expected(mode, version);
@@ -58,9 +54,8 @@ BOOST_AUTO_TEST_CASE(send_compact__constructor_4__always__equals_params)
     BOOST_REQUIRE_EQUAL(version, instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_1__valid_input__success)
-{
-    const message::send_compact expected{ true, 164 };
+BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_1__valid_input__success) {
+    const message::send_compact expected{true, 164};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     auto const result = message::send_compact::factory_from_data(
         message::send_compact::version_minimum, data);
@@ -73,9 +68,8 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_1__valid_input__success)
     BOOST_REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_2__valid_input__success)
-{
-    const message::send_compact expected{ false, 5 };
+BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_2__valid_input__success) {
+    const message::send_compact expected{false, 5};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     data_source istream(data);
     auto const result = message::send_compact::factory_from_data(
@@ -89,9 +83,8 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_2__valid_input__success)
     BOOST_REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_3__valid_input__success)
-{
-    const message::send_compact expected{ true, 257 };
+BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_3__valid_input__success) {
+    const message::send_compact expected{true, 257};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     data_source istream(data);
     istream_reader source(istream);
@@ -106,32 +99,28 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_3__valid_input__success)
     BOOST_REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__from_data_1__invalid_mode_byte__failure)
-{
-    data_chunk raw_data{ 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+BOOST_AUTO_TEST_CASE(send_compact__from_data_1__invalid_mode_byte__failure) {
+    data_chunk raw_data{0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
     message::send_compact msg;
     bool result = msg.from_data(message::send_compact::version_minimum, raw_data);
     BOOST_REQUIRE(!result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__from_data_1__insufficient_version__failure)
-{
-    const message::send_compact expected{ true, 257 };
+BOOST_AUTO_TEST_CASE(send_compact__from_data_1__insufficient_version__failure) {
+    const message::send_compact expected{true, 257};
     data_chunk raw_data = expected.to_data(message::send_compact::version_minimum);
     message::send_compact msg;
     bool result = msg.from_data(message::send_compact::version_minimum - 1, raw_data);
     BOOST_REQUIRE(!result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_accessor__always__returns_initialized_value) {
     const bool expected = true;
     const message::send_compact instance(expected, 210u);
     BOOST_REQUIRE_EQUAL(expected, instance.high_bandwidth_mode());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_setter__roundtrip__success) {
     const bool expected = true;
     message::send_compact instance;
     BOOST_REQUIRE(expected != instance.high_bandwidth_mode());
@@ -139,15 +128,13 @@ BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_setter__roundtrip__succes
     BOOST_REQUIRE_EQUAL(expected, instance.high_bandwidth_mode());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__version_accessor__always__returns_initialized_value)
-{
+BOOST_AUTO_TEST_CASE(send_compact__version_accessor__always__returns_initialized_value) {
     uint64_t const expected = 6548u;
     const message::send_compact instance(false, expected);
     BOOST_REQUIRE_EQUAL(expected, instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__version_setter__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(send_compact__version_setter__roundtrip__success) {
     uint64_t const expected = 6548u;
     message::send_compact instance;
     BOOST_REQUIRE(expected != instance.version());
@@ -155,8 +142,7 @@ BOOST_AUTO_TEST_CASE(send_compact__version_setter__roundtrip__success)
     BOOST_REQUIRE_EQUAL(expected, instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_assign_equals__always__matches_equivalent)
-{
+BOOST_AUTO_TEST_CASE(send_compact__operator_assign_equals__always__matches_equivalent) {
     bool mode = false;
     uint64_t version = 210u;
     message::send_compact value(mode, version);
@@ -169,29 +155,25 @@ BOOST_AUTO_TEST_CASE(send_compact__operator_assign_equals__always__matches_equiv
     BOOST_REQUIRE_EQUAL(version, instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_equals__duplicates__returns_true)
-{
+BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_equals__duplicates__returns_true) {
     const message::send_compact expected(false, 15234u);
     message::send_compact instance(expected);
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_equals__differs__returns_false)
-{
+BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_equals__differs__returns_false) {
     const message::send_compact expected(true, 979797u);
     message::send_compact instance;
     BOOST_REQUIRE_EQUAL(false, instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_not_equals__duplicates__returns_false)
-{
+BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_not_equals__duplicates__returns_false) {
     const message::send_compact expected(true, 734678u);
     message::send_compact instance(expected);
     BOOST_REQUIRE_EQUAL(false, instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_not_equals__differs__returns_true)
-{
+BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_not_equals__differs__returns_true) {
     const message::send_compact expected(false, 5357534u);
     message::send_compact instance;
     BOOST_REQUIRE(instance != expected);

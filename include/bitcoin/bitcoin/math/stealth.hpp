@@ -34,44 +34,49 @@ BI_API bool is_stealth_script(chain::script const& script);
 
 /// Convert a stealth info script to a prefix usable for stealth.
 BI_API bool to_stealth_prefix(uint32_t& out_prefix,
-    chain::script const& script);
+                              chain::script const& script);
 
 /// Create a valid stealth ephemeral private key from the provided seed.
 BI_API bool create_ephemeral_key(ec_secret& out_secret,
-    data_chunk const& seed);
+                                 data_chunk const& seed);
 
 /// Create a stealth null data script the specified filter prefix.
 /// Create an ephemeral secret key generated from the seed.
 BI_API bool create_stealth_data(chain::script& out_null_data,
-    ec_secret& out_secret, const binary& filter, data_chunk const& seed);
+                                ec_secret& out_secret,
+                                const binary& filter,
+                                data_chunk const& seed);
 
 /// Create a stealth null data script the specified filter prefix.
 /// Use the ephemeral secret key provided by parameter.
 BI_API bool create_stealth_script(chain::script& out_null_data,
-    ec_secret const& secret, const binary& filter, data_chunk const& seed);
+                                  ec_secret const& secret,
+                                  const binary& filter,
+                                  data_chunk const& seed);
 
 /// Extract the stealth ephemeral public key from an output script.
 BI_API bool extract_ephemeral_key(ec_compressed& out_ephemeral_public_key,
-    chain::script const& script);
+                                  chain::script const& script);
 
 /// Extract the unsigned stealth ephemeral public key from an output script.
 BI_API bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
-    chain::script const& script);
+                                  chain::script const& script);
 
 /// Calculate the shared secret.
-BI_API bool shared_secret(ec_secret& out_shared, ec_secret const& secret,
-    const ec_compressed& point);
+BI_API bool shared_secret(ec_secret& out_shared, ec_secret const& secret, const ec_compressed& point);
 
 /// Uncover the stealth public key.
 BI_API bool uncover_stealth(ec_compressed& out_stealth,
-    const ec_compressed& ephemeral_or_scan, ec_secret const& scan_or_ephemeral,
-    const ec_compressed& spend);
+                            const ec_compressed& ephemeral_or_scan,
+                            ec_secret const& scan_or_ephemeral,
+                            const ec_compressed& spend);
 
 /// Uncover the stealth secret.
 BI_API bool uncover_stealth(ec_secret& out_stealth,
-    const ec_compressed& ephemeral_or_scan, ec_secret const& scan_or_ephemeral,
-    ec_secret const& spend);
+                            const ec_compressed& ephemeral_or_scan,
+                            ec_secret const& scan_or_ephemeral,
+                            ec_secret const& spend);
 
-} // namespace libbitcoin
+}  // namespace libbitcoin
 
-#endif //LIBBITCOIN_MATH_STEALTH_HPP
+#endif  //LIBBITCOIN_MATH_STEALTH_HPP

@@ -24,13 +24,13 @@
 
 #include <boost/program_options.hpp>
 
+#include <bitcoin/bitcoin/wallet/ec_public.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/formats/base_58.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 
 namespace libbitcoin {
 namespace wallet {
@@ -39,10 +39,10 @@ const uint8_t ec_private::compressed_sentinel = 0x01;
 #ifdef BITPRIM_CURRENCY_LTC
 const uint8_t ec_private::mainnet_wif = 0xb0;
 const uint8_t ec_private::mainnet_p2kh = 0x30;
-#else //BITPRIM_CURRENCY_LTC
+#else   //BITPRIM_CURRENCY_LTC
 const uint8_t ec_private::mainnet_wif = 0x80;
 const uint8_t ec_private::mainnet_p2kh = 0x00;
-#endif //BITPRIM_CURRENCY_LTC
+#endif  //BITPRIM_CURRENCY_LTC
 
 const uint16_t ec_private::mainnet = to_version(mainnet_p2kh, mainnet_wif);
 
@@ -51,72 +51,60 @@ const uint8_t ec_private::testnet_p2kh = 0x6f;
 const uint16_t ec_private::testnet = to_version(testnet_p2kh, testnet_wif);
 
 ec_private::ec_private()
-  : valid_(false), compress_(true), version_(0), secret_(null_hash)
-{
+    : valid_(false), compress_(true), version_(0), secret_(null_hash) {
 }
 
 ec_private::ec_private(const ec_private& x)
-  : valid_(x.valid_), compress_(x.compress_), version_(x.version_),
-    secret_(x.secret_)
-{
+    : valid_(x.valid_), compress_(x.compress_), version_(x.version_), secret_(x.secret_) {
 }
 
 ec_private::ec_private(std::string const& wif, uint8_t address_version)
-  : ec_private(from_string(wif, address_version))
-{
+    : ec_private(from_string(wif, address_version)) {
 }
 
 ec_private::ec_private(const wif_compressed& wif, uint8_t address_version)
-  : ec_private(from_compressed(wif, address_version))
-{
+    : ec_private(from_compressed(wif, address_version)) {
 }
 
 ec_private::ec_private(const wif_uncompressed& wif, uint8_t address_version)
-  : ec_private(from_uncompressed(wif, address_version))
-{
+    : ec_private(from_uncompressed(wif, address_version)) {
 }
 
 ec_private::ec_private(ec_secret const& secret, uint16_t version, bool compress)
-  : valid_(true), compress_(compress), version_(version), secret_(secret)
-{
+    : valid_(true), compress_(compress), version_(version), secret_(secret) {
 }
 
 // Validators.
 // ----------------------------------------------------------------------------
 
-bool ec_private::is_wif(data_slice decoded)
-{
+bool ec_private::is_wif(data_slice decoded) {
     auto const size = decoded.size();
     if (size != wif_compressed_size && size != wif_uncompressed_size)
         return false;
 
-    if ( ! verify_checksum(decoded))
+    if (!verify_checksum(decoded))
         return false;
 
     return (size == wif_uncompressed_size) ||
-        decoded.data()[1 + ec_secret_size] == compressed_sentinel;
+           decoded.data()[1 + ec_secret_size] == compressed_sentinel;
 }
 
 // Factories.
 // ----------------------------------------------------------------------------
 
 ec_private ec_private::from_string(std::string const& wif,
-    uint8_t address_version)
-{
+                                   uint8_t address_version) {
     data_chunk decoded;
-    if ( ! decode_base58(decoded, wif) || !is_wif(decoded))
+    if (!decode_base58(decoded, wif) || !is_wif(decoded))
         return ec_private();
 
     auto const compressed = decoded.size() == wif_compressed_size;
-    return compressed ?
-        ec_private(to_array<wif_compressed_size>(decoded), address_version) :
-        ec_private(to_array<wif_uncompressed_size>(decoded), address_version);
+    return compressed ? ec_private(to_array<wif_compressed_size>(decoded), address_version) : ec_private(to_array<wif_uncompressed_size>(decoded), address_version);
 }
 
 ec_private ec_private::from_compressed(const wif_compressed& wif,
-    uint8_t address_version)
-{
-    if ( ! is_wif(wif))
+                                       uint8_t address_version) {
+    if (!is_wif(wif))
         return ec_private();
 
     const uint16_t version = to_version(address_version, wif.front());
@@ -125,9 +113,8 @@ ec_private ec_private::from_compressed(const wif_compressed& wif,
 }
 
 ec_private ec_private::from_uncompressed(const wif_uncompressed& wif,
-    uint8_t address_version)
-{
-    if ( ! is_wif(wif))
+                                         uint8_t address_version) {
+    if (!is_wif(wif))
         return ec_private();
 
     const uint16_t version = to_version(address_version, wif.front());
@@ -138,13 +125,11 @@ ec_private ec_private::from_uncompressed(const wif_uncompressed& wif,
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-ec_private::operator const bool() const
-{
+ec_private::operator const bool() const {
     return valid_;
 }
 
-ec_private::operator ec_secret const&() const
-{
+ec_private::operator ec_secret const&() const {
     return secret_;
 }
 
@@ -152,48 +137,41 @@ ec_private::operator ec_secret const&() const
 // ----------------------------------------------------------------------------
 
 // Conversion to WIF loses payment address version info.
-std::string ec_private::encoded() const
-{
-    if (compressed())
-    {
+std::string ec_private::encoded() const {
+    if (compressed()) {
         wif_compressed wif;
         auto const prefix = to_array(wif_version());
         auto const compressed = to_array(compressed_sentinel);
-        build_checked_array(wif, { prefix, secret_, compressed });
+        build_checked_array(wif, {prefix, secret_, compressed});
         return encode_base58(wif);
     }
 
     wif_uncompressed wif;
     auto const prefix = to_array(wif_version());
-    build_checked_array(wif, { prefix, secret_ });
+    build_checked_array(wif, {prefix, secret_});
     return encode_base58(wif);
 }
 
 // Accessors.
 // ----------------------------------------------------------------------------
 
-ec_secret const& ec_private::secret() const
-{
+ec_secret const& ec_private::secret() const {
     return secret_;
 }
 
-const uint16_t ec_private::version() const
-{
+const uint16_t ec_private::version() const {
     return version_;
 }
 
-const uint8_t ec_private::payment_version() const
-{
+const uint8_t ec_private::payment_version() const {
     return to_address_prefix(version_);
 }
 
-const uint8_t ec_private::wif_version() const
-{
+const uint8_t ec_private::wif_version() const {
     return to_wif_prefix(version_);
 }
 
-const bool ec_private::compressed() const
-{
+const bool ec_private::compressed() const {
     return compress_;
 }
 
@@ -202,23 +180,19 @@ const bool ec_private::compressed() const
 
 // Conversion to ec_public loses all version information.
 // In the case of failure the key is always compressed (ec_compressed_null).
-ec_public ec_private::to_public() const
-{
+ec_public ec_private::to_public() const {
     ec_compressed point;
-    return valid_ && secret_to_public(point, secret_) ?
-        ec_public(point, compressed()) : ec_public();
+    return valid_ && secret_to_public(point, secret_) ? ec_public(point, compressed()) : ec_public();
 }
 
-payment_address ec_private::to_payment_address() const
-{
+payment_address ec_private::to_payment_address() const {
     return payment_address(*this);
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
 
-ec_private& ec_private::operator=(const ec_private& x)
-{
+ec_private& ec_private::operator=(const ec_private& x) {
     valid_ = x.valid_;
     compress_ = x.compress_;
     version_ = x.version_;
@@ -226,30 +200,25 @@ ec_private& ec_private::operator=(const ec_private& x)
     return *this;
 }
 
-bool ec_private::operator<(const ec_private& x) const
-{
+bool ec_private::operator<(const ec_private& x) const {
     return encoded() < x.encoded();
 }
 
-bool ec_private::operator==(const ec_private& x) const
-{
+bool ec_private::operator==(const ec_private& x) const {
     return valid_ == x.valid_ && compress_ == x.compress_ &&
-        version_ == x.version_ && secret_ == x.secret_;
+           version_ == x.version_ && secret_ == x.secret_;
 }
 
-bool ec_private::operator!=(const ec_private& x) const
-{
+bool ec_private::operator!=(const ec_private& x) const {
     return !(*this == x);
 }
 
-std::istream& operator>>(std::istream& in, ec_private& to)
-{
+std::istream& operator>>(std::istream& in, ec_private& to) {
     std::string value;
     in >> value;
     to = ec_private(value);
 
-    if ( ! to)
-    {
+    if (!to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }
@@ -257,11 +226,10 @@ std::istream& operator>>(std::istream& in, ec_private& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ec_private& of)
-{
+std::ostream& operator<<(std::ostream& out, const ec_private& of) {
     out << of.encoded();
     return out;
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin

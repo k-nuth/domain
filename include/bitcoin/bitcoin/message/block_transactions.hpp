@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API block_transactions {
-public:
+   public:
     typedef std::shared_ptr<block_transactions> ptr;
     typedef std::shared_ptr<const block_transactions> const_ptr;
 
@@ -87,13 +87,13 @@ public:
 
         // Order is required.
         for (auto& tx : transactions_)
-            if ( ! tx.from_data(source, true, witness_default()))
+            if (!tx.from_data(source, true, witness_default()))
                 break;
 
         if (version < block_transactions::version_minimum)
             source.invalidate();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -129,7 +129,7 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-private:
+   private:
     hash_digest block_hash_;
     chain::transaction::list transactions_;
 };

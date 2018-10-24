@@ -38,7 +38,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API filter_load {
-public:
+   public:
     typedef std::shared_ptr<filter_load> ptr;
     typedef std::shared_ptr<const filter_load> const_ptr;
 
@@ -99,7 +99,7 @@ public:
         if (version < filter_load::version_minimum)
             source.invalidate();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -134,7 +134,7 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-private:
+   private:
     data_chunk filter_;
     uint32_t hash_functions_;
     uint32_t tweak_;

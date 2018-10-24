@@ -20,6 +20,7 @@
 #define LIBBITCOIN_ENCRYPTED_KEYS_HPP
 
 #include <string>
+
 #include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/crypto.hpp>

@@ -21,7 +21,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/input_point.hpp>
 #include <bitcoin/bitcoin/config/point.hpp>
@@ -33,8 +35,7 @@ namespace config {
 using namespace boost::program_options;
 
 // input is currently a private encoding in bx.
-static bool decode_input(chain::input& input, std::string const& tuple)
-{
+static bool decode_input(chain::input& input, std::string const& tuple) {
     auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() != 2 && tokens.size() != 3)
         return false;
@@ -49,59 +50,49 @@ static bool decode_input(chain::input& input, std::string const& tuple)
 }
 
 // input is currently a private encoding in bx.
-static std::string encode_input(const chain::input& input)
-{
+static std::string encode_input(const chain::input& input) {
     std::stringstream result;
     result << point(input.previous_output()) << point::delimeter
-        << input.sequence();
+           << input.sequence();
 
     return result.str();
 }
 
 input::input()
-  : value_()
-{}
+    : value_() {}
 
-input::input(std::string const& tuple)
-{
+input::input(std::string const& tuple) {
     std::stringstream(tuple) >> *this;
 }
 
 input::input(const chain::input& value)
-  : value_(value)
-{}
+    : value_(value) {}
 
 input::input(input const& x)
-  : input(x.value_)
-{}
+    : input(x.value_) {}
 
 input::input(const chain::input_point& value)
-  : value_({value, {}, max_input_sequence})
-{}
+    : value_({value, {}, max_input_sequence}) {}
 
-input::operator const chain::input&() const
-{
+input::operator const chain::input&() const {
     return value_;
 }
 
-std::istream& operator>>(std::istream& stream, input& argument)
-{
+std::istream& operator>>(std::istream& stream, input& argument) {
     std::string tuple;
     stream >> tuple;
 
-    if ( ! decode_input(argument.value_, tuple))
-    {
+    if (!decode_input(argument.value_, tuple)) {
         BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
     }
 
     return stream;
 }
 
-std::ostream& operator<<(std::ostream& output, input const& argument)
-{
+std::ostream& operator<<(std::ostream& output, input const& argument) {
     output << encode_input(argument.value_);
     return output;
 }
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin

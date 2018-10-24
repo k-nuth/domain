@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API send_headers {
-public:
+   public:
     typedef std::shared_ptr<send_headers> ptr;
     typedef std::shared_ptr<const send_headers> const_ptr;
 
@@ -73,7 +73,7 @@ public:
             source.invalidate();
         }
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -91,10 +91,10 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-protected:
+   protected:
     send_headers(bool insufficient_version);
 
-private:
+   private:
     bool insufficient_version_;
 };
 

@@ -31,8 +31,7 @@ BOOST_AUTO_TEST_SUITE(encrypted_tests)
 
 #ifdef WITH_ICU
 
-BOOST_AUTO_TEST_CASE(encrypted__fixture__unicode_passphrase__matches_encrypted_test_vector)
-{
+BOOST_AUTO_TEST_CASE(encrypted__fixture__unicode_passphrase__matches_encrypted_test_vector) {
     auto const encoded_password = base16_literal("cf92cc8100f0909080f09f92a9");
     std::string passphrase(encoded_password.begin(), encoded_password.end());
 
@@ -48,11 +47,10 @@ BOOST_AUTO_TEST_CASE(encrypted__fixture__unicode_passphrase__matches_encrypted_t
 BOOST_AUTO_TEST_SUITE(encrypted__create_token_lot)
 
 #define BC_REQUIRE_CREATE_TOKEN_LOT(passphrase, bytes, lot, sequence) \
-    encrypted_token out_token; \
+    encrypted_token out_token;                                        \
     BOOST_REQUIRE(create_token(out_token, passphrase, bytes, lot, sequence))
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__lot_overlow__false)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__lot_overlow__false) {
     const size_t lot = 1048575 + 1;
     const size_t sequence = 0;
     auto const passphrase = "";
@@ -61,8 +59,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__lot_overlow__false)
     BOOST_REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__sequence_overlow__false)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__sequence_overlow__false) {
     const size_t lot = 0;
     const size_t sequence = 4095 + 1;
     auto const passphrase = "";
@@ -71,8 +68,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__sequence_overlow__false)
     BOOST_REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__defaults__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__defaults__expected) {
     const size_t lot = 0;
     const size_t sequence = 0;
     auto const passphrase = "";
@@ -81,8 +77,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__defaults__expected)
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8F7yQVcg1eQKPuX7rzGwBtEH1YSZnKbyk75x3rugZu1ci4RyF4rEn");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase__expected) {
     const size_t lot = 0;
     const size_t sequence = 0;
     auto const passphrase = "passphrase";
@@ -91,8 +86,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase__expected)
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8F7x4pQXMhsJs2j7L8LTV8ujk9jGqgzUrafBeto9VrabP5SmvANvz");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_max__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_max__expected) {
     const size_t lot = 1048575;
     const size_t sequence = 0;
     auto const passphrase = "passphrase";
@@ -101,8 +95,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_max__expected)
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_sequence_max__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_sequence_max__expected) {
     const size_t lot = 0;
     const size_t sequence = 4095;
     auto const passphrase = "passphrase";
@@ -111,8 +104,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_sequence_max__expec
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_sequence__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_sequence__expected) {
     const size_t lot = 42;
     const size_t sequence = 42;
     auto const passphrase = "passphrase";
@@ -128,19 +120,17 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE(encrypted__create_token_entropy)
 
 #define BC_CREATE_TOKEN_ENTROPY(passphrase, bytes) \
-    encrypted_token out_token; \
+    encrypted_token out_token;                     \
     create_token(out_token, passphrase, bytes)
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__defaults__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__defaults__expected) {
     auto const passphrase = "";
     auto const entropy = base16_literal("baadf00dbaadf00d");
     BC_CREATE_TOKEN_ENTROPY(passphrase, entropy);
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphraseqVHzjNrYRo5G6yLmJ7TQ49fKnQtsgjybNgNHAKBCQKoFZcTNjNJtg4oCUgtPt3");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__passphrase__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__passphrase__expected) {
     auto const passphrase = "passphrase";
     auto const entropy = base16_literal("baadf00dbaadf00d");
     BC_CREATE_TOKEN_ENTROPY(passphrase, entropy);
@@ -153,14 +143,13 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__encrypt_private)
 
-#define BC_REQUIRE_ENCRYPT(secret, passphrase, version, compressed, expected) \
-    encrypted_private out_private; \
+#define BC_REQUIRE_ENCRYPT(secret, passphrase, version, compressed, expected)     \
+    encrypted_private out_private;                                                \
     BOOST_REQUIRE(encrypt(out_private, secret, passphrase, version, compressed)); \
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), expected)
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_0__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_0__expected) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const expected = "6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg";
@@ -169,8 +158,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_0__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_1__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_1__expected) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const expected = "6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq";
@@ -179,8 +167,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_1__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_2_compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_2_compressed__expected) {
     auto compression = true;
     const uint8_t version = 0x00;
     auto const expected = "6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo";
@@ -189,8 +176,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_2_compressed__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_3_compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_3_compressed__expected) {
     auto compression = true;
     const uint8_t version = 0x00;
     auto const expected = "6PYLtMnXvfG3oJde97zRyLYFZCYizPU5T3LwgdYJz1fRhh16bU7u6PPmY7";
@@ -199,8 +185,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_3_compressed__expected)
 }
 
 // #3 from: github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_unicode__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_unicode__expected) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const encoded_password = base16_literal("cf92cc8100f0909080f09f92a9");
@@ -219,14 +204,13 @@ BOOST_AUTO_TEST_SUITE(encrypted__decrypt1)
 // TODO(libbitcoin): create compressed+multiplied and altchain/testnet vector(s).
 
 #define BC_REQUIRE_DECRYPT_SECRET(key, passphrase) \
-    ec_secret out_secret; \
-    uint8_t out_version = 42; \
-    bool out_is_compressed = true; \
+    ec_secret out_secret;                          \
+    uint8_t out_version = 42;                      \
+    bool out_is_compressed = true;                 \
     BOOST_REQUIRE(decrypt(out_secret, out_version, out_is_compressed, key, passphrase))
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_0__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_0__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg");
     BC_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
@@ -236,8 +220,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_0__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_1__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_1__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq");
     BC_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
@@ -247,8 +230,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_1__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_2_compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_2_compressed__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo");
     BC_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
@@ -258,8 +240,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_2_compressed__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_3_compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_3_compressed__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PYLtMnXvfG3oJde97zRyLYFZCYizPU5T3LwgdYJz1fRhh16bU7u6PPmY7");
     BC_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
@@ -269,8 +250,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_3_compressed__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_4_multiplied__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_4_multiplied__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PfQu77ygVyJLZjfvMLyhLMQbYnu5uguoJJ4kMCLqWwPEdfpwANVS76gTX");
     BC_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
@@ -280,8 +260,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_4_multiplied__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_5_multiplied__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_5_multiplied__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PfLGnQs6VZnrNpmVKfjotbnQuaJK4KZoPFrAjx1JMJUa1Ft8gnf5WxfKd");
     BC_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
@@ -291,8 +270,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_5_multiplied__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_6_multiplied_lot__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_6_multiplied_lot__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PgNBNNzDkKdhkT6uJntUXwwzQV8Rr2tZcbkDcuC9DZRsS6AtHts4Ypo1j");
     BC_REQUIRE_DECRYPT_SECRET(key, "MOLON LABE");
@@ -302,8 +280,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_6_multiplied_lot__expect
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_7_multiplied_lot__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_7_multiplied_lot__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PgGWtx25kUg8QWvwuJAgorN6k9FbE25rv5dMRwu5SKMnfpfVe5mar2ngH");
     BC_REQUIRE_DECRYPT_SECRET(key, "ΜΟΛΩΝ ΛΑΒΕ");
@@ -313,8 +290,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_7_multiplied_lot__expect
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_8_multiplied__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_8_multiplied__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PfPAw5HErFdzMyBvGMwSfSWjKmzgm3jDg7RxQyVCSSBJFZLAZ6hVupmpn");
     BC_REQUIRE_DECRYPT_SECRET(key, "libbitcoin test");
@@ -324,8 +300,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_8_multiplied__expected)
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_9_multiplied__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_9_multiplied__expected) {
     const uint8_t expected_version = 0x00;
     auto const key = base58_literal("6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
     BC_REQUIRE_DECRYPT_SECRET(key, "Libbitcoin BIP38 Test Vector");
@@ -342,18 +317,17 @@ BOOST_AUTO_TEST_SUITE(encrypted__decrypt_public)
 
 // TODO(libbitcoin): create compressed and altchain/testnet vector(s).
 
-#define BC_REQUIRE_DECRYPT_POINT(key, passphrase, version) \
-    ec_compressed out_point; \
-    uint8_t out_version = 42; \
-    bool out_is_compressed = true; \
+#define BC_REQUIRE_DECRYPT_POINT(key, passphrase, version)                              \
+    ec_compressed out_point;                                                            \
+    uint8_t out_version = 42;                                                           \
+    bool out_is_compressed = true;                                                      \
     BOOST_REQUIRE(decrypt(out_point, out_version, out_is_compressed, key, passphrase)); \
-    BOOST_REQUIRE_EQUAL(out_version, version); \
-    BOOST_REQUIRE(!out_is_compressed); \
-    auto const derived_address = payment_address({ out_point, out_is_compressed }, out_version).encoded()
+    BOOST_REQUIRE_EQUAL(out_version, version);                                          \
+    BOOST_REQUIRE(!out_is_compressed);                                                  \
+    auto const derived_address = payment_address({out_point, out_is_compressed}, out_version).encoded()
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_6_lot__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_6_lot__expected) {
     const uint8_t version = 0x00;
     auto const key = base58_literal("cfrm38V8aXBn7JWA1ESmFMUn6erxeBGZGAxJPY4e36S9QWkzZKtaVqLNMgnifETYw7BPwWC9aPD");
     BC_REQUIRE_DECRYPT_POINT(key, "MOLON LABE", version);
@@ -362,8 +336,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_6_lot__expected)
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_7_lot__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_7_lot__expected) {
     const uint8_t version = 0x00;
     auto const key = base58_literal("cfrm38V8G4qq2ywYEFfWLD5Cc6msj9UwsG2Mj4Z6QdGJAFQpdatZLavkgRd1i4iBMdRngDqDs51");
     BC_REQUIRE_DECRYPT_POINT(key, "ΜΟΛΩΝ ΛΑΒΕ", version);
@@ -372,8 +345,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_7_lot__expected)
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_8__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_8__expected) {
     const uint8_t version = 0x00;
     auto const key = base58_literal("cfrm38V5Nm1mn7GxPBAGTXawqXRwE1EbR19GqsvJ9JmF5VKLqi8nETmULpELkQvExCGkTNCH2An");
     BC_REQUIRE_DECRYPT_POINT(key, "libbitcoin test", version);
@@ -382,8 +354,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_8__expected)
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_9__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_9__expected) {
     const uint8_t version = 0x00;
     auto const key = base58_literal("cfrm38V5ec4E5RKwBu46Jf5zfaE54nuB1NWHpHSpgX4GQqfzx7fvqm43mBHvr89pPgykDHts9VC");
     BC_REQUIRE_DECRYPT_POINT(key, "Libbitcoin BIP38 Test Vector", version);
@@ -393,7 +364,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_9__expected)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-#endif // WITH_ICU
+#endif  // WITH_ICU
 
 // ----------------------------------------------------------------------------
 
@@ -402,12 +373,11 @@ BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair)
 // TODO(libbitcoin): create compressed vector(s).
 
 #define BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compressed) \
-    ec_compressed out_point; \
-    encrypted_private out_private; \
+    ec_compressed out_point;                                         \
+    encrypted_private out_private;                                   \
     BOOST_REQUIRE(create_key_pair(out_private, out_point, token, seed, version, compressed))
 
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__bad_checksum__false)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__bad_checksum__false) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
@@ -418,8 +388,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__bad_checksum__false)
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_8__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_8__expected) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
@@ -433,8 +402,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_8__expected)
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9__expected) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
@@ -448,8 +416,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9__expected)
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9_compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9_compressed__expected) {
     auto compression = true;
     const uint8_t version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
@@ -460,8 +427,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9_compressed__expected)
 }
 
 // altchain vectors are based on preliminary bidirectional mapping proposal.
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9_compressed_testnet__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9_compressed_testnet__expected) {
     auto compression = true;
     const uint8_t version = 111;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
@@ -480,13 +446,12 @@ BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair_with_confirmation)
 // TODO(libbitcoin): create compressed vector(s).
 
 #define BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compressed) \
-    ec_compressed out_point; \
-    encrypted_public out_public; \
-    encrypted_private out_private; \
+    ec_compressed out_point;                                                      \
+    encrypted_public out_public;                                                  \
+    encrypted_private out_private;                                                \
     BOOST_REQUIRE(create_key_pair(out_private, out_public, out_point, token, seed, version, compressed))
 
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__bad_checksum__false)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__bad_checksum__false) {
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
     auto const token = base58_literal("passphraseo59BauW85etaRsKpbbTrEa5RRYw6bq5K9yrDf4r4N5fcirPdtDKmfJw9oYNoGN");
     ec_compressed out_point;
@@ -496,8 +461,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__bad_checksum_
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_8__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_8__expected) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
@@ -512,8 +476,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_8__exp
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9__expected) {
     auto compression = false;
     const uint8_t version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
@@ -528,8 +491,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9__exp
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_compressed__expected) {
     auto compression = true;
     const uint8_t version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
@@ -541,8 +503,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_comp
 }
 
 // altchain vectors are based on preliminary bidirectional mapping proposal.
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_compressed_testnet__expected)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_compressed_testnet__expected) {
     auto compression = true;
     const uint8_t version = 111;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
@@ -561,8 +522,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__round_trips)
 
-BOOST_AUTO_TEST_CASE(encrypted__encrypt__compressed_testnet__matches_secret_version_and_compression)
-{
+BOOST_AUTO_TEST_CASE(encrypted__encrypt__compressed_testnet__matches_secret_version_and_compression) {
     auto const secret = base16_literal("09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
     auto const passphrase = "passphrase";
 
@@ -584,8 +544,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt__compressed_testnet__matches_secret_vers
     BOOST_REQUIRE_EQUAL(out_version, version);
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__private_uncompressed_testnet__decrypts_with_matching_version_and_compression)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__private_uncompressed_testnet__decrypts_with_matching_version_and_compression) {
     // Create the token.
     encrypted_token out_token;
     auto const passphrase = "passphrase";
@@ -618,8 +577,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__private_uncompressed_testn
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), encode_base16(compressed));
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__private_and_public_compressed_testnet__decrypts_with_matching_version_and_compression)
-{
+BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__private_and_public_compressed_testnet__decrypts_with_matching_version_and_compression) {
     // Create the token.
     encrypted_token out_token;
     auto const passphrase = "passphrase";

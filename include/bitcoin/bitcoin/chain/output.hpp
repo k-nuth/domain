@@ -42,7 +42,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API output {
-public:
+   public:
     typedef std::vector<output> list;
 
     /// This is a sentinel used in .value to indicate not found in store.
@@ -100,13 +100,13 @@ public:
     bool from_data(R& source, bool wire = true, bool unused = false) {
         reset();
 
-        if ( ! wire)
+        if (!wire)
             validation.spender_height = source.read_4_bytes_little_endian();
 
         value_ = source.read_8_bytes_little_endian();
         script_.from_data(source, true);
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -124,7 +124,7 @@ public:
 
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool unused = false) const {
-        if ( ! wire) {
+        if (!wire) {
             auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
             sink.write_4_bytes_little_endian(height32);
         }
@@ -170,11 +170,11 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-protected:
+   protected:
     void reset();
     void invalidate_cache() const;
 
-private:
+   private:
     typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
 
     addresses_ptr addresses_cache() const;

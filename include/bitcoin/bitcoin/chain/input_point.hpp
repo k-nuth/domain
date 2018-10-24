@@ -26,7 +26,7 @@ namespace chain {
 
 typedef point input_point;
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

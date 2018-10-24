@@ -18,6 +18,7 @@
  */
 #include <cstdlib>
 #include <string>
+
 #include <bitcoin/bitcoin.hpp>
 
 BC_USE_LIBBITCOIN_MAIN

@@ -27,7 +27,7 @@ namespace keoken {
 using asset_id_t = uint32_t;
 using amount_t = int64_t;
 
-} // namespace keoken
-} // namespace bitprim
+}  // namespace keoken
+}  // namespace bitprim
 
-#endif //BITPRIM_KEOKEN_PRIMITIVES_HPP_
+#endif  //BITPRIM_KEOKEN_PRIMITIVES_HPP_

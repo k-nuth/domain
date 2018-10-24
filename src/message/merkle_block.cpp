@@ -60,7 +60,7 @@ merkle_block::merkle_block()
     : header_(), total_transactions_(0), hashes_(), flags_() {
 }
 
-merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags) 
+merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags)
     : header_(header), total_transactions_(total_transactions), hashes_(hashes), flags_(flags) {
 }
 

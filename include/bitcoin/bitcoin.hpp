@@ -20,7 +20,6 @@
 #include <bitcoin/bitcoin/define.hpp>
 // #include <bitcoin/bitcoin/error.hpp>
 // #include <bitcoin/bitcoin/handlers.hpp>
-#include <bitcoin/bitcoin/version.hpp>
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/compact.hpp>
@@ -38,6 +37,7 @@
 #include <bitcoin/bitcoin/chain/stealth.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
+#include <bitcoin/bitcoin/version.hpp>
 
 // #include <bitcoin/bitcoin/config/authority.hpp>
 // #include <bitcoin/infrastructure/config/base16.hpp>
@@ -87,10 +87,10 @@
 // #include <bitcoin/bitcoin/log/features/rate.hpp>
 // #include <bitcoin/bitcoin/log/features/timer.hpp>
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
-#include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
+#include <bitcoin/infrastructure/machine/number.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/machine/rule_fork.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>
 #include <bitcoin/infrastructure/machine/script_version.hpp>
@@ -101,7 +101,6 @@
 // #include <bitcoin/infrastructure/math/hash.hpp>
 // #include <bitcoin/infrastructure/math/limits.hpp>
 #include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/infrastructure/math/uint256.hpp>
 #include <bitcoin/bitcoin/message/address.hpp>
 #include <bitcoin/bitcoin/message/alert.hpp>
 #include <bitcoin/bitcoin/message/alert_payload.hpp>
@@ -125,6 +124,7 @@
 #include <bitcoin/bitcoin/message/memory_pool.hpp>
 #include <bitcoin/bitcoin/message/merkle_block.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/infrastructure/math/uint256.hpp>
 // #include <bitcoin/bitcoin/message/network_address.hpp>
 #include <bitcoin/bitcoin/message/not_found.hpp>
 #include <bitcoin/bitcoin/message/ping.hpp>

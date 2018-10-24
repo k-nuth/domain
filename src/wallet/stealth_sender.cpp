@@ -22,43 +22,44 @@
 
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/math/stealth.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/utility/binary.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
 stealth_sender::stealth_sender(const stealth_address& address,
-    data_chunk const& seed, const binary& filter, uint8_t version)
-  : version_(version)
-{
+                               data_chunk const& seed,
+                               const binary& filter,
+                               uint8_t version)
+    : version_(version) {
     ec_secret ephemeral_private;
     if (create_ephemeral_key(ephemeral_private, seed))
         initialize(ephemeral_private, address, seed, filter);
 }
 
 stealth_sender::stealth_sender(ec_secret const& ephemeral_private,
-    const stealth_address& address, data_chunk const& seed,
-    const binary& filter, uint8_t version)
-  : version_(version)
-{
+                               const stealth_address& address,
+                               data_chunk const& seed,
+                               const binary& filter,
+                               uint8_t version)
+    : version_(version) {
     initialize(ephemeral_private, address, seed, filter);
 }
 
-stealth_sender::operator const bool() const
-{
+stealth_sender::operator const bool() const {
     return address_;
 }
 
 // private
 // TODO(libbitcoin): convert to factory and make script_ and address_ const.
 void stealth_sender::initialize(ec_secret const& ephemeral_private,
-    const stealth_address& address, data_chunk const& seed,
-    const binary& filter)
-{
+                                const stealth_address& address,
+                                data_chunk const& seed,
+                                const binary& filter) {
     ec_compressed ephemeral_public;
-    if ( ! secret_to_public(ephemeral_public, ephemeral_private))
+    if (!secret_to_public(ephemeral_public, ephemeral_private))
         return;
 
     auto const& spend_keys = address.spend_keys();
@@ -66,25 +67,23 @@ void stealth_sender::initialize(ec_secret const& ephemeral_private,
         return;
 
     ec_compressed sender_public;
-    if ( ! uncover_stealth(sender_public, address.scan_key(), ephemeral_private,
-        spend_keys.front()))
+    if (!uncover_stealth(sender_public, address.scan_key(), ephemeral_private,
+                         spend_keys.front()))
         return;
 
     if (create_stealth_script(script_, ephemeral_private, filter, seed))
-        address_ = { sender_public, version_ };
+        address_ = {sender_public, version_};
 }
 
 // Will be invalid if construct fails.
-chain::script const& stealth_sender::stealth_script() const
-{
+chain::script const& stealth_sender::stealth_script() const {
     return script_;
 }
 
 // Will be invalid if construct fails.
-const wallet::payment_address& stealth_sender::payment_address() const
-{
+const wallet::payment_address& stealth_sender::payment_address() const {
     return address_;
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin

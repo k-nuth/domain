@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>

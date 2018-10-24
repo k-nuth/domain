@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 using namespace bc::chain;
@@ -27,27 +27,23 @@ static auto const valid_raw_point_iterator_source = to_chunk(base16_literal(SOUR
 
 BOOST_AUTO_TEST_SUITE(point_iterator_tests)
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_bool__not_at_end__returns_true)
-{
+BOOST_AUTO_TEST_CASE(point_iterator__operator_bool__not_at_end__returns_true) {
     point_iterator instance(point{});
     BOOST_REQUIRE((bool)instance);
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_bool_at_end__returns_false)
-{
+BOOST_AUTO_TEST_CASE(point_iterator__operator_bool_at_end__returns_false) {
     point value;
     point_iterator instance(value, static_cast<unsigned>(value.serialized_size(false)));
     BOOST_REQUIRE(!instance);
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_asterisk__initialized_point__matches_source)
-{
+BOOST_AUTO_TEST_CASE(point_iterator__operator_asterisk__initialized_point__matches_source) {
     point point;
     BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
     point_iterator instance(point);
 
-    for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++)
-    {
+    for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++) {
         BOOST_REQUIRE(instance);
         BOOST_REQUIRE_EQUAL(valid_raw_point_iterator_source[i], (*instance));
     }
@@ -56,15 +52,13 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_asterisk__initialized_point__match
     BOOST_REQUIRE_EQUAL(0u, (*instance));
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_arrow__initialized_point__matches_source)
-{
+BOOST_AUTO_TEST_CASE(point_iterator__operator_arrow__initialized_point__matches_source) {
     point point;
     BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
     point_iterator instance(point);
     BOOST_REQUIRE(valid_raw_point_iterator_source.size() > 0);
 
-    for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++)
-    {
+    for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++) {
         BOOST_REQUIRE(instance);
         BOOST_REQUIRE_EQUAL(valid_raw_point_iterator_source[i], instance.operator->());
     }
@@ -73,8 +67,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_arrow__initialized_point__matches_
     BOOST_REQUIRE_EQUAL(0u, instance.operator->());
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus_int__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus_int__roundtrip__success) {
     point point;
     uint8_t offset = 5u;
     BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
@@ -91,8 +84,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus_int__roundtrip__success
     BOOST_REQUIRE(modified != expected);
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus__roundtrip__success) {
     point point;
     uint8_t offset = 5u;
     BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));

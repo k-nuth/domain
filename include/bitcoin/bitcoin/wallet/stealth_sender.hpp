@@ -23,28 +23,28 @@
 
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
+#include <bitcoin/bitcoin/wallet/stealth_address.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/utility/binary.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/bitcoin/wallet/stealth_address.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
 /// This class does not support multisignature stealth addresses.
-class BC_API stealth_sender
-{
-public:
+class BC_API stealth_sender {
+   public:
     /// Constructors.
     /// Generate a send address from the stealth address.
-    stealth_sender(const stealth_address& address, data_chunk const& seed,
-        const binary& filter, uint8_t version=payment_address::mainnet_p2kh);
+    stealth_sender(const stealth_address& address, data_chunk const& seed, const binary& filter, uint8_t version = payment_address::mainnet_p2kh);
 
     /// Generate a send address from the stealth address.
     stealth_sender(ec_secret const& ephemeral_private,
-        const stealth_address& address, data_chunk const& seed,
-        const binary& filter, uint8_t version=payment_address::mainnet_p2kh);
+                   const stealth_address& address,
+                   data_chunk const& seed,
+                   const binary& filter,
+                   uint8_t version = payment_address::mainnet_p2kh);
 
     /// Caller must test after construct.
     operator const bool() const;
@@ -55,18 +55,18 @@ public:
     /// The bitcoin payment address to which the payment will be made.
     const wallet::payment_address& payment_address() const;
 
-private:
+   private:
     void initialize(ec_secret const& ephemeral_private,
-        const stealth_address& address, data_chunk const& seed,
-        const binary& filter);
+                    const stealth_address& address,
+                    data_chunk const& seed,
+                    const binary& filter);
 
     const uint8_t version_;
     chain::script script_;
     wallet::payment_address address_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif
-

@@ -24,8 +24,8 @@
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
@@ -36,9 +36,8 @@ class payment_address;
 
 /// Use to pass an ec point as either ec_compressed or ec_uncompressed.
 /// ec_public doesn't carry a version for address creation or base58 encoding.
-class BC_API ec_public
-{
-public:
+class BC_API ec_public {
+   public:
     static const uint8_t compressed_even;
     static const uint8_t compressed_odd;
     static const uint8_t uncompressed;
@@ -50,8 +49,8 @@ public:
     ec_public(const ec_private& secret);
     ec_public(data_chunk const& decoded);
     ec_public(std::string const& base16);
-    ec_public(const ec_compressed& point, bool compress=true);
-    ec_public(const ec_uncompressed& point, bool compress=false);
+    ec_public(const ec_compressed& point, bool compress = true);
+    ec_public(const ec_uncompressed& point, bool compress = false);
 
     /// Operators.
     bool operator<(const ec_public& x) const;
@@ -78,9 +77,9 @@ public:
     /// Methods.
     bool to_data(data_chunk& out) const;
     bool to_uncompressed(ec_uncompressed& out) const;
-    payment_address to_payment_address(uint8_t version=mainnet_p2kh) const;
+    payment_address to_payment_address(uint8_t version = mainnet_p2kh) const;
 
-private:
+   private:
     /// Validators.
     static bool is_point(data_slice decoded);
 
@@ -98,7 +97,7 @@ private:
     ec_compressed point_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

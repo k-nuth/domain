@@ -16,15 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 
 BOOST_AUTO_TEST_SUITE(send_headers_tests)
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk)
-{
+BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
     const message::send_headers expected{};
     auto const data = expected.to_data(message::version::level::maximum);
     auto const result = message::send_headers::factory_from_data(
@@ -35,8 +34,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk)
     BOOST_REQUIRE_EQUAL(0u, result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream)
-{
+BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream) {
     const message::send_headers expected{};
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
@@ -48,8 +46,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream)
     BOOST_REQUIRE_EQUAL(0u, result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader)
-{
+BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader) {
     const message::send_headers expected{};
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
@@ -62,8 +59,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader)
     BOOST_REQUIRE_EQUAL(0u, result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(from_data_reader_version_prior_bip130_failure)
-{
+BOOST_AUTO_TEST_CASE(from_data_reader_version_prior_bip130_failure) {
     data_chunk data{};
     data_source istream(data);
     istream_reader source(istream);
@@ -74,8 +70,7 @@ BOOST_AUTO_TEST_CASE(from_data_reader_version_prior_bip130_failure)
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(from_data_reader_version_at_least_bip130_success)
-{
+BOOST_AUTO_TEST_CASE(from_data_reader_version_at_least_bip130_success) {
     data_chunk data{};
     data_source istream(data);
     istream_reader source(istream);

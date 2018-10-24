@@ -22,18 +22,17 @@
 #include <cstdint>
 
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
+#include <bitcoin/infrastructure/error.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
 namespace machine {
 
-class BC_API interpreter
-{
-public:
+class BC_API interpreter {
+   public:
     typedef error::error_code_t result;
 
     // Operations (shared).
@@ -44,8 +43,7 @@ public:
     static result op_reserved(opcode);
     static result op_push_number(program& program, uint8_t value);
     static result op_push_size(program& program, operation const& op);
-    static result op_push_data(program& program, data_chunk const& data,
-        uint32_t size_limit);
+    static result op_push_data(program& program, data_chunk const& data, uint32_t size_limit);
 
     // Operations (not shared).
     //-----------------------------------------------------------------------------
@@ -118,12 +116,12 @@ public:
     /// For best performance use script runner for a sequence of operations.
     static code run(operation const& op, program& program);
 
-private:
+   private:
     static result run_op(operation const& op, program& program);
 };
 
-} // namespace machine
-} // namespace libbitcoin
+}  // namespace machine
+}  // namespace libbitcoin
 
 #include <bitcoin/bitcoin/impl/machine/interpreter.ipp>
 

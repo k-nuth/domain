@@ -20,6 +20,7 @@
 #define LIBBITCOIN_MULTI_CRYPTO_SUPPORT_HPP_
 
 #include <string>
+
 #include <bitcoin/infrastructure/config/settings.hpp>
 
 namespace libbitcoin {
@@ -36,7 +37,7 @@ constexpr uint32_t ltc_regtest = 0xdab5bffau;
 constexpr uint32_t bch_mainnet = 0xe8f3e1e3u;
 constexpr uint32_t bch_testnet = 0xf4f3e5f4u;
 constexpr uint32_t bch_regtest = 0xfabfb5dau;
-} // namespace netmagic
+}  // namespace netmagic
 
 namespace config {
 
@@ -47,7 +48,7 @@ enum class currency {
     litecoin
 };
 
-} // namespace config
+}  // namespace config
 
 config::currency get_currency();
 
@@ -59,7 +60,7 @@ config::settings get_network(uint32_t identifier);
 #ifdef BITPRIM_CURRENCY_BCH
 std::string cashaddr_prefix();
 void set_cashaddr_prefix(std::string const& x);
-#endif //BITPRIM_CURRENCY_BCH
+#endif  //BITPRIM_CURRENCY_BCH
 
 } /*namespace libbitcoin*/
 

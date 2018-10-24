@@ -65,8 +65,7 @@ size_t header::satoshi_fixed_size(uint32_t version) {
 }
 
 header::header()
-    : chain::header() 
-{}
+    : chain::header() {}
 
 header::header(uint32_t version,
                hash_digest const& previous_block_hash,
@@ -74,8 +73,7 @@ header::header(uint32_t version,
                uint32_t timestamp,
                uint32_t bits,
                uint32_t nonce)
-    : chain::header(version, previous_block_hash, merkle, timestamp, bits, nonce) 
-{}
+    : chain::header(version, previous_block_hash, merkle, timestamp, bits, nonce) {}
 
 header::header(chain::header const& x)
     : chain::header(x) {

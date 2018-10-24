@@ -39,7 +39,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API compact_block {
-public:
+   public:
     typedef std::shared_ptr<compact_block> ptr;
     typedef std::shared_ptr<const compact_block> const_ptr;
 
@@ -96,7 +96,7 @@ public:
 
         reset();
 
-        if ( ! header_.from_data(source))
+        if (!header_.from_data(source))
             return false;
 
         nonce_ = source.read_8_bytes_little_endian();
@@ -128,13 +128,13 @@ public:
         // NOTE: Witness flag is controlled by prefilled tx
         // Order is required.
         for (auto& tx : transactions_)
-            if ( ! tx.from_data(version, source))
+            if (!tx.from_data(version, source))
                 break;
 
         if (version < compact_block::version_minimum)
             source.invalidate();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -186,7 +186,7 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-private:
+   private:
     chain::header header_;
     uint64_t nonce_;
     short_id_list short_ids_;

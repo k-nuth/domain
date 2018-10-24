@@ -20,23 +20,19 @@
 #define LIBBITCOIN_PROPERTY_TREE_IPP
 
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
 namespace config {
 
-void inline add_child(pt::ptree& out_list, std::string const& name,
-    const pt::ptree& element, bool json)
-{
-    if (json)
-    {
+void inline add_child(pt::ptree& out_list, std::string const& name, const pt::ptree& element, bool json) {
+    if (json) {
         // HACK: work around invalid assertions in boost::property_tree.
         // It is sufficient to call push_back as long as the name is empty.
-        out_list.push_back({ "", element });
+        out_list.push_back({"", element});
         ////out_list.add_child("", element);
-    }
-    else
-    {
+    } else {
         out_list.add_child(name, element);
     }
 }
@@ -51,11 +47,9 @@ void inline add_child(pt::ptree& out_list, std::string const& name,
  * @returns              A new property tree containing the list.
  */
 template <typename Values>
-pt::ptree property_tree_list(std::string const& name, const Values& values,
-    bool json)
-{
+pt::ptree property_tree_list(std::string const& name, const Values& values, bool json) {
     pt::ptree list;
-    for (auto const& value: values)
+    for (auto const& value : values)
         add_child(list, name, property_list(value), json);
 
     return list;
@@ -72,10 +66,10 @@ pt::ptree property_tree_list(std::string const& name, const Values& values,
  */
 template <typename Values>
 pt::ptree property_tree_list_of_lists(std::string const& name,
-    const Values& values, bool json)
-{
+                                      const Values& values,
+                                      bool json) {
     pt::ptree list;
-    for (auto const& value: values)
+    for (auto const& value : values)
         add_child(list, name, property_list(value, json), json);
 
     return list;
@@ -90,13 +84,10 @@ pt::ptree property_tree_list_of_lists(std::string const& name,
  * @returns              A new property tree containing the list.
  */
 template <typename Values>
-pt::ptree property_value_list(std::string const& name, const Values& values,
-    bool json)
-{
+pt::ptree property_value_list(std::string const& name, const Values& values, bool json) {
     pt::ptree list;
     pt::ptree element;
-    for (auto const& value: values)
-    {
+    for (auto const& value : values) {
         element.put_value(value);
         add_child(list, name, element, json);
     }
@@ -104,7 +95,7 @@ pt::ptree property_value_list(std::string const& name, const Values& values,
     return list;
 }
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

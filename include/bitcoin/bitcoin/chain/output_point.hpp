@@ -30,12 +30,11 @@
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 
-
 namespace libbitcoin {
 namespace chain {
 
 class BC_API output_point : public point {
-public:
+   public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation_type {
         /// An output is spent if a valid transaction has a valid claim on it.
@@ -78,17 +77,13 @@ public:
     // Operators.
     //-------------------------------------------------------------------------
 
-    friend
-    bool operator==(output_point const& x, point const& y);
+    friend bool operator==(output_point const& x, point const& y);
 
-    friend
-    bool operator!=(output_point const& x, point const& y);
+    friend bool operator!=(output_point const& x, point const& y);
 
-    friend    
-    bool operator==(output_point const& x, output_point const& y);
-    
-    friend
-    bool operator!=(output_point const& x, output_point const& y);
+    friend bool operator==(output_point const& x, output_point const& y);
+
+    friend bool operator!=(output_point const& x, output_point const& y);
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -113,7 +108,7 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_type validation;
 
-protected:
+   protected:
     // So that input may call reset from its own.
     friend class input;
 };

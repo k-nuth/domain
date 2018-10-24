@@ -28,19 +28,17 @@ namespace keoken {
 namespace message {
 
 using bc::data_chunk;
-using bc::data_source;
 using bc::data_sink;
+using bc::data_source;
 using bc::istream_reader;
 using bc::ostream_writer;
 using bc::writer;
-    
+
 // Constructors.
 //-------------------------------------------------------------------------
 
 send_tokens::send_tokens(asset_id_t asset_id, amount_t amount)
-    : asset_id_(asset_id)
-    , amount_(amount)
-{}
+    : asset_id_(asset_id), amount_(amount) {}
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -60,21 +58,21 @@ bool operator!=(send_tokens const& a, send_tokens const& b) {
 
 // static
 send_tokens send_tokens::factory_from_data(data_chunk const& data) {
-    send_tokens instance;       //NOLINT
+    send_tokens instance;  //NOLINT
     instance.from_data(data);
     return instance;
 }
 
 // static
 send_tokens send_tokens::factory_from_data(data_source& stream) {
-    send_tokens instance;       //NOLINT
+    send_tokens instance;  //NOLINT
     instance.from_data(stream);
     return instance;
 }
 
 // static
 send_tokens send_tokens::factory_from_data(bc::reader& source) {
-    send_tokens instance;       //NOLINT
+    send_tokens instance;  //NOLINT
     instance.from_data(source);
     return instance;
 }
@@ -126,13 +124,12 @@ void send_tokens::to_data(writer& sink) const {
     sink.write_8_bytes_big_endian(amount_);
 }
 
-
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
 
 size_t send_tokens::serialized_size() const {
     return base::serialized_size() +
-           sizeof(asset_id_) + 
+           sizeof(asset_id_) +
            sizeof(amount_);
 }
 
@@ -152,6 +149,6 @@ void send_tokens::set_amount(amount_t x) {
     amount_ = x;
 }
 
-} // namespace message
-} // namespace keoken
-} // namespace bitprim
+}  // namespace message
+}  // namespace keoken
+}  // namespace bitprim

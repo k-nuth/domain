@@ -19,8 +19,8 @@
 #ifndef LIBBITCOIN_PARSE_ENCRYPTED_PRIVATE_HPP
 #define LIBBITCOIN_PARSE_ENCRYPTED_PRIVATE_HPP
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
@@ -32,11 +32,10 @@ namespace wallet {
 
 // Swap not defined.
 class parse_encrypted_private
-  : public parse_encrypted_key<2u>
-{
-public:
+    : public parse_encrypted_key<2u> {
+   public:
     static byte_array<prefix_size> prefix_factory(uint8_t address,
-        bool multiplied);
+                                                  bool multiplied);
 
     explicit parse_encrypted_private(const encrypted_private& key);
 
@@ -46,7 +45,7 @@ public:
     quarter_hash data1() const;
     half_hash data2() const;
 
-private:
+   private:
     bool verify_magic() const;
 
     static constexpr uint8_t default_context_ = 0x42;
@@ -57,7 +56,7 @@ private:
     const half_hash data2_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

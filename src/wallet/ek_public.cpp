@@ -21,7 +21,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/formats/base_58.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
@@ -30,99 +32,83 @@ namespace libbitcoin {
 namespace wallet {
 
 ek_public::ek_public()
-  : valid_(false), public_()
-{
+    : valid_(false), public_() {
 }
 
 ek_public::ek_public(std::string const& encoded)
-  : ek_public(from_string(encoded))
-{
+    : ek_public(from_string(encoded)) {
 }
 
 ek_public::ek_public(const ek_public& x)
-  : valid_(x.valid_), public_(x.public_)
-{
+    : valid_(x.valid_), public_(x.public_) {
 }
 
 ek_public::ek_public(const encrypted_public& value)
-  : valid_(true), public_(value)
-{
+    : valid_(true), public_(value) {
 }
 
 // Factories.
 // ----------------------------------------------------------------------------
 
-ek_public ek_public::from_string(std::string const& encoded)
-{
+ek_public ek_public::from_string(std::string const& encoded) {
     // TODO(libbitcoin): incorporate existing parser here, setting new members.
 
     encrypted_public key;
-    return decode_base58(key, encoded) && verify_checksum(key) ?
-        ek_public(key) : ek_public();
+    return decode_base58(key, encoded) && verify_checksum(key) ? ek_public(key) : ek_public();
 }
 
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-ek_public::operator const bool() const
-{
+ek_public::operator const bool() const {
     return valid_;
 }
 
-ek_public::operator const encrypted_public&() const
-{
+ek_public::operator const encrypted_public&() const {
     return public_;
 }
 
 // Serializer.
 // ----------------------------------------------------------------------------
 
-std::string ek_public::encoded() const
-{
+std::string ek_public::encoded() const {
     return encode_base58(public_);
 }
 
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const encrypted_public& ek_public::public_key() const
-{
+const encrypted_public& ek_public::public_key() const {
     return public_;
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_public& ek_public::operator=(const ek_public& x)
-{
+ek_public& ek_public::operator=(const ek_public& x) {
     valid_ = x.valid_;
     public_ = x.public_;
     return *this;
 }
 
-bool ek_public::operator<(const ek_public& x) const
-{
+bool ek_public::operator<(const ek_public& x) const {
     return encoded() < x.encoded();
 }
 
-bool ek_public::operator==(const ek_public& x) const
-{
+bool ek_public::operator==(const ek_public& x) const {
     return valid_ == x.valid_ && public_ == x.public_;
 }
 
-bool ek_public::operator!=(const ek_public& x) const
-{
+bool ek_public::operator!=(const ek_public& x) const {
     return !(*this == x);
 }
 
-std::istream& operator>>(std::istream& in, ek_public& to)
-{
+std::istream& operator>>(std::istream& in, ek_public& to) {
     std::string value;
     in >> value;
     to = ek_public(value);
 
-    if ( ! to)
-    {
+    if (!to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }
@@ -130,11 +116,10 @@ std::istream& operator>>(std::istream& in, ek_public& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ek_public& of)
-{
+std::ostream& operator<<(std::ostream& out, const ek_public& of) {
     out << of.encoded();
     return out;
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin

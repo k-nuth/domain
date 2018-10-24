@@ -47,7 +47,7 @@ size_t heading::maximum_size() {
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
 size_t heading::maximum_payload_size(uint32_t, bool witness) {
-/*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
+    /*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */

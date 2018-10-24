@@ -34,9 +34,8 @@ namespace libbitcoin {
 namespace wallet {
 
 /// A class for working with stealth payment addresses.
-class BC_API stealth_address
-{
-public:
+class BC_API stealth_address {
+   public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
     static const uint8_t mainnet_p2kh;
 
@@ -54,9 +53,7 @@ public:
     stealth_address(data_chunk const& decoded);
     stealth_address(std::string const& encoded);
     stealth_address(const stealth_address& x);
-    stealth_address(const binary& filter, const ec_compressed& scan_key,
-        const point_list& spend_keys, uint8_t signatures=0,
-        uint8_t version=mainnet_p2kh);
+    stealth_address(const binary& filter, const ec_compressed& scan_key, const point_list& spend_keys, uint8_t signatures = 0, uint8_t version = mainnet_p2kh);
 
     /// Operators.
     bool operator<(const stealth_address& x) const;
@@ -65,7 +62,7 @@ public:
     stealth_address& operator=(const stealth_address& x);
     friend std::istream& operator>>(std::istream& in, stealth_address& to);
     friend std::ostream& operator<<(std::ostream& out,
-        const stealth_address& of);
+                                    const stealth_address& of);
 
     /// Cast operators.
     operator const bool() const;
@@ -84,23 +81,22 @@ public:
     /// Methods.
     data_chunk to_chunk() const;
 
-private:
+   private:
     /// Factories.
     static stealth_address from_string(std::string const& encoded);
     static stealth_address from_stealth(data_chunk const& decoded);
     static stealth_address from_stealth(const binary& filter,
-        const ec_compressed& scan_key, const point_list& spend_keys,
-        uint8_t signatures, uint8_t version);
+                                        const ec_compressed& scan_key,
+                                        const point_list& spend_keys,
+                                        uint8_t signatures,
+                                        uint8_t version);
 
     /// Parameter order is used to change the constructor signature.
-    stealth_address(uint8_t version, const binary& filter,
-        const ec_compressed& scan_key, const point_list& spend_keys,
-        uint8_t signatures);
+    stealth_address(uint8_t version, const binary& filter, const ec_compressed& scan_key, const point_list& spend_keys, uint8_t signatures);
 
     /// Helpers.
     bool reuse_key() const;
     uint8_t options() const;
-
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
@@ -112,7 +108,7 @@ private:
     binary filter_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

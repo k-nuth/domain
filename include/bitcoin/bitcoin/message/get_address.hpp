@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API get_address {
-public:
+   public:
     typedef std::shared_ptr<get_address> ptr;
     typedef std::shared_ptr<const get_address> const_ptr;
 

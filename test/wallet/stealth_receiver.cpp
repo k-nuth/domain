@@ -33,8 +33,7 @@ BOOST_AUTO_TEST_SUITE(stealth_receiver_tests)
 #define DERIVED_ADDRESS "mtKffkQLTw2D6f6mTkrWfi8qxLv4jL1LrK"
 
 // TODO(libbitcoin): test individual methods in isolation.
-BOOST_AUTO_TEST_CASE(stealth_receiver__exchange_between_sender_and_receiver__always__round_trips)
-{
+BOOST_AUTO_TEST_CASE(stealth_receiver__exchange_between_sender_and_receiver__always__round_trips) {
     static auto const version = payment_address::testnet_p2kh;
     const hd_private main_key(MAIN_KEY, hd_private::testnet);
     auto const scan_key = main_key.derive_private(0 + hd_first_hardened_key);

@@ -27,7 +27,7 @@ namespace keoken {
 
 bc::data_chunk first_keoken_output(bc::chain::transaction const& tx);
 
-} // namespace keoken
-} // namespace bitprim
+}  // namespace keoken
+}  // namespace bitprim
 
-#endif //BITPRIM_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
+#endif  //BITPRIM_KEOKEN_TRANSACTION_EXTRACTOR_HPP_

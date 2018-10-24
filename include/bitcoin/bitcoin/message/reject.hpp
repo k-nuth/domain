@@ -39,7 +39,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API reject {
-public:
+   public:
     enum class reason_code : uint8_t {
         /// The reason code is not defined.
         undefined = 0x00,
@@ -138,7 +138,7 @@ public:
         if (version < reject::version_minimum)
             source.invalidate();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -176,7 +176,7 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-private:
+   private:
     static reason_code reason_from_byte(uint8_t byte);
     static uint8_t reason_to_byte(reason_code value);
 

@@ -37,13 +37,12 @@ namespace wallet {
 /// A bitcoin URI corresponding to BIP 21 and BIP 72.
 /// The object is not constant, setters can change state after construction.
 class BC_API bitcoin_uri
-  : public uri_reader
-{
-public:
+    : public uri_reader {
+   public:
     /// Constructors.
     bitcoin_uri();
     bitcoin_uri(const bitcoin_uri& x);
-    bitcoin_uri(std::string const& uri, bool strict=true);
+    bitcoin_uri(std::string const& uri, bool strict = true);
 
     /// Operators.
     bool operator<(const bitcoin_uri& x) const;
@@ -52,7 +51,7 @@ public:
     bitcoin_uri& operator=(const bitcoin_uri& x);
     friend std::istream& operator>>(std::istream& in, bitcoin_uri& to);
     friend std::ostream& operator<<(std::ostream& out,
-        const bitcoin_uri& from);
+                                    const bitcoin_uri& from);
 
     /// Test whether the URI has been initialized.
     operator const bool() const;
@@ -87,7 +86,7 @@ public:
     bool set_fragment(std::string const& fragment);
     bool set_parameter(std::string const& key, std::string const& value);
 
-private:
+   private:
     /// Private helpers.
     bool set_amount(std::string const& satoshis);
 
@@ -98,8 +97,7 @@ private:
     std::map<std::string, std::string> query_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif
-

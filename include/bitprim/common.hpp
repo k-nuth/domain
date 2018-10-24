@@ -21,8 +21,7 @@
 
 namespace libbitcoin {
 
-constexpr inline
-bool witness_default() {
+constexpr inline bool witness_default() {
 #ifdef BITPRIM_CURRENCY_BCH
     return false;
 #else
@@ -32,14 +31,16 @@ bool witness_default() {
 
 constexpr inline
 #ifdef BITPRIM_CURRENCY_BCH
-bool witness_val(bool /*x*/) {
+    bool
+    witness_val(bool /*x*/) {
     return false;
 #else
-bool witness_val(bool x) {
+    bool
+    witness_val(bool x) {
     return x;
 #endif
 }
 
-} // namespace libbitcoin
+}  // namespace libbitcoin
 
-#endif //BITPRIM_COMMON_HPP_
+#endif  //BITPRIM_COMMON_HPP_

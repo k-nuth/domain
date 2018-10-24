@@ -39,7 +39,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API ping {
-public:
+   public:
     typedef std::shared_ptr<ping> ptr;
     typedef std::shared_ptr<const ping> const_ptr;
 
@@ -73,10 +73,10 @@ public:
         valid_ = true;
         nonceless_ = (version < version::level::bip31);
 
-        if ( ! nonceless_)
+        if (!nonceless_)
             nonce_ = source.read_8_bytes_little_endian();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -109,7 +109,7 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-private:
+   private:
     uint64_t nonce_;
     bool nonceless_;
     bool valid_;

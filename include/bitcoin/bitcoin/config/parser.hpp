@@ -20,8 +20,10 @@
 #define LIBBITCOIN_CONFIG_PARSER_HPP
 
 #include <string>
+
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/config/checkpoint.hpp>
 
@@ -36,57 +38,48 @@ typedef boost::program_options::positional_options_description
 
 namespace config {
 
-enum class load_error { 
-    non_existing_file = -1, 
-    default_config = 0, 
-    success = 1 
+enum class load_error {
+    non_existing_file = -1,
+    default_config = 0,
+    success = 1
 };
 
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
 class BC_API parser {
-public:
-    static 
-    std::string format_invalid_parameter(std::string const& message);
-    
-    static 
-    bool get_option(variables_map& variables, std::string const& name);
-    
-    static 
-    boost::filesystem::path get_config_option(variables_map& variables, std::string const& name);
+   public:
+    static std::string format_invalid_parameter(std::string const& message);
+
+    static bool get_option(variables_map& variables, std::string const& name);
+
+    static boost::filesystem::path get_config_option(variables_map& variables, std::string const& name);
 
     /// Load command line options (named).
-    virtual 
-    options_metadata load_options() = 0;
+    virtual options_metadata load_options() = 0;
 
     /// Load command line arguments (positional).
-    virtual 
-    arguments_metadata load_arguments() = 0;
+    virtual arguments_metadata load_arguments() = 0;
 
     /// Load environment variable settings.
-    virtual 
-    options_metadata load_environment() = 0;
+    virtual options_metadata load_environment() = 0;
 
     /// Load configuration file settings.
-    virtual 
-    options_metadata load_settings() = 0;
+    virtual options_metadata load_settings() = 0;
 
-protected:
-    virtual 
-    void load_command_variables(variables_map& variables, int argc, const char* argv[]);
+   protected:
+    virtual void load_command_variables(variables_map& variables, int argc, const char* argv[]);
 
-    virtual 
-    // int load_configuration_variables(variables_map& variables, std::string const& option_name);
-    load_error load_configuration_variables(variables_map& variables, std::string const& option_name);
+    virtual
+        // int load_configuration_variables(variables_map& variables, std::string const& option_name);
+        load_error
+        load_configuration_variables(variables_map& variables, std::string const& option_name);
 
-    virtual    
-    load_error load_configuration_variables_path(variables_map& variables, boost::filesystem::path const& config_path);
+    virtual load_error load_configuration_variables_path(variables_map& variables, boost::filesystem::path const& config_path);
 
-    virtual 
-    void load_environment_variables(variables_map& variables, std::string const& prefix);
-
+    virtual void load_environment_variables(variables_map& variables, std::string const& prefix);
 };
 
-}} // namespace libbitcoin::config
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

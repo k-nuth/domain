@@ -43,11 +43,10 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API point {
-public:
+   public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
     static constexpr uint32_t null_index = no_previous_output;
-
 
     using list = std::vector<point>;
     using indexes = std::vector<uint32_t>;
@@ -63,7 +62,7 @@ public:
 
     // constexpr
     point(point const& x) = default;
-    
+
     // constexpr
     point& operator=(point const& x) = default;
 
@@ -71,41 +70,32 @@ public:
     //-------------------------------------------------------------------------
 
     // constexpr    //Note(bitprim): Could be constexpr in C++20
-    friend
-    bool operator==(point const& x, point const& y);
-    
+    friend bool operator==(point const& x, point const& y);
+
     // constexpr    //Note(bitprim): Could be constexpr in C++20
-    friend
-    bool operator!=(point const& x, point const& y);
-    
-    // constexpr
-    friend
-    bool operator<(point const& x, point const& y);
+    friend bool operator!=(point const& x, point const& y);
 
     // constexpr
-    friend
-    bool operator>(point const& x, point const& y);
+    friend bool operator<(point const& x, point const& y);
 
     // constexpr
-    friend
-    bool operator<=(point const& x, point const& y);
+    friend bool operator>(point const& x, point const& y);
 
     // constexpr
-    friend
-    bool operator>=(point const& x, point const& y);
+    friend bool operator<=(point const& x, point const& y);
+
+    // constexpr
+    friend bool operator>=(point const& x, point const& y);
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    point factory_from_data(data_chunk const& data, bool wire = true);
-    
-    static 
-    point factory_from_data(data_source& stream, bool wire = true);
+    static point factory_from_data(data_chunk const& data, bool wire = true);
+
+    static point factory_from_data(data_source& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static 
-    point factory_from_data(R& source, bool wire = true) {
+    static point factory_from_data(R& source, bool wire = true) {
         point instance;
         instance.from_data(source, wire);
         return instance;
@@ -133,7 +123,7 @@ public:
             }
         }
 
-        if ( ! source) {
+        if (!source) {
             reset();
         }
 
@@ -174,11 +164,12 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    static 
+    static
+        // constexpr
+        size_t
+        satoshi_fixed_size();
+
     // constexpr
-    size_t satoshi_fixed_size();
-    
-    // constexpr    
     size_t serialized_size(bool wire = true) const;
 
     // deprecated (unsafe)
@@ -209,11 +200,11 @@ public:
     // constexpr
     bool is_null() const;
 
-protected:
+   protected:
     // point(hash_digest const& hash, uint32_t index, bool valid);
     void reset();
 
-private:
+   private:
     hash_digest hash_;
     uint32_t index_;
     bool valid_;

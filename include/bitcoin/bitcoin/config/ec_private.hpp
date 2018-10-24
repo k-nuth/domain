@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -30,15 +31,12 @@ namespace config {
 /**
  * Serialization helper to convert between base16 string and ec_secret.
  */
-class BC_API ec_private
-{
-public:
-
+class BC_API ec_private {
+   public:
     /**
      * Default constructor.
      */
-    ec_private()
-    {
+    ec_private() {
     }
 
     /**
@@ -66,7 +64,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        ec_private& argument);
+                                    ec_private& argument);
 
     /**
      * Overload stream out.
@@ -75,17 +73,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const ec_private& argument);
+                                    const ec_private& argument);
 
-private:
-
+   private:
     /**
      * The state of this object.
      */
     ec_secret value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

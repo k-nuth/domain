@@ -44,7 +44,7 @@ namespace libbitcoin {
 namespace chain {
 
 class BC_API input {
-public:
+   public:
     using list = std::vector<input>;
 
     // Constructors.
@@ -97,7 +97,7 @@ public:
 
         reset();
 
-        if ( ! previous_output_.from_data(source, wire))
+        if (!previous_output_.from_data(source, wire))
             return false;
 
         script_.from_data(source, true);
@@ -109,7 +109,7 @@ public:
 
         sequence_ = source.read_4_bytes_little_endian();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -195,11 +195,11 @@ public:
     bool extract_embedded_script(chain::script& out) const;
     bool extract_witness_script(chain::script& out, chain::script const& prevout) const;
 
-protected:
+   protected:
     void reset();
     void invalidate_cache() const;
 
-private:
+   private:
     typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
 
     addresses_ptr addresses_cache() const;

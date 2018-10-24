@@ -40,7 +40,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API merkle_block {
-public:
+   public:
     typedef std::vector<merkle_block> list;
     typedef std::shared_ptr<merkle_block> ptr;
     typedef std::shared_ptr<const merkle_block> const_ptr;
@@ -88,7 +88,7 @@ public:
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        if ( ! header_.from_data(source))
+        if (!header_.from_data(source))
             return false;
 
         total_transactions_ = source.read_4_bytes_little_endian();
@@ -108,7 +108,7 @@ public:
         if (version < merkle_block::version_minimum)
             source.invalidate();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -149,7 +149,7 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-private:
+   private:
     chain::header header_;
     size_t total_transactions_;
     hash_list hashes_;

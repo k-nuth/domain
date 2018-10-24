@@ -37,7 +37,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API memory_pool {
-public:
+   public:
     typedef std::shared_ptr<memory_pool> ptr;
     typedef std::shared_ptr<const memory_pool> const_ptr;
 
@@ -71,7 +71,7 @@ public:
         if (version < memory_pool::version_minimum)
             source.invalidate();
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -94,10 +94,10 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-protected:
+   protected:
     memory_pool(bool insufficient_version);
 
-private:
+   private:
     bool insufficient_version_;
 };
 

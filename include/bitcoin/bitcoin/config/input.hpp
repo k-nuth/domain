@@ -21,9 +21,10 @@
 
 #include <iostream>
 #include <string>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/input_point.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
 namespace config {
@@ -31,10 +32,8 @@ namespace config {
 /**
  * Serialization helper stub for chain::input.
  */
-class BC_API input
-{
-public:
-
+class BC_API input {
+   public:
     /**
      * Default constructor.
      */
@@ -86,17 +85,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        input const& argument);
+                                    input const& argument);
 
-private:
-
+   private:
     /**
      * The state of this object.
      */
     chain::input value_;
 };
 
-} // namespace explorer
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

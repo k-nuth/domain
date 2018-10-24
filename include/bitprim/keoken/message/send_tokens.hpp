@@ -32,10 +32,10 @@ namespace keoken {
 namespace message {
 
 class BC_API send_tokens {
-public:
+   public:
     static const uint16_t version = 0;
     static const uint16_t type = 1;
-    
+
     // Constructors.
     //-------------------------------------------------------------------------
 
@@ -53,11 +53,9 @@ public:
     // Regular.
     //-------------------------------------------------------------------------
 
-    friend
-    bool operator==(send_tokens const& a, send_tokens const& b);
-    
-    friend
-    bool operator!=(send_tokens const& a, send_tokens const& b);
+    friend bool operator==(send_tokens const& a, send_tokens const& b);
+
+    friend bool operator!=(send_tokens const& a, send_tokens const& b);
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -88,13 +86,13 @@ public:
     amount_t amount() const;
     void set_amount(amount_t x);
 
-private:
+   private:
     asset_id_t asset_id_;
     amount_t amount_;
 };
 
-} // namespace message
-} // namespace keoken
-} // namespace bitprim
+}  // namespace message
+}  // namespace keoken
+}  // namespace bitprim
 
-#endif //BITPRIM_KEOKEN_MESSAGE_SEND_TOKENS_HPP_
+#endif  //BITPRIM_KEOKEN_MESSAGE_SEND_TOKENS_HPP_

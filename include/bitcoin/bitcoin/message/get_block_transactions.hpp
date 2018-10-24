@@ -38,7 +38,7 @@ namespace libbitcoin {
 namespace message {
 
 class BC_API get_block_transactions {
-public:
+   public:
     typedef std::shared_ptr<get_block_transactions> ptr;
     typedef std::shared_ptr<const get_block_transactions> const_ptr;
 
@@ -90,7 +90,7 @@ public:
         for (size_t position = 0; position < count && source; ++position)
             indexes_.push_back(source.read_size_little_endian());
 
-        if ( ! source)
+        if (!source)
             reset();
 
         return source;
@@ -124,7 +124,7 @@ public:
     static uint32_t const version_minimum;
     static uint32_t const version_maximum;
 
-private:
+   private:
     hash_digest block_hash_;
     std::vector<uint64_t> indexes_;
 };

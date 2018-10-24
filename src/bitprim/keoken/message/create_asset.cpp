@@ -32,8 +32,8 @@ namespace keoken {
 namespace message {
 
 using bc::data_chunk;
-using bc::data_source;
 using bc::data_sink;
+using bc::data_source;
 using bc::istream_reader;
 using bc::ostream_writer;
 using bc::writer;
@@ -42,10 +42,7 @@ using bc::writer;
 //-------------------------------------------------------------------------
 
 create_asset::create_asset(std::string name, amount_t amount)
-    : name_(std::move(name))
-    , amount_(amount)
-{}
-
+    : name_(std::move(name)), amount_(amount) {}
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -97,16 +94,16 @@ bool create_asset::from_data(data_source& stream) {
 //Note: from_data and to_data are not longer simetrical.
 bool create_asset::from_data(bc::reader& source) {
     auto name_opt = read_null_terminated_string(source, max_name_size);
-    if ( ! name_opt) {
+    if (!name_opt) {
         source.invalidate();
         return false;
     }
 
-    if (name_opt->size() < min_asset_name_size) {   //NOLINT
+    if (name_opt->size() < min_asset_name_size) {  //NOLINT
         source.invalidate();
-        return false;     
+        return false;
     }
-   
+
     name_ = *name_opt;
     amount_ = source.read_8_bytes_big_endian();
 
@@ -138,19 +135,18 @@ void create_asset::to_data(data_sink& stream) const {
 //Note: from_data and to_data are not simetrical.
 void create_asset::to_data(writer& sink) const {
     base::to_data(sink, version, type);
-    sink.write_bytes(reinterpret_cast<uint8_t const*>(name_.data()), name_.size() + 1);     //NOLINT
+    sink.write_bytes(reinterpret_cast<uint8_t const*>(name_.data()), name_.size() + 1);  //NOLINT
     sink.write_8_bytes_big_endian(amount_);
 }
-
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
 
 size_t create_asset::serialized_size() const {
     return base::serialized_size() +
-           sizeof(amount_) + 
-           name_.size() + 
-           1;   //null terminated string
+           sizeof(amount_) +
+           name_.size() +
+           1;  //null terminated string
 }
 
 std::string const& create_asset::name() const {
@@ -173,6 +169,6 @@ void create_asset::set_amount(amount_t x) {
     amount_ = x;
 }
 
-} // namespace message
-} // namespace keoken
-} // namespace bitprim
+}  // namespace message
+}  // namespace keoken
+}  // namespace bitprim

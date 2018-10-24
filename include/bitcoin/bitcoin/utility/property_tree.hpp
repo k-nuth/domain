@@ -22,7 +22,9 @@
 #include <map>
 #include <string>
 #include <vector>
+
 #include <boost/property_tree/ptree.hpp>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/points_value.hpp>
 #include <bitcoin/bitcoin/config/header.hpp>

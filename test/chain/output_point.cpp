@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 
@@ -26,14 +26,12 @@ auto const valid_raw_output_point = to_chunk(base16_literal("000000000019d6689c0
 
 BOOST_AUTO_TEST_SUITE(output_point_tests)
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_1__always__returns_default_initialized)
-{
+BOOST_AUTO_TEST_CASE(output_point__constructor_1__always__returns_default_initialized) {
     const chain::point instance;
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_2__valid_input__returns_input_initialized)
-{
+BOOST_AUTO_TEST_CASE(output_point__constructor_2__valid_input__returns_input_initialized) {
     static uint32_t const index = 1234u;
     const chain::point value(hash1, index);
     chain::output_point instance(value);
@@ -43,8 +41,7 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_2__valid_input__returns_input_ini
     BOOST_REQUIRE_EQUAL(index, instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_3__valid_input__returns_input_initialized)
-{
+BOOST_AUTO_TEST_CASE(output_point__constructor_3__valid_input__returns_input_initialized) {
     static uint32_t const index = 1234u;
     chain::point value(hash1, index);
     chain::output_point instance(std::move(value));
@@ -53,8 +50,7 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_3__valid_input__returns_input_ini
     BOOST_REQUIRE_EQUAL(index, instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_4__valid_input__returns_input_initialized)
-{
+BOOST_AUTO_TEST_CASE(output_point__constructor_4__valid_input__returns_input_initialized) {
     static uint32_t const index = 1234u;
     chain::output_point instance(hash1, index);
     BOOST_REQUIRE(instance.is_valid());
@@ -62,8 +58,7 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_4__valid_input__returns_input_ini
     BOOST_REQUIRE_EQUAL(index, instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_5__valid_input__returns_input_initialized)
-{
+BOOST_AUTO_TEST_CASE(output_point__constructor_5__valid_input__returns_input_initialized) {
     static uint32_t const index = 1234u;
     auto dup_hash = hash1;
     chain::output_point instance(std::move(dup_hash), index);
@@ -72,49 +67,40 @@ BOOST_AUTO_TEST_CASE(output_point__constructor_5__valid_input__returns_input_ini
     BOOST_REQUIRE_EQUAL(index, instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_6__valid_input__returns_input_initialized)
-{
+BOOST_AUTO_TEST_CASE(output_point__constructor_6__valid_input__returns_input_initialized) {
     const chain::output_point expected(hash1, 524342u);
     chain::output_point instance(expected);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_7__valid_input__returns_input_initialized)
-{
+BOOST_AUTO_TEST_CASE(output_point__constructor_7__valid_input__returns_input_initialized) {
     chain::output_point expected(hash1, 524342u);
     chain::output_point instance(std::move(expected));
     BOOST_REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__begin_end__initialized__begin_not_equal_end)
-{
-    static const chain::output_point instance{ null_hash, 0 };
+BOOST_AUTO_TEST_CASE(output_point__begin_end__initialized__begin_not_equal_end) {
+    static const chain::output_point instance{null_hash, 0};
     BOOST_REQUIRE(instance.begin() != instance.end());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__from_data__insufficient_bytes__failure)
-{
+BOOST_AUTO_TEST_CASE(output_point__from_data__insufficient_bytes__failure) {
     static data_chunk const data(10);
     chain::output_point instance;
     BOOST_REQUIRE(!instance.from_data(data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__from_data__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(output_point__from_data__roundtrip__success) {
     static uint32_t const index = 53213u;
-    static hash_digest const hash
-    {
-        {
-            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
-            0x01, 0x01, 0xab, 0x11, 0x11, 0xcd, 0x11, 0x11,
-            0x01, 0x10, 0x11, 0xab, 0x11, 0x11, 0xcd, 0x11,
-            0x01, 0x11, 0x11, 0x11, 0xab, 0x11, 0x11, 0xcd
-        }
-    };
+    static hash_digest const hash{
+        {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
+         0x01, 0x01, 0xab, 0x11, 0x11, 0xcd, 0x11, 0x11,
+         0x01, 0x10, 0x11, 0xab, 0x11, 0x11, 0xcd, 0x11,
+         0x01, 0x11, 0x11, 0x11, 0xab, 0x11, 0x11, 0xcd}};
 
-    chain::output_point initial{ hash, index };
+    chain::output_point initial{hash, index};
 
     BOOST_REQUIRE(initial.is_valid());
     BOOST_REQUIRE(hash == initial.hash());
@@ -128,15 +114,12 @@ BOOST_AUTO_TEST_CASE(output_point__from_data__roundtrip__success)
     BOOST_REQUIRE(point == initial);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__factory_from_data_1__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(output_point__factory_from_data_1__roundtrip__success) {
     static auto const data = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    BOOST_REQUIRE(data == (data_chunk
-    {
-        0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
-        0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
-        0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00
-    }));
+    BOOST_REQUIRE(data == (data_chunk{
+                              0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
+                              0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
+                              0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
 
     auto point = chain::output_point::factory_from_data(data);
 
@@ -148,15 +131,12 @@ BOOST_AUTO_TEST_CASE(output_point__factory_from_data_1__roundtrip__success)
     BOOST_REQUIRE(output == data);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__factory_from_data_2__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(output_point__factory_from_data_2__roundtrip__success) {
     static auto const data = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    BOOST_REQUIRE(data == (data_chunk
-    {
-        0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
-        0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
-        0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00
-    }));
+    BOOST_REQUIRE(data == (data_chunk{
+                              0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
+                              0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
+                              0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
 
     data_source istream(data);
     auto point = chain::output_point::factory_from_data(istream);
@@ -169,15 +149,12 @@ BOOST_AUTO_TEST_CASE(output_point__factory_from_data_2__roundtrip__success)
     BOOST_REQUIRE(output == data);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__factory_from_data_3__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(output_point__factory_from_data_3__roundtrip__success) {
     static auto const data = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    BOOST_REQUIRE(data == (data_chunk
-    {
-        0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
-        0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
-        0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00
-    }));
+    BOOST_REQUIRE(data == (data_chunk{
+                              0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
+                              0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
+                              0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
 
     data_source istream(data);
     istream_reader source(istream);
@@ -191,8 +168,7 @@ BOOST_AUTO_TEST_CASE(output_point__factory_from_data_3__roundtrip__success)
     BOOST_REQUIRE(output == data);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_coinbase_prevout__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_coinbase_prevout__returns_true) {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 50u;
@@ -201,8 +177,7 @@ BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_coinbase_prevout__returns_t
     BOOST_REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout__returns_false)
-{
+BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout__returns_false) {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 100u;
@@ -211,8 +186,7 @@ BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout__returns
     BOOST_REQUIRE(!instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout_null_input__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout_null_input__returns_true) {
     size_t target_height = 162u;
     chain::output_point instance(null_hash, chain::point::null_index);
     instance.validation.height = 100u;
@@ -221,8 +195,7 @@ BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout_null_inp
     BOOST_REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_non_coinbase_prevout__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_non_coinbase_prevout__returns_true) {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 50u;
@@ -231,8 +204,7 @@ BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_non_coinbase_prevout__retur
     BOOST_REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_non_coinbase_prevout__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_non_coinbase_prevout__returns_true) {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 100u;
@@ -241,8 +213,7 @@ BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_non_coinbase_prevout__ret
     BOOST_REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_1__always__matches_equivalent)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_1__always__matches_equivalent) {
     chain::output_point expected;
     BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
     chain::output_point instance;
@@ -252,8 +223,7 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_1__always__matches_equ
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_2__always__matches_equivalent)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_2__always__matches_equivalent) {
     chain::output_point expected;
     BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
     chain::output_point instance;
@@ -261,8 +231,7 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_2__always__matches_equ
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_3__always__matches_equivalent)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_3__always__matches_equivalent) {
     chain::point expected;
     BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
     chain::output_point instance;
@@ -272,8 +241,7 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_3__always__matches_equ
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equivalent)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equivalent) {
     chain::point expected;
     BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
     chain::output_point instance;
@@ -281,8 +249,7 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equ
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__duplicates__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__duplicates__returns_true) {
     chain::output_point alpha;
     chain::output_point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
@@ -290,16 +257,14 @@ BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__duplicates__return
     BOOST_REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__differs__returns_false)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__differs__returns_false) {
     chain::output_point alpha;
     chain::output_point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__duplicates__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__duplicates__returns_true) {
     chain::output_point alpha;
     chain::point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
@@ -307,16 +272,14 @@ BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__duplicates__return
     BOOST_REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__differs__returns_false)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__differs__returns_false) {
     chain::output_point alpha;
     chain::point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__duplicates__returns_false)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__duplicates__returns_false) {
     chain::output_point alpha;
     chain::output_point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
@@ -324,16 +287,14 @@ BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__duplicates__re
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__differs__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__differs__returns_true) {
     chain::output_point alpha;
     chain::output_point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
     BOOST_REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__duplicates__returns_false)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__duplicates__returns_false) {
     chain::output_point alpha;
     chain::point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
@@ -341,8 +302,7 @@ BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__duplicates__re
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__differs__returns_true)
-{
+BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__differs__returns_true) {
     chain::output_point alpha;
     chain::point beta;
     BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));

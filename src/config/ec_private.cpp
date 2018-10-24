@@ -21,7 +21,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -29,44 +31,37 @@ namespace libbitcoin {
 namespace config {
 
 // ec_secret base16 format is private to bx.
-static bool decode_secret(ec_secret& secret, std::string const& encoded)
-{
+static bool decode_secret(ec_secret& secret, std::string const& encoded) {
     return decode_base16(secret, encoded) && verify(secret);
 }
 
-ec_private::ec_private(std::string const& hexcode)
-{
+ec_private::ec_private(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;
 }
 
 ec_private::ec_private(ec_secret const& secret)
-  : value_(secret)
-{
+    : value_(secret) {
 }
 
-ec_private::operator ec_secret const&() const
-{
+ec_private::operator ec_secret const&() const {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, ec_private& argument)
-{
+std::istream& operator>>(std::istream& input, ec_private& argument) {
     std::string hexcode;
     input >> hexcode;
 
-    if ( ! decode_secret(argument.value_, hexcode))
-    {
+    if (!decode_secret(argument.value_, hexcode)) {
         BOOST_THROW_EXCEPTION(boost::program_options::invalid_option_value(hexcode));
     }
 
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const ec_private& argument)
-{
+std::ostream& operator<<(std::ostream& output, const ec_private& argument) {
     output << encode_base16(argument.value_);
     return output;
 }
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
