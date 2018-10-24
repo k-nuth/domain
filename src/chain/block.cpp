@@ -878,20 +878,22 @@ code block::check() const {
         return ec;
 
         // TODO(libbitcoin): relates to total of tx.size(false) (pool cache). -> no witness size
-    } if (serialized_size(false) > get_max_block_size()) {
+    }
+    if (serialized_size(false) > get_max_block_size()) {
         return error::block_size_limit;
-
-    } if (transactions_.empty()) {
+    }
+    if (transactions_.empty()) {
         return error::empty_block;
-
-    } if ( ! transactions_.front().is_coinbase()) {
+    }
+    if ( ! transactions_.front().is_coinbase()) {
         return error::first_not_coinbase;
-
-    } if (is_extra_coinbases()) {
+    }
+    if (is_extra_coinbases()) {
         return error::extra_coinbases;
 
         // TODO(libbitcoin): determinable from tx pool graph.
-    } if (is_forward_reference()) {
+    }
+    if (is_forward_reference()) {
         return error::forward_reference;
 
         // This is subset of is_internal_double_spend if collisions cannot happen.
@@ -899,11 +901,13 @@ code block::check() const {
         ////    return error::internal_duplicate;
 
         // TODO(libbitcoin): determinable from tx pool graph.
-    } if (is_internal_double_spend()) {
+    }
+    if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
 
         // TODO(libbitcoin): relates height to tx.hash(false) (pool cache).
-    } if ( ! is_valid_merkle_root()) {
+    }
+    if ( ! is_valid_merkle_root()) {
         return error::merkle_mismatch;
 
         // We cannot know if bip16 is enabled at this point so we disable it.
@@ -913,10 +917,8 @@ code block::check() const {
         // Reenable once sigop caching is implemented, otherwise is deoptimization.
         ////else if (signature_operations(false, false) > get_max_block_sigops())
         ////    return error::block_legacy_sigop_limit;
-
-    } 
-        return check_transactions();
-    
+    }
+    return check_transactions();
 }
 
 code block::accept(bool transactions) const {
@@ -948,47 +950,51 @@ code block::accept(chain_state const& state, bool transactions) const {
 
         //In Bitcoin Cash, block size check is now dependent on the Blockchain state.
 #if defined(BITPRIM_CURRENCY_BCH)
-    } if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old) {
+    }
+    if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old) {
         return error::block_size_limit;
 #endif
-
-    } if (state.is_under_checkpoint()) {
+    }
+    if (state.is_under_checkpoint()) {
         return error::success;
 
         // TODO(libbitcoin): relates height to total of tx.size(true) (pool cache).
         // NOTE: for BCH bit141 is set as false
-    } if (bip141 && weight() > max_block_weight) {
+    }
+    if (bip141 && weight() > max_block_weight) {
         return error::block_weight_limit;
-
-    } if (bip34 && !is_valid_coinbase_script(state.height())) {
+    }
+    if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;
 
         // TODO(libbitcoin): relates height to total of tx.fee (pool cach).
-    } if ( ! is_valid_coinbase_claim(state.height())) {
+    }
+    if ( ! is_valid_coinbase_claim(state.height())) {
         return error::coinbase_value_limit;
 
         // TODO(libbitcoin): relates median time past to tx.locktime (pool cache min tx.time).
-    } if ( ! is_final(state.height(), block_time)) {
+    }
+    if ( ! is_final(state.height(), block_time)) {
         return error::block_non_final;
 
         // TODO(libbitcoin): relates height to tx.hash(true) (pool cache).
         // NOTE: for BCH bit141 is set as false
-    } if (bip141 && !is_valid_witness_commitment()) {
+    }
+    if (bip141 && !is_valid_witness_commitment()) {
         return error::invalid_witness_commitment;
 
         // TODO(libbitcoin): determine if performance benefit is worth excluding sigops here.
         // TODO(libbitcoin): relates block limit to total of tx.sigops (pool cache tx.sigops).
         // This recomputes sigops to include p2sh from prevouts.
         // NOTE: for BCH bit141 is set as false
-    } if (transactions && (signature_operations(bip16, bip141) > allowed_sigops)) {
+    }
+    if (transactions && (signature_operations(bip16, bip141) > allowed_sigops)) {
         return error::block_embedded_sigop_limit;
-
-    } if (transactions) {
+    }
+    if (transactions) {
         return accept_transactions(state);
-
-    } 
-        return ec;
-    
+    }
+    return ec;
 }
 
 code block::connect() const {
@@ -1001,9 +1007,8 @@ code block::connect(const chain_state& state) const {
 
     if (state.is_under_checkpoint()) {
         return error::success;
-    } 
-        return connect_transactions(state);
-    
+    }
+    return connect_transactions(state);
 }
 
 }  // namespace chain

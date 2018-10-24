@@ -212,9 +212,8 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 
     if (prefix == payment_address::cashaddr_prefix_mainnet) {
         return payment_address(hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh);
-    } 
-        return payment_address(hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh);
-    
+    }
+    return payment_address(hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh);
 
     // // Pop the version.
     // data.erase(data.begin());
@@ -346,7 +345,8 @@ std::string encode_cashaddr_(payment_address const& wallet) {
     if (wallet.version() == payment_address::mainnet_p2kh || wallet.version() == payment_address::mainnet_p2sh) {
         // Mainnet
         return cashaddr::encode(payment_address::cashaddr_prefix_mainnet, pack_addr_data_(wallet.hash(), wallet.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
-    } if (wallet.version() == payment_address::testnet_p2kh || wallet.version() == payment_address::testnet_p2sh) {
+    }
+    if (wallet.version() == payment_address::testnet_p2kh || wallet.version() == payment_address::testnet_p2sh) {
         // Testnet
         return cashaddr::encode(payment_address::cashaddr_prefix_testnet, pack_addr_data_(wallet.hash(), wallet.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }

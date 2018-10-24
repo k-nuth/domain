@@ -126,13 +126,16 @@ static bool opcode_from_data_prefix(opcode& out_code,
 
     if (prefix == "0") {
         return size <= op_75;
-    } if (prefix == "1") {
+    }
+    if (prefix == "1") {
         out_code = opcode::push_one_size;
         return size <= max_uint8;
-    } if (prefix == "2") {
+    }
+    if (prefix == "2") {
         out_code = opcode::push_two_size;
         return size <= max_uint16;
-    } if (prefix == "4") {
+    }
+    if (prefix == "4") {
         out_code = opcode::push_four_size;
         return size <= max_uint32;
     }
