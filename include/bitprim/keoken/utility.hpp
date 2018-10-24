@@ -62,7 +62,7 @@ template <Reader R, BITPRIM_IS_READER(R)>
 inline boost::optional<std::string> read_null_terminated_string(R& source, size_t max) {
     if (max == 0) {
         return boost::none;
-}
+    }
 
     std::string res;
 
@@ -71,7 +71,7 @@ inline boost::optional<std::string> read_null_terminated_string(R& source, size_
         res.push_back(b);
         if (res.size() >= max) {
             return boost::none;
-}
+        }
         b = source.read_byte();
     }
 

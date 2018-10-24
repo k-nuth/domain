@@ -150,7 +150,7 @@ size_t get_block_transactions::serialized_size(uint32_t version) const {
 
     for (auto const& element : indexes_) {
         size += message::variable_uint_size(element);
-}
+    }
 
     return size;
 }

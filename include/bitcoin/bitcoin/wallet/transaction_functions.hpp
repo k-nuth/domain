@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef BITPRIM_TRANSACTION_FUNCTIONS_HPP
 #define BITPRIM_TRANSACTION_FUNCTIONS_HPP
 
@@ -30,22 +29,21 @@
 namespace libbitcoin {
 namespace wallet {
 
-
 using raw_output = std::pair<payment_address, uint64_t>;
 using raw_output_list = std::vector<raw_output>;
 
 BC_API std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point::list const& outputs_to_spend,
-                                               raw_output_list const& destiny_and_amount,
-                                               std::vector<libbitcoin::chain::output> const& extra_outputs,
-                                               uint32_t locktime = 0,
-                                               uint32_t tx_version = 1,
-                                               uint8_t script_version = 5);
+                                                                    raw_output_list const& destiny_and_amount,
+                                                                    std::vector<libbitcoin::chain::output> const& extra_outputs,
+                                                                    uint32_t locktime = 0,
+                                                                    uint32_t tx_version = 1,
+                                                                    uint8_t script_version = 5);
 
 BC_API std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point::list const& outputs_to_spend,
-                                               raw_output_list const& destiny_and_amount,
-                                               uint32_t locktime = 0,
-                                               uint32_t tx_version = 1,
-                                               uint8_t script_version = 5);
+                                                                    raw_output_list const& destiny_and_amount,
+                                                                    uint32_t locktime = 0,
+                                                                    uint32_t tx_version = 1,
+                                                                    uint8_t script_version = 5);
 
 BC_API std::pair<error::error_code_t, data_chunk> input_signature_old(libbitcoin::ec_secret const& private_key,
                                                                       chain::script const& output_script,
@@ -76,9 +74,10 @@ BC_API std::pair<error::error_code_t, chain::transaction> input_set(chain::scrip
 
 BC_API std::pair<error::error_code_t, chain::transaction> input_set(data_chunk const& signature,
                                                                     wallet::ec_public const& public_key,
-                                                                    chain::transaction const& tx, uint32_t index = 0);
+                                                                    chain::transaction const& tx,
+                                                                    uint32_t index = 0);
 
-} //end namespace wallet
-} //end namespace libbitcoin
+}  //end namespace wallet
+}  //end namespace libbitcoin
 
-#endif //BITPRIM_TRANSACTION_FUNCTIONS_HPP
+#endif  //BITPRIM_TRANSACTION_FUNCTIONS_HPP

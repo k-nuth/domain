@@ -187,7 +187,7 @@ bool operation::from_string(std::string const& mnemonic) {
 
     if ( ! valid_) {
         reset();
-}
+    }
 
     return valid_;
 }
@@ -250,7 +250,7 @@ static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
     // If opcode is minimal for a size-based encoding, do not set a prefix.
     if (code == operation::opcode_from_size(data.size())) {
         return "";
-}
+    }
 
     switch (code) {
         case opcode::push_one_size:
@@ -268,11 +268,11 @@ static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
 std::string operation::to_string(uint32_t active_forks) const {
     if ( ! valid_) {
         return "<invalid>";
-}
+    }
 
     if (data_.empty()) {
         return opcode_to_string(code_, active_forks);
-}
+    }
 
     // Data encoding uses single token with explicit size prefix as required.
     return "[" + opcode_to_prefix(code_, data_) + encode_base16(data_) + "]";

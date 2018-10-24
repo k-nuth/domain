@@ -165,7 +165,7 @@ size_t block_transactions::serialized_size(uint32_t version) const {
 
     for (auto const& element : transactions_) {
         size += element.serialized_size(/*wire*/ true, witness_default(), /*unconfirmed*/ false);
-}
+    }
 
     return size;
 }

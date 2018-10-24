@@ -20,17 +20,17 @@
 #define BITPRIM_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
 
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 #include <bitprim/keoken/constants.hpp>
 #include <bitprim/keoken/message/base.hpp>
 #include <bitprim/keoken/primitives.hpp>
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
 
 namespace bitprim {
 namespace keoken {
@@ -115,7 +115,6 @@ public:
         sink.write_bytes(reinterpret_cast<uint8_t const*>(name_.data()), name_.size() + 1);  //NOLINT
         sink.write_8_bytes_big_endian(amount_);
     }
-
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------

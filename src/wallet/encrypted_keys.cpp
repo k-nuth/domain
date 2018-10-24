@@ -136,15 +136,15 @@ static one_byte set_flags(bool compressed, bool lot_sequence, bool multiplied) {
 
     if (compressed) {
         byte |= ek_flag::ec_compressed_key;
-}
+    }
 
     if (lot_sequence) {
         byte |= ek_flag::lot_sequence_key;
-}
+    }
 
     if ( ! multiplied) {
         byte |= ek_flag::ec_non_multiplied;
-}
+    }
 
     return to_array(byte);
 }
@@ -199,7 +199,7 @@ static bool create_public_key(encrypted_public& out_public,
     ec_compressed point;
     if ( ! secret_to_public(point, secret)) {
         return false;
-}
+    }
 
     auto const prefix = parse_encrypted_public::prefix_factory(version);
     auto const hash = point_hash(point);
@@ -232,19 +232,19 @@ bool create_key_pair(encrypted_private& out_private,
     const parse_encrypted_token parse(token);
     if ( ! parse.valid()) {
         return false;
-}
+    }
 
     auto const point = splice(parse.sign(), parse.data());
     auto point_copy = point;
     auto const factor = bitcoin_hash(seed);
     if ( ! ec_multiply(point_copy, factor)) {
         return false;
-}
+    }
 
     ek_salt salt;
     if ( ! address_salt(salt, point_copy, version, compressed)) {
         return false;
-}
+    }
 
     auto const salt_entropy = splice(salt, parse.entropy());
     auto const derived = split(scrypt_pair(point, salt_entropy));
@@ -253,7 +253,7 @@ bool create_key_pair(encrypted_private& out_private,
     if ( ! create_public_key(out_public, flags, salt, parse.entropy(),
                            derived.left, derived.right, factor, version)) {
         return false;
-}
+    }
 
     create_private_key(out_private, flags, salt, parse.entropy(), derived.left,
                        derived.right, seed, version);

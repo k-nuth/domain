@@ -30,9 +30,9 @@ constexpr bool is_reader_helper(int /*unused*/) {
 }
 
 template <typename R>
-constexpr bool is_reader_helper(...) { //NOLINT
+constexpr bool is_reader_helper(...) {  //NOLINT
     return false;
-}  
+}
 
 template <typename R>
 constexpr bool is_reader() {

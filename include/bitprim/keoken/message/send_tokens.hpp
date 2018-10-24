@@ -20,16 +20,16 @@
 #define BITPRIM_KEOKEN_MESSAGE_SEND_TOKENS_HPP_
 
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
 
-#include <bitprim/keoken/message/base.hpp>
-#include <bitprim/keoken/primitives.hpp>
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
+#include <bitprim/keoken/message/base.hpp>
+#include <bitprim/keoken/primitives.hpp>
 
 namespace bitprim {
 namespace keoken {

@@ -277,7 +277,7 @@ size_t alert_payload::serialized_size(uint32_t version) const {
 
     for (auto const& sub_version : set_sub_version_) {
         size += message::variable_uint_size(sub_version.size()) + sub_version.size();
-}
+    }
 
     return size;
 }

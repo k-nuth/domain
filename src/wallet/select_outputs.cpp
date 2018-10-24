@@ -36,7 +36,7 @@ void select_outputs::greedy(points_value& out, const points_value& unspent, uint
     // The minimum required value does not exist.
     if (unspent.value() < minimum_value) {
         return;
-}
+    }
 
     // Optimization for simple case not requiring search.
     if (unspent.points.size() == 1) {
@@ -79,7 +79,7 @@ void select_outputs::greedy(points_value& out, const points_value& unspent, uint
 
         if (out.value() >= minimum_value) {
             return;
-}
+        }
     }
 
     BITCOIN_ASSERT_MSG(false, "unreachable code reached");

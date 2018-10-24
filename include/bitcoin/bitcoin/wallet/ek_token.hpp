@@ -31,8 +31,7 @@ namespace wallet {
 /**
  * Serialization helper to convert between base58 string and bip38 token.
  */
-class BC_API ek_token
-{
+class BC_API ek_token {
 public:
     /// Constructors.
     ek_token();
@@ -68,7 +67,7 @@ private:
     encrypted_token token_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

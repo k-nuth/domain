@@ -39,7 +39,7 @@ static bool decode_endorsement(bc::endorsement& endorsement,
     if ( ! decode_base16(decoded, encoded) ||
         (decoded.size() > max_endorsement_size)) {
         return false;
-}
+    }
 
     endorsement = decoded;
     return true;

@@ -29,8 +29,7 @@ namespace libbitcoin {
 namespace wallet {
 
 /// Use to pass an encrypted private key.
-class BC_API ek_private
-{
+class BC_API ek_private {
 public:
     /// Constructors.
     ek_private();
@@ -66,7 +65,7 @@ private:
     encrypted_private private_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

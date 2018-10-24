@@ -57,7 +57,7 @@ bool stealth_receiver::derive_address(payment_address& out_address,
     if ( ! uncover_stealth(receiver_public, ephemeral_public, scan_private_,
                          spend_public_)) {
         return false;
-}
+    }
 
     out_address = {receiver_public, version_};
     return true;

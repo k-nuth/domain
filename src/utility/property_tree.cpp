@@ -91,7 +91,7 @@ ptree property_list(const chain::input& tx_input) {
 
     if (address) {
         tree.put("address_hash", hash160(address.hash()));
-}
+    }
 
     tree.put("previous_output.hash", hash256(tx_input.previous_output().hash()));
     tree.put("previous_output.index", tx_input.previous_output().index());
@@ -100,7 +100,7 @@ ptree property_list(const chain::input& tx_input) {
 
     if (tx_input.is_segregated()) {
         tree.put("witness", tx_input.witness().to_string());
-}
+    }
 
     return tree;
 }
@@ -147,7 +147,7 @@ ptree property_list(const chain::output& tx_output) {
 
     if (address) {
         tree.put("address_hash", hash160(address.hash()));
-}
+    }
 
     tree.put("script", tx_output.script().to_string(rule_fork::all_rules));
 
@@ -263,7 +263,7 @@ ptree property_tree(const settings_list& settings) {
 
     for (auto const& setting : settings) {
         list.put(setting.first, setting.second);
-}
+    }
 
     ptree tree;
     tree.add_child("settings", list);

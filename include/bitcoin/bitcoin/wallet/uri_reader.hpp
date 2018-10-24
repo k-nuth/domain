@@ -32,10 +32,8 @@ namespace wallet {
  * The URI parser calls these methods as it extracts each URI component.
  * A false return from any setter is expected to terminate the parser.
  */
-class BC_API uri_reader
-{
+class BC_API uri_reader {
 public:
-
     /**
      * Parses any URI string into its individual components.
      * @param[in]  uri     The URI to parse.
@@ -44,8 +42,7 @@ public:
      * according to the  `UriReader`.
      */
     template <class UriReader>
-    static UriReader parse(std::string const& uri, bool strict=true)
-    {
+    static UriReader parse(std::string const& uri, bool strict = true) {
         wallet::uri parsed;
         if ( ! parsed.decode(uri, strict))
             return UriReader();
@@ -63,8 +60,7 @@ public:
             return UriReader();
 
         auto const query = parsed.decode_query();
-        for (auto const& term: query)
-        {
+        for (auto const& term : query) {
             auto const& key = term.first;
             auto const& value = term.second;
             if ( ! key.empty() && !out.set_parameter(key, value))
@@ -81,10 +77,10 @@ public:
     virtual bool set_path(std::string const& path) = 0;
     virtual bool set_fragment(std::string const& fragment) = 0;
     virtual bool set_parameter(std::string const& key,
-        std::string const& value) = 0;
+                               std::string const& value) = 0;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

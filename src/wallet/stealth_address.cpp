@@ -139,7 +139,7 @@ stealth_address stealth_address::from_stealth(data_chunk const& decoded) {
     point_list spend_keys;
     if (options == reuse_key_flag) {
         spend_keys.push_back(scan_key);
-}
+    }
 
     // [spend_pubkey_1:33]..[spend_pubkey_N:33]
     ec_compressed point;
@@ -186,7 +186,7 @@ stealth_address stealth_address::from_stealth(const binary& filter,
     auto spenders = spend_keys;
     if (spenders.empty()) {
         spenders.push_back(scan_key);
-}
+    }
 
     // Guard against too many keys.
     auto const spend_keys_size = spenders.size();
@@ -264,7 +264,7 @@ data_chunk stealth_address::to_chunk() const {
     // Adjust for key reuse.
     if (reuse_key()) {
         --number_spend_pubkeys;
-}
+    }
 
     address.push_back(number_spend_pubkeys);
 

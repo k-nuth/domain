@@ -81,11 +81,11 @@ bool ec_private::is_wif(data_slice decoded) {
     auto const size = decoded.size();
     if (size != wif_compressed_size && size != wif_uncompressed_size) {
         return false;
-}
+    }
 
     if ( ! verify_checksum(decoded)) {
         return false;
-}
+    }
 
     return (size == wif_uncompressed_size) ||
            decoded.data()[1 + ec_secret_size] == compressed_sentinel;
@@ -99,7 +99,7 @@ ec_private ec_private::from_string(std::string const& wif,
     data_chunk decoded;
     if ( ! decode_base58(decoded, wif) || !is_wif(decoded)) {
         return ec_private();
-}
+    }
 
     auto const compressed = decoded.size() == wif_compressed_size;
     return compressed ? ec_private(to_array<wif_compressed_size>(decoded), address_version) : ec_private(to_array<wif_uncompressed_size>(decoded), address_version);
@@ -109,7 +109,7 @@ ec_private ec_private::from_compressed(const wif_compressed& wif,
                                        uint8_t address_version) {
     if ( ! is_wif(wif)) {
         return ec_private();
-}
+    }
 
     const uint16_t version = to_version(address_version, wif.front());
     auto const secret = slice<1, ec_secret_size + 1>(wif);
@@ -120,7 +120,7 @@ ec_private ec_private::from_uncompressed(const wif_uncompressed& wif,
                                          uint8_t address_version) {
     if ( ! is_wif(wif)) {
         return ec_private();
-}
+    }
 
     const uint16_t version = to_version(address_version, wif.front());
     auto const secret = slice<1, ec_secret_size + 1>(wif);

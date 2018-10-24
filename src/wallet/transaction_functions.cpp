@@ -43,7 +43,7 @@ static bool push_scripts(chain::output::list& outputs,
     // If it's not explicit the script must be a form of pay to short hash.
     if (output.pay_to_hash() == libbitcoin::null_short_hash) {
         return false;
-}
+    }
 
     libbitcoin::machine::operation::list payment_ops;
     auto const hash = output.pay_to_hash();
@@ -55,12 +55,12 @@ static bool push_scripts(chain::output::list& outputs,
         payment_ops = libbitcoin::chain::script::to_pay_script_hash_pattern(hash);
     } else {
         return false;
-}
+    }
 
     // If stealth add null data stealth output immediately before payment.
     if (output.is_stealth()) {
         outputs.push_back({no_amount, output.script()});
-}
+    }
 
     outputs.push_back({output.amount(), {payment_ops}});
     return true;

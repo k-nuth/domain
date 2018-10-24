@@ -180,7 +180,7 @@ size_t version::serialized_size(uint32_t version) const {
 
     if (value_ >= level::bip37) {
         size += sizeof(uint8_t);
-}
+    }
 
     return size;
 }

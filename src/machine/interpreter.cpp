@@ -31,29 +31,29 @@ code interpreter::run(program& program) {
 
     if ( ! program.is_valid()) {
         return error::invalid_script;
-}
+    }
 
     for (auto const& op : program) {
         if (op.is_oversized()) {
             return error::invalid_push_data_size;
-}
+        }
 
         if (op.is_disabled()) {
             return error::op_disabled;
-}
+        }
 
         if ( ! program.increment_operation_count(op)) {
             return error::invalid_operation_count;
-}
+        }
 
         if (program.if_(op)) {
             if ((ec = run_op(op, program))) {
                 return ec;
-}
+            }
 
             if (program.is_stack_overflow()) {
                 return error::invalid_stack_size;
-}
+            }
         }
     }
 

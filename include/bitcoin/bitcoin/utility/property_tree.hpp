@@ -25,12 +25,12 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/points_value.hpp>
 #include <bitcoin/bitcoin/config/header.hpp>
 #include <bitcoin/bitcoin/config/input.hpp>
 #include <bitcoin/bitcoin/config/output.hpp>
 #include <bitcoin/bitcoin/config/transaction.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 
 namespace pt = boost::property_tree;
 
@@ -64,7 +64,7 @@ BC_API pt::ptree property_tree(const config::header& header);
  * @return              A property tree.
  */
 BC_API pt::ptree property_tree(const std::vector<config::header>& headers,
-    bool json);
+                               bool json);
 
 /**
  * Generate a property list for a transaction input.
@@ -109,7 +109,7 @@ BC_API pt::ptree property_tree(const config::input& input);
  * @return             A property tree.
  */
 BC_API pt::ptree property_tree(const std::vector<config::input>& inputs,
-    bool json);
+                               bool json);
 
 /**
  * Generate a property list for a transaction output.
@@ -132,7 +132,7 @@ BC_API pt::ptree property_tree(const chain::output& tx_output);
  * @return                 A property tree.
  */
 BC_API pt::ptree property_tree(const chain::output::list& tx_outputs,
-    bool json);
+                               bool json);
 
 /**
  * Generate a property list for a point value.
@@ -172,7 +172,7 @@ BC_API pt::ptree property_tree(const config::transaction& transaction, bool json
  * @return                   A property tree.
  */
 BC_API pt::ptree property_tree(const std::vector<config::transaction>& transactions,
-    bool json);
+                               bool json);
 
 /**
  * Generate a property list for a wrapper.
@@ -195,8 +195,7 @@ BC_API pt::ptree property_tree(const wallet::wrapped_data& wrapper);
  * @param[in]  index   The tx index.
  * @returns            A new property list containing the list.
  */
-BC_API pt::ptree property_list(hash_digest const& hash, size_t height,
-    size_t index);
+BC_API pt::ptree property_list(hash_digest const& hash, size_t height, size_t index);
 
 /**
  * Create a property tree for the fetch-tx-index command.
@@ -205,8 +204,7 @@ BC_API pt::ptree property_list(hash_digest const& hash, size_t height,
  * @param[in]  index   The tx index.
  * @returns            A new property tree containing the list.
  */
-BC_API pt::ptree property_tree(hash_digest const& hash, size_t height,
-    size_t index);
+BC_API pt::ptree property_tree(hash_digest const& hash, size_t height, size_t index);
 
 /**
  * Create a property tree for the settings command.
@@ -215,7 +213,7 @@ BC_API pt::ptree property_tree(hash_digest const& hash, size_t height,
  */
 BC_API pt::ptree property_tree(const settings_list& settings);
 
-} // namespace libbitcoin
+}  // namespace libbitcoin
 
 #include <bitcoin/bitcoin/impl/utility/property_tree.ipp>
 

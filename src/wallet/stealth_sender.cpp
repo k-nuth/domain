@@ -37,7 +37,7 @@ stealth_sender::stealth_sender(const stealth_address& address,
     ec_secret ephemeral_private;
     if (create_ephemeral_key(ephemeral_private, seed)) {
         initialize(ephemeral_private, address, seed, filter);
-}
+    }
 }
 
 stealth_sender::stealth_sender(ec_secret const& ephemeral_private,

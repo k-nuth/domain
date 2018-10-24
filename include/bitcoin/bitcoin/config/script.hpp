@@ -33,10 +33,8 @@ namespace config {
 /**
  * Serialization helper to convert between base16/raw script and script_type.
  */
-class BC_API script
-{
+class BC_API script {
 public:
-
     /**
      * Default constructor.
      */
@@ -97,7 +95,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        script& argument);
+                                    script& argument);
 
     /**
      * Overload stream out.
@@ -106,17 +104,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        script const& argument);
+                                    script const& argument);
 
 private:
-
     /**
      * The state of this object.
      */
     chain::script value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif
