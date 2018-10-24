@@ -51,12 +51,12 @@ void select_outputs::greedy(points_value& out, const points_value& unspent, uint
         return point.value() < minimum_value;
     };
 
-    auto const lesser = [](point_value const& left, point_value const& right) {
-        return left.value() < right.value();
+    auto const lesser = [](point_value const& x, point_value const& y) {
+        return x.value() < y.value();
     };
 
-    auto const greater = [](point_value const& left, point_value const& right) {
-        return left.value() > right.value();
+    auto const greater = [](point_value const& x, point_value const& y) {
+        return x.value() > y.value();
     };
 
     // Reorder list beteen values that exceed minimum and those that do not.
@@ -96,8 +96,8 @@ void select_outputs::individual(points_value& out, const points_value& unspent, 
         }
     }
 
-    auto const lesser = [](point_value const& left, point_value const& right) {
-        return left.value() < right.value();
+    auto const lesser = [](point_value const& x, point_value const& y) {
+        return x.value() < y.value();
     };
 
     // Return in ascending order by value.

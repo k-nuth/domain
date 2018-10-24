@@ -22,14 +22,14 @@
 using namespace bc;
 using namespace bc::message;
 
-bool equal(const address& left, const address& right) {
-    auto const left_addresses = left.addresses();
-    auto const right_addresses = right.addresses();
+bool equal(const address& x, const address& y) {
+    auto const x_addresses = x.addresses();
+    auto const y_addresses = y.addresses();
 
-    bool same = (left_addresses.size() == right_addresses.size());
+    bool same = (x_addresses.size() == y_addresses.size());
 
-    for (size_t i = 0; (i < left_addresses.size()) && same; i++) {
-        same = (left_addresses[i] == right_addresses[i]) && (left_addresses[i].timestamp() == right_addresses[i].timestamp());
+    for (size_t i = 0; (i < x_addresses.size()) && same; i++) {
+        same = (x_addresses[i] == y_addresses[i]) && (x_addresses[i].timestamp() == y_addresses[i].timestamp());
     }
 
     return same;
