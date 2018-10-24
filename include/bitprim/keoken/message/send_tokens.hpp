@@ -23,9 +23,13 @@
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 #include <bitprim/keoken/message/base.hpp>
 #include <bitprim/keoken/primitives.hpp>
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace bitprim {
 namespace keoken {
@@ -62,18 +66,42 @@ public:
 
     static send_tokens factory_from_data(bc::data_chunk const& data);
     static send_tokens factory_from_data(bc::data_source& stream);
-    static send_tokens factory_from_data(bc::reader& source);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static send_tokens factory_from_data(R& source) {
+        send_tokens instance;  //NOLINT
+        instance.from_data(source);
+        return instance;
+    }
 
     bool from_data(bc::data_chunk const& data);
     bool from_data(bc::data_source& stream);
-    bool from_data(bc::reader& source);
+
+    //Note: from_data and to_data are not longer simetrical.
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source) {
+        asset_id_ = source.read_4_bytes_big_endian();
+        amount_ = source.read_8_bytes_big_endian();
+
+        // if ( ! source)
+        //     reset();
+
+        return source;
+    }
 
     // Serialization.
     //-------------------------------------------------------------------------
 
     bc::data_chunk to_data() const;
-    void to_data(libbitcoin::data_sink& stream) const;
-    void to_data(bc::writer& sink) const;
+    void to_data(bc::data_sink& stream) const;
+
+    //Note: from_data and to_data are not longer simetrical.
+    template <Writer W>
+    void to_data(W& sink) const {
+        base::to_data(sink, version, type);
+        sink.write_4_bytes_big_endian(asset_id_);
+        sink.write_8_bytes_big_endian(amount_);
+    }
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------

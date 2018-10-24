@@ -70,12 +70,12 @@ send_tokens send_tokens::factory_from_data(data_source& stream) {
     return instance;
 }
 
-// static
-send_tokens send_tokens::factory_from_data(bc::reader& source) {
-    send_tokens instance;  //NOLINT
-    instance.from_data(source);
-    return instance;
-}
+// // static
+// send_tokens send_tokens::factory_from_data(bc::reader& source) {
+//     send_tokens instance;  //NOLINT
+//     instance.from_data(source);
+//     return instance;
+// }
 
 bool send_tokens::from_data(data_chunk const& data) {
     data_source istream(data);
@@ -87,16 +87,16 @@ bool send_tokens::from_data(data_source& stream) {
     return from_data(stream_r);
 }
 
-//Note: from_data and to_data are not longer simetrical.
-bool send_tokens::from_data(bc::reader& source) {
-    asset_id_ = source.read_4_bytes_big_endian();
-    amount_ = source.read_8_bytes_big_endian();
+// //Note: from_data and to_data are not longer simetrical.
+// bool send_tokens::from_data(bc::reader& source) {
+//     asset_id_ = source.read_4_bytes_big_endian();
+//     amount_ = source.read_8_bytes_big_endian();
 
-    // if ( ! source)
-    //     reset();
+//     // if ( ! source)
+//     //     reset();
 
-    return source;
-}
+//     return source;
+// }
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -117,12 +117,12 @@ void send_tokens::to_data(data_sink& stream) const {
     to_data(sink_w);
 }
 
-//Note: from_data and to_data are not longer simetrical.
-void send_tokens::to_data(writer& sink) const {
-    base::to_data(sink, version, type);
-    sink.write_4_bytes_big_endian(asset_id_);
-    sink.write_8_bytes_big_endian(amount_);
-}
+// //Note: from_data and to_data are not longer simetrical.
+// void send_tokens::to_data(writer& sink) const {
+//     base::to_data(sink, version, type);
+//     sink.write_4_bytes_big_endian(asset_id_);
+//     sink.write_8_bytes_big_endian(amount_);
+// }
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------

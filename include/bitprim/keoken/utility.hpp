@@ -24,6 +24,9 @@
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
+
 namespace bitprim {
 namespace keoken {
 
@@ -41,7 +44,8 @@ constexpr
 //     return static_cast<std::underlying_type_t<E>>(e);
 // }
 
-inline std::string read_null_terminated_string_unlimited(bc::reader& source) {
+template <Reader R, BITPRIM_IS_READER(R)>
+inline std::string read_null_terminated_string_unlimited(R& source) {
     // precondition: there is almost 1 `\0` byte in source
     std::string res;
 
@@ -54,7 +58,8 @@ inline std::string read_null_terminated_string_unlimited(bc::reader& source) {
     return res;
 }
 
-inline boost::optional<std::string> read_null_terminated_string(bc::reader& source, size_t max) {
+template <Reader R, BITPRIM_IS_READER(R)>
+inline boost::optional<std::string> read_null_terminated_string(R& source, size_t max) {
     if (max == 0) {
         return boost::none;
 }

@@ -23,9 +23,14 @@
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 
+#include <bitprim/keoken/constants.hpp>
 #include <bitprim/keoken/message/base.hpp>
 #include <bitprim/keoken/primitives.hpp>
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace bitprim {
 namespace keoken {
@@ -63,18 +68,54 @@ public:
 
     static create_asset factory_from_data(bc::data_chunk const& data);
     static create_asset factory_from_data(bc::data_source& stream);
-    static create_asset factory_from_data(bc::reader& source);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static create_asset factory_from_data(R& source) {
+        create_asset instance;
+        instance.from_data(source);
+        return instance;
+    }
 
     bool from_data(bc::data_chunk const& data);
     bool from_data(bc::data_source& stream);
-    bool from_data(bc::reader& source);
+
+    //Note: from_data and to_data are not longer simetrical.
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source) {
+        auto name_opt = read_null_terminated_string(source, max_name_size);
+        if ( ! name_opt) {
+            source.invalidate();
+            return false;
+        }
+
+        if (name_opt->size() < min_asset_name_size) {  //NOLINT
+            source.invalidate();
+            return false;
+        }
+
+        name_ = *name_opt;
+        amount_ = source.read_8_bytes_big_endian();
+
+        // if ( ! source)
+        //     reset();
+
+        return source;
+    }
 
     // Serialization.
     //-------------------------------------------------------------------------
 
     bc::data_chunk to_data() const;
-    void to_data(libbitcoin::data_sink& stream) const;
-    void to_data(bc::writer& sink) const;
+    void to_data(bc::data_sink& stream) const;
+
+    //Note: from_data and to_data are not simetrical.
+    template <Writer W>
+    void to_data(W& sink) const {
+        base::to_data(sink, version, type);
+        sink.write_bytes(reinterpret_cast<uint8_t const*>(name_.data()), name_.size() + 1);  //NOLINT
+        sink.write_8_bytes_big_endian(amount_);
+    }
+
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
