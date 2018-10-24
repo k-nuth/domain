@@ -628,14 +628,14 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     if (is_uahf_enabled(values.height, forks)) {
         if (is_daa_enabled(values.height, forks)) {
             return cash_difficulty_adjustment(values);
-        } else {
+        } 
             auto six_time_span = median_time_past(values, 0, false);
             // precondition: last_time_span >= six_time_span
             //TODO(fernando): resolve hardcoded values
             if ((last_time_span - six_time_span) > (12 * 3600)) {
                 return work_required_adjust_cash(values);
             }
-        }
+        
     }
 #endif  //BITPRIM_CURRENCY_BCH
 
@@ -727,14 +727,14 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
 #else
 //Note: Could not happend: DAA and not BCH
 #endif  //BITPRIM_CURRENCY_BCH
-    } else {
+    } 
         // Reverse iterate the ordered-by-height list of header bits.
         for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit) {
             if (is_retarget_or_non_limit(--height, *bit)) {
                 return *bit;
             }
         }
-    }
+    
 
     // Since the set of heights is either a full retarget range or ends at
     // zero this is not reachable unless the data set is invalid.
