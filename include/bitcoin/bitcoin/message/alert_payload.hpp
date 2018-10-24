@@ -134,7 +134,7 @@ class BC_API alert_payload {
         status_bar_ = source.read_string();
         reserved_ = source.read_string();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

@@ -73,7 +73,7 @@ class BC_API send_headers {
             source.invalidate();
         }
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

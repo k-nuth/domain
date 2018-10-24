@@ -84,12 +84,12 @@ using namespace bc::machine;
 transaction new_tx(const script_test& test) {
     // Parse input script from string.
     script input_script;
-    if (!input_script.from_string(test.input))
+    if ( ! input_script.from_string(test.input))
         return {};
 
     // Parse output script from string.
     script output_script;
-    if (!output_script.from_string(test.output))
+    if ( ! output_script.from_string(test.output))
         return {};
 
     // Assign output script to input's prevout validation metadata.

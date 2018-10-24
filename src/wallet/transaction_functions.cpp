@@ -35,7 +35,7 @@ static bool push_scripts(chain::output::list& outputs,
     static constexpr uint64_t no_amount = 0;
 
     // explicit script
-    if (!output.is_stealth() && output.script().is_valid()) {
+    if ( ! output.is_stealth() && output.script().is_valid()) {
         outputs.push_back({output.amount(), output.script()});
         return true;
     }
@@ -81,7 +81,7 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
 
     for (auto const& output : destiny_and_amount) {
         std::string destiny_string = output.first.encoded() + ":" + std::to_string(output.second);
-        if (!push_scripts(tx.outputs(), libbitcoin::config::output(destiny_string), script_version)) {
+        if ( ! push_scripts(tx.outputs(), libbitcoin::config::output(destiny_string), script_version)) {
             return {error::error_code_t::invalid_output, {}};
         }
     }
@@ -121,7 +121,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_old(libbitcoin::ec_se
     }
 
     libbitcoin::endorsement endorse;
-    if (!libbitcoin::chain::script::create_endorsement(endorse, private_key, output_script, tx, index, sign_type)) {
+    if ( ! libbitcoin::chain::script::create_endorsement(endorse, private_key, output_script, tx, index, sign_type)) {
         return {error::error_code_t::input_sign_failed, {}};
     }
     return {error::error_code_t::success, endorse};
@@ -145,7 +145,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_btc(libbitcoin::ec_se
 
     libbitcoin::endorsement endorse;
 
-    if (!libbitcoin::chain::script::create_endorsement(endorse,
+    if ( ! libbitcoin::chain::script::create_endorsement(endorse,
                                                        private_key,
                                                        output_script,
                                                        tx,

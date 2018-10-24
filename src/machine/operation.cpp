@@ -185,7 +185,7 @@ bool operation::from_string(std::string const& mnemonic) {
         valid_ = true;
     }
 
-    if (!valid_)
+    if ( ! valid_)
         reset();
 
     return valid_;
@@ -264,7 +264,7 @@ static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
 
 // The removal of spaces in v3 data is a compatability break with our v2.
 std::string operation::to_string(uint32_t active_forks) const {
-    if (!valid_)
+    if ( ! valid_)
         return "<invalid>";
 
     if (data_.empty())

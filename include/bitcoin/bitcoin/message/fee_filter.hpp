@@ -78,7 +78,7 @@ class BC_API fee_filter {
         if (version < fee_filter::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

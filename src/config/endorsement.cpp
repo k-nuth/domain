@@ -36,7 +36,7 @@ namespace config {
 static bool decode_endorsement(bc::endorsement& endorsement,
                                std::string const& encoded) {
     bc::endorsement decoded;
-    if (!decode_base16(decoded, encoded) ||
+    if ( ! decode_base16(decoded, encoded) ||
         (decoded.size() > max_endorsement_size))
         return false;
 
@@ -76,7 +76,7 @@ std::istream& operator>>(std::istream& input, endorsement& argument) {
     std::string hexcode;
     input >> hexcode;
 
-    if (!decode_endorsement(argument.value_, hexcode)) {
+    if ( ! decode_endorsement(argument.value_, hexcode)) {
         BOOST_THROW_EXCEPTION(boost::program_options::invalid_option_value(hexcode));
     }
 

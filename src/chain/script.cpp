@@ -210,7 +210,7 @@ bool script::from_string(std::string const& mnemonic) {
 
     // Create an op list from the split tokens, one operation per token.
     for (size_t index = 0; index < ops.size(); ++index) {
-        if (!ops[index].from_string(tokens[index])) {
+        if ( ! ops[index].from_string(tokens[index])) {
             return false;
         }
     }
@@ -784,7 +784,7 @@ bool script::create_endorsement(endorsement& out, ec_secret const& secret, scrip
 
     // Create the EC signature and encode as DER.
     ec_signature signature;
-    if (!sign(signature, secret, sighash) || !encode_signature(out, signature)) {
+    if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature)) {
         return false;
     }
 
@@ -890,7 +890,7 @@ bool script::is_pay_multisig_pattern(operation::list const& ops) {
     }
 
     for (auto op = ops.begin() + 1; op != ops.end() - 2; ++op) {
-        if (!is_public_key(op->data())) {
+        if ( ! is_public_key(op->data())) {
             return false;
         }
     }
@@ -955,7 +955,7 @@ operation::list script::to_null_data_pattern(data_slice data) {
 }
 
 operation::list script::to_pay_public_key_pattern(data_slice point) {
-    if (!is_public_key(point)) {
+    if ( ! is_public_key(point)) {
         return {};
     }
 
@@ -1017,7 +1017,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures, data_stack c
     ops.emplace_back(op_m);
 
     for (auto const point : points) {
-        if (!is_public_key(point)) {
+        if ( ! is_public_key(point)) {
             return {};
         }
 
@@ -1042,7 +1042,7 @@ script_version script::version() const {
     // The first operations access must be method-based to guarantee the cache.
     auto const& ops = operations();
 
-    if (!is_witness_program_pattern(ops)) {
+    if ( ! is_witness_program_pattern(ops)) {
         return script_version::unversioned;
     }
 
@@ -1241,14 +1241,14 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
     }
 
     // This precludes bare witness programs of -0 (undocumented).
-    if (!prevout.stack_result(false)) {
+    if ( ! prevout.stack_result(false)) {
         return error::stack_false;
     }
 
     // Triggered by output script push of version and witness program (bip141).
     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
         // The input script must be empty (bip141).
-        if (!input_script.empty()) {
+        if ( ! input_script.empty()) {
             return error::dirty_witness;
         }
 
@@ -1260,7 +1260,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
 
     // p2sh and p2w are mutually exclusive.
     else if (prevout_script.is_pay_to_script_hash(forks)) {
-        if (!is_relaxed_push(input_script.operations())) {
+        if ( ! is_relaxed_push(input_script.operations())) {
             return error::invalid_script_embed;
         }
 
@@ -1273,7 +1273,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
         }
 
         // This precludes embedded witness programs of -0 (undocumented).
-        if (!embedded.stack_result(false)) {
+        if ( ! embedded.stack_result(false)) {
             return error::stack_false;
         }
 
@@ -1292,7 +1292,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
     }
 
     // Witness must be empty if no bip141 or valid witness program (bip141).
-    if (!witnessed && !input_witness.empty()) {
+    if ( ! witnessed && !input_witness.empty()) {
         return error::unexpected_witness;
     }
 

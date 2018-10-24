@@ -59,7 +59,7 @@ void stealth_sender::initialize(ec_secret const& ephemeral_private,
                                 data_chunk const& seed,
                                 const binary& filter) {
     ec_compressed ephemeral_public;
-    if (!secret_to_public(ephemeral_public, ephemeral_private))
+    if ( ! secret_to_public(ephemeral_public, ephemeral_private))
         return;
 
     auto const& spend_keys = address.spend_keys();
@@ -67,7 +67,7 @@ void stealth_sender::initialize(ec_secret const& ephemeral_private,
         return;
 
     ec_compressed sender_public;
-    if (!uncover_stealth(sender_public, address.scan_key(), ephemeral_private,
+    if ( ! uncover_stealth(sender_public, address.scan_key(), ephemeral_private,
                          spend_keys.front()))
         return;
 

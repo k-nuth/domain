@@ -71,13 +71,13 @@ class BC_API not_found
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     {
-        if (!inventory::from_data(version, source))
+        if ( ! inventory::from_data(version, source))
             return false;
 
         if (version < not_found::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

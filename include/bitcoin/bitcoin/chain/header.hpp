@@ -107,11 +107,11 @@ class BC_API header {
         bits_ = source.read_4_bytes_little_endian();
         nonce_ = source.read_4_bytes_little_endian();
 
-        if (!wire) {
+        if ( ! wire) {
             validation.median_time_past = source.read_4_bytes_little_endian();
         }
 
-        if (!source) {
+        if ( ! source) {
             reset();
         }
 
@@ -138,7 +138,7 @@ class BC_API header {
         sink.write_4_bytes_little_endian(bits_);
         sink.write_4_bytes_little_endian(nonce_);
 
-        if (!wire) {
+        if ( ! wire) {
             sink.write_4_bytes_little_endian(validation.median_time_past);
         }
     }

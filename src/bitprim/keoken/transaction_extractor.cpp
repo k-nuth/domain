@@ -51,7 +51,7 @@ data_chunk get_keoken_data(I f, I l) {
     if (f->code() != opcode::push_size_4)
         return data_chunk{};
 
-    if (!std::equal(f->data().begin(), f->data().end(), static_cast<uint8_t const*>(protocol_name))) {
+    if ( ! std::equal(f->data().begin(), f->data().end(), static_cast<uint8_t const*>(protocol_name))) {
         return data_chunk{};
     }
 
@@ -75,7 +75,7 @@ data_chunk first_keoken_output(bc::chain::transaction const& tx) {
     //precondition: tx is a confirmed transaction
     for (auto const& out : tx.outputs()) {
         auto const& keo_data = get_keoken_data(out.script().operations());
-        if (!keo_data.empty()) {
+        if ( ! keo_data.empty()) {
             return keo_data;
         }
     }

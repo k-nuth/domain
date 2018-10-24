@@ -81,7 +81,7 @@ bool ec_public::is_point(data_slice decoded) {
 // ----------------------------------------------------------------------------
 
 ec_public ec_public::from_private(const ec_private& secret) {
-    if (!secret) {
+    if ( ! secret) {
         return ec_public();
     }
 
@@ -90,14 +90,14 @@ ec_public ec_public::from_private(const ec_private& secret) {
 
 ec_public ec_public::from_string(std::string const& base16) {
     data_chunk decoded;
-    if (!decode_base16(decoded, base16))
+    if ( ! decode_base16(decoded, base16))
         return ec_public();
 
     return ec_public(decoded);
 }
 
 ec_public ec_public::from_data(data_chunk const& decoded) {
-    if (!is_point(decoded))
+    if ( ! is_point(decoded))
         return ec_public();
 
     if (decoded.size() == ec_compressed_size)
@@ -108,7 +108,7 @@ ec_public ec_public::from_data(data_chunk const& decoded) {
 }
 
 ec_public ec_public::from_point(const ec_uncompressed& point, bool compress) {
-    if (!is_point(point))
+    if ( ! is_point(point))
         return ec_public();
 
     ec_compressed compressed;
@@ -154,7 +154,7 @@ const bool ec_public::compressed() const {
 // ----------------------------------------------------------------------------
 
 bool ec_public::to_data(data_chunk& out) const {
-    if (!valid_)
+    if ( ! valid_)
         return false;
 
     if (compressed()) {
@@ -174,7 +174,7 @@ bool ec_public::to_data(data_chunk& out) const {
 }
 
 bool ec_public::to_uncompressed(ec_uncompressed& out) const {
-    if (!valid_)
+    if ( ! valid_)
         return false;
 
     return bc::decompress(out, to_array<ec_compressed_size>(point_));
@@ -213,7 +213,7 @@ std::istream& operator>>(std::istream& in, ec_public& to) {
     in >> value;
     to = ec_public(value);
 
-    if (!to) {
+    if ( ! to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }

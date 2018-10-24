@@ -87,13 +87,13 @@ class BC_API block_transactions {
 
         // Order is required.
         for (auto& tx : transactions_)
-            if (!tx.from_data(source, true, witness_default()))
+            if ( ! tx.from_data(source, true, witness_default()))
                 break;
 
         if (version < block_transactions::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

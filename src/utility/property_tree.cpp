@@ -151,7 +151,7 @@ ptree property_list(const chain::output& tx_output) {
     // TODO(libbitcoin): this will eventually change due to privacy problems, see:
     // lists.dyne.org/lurker/message/20140812.214120.317490ae.en.html
 
-    if (!address) {
+    if ( ! address) {
         uint32_t stealth_prefix;
         ec_compressed ephemeral_key;
 

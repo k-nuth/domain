@@ -83,7 +83,7 @@ class BC_API send_compact {
         if (version < send_compact::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

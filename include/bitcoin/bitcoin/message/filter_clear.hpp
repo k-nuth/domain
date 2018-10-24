@@ -71,7 +71,7 @@ class BC_API filter_clear {
         if (version < filter_clear::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

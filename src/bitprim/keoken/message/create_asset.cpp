@@ -94,7 +94,7 @@ bool create_asset::from_data(data_source& stream) {
 //Note: from_data and to_data are not longer simetrical.
 bool create_asset::from_data(bc::reader& source) {
     auto name_opt = read_null_terminated_string(source, max_name_size);
-    if (!name_opt) {
+    if ( ! name_opt) {
         source.invalidate();
         return false;
     }

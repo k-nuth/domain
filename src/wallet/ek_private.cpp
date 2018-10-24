@@ -108,7 +108,7 @@ std::istream& operator>>(std::istream& in, ek_private& to) {
     in >> value;
     to = ek_private(value);
 
-    if (!to) {
+    if ( ! to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }

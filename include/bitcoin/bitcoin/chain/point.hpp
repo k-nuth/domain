@@ -123,7 +123,7 @@ class BC_API point {
             }
         }
 
-        if (!source) {
+        if ( ! source) {
             reset();
         }
 

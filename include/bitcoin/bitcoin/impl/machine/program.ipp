@@ -163,7 +163,7 @@ inline data_chunk program::pop() {
 
 inline bool program::pop(int32_t& out_value) {
     number value;
-    if (!pop(value))
+    if ( ! pop(value))
         return false;
 
     out_value = value.int32();
@@ -187,7 +187,7 @@ inline bool program::pop_ternary(number& first, number& second, number& third) {
 // Determines if popped value is valid post-pop stack index and returns index.
 inline bool program::pop_position(stack_iterator& out_position) {
     int32_t signed_index;
-    if (!pop(signed_index))
+    if ( ! pop(signed_index))
         return false;
 
     // Ensure the index is within bounds.

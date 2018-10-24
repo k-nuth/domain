@@ -158,7 +158,7 @@ void bitcoin_uri::set_address(const stealth_address& stealth) {
 
 bool bitcoin_uri::set_amount(std::string const& satoshis) {
     uint64_t decoded;
-    if (!decode_base10(decoded, satoshis, btc_decimal_places, strict_))
+    if ( ! decode_base10(decoded, satoshis, btc_decimal_places, strict_))
         return false;
 
     // Normalize the encoding for string-based getter (parameter).
@@ -247,7 +247,7 @@ std::istream& operator>>(std::istream& in, bitcoin_uri& to) {
     in >> value;
     to = bitcoin_uri(value);
 
-    if (!to) {
+    if ( ! to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }

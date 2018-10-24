@@ -138,7 +138,7 @@ class BC_API reject {
         if (version < reject::version_minimum)
             source.invalidate();
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;

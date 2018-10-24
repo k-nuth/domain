@@ -127,7 +127,7 @@ bool ConvertBits(O& out, I it, I end) {
     }
 
     // We have remaining bits to encode but do not pad.
-    if (!pad && bits) {
+    if ( ! pad && bits) {
         return false;
     }
 
@@ -225,7 +225,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 
 payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
-    if (!decode_base58(decoded, address) || !is_address(decoded)) {
+    if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
 #ifdef BITPRIM_CURRENCY_BCH
         return from_string_cashaddr(address);
 #else
@@ -237,7 +237,7 @@ payment_address payment_address::from_string(std::string const& address) {
 }
 
 payment_address payment_address::from_payment(const payment& decoded) {
-    if (!is_address(decoded)) {
+    if ( ! is_address(decoded)) {
         return {};
     }
 
@@ -246,7 +246,7 @@ payment_address payment_address::from_payment(const payment& decoded) {
 }
 
 payment_address payment_address::from_private(const ec_private& secret) {
-    if (!secret) {
+    if ( ! secret) {
         return {};
     }
 
@@ -254,12 +254,12 @@ payment_address payment_address::from_private(const ec_private& secret) {
 }
 
 payment_address payment_address::from_public(const ec_public& point, uint8_t version) {
-    if (!point) {
+    if ( ! point) {
         return {};
     }
 
     data_chunk data;
-    if (!point.to_data(data)) {
+    if ( ! point.to_data(data)) {
         return {};
     }
 
@@ -405,7 +405,7 @@ std::istream& operator>>(std::istream& in, payment_address& to) {
     in >> value;
     to = payment_address(value);
 
-    if (!to) {
+    if ( ! to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }

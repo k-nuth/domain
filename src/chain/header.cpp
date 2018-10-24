@@ -321,7 +321,7 @@ hash_digest header::hash() const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (!hash_) {
+    if ( ! hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
         hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data()));
@@ -409,11 +409,11 @@ bool header::is_valid_proof_of_work(bool retarget) const {
 //-----------------------------------------------------------------------------
 
 code header::check(bool retarget) const {
-    if (!is_valid_proof_of_work(retarget)) {
+    if ( ! is_valid_proof_of_work(retarget)) {
         return error::invalid_proof_of_work;
     }
 
-    if (!is_valid_timestamp()) {
+    if ( ! is_valid_timestamp()) {
         return error::futuristic_timestamp;
     }
 

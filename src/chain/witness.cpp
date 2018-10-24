@@ -243,7 +243,7 @@ void witness::to_data(data_sink& stream, bool prefix) const {
 //}
 
 std::string witness::to_string() const {
-    if (!valid_) {
+    if ( ! valid_) {
         return "<invalid>";
     }
 
@@ -354,7 +354,7 @@ bool witness::extract_sigop_script(script& out_script,
                     return true;
 
                 case hash_size:
-                    if (!stack_.empty()) {
+                    if ( ! stack_.empty()) {
                         out_script.from_data(stack_.back(), false);
                     }
 
@@ -408,7 +408,7 @@ bool witness::extract_embedded_script(script& out_script,
                 out_script.from_data(pop(out_stack), false);
 
                 // Stack elements must be within push size limit (bip141).
-                if (!is_push_size(out_stack)) {
+                if ( ! is_push_size(out_stack)) {
                     return false;
                 }
 
@@ -445,7 +445,7 @@ code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks
             script script;
             data_stack stack;
 
-            if (!extract_embedded_script(script, stack, program_script)) {
+            if ( ! extract_embedded_script(script, stack, program_script)) {
                 return error::invalid_witness;
             }
 
@@ -457,7 +457,7 @@ code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks
             }
 
             // A v0 script must succeed with a clean true stack (bip141).
-            if (!witness.stack_result(true)) {
+            if ( ! witness.stack_result(true)) {
                 return error::stack_false;
             }
         }

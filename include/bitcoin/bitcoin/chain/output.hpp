@@ -100,13 +100,13 @@ class BC_API output {
     bool from_data(R& source, bool wire = true, bool unused = false) {
         reset();
 
-        if (!wire)
+        if ( ! wire)
             validation.spender_height = source.read_4_bytes_little_endian();
 
         value_ = source.read_8_bytes_little_endian();
         script_.from_data(source, true);
 
-        if (!source)
+        if ( ! source)
             reset();
 
         return source;
@@ -124,7 +124,7 @@ class BC_API output {
 
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool unused = false) const {
-        if (!wire) {
+        if ( ! wire) {
             auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
             sink.write_4_bytes_little_endian(height32);
         }
