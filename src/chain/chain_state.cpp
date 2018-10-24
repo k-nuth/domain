@@ -656,7 +656,7 @@ uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
 uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     // Invalid parameter via public interface, test is_valid for results.
     if (values.height == 0) {
-        return{};
+        return {};
     }
 
     // Regtest bypasses all retargeting.
@@ -857,7 +857,7 @@ size_t chain_state::retarget_distance(size_t height) {
 // static
 chain_state::map chain_state::get_map(size_t height, checkpoints const& checkpoints, uint32_t forks) {
     if (height == 0) {
-        return{}
+        return {}
 };
 
     map map;

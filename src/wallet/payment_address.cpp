@@ -166,25 +166,25 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     std::tie(prefix, payload) = cashaddr::decode(address, cashaddr_prefix());
 
     if (prefix != cashaddr_prefix()) {
-        return{};
+        return {};
     }
 
     if (payload.empty()) {
-        return{};
+        return {};
     }
 
     // Check that the padding is zero.
     size_t extrabits = payload.size() * 5 % 8;
     if (extrabits >= 5) {
         // We have more padding than allowed.
-        return{};
+        return {};
     }
 
     uint8_t last = payload.back();
     uint8_t mask = (1 << extrabits) - 1;
     if (last & mask) {
         // We have non zero bits as padding.
-        return{};
+        return {};
     }
 
     data_chunk data;
@@ -195,7 +195,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     uint8_t version = data[0];
     if (version & 0x80) {
         // First bit is reserved.
-        return{};
+        return {};
     }
 
     auto type = CashAddrType((version >> 3) & 0x1f);
@@ -206,7 +206,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 
     // Check that we decoded the exact number of bytes we expected.
     if (data.size() != hash_size + 1) {
-        return{};
+        return {};
     }
 
     //uint8_t version2;
@@ -241,7 +241,7 @@ payment_address payment_address::from_string(std::string const& address) {
 #ifdef BITPRIM_CURRENCY_BCH
         return from_string_cashaddr(address);
 #else
-        return{};
+        return {};
 #endif //BITPRIM_CURRENCY_BCH
     }
 
@@ -250,7 +250,7 @@ payment_address payment_address::from_string(std::string const& address) {
 
 payment_address payment_address::from_payment(const payment& decoded) {
     if ( ! is_address(decoded)) {
-        return{};
+        return {};
     }
 
     auto const hash = slice<1, short_hash_size + 1>(decoded);
@@ -260,7 +260,7 @@ payment_address payment_address::from_payment(const payment& decoded) {
 payment_address payment_address::from_private(const ec_private& secret)
 {
     if ( ! secret) {
-        return{};
+        return {};
     }
 
     return{ secret.to_public(), secret.payment_version() };
@@ -268,12 +268,12 @@ payment_address payment_address::from_private(const ec_private& secret)
 
 payment_address payment_address::from_public(const ec_public& point, uint8_t version) {
     if ( ! point) {
-        return{};
+        return {};
     }
 
     data_chunk data;
     if ( ! point.to_data(data)) {
-        return{};
+        return {};
     }
 
     return {bitcoin_short_hash(data), version};
@@ -485,7 +485,7 @@ payment_address::list payment_address::extract_input(chain::script const& script
         case script_pattern::non_standard:
         default:
         {
-            return{};
+            return {};
         }
     }
 }
@@ -527,7 +527,7 @@ payment_address::list payment_address::extract_output(
         case script_pattern::non_standard:
         default:
         {
-            return{};
+            return {};
         }
     }
 }
