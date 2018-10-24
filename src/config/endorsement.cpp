@@ -23,7 +23,9 @@
 #include <sstream>
 #include <string>
 #include <cstdint>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 

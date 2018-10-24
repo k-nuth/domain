@@ -22,7 +22,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin/config/point.hpp>
 #include <bitcoin/bitcoin/config/script.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>

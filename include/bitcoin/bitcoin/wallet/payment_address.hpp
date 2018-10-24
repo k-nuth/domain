@@ -25,6 +25,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>

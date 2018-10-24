@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <cstdint>
+
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/bitcoin/chain/points_value.hpp>

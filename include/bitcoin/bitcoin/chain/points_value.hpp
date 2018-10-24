@@ -21,6 +21,7 @@
 
 #include <numeric>
 #include <cstdint>
+
 #include <bitcoin/bitcoin/chain/point_value.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/limits.hpp>

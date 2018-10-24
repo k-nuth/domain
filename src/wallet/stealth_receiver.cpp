@@ -19,6 +19,7 @@
 #include <bitcoin/bitcoin/wallet/stealth_receiver.hpp>
 
 #include <cstdint>
+
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/utility/binary.hpp>

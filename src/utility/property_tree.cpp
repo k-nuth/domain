@@ -22,7 +22,9 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+
 #include <boost/property_tree/ptree.hpp>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/config/base16.hpp>
 #include <bitcoin/bitcoin/config/header.hpp>

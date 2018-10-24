@@ -20,6 +20,7 @@
 #define LIBBITCOIN_MACHINE_INTERPRETER_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>

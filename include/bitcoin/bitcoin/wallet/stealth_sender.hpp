@@ -20,6 +20,7 @@
 #define LIBBITCOIN_WALLET_STEALTH_SENDER_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>

@@ -19,6 +19,7 @@
 #include <bitcoin/bitcoin/wallet/stealth_sender.hpp>
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/utility/binary.hpp>

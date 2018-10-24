@@ -20,6 +20,7 @@
 #define LIBBITCOIN_MACHINE_PROGRAM_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/constants.hpp>

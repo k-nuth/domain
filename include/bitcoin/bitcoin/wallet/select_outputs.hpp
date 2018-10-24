@@ -20,6 +20,7 @@
 #define LIBBITCOIN_WALLET_SELECT_OUTPUTS_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/chain/points_value.hpp>
 

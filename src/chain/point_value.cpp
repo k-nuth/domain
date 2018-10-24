@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <utility>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/point.hpp>
 #include <bitcoin/bitcoin/chain/point_value.hpp>
 

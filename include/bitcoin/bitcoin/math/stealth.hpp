@@ -20,6 +20,7 @@
 #define LIBBITCOIN_MATH_STEALTH_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/infrastructure/define.hpp>

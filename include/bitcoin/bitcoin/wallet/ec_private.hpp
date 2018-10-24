@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
+
 #include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>

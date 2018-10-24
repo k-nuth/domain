@@ -19,6 +19,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin.hpp>
 
 BOOST_AUTO_TEST_SUITE(compact_tests)

@@ -23,7 +23,9 @@
 #include <iostream>
 #include <string>
 #include <utility>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/infrastructure/formats/base_58.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>

@@ -20,6 +20,7 @@
 #define LIBBITCOIN_CHAIN_COMPACT_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 

@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
