@@ -22,20 +22,20 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <boost/range/adaptor/reversed.hpp>
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
 #include <bitcoin/bitcoin/chain/compact.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
+#include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/unicode/unicode.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/timer.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 
 
 
