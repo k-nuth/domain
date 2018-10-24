@@ -24,6 +24,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <utility>
+
 #include <bitcoin/bitcoin/chain/point.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>

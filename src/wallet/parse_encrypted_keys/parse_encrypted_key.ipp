@@ -21,8 +21,10 @@
 
 #include <cstdint>
 #include <cstddef>
+
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
+
 #include "parse_encrypted_prefix.hpp"
 
 namespace libbitcoin {

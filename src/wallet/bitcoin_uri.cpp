@@ -22,7 +22,9 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/infrastructure/formats/base_10.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_address.hpp>

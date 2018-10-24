@@ -21,6 +21,7 @@
 
 #include <cstddef>
 #include <cstdint>
+
 #include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/define.hpp>

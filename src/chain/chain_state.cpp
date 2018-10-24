@@ -719,7 +719,7 @@ uint32_t chain_state::work_required_adjust_cash(data const& values) {
     const compact bits(bits_high(values));
     uint256_t target(bits);
     target = difficulty_adjustment_cash(target); //target += (target >> 2);
-    static const uint256_t pow_limit(compact{ retarget_proof_of_work_limit });
+    static uint256_t const pow_limit(compact{ retarget_proof_of_work_limit });
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 }
 #endif //BITPRIM_CURRENCY_BCH
@@ -731,7 +731,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
     
 #ifdef BITPRIM_CURRENCY_LTC
     uint256_t target(bits);
-    static const uint256_t pow_limit("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    static uint256_t const pow_limit("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     // hash_number retarget_new;
     // retarget_new.set_compact(bits_high(values));
 
@@ -760,7 +760,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
 
 #else //BITPRIM_CURRENCY_LTC
-    static const uint256_t pow_limit(compact{ retarget_proof_of_work_limit });
+    static uint256_t const pow_limit(compact{ retarget_proof_of_work_limit });
     BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
 
     uint256_t target(bits);

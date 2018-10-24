@@ -22,7 +22,9 @@
 #include <cstddef>
 #include <algorithm>
 #include <stdexcept>
+
 #include <boost/locale.hpp>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/crypto.hpp>
@@ -34,6 +36,7 @@
 #include <bitcoin/infrastructure/utility/endian.hpp>
 #include <bitcoin/bitcoin/wallet/ec_private.hpp>
 #include <bitcoin/bitcoin/wallet/ec_public.hpp>
+
 #include "parse_encrypted_keys/parse_encrypted_key.hpp"
 #include "parse_encrypted_keys/parse_encrypted_prefix.hpp"
 #include "parse_encrypted_keys/parse_encrypted_private.hpp"

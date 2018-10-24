@@ -22,6 +22,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iterator>
+
 #include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {

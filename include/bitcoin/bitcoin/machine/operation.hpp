@@ -25,7 +25,6 @@
 #include <vector>
 
 #include <bitcoin/bitcoin/constants.hpp>
-
 #include <bitcoin/infrastructure/define.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>

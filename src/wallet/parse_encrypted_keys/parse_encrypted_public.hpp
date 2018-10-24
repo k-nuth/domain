@@ -21,8 +21,10 @@
 
 #include <cstdint>
 #include <cstddef>
+
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
+
 #include "parse_encrypted_key.hpp"
 
 namespace libbitcoin {

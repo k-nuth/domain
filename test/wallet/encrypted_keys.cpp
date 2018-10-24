@@ -19,7 +19,9 @@
 #include <algorithm>
 #include <cstddef>
 #include <string>
+
 #include <boost/test/unit_test.hpp>
+
 #include <bitcoin/bitcoin.hpp>
 
 using namespace bc;

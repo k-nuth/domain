@@ -20,6 +20,7 @@
 
 #include <cstddef>
 #include <cstdint>
+
 #include <bitcoin/bitcoin.hpp>
 
 using namespace bc;
