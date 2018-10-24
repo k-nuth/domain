@@ -34,7 +34,7 @@ public:
     explicit compact(uint32_t compact);
 
     /// Construct a normal form compact number from a 256 bit number
-    explicit compact(const uint256_t& big);
+    explicit compact(uint256_t const& big);
 
     /// Move constructor.
     compact(compact&& x);
@@ -51,11 +51,11 @@ public:
 
     /// Big number that the compact number represents.
     /// This is either saved or generated from the construction parameter.
-    operator const uint256_t&() const;
+    operator uint256_t const&() const;
 
 private:
     static bool from_compact(uint256_t& out, uint32_t compact);
-    static uint32_t from_big(const uint256_t& big);
+    static uint32_t from_big(uint256_t const& big);
 
     uint256_t big_;
     uint32_t normal_;
