@@ -688,11 +688,17 @@ hash_digest script::generate_version_0_signature_hash(transaction const& tx,
 
 #ifdef BITPRIM_CURRENCY_BCH
     auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
-    auto const none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
+
+    //Note(bitprim: Not used for the moment:
+    // auto const none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
+
     auto const all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::cash_forkid_all);
 #else
     auto const single = (sighash == sighash_algorithm::single);
-    auto const none = (sighash == sighash_algorithm::none);
+
+    //Note(bitprim: Not used for the moment:
+    // auto const none = (sighash == sighash_algorithm::none);
+
     auto const all = (sighash == sighash_algorithm::all);
 #endif
 
