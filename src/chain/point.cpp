@@ -35,53 +35,61 @@
 namespace libbitcoin {
 namespace chain {
 
-static auto const store_point_size = std::tuple_size<point>::value;
-
-// This sentinel is serialized and defined by consensus, not implementation.
-uint32_t const point::null_index = no_previous_output;
+constexpr auto store_point_size = std::tuple_size<point>::value;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
 // A default instance is invalid (until modified).
+// constexpr
 point::point()
-    : hash_(null_hash), index_(0), valid_(false) {
-}
+    : hash_(null_hash), index_(0), valid_(false) 
+{}
 
+// constexpr
 point::point(hash_digest const& hash, uint32_t index)
-    : hash_(hash), index_(index), valid_(true) {
-}
+    : hash_(hash), index_(index), valid_(true) 
+{}
 
-point::point(point const& x)
-    : point(x.hash_, x.index_, x.valid_) {
-}
-
-// protected
-point::point(hash_digest const& hash, uint32_t index, bool valid)
-    : hash_(hash), index_(index), valid_(valid) {
-}
-
-point& point::operator=(point const& x) {
-    hash_ = x.hash_;
-    index_ = x.index_;
-    return *this;
-}
+// // protected
+// point::point(hash_digest const& hash, uint32_t index, bool valid)
+//     : hash_(hash), index_(index), valid_(valid) 
+// {}
 
 // Operators.
 //-----------------------------------------------------------------------------
 
+// constexpr    //Note(bitprim): Could be constexpr in C++20
+bool operator==(point const& x, point const& y) {
+    return (x.hash_ == y.hash_) && (x.index_ == y.index_);
+}
+
+// constexpr
+bool operator!=(point const& x, point const& y) {
+    return !(x == y);
+}
+
+
 // This arbitrary order is produced to support set uniqueness determinations.
-bool point::operator<(point const& x) const {
+// constexpr
+bool operator<(point const& x, point const& y) {
     // The index is primary only because its comparisons are simpler.
-    return index_ == x.index_ ? hash_ < x.hash_ : index_ < x.index_;
+    return x.index_ == y.index_ ? x.hash_ < y.hash_ : x.index_ < y.index_;
 }
 
-bool point::operator==(point const& x) const {
-    return (hash_ == x.hash_) && (index_ == x.index_);
+// constexpr
+bool operator>(point const& x, point const& y) {
+    return y < x;
 }
 
-bool point::operator!=(point const& x) const {
-    return !(*this == x);
+// constexpr
+bool operator<=(point const& x, point const& y) {
+    return !(y < x);
+}
+
+// constexpr
+bool operator>=(point const& x, point const& y) {
+    return !(x < y);
 }
 
 // Deserialization.
@@ -118,6 +126,7 @@ void point::reset() {
     index_ = 0;
 }
 
+// constexpr
 bool point::is_valid() const {
     return valid_ || (hash_ != null_hash) || (index_ != 0);
 }
@@ -155,32 +164,39 @@ point_iterator point::end() const {
 // Properties.
 //-----------------------------------------------------------------------------
 
-size_t point::serialized_size(bool wire) const {
+// constexpr
+size_t point::serialized_size(bool wire /*= true*/) const {
     return wire ? point::satoshi_fixed_size() : store_point_size;
 }
 
+// constexpr
 size_t point::satoshi_fixed_size() {
     return hash_size + sizeof(index_);
 }
 
+// constexpr
 hash_digest& point::hash() {
     return hash_;
 }
 
+// constexpr
 hash_digest const& point::hash() const {
     return hash_;
 }
 
+// constexpr
 void point::set_hash(hash_digest const& value) {
     // This is no longer a default instance, so valid.
     valid_ = true;
     hash_ = value;
 }
 
+// constexpr
 uint32_t point::index() const {
     return index_;
 }
 
+// constexpr
 void point::set_index(uint32_t value) {
     // This is no longer a default instance, so valid.
     valid_ = true;
@@ -212,6 +228,7 @@ uint64_t point::checksum() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
+// constexpr
 bool point::is_null() const {
     return (index_ == null_index) && (hash_ == null_hash);
 }

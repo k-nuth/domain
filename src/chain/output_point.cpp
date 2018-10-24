@@ -65,20 +65,20 @@ output_point& output_point::operator=(point const& x) {
 //     return *this;
 // }
 
-bool output_point::operator==(point const& x) const {
-    return point::operator==(x);
+bool operator==(output_point const& x, point const& y) {
+    return x == y;  //TODO(fernando): check if it is an infinite loop
 }
 
-bool output_point::operator!=(point const& x) const {
-    return point::operator!=(x);
+bool operator!=(output_point const& x, point const& y) {
+    return !(x == y);
 }
 
-bool output_point::operator==(output_point const& x) const {
-    return point::operator==(x);
+bool operator==(output_point const& x, output_point const& y) {
+    return x == y;  //TODO(fernando): check if it is an infinite loop
 }
 
-bool output_point::operator!=(output_point const& x) const {
-    return !(*this == x);
+bool operator!=(output_point const& x, output_point const& y) {
+    return !(x == y);
 }
 
 // Deserialization.

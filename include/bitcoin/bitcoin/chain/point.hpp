@@ -46,7 +46,8 @@ class BC_API point {
 public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
-    static uint32_t const null_index;
+    static constexpr uint32_t null_index = no_previous_output;
+
 
     using list = std::vector<point>;
     using indexes = std::vector<uint32_t>;
@@ -54,27 +55,57 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
+    // constexpr
     point();
+
+    // constexpr
     point(hash_digest const& hash, uint32_t index);
 
-    point(point const& x);
-    point& operator=(point const& x);
+    // constexpr
+    point(point const& x) = default;
+    
+    // constexpr
+    point& operator=(point const& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    bool operator==(point const& x) const;
-    bool operator!=(point const& x) const;
-    bool operator<(point const& x) const;
+    // constexpr    //Note(bitprim): Could be constexpr in C++20
+    friend
+    bool operator==(point const& x, point const& y);
+    
+    // constexpr    //Note(bitprim): Could be constexpr in C++20
+    friend
+    bool operator!=(point const& x, point const& y);
+    
+    // constexpr
+    friend
+    bool operator<(point const& x, point const& y);
+
+    // constexpr
+    friend
+    bool operator>(point const& x, point const& y);
+
+    // constexpr
+    friend
+    bool operator<=(point const& x, point const& y);
+
+    // constexpr
+    friend
+    bool operator>=(point const& x, point const& y);
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static point factory_from_data(data_chunk const& data, bool wire = true);
-    static point factory_from_data(data_source& stream, bool wire = true);
+    static
+    point factory_from_data(data_chunk const& data, bool wire = true);
+    
+    static 
+    point factory_from_data(data_source& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static point factory_from_data(R& source, bool wire = true) {
+    static 
+    point factory_from_data(R& source, bool wire = true) {
         point instance;
         instance.from_data(source, wire);
         return instance;
@@ -111,6 +142,7 @@ public:
 
     //bool from_data(reader& source, bool wire=true);
 
+    // constexpr
     bool is_valid() const;
 
     // Serialization.
@@ -142,16 +174,27 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    static size_t satoshi_fixed_size();
+    static 
+    // constexpr
+    size_t satoshi_fixed_size();
+    
+    // constexpr    
     size_t serialized_size(bool wire = true) const;
 
     // deprecated (unsafe)
+    // constexpr
     hash_digest& hash();
 
+    // constexpr
     hash_digest const& hash() const;
+
+    // constexpr
     void set_hash(hash_digest const& value);
 
+    // constexpr
     uint32_t index() const;
+
+    // constexpr
     void set_index(uint32_t value);
 
     // Utilities.
@@ -163,10 +206,11 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
+    // constexpr
     bool is_null() const;
 
 protected:
-    point(hash_digest const& hash, uint32_t index, bool valid);
+    // point(hash_digest const& hash, uint32_t index, bool valid);
     void reset();
 
 private:
@@ -197,8 +241,7 @@ struct hash<bc::chain::point> {
 // Extend std namespace with the non-wire size of point (database key size).
 template <>
 struct tuple_size<bc::chain::point> {
-    static auto const value = std::tuple_size<bc::hash_digest>::value +
-                              sizeof(uint16_t);
+    static auto const value = std::tuple_size<bc::hash_digest>::value + sizeof(uint16_t);
 
     operator std::size_t() const {
         return value;
