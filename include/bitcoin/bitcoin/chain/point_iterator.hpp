@@ -31,8 +31,7 @@ namespace chain {
 class point;
 
 /// A point iterator for store serialization (does not support wire).
-class BC_API point_iterator
-{
+class BC_API point_iterator {
 public:
     typedef uint8_t pointer;
     typedef uint8_t reference;

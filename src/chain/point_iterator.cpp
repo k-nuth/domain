@@ -34,8 +34,8 @@
 namespace libbitcoin {
 namespace chain {
 
-static auto const point_size = static_cast<unsigned>(
-    std::tuple_size<point>::value);
+// static auto const point_size = static_cast<unsigned>(std::tuple_size<point>::value);
+constexpr auto point_size = static_cast<unsigned>(std::tuple_size<point>::value);
 
 // Constructors.
 //-----------------------------------------------------------------------------

@@ -48,17 +48,17 @@ void select_outputs::greedy(points_value& out, const points_value& unspent,
     // Copy the points list for safe manipulation.
     auto copy = unspent.points;
 
-    auto const below = [minimum_value](const point_value& point)
+    auto const below = [minimum_value](point_value const& point)
     {
         return point.value() < minimum_value;
     };
 
-    auto const lesser = [](const point_value& left, const point_value& right)
+    auto const lesser = [](point_value const& left, point_value const& right)
     {
         return left.value() < right.value();
     };
 
-    auto const greater = [](const point_value& left, const point_value& right)
+    auto const greater = [](point_value const& left, point_value const& right)
     {
         return left.value() > right.value();
     };
@@ -101,7 +101,7 @@ void select_outputs::individual(points_value& out, const points_value& unspent,
         if (point.value() >= minimum_value)
             out.points.push_back(point);
 
-    auto const lesser = [](const point_value& left, const point_value& right)
+    auto const lesser = [](point_value const& left, point_value const& right)
     {
         return left.value() < right.value();
     };

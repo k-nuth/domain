@@ -29,7 +29,7 @@ static auto const hash1 = hash_literal(
 
 BOOST_AUTO_TEST_CASE(point_value__default_constructor__always__zero_value)
 {
-    static const point_value instance;
+    static point_value const instance;
     BOOST_REQUIRE(instance.hash() == null_hash);
     BOOST_REQUIRE_EQUAL(instance.index(), 0u);
     BOOST_REQUIRE_EQUAL(instance.value(), 0u);
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(point_value__default_constructor__always__zero_value)
 BOOST_AUTO_TEST_CASE(point_value__move_constructor__always__expected)
 {
     point_value other{ { hash1, 42 }, 34 };
-    const point_value instance(std::move(x));
+    point_value const instance(std::move(x));
     BOOST_REQUIRE(instance.hash() == hash1);
     BOOST_REQUIRE_EQUAL(instance.index(), 42u);
     BOOST_REQUIRE_EQUAL(instance.value(), 34u);
@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE(point_value__move_constructor__always__expected)
 
 BOOST_AUTO_TEST_CASE(point_value__copy_constructor__always__expected)
 {
-    static const point_value other{ { hash1, 42 }, 34 };
-    const point_value instance(x);
+    static point_value const other{ { hash1, 42 }, 34 };
+    point_value const instance(x);
     BOOST_REQUIRE(instance.hash() == hash1);
     BOOST_REQUIRE_EQUAL(instance.index(), 42u);
     BOOST_REQUIRE_EQUAL(instance.value(), 34u);
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(point_value__copy_constructor__always__expected)
 BOOST_AUTO_TEST_CASE(point_value__constructor4__always__expected)
 {
     point foo{ hash1, 42 };
-    static const point_value instance(std::move(foo), 34);
+    static point_value const instance(std::move(foo), 34);
     BOOST_REQUIRE(instance.hash() == hash1);
     BOOST_REQUIRE_EQUAL(instance.index(), 42u);
     BOOST_REQUIRE_EQUAL(instance.value(), 34u);
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(point_value__constructor4__always__expected)
 BOOST_AUTO_TEST_CASE(point_value__constructor5__always__expected)
 {
     static point const foo{ hash1, 42 };
-    static const point_value instance(foo, 34);
+    static point_value const instance(foo, 34);
     BOOST_REQUIRE(instance.hash() == hash1);
     BOOST_REQUIRE_EQUAL(instance.index(), 42u);
     BOOST_REQUIRE_EQUAL(instance.value(), 34u);
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(point_value__move_assign__always__expected)
 
 BOOST_AUTO_TEST_CASE(point_value__copy_assign__always__expected)
 {
-    static const point_value other{ { hash1, 42 }, 34 };
+    static point_value const other{ { hash1, 42 }, 34 };
     auto const instance = other;
     BOOST_REQUIRE(instance.hash() == hash1);
     BOOST_REQUIRE_EQUAL(instance.index(), 42u);
@@ -108,57 +108,57 @@ BOOST_AUTO_TEST_CASE(point_value__swap__always__expected_reversal)
 
 BOOST_AUTO_TEST_CASE(point_value__equality__same__true)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { hash1, 42 }, 34 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { hash1, 42 }, 34 };
     BOOST_REQUIRE(instance1 == instance2);
 }
 
 BOOST_AUTO_TEST_CASE(point_value__equality__different_by_hash__false)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { null_hash, 43 }, 34 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { null_hash, 43 }, 34 };
     BOOST_REQUIRE(!(instance1 == instance2));
 }
 
 BOOST_AUTO_TEST_CASE(point_value__equality__different_by_index__false)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { hash1, 43 }, 34 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { hash1, 43 }, 34 };
     BOOST_REQUIRE(!(instance1 == instance2));
 }
 
 BOOST_AUTO_TEST_CASE(point_value__equality__different_by_value__false)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { hash1, 42 }, 35 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { hash1, 42 }, 35 };
     BOOST_REQUIRE(!(instance1 == instance2));
 }
 
 BOOST_AUTO_TEST_CASE(point_value__inequality__same__false)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { hash1, 42 }, 34 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { hash1, 42 }, 34 };
     BOOST_REQUIRE(!(instance1 != instance2));
 }
 
 BOOST_AUTO_TEST_CASE(point_value__inequality__different_by_hash__true)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { null_hash, 43 }, 34 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { null_hash, 43 }, 34 };
     BOOST_REQUIRE(instance1 != instance2);
 }
 
 BOOST_AUTO_TEST_CASE(point_value__inequality__different_by_index__true)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { hash1, 43 }, 34 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { hash1, 43 }, 34 };
     BOOST_REQUIRE(instance1 != instance2);
 }
 
 BOOST_AUTO_TEST_CASE(point_value__inequality__different_by_value__true)
 {
-    static const point_value instance1{ { hash1, 42 }, 34 };
-    static const point_value instance2{ { hash1, 42 }, 35 };
+    static point_value const instance1{ { hash1, 42 }, 34 };
+    static point_value const instance2{ { hash1, 42 }, 35 };
     BOOST_REQUIRE(instance1 != instance2);
 }
 
