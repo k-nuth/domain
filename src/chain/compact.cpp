@@ -42,46 +42,36 @@ static constexpr uint32_t first_byte_mask = 0xffffff00;
 // Inlines
 //-----------------------------------------------------------------------------
 
-inline
-bool is_negated(uint32_t compact) {
+inline bool is_negated(uint32_t compact) {
     return (compact & sign_bit) != 0;
 }
 
-inline 
-bool is_nonzero(uint32_t compact) {
+inline bool is_nonzero(uint32_t compact) {
     return (compact & mantissa_max) != 0;
 }
 
-inline 
-uint8_t log_256(uint32_t mantissa) {
+inline uint8_t log_256(uint32_t mantissa) {
     BITCOIN_ASSERT_MSG(mantissa <= 0x00ffffff, "mantissa log256 is 4");
 
-    return
-        (mantissa > 0x0000ffff ? 3 :
-        (mantissa > 0x000000ff ? 2 :
-        (mantissa > 0x00000000 ? 1 : 0)));
+    return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));
 }
 
-inline 
-bool is_overflow(uint8_t exponent, uint32_t mantissa) {
+inline bool is_overflow(uint8_t exponent, uint32_t mantissa) {
     // Overflow if exponent would shift the mantissa more than 32 bytes.
     return (mantissa > 0) && (exponent > 32 + 3 - log_256(mantissa));
 }
 
-inline 
-uint32_t shift_low(uint8_t exponent) {
+inline uint32_t shift_low(uint8_t exponent) {
     BITCOIN_ASSERT(exponent <= 3);
-    return  8 * (3 - exponent);
+    return 8 * (3 - exponent);
 }
 
-inline 
-uint32_t shift_high(uint8_t exponent) {
+inline uint32_t shift_high(uint8_t exponent) {
     BITCOIN_ASSERT(exponent > 3);
-    return  8 * (exponent - 3);
+    return 8 * (exponent - 3);
 }
 
-inline 
-size_t logical_size(uint256_t value) {
+inline size_t logical_size(uint256_t value) {
     auto byte = 0;
 
     for (; value != 0; ++byte) {
@@ -100,8 +90,7 @@ compact::compact(uint32_t compact) {
 }
 
 compact::compact(uint256_t const& big)
-    : big_(big), overflowed_(false)
-{
+    : big_(big), overflowed_(false) {
     normal_ = from_big(big_);
 }
 
@@ -157,9 +146,7 @@ uint32_t compact::from_big(uint256_t const& big) {
     auto exponent = static_cast<uint8_t>(logical_size(big));
 
     // Shift the big number significant digits into the mantissa.
-    auto const mantissa64 = exponent <= 3 ?
-        static_cast<uint64_t>(big) << shift_low(exponent) :
-        static_cast<uint64_t>(big >> shift_high(exponent));
+    auto const mantissa64 = exponent <= 3 ? static_cast<uint64_t>(big) << shift_low(exponent) : static_cast<uint64_t>(big >> shift_high(exponent));
 
     auto mantissa = static_cast<uint32_t>(mantissa64);
 
@@ -180,5 +167,5 @@ uint32_t compact::from_big(uint256_t const& big) {
     return (exponent << mantissa_bits) | mantissa;
 }
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin

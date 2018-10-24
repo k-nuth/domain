@@ -41,57 +41,31 @@ using wall_clock = std::chrono::system_clock;
 
 header::header()
     // : header(0, null_hash, null_hash, 0, 0, 0) {
-    : version_(0)
-    , previous_block_hash_(null_hash)
-    , merkle_(null_hash)
-    , timestamp_(0)
-    , bits_(0)
-    , nonce_(0)
-    , validation{} 
-{}
+    : version_(0), previous_block_hash_(null_hash), merkle_(null_hash), timestamp_(0), bits_(0), nonce_(0), validation{} {}
 
 header::header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
-    : version_(version)
-    , previous_block_hash_(previous_block_hash)
-    , merkle_(merkle)
-    , timestamp_(timestamp)
-    , bits_(bits)
-    , nonce_(nonce)
-    , validation{} 
-{}
+    : version_(version), previous_block_hash_(previous_block_hash), merkle_(merkle), timestamp_(timestamp), bits_(bits), nonce_(nonce), validation{} {}
 
 header::header(header const& x)
-    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) 
+    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_)
 
-    : version_(x.version_)
-    , previous_block_hash_(x.previous_block_hash_)
-    , merkle_(x.merkle_)
-    , timestamp_(x.timestamp_)
-    , bits_(x.bits_)
-    , nonce_(x.nonce_)
-    // , validation{} 
-    , validation(x.validation)
-{
+    : version_(x.version_), previous_block_hash_(x.previous_block_hash_), merkle_(x.merkle_), timestamp_(x.timestamp_), bits_(x.bits_), nonce_(x.nonce_)
+      // , validation{}
+      ,
+      validation(x.validation) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     // validation = x.validation;
 }
 
 header::header(header const& x, hash_digest const& hash)
-    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_) 
-    : version_(x.version_)
-    , previous_block_hash_(x.previous_block_hash_)
-    , merkle_(x.merkle_)
-    , timestamp_(x.timestamp_)
-    , bits_(x.bits_)
-    , nonce_(x.nonce_)
-    // , validation{} 
-    , validation(x.validation)
-{
+    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_)
+    : version_(x.version_), previous_block_hash_(x.previous_block_hash_), merkle_(x.merkle_), timestamp_(x.timestamp_), bits_(x.bits_), nonce_(x.nonce_)
+      // , validation{}
+      ,
+      validation(x.validation) {
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = x.validation;
 }
-
-
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -347,7 +321,7 @@ hash_digest header::hash() const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if ( ! hash_) {
+    if (!hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
         hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data()));
@@ -423,7 +397,7 @@ bool header::is_valid_proof_of_work(bool retarget) const {
         return false;
     }
 
-        // Ensure actual work is at least claimed amount (smaller is more work).
+    // Ensure actual work is at least claimed amount (smaller is more work).
 #ifdef BITPRIM_CURRENCY_LTC
     return to_uint256(litecoin_proof_of_work_hash()) <= target;
 #else
@@ -435,35 +409,34 @@ bool header::is_valid_proof_of_work(bool retarget) const {
 //-----------------------------------------------------------------------------
 
 code header::check(bool retarget) const {
-    if ( ! is_valid_proof_of_work(retarget)) {
+    if (!is_valid_proof_of_work(retarget)) {
         return error::invalid_proof_of_work;
-    } 
-    
-    if ( ! is_valid_timestamp()) {
+    }
+
+    if (!is_valid_timestamp()) {
         return error::futuristic_timestamp;
-    } 
-    
+    }
+
     return error::success;
-    
 }
 
 code header::accept(const chain_state& state) const {
     if (bits_ != state.work_required()) {
         return error::incorrect_proof_of_work;
-    } 
-    
+    }
+
     if (state.is_checkpoint_conflict(hash())) {
         return error::checkpoints_failed;
-    } 
-    
+    }
+
     if (state.is_under_checkpoint()) {
         return error::success;
-    } 
-    
+    }
+
     if (version_ < state.minimum_version()) {
         return error::old_version_block;
-    } 
-    
+    }
+
     if (timestamp_ <= state.median_time_past()) {
         return error::timestamp_too_early;
     }

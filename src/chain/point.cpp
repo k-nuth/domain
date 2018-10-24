@@ -43,17 +43,15 @@ constexpr auto store_point_size = std::tuple_size<point>::value;
 // A default instance is invalid (until modified).
 // constexpr
 point::point()
-    : hash_(null_hash), index_(0), valid_(false) 
-{}
+    : hash_(null_hash), index_(0), valid_(false) {}
 
 // constexpr
 point::point(hash_digest const& hash, uint32_t index)
-    : hash_(hash), index_(index), valid_(true) 
-{}
+    : hash_(hash), index_(index), valid_(true) {}
 
 // // protected
 // point::point(hash_digest const& hash, uint32_t index, bool valid)
-//     : hash_(hash), index_(index), valid_(valid) 
+//     : hash_(hash), index_(index), valid_(valid)
 // {}
 
 // Operators.
@@ -68,7 +66,6 @@ bool operator==(point const& x, point const& y) {
 bool operator!=(point const& x, point const& y) {
     return !(x == y);
 }
-
 
 // This arbitrary order is produced to support set uniqueness determinations.
 // constexpr

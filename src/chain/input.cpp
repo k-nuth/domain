@@ -40,36 +40,31 @@ using namespace bc::machine;
 //-----------------------------------------------------------------------------
 
 input::input()
-    : sequence_(0) 
-{}
+    : sequence_(0) {}
 
 input::input(input const& x)
     : addresses_(x.addresses_cache()),
       previous_output_(x.previous_output_),
       script_(x.script_),
       witness_(x.witness_),
-      sequence_(x.sequence_) 
-{}
+      sequence_(x.sequence_) {}
 
 input::input(input&& x) noexcept
     : addresses_(x.addresses_cache()),
       previous_output_(std::move(x.previous_output_)),
       script_(std::move(x.script_)),
       witness_(std::move(x.witness_)),
-      sequence_(x.sequence_) 
-{}
+      sequence_(x.sequence_) {}
 
 input::input(output_point&& previous_output, chain::script&& script, uint32_t sequence)
     : previous_output_(std::move(previous_output)),
       script_(std::move(script)),
-      sequence_(sequence) 
-{}
+      sequence_(sequence) {}
 
 input::input(output_point const& previous_output, chain::script const& script, uint32_t sequence)
     : previous_output_(previous_output),
       script_(script),
-      sequence_(sequence) 
-{}
+      sequence_(sequence) {}
 
 // Private cache access for copy/move construction.
 input::addresses_ptr input::addresses_cache() const {
@@ -337,7 +332,7 @@ payment_address::list input::addresses() const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if ( ! addresses_) {
+    if (!addresses_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
 
@@ -377,7 +372,7 @@ bool input::is_segregated() const {
 bool input::is_locked(size_t block_height, uint32_t median_time_past) const {
     if ((sequence_ & relative_locktime_disabled) != 0) {
         return false;
-}
+    }
 
     // bip68: a minimum block-height constraint over the input's age.
     auto const minimum = (sequence_ & relative_locktime_mask);
@@ -435,15 +430,15 @@ bool input::extract_embedded_script(chain::script& out) const {
     auto const& prevout_script = previous_output_.validation.cache.script();
 
     // There are no embedded sigops when the prevout script is not p2sh.
-    if ( ! prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule)) {
+    if (!prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule)) {
         return false;
-}
+    }
 
     // There are no embedded sigops when the input script is not push only.
     // The first operations access must be method-based to guarantee the cache.
     if (ops.empty() || !script::is_relaxed_push(ops)) {
         return false;
-}
+    }
 
     // Parse the embedded script from the last input script item (data).
     // This cannot fail because there is no prefix to invalidate the length.
@@ -453,9 +448,9 @@ bool input::extract_embedded_script(chain::script& out) const {
 bool input::extract_reserved_hash(hash_digest& out) const {
     auto const& stack = witness_.stack();
 
-    if ( ! witness::is_reserved_pattern(stack)) {
+    if (!witness::is_reserved_pattern(stack)) {
         return false;
-}
+    }
 
     std::copy_n(stack.front().begin(), hash_size, out.begin());
     return true;

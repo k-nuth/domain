@@ -45,34 +45,29 @@ uint32_t const output::validation::not_spent = max_uint32;
 
 output::output()
     : value_(not_found),
-      validation{} 
-{}
+      validation{} {}
 
 output::output(output&& x) noexcept
     : addresses_(x.addresses_cache()),
       value_(x.value_),
       script_(std::move(x.script_)),
-      validation(x.validation) 
-{}
+      validation(x.validation) {}
 
 output::output(output const& x)
     : addresses_(x.addresses_cache()),
       value_(x.value_),
       script_(x.script_),
-      validation(x.validation) 
-{}
+      validation(x.validation) {}
 
 output::output(uint64_t value, chain::script&& script)
     : value_(value),
       script_(std::move(script)),
-      validation{} 
-{}
+      validation{} {}
 
 output::output(uint64_t value, chain::script const& script)
     : value_(value),
       script_(script),
-      validation{} 
-{}
+      validation{} {}
 
 // Private cache access for copy/move construction.
 output::addresses_ptr output::addresses_cache() const {
@@ -273,7 +268,7 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     // Critical Section
     mutex_.lock_upgrade();
 
-    if ( ! addresses_) {
+    if (!addresses_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
         addresses_ = std::make_shared<payment_address::list>(
@@ -312,9 +307,9 @@ bool output::is_dust(uint64_t minimum_output_value) const {
 bool output::extract_committed_hash(hash_digest& out) const {
     auto const& ops = script_.operations();
 
-    if ( ! script::is_commitment_pattern(ops)) {
+    if (!script::is_commitment_pattern(ops)) {
         return false;
-}
+    }
 
     // The four byte offset for the witness commitment hash (bip141).
     auto const start = ops[1].data().begin() + sizeof(witness_head);

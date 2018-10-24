@@ -30,54 +30,45 @@ namespace chain {
 //-------------------------------------------------------------------------
 
 point_value::point_value()
-  : point(), value_(0)
-{
+    : point(), value_(0) {
 }
 
 point_value::point_value(point_value&& x)
-  : value_(x.value_), point(std::move(x))
-{
+    : value_(x.value_), point(std::move(x)) {
 }
 
 point_value::point_value(point_value const& x)
-  : point(x), value_(x.value_)
-{
+    : point(x), value_(x.value_) {
 }
 
 point_value::point_value(point&& instance, uint64_t value)
-  : point(std::move(instance)), value_(value)
-{
+    : point(std::move(instance)), value_(value) {
 }
 
 point_value::point_value(point const& instance, uint64_t value)
-  : point(instance), value_(value)
-{
+    : point(instance), value_(value) {
 }
 
 // Operators.
 //-------------------------------------------------------------------------
 
 // Copy and swap idiom, see: stackoverflow.com/a/3279550/1172329
-point_value& point_value::operator=(point_value x)
-{
+point_value& point_value::operator=(point_value x) {
     swap(*this, x);
     return *this;
 }
 
-bool point_value::operator==(point_value const& x) const
-{
+bool point_value::operator==(point_value const& x) const {
     return static_cast<point>(*this) == static_cast<point>(x) &&
-        (value_ == x.value_);
+           (value_ == x.value_);
 }
 
-bool point_value::operator!=(point_value const& x) const
-{
+bool point_value::operator!=(point_value const& x) const {
     return !(*this == x);
 }
 
 // friend function, see: stackoverflow.com/a/5695855/1172329
-void swap(point_value& left, point_value& right)
-{
+void swap(point_value& left, point_value& right) {
     using std::swap;
 
     // Must be unqualified (no std namespace).
@@ -88,15 +79,13 @@ void swap(point_value& left, point_value& right)
 // Properties (accessors).
 //-------------------------------------------------------------------------
 
-uint64_t point_value::value() const
-{
+uint64_t point_value::value() const {
     return value_;
 }
 
-void point_value::set_value(uint64_t value)
-{
+void point_value::set_value(uint64_t value) {
     value_ = value;
 }
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin

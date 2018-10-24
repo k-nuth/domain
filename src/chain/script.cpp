@@ -210,7 +210,7 @@ bool script::from_string(std::string const& mnemonic) {
 
     // Create an op list from the split tokens, one operation per token.
     for (size_t index = 0; index < ops.size(); ++index) {
-        if ( ! ops[index].from_string(tokens[index])) {
+        if (!ops[index].from_string(tokens[index])) {
             return false;
         }
     }
@@ -411,7 +411,7 @@ operation::list const& script::operations() const {
     // If an op fails it is pushed to operations and the loop terminates.
     // To validate the ops the caller must test the last op.is_valid(), or may
     // text script.is_valid_operations(), which is done in script validation.
-    while ( ! stream_r.is_exhausted()) {
+    while (!stream_r.is_exhausted()) {
         op.from_data(stream_r);
         operations_.push_back(std::move(op));
     }
@@ -784,7 +784,7 @@ bool script::create_endorsement(endorsement& out, ec_secret const& secret, scrip
 
     // Create the EC signature and encode as DER.
     ec_signature signature;
-    if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature)) {
+    if (!sign(signature, secret, sighash) || !encode_signature(out, signature)) {
         return false;
     }
 
@@ -880,7 +880,7 @@ bool script::is_pay_multisig_pattern(operation::list const& ops) {
 
     if (op_m < op_1 || op_m > op_n || op_n < op_1 || op_n > op_16) {
         return false;
-}
+    }
 
     auto const number = op_n - op_1 + 1u;
     auto const points = op_count - 3u;
@@ -890,7 +890,7 @@ bool script::is_pay_multisig_pattern(operation::list const& ops) {
     }
 
     for (auto op = ops.begin() + 1; op != ops.end() - 2; ++op) {
-        if ( ! is_public_key(op->data())) {
+        if (!is_public_key(op->data())) {
             return false;
         }
     }
@@ -950,17 +950,17 @@ operation::list script::to_null_data_pattern(data_slice data) {
         return {};
     }
 
-    return operation::list{ {opcode::return_},
-                            {to_chunk(data)}};
+    return operation::list{{opcode::return_},
+                           {to_chunk(data)}};
 }
 
 operation::list script::to_pay_public_key_pattern(data_slice point) {
-    if ( ! is_public_key(point)) {
+    if (!is_public_key(point)) {
         return {};
     }
 
-    return operation::list{ {to_chunk(point)},
-                            {opcode::checksig}};
+    return operation::list{{to_chunk(point)},
+                           {opcode::checksig}};
 }
 
 operation::list script::to_pay_key_hash_pattern(short_hash const& hash) {
@@ -1017,7 +1017,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures, data_stack c
     ops.emplace_back(op_m);
 
     for (auto const point : points) {
-        if ( ! is_public_key(point)) {
+        if (!is_public_key(point)) {
             return {};
         }
 
@@ -1042,7 +1042,7 @@ script_version script::version() const {
     // The first operations access must be method-based to guarantee the cache.
     auto const& ops = operations();
 
-    if ( ! is_witness_program_pattern(ops)) {
+    if (!is_witness_program_pattern(ops)) {
         return script_version::unversioned;
     }
 
@@ -1218,7 +1218,7 @@ void script::find_and_delete(data_stack const& endorsements) {
 // The criteria below are not be comprehensive but are fast to evaluate.
 bool script::is_unspendable() const {
     // The first operations access must be method-based to guarantee the cache.
-    return ( ! operations().empty() && operations_[0].code() == opcode::return_) || serialized_size(false) > max_script_size;
+    return (!operations().empty() && operations_[0].code() == opcode::return_) || serialized_size(false) > max_script_size;
 }
 
 // Validation.
@@ -1241,14 +1241,14 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
     }
 
     // This precludes bare witness programs of -0 (undocumented).
-    if ( ! prevout.stack_result(false)) {
+    if (!prevout.stack_result(false)) {
         return error::stack_false;
     }
 
     // Triggered by output script push of version and witness program (bip141).
     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
         // The input script must be empty (bip141).
-        if ( ! input_script.empty()) {
+        if (!input_script.empty()) {
             return error::dirty_witness;
         }
 
@@ -1260,7 +1260,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
 
     // p2sh and p2w are mutually exclusive.
     else if (prevout_script.is_pay_to_script_hash(forks)) {
-        if ( ! is_relaxed_push(input_script.operations())) {
+        if (!is_relaxed_push(input_script.operations())) {
             return error::invalid_script_embed;
         }
 
@@ -1273,7 +1273,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
         }
 
         // This precludes embedded witness programs of -0 (undocumented).
-        if ( ! embedded.stack_result(false)) {
+        if (!embedded.stack_result(false)) {
             return error::stack_false;
         }
 
@@ -1292,7 +1292,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
     }
 
     // Witness must be empty if no bip141 or valid witness program (bip141).
-    if ( ! witnessed && !input_witness.empty()) {
+    if (!witnessed && !input_witness.empty()) {
         return error::unexpected_witness;
     }
 

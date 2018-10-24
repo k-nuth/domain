@@ -58,102 +58,58 @@ namespace chain {
 // Constructors.
 //-----------------------------------------------------------------------------
 
-transaction::transaction() //NOLINT
-    : version_(0)
-    , locktime_(0)
-    , validation{}
-{}
+transaction::transaction()  //NOLINT
+    : version_(0), locktime_(0), validation{} {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs, uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard)
-    : version_(version)
-    , locktime_(locktime)
-    , inputs_(inputs)
-    , outputs_(outputs)
-    , cached_fees_(cached_fees)
-    , cached_sigops_(cached_sigops)
-    , cached_is_standard_(cached_is_standard)
-    , validation{} 
-{}
+    : version_(version), locktime_(locktime), inputs_(inputs), outputs_(outputs), cached_fees_(cached_fees), cached_sigops_(cached_sigops), cached_is_standard_(cached_is_standard), validation{} {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs, uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard)
-    : version_(version)
-    , locktime_(locktime)
-    , inputs_(std::move(inputs))
-    , outputs_(std::move(outputs))
-    , cached_fees_(cached_fees)
-    , cached_sigops_(cached_sigops)
-    , cached_is_standard_(cached_is_standard)
-    , validation{} 
-{}
+    : version_(version), locktime_(locktime), inputs_(std::move(inputs)), outputs_(std::move(outputs)), cached_fees_(cached_fees), cached_sigops_(cached_sigops), cached_is_standard_(cached_is_standard), validation{} {}
 
 transaction::transaction(transaction const& x)
-    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_) 
+    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_)
 
-    : version_(x.version_)
-    , locktime_(x.locktime_)
-    , inputs_(x.inputs_)
-    , outputs_(x.outputs_)
-    , cached_fees_(0)
-    , cached_sigops_(0)
-    , cached_is_standard_(false)
-    // , validation{} 
-    , validation(x.validation)
-{
+    : version_(x.version_), locktime_(x.locktime_), inputs_(x.inputs_), outputs_(x.outputs_), cached_fees_(0), cached_sigops_(0), cached_is_standard_(false)
+      // , validation{}
+      ,
+      validation(x.validation) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     // validation = x.validation;
 }
 
 transaction::transaction(transaction&& x) noexcept
-    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_)) 
+    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_))
 
-    : version_(x.version_)
-    , locktime_(x.locktime_)
-    , inputs_(std::move(x.inputs_))
-    , outputs_(std::move(x.outputs_))
-    , cached_fees_(0)
-    , cached_sigops_(0)
-    , cached_is_standard_(false)
-    // , validation{}
-    , validation(std::move(x.validation))
-{
+    : version_(x.version_), locktime_(x.locktime_), inputs_(std::move(x.inputs_)), outputs_(std::move(x.outputs_)), cached_fees_(0), cached_sigops_(0), cached_is_standard_(false)
+      // , validation{}
+      ,
+      validation(std::move(x.validation)) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     // validation = std::move(x.validation);
 }
 
 transaction::transaction(transaction const& x, hash_digest const& hash)
-    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_, x.cached_sigops_, x.cached_fees_, x.cached_is_standard_) 
+    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_, x.cached_sigops_, x.cached_fees_, x.cached_is_standard_)
 
-    : version_(x.version_)
-    , locktime_(x.locktime_)
-    , inputs_(x.inputs_)
-    , outputs_(x.outputs_)
-    , cached_fees_(x.cached_fees_)
-    , cached_sigops_(x.cached_sigops_)
-    , cached_is_standard_(x.cached_is_standard_)
-    // , validation{}     
-    , validation(x.validation)
-{
+    : version_(x.version_), locktime_(x.locktime_), inputs_(x.inputs_), outputs_(x.outputs_), cached_fees_(x.cached_fees_), cached_sigops_(x.cached_sigops_), cached_is_standard_(x.cached_is_standard_)
+      // , validation{}
+      ,
+      validation(x.validation) {
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = x.validation;
 }
 
 transaction::transaction(transaction&& x, hash_digest const& hash)
-    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_), x.cached_sigops_, x.cached_fees_, x.cached_is_standard_) 
+    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_), x.cached_sigops_, x.cached_fees_, x.cached_is_standard_)
 
-    : version_(x.version_)
-    , locktime_(x.locktime_)
-    , inputs_(std::move(x.inputs_))
-    , outputs_(std::move(x.outputs_))
-    , cached_fees_(x.cached_fees_)
-    , cached_sigops_(x.cached_sigops_)
-    , cached_is_standard_(x.cached_is_standard_)
-    // , validation{}
-    , validation(std::move(x.validation))
-{
+    : version_(x.version_), locktime_(x.locktime_), inputs_(std::move(x.inputs_)), outputs_(std::move(x.outputs_)), cached_fees_(x.cached_fees_), cached_sigops_(x.cached_sigops_), cached_is_standard_(x.cached_is_standard_)
+      // , validation{}
+      ,
+      validation(std::move(x.validation)) {
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = std::move(x.validation);
 }
-
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -499,7 +455,7 @@ hash_digest transaction::hash(bool witness) const {
     hash_mutex_.lock_upgrade();
 
     if (witness_val(witness)) {
-        if ( ! witness_hash_) {
+        if (!witness_hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock();
 
@@ -510,7 +466,7 @@ hash_digest transaction::hash(bool witness) const {
             //-----------------------------------------------------------------
         }
     } else {
-        if ( ! hash_) {
+        if (!hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock();
             hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data(true)));
@@ -531,7 +487,7 @@ hash_digest transaction::outputs_hash() const {
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if ( ! outputs_hash_) {
+    if (!outputs_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
         outputs_hash_ = std::make_shared<hash_digest>(script::to_outputs(*this));
@@ -551,7 +507,7 @@ hash_digest transaction::inpoints_hash() const {
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if ( ! inpoints_hash_) {
+    if (!inpoints_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
         inpoints_hash_ = std::make_shared<hash_digest>(script::to_inpoints(*this));
@@ -571,7 +527,7 @@ hash_digest transaction::sequences_hash() const {
     // Critical Section
     hash_mutex_.lock_upgrade();
 
-    if ( ! sequences_hash_) {
+    if (!sequences_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
         sequences_hash_ = std::make_shared<hash_digest>(script::to_sequences(*this));
@@ -618,7 +574,7 @@ bool transaction::is_coinbase() const {
 
 // True if coinbase and has invalid input[0] script size.
 bool transaction::is_oversized_coinbase() const {
-    if ( ! is_coinbase()) {
+    if (!is_coinbase()) {
         return false;
     }
 
@@ -916,7 +872,7 @@ code transaction::connect_input(const chain_state& state, size_t input_index) co
     auto const& prevout = inputs_[input_index].previous_output().validation;
 
     // Verify that the previous output cache has been populated.
-    if ( ! prevout.cache.is_valid()) {
+    if (!prevout.cache.is_valid()) {
         return error::missing_previous_output;
     }
 
@@ -934,41 +890,40 @@ code transaction::connect_input(const chain_state& state, size_t input_index) co
 code transaction::check(bool transaction_pool, bool retarget) const {
     if (inputs_.empty() || outputs_.empty()) {
         return error::empty_transaction;
-    } 
-    
+    }
+
     if (is_null_non_coinbase()) {
         return error::previous_output_null;
-    } 
-    
+    }
+
     if (total_output_value() > max_money(retarget)) {
         return error::spend_overflow;
-    } 
-    
-    if ( ! transaction_pool && is_oversized_coinbase()) {
+    }
+
+    if (!transaction_pool && is_oversized_coinbase()) {
         return error::invalid_coinbase_script_size;
-    } 
-    
+    }
+
     if (transaction_pool && is_coinbase()) {
         return error::coinbase_transaction;
-    } 
-    
+    }
+
     if (transaction_pool && is_internal_double_spend()) {
         return error::transaction_internal_double_spend;
-    // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
-    } 
-    
+        // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
+    }
+
     if (transaction_pool && serialized_size(true, false) >= get_max_block_size()) {
         return error::transaction_size_limit;
 
-    // We cannot know if bip16/bip141 is enabled here so we do not check it.
-    // This will not make a difference unless prevouts are populated, in which
-    // case they are ignored. This means that p2sh sigops are not counted here.
-    // This is a preliminary check, the final count must come from accept().
-    // Reenable once sigop caching is implemented, otherwise is deoptimization.
-    ////else if (transaction_pool && signature_operations(false, false) > get_max_block_sigops()
-    ////    return error::transaction_legacy_sigop_limit;
-
-    } 
+        // We cannot know if bip16/bip141 is enabled here so we do not check it.
+        // This will not make a difference unless prevouts are populated, in which
+        // case they are ignored. This means that p2sh sigops are not counted here.
+        // This is a preliminary check, the final count must come from accept().
+        // Reenable once sigop caching is implemented, otherwise is deoptimization.
+        ////else if (transaction_pool && signature_operations(false, false) > get_max_block_sigops()
+        ////    return error::transaction_legacy_sigop_limit;
+    }
 
     return error::success;
 }
@@ -995,61 +950,61 @@ code transaction::accept(const chain_state& state, bool transaction_pool) const 
 
     if (transaction_pool && state.is_under_checkpoint()) {
         return error::premature_validation;
-    // A segregated tx should appear empty if bip141 is not enabled.
-    } 
-    
-    if ( ! bip141 && is_segregated()) {
+        // A segregated tx should appear empty if bip141 is not enabled.
+    }
+
+    if (!bip141 && is_segregated()) {
         return error::empty_transaction;
-    } 
-    
+    }
+
     if (transaction_pool && !is_final(state.height(), state.median_time_past())) {
         return error::transaction_non_final;
 
-    //*************************************************************************
-    // CONSENSUS:
-    // A transaction hash that exists in the chain is not acceptable even if
-    // the original is spent in the new block. This is not necessary nor is it
-    // described by BIP30, but it is in the code referenced by BIP30.
-    //*************************************************************************
-    } 
-    
+        //*************************************************************************
+        // CONSENSUS:
+        // A transaction hash that exists in the chain is not acceptable even if
+        // the original is spent in the new block. This is not necessary nor is it
+        // described by BIP30, but it is in the code referenced by BIP30.
+        //*************************************************************************
+    }
+
     if (bip30 && !revert_bip30 && validation.duplicate) {
         return error::unspent_duplicate;
     }
-    
+
     if (is_missing_previous_outputs()) {
         return error::missing_previous_output;
-    } 
-    
+    }
+
     if (is_double_spend(transaction_pool)) {
         return error::double_spend;
-    // This relates height to maturity of spent coinbase. Since reorg is the
-    // only way to decrease height and reorg invalidates, this is cache safe.
-    } 
-    
-    if ( ! is_mature(state.height())) {
+        // This relates height to maturity of spent coinbase. Since reorg is the
+        // only way to decrease height and reorg invalidates, this is cache safe.
+    }
+
+    if (!is_mature(state.height())) {
         return error::coinbase_maturity;
-    } 
-    
+    }
+
     if (is_overspent()) {
         return error::spend_exceeds_value;
     }
-    
+
     if (bip68 && is_locked(state.height(), state.median_time_past())) {
         return error::sequence_locked;
-    // This recomputes sigops to include p2sh from prevouts if bip16 is true.
-    } 
-    
+        // This recomputes sigops to include p2sh from prevouts if bip16 is true.
+    }
+
     if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
         return error::transaction_embedded_sigop_limit;
-    // This causes second serialized_size(true, false) computation (uncached).
-    // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
-    } 
-    
+        // This causes second serialized_size(true, false) computation (uncached).
+        // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
+    }
+
     if (transaction_pool && bip141 && weight() > max_block_weight) {
         return error::transaction_weight_limit;
-    } 
-    
+    }
+
     return error::success;
 }
 

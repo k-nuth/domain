@@ -243,9 +243,9 @@ void witness::to_data(data_sink& stream, bool prefix) const {
 //}
 
 std::string witness::to_string() const {
-    if ( ! valid_) {
+    if (!valid_) {
         return "<invalid>";
-}
+    }
 
     std::string text;
     auto const serialize = [&text](data_chunk const& element) {
@@ -354,9 +354,9 @@ bool witness::extract_sigop_script(script& out_script,
                     return true;
 
                 case hash_size:
-                    if ( ! stack_.empty()) {
+                    if (!stack_.empty()) {
                         out_script.from_data(stack_.back(), false);
-}
+                    }
 
                     return true;
 
@@ -390,7 +390,7 @@ bool witness::extract_embedded_script(script& out_script,
                 // Stack must be 2 elements, within push size limit (bip141).
                 if (out_stack.size() != 2 || !is_push_size(out_stack)) {
                     return false;
-}
+                }
 
                 // The hash160 of public key must match the program (bip141).
                 out_script.from_operations(to_pay_key_hash(std::move(program)));
@@ -402,15 +402,15 @@ bool witness::extract_embedded_script(script& out_script,
                 // The witness must consist of at least 1 item (bip141).
                 if (out_stack.empty()) {
                     return false;
-}
+                }
 
                 // The script is popped off the initial witness stack (bip141).
                 out_script.from_data(pop(out_stack), false);
 
                 // Stack elements must be within push size limit (bip141).
-                if ( ! is_push_size(out_stack)) {
+                if (!is_push_size(out_stack)) {
                     return false;
-}
+                }
 
                 // SHA256 of the witness script must match program (bip141).
                 return std::equal(program.begin(), program.end(),
@@ -445,21 +445,21 @@ code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks
             script script;
             data_stack stack;
 
-            if ( ! extract_embedded_script(script, stack, program_script)) {
+            if (!extract_embedded_script(script, stack, program_script)) {
                 return error::invalid_witness;
-}
+            }
 
             program witness(script, tx, input_index, forks, std::move(stack),
                             value, version);
 
             if ((ec = witness.evaluate())) {
                 return ec;
-}
+            }
 
             // A v0 script must succeed with a clean true stack (bip141).
-            if ( ! witness.stack_result(true)) {
+            if (!witness.stack_result(true)) {
                 return error::stack_false;
-}
+            }
         }
 
         // These versions are reserved for future extensions (bip141).

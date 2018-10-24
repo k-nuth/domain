@@ -32,18 +32,13 @@ namespace chain {
 //-----------------------------------------------------------------------------
 
 output_point::output_point()
-    : validation{} 
-{}
+    : validation{} {}
 
 output_point::output_point(hash_digest const& hash, uint32_t index)
-    : point(hash, index)
-    , validation{} 
-{}
+    : point(hash, index), validation{} {}
 
 output_point::output_point(point const& x)
-    : point(x)
-    , validation{} 
-{}
+    : point(x), validation{} {}
 
 // output_point::output_point(output_point&& x) noexcept
 //     : point(x)
@@ -109,7 +104,7 @@ output_point output_point::factory_from_data(data_source& stream, bool wire) {
 // For tx pool validation height is that of the candidate block.
 bool output_point::is_mature(size_t height) const {
     // Coinbase (null) inputs and those with non-coinbase prevouts are mature.
-    if ( ! validation.coinbase || is_null()) {
+    if (!validation.coinbase || is_null()) {
         return true;
     }
 
