@@ -55,7 +55,7 @@ public:
 
     // Swap implementation required to properly handle base class.
     friend 
-    void swap(point_value& left, point_value& right);
+    void swap(point_value& x, point_value& y);
 
     // Properties (accessors).
     //-------------------------------------------------------------------------

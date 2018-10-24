@@ -48,7 +48,7 @@ point_value::point_value(point const& p, uint64_t value)
 
 // friend
 bool operator==(point_value const& x, point_value const& y) {
-    return static_cast<point>(x) == static_cast<point>(y) && x.value_ == y.value_;        //NOLINT    //Note(bitprim): slicing object from point_value to point
+    return static_cast<point const&>(x) == static_cast<point const&>(y) && x.value_ == y.value_;
 }
 
 // friend
@@ -57,11 +57,11 @@ bool operator!=(point_value const& x, point_value const& y) {
 }
 
 // friend
-void swap(point_value& left, point_value& right) {
+void swap(point_value& x, point_value& y) {
     using std::swap;
 
-    swap(static_cast<point&>(left), static_cast<point&>(right));
-    swap(left.value_, right.value_);
+    swap(static_cast<point&>(x), static_cast<point&>(y));
+    swap(x.value_, y.value_);
 }
 
 // Properties (accessors).
