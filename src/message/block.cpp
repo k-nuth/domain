@@ -50,31 +50,51 @@ block block::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//block block::factory_from_data(uint32_t version, reader& source)
-//{
-//    block instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
-block::block(block&& x) noexcept
-    : chain::block(std::move(x)) {
-}
-
 block::block(chain::block&& x)
-    : chain::block(std::move(x)) {
-}
+    : chain::block(std::move(x)) 
+{}
 
-block::block(const chain::block& x)
-    : chain::block(x) {
-}
+block::block(chain::block const& x)
+    : chain::block(x) 
+{}
 
 block::block(chain::header const& header, chain::transaction::list&& transactions)
-    : chain::block(header, std::move(transactions)) {
-}
+    : chain::block(header, std::move(transactions)) 
+{}
 
 block::block(chain::header const& header, chain::transaction::list const& transactions)
-    : chain::block(header, transactions) {
+    : chain::block(header, transactions) 
+{}
+
+// block::block(block&& x) noexcept
+//     : chain::block(std::move(x)) 
+// {}
+
+block& block::operator=(chain::block&& x) {
+    reset();
+    chain::block::operator=(std::move(x));
+    return *this;
+}
+
+// block& block::operator=(block&& x) noexcept {
+//     chain::block::operator=(std::move(x));
+//     return *this;
+// }
+
+bool block::operator==(chain::block const& x) const {
+    return chain::block::operator==(x);
+}
+
+bool block::operator!=(chain::block const& x) const {
+    return chain::block::operator!=(x);
+}
+
+bool block::operator==(block const& x) const {
+    return chain::block::operator==(x);
+}
+
+bool block::operator!=(block const& x) const {
+    return !(*this == x);
 }
 
 // Witness is always deserialized if present.
@@ -88,10 +108,6 @@ bool block::from_data(uint32_t /*version*/, data_source& stream) {
     return chain::block::from_data(stream, true);
 }
 
-//bool block::from_data(uint32_t version, reader& source)
-//{
-//    return chain::block::from_data(source, true);
-//}
 
 // Witness is always serialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
@@ -104,11 +120,6 @@ void block::to_data(uint32_t /*version*/, data_sink& stream) const {
     chain::block::to_data(stream, true);
 }
 
-//void block::to_data(uint32_t version, writer& sink) const
-//{
-//    chain::block::to_data(sink, true);
-//}
-
 // Witness size is always counted if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
@@ -116,32 +127,7 @@ size_t block::serialized_size(uint32_t /*unused*/) const {
     return chain::block::serialized_size(true);
 }
 
-block& block::operator=(chain::block&& x) {
-    reset();
-    chain::block::operator=(std::move(x));
-    return *this;
-}
 
-block& block::operator=(block&& x) noexcept {
-    chain::block::operator=(std::move(x));
-    return *this;
-}
-
-bool block::operator==(const chain::block& x) const {
-    return chain::block::operator==(x);
-}
-
-bool block::operator!=(const chain::block& x) const {
-    return chain::block::operator!=(x);
-}
-
-bool block::operator==(block const& x) const {
-    return chain::block::operator==(x);
-}
-
-bool block::operator!=(block const& x) const {
-    return !(*this == x);
-}
 
 //TODO(fernando): check this family of functions: to_data_header_nonce
 void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
