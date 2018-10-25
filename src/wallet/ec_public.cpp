@@ -46,11 +46,11 @@ ec_public::ec_public()
     : valid_(false), compress_(true), point_(null_compressed_point) {
 }
 
-ec_public::ec_public(const ec_public& x)
+ec_public::ec_public(ec_public const& x)
     : valid_(x.valid_), compress_(x.compress_), point_(x.point_) {
 }
 
-ec_public::ec_public(const ec_private& secret)
+ec_public::ec_public(ec_private const& secret)
     : ec_public(from_private(secret)) {
 }
 
@@ -80,7 +80,7 @@ bool ec_public::is_point(data_slice decoded) {
 // Factories.
 // ----------------------------------------------------------------------------
 
-ec_public ec_public::from_private(const ec_private& secret) {
+ec_public ec_public::from_private(ec_private const& secret) {
     if ( ! secret) {
         return ec_public();
     }
@@ -194,7 +194,7 @@ payment_address ec_public::to_payment_address(uint8_t version) const {
 // Operators.
 // ----------------------------------------------------------------------------
 
-ec_public& ec_public::operator=(const ec_public& x) {
+ec_public& ec_public::operator=(ec_public const& x) {
     valid_ = x.valid_;
     compress_ = x.compress_;
     version_ = x.version_;
@@ -202,16 +202,16 @@ ec_public& ec_public::operator=(const ec_public& x) {
     return *this;
 }
 
-bool ec_public::operator<(const ec_public& x) const {
+bool ec_public::operator<(ec_public const& x) const {
     return encoded() < x.encoded();
 }
 
-bool ec_public::operator==(const ec_public& x) const {
+bool ec_public::operator==(ec_public const& x) const {
     return valid_ == x.valid_ && compress_ == x.compress_ &&
            version_ == x.version_ && point_ == x.point_;
 }
 
-bool ec_public::operator!=(const ec_public& x) const {
+bool ec_public::operator!=(ec_public const& x) const {
     return !(*this == x);
 }
 
@@ -228,7 +228,7 @@ std::istream& operator>>(std::istream& in, ec_public& to) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ec_public& of) {
+std::ostream& operator<<(std::ostream& out, ec_public const& of) {
     out << of.encoded();
     return out;
 }

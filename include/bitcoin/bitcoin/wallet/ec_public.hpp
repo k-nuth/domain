@@ -45,20 +45,20 @@ public:
 
     /// Constructors.
     ec_public();
-    ec_public(const ec_public& x);
-    ec_public(const ec_private& secret);
+    ec_public(ec_public const& x);
+    ec_public(ec_private const& secret);
     ec_public(data_chunk const& decoded);
     ec_public(std::string const& base16);
     ec_public(const ec_compressed& point, bool compress = true);
     ec_public(const ec_uncompressed& point, bool compress = false);
 
     /// Operators.
-    bool operator<(const ec_public& x) const;
-    bool operator==(const ec_public& x) const;
-    bool operator!=(const ec_public& x) const;
-    ec_public& operator=(const ec_public& x);
+    bool operator<(ec_public const& x) const;
+    bool operator==(ec_public const& x) const;
+    bool operator!=(ec_public const& x) const;
+    ec_public& operator=(ec_public const& x);
     friend std::istream& operator>>(std::istream& in, ec_public& to);
-    friend std::ostream& operator<<(std::ostream& out, const ec_public& of);
+    friend std::ostream& operator<<(std::ostream& out, ec_public const& of);
 
     /// Cast operators.
     operator const bool() const;
@@ -85,7 +85,7 @@ private:
 
     /// Factories.
     static ec_public from_data(data_chunk const& decoded);
-    static ec_public from_private(const ec_private& secret);
+    static ec_public from_private(ec_private const& secret);
     static ec_public from_string(std::string const& base16);
     static ec_public from_point(const ec_uncompressed& point, bool compress);
 
