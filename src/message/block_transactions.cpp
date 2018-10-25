@@ -99,39 +99,6 @@ bool block_transactions::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool block_transactions::from_data(uint32_t version, reader& source)
-//{
-//    //std::cout << "bool block_transactions::from_data(uint32_t version, reader& source) \n";
-//    reset();
-//
-//    block_hash_ = source.read_hash();
-//    auto const count = source.read_size_little_endian();
-//
-//    // Guard against potential for arbitary memory allocation.
-//    if (count > get_max_block_size())
-//        source.invalidate();
-//    else
-//        transactions_.resize(count);
-//#ifdef BITPRIM_CURRENCY_BCH
-//    bool witness = false;
-//#else
-//    bool witness = true;
-//#endif
-//
-//    // Order is required.
-//    for (auto& tx: transactions_)
-//        if ( ! tx.from_data(source, true, witness))
-//            break;
-//
-//    if (version < block_transactions::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk block_transactions::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -148,26 +115,15 @@ void block_transactions::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void block_transactions::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_hash(block_hash_);
-//    sink.write_variable_little_endian(transactions_.size());
-//
-//#ifdef BITPRIM_CURRENCY_BCH
-//    bool witness = false;
-//#else
-//    bool witness = true;
-//#endif
-//    for (auto const& element: transactions_) {
-//        element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
-//    }
-//}
-
 size_t block_transactions::serialized_size(uint32_t /*version*/) const {
     auto size = hash_size + message::variable_uint_size(transactions_.size());
 
     for (auto const& element : transactions_) {
-        size += element.serialized_size(/*wire*/ true, witness_default(), /*unconfirmed*/ false);
+        size += element.serialized_size(/*wire*/ true, witness_default()
+#ifdef BITPRIM_CACHED_RPC_DATA
+                                       , /*unconfirmed*/ false
+#endif
+                                       );
     }
 
     return size;

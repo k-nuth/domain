@@ -47,13 +47,6 @@ prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version,
     return instance;
 }
 
-//prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, reader& source)
-//{
-//    prefilled_transaction instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 prefilled_transaction::prefilled_transaction()
     : index_(max_index), transaction_() {}
 
@@ -95,24 +88,6 @@ bool prefilled_transaction::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool prefilled_transaction::from_data(uint32_t version, reader& source)
-//{
-//#ifdef BITPRIM_CURRENCY_BCH
-//    bool witness = false;
-//#else
-//    bool witness = true;
-//#endif
-//    reset();
-//
-//    index_ = source.read_variable_little_endian();
-//    transaction_.from_data(source, true, witness);
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk prefilled_transaction::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -129,21 +104,14 @@ void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void prefilled_transaction::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_variable_little_endian(index_);
-//#ifdef BITPRIM_CURRENCY_BCH
-//    bool witness = false;
-//#else
-//    bool witness = true;
-//#endif
-//    transaction_.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
-//}
-
 size_t prefilled_transaction::serialized_size(uint32_t version) const {
-    // TODO(libbitcoin): serialize size should use witness for ! BCH
+    // TODO(bitprim): serialize size should use witness for ! BCH
     return message::variable_uint_size(index_) +
-           transaction_.serialized_size(/*wire*/ true, witness_default(), /*unconfirmed*/ false);
+           transaction_.serialized_size(/*wire*/ true, witness_default()
+#ifdef BITPRIM_CACHED_RPC_DATA           
+                                      , /*unconfirmed*/ false
+#endif
+                                       );
 }
 
 uint64_t prefilled_transaction::index() const {

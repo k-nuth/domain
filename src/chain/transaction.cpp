@@ -216,76 +216,32 @@ transaction transaction::factory_from_data(data_source& stream, bool wire, bool 
 ////     return instance;
 //// }
 
-bool transaction::from_data(data_chunk const& data, bool wire, bool witness, bool unconfirmed) {
+bool transaction::from_data(data_chunk const& data, bool wire, bool witness
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , bool unconfirmed
+#endif
+    ) {
     data_source istream(data);
-    return from_data(istream, wire, witness_val(witness), unconfirmed);
+    return from_data(istream, wire, witness_val(witness)
+#ifdef BITPRIM_CACHED_RPC_DATA    
+                    , unconfirmed
+#endif
+                    );
 }
 
-bool transaction::from_data(data_source& stream, bool wire, bool witness, bool unconfirmed) {
+bool transaction::from_data(data_source& stream, bool wire, bool witness
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , bool unconfirmed
+#endif
+    ) {
     istream_reader stream_r(stream);
-    return from_data(stream_r, wire, witness_val(witness), unconfirmed);
-}
+    return from_data(stream_r, wire, witness_val(witness)
+#ifdef BITPRIM_CACHED_RPC_DATA    
+                    , unconfirmed
+#endif
 
-// // Witness is not used by outputs, just for template normalization.
-//// bool transaction::from_data(reader& source, bool wire, bool witness, bool unconfirmed) {
-////     reset();
-//
-////     if (wire) {
-////         // Wire (satoshi protocol) deserialization.
-////         version_ = source.read_4_bytes_little_endian();
-////         read(source, inputs_, wire, witness_val(witness));
-//// #ifdef BITPRIM_CURRENCY_BCH
-////         auto const marker = false;
-//// #else
-////         // Detect witness as no inputs (marker) and expected flag (bip144).
-////         auto const marker = inputs_.size() == witness_marker && source.peek_byte() == witness_flag;
-//// #endif
-//
-////         // This is always enabled so caller should validate with is_segregated.
-////         if (marker) {
-////             // Skip over the peeked witness flag.
-////             source.skip(1);
-////             read(source, inputs_, wire, witness_val(witness));
-////             read(source, outputs_, wire, witness_val(witness));
-////             read_witnesses(source, inputs_);
-////         } else {
-////             read(source, outputs_, wire, witness_val(witness));
-////         }
-//
-////         locktime_ = source.read_4_bytes_little_endian();
-////     } else {
-////         // Database (outputs forward) serialization.
-////         // Witness data is managed internal to inputs.
-////         read(source, outputs_, wire, witness_val(witness));
-////         read(source, inputs_, wire, witness_val(witness));
-////         auto const locktime = source.read_variable_little_endian();
-////         auto const version = source.read_variable_little_endian();
-//
-////         if (locktime > max_uint32 || version > max_uint32)
-////             source.invalidate();
-//
-////         locktime_ = static_cast<uint32_t>(locktime);
-////         version_ = static_cast<uint32_t>(version);
-//
-////         if (unconfirmed) {
-////             auto const sigops = source.read_4_bytes_little_endian();
-////             cached_sigops_ = static_cast<uint32_t>(sigops);
-////             auto const fees = source.read_8_bytes_little_endian();
-////             cached_fees_ = static_cast<uint64_t>(fees);
-////             auto const is_standard = source.read_byte();
-////             cached_is_standard_ = static_cast<bool>(is_standard);
-////         }
-////     }
-//
-////     // TODO(libbitcoin): optimize by having reader skip witness data.
-////     if ( ! witness_val(witness))
-////         strip_witness();
-//
-////     if ( ! source)
-////         reset();
-//
-////     return source;
-//// }
+                    );
+}
 
 // protected
 void transaction::reset() {
@@ -313,72 +269,61 @@ bool transaction::is_valid() const {
 
 // Transactions with empty witnesses always use old serialization (bip144).
 // If no inputs are witness programs then witness hash is tx hash (bip141).
-data_chunk transaction::to_data(bool wire, bool witness, bool unconfirmed) const {
+data_chunk transaction::to_data(bool wire, bool witness
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , bool unconfirmed
+#endif
+    ) const {
     // Witness handling must be disabled for non-segregated txs.
     witness &= is_segregated();
 
     data_chunk data;
-    auto const size = serialized_size(wire, witness_val(witness), unconfirmed);
+    auto const size = serialized_size(wire, witness_val(witness)
+#ifdef BITPRIM_CACHED_RPC_DATA
+                                     , unconfirmed
+#endif
+                                     );
 
     // Reserve an extra byte to prevent full reallocation in the case of
     // generate_signature_hash extension by addition of the sighash_type.
     data.reserve(size + sizeof(uint8_t));
 
     data_sink ostream(data);
-    to_data(ostream, wire, witness_val(witness), unconfirmed);
+    to_data(ostream, wire, witness_val(witness)
+#ifdef BITPRIM_CACHED_RPC_DATA
+           , unconfirmed
+#endif
+           );
+
     ostream.flush();
     BITCOIN_ASSERT(data.size() == size);
     return data;
 }
 
-void transaction::to_data(data_sink& stream, bool wire, bool witness, bool unconfirmed) const {
+void transaction::to_data(data_sink& stream, bool wire, bool witness
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , bool unconfirmed
+#endif
+    ) const {
     // Witness handling must be disabled for non-segregated txs.
     witness &= is_segregated();
 
     ostream_writer sink_w(stream);
-    to_data(sink_w, wire, witness_val(witness), unconfirmed);
+    to_data(sink_w, wire, witness_val(witness)
+#ifdef BITPRIM_CACHED_RPC_DATA
+           , unconfirmed
+#endif
+           );
 }
-
-// // Witness is not used by outputs, just for template normalization.
-//// void transaction::to_data(writer& sink, bool wire, bool witness, bool unconfirmed) const {
-////     if (wire) {
-////         // Witness handling must be disabled for non-segregated txs.
-////         witness &= is_segregated();
-//
-////         // Wire (satoshi protocol) serialization.
-////         sink.write_4_bytes_little_endian(version_);
-//
-////         if (witness_val(witness)) {
-////             sink.write_byte(witness_marker);
-////             sink.write_byte(witness_flag);
-////             write(sink, inputs_, wire, witness_val(witness));
-////             write(sink, outputs_, wire, witness_val(witness));
-////             write_witnesses(sink, inputs_);
-////         } else {
-////             write(sink, inputs_, wire, witness_val(witness));
-////             write(sink, outputs_, wire, witness_val(witness));
-////         }
-//
-////         sink.write_4_bytes_little_endian(locktime_);
-////     } else {
-////         // Database (outputs forward) serialization.
-////         // Witness data is managed internal to inputs.
-////         write(sink, outputs_, wire, witness_val(witness));
-////         write(sink, inputs_, wire, witness_val(witness));
-////         sink.write_variable_little_endian(locktime_);
-////         sink.write_variable_little_endian(version_);
-////         if (unconfirmed) {
-////             sink.write_4_bytes_little_endian(signature_operations());
-////             sink.write_8_bytes_little_endian(fees());
-////             sink.write_byte(is_standard());
-////         }
-////     }
-//// }
 
 // Size.
 //-----------------------------------------------------------------------------
 
-size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) const {
+size_t transaction::serialized_size(bool wire, bool witness
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , bool unconfirmed
+#endif
+    ) const {
     // The witness parameter must be set to false for non-segregated txs.
     witness &= is_segregated();
 
@@ -393,7 +338,17 @@ size_t transaction::serialized_size(bool wire, bool witness, bool unconfirmed) c
     };
 
     // Must be both witness and wire encoding for bip144 serialization.
-    return (wire && witness_val(witness) ? sizeof(witness_marker) : 0) + (wire && witness_val(witness) ? sizeof(witness_flag) : 0) + (wire ? sizeof(version_) : message::variable_uint_size(version_)) + (wire ? sizeof(locktime_) : message::variable_uint_size(locktime_)) + message::variable_uint_size(inputs_.size()) + message::variable_uint_size(outputs_.size()) + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins) + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs) + ((!wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t) : 0);
+    return (wire && witness_val(witness) ? sizeof(witness_marker) : 0) 
+         + (wire && witness_val(witness) ? sizeof(witness_flag) : 0) 
+         + (wire ? sizeof(version_) : message::variable_uint_size(version_)) 
+         + (wire ? sizeof(locktime_) : message::variable_uint_size(locktime_)) 
+         + message::variable_uint_size(inputs_.size()) + message::variable_uint_size(outputs_.size()) 
+         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins) 
+         + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs) 
+#ifdef BITPRIM_CACHED_RPC_DATA         
+         + ((!wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t) : 0)
+#endif
+         ;
 }
 
 // Accessors.

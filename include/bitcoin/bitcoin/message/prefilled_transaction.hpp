@@ -90,7 +90,11 @@ public:
     template <Writer W>
     void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(index_);
-        transaction_.to_data(sink, /*wire*/ true, witness_default(), /*unconfirmed*/ false);
+        transaction_.to_data(sink, /*wire*/ true, witness_default()
+#ifdef BITPRIM_CACHED_RPC_DATA        
+                             , /*unconfirmed*/ false
+#endif
+                             );
     }
 
     //void to_data(uint32_t version, writer& sink) const;

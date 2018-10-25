@@ -109,7 +109,11 @@ public:
         sink.write_variable_little_endian(transactions_.size());
 
         for (auto const& element : transactions_) {
-            element.to_data(sink, /*wire*/ true, witness_default(), /*unconfirmed*/ false);
+            element.to_data(sink, /*wire*/ true, witness_default()
+#ifdef BITPRIM_CACHED_RPC_DATA
+                            , /*unconfirmed*/ false
+#endif
+                            );
         }
     }
 

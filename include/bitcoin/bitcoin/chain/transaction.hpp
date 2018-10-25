@@ -183,12 +183,25 @@ public:
 
     //static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
 
-    bool from_data(data_chunk const& data, bool wire = true, bool witness = false, bool unconfirmed = false);
-    bool from_data(data_source& stream, bool wire = true, bool witness = false, bool unconfirmed = false);
+    bool from_data(data_chunk const& data, bool wire = true, bool witness = false
+#ifdef BITPRIM_CACHED_RPC_DATA
+                    , bool unconfirmed = false
+#endif
+                    );
+
+    bool from_data(data_source& stream, bool wire = true, bool witness = false
+#ifdef BITPRIM_CACHED_RPC_DATA
+                    , bool unconfirmed = false
+#endif
+                    );
 
     // Witness is not used by outputs, just for template normalization.
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool witness = false, bool unconfirmed = false) {
+    bool from_data(R& source, bool wire = true, bool witness = false
+#ifdef BITPRIM_CACHED_RPC_DATA
+                    , bool unconfirmed = false
+#endif
+                ) {
         reset();
 
         if (wire) {
@@ -254,19 +267,30 @@ public:
         return source;
     }
 
-    //bool from_data(reader& source, bool wire=true, bool witness=false, bool unconfirmed=false);
-
     bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire = true, bool witness = false, bool unconfirmed = false) const;
-    void to_data(data_sink& stream, bool wire = true, bool witness = false, bool unconfirmed = false) const;
+    data_chunk to_data(bool wire = true, bool witness = false
+#ifdef BITPRIM_CACHED_RPC_DATA
+                        , bool unconfirmed = false
+#endif
+                    ) const;
+
+    void to_data(data_sink& stream, bool wire = true, bool witness = false
+#ifdef BITPRIM_CACHED_RPC_DATA
+                    , bool unconfirmed = false
+#endif
+                ) const;
 
     // Witness is not used by outputs, just for template normalization.
     template <Writer W>
-    void to_data(W& sink, bool wire = true, bool witness = false, bool unconfirmed = false) const {
+    void to_data(W& sink, bool wire = true, bool witness = false
+#ifdef BITPRIM_CACHED_RPC_DATA
+                , bool unconfirmed = false
+#endif
+                ) const {
         if (wire) {
             // Witness handling must be disabled for non-segregated txs.
             witness &= is_segregated();
@@ -306,12 +330,14 @@ public:
         }
     }
 
-    //void to_data(writer& sink, bool wire=true, bool witness=false, bool unconfirmed=false) const;
-
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    size_t serialized_size(bool wire = true, bool witness = false, bool unconfirmed = false) const;
+    size_t serialized_size(bool wire = true, bool witness = false
+#ifdef BITPRIM_CACHED_RPC_DATA
+                            , bool unconfirmed = false
+#endif
+                        ) const;
 
     uint32_t version() const;
     void set_version(uint32_t value);
