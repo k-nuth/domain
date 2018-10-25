@@ -52,6 +52,7 @@ public:
     /// Big number that the compact number represents.
     /// This is either saved or generated from the construction parameter.
     operator uint256_t const&() const;
+    uint256_t const& big() const;
 
 private:
     static bool from_compact(uint256_t& out, uint32_t compact);
