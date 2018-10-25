@@ -81,7 +81,7 @@ static std::string const encoded_mainnet_genesis_block =
     "00f2052a01000000"                                                                                                                                  //50 btc
     "43"                                                                                                                                                //pk_script length
     "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
-    "00000000";                                                                                                                                         //locktime
+    "00000000";     //NOLINT                                                                                                                            //locktime
 
 //Litecoin testnet genesis block
 static std::string const encoded_testnet_genesis_block =
@@ -102,8 +102,8 @@ static std::string const encoded_testnet_genesis_block =
     "00f2052a01000000"                                                                                                                                  //50 btc
     "43"                                                                                                                                                //pk_script length
     "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
-    "00000000";                                                                                                                                         //locktime
-#else                                                                                                                                                   //BITPRIM_CURRENCY_LTC
+    "00000000";           //NOLINT                                                                                                                      //locktime
+#else  //BITPRIM_CURRENCY_LTC
 
 static std::string const encoded_mainnet_genesis_block =
     "01000000"
@@ -123,7 +123,7 @@ static std::string const encoded_mainnet_genesis_block =
     "00f2052a01000000"
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000";
+    "00000000"; //NOLINT
 
 static std::string const encoded_testnet_genesis_block =
     "01000000"
@@ -143,8 +143,8 @@ static std::string const encoded_testnet_genesis_block =
     "00f2052a01000000"
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000";
-#endif                                                                                                                                                  //BITPRIM_CURRENCY_LTC
+    "00000000"; //NOLINT
+#endif  //BITPRIM_CURRENCY_LTC
 
 static std::string const encoded_regtest_genesis_block =
     "01000000"
@@ -164,37 +164,53 @@ static std::string const encoded_regtest_genesis_block =
     "00f2052a01000000"
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000";
+    "00000000";  //NOLINT
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
-block::block()
-    : validation{} {
-}
+// block::block()
+//     : validation{} {
+// }
 
 // TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list const& transactions)
-    : header_(header), transactions_(transactions), validation{} {
-}
+    : header_(header)
+    , transactions_(transactions)
+    , validation{} 
+{}
 
 // TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list&& transactions)
-    : header_(header), transactions_(std::move(transactions)), validation{} {
-}
+    : header_(header)
+    , transactions_(std::move(transactions))
+    , validation{} 
+{}
 
 block::block(block const& x)
-    : block(x.header_, x.transactions_) {
-    validation = x.validation;
+    // : block(x.header_, x.transactions_) 
+    : header_(x.header_)
+    , transactions_(x.transactions_)
+    , validation(x.validation)
+{
+    // validation = x.validation;
 }
 
 block::block(block&& x) noexcept
-    : block(x.header_, std::move(x.transactions_)) {
-    validation = std::move(x.validation);
+    // : block(x.header_, std::move(x.transactions_)) 
+    : header_(x.header_)
+    , transactions_(std::move(x.transactions_))
+    , validation(std::move(x.validation))
+{
+    // validation = std::move(x.validation);
 }
 
-// Operators.
-//-----------------------------------------------------------------------------
+block& block::operator=(block const& x) {
+    header_ = x.header_;
+    transactions_ = x.transactions_;
+    validation = x.validation;
+    return *this;
+}
 
 block& block::operator=(block&& x) noexcept {
     header_ = x.header_;
@@ -202,6 +218,9 @@ block& block::operator=(block&& x) noexcept {
     validation = std::move(x.validation);
     return *this;
 }
+
+// Operators.
+//-----------------------------------------------------------------------------
 
 bool block::operator==(block const& x) const {
     return (header_ == x.header_) && (transactions_ == x.transactions_);
@@ -498,7 +517,7 @@ block::indexes block::locator_heights(size_t top) {
     for (auto height = top; height > 0; height = floor_subtract(height, step)) {
         // Push top 10 indexes first, then back off exponentially.
         if (heights.size() >= 10) {
-            step <<= 1;
+            step <<= 1u;
         }
 
         heights.push_back(height);
@@ -775,7 +794,7 @@ bool block::is_valid_coinbase_script(size_t height) const {
 bool block::is_valid_witness_commitment() const {
 #ifdef BITPRIM_CURRENCY_BCH
     return false;
-#endif
+#else
     if (transactions_.empty() || transactions_.front().inputs().empty()) {
         return false;
     }
@@ -794,12 +813,13 @@ bool block::is_valid_witness_commitment() const {
 
     // If no txs in block are segregated the commitment is optional (bip141).
     return !is_segregated();
+#endif // BITPRIM_CURRENCY_BCH
 }
 
 bool block::is_segregated() const {
 #ifdef BITPRIM_CURRENCY_BCH
     return false;
-#endif
+#else
     bool value;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -827,6 +847,7 @@ bool block::is_segregated() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return value;
+#endif // BITPRIM_CURRENCY_BCH
 }
 
 code block::check_transactions() const {
