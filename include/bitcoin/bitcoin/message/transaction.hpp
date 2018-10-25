@@ -59,9 +59,7 @@ public:
         return instance;
     }
 
-    //static transaction factory_from_data(uint32_t version, reader& source);
-
-    transaction();
+    transaction() = default;
 
     transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs);
     transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs);

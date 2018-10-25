@@ -46,10 +46,6 @@ transaction transaction::factory_from_data(uint32_t version, data_source& stream
     return instance;
 }
 
-transaction::transaction()
-    : chain::transaction() {
-}
-
 transaction::transaction(chain::transaction&& x)
     : chain::transaction(std::move(x)) {
 }
@@ -104,22 +100,22 @@ bool transaction::operator!=(transaction const& x) const {
 // Witness is always deserialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-bool transaction::from_data(uint32_t version, data_chunk const& data) {
+bool transaction::from_data(uint32_t /*version*/, data_chunk const& data) {
     return chain::transaction::from_data(data, true, true);
 }
 
-bool transaction::from_data(uint32_t version, data_source& stream) {
+bool transaction::from_data(uint32_t /*version*/, data_source& stream) {
     return chain::transaction::from_data(stream, true, true);
 }
 
 // Witness is always serialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-data_chunk transaction::to_data(uint32_t version, bool witness) const {
+data_chunk transaction::to_data(uint32_t /*version*/, bool witness) const {
     return chain::transaction::to_data(true, witness);
 }
 
-void transaction::to_data(uint32_t version, data_sink& stream, bool witness) const {
+void transaction::to_data(uint32_t /*version*/, data_sink& stream, bool witness) const {
     chain::transaction::to_data(stream, true, witness);
 }
 
@@ -127,7 +123,7 @@ void transaction::to_data(uint32_t version, data_sink& stream, bool witness) con
 // Witness size is always counted if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-size_t transaction::serialized_size(uint32_t) const {
+size_t transaction::serialized_size(uint32_t /*unused*/) const {
     return chain::transaction::serialized_size(true, true);
 }
 
