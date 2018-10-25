@@ -30,16 +30,16 @@
 namespace libbitcoin {
 namespace message {
 
-uint32_t inventory_vector::to_number(type_id inventory_type) {
-    return static_cast<uint32_t>(inventory_type);
+uint32_t inventory_vector::to_number(type_id type) {
+    return static_cast<uint32_t>(type);
 }
 
 inventory_vector::type_id inventory_vector::to_type(uint32_t value) {
     return static_cast<type_id>(value);
 }
 
-std::string inventory_vector::to_string(type_id inventory_type) {
-    switch (inventory_type) {
+std::string inventory_vector::to_string(type_id type) {
+    switch (type) {
         case type_id::transaction:
             return "transaction";
         case type_id::block:
@@ -142,7 +142,7 @@ size_t inventory_vector::serialized_size(uint32_t version) const {
     return inventory_vector::satoshi_fixed_size(version);
 }
 
-size_t inventory_vector::satoshi_fixed_size(uint32_t version) {
+size_t inventory_vector::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(hash_) + sizeof(uint32_t);
 }
 
