@@ -48,7 +48,8 @@ prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version,
 }
 
 prefilled_transaction::prefilled_transaction()
-    : index_(max_index), transaction_() {}
+    : index_(max_index) 
+{}
 
 prefilled_transaction::prefilled_transaction(uint64_t index,
                                              chain::transaction const& tx)
