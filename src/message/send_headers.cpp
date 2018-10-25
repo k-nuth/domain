@@ -43,13 +43,6 @@ send_headers send_headers::factory_from_data(uint32_t version, data_source& stre
     return instance;
 }
 
-//send_headers send_headers::factory_from_data(uint32_t version, reader& source)
-//{
-//    send_headers instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 size_t send_headers::satoshi_fixed_size(uint32_t version) {
     return 0;
 }
@@ -65,13 +58,13 @@ send_headers::send_headers(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-send_headers::send_headers(const send_headers& x)
-    : send_headers(x.insufficient_version_) {
-}
+// send_headers::send_headers(send_headers const& x)
+//     : send_headers(x.insufficient_version_) {
+// }
 
-send_headers::send_headers(send_headers&& x)
-    : send_headers(x.insufficient_version_) {
-}
+// send_headers::send_headers(send_headers&& x) noexcept
+//     : send_headers(x.insufficient_version_) 
+// {}
 
 bool send_headers::is_valid() const {
     return !insufficient_version_;
@@ -91,25 +84,6 @@ bool send_headers::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
-
-//bool send_headers::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    // Initialize as valid from deserialization.
-//    insufficient_version_ = false;
-//
-//    if (version < send_headers::version_minimum)
-//    {
-//        insufficient_version_ = true;
-//        source.invalidate();
-//    }
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
 
 data_chunk send_headers::to_data(uint32_t version) const {
     data_chunk data;

@@ -39,7 +39,7 @@ namespace message {
 class BC_API send_headers {
 public:
     typedef std::shared_ptr<send_headers> ptr;
-    typedef std::shared_ptr<const send_headers> const_ptr;
+    typedef std::shared_ptr<send_headers const> const_ptr;
 
     static send_headers factory_from_data(uint32_t version, data_chunk const& data);
     static send_headers factory_from_data(uint32_t version, data_source& stream);
@@ -51,12 +51,11 @@ public:
         return instance;
     }
 
-    //static send_headers factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
     send_headers();
-    send_headers(const send_headers& x);
-    send_headers(send_headers&& x);
+    send_headers(send_headers const& x) = default;
+    send_headers(send_headers&& x) = default;
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
