@@ -51,13 +51,19 @@ public:
         return instance;
     }
 
-    //static block_transactions factory_from_data(uint32_t version, reader& source);
-
     block_transactions();
     block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
     block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions);
     block_transactions(block_transactions const& x) = default;
-    block_transactions(block_transactions&& x) noexcept;
+    block_transactions(block_transactions&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    block_transactions& operator=(block_transactions&& x) = default;
+    void operator=(block_transactions const&) = delete; //TODO(fernando): why?
+
+    bool operator==(block_transactions const& x) const;
+    bool operator!=(block_transactions const& x) const;
+
 
     hash_digest& block_hash();
     hash_digest const& block_hash() const;
@@ -121,13 +127,6 @@ public:
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
-
-    // This class is move assignable but not copy assignable.
-    block_transactions& operator=(block_transactions&& x) noexcept;
-    void operator=(block_transactions const&) = delete;
-
-    bool operator==(block_transactions const& x) const;
-    bool operator!=(block_transactions const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

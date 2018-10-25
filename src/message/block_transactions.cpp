@@ -73,11 +73,25 @@ block_transactions::block_transactions(hash_digest const& block_hash, chain::tra
 //     , transactions_(x.transactions_) 
 // {}
 
-block_transactions::block_transactions(block_transactions&& x) noexcept
-    // : block_transactions(std::move(x.block_hash_), std::move(x.transactions_)) 
-    : block_hash_(x.block_hash_)
-    , transactions_(std::move(x.transactions_)) 
-{}
+// block_transactions::block_transactions(block_transactions&& x) noexcept
+//     // : block_transactions(std::move(x.block_hash_), std::move(x.transactions_)) 
+//     : block_hash_(x.block_hash_)
+//     , transactions_(std::move(x.transactions_)) 
+// {}
+
+// block_transactions& block_transactions::operator=(block_transactions&& x) noexcept {
+//     block_hash_ = std::move(x.block_hash_);
+//     transactions_ = std::move(x.transactions_);
+//     return *this;
+// }
+
+bool block_transactions::operator==(block_transactions const& x) const {
+    return (block_hash_ == x.block_hash_) && (transactions_ == x.transactions_);
+}
+
+bool block_transactions::operator!=(block_transactions const& x) const {
+    return !(*this == x);
+}
 
 bool block_transactions::is_valid() const {
     return (block_hash_ != null_hash);
@@ -157,19 +171,6 @@ void block_transactions::set_transactions(chain::transaction::list&& x) {
     transactions_ = std::move(x);
 }
 
-block_transactions& block_transactions::operator=(block_transactions&& x) {
-    block_hash_ = std::move(x.block_hash_);
-    transactions_ = std::move(x.transactions_);
-    return *this;
-}
-
-bool block_transactions::operator==(block_transactions const& x) const {
-    return (block_hash_ == x.block_hash_) && (transactions_ == x.transactions_);
-}
-
-bool block_transactions::operator!=(block_transactions const& x) const {
-    return !(*this == x);
-}
 
 }  // namespace message
 }  // namespace libbitcoin
