@@ -49,13 +49,6 @@ merkle_block merkle_block::factory_from_data(uint32_t version, data_source& stre
     return instance;
 }
 
-//merkle_block merkle_block::factory_from_data(uint32_t version, reader& source)
-//{
-//    merkle_block instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 merkle_block::merkle_block()
     : header_(), total_transactions_(0), hashes_(), flags_() {
 }
@@ -70,20 +63,48 @@ merkle_block::merkle_block(chain::header const& header, size_t total_transaction
 
 // Hack: use of safe_unsigned here isn't great. We should consider using size_t
 // for the transaction count and invalidating on deserialization and construct.
-merkle_block::merkle_block(const chain::block& block)
+merkle_block::merkle_block(chain::block const& block)
     : merkle_block(block.header(),
                    safe_unsigned<uint32_t>(block.transactions().size()),
                    block.to_hashes(),
                    {}) {
 }
 
-merkle_block::merkle_block(const merkle_block& x)
-    : merkle_block(x.header_, x.total_transactions_, x.hashes_, x.flags_) {
+// merkle_block::merkle_block(merkle_block const& x)
+//     : merkle_block(x.header_, x.total_transactions_, x.hashes_, x.flags_) {
+// }
+
+// merkle_block::merkle_block(merkle_block&& x) noexcept
+//     : merkle_block(x.header_, x.total_transactions_, std::move(x.hashes_), std::move(x.flags_)) 
+// {}
+
+// merkle_block& merkle_block::operator=(merkle_block&& x) noexcept {
+//     header_ = x.header_;
+//     hashes_ = std::move(x.hashes_);
+//     flags_ = std::move(x.flags_);
+//     return *this;
+// }
+
+bool merkle_block::operator==(merkle_block const& x) const {
+    auto result = (header_ == x.header_) &&
+                  (hashes_.size() == x.hashes_.size()) &&
+                  (flags_.size() == x.flags_.size());
+
+    for (size_t i = 0; i < hashes_.size() && result; i++) {
+        result = (hashes_[i] == x.hashes_[i]);
+    }
+
+    for (size_t i = 0; i < flags_.size() && result; i++) {
+        result = (flags_[i] == x.flags_[i]);
+    }
+
+    return result;
 }
 
-merkle_block::merkle_block(merkle_block&& x)
-    : merkle_block(x.header_, x.total_transactions_, std::move(x.hashes_), std::move(x.flags_)) {
+bool merkle_block::operator!=(merkle_block const& x) const {
+    return !(*this == x);
 }
+
 
 bool merkle_block::is_valid() const {
     return !hashes_.empty() || !flags_.empty() || header_.is_valid();
@@ -108,36 +129,6 @@ bool merkle_block::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool merkle_block::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    if ( ! header_.from_data(source))
-//        return false;
-//
-//    total_transactions_ = source.read_4_bytes_little_endian();
-//    auto const count = source.read_size_little_endian();
-//
-//    // Guard against potential for arbitary memory allocation.
-//    if (count > get_max_block_size())
-//        source.invalidate();
-//    else
-//        hashes_.reserve(count);
-//
-//    for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash)
-//        hashes_.push_back(source.read_hash());
-//
-//    flags_ = source.read_bytes(source.read_size_little_endian());
-//
-//    if (version < merkle_block::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk merkle_block::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -154,22 +145,7 @@ void merkle_block::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void merkle_block::to_data(uint32_t version, writer& sink) const
-//{
-//    header_.to_data(sink);
-//
-//    auto const total32 = safe_unsigned<uint32_t>(total_transactions_);
-//    sink.write_4_bytes_little_endian(total32);
-//    sink.write_variable_little_endian(hashes_.size());
-//
-//    for (auto const& hash : hashes_)
-//        sink.write_hash(hash);
-//
-//    sink.write_variable_little_endian(flags_.size());
-//    sink.write_bytes(flags_);
-//}
-
-size_t merkle_block::serialized_size(uint32_t version) const {
+size_t merkle_block::serialized_size(uint32_t /*version*/) const {
     return header_.serialized_size() + 4u +
            message::variable_uint_size(hashes_.size()) + (hash_size * hashes_.size()) +
            message::variable_uint_size(flags_.size()) + flags_.size();
@@ -225,33 +201,6 @@ void merkle_block::set_flags(data_chunk const& value) {
 
 void merkle_block::set_flags(data_chunk&& value) {
     flags_ = std::move(value);
-}
-
-merkle_block& merkle_block::operator=(merkle_block&& x) {
-    header_ = x.header_;
-    hashes_ = std::move(x.hashes_);
-    flags_ = std::move(x.flags_);
-    return *this;
-}
-
-bool merkle_block::operator==(const merkle_block& x) const {
-    auto result = (header_ == x.header_) &&
-                  (hashes_.size() == x.hashes_.size()) &&
-                  (flags_.size() == x.flags_.size());
-
-    for (size_t i = 0; i < hashes_.size() && result; i++) {
-        result = (hashes_[i] == x.hashes_[i]);
-    }
-
-    for (size_t i = 0; i < flags_.size() && result; i++) {
-        result = (flags_[i] == x.flags_[i]);
-    }
-
-    return result;
-}
-
-bool merkle_block::operator!=(const merkle_block& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message

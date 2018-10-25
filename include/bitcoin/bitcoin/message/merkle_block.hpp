@@ -43,7 +43,7 @@ class BC_API merkle_block {
 public:
     typedef std::vector<merkle_block> list;
     typedef std::shared_ptr<merkle_block> ptr;
-    typedef std::shared_ptr<const merkle_block> const_ptr;
+    typedef std::shared_ptr<merkle_block const> const_ptr;
 
     static merkle_block factory_from_data(uint32_t version, data_chunk const& data);
     static merkle_block factory_from_data(uint32_t version, data_source& stream);
@@ -60,9 +60,17 @@ public:
     merkle_block();
     merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags);
     merkle_block(chain::header const& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
-    merkle_block(const chain::block& block);
-    merkle_block(const merkle_block& x);
-    merkle_block(merkle_block&& x);
+    merkle_block(chain::block const& block);
+    merkle_block(merkle_block const& x) = default;
+    merkle_block(merkle_block&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    merkle_block& operator=(merkle_block&& x) = default;
+    void operator=(merkle_block const&) = delete;
+
+    bool operator==(merkle_block const& x) const;
+    bool operator!=(merkle_block const& x) const;
+
 
     chain::header& header();
     chain::header const& header() const;
@@ -138,12 +146,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    merkle_block& operator=(merkle_block&& x);
-    void operator=(const merkle_block&) = delete;
-
-    bool operator==(const merkle_block& x) const;
-    bool operator!=(const merkle_block& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
