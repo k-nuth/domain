@@ -61,13 +61,13 @@ filter_clear::filter_clear(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-filter_clear::filter_clear(const filter_clear& x)
-    : filter_clear(x.insufficient_version_) {
-}
+// filter_clear::filter_clear(const filter_clear& x)
+//     : filter_clear(x.insufficient_version_) {
+// }
 
-filter_clear::filter_clear(filter_clear&& x) noexcept
-    : filter_clear(x.insufficient_version_) {
-}
+// filter_clear::filter_clear(filter_clear&& x) noexcept
+//     : filter_clear(x.insufficient_version_) {
+// }
 
 bool filter_clear::is_valid() const {
     return !insufficient_version_;
@@ -88,22 +88,6 @@ bool filter_clear::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool filter_clear::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    // Initialize as valid from deserialization.
-//    insufficient_version_ = false;
-//
-//    if (version < filter_clear::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk filter_clear::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -119,10 +103,6 @@ void filter_clear::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void filter_clear::to_data(uint32_t version, writer& sink) const
-//{
-//}
 
 size_t filter_clear::serialized_size(uint32_t version) const {
     return filter_clear::satoshi_fixed_size(version);
