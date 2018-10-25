@@ -43,9 +43,6 @@ verack verack::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-verack::verack() 
-{}
-
 bool verack::is_valid() const {
     return true;
 }
@@ -74,14 +71,15 @@ data_chunk verack::to_data(uint32_t version) const {
     return data;
 }
 
-void verack::to_data(uint32_t version, data_sink& stream) const {
+//TODO(fernando): empty?
+void verack::to_data(uint32_t /*version*/, data_sink& /*stream*/) const {
 }
 
 size_t verack::serialized_size(uint32_t version) const {
     return verack::satoshi_fixed_size(version);
 }
 
-size_t verack::satoshi_fixed_size(uint32_t version) {
+size_t verack::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
