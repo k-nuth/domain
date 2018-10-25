@@ -306,15 +306,15 @@ uint8_t stealth_address::options() const {
 // Operators.
 // ----------------------------------------------------------------------------
 
-stealth_address& stealth_address::operator=(stealth_address const& x) {
-    valid_ = x.valid_;
-    version_ = x.version_;
-    scan_key_ = x.scan_key_;
-    spend_keys_ = x.spend_keys_;
-    signatures_ = x.signatures_;
-    filter_ = x.filter_;
-    return *this;
-}
+// stealth_address& stealth_address::operator=(stealth_address const& x) {
+//     valid_ = x.valid_;
+//     version_ = x.version_;
+//     scan_key_ = x.scan_key_;
+//     spend_keys_ = x.spend_keys_;
+//     signatures_ = x.signatures_;
+//     filter_ = x.filter_;
+//     return *this;
+// }
 
 bool stealth_address::operator<(stealth_address const& x) const {
     return encoded() < x.encoded();
