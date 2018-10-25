@@ -62,13 +62,13 @@ public:
 
     //static compact_block factory_from_data(uint32_t version, reader& source);
 
-    static compact_block factory_from_block(message::block const& block);
+    static compact_block factory_from_block(message::block const& blk);
 
     compact_block();
     compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, const prefilled_transaction::list& transactions);
     compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
     compact_block(const compact_block& x);
-    compact_block(compact_block&& x);
+    compact_block(compact_block&& x) noexcept;
 
     chain::header& header();
     chain::header const& header() const;
@@ -176,7 +176,7 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    compact_block& operator=(compact_block&& x);
+    compact_block& operator=(compact_block&& x) noexcept;
     void operator=(const compact_block&) = delete;
 
     bool operator==(const compact_block& x) const;

@@ -123,7 +123,7 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     // This class is move assignable but not copy assignable.
-    block_transactions& operator=(block_transactions&& x);
+    block_transactions& operator=(block_transactions&& x) noexcept;
     void operator=(block_transactions const&) = delete;
 
     bool operator==(block_transactions const& x) const;

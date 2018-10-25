@@ -155,15 +155,20 @@ public:
     transaction(transaction const& x, hash_digest const& hash);
     transaction(transaction&& x, hash_digest const& hash);
 
+
+
     transaction(transaction const& x);
     transaction(transaction&& x) noexcept;
-
-    // Operators.
-    //-----------------------------------------------------------------------------
 
     /// This class is move assignable and copy assignable.
     transaction& operator=(transaction const& x);
     transaction& operator=(transaction&& x) noexcept;
+
+
+
+
+    // Operators.
+    //-----------------------------------------------------------------------------
 
     bool operator==(transaction const& x) const;
     bool operator!=(transaction const& x) const;

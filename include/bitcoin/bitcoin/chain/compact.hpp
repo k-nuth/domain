@@ -36,8 +36,7 @@ public:
     /// Construct a normal form compact number from a 256 bit number
     explicit compact(uint256_t const& big);
 
-    /// Move constructor.
-    compact(compact&& x);
+    compact(compact&& x) noexcept;
 
     /// Copy constructor.
     compact(const compact& x);

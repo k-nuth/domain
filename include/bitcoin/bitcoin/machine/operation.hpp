@@ -50,7 +50,7 @@ public:
 
     operation();
 
-    operation(operation&& x);
+    operation(operation&& x) noexcept;
     operation(operation const& x);
 
     operation(data_chunk&& uncoded, bool minimal = true);
@@ -61,7 +61,7 @@ public:
     // Operators.
     //-------------------------------------------------------------------------
 
-    operation& operator=(operation&& x);
+    operation& operator=(operation&& x) noexcept;
     operation& operator=(operation const& x);
 
     bool operator==(operation const& x) const;
@@ -219,6 +219,6 @@ private:
 }  // namespace machine
 }  // namespace libbitcoin
 
-#include <bitcoin/infrastructure/impl/machine/operation.ipp>
+#include <bitcoin/bitcoin/impl/machine/operation.ipp>
 
 #endif
