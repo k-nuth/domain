@@ -34,10 +34,7 @@ namespace config {
  */
 class BC_API transaction {
 public:
-    /**
-     * Default constructor.
-     */
-    transaction();
+    transaction() = default;
 
     /**
      * Initialization constructor.

@@ -32,10 +32,6 @@ namespace config {
 
 using namespace boost::program_options;
 
-transaction::transaction()
-    : value_() {
-}
-
 transaction::transaction(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;
 }

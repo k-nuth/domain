@@ -32,10 +32,6 @@ namespace config {
 
 using namespace boost::program_options;
 
-header::header()
-    : value_() {
-}
-
 header::header(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;
 }

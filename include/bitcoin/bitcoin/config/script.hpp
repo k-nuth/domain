@@ -35,10 +35,7 @@ namespace config {
  */
 class BC_API script {
 public:
-    /**
-     * Default constructor.
-     */
-    script();
+    script() = default;
 
     /**
      * Initialization constructor.

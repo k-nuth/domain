@@ -36,10 +36,7 @@ class BC_API point {
 public:
     static std::string const delimeter;
 
-    /**
-     * Default constructor.
-     */
-    point();
+    point() = default;
 
     /**
      * Initialization constructor.
@@ -53,10 +50,6 @@ public:
      */
     point(const chain::output_point& value);
 
-    /**
-     * Copy constructor.
-     * @param[in]  other  The object to copy into self on construct.
-     */
     point(point const& x);
 
     /**

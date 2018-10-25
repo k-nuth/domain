@@ -49,10 +49,6 @@ static std::string encode_endorsement(data_slice signature) {
     return encode_base16(signature);
 }
 
-endorsement::endorsement()
-    : value_() {
-}
-
 endorsement::endorsement(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;
 }

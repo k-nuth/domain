@@ -36,10 +36,6 @@ namespace config {
 using namespace boost;
 using namespace boost::program_options;
 
-script::script()
-    : value_() {
-}
-
 script::script(std::string const& mnemonic) {
     std::stringstream(mnemonic) >> *this;
 }
