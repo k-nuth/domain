@@ -148,7 +148,7 @@ bool bitcoin_uri::set_address(std::string const& address) {
     return false;
 }
 
-void bitcoin_uri::set_address(const payment_address& payment) {
+void bitcoin_uri::set_address(payment_address const& payment) {
     address_ = payment.encoded();
 }
 
