@@ -72,8 +72,16 @@ public:
 
     inventory_vector();
     inventory_vector(type_id type, hash_digest const& hash);
-    inventory_vector(inventory_vector const& x);
-    inventory_vector(inventory_vector&& x);
+    inventory_vector(inventory_vector const& x) = default;
+    inventory_vector(inventory_vector&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    inventory_vector& operator=(inventory_vector&& x) = default;
+    inventory_vector& operator=(inventory_vector const& x) = default;
+
+    bool operator==(inventory_vector const& x) const;
+    bool operator!=(inventory_vector const& x) const;
+
 
     type_id type() const;
     void set_type(type_id value);
@@ -119,12 +127,6 @@ public:
     void to_witness();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    inventory_vector& operator=(inventory_vector&& x);
-    void operator=(inventory_vector const& x);
-
-    bool operator==(inventory_vector const& x) const;
-    bool operator!=(inventory_vector const& x) const;
 
 private:
     type_id type_;
