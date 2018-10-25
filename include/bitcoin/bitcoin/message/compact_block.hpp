@@ -41,7 +41,7 @@ namespace message {
 class BC_API compact_block {
 public:
     typedef std::shared_ptr<compact_block> ptr;
-    typedef std::shared_ptr<const compact_block> const_ptr;
+    typedef std::shared_ptr<compact_block const> const_ptr;
 
     //typedef mini_hash short_id;
     //typedef mini_hash_list short_id_list;
@@ -65,10 +65,18 @@ public:
     static compact_block factory_from_block(message::block const& blk);
 
     compact_block();
-    compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, const prefilled_transaction::list& transactions);
+    compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions);
     compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
-    compact_block(const compact_block& x);
-    compact_block(compact_block&& x) noexcept;
+    compact_block(compact_block const& x) = default;
+    compact_block(compact_block&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    compact_block& operator=(compact_block&& x) = default;
+    void operator=(compact_block const&) = delete;
+
+    bool operator==(compact_block const& x) const;
+    bool operator!=(compact_block const& x) const;
+
 
     chain::header& header();
     chain::header const& header() const;
@@ -83,8 +91,8 @@ public:
     void set_short_ids(short_id_list&& value);
 
     prefilled_transaction::list& transactions();
-    const prefilled_transaction::list& transactions() const;
-    void set_transactions(const prefilled_transaction::list& value);
+    prefilled_transaction::list const& transactions() const;
+    void set_transactions(prefilled_transaction::list const& value);
     void set_transactions(prefilled_transaction::list&& value);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -174,13 +182,6 @@ public:
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
-
-    // This class is move assignable but not copy assignable.
-    compact_block& operator=(compact_block&& x) noexcept;
-    void operator=(const compact_block&) = delete;
-
-    bool operator==(const compact_block& x) const;
-    bool operator!=(const compact_block& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
