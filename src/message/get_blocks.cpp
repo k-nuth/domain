@@ -53,7 +53,7 @@ get_blocks get_blocks::factory_from_data(uint32_t version, data_source& stream) 
 //}
 
 get_blocks::get_blocks()
-    : start_hashes_(), stop_hash_(null_hash) {
+    : stop_hash_(null_hash) {
 }
 
 get_blocks::get_blocks(hash_list const& start, hash_digest const& stop)
@@ -61,7 +61,7 @@ get_blocks::get_blocks(hash_list const& start, hash_digest const& stop)
 }
 
 get_blocks::get_blocks(hash_list&& start, hash_digest const& stop)
-    : start_hashes_(std::move(start)), stop_hash_(std::move(stop)) {
+    : start_hashes_(std::move(start)), stop_hash_(stop) {
 }
 
 // get_blocks::get_blocks(const get_blocks& x)
