@@ -40,8 +40,7 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API transaction
-    : public chain::transaction {
+class BC_API transaction : public chain::transaction {
 public:
     typedef std::shared_ptr<transaction> ptr;
     typedef std::shared_ptr<transaction const> const_ptr;
@@ -64,14 +63,28 @@ public:
 
     transaction();
 
-    transaction(transaction&& x);
-    transaction(chain::transaction&& x);
-
-    transaction(transaction const& x);
-    transaction(chain::transaction const& x);
-
     transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs);
     transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs);
+
+    transaction(chain::transaction const& x);
+    transaction(chain::transaction&& x);
+
+    transaction(transaction const& x) = default;
+    transaction(transaction&& x) = default;
+
+    transaction& operator=(chain::transaction&& x);
+
+    /// This class is move assignable but not copy assignable.
+    transaction& operator=(transaction&& x) = default;
+    void operator=(transaction const&) = delete;
+
+    bool operator==(chain::transaction const& x) const;
+    bool operator!=(chain::transaction const& x) const;
+
+    bool operator==(transaction const& x) const;
+    bool operator!=(transaction const& x) const;
+
+
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
@@ -93,17 +106,6 @@ public:
     //void to_data(uint32_t version, writer& sink, bool witness = true) const;
     size_t serialized_size(uint32_t version) const;
 
-    transaction& operator=(chain::transaction&& x);
-
-    /// This class is move assignable but not copy assignable.
-    transaction& operator=(transaction&& x);
-    void operator=(transaction const&) = delete;
-
-    bool operator==(chain::transaction const& x) const;
-    bool operator!=(chain::transaction const& x) const;
-
-    bool operator==(transaction const& x) const;
-    bool operator!=(transaction const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
