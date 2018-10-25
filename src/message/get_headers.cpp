@@ -40,9 +40,6 @@ get_headers get_headers::factory_from_data(uint32_t version, data_source& stream
     return instance;
 }
 
-get_headers::get_headers()
-{}
-
 get_headers::get_headers(hash_list const& start, hash_digest const& stop)
     : get_blocks(start, stop) {
 }
