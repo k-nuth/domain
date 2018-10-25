@@ -45,28 +45,35 @@ address address::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//address address::factory_from_data(uint32_t version, reader& source)
-//{
-//    address instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 address::address(network_address::list const& addresses)
-    : addresses_(addresses) {
-}
+    : addresses_(addresses) 
+{}
 
 address::address(network_address::list&& addresses)
-    : addresses_(std::move(addresses)) {
+    : addresses_(std::move(addresses)) 
+{}
+
+// address::address(address const& x)
+//     : address(x.addresses_) {
+// }
+
+// address::address(address&& x) noexcept
+//     : address(std::move(x.addresses_)) {
+// }
+
+// address& address::operator=(address&& x) noexcept {
+//     addresses_ = std::move(x.addresses_);
+//     return *this;
+// }
+
+bool address::operator==(address const& x) const {
+    return (addresses_ == x.addresses_);
 }
 
-address::address(address const& x)
-    : address(x.addresses_) {
+bool address::operator!=(address const& x) const {
+    return !(*this == x);
 }
 
-address::address(address&& x) noexcept
-    : address(std::move(x.addresses_)) {
-}
 
 bool address::is_valid() const {
     return !addresses_.empty();
@@ -87,28 +94,6 @@ bool address::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool address::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    auto const count = source.read_size_little_endian();
-//
-//    // Guard against potential for arbitary memory allocation.
-//    if (count > max_address)
-//        source.invalidate();
-//    else
-//        addresses_.resize(count);
-//
-//    for (auto& address: addresses_)
-//        if ( ! address.from_data(version, source, true))
-//            break;
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk address::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -124,14 +109,6 @@ void address::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void address::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_variable_little_endian(addresses_.size());
-//
-//    for (auto const& net_address: addresses_)
-//        net_address.to_data(version, sink, true);
-//}
 
 size_t address::serialized_size(uint32_t version) const {
     return message::variable_uint_size(addresses_.size()) +
@@ -152,19 +129,6 @@ void address::set_addresses(network_address::list const& value) {
 
 void address::set_addresses(network_address::list&& value) {
     addresses_ = std::move(value);
-}
-
-address& address::operator=(address&& x) noexcept {
-    addresses_ = std::move(x.addresses_);
-    return *this;
-}
-
-bool address::operator==(address const& x) const {
-    return (addresses_ == x.addresses_);
-}
-
-bool address::operator!=(address const& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message

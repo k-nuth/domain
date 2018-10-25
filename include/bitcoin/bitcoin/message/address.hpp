@@ -57,8 +57,20 @@ public:
     address() = default;
     address(network_address::list const& addresses);
     address(network_address::list&& addresses);
-    address(address const& x);
-    address(address&& x) noexcept;
+
+
+    /// This class is move assignable but not copy assignable.
+    // address(address const& x);
+    // address(address&& x) noexcept;
+    // address& operator=(address&& x) noexcept;
+    address(address const& x) = default;
+    address(address&& x) = default;
+    address& operator=(address&& x) = default;
+    void operator=(address const&) = delete;
+
+    bool operator==(address const& x) const;
+    bool operator!=(address const& x) const;
+
 
     network_address::list& addresses();
     network_address::list const& addresses() const;
@@ -109,12 +121,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    /// This class is move assignable but not copy assignable.
-    address& operator=(address&& x) noexcept;
-    void operator=(address const&) = delete;
-
-    bool operator==(address const& x) const;
-    bool operator!=(address const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
