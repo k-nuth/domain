@@ -63,15 +63,15 @@ payment_address::payment_address()
     : valid_(false), version_(0), hash_(null_short_hash) {
 }
 
-payment_address::payment_address(payment_address&& x)
-    : valid_(x.valid_), version_(x.version_), hash_(std::move(x.hash_)) {
-}
+payment_address::payment_address(payment_address&& x) noexcept
+    : valid_(x.valid_), version_(x.version_), hash_(std::move(x.hash_)) 
+{}
 
-payment_address::payment_address(const payment_address& x)
+payment_address::payment_address(payment_address const& x)
     : valid_(x.valid_), version_(x.version_), hash_(x.hash_) {
 }
 
-payment_address::payment_address(const payment& decoded)
+payment_address::payment_address(payment const& decoded)
     : payment_address(from_payment(decoded)) {
 }
 
@@ -79,11 +79,11 @@ payment_address::payment_address(std::string const& address)
     : payment_address(from_string(address)) {
 }
 
-payment_address::payment_address(const ec_private& secret)
+payment_address::payment_address(ec_private const& secret)
     : payment_address(from_private(secret)) {
 }
 
-payment_address::payment_address(const ec_public& point, uint8_t version)
+payment_address::payment_address(ec_public const& point, uint8_t version)
     : payment_address(from_public(point, version)) {
 }
 
@@ -235,7 +235,7 @@ payment_address payment_address::from_string(std::string const& address) {
     return {decoded};
 }
 
-payment_address payment_address::from_payment(const payment& decoded) {
+payment_address payment_address::from_payment(payment const& decoded) {
     if ( ! is_address(decoded)) {
         return {};
     }
@@ -244,7 +244,7 @@ payment_address payment_address::from_payment(const payment& decoded) {
     return {hash, decoded.front()};
 }
 
-payment_address payment_address::from_private(const ec_private& secret) {
+payment_address payment_address::from_private(ec_private const& secret) {
     if ( ! secret) {
         return {};
     }
@@ -252,7 +252,7 @@ payment_address payment_address::from_private(const ec_private& secret) {
     return {secret.to_public(), secret.payment_version()};
 }
 
-payment_address payment_address::from_public(const ec_public& point, uint8_t version) {
+payment_address payment_address::from_public(ec_public const& point, uint8_t version) {
     if ( ! point) {
         return {};
     }
@@ -380,23 +380,23 @@ payment payment_address::to_payment() const {
 // Operators.
 // ----------------------------------------------------------------------------
 
-payment_address& payment_address::operator=(const payment_address& x) {
+payment_address& payment_address::operator=(payment_address const& x) {
     valid_ = x.valid_;
     version_ = x.version_;
     hash_ = x.hash_;
     return *this;
 }
 
-bool payment_address::operator<(const payment_address& x) const {
+bool payment_address::operator<(payment_address const& x) const {
     return encoded() < x.encoded();
 }
 
-bool payment_address::operator==(const payment_address& x) const {
+bool payment_address::operator==(payment_address const& x) const {
     return valid_ == x.valid_ && version_ == x.version_ &&
            hash_ == x.hash_;
 }
 
-bool payment_address::operator!=(const payment_address& x) const {
+bool payment_address::operator!=(payment_address const& x) const {
     return !(*this == x);
 }
 
@@ -413,7 +413,7 @@ std::istream& operator>>(std::istream& in, payment_address& to) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const payment_address& of) {
+std::ostream& operator<<(std::ostream& out, payment_address const& of) {
     out << of.encoded();
     return out;
 }

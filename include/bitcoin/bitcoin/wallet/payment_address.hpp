@@ -60,36 +60,32 @@ public:
     typedef std::shared_ptr<payment_address> ptr;
 
     /// Extract a payment address list from an input or output script.
-    static list extract(chain::script const& script,
-                        uint8_t p2kh_version = mainnet_p2kh,
-                        uint8_t p2sh_version = mainnet_p2sh);
-    static list extract_input(chain::script const& script,
-                              uint8_t p2kh_version = mainnet_p2kh,
-                              uint8_t p2sh_version = mainnet_p2sh);
-    static list extract_output(chain::script const& script,
-                               uint8_t p2kh_version = mainnet_p2kh,
-                               uint8_t p2sh_version = mainnet_p2sh);
+    static list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
+    static list extract_input(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
+    static list extract_output(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
 
     /// Constructors.
     payment_address();
-    payment_address(payment_address&& x);
-    payment_address(const payment_address& x);
-    payment_address(const payment& decoded);
-    payment_address(const ec_private& secret);
+    payment_address(payment_address const& x);
+    payment_address(payment_address&& x) noexcept;
+    
+    payment_address(payment const& decoded);
+    payment_address(ec_private const& secret);
     payment_address(std::string const& address);
     payment_address(short_hash&& hash, uint8_t version = mainnet_p2kh);
     payment_address(short_hash const& hash, uint8_t version = mainnet_p2kh);
-    payment_address(const ec_public& point, uint8_t version = mainnet_p2kh);
+    payment_address(ec_public const& point, uint8_t version = mainnet_p2kh);
     payment_address(chain::script const& script, uint8_t version = mainnet_p2sh);
 
+    payment_address& operator=(payment_address const& x);
+
     /// Operators.
-    bool operator<(const payment_address& x) const;
-    bool operator==(const payment_address& x) const;
-    bool operator!=(const payment_address& x) const;
-    payment_address& operator=(const payment_address& x);
+    bool operator==(payment_address const& x) const;
+    bool operator!=(payment_address const& x) const;
+    bool operator<(payment_address const& x) const;
+
     friend std::istream& operator>>(std::istream& in, payment_address& to);
-    friend std::ostream& operator<<(std::ostream& out,
-                                    const payment_address& of);
+    friend std::ostream& operator<<(std::ostream& out, payment_address const& of);
 
     /// Cast operators.
     operator const bool() const;
@@ -120,9 +116,9 @@ private:
     static payment_address from_string_cashaddr(std::string const& address);
 #endif  //BITPRIM_CURRENCY_BCH
 
-    static payment_address from_payment(const payment& decoded);
-    static payment_address from_private(const ec_private& secret);
-    static payment_address from_public(const ec_public& point, uint8_t version);
+    static payment_address from_payment(payment const& decoded);
+    static payment_address from_private(ec_private const& secret);
+    static payment_address from_public(ec_public const& point, uint8_t version);
     static payment_address from_script(chain::script const& script,
                                        uint8_t version);
 
