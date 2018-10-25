@@ -43,13 +43,6 @@ fee_filter fee_filter::factory_from_data(uint32_t version, data_source& stream) 
     return instance;
 }
 
-//fee_filter fee_filter::factory_from_data(uint32_t version, reader& source)
-//{
-//    fee_filter instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 size_t fee_filter::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(minimum_fee_);
 }
@@ -69,12 +62,27 @@ fee_filter::fee_filter(uint64_t minimum, bool insufficient_version)
     : minimum_fee_(minimum), insufficient_version_(insufficient_version) {
 }
 
-fee_filter::fee_filter(const fee_filter& x)
-    : fee_filter(x.minimum_fee_, x.insufficient_version_) {
+// fee_filter::fee_filter(const fee_filter& x)
+//     : fee_filter(x.minimum_fee_, x.insufficient_version_) {
+// }
+
+// fee_filter::fee_filter(fee_filter&& x) noexcept
+//     : fee_filter(x.minimum_fee_, x.insufficient_version_) {
+// }
+
+// fee_filter& fee_filter::operator=(fee_filter&& x) noexcept {
+//     minimum_fee_ = x.minimum_fee_;
+//     insufficient_version_ = x.insufficient_version_;
+//     return *this;
+// }
+
+//TODO(fernando): it does not compare all the data members, is it OK?
+bool fee_filter::operator==(const fee_filter& x) const {
+    return (minimum_fee_ == x.minimum_fee_);
 }
 
-fee_filter::fee_filter(fee_filter&& x) noexcept
-    : fee_filter(x.minimum_fee_, x.insufficient_version_) {
+bool fee_filter::operator!=(const fee_filter& x) const {
+    return !(*this == x);
 }
 
 bool fee_filter::from_data(uint32_t version, data_chunk const& data) {
@@ -86,24 +94,6 @@ bool fee_filter::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
-
-//bool fee_filter::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    // Initialize as valid from deserialization.
-//    insufficient_version_ = false;
-//
-//    minimum_fee_ = source.read_8_bytes_little_endian();
-//
-//    if (version < fee_filter::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
 
 data_chunk fee_filter::to_data(uint32_t version) const {
     data_chunk data;
@@ -120,11 +110,6 @@ void fee_filter::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void fee_filter::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_8_bytes_little_endian(minimum_fee_);
-//}
 
 bool fee_filter::is_valid() const {
     return !insufficient_version_ || (minimum_fee_ > 0);
@@ -149,20 +134,6 @@ void fee_filter::set_minimum_fee(uint64_t value) {
 
     // This is no longer a default instance, so is valid.
     insufficient_version_ = false;
-}
-
-fee_filter& fee_filter::operator=(fee_filter&& x) noexcept {
-    minimum_fee_ = x.minimum_fee_;
-    insufficient_version_ = x.insufficient_version_;
-    return *this;
-}
-
-bool fee_filter::operator==(const fee_filter& x) const {
-    return (minimum_fee_ == x.minimum_fee_);
-}
-
-bool fee_filter::operator!=(const fee_filter& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message
