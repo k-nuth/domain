@@ -56,11 +56,11 @@ static_assert(2 * quarter == bc::aes256_block_size, "oops!");
 // address_
 // ----------------------------------------------------------------------------
 
-static hash_digest address_hash(const payment_address& address) {
+static hash_digest address_hash(payment_address const& address) {
     return bitcoin_hash(to_chunk(address.encoded()));
 }
 
-static bool address_salt(ek_salt& salt, const payment_address& address) {
+static bool address_salt(ek_salt& salt, payment_address const& address) {
     salt = slice<0, ek_salt_size>(address_hash(address));
     return true;
 }
@@ -76,7 +76,7 @@ static bool address_salt(ek_salt& salt, ec_secret const& secret, uint8_t version
 }
 
 static bool address_validate(const ek_salt& salt,
-                             const payment_address& address) {
+                             payment_address const& address) {
     auto const hash = address_hash(address);
     return std::equal(hash.begin(), hash.begin() + salt.size(), salt.begin());
 }
