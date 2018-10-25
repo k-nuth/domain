@@ -56,8 +56,8 @@ public:
     block_transactions();
     block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
     block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions);
-    block_transactions(const block_transactions& x);
-    block_transactions(block_transactions&& x);
+    block_transactions(block_transactions const& x) = default;
+    block_transactions(block_transactions&& x) noexcept;
 
     hash_digest& block_hash();
     hash_digest const& block_hash() const;
@@ -120,10 +120,10 @@ public:
 
     // This class is move assignable but not copy assignable.
     block_transactions& operator=(block_transactions&& x);
-    void operator=(const block_transactions&) = delete;
+    void operator=(block_transactions const&) = delete;
 
-    bool operator==(const block_transactions& x) const;
-    bool operator!=(const block_transactions& x) const;
+    bool operator==(block_transactions const& x) const;
+    bool operator!=(block_transactions const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

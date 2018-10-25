@@ -142,7 +142,7 @@ alert_payload::alert_payload(const alert_payload& x)
           x.reserved_) {
 }
 
-alert_payload::alert_payload(alert_payload&& x)
+alert_payload::alert_payload(alert_payload&& x) noexcept
     : alert_payload(
           x.version_,
           x.relay_until_,
@@ -267,7 +267,7 @@ void alert_payload::to_data(uint32_t version, data_sink& stream) const {
 //    sink.write_string(reserved_);
 //}
 
-size_t alert_payload::serialized_size(uint32_t version) const {
+size_t alert_payload::serialized_size(uint32_t /*version*/) const {
     size_t size = 40u +
                   message::variable_uint_size(comment_.size()) + comment_.size() +
                   message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
@@ -426,7 +426,7 @@ void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
 }
 
-alert_payload& alert_payload::operator=(alert_payload&& x) {
+alert_payload& alert_payload::operator=(alert_payload&& x) noexcept {
     version_ = x.version_;
     relay_until_ = x.relay_until_;
     expiration_ = x.expiration_;

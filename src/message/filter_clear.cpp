@@ -65,7 +65,7 @@ filter_clear::filter_clear(const filter_clear& x)
     : filter_clear(x.insufficient_version_) {
 }
 
-filter_clear::filter_clear(filter_clear&& x)
+filter_clear::filter_clear(filter_clear&& x) noexcept
     : filter_clear(x.insufficient_version_) {
 }
 
@@ -128,7 +128,7 @@ size_t filter_clear::serialized_size(uint32_t version) const {
     return filter_clear::satoshi_fixed_size(version);
 }
 
-size_t filter_clear::satoshi_fixed_size(uint32_t version) {
+size_t filter_clear::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 

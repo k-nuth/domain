@@ -53,10 +53,6 @@ alert alert::factory_from_data(uint32_t version, data_source& stream) {
 //    return instance;
 //}
 
-alert::alert()
-    : payload_(), signature_() {
-}
-
 alert::alert(data_chunk const& payload, data_chunk const& signature)
     : payload_(payload), signature_(signature) {
 }
@@ -65,11 +61,11 @@ alert::alert(data_chunk&& payload, data_chunk&& signature)
     : payload_(std::move(payload)), signature_(std::move(signature)) {
 }
 
-alert::alert(const alert& x)
+alert::alert(alert const& x)
     : alert(x.payload_, x.signature_) {
 }
 
-alert::alert(alert&& x)
+alert::alert(alert&& x) noexcept
     : alert(std::move(x.payload_), std::move(x.signature_)) {
 }
 
@@ -131,7 +127,7 @@ void alert::to_data(uint32_t version, data_sink& stream) const {
 //    sink.write_bytes(signature_);
 //}
 
-size_t alert::serialized_size(uint32_t version) const {
+size_t alert::serialized_size(uint32_t /*version*/) const {
     return message::variable_uint_size(payload_.size()) + payload_.size() +
            message::variable_uint_size(signature_.size()) + signature_.size();
 }
@@ -168,17 +164,17 @@ void alert::set_signature(data_chunk&& value) {
     signature_ = std::move(value);
 }
 
-alert& alert::operator=(alert&& x) {
+alert& alert::operator=(alert&& x) noexcept {
     payload_ = std::move(x.payload_);
     signature_ = std::move(x.signature_);
     return *this;
 }
 
-bool alert::operator==(const alert& x) const {
+bool alert::operator==(alert const& x) const {
     return (payload_ == x.payload_) && (signature_ == x.signature_);
 }
 
-bool alert::operator!=(const alert& x) const {
+bool alert::operator!=(alert const& x) const {
     return !(*this == x);
 }
 

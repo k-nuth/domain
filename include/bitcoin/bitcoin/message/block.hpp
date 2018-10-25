@@ -40,8 +40,7 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API block
-    : public chain::block {
+class BC_API block : public chain::block {
 public:
     typedef std::shared_ptr<block> ptr;
     typedef std::shared_ptr<block const> const_ptr;
@@ -62,13 +61,13 @@ public:
 
     //static block factory_from_data(uint32_t version, reader& source);
 
-    block();
+    block() = default;
 
+    block(block const& x) = default;
     block(block&& x) noexcept;
-    block(block const& x);
 
-    block(chain::block&& x);
     block(const chain::block& x);
+    block(chain::block&& x);
 
     block(chain::header const& header, chain::transaction::list&& transactions);
     block(chain::header const& header, chain::transaction::list const& transactions);
