@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_SUITE(reject_tests)
 BOOST_AUTO_TEST_CASE(reject__factory_from_data__tx_nonstandard_empty_data__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, MALFORMED_REJECT));
-    auto const reject = message::reject::factory_from_data(version_maximum, payload);
+    auto reject const = message::reject::factory_from_data(version_maximum, payload);
     BOOST_REQUIRE(reject.is_valid());
 }
 

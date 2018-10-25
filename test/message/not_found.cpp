@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_bytes__failure) {
 }
 
 BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure) {
-    static const not_found expected{
+    static not_found const expected{
         {{inventory_vector::type_id::error,
           {{0x44, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
             0xbb, 0x85, 0x0a, 0x3d, 0x79, 0x24, 0xed, 0x0f,
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure) {
 }
 
 BOOST_AUTO_TEST_CASE(not_found__factory_from_data_1__valid_input__success) {
-    static const not_found expected{
+    static not_found const expected{
         {{inventory_vector::type_id::error,
           {{0x44, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
             0xbb, 0x85, 0x0a, 0x3d, 0x79, 0x24, 0xed, 0x0f,
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_1__valid_input__success) {
 }
 
 BOOST_AUTO_TEST_CASE(not_found__factory_from_data_2__valid_input__success) {
-    static const not_found expected{
+    static not_found const expected{
         {{inventory_vector::type_id::transaction,
           {{0x44, 0x9a, 0x0d, 0xee, 0x9a, 0xd5, 0x39, 0xee,
             0xee, 0x85, 0x0a, 0x3d, 0xee, 0x24, 0xed, 0x0f,
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_2__valid_input__success) {
 }
 
 BOOST_AUTO_TEST_CASE(not_found__factory_from_data_3__valid_input__success) {
-    static const not_found expected{
+    static not_found const expected{
         {{inventory_vector::type_id::block,
           {{0x66, 0x9a, 0x0d, 0x24, 0x66, 0xd5, 0x39, 0x89,
             0xbb, 0x66, 0x0a, 0x3d, 0x79, 0x66, 0xed, 0x0f,

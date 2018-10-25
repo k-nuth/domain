@@ -58,7 +58,7 @@ std::istream& operator>>(std::istream& input, ec_private& argument) {
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const ec_private& argument) {
+std::ostream& operator<<(std::ostream& output, ec_private const& argument) {
     output << encode_base16(argument.value_);
     return output;
 }
