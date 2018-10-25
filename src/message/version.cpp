@@ -45,15 +45,8 @@ version version::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//version version::factory_from_data(uint32_t version, reader& source)
-//{
-//    message::version instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 version::version()
-    : value_(0), services_(0), timestamp_(0), address_receiver_(), address_sender_(), nonce_(0), user_agent_(), start_height_(0), relay_(false) {
+    : value_(0), services_(0), timestamp_(0), nonce_(0), start_height_(0), relay_(false) {
 }
 
 version::version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay)
