@@ -54,11 +54,19 @@ public:
 
     //static filter_add factory_from_data(uint32_t version, reader& source);
 
-    filter_add();
+    filter_add() = default;
     filter_add(data_chunk const& data);
     filter_add(data_chunk&& data);
-    filter_add(const filter_add& x);
-    filter_add(filter_add&& x);
+
+    filter_add(filter_add const& x) = default;
+    filter_add(filter_add&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    filter_add& operator=(filter_add&& x) = default;
+    void operator=(filter_add const&) = delete;
+
+    bool operator==(filter_add const& x) const;
+    bool operator!=(filter_add const& x) const;
 
     data_chunk& data();
     data_chunk const& data() const;
@@ -102,13 +110,6 @@ public:
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
-
-    // This class is move assignable but not copy assignable.
-    filter_add& operator=(filter_add&& x);
-    void operator=(const filter_add&) = delete;
-
-    bool operator==(const filter_add& x) const;
-    bool operator!=(const filter_add& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

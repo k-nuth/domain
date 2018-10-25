@@ -46,17 +46,6 @@ filter_add filter_add::factory_from_data(uint32_t version, data_source& stream) 
     return instance;
 }
 
-//filter_add filter_add::factory_from_data(uint32_t version, reader& source)
-//{
-//    filter_add instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
-filter_add::filter_add()
-    : data_() {
-}
-
 filter_add::filter_add(data_chunk const& data)
     : data_(data) {
 }
@@ -65,12 +54,25 @@ filter_add::filter_add(data_chunk&& data)
     : data_(std::move(data)) {
 }
 
-filter_add::filter_add(const filter_add& x)
-    : filter_add(x.data_) {
+// filter_add::filter_add(filter_add const& x)
+//     : filter_add(x.data_) {
+// }
+
+// filter_add::filter_add(filter_add&& x) noexcept
+//     : filter_add(std::move(x.data_)) 
+// {}
+
+// filter_add& filter_add::operator=(filter_add&& x) noexcept {
+//     data_ = std::move(x.data_);
+//     return *this;
+// }
+
+bool filter_add::operator==(filter_add const& x) const {
+    return (data_ == x.data_);
 }
 
-filter_add::filter_add(filter_add&& x)
-    : filter_add(std::move(x.data_)) {
+bool filter_add::operator!=(filter_add const& x) const {
+    return !(*this == x);
 }
 
 bool filter_add::is_valid() const {
@@ -92,26 +94,6 @@ bool filter_add::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool filter_add::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    auto const size = source.read_size_little_endian();
-//
-//    if (size > max_filter_add)
-//        source.invalidate();
-//    else
-//        data_ = source.read_bytes(size);
-//
-//    if (version < filter_add::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk filter_add::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -128,13 +110,7 @@ void filter_add::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void filter_add::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_variable_little_endian(data_.size());
-//    sink.write_bytes(data_);
-//}
-
-size_t filter_add::serialized_size(uint32_t version) const {
+size_t filter_add::serialized_size(uint32_t /*version*/) const {
     return message::variable_uint_size(data_.size()) + data_.size();
 }
 
@@ -152,19 +128,6 @@ void filter_add::set_data(data_chunk const& value) {
 
 void filter_add::set_data(data_chunk&& value) {
     data_ = std::move(value);
-}
-
-filter_add& filter_add::operator=(filter_add&& x) {
-    data_ = std::move(x.data_);
-    return *this;
-}
-
-bool filter_add::operator==(const filter_add& x) const {
-    return (data_ == x.data_);
-}
-
-bool filter_add::operator!=(const filter_add& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message
