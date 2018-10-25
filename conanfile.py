@@ -42,6 +42,7 @@ class BitprimDomainConan(BitprimConanFile):
                "fix_march": [True, False],
                "verbose": [True, False],
                "keoken": [True, False],
+               "cached_rpc_data": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
     }
@@ -59,6 +60,7 @@ class BitprimDomainConan(BitprimConanFile):
         "fix_march=False", \
         "verbose=False", \
         "keoken=False", \
+        "cached_rpc_data=False", \
         "cxxflags=_DUMMY_", \
         "cflags=_DUMMY_"
 
@@ -151,6 +153,7 @@ class BitprimDomainConan(BitprimConanFile):
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
 
+        cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
         cmake.definitions["WITH_KEOKEN"] = option_on_off(self.is_keoken)
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_TESTS_NEW"] = option_on_off(self.options.with_tests)

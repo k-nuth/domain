@@ -54,27 +54,30 @@ block_transactions block_transactions::factory_from_data(uint32_t version, data_
 //}
 
 block_transactions::block_transactions()
-    : block_hash_(null_hash), transactions_() {
-}
+    : block_hash_(null_hash) 
+{}
 
-block_transactions::block_transactions(hash_digest const& block_hash,
-                                       chain::transaction::list const& transactions)
-    : block_hash_(block_hash), transactions_(transactions) {
-}
+block_transactions::block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions)
+    : block_hash_(block_hash)
+    , transactions_(transactions) 
+{}
 
-block_transactions::block_transactions(hash_digest const& block_hash,
-                                       chain::transaction::list&& transactions)
-    : block_hash_(std::move(block_hash)), transactions_(std::move(transactions)) {
-}
+block_transactions::block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions)
+    : block_hash_(block_hash)
+    , transactions_(std::move(transactions)) 
+{}
 
-block_transactions::block_transactions(const block_transactions& x)
-    : block_transactions(x.block_hash_, x.transactions_) {
-}
+// block_transactions::block_transactions(block_transactions const& x)
+//     // : block_transactions(x.block_hash_, x.transactions_) 
+//     : block_hash_(x.block_hash_)
+//     , transactions_(x.transactions_) 
+// {}
 
-block_transactions::block_transactions(block_transactions&& x)
-    : block_transactions(std::move(x.block_hash_),
-                         std::move(x.transactions_)) {
-}
+block_transactions::block_transactions(block_transactions&& x) noexcept
+    // : block_transactions(std::move(x.block_hash_), std::move(x.transactions_)) 
+    : block_hash_(x.block_hash_)
+    , transactions_(std::move(x.transactions_)) 
+{}
 
 bool block_transactions::is_valid() const {
     return (block_hash_ != null_hash);
@@ -160,7 +163,7 @@ void block_transactions::to_data(uint32_t version, data_sink& stream) const {
 //    }
 //}
 
-size_t block_transactions::serialized_size(uint32_t version) const {
+size_t block_transactions::serialized_size(uint32_t /*version*/) const {
     auto size = hash_size + message::variable_uint_size(transactions_.size());
 
     for (auto const& element : transactions_) {
@@ -190,12 +193,12 @@ chain::transaction::list const& block_transactions::transactions() const {
     return transactions_;
 }
 
-void block_transactions::set_transactions(chain::transaction::list const& value) {
-    transactions_ = value;
+void block_transactions::set_transactions(chain::transaction::list const& x) {
+    transactions_ = x;
 }
 
-void block_transactions::set_transactions(chain::transaction::list&& value) {
-    transactions_ = std::move(value);
+void block_transactions::set_transactions(chain::transaction::list&& x) {
+    transactions_ = std::move(x);
 }
 
 block_transactions& block_transactions::operator=(block_transactions&& x) {
@@ -204,11 +207,11 @@ block_transactions& block_transactions::operator=(block_transactions&& x) {
     return *this;
 }
 
-bool block_transactions::operator==(const block_transactions& x) const {
+bool block_transactions::operator==(block_transactions const& x) const {
     return (block_hash_ == x.block_hash_) && (transactions_ == x.transactions_);
 }
 
-bool block_transactions::operator!=(const block_transactions& x) const {
+bool block_transactions::operator!=(block_transactions const& x) const {
     return !(*this == x);
 }
 

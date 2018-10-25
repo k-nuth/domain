@@ -34,10 +34,7 @@ namespace config {
  */
 class BC_API header {
 public:
-    /**
-     * Default constructor.
-     */
-    header();
+    header() = default;
 
     /**
      * Initialization constructor.

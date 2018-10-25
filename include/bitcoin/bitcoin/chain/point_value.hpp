@@ -31,7 +31,7 @@ namespace chain {
 /// A valued point, does not implement specialized serialization methods.
 class BC_API point_value : public point {
 public:
-    typedef std::vector<point_value> list;
+    using list = std::vector<point_value>;
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -40,8 +40,7 @@ public:
     point_value(point_value const& x) = default;
     point_value(point const& p, uint64_t value);
 
-    /// This class is copy assignable.
-    // point_value& operator=(point_value x);
+    /// This class is move assignable and copy assignable.
     point_value& operator=(point_value const& x) = default;
 
     // Operators.
@@ -49,7 +48,7 @@ public:
 
     friend
     bool operator==(point_value const& x, point_value const& y);
-    
+
     friend
     bool operator!=(point_value const& x, point_value const& y);
 

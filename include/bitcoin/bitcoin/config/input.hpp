@@ -34,10 +34,7 @@ namespace config {
  */
 class BC_API input {
 public:
-    /**
-     * Default constructor.
-     */
-    input();
+    input() = default;
 
     /**
      * Initialization constructor.
@@ -51,10 +48,6 @@ public:
      */
     input(const chain::input& value);
 
-    /**
-     * Copy constructor.
-     * @param[in]  x  The object to copy into self on construct.
-     */
     input(input const& x);
 
     /**

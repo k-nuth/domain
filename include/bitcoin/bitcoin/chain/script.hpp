@@ -261,8 +261,13 @@ public:
 
     static code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
+
     // TODO(libbitcoin): move back to private.
+#ifdef BITPRIM_CURRENCY_BCH
+    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t value);
+#else
     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
+#endif
 
 protected:
     // So that input and output may call reset from their own.

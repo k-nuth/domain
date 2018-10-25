@@ -40,7 +40,7 @@ namespace message {
 class BC_API address {
 public:
     typedef std::shared_ptr<address> ptr;
-    typedef std::shared_ptr<const address> const_ptr;
+    typedef std::shared_ptr<address const> const_ptr;
 
     static address factory_from_data(uint32_t version, data_chunk const& data);
     static address factory_from_data(uint32_t version, data_source& stream);
@@ -54,15 +54,15 @@ public:
 
     //static address factory_from_data(uint32_t version, reader& source);
 
-    address();
-    address(const network_address::list& addresses);
+    address() = default;
+    address(network_address::list const& addresses);
     address(network_address::list&& addresses);
-    address(const address& x);
-    address(address&& x);
+    address(address const& x);
+    address(address&& x) noexcept;
 
     network_address::list& addresses();
-    const network_address::list& addresses() const;
-    void set_addresses(const network_address::list& value);
+    network_address::list const& addresses() const;
+    void set_addresses(network_address::list const& value);
     void set_addresses(network_address::list&& value);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -110,11 +110,11 @@ public:
     size_t serialized_size(uint32_t version) const;
 
     /// This class is move assignable but not copy assignable.
-    address& operator=(address&& x);
-    void operator=(const address&) = delete;
+    address& operator=(address&& x) noexcept;
+    void operator=(address const&) = delete;
 
-    bool operator==(const address& x) const;
-    bool operator!=(const address& x) const;
+    bool operator==(address const& x) const;
+    bool operator!=(address const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

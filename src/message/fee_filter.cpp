@@ -50,7 +50,7 @@ fee_filter fee_filter::factory_from_data(uint32_t version, data_source& stream) 
 //    return instance;
 //}
 
-size_t fee_filter::satoshi_fixed_size(uint32_t version) {
+size_t fee_filter::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(minimum_fee_);
 }
 
@@ -73,7 +73,7 @@ fee_filter::fee_filter(const fee_filter& x)
     : fee_filter(x.minimum_fee_, x.insufficient_version_) {
 }
 
-fee_filter::fee_filter(fee_filter&& x)
+fee_filter::fee_filter(fee_filter&& x) noexcept
     : fee_filter(x.minimum_fee_, x.insufficient_version_) {
 }
 
@@ -151,7 +151,7 @@ void fee_filter::set_minimum_fee(uint64_t value) {
     insufficient_version_ = false;
 }
 
-fee_filter& fee_filter::operator=(fee_filter&& x) {
+fee_filter& fee_filter::operator=(fee_filter&& x) noexcept {
     minimum_fee_ = x.minimum_fee_;
     insufficient_version_ = x.insufficient_version_;
     return *this;

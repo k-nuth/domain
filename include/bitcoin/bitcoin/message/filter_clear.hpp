@@ -56,7 +56,7 @@ public:
 
     filter_clear();
     filter_clear(const filter_clear& x);
-    filter_clear(filter_clear&& x);
+    filter_clear(filter_clear&& x) noexcept;
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);

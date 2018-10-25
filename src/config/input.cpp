@@ -60,9 +60,6 @@ static std::string encode_input(const chain::input& input) {
     return result.str();
 }
 
-input::input()
-    : value_() {}
-
 input::input(std::string const& tuple) {
     std::stringstream(tuple) >> *this;
 }

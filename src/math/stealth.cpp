@@ -179,10 +179,10 @@ bool shared_secret(ec_secret& out_shared, ec_secret const& secret, const ec_comp
 
 bool uncover_stealth(ec_compressed& out_stealth,
                      const ec_compressed& ephemeral_or_scan,
-                     ec_secret const& scan_or_ophemeral,
+                     ec_secret const& scan_or_ephemeral,
                      const ec_compressed& spend) {
     ec_secret shared;
-    if ( ! shared_secret(shared, scan_or_ophemeral, ephemeral_or_scan)) {
+    if ( ! shared_secret(shared, scan_or_ephemeral, ephemeral_or_scan)) {
         return false;
     }
 

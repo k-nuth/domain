@@ -61,8 +61,7 @@ using namespace bc::machine;
 using namespace boost::adaptors;
 
 // bit.ly/2cPazSa
-static auto const one_hash = hash_literal(
-    "0000000000000000000000000000000000000000000000000000000000000001");
+static auto const one_hash = hash_literal("0000000000000000000000000000000000000000000000000000000000000001"); //NOLINT
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -72,6 +71,7 @@ script::script()
     : valid_(false), cached_(false) {
 }
 
+//TODO(fernando): check if it call be defaulted (this and all the special ctors)
 script::script(script&& x) noexcept
     : bytes_(std::move(x.bytes_)), valid_(x.valid_), cached_(false) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
@@ -390,7 +390,7 @@ operation::list const& script::operations() const {
         return operations_;
     }
 
-    operation op;
+    // operation op;
     data_source istream(bytes_);
     istream_reader stream_r(istream);
     auto const size = bytes_.size();
@@ -411,9 +411,10 @@ operation::list const& script::operations() const {
     // If an op fails it is pushed to operations and the loop terminates.
     // To validate the ops the caller must test the last op.is_valid(), or may
     // text script.is_valid_operations(), which is done in script validation.
-    while (!stream_r.is_exhausted()) {
-        op.from_data(stream_r);
-        operations_.push_back(std::move(op));
+    while ( ! stream_r.is_exhausted()) {
+        // op.from_data(stream_r);
+        // operations_.push_back(std::move(op));
+        operations_.push_back(operation::factory_from_data(stream_r));
     }
 
     operations_.shrink_to_fit();
@@ -428,7 +429,8 @@ operation::list const& script::operations() const {
 // Signing (unversioned).
 //-----------------------------------------------------------------------------
 
-inline hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
+inline 
+hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
     BITCOIN_ASSERT(!tx.is_coinbase());
 
@@ -442,7 +444,8 @@ inline hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) 
 // there are 4 possible 7 bit values that can set "single" and 4 others that
 // can set none, and yet all other values set "all".
 //*****************************************************************************
-inline sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
+inline 
+sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     switch (sighash_type & sighash_algorithm::mask) {
         case sighash_algorithm::single:
             return sighash_algorithm::single;
@@ -453,11 +456,15 @@ inline sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     }
 }
 
-inline uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
-    return to_sighash_enum(sighash_type) == value;
+inline 
+uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
+    return static_cast<uint8_t>(
+        to_sighash_enum(sighash_type) == value
+    );
 }
 
-static hash_digest sign_none(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
+static 
+hash_digest sign_none(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -484,7 +491,8 @@ static hash_digest sign_none(transaction const& tx, uint32_t input_index, script
     return signature_hash({tx.version(), tx.locktime(), std::move(ins), {}}, sighash_type);
 }
 
-static hash_digest sign_single(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
+static 
+hash_digest sign_single(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -520,7 +528,8 @@ static hash_digest sign_single(transaction const& tx, uint32_t input_index, scri
                           sighash_type);
 }
 
-static hash_digest sign_all(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
+static 
+hash_digest sign_all(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -550,12 +559,13 @@ static hash_digest sign_all(transaction const& tx, uint32_t input_index, script 
     return signature_hash(out, sighash_type);
 }
 
-static script strip_code_seperators(script const& script_code) {
+static 
+script strip_code_seperators(script const& script_code) {
     operation::list ops;
 
-    for (auto op = script_code.begin(); op != script_code.end(); ++op) {
-        if (op->code() != opcode::codeseparator) {
-            ops.push_back(*op);
+     for (auto const& op : script_code) {
+        if (op.code() != opcode::codeseparator) {
+            ops.push_back(op);
         }
     }
 
@@ -1022,7 +1032,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures, data_stack c
     ops.reserve(points.size() + 3);
     ops.emplace_back(op_m);
 
-    for (auto const point : points) {
+    for (auto const& point : points) {
         if ( ! is_public_key(point)) {
             return {};
         }
@@ -1230,9 +1240,12 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
+#ifdef BITPRIM_CURRENCY_BCH
+code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
+#else
 code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
+#endif
     code ec;
-    bool witnessed;
 
     // Evaluate input script.
     program input(input_script, tx, input_index, forks);
@@ -1251,6 +1264,8 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
         return error::stack_false;
     }
 
+#ifndef BITPRIM_CURRENCY_BCH
+    bool witnessed;
     // Triggered by output script push of version and witness program (bip141).
     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
         // The input script must be empty (bip141).
@@ -1262,10 +1277,11 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
         if ((ec = input_witness.verify(tx, input_index, forks, prevout_script, value))) {
             return ec;
         }
-    }
-
+    } else
+#endif
     // p2sh and p2w are mutually exclusive.
-    else if (prevout_script.is_pay_to_script_hash(forks)) {
+    /*else*/ 
+    if (prevout_script.is_pay_to_script_hash(forks)) {
         if ( ! is_relaxed_push(input_script.operations())) {
             return error::invalid_script_embed;
         }
@@ -1283,6 +1299,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
             return error::stack_false;
         }
 
+#ifndef BITPRIM_CURRENCY_BCH
         // Triggered by embedded push of version and witness program (bip141).
         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
             // The input script must be a push of the embedded_script (bip141).
@@ -1295,12 +1312,15 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
                 return ec;
             }
         }
+#endif
     }
 
+#ifndef BITPRIM_CURRENCY_BCH
     // Witness must be empty if no bip141 or valid witness program (bip141).
     if ( ! witnessed && !input_witness.empty()) {
         return error::unexpected_witness;
     }
+#endif
 
     return error::success;
 }
@@ -1312,7 +1332,12 @@ code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
 
     auto const& in = tx.inputs()[input];
     auto const& prevout = in.previous_output().validation.cache;
+
+#ifdef BITPRIM_CURRENCY_BCH
+    return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
+#else
     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
+#endif
 }
 
 }  // namespace chain

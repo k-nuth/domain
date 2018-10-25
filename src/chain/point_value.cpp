@@ -30,8 +30,8 @@ namespace chain {
 //-------------------------------------------------------------------------
 
 point_value::point_value()
-    : value_(0) {
-}
+    : value_(0) 
+{}
 
 point_value::point_value(point const& p, uint64_t value)
     : point(p), value_(value) {
@@ -40,7 +40,7 @@ point_value::point_value(point const& p, uint64_t value)
 // Operators.
 //-------------------------------------------------------------------------
 
-// // Copy and swap idiom, see: stackoverflow.com/a/3279550/1172329
+// Copy and swap idiom, see: stackoverflow.com/a/3279550/1172329
 // point_value& point_value::operator=(point_value x) {
 //     swap(*this, x);
 //     return *this;
@@ -59,7 +59,6 @@ bool operator!=(point_value const& x, point_value const& y) {
 // friend
 void swap(point_value& x, point_value& y) {
     using std::swap;
-
     swap(static_cast<point&>(x), static_cast<point&>(y));
     swap(x.value_, y.value_);
 }

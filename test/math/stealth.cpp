@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(verify_string_constructor) {
     }
 }
 
-// Binary as a value on the left, padded with zeros to the right.
+// Binary as a value on the left, padded with zeros to the y.
 BOOST_AUTO_TEST_CASE(compare_constructor_results) {
     std::string value = "01100111000";
     binary prefix(value);

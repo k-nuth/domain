@@ -178,7 +178,7 @@ public:
     static bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
 #ifdef BITPRIM_CURRENCY_BCH
-    static uint256_t difficulty_adjustment_cash(uint256_t);
+    static uint256_t difficulty_adjustment_cash(uint256_t const& target);
 #endif  //BITPRIM_CURRENCY_BCH
 
     uint32_t get_next_work_required(uint32_t time_now);

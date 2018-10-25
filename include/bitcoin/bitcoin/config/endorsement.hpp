@@ -35,10 +35,7 @@ namespace config {
  */
 class BC_API endorsement {
 public:
-    /**
-     * Default constructor.
-     */
-    endorsement();
+    endorsement() = default;
 
     /**
      * Initialization constructor.

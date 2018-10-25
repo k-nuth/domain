@@ -65,7 +65,7 @@ public:
     program(chain::script const& script, const program& x);
 
     /// Create using copied tx, input, forks, value and moved stack (p2sh run).
-    program(chain::script const& script, program&& other, bool move);
+    program(chain::script const& script, program&& x, bool move);
 
     /// Constant registers.
     bool is_valid() const;

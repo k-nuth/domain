@@ -61,9 +61,6 @@ static std::string encode_point(const chain::output_point& point) {
 
 std::string const point::delimeter = ":";
 
-point::point()
-    : value_() {}
-
 point::point(std::string const& tuple) {
     std::stringstream(tuple) >> *this;
 }

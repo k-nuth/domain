@@ -102,11 +102,12 @@ public:
 
         script_.from_data(source, true);
 
+#ifndef BITPRIM_CURRENCY_BCH
         // Transaction from_data handles the discontiguous wire witness decoding.
         if (witness_val(witness) && !wire) {
             witness_.from_data(source, true);
         }
-
+#endif
         sequence_ = source.read_4_bytes_little_endian();
 
         if ( ! source)
@@ -135,10 +136,12 @@ public:
         previous_output_.to_data(sink, wire);
         script_.to_data(sink, true);
 
+#ifndef BITPRIM_CURRENCY_BCH
         // Transaction to_data handles the discontiguous wire witness encoding.
-        if (witness_val(witness) && !wire)
+        if (witness_val(witness) && !wire) {
             witness_.to_data(sink, true);
-
+        }
+#endif
         sink.write_4_bytes_little_endian(sequence_);
     }
 
@@ -147,8 +150,11 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
+    size_t serialized_size_non_witness(bool wire) const;
+
     /// This accounts for wire witness, but does not read or write it.
     size_t serialized_size(bool wire = true, bool witness = false) const;
+
 
     output_point& previous_output();
     output_point const& previous_output() const;
@@ -162,12 +168,15 @@ public:
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
+
+#ifndef BITPRIM_CURRENCY_BCH
     // Deprecated (unsafe).
     chain::witness& witness();
 
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
+#endif // BITPRIM_CURRENCY_BCH
 
     uint32_t sequence() const;
     void set_sequence(uint32_t value);
@@ -209,7 +218,9 @@ private:
 
     output_point previous_output_;
     chain::script script_;
+#ifndef BITPRIM_CURRENCY_BCH
     chain::witness witness_;
+#endif
     uint32_t sequence_;
 };
 

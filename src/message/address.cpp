@@ -52,11 +52,7 @@ address address::factory_from_data(uint32_t version, data_source& stream) {
 //    return instance;
 //}
 
-address::address()
-    : addresses_() {
-}
-
-address::address(const network_address::list& addresses)
+address::address(network_address::list const& addresses)
     : addresses_(addresses) {
 }
 
@@ -64,11 +60,11 @@ address::address(network_address::list&& addresses)
     : addresses_(std::move(addresses)) {
 }
 
-address::address(const address& x)
+address::address(address const& x)
     : address(x.addresses_) {
 }
 
-address::address(address&& x)
+address::address(address&& x) noexcept
     : address(std::move(x.addresses_)) {
 }
 
@@ -146,11 +142,11 @@ network_address::list& address::addresses() {
     return addresses_;
 }
 
-const network_address::list& address::addresses() const {
+network_address::list const& address::addresses() const {
     return addresses_;
 }
 
-void address::set_addresses(const network_address::list& value) {
+void address::set_addresses(network_address::list const& value) {
     addresses_ = value;
 }
 
@@ -158,16 +154,16 @@ void address::set_addresses(network_address::list&& value) {
     addresses_ = std::move(value);
 }
 
-address& address::operator=(address&& x) {
+address& address::operator=(address&& x) noexcept {
     addresses_ = std::move(x.addresses_);
     return *this;
 }
 
-bool address::operator==(const address& x) const {
+bool address::operator==(address const& x) const {
     return (addresses_ == x.addresses_);
 }
 
-bool address::operator!=(const address& x) const {
+bool address::operator!=(address const& x) const {
     return !(*this == x);
 }
 

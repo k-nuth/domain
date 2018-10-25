@@ -59,54 +59,104 @@ namespace chain {
 //-----------------------------------------------------------------------------
 
 transaction::transaction()  //NOLINT
-    : version_(0), locktime_(0), validation{} {}
+    : version_(0), locktime_(0), validation{} 
+{}
 
-transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs, uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard)
-    : version_(version), locktime_(locktime), inputs_(inputs), outputs_(outputs), cached_fees_(cached_fees), cached_sigops_(cached_sigops), cached_is_standard_(cached_is_standard), validation{} {}
+transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs
+#ifdef BITPRIM_CACHED_RPC_DATA
+                        , uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard
+#endif
+                        )
+    : version_(version)
+    , locktime_(locktime)
+    , inputs_(inputs)
+    , outputs_(outputs)
+#ifdef BITPRIM_CACHED_RPC_DATA    
+    , cached_fees_(cached_fees)
+    , cached_sigops_(cached_sigops)
+    , cached_is_standard_(cached_is_standard)
+#endif
+    , validation{} 
+{}
 
-transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs, uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard)
-    : version_(version), locktime_(locktime), inputs_(std::move(inputs)), outputs_(std::move(outputs)), cached_fees_(cached_fees), cached_sigops_(cached_sigops), cached_is_standard_(cached_is_standard), validation{} {}
+transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs
+#ifdef BITPRIM_CACHED_RPC_DATA
+                       , uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard
+#endif
+                        )
+    : version_(version)
+    , locktime_(locktime)
+    , inputs_(std::move(inputs))
+    , outputs_(std::move(outputs))
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , cached_fees_(cached_fees)
+    , cached_sigops_(cached_sigops)
+    , cached_is_standard_(cached_is_standard)
+#endif
+    , validation{} 
+{}
 
 transaction::transaction(transaction const& x)
-    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_)
-
-    : version_(x.version_), locktime_(x.locktime_), inputs_(x.inputs_), outputs_(x.outputs_), cached_fees_(0), cached_sigops_(0), cached_is_standard_(false)
-      // , validation{}
-      ,
-      validation(x.validation) {
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(x.inputs_)
+    , outputs_(x.outputs_)
+#ifdef BITPRIM_CACHED_RPC_DATA    
+    , cached_fees_(0)
+    , cached_sigops_(0)
+    , cached_is_standard_(false)
+#endif
+    , validation(x.validation) 
+{
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     // validation = x.validation;
 }
 
 transaction::transaction(transaction&& x) noexcept
-    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_))
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(std::move(x.inputs_))
+    , outputs_(std::move(x.outputs_))
 
-    : version_(x.version_), locktime_(x.locktime_), inputs_(std::move(x.inputs_)), outputs_(std::move(x.outputs_)), cached_fees_(0), cached_sigops_(0), cached_is_standard_(false)
-      // , validation{}
-      ,
-      validation(std::move(x.validation)) {
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , cached_fees_(0)
+    , cached_sigops_(0)
+    , cached_is_standard_(false)
+#endif
+    , validation(std::move(x.validation)) 
+{
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     // validation = std::move(x.validation);
 }
 
 transaction::transaction(transaction const& x, hash_digest const& hash)
-    // : transaction(x.version_, x.locktime_, x.inputs_, x.outputs_, x.cached_sigops_, x.cached_fees_, x.cached_is_standard_)
-
-    : version_(x.version_), locktime_(x.locktime_), inputs_(x.inputs_), outputs_(x.outputs_), cached_fees_(x.cached_fees_), cached_sigops_(x.cached_sigops_), cached_is_standard_(x.cached_is_standard_)
-      // , validation{}
-      ,
-      validation(x.validation) {
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(x.inputs_)
+    , outputs_(x.outputs_)
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , cached_fees_(x.cached_fees_)
+    , cached_sigops_(x.cached_sigops_)
+    , cached_is_standard_(x.cached_is_standard_)
+#endif
+    , validation(x.validation) 
+{
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = x.validation;
 }
 
 transaction::transaction(transaction&& x, hash_digest const& hash)
-    // : transaction(x.version_, x.locktime_, std::move(x.inputs_), std::move(x.outputs_), x.cached_sigops_, x.cached_fees_, x.cached_is_standard_)
-
-    : version_(x.version_), locktime_(x.locktime_), inputs_(std::move(x.inputs_)), outputs_(std::move(x.outputs_)), cached_fees_(x.cached_fees_), cached_sigops_(x.cached_sigops_), cached_is_standard_(x.cached_is_standard_)
-      // , validation{}
-      ,
-      validation(std::move(x.validation)) {
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(std::move(x.inputs_))
+    , outputs_(std::move(x.outputs_))
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , cached_fees_(x.cached_fees_)
+    , cached_sigops_(x.cached_sigops_)
+    , cached_is_standard_(x.cached_is_standard_)
+#endif
+    , validation(std::move(x.validation)) 
+{
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = std::move(x.validation);
 }
@@ -412,6 +462,7 @@ void transaction::set_outputs(output::list&& value) {
     total_output_value_ = boost::none;
 }
 
+#ifdef BITPRIM_CACHED_RPC_DATA
 uint64_t transaction::cached_fees() const {
     return cached_fees_;
 }
@@ -423,6 +474,7 @@ uint32_t transaction::cached_sigops() const {
 bool transaction::cached_is_standard() const {
     return cached_is_standard_;
 }
+#endif // BITPRIM_CACHED_RPC_DATA
 
 // Cache.
 //-----------------------------------------------------------------------------

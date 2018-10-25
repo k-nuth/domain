@@ -32,18 +32,16 @@ namespace chain {
 //-----------------------------------------------------------------------------
 
 output_point::output_point()
-    : validation{} {}
+    : validation{} 
+{}
 
 output_point::output_point(hash_digest const& hash, uint32_t index)
-    : point(hash, index), validation{} {}
+    : point(hash, index), validation{} 
+{}
 
 output_point::output_point(point const& x)
-    : point(x), validation{} {}
-
-// output_point::output_point(output_point&& x) noexcept
-//     : point(x)
-//     , validation(std::move(x.validation))
-// {}
+    : point(x), validation{} 
+{}
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -53,12 +51,6 @@ output_point& output_point::operator=(point const& x) {
     point::operator=(x);
     return *this;
 }
-
-// output_point& output_point::operator=(output_point&& x) noexcept {
-//     point::operator=(x);
-//     validation = std::move(x.validation);
-//     return *this;
-// }
 
 bool operator==(output_point const& x, point const& y) {
     return x == y;  //TODO(fernando): check if it is an infinite loop

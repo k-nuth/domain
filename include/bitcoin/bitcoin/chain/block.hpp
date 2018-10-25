@@ -79,21 +79,21 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    block();
-
-    block(block&& x) noexcept;
-    block(block const& x);
-
+    block() = default;
     block(chain::header const& header, transaction::list&& transactions);
     block(chain::header const& header, transaction::list const& transactions);
 
+    //Note(bitprim): cannot be defaulted because of the mutex data member.
+    block(block const& x);
+    block(block&& x) noexcept;
+
+    /// This class is move assignable and copy assignable.
+    block& operator=(block const& x);
+    block& operator=(block&& x) noexcept;
+
+
     // Operators.
     //-------------------------------------------------------------------------
-
-    /// This class is move assignable but NOT copy assignable.
-    block& operator=(block&& x) noexcept;
-    block& operator=(block const& x) = delete;
-
     bool operator==(block const& x) const;
     bool operator!=(block const& x) const;
 

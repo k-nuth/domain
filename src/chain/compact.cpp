@@ -42,36 +42,42 @@ static constexpr uint32_t first_byte_mask = 0xffffff00;
 // Inlines
 //-----------------------------------------------------------------------------
 
-inline bool is_negated(uint32_t compact) {
+inline 
+bool is_negated(uint32_t compact) {
     return (compact & sign_bit) != 0;
 }
 
-inline bool is_nonzero(uint32_t compact) {
+inline 
+bool is_nonzero(uint32_t compact) {
     return (compact & mantissa_max) != 0;
 }
 
-inline uint8_t log_256(uint32_t mantissa) {
+inline 
+uint8_t log_256(uint32_t mantissa) {
     BITCOIN_ASSERT_MSG(mantissa <= 0x00ffffff, "mantissa log256 is 4");
-
     return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));
 }
 
-inline bool is_overflow(uint8_t exponent, uint32_t mantissa) {
+inline 
+bool is_overflow(uint8_t exponent, uint32_t mantissa) {
     // Overflow if exponent would shift the mantissa more than 32 bytes.
     return (mantissa > 0) && (exponent > 32 + 3 - log_256(mantissa));
 }
 
-inline uint32_t shift_low(uint8_t exponent) {
+inline 
+uint32_t shift_low(uint8_t exponent) {
     BITCOIN_ASSERT(exponent <= 3);
     return 8 * (3 - exponent);
 }
 
-inline uint32_t shift_high(uint8_t exponent) {
+inline 
+uint32_t shift_high(uint8_t exponent) {
     BITCOIN_ASSERT(exponent > 3);
     return 8 * (exponent - 3);
 }
 
-inline size_t logical_size(uint256_t value) {
+inline 
+size_t logical_size(uint256_t value) {
     auto byte = 0;
 
     for (; value != 0; ++byte) {
@@ -103,6 +109,10 @@ uint32_t compact::normal() const {
 }
 
 compact::operator uint256_t const&() const {
+    return big_;
+}
+
+uint256_t const& compact::big() const {
     return big_;
 }
 
@@ -157,14 +167,14 @@ uint32_t compact::from_big(uint256_t const& big) {
     //*************************************************************************
     if (is_negated(mantissa)) {
         exponent++;
-        mantissa >>= 8;
+        mantissa >>= 8u;
     }
 
     BITCOIN_ASSERT_MSG((exponent & first_byte_mask) == 0, "size exceess");
     BITCOIN_ASSERT_MSG((mantissa & mantissa_mask) == 0, "value exceess");
 
     // Assemble the compact notation.
-    return (exponent << mantissa_bits) | mantissa;
+    return (static_cast<uint32_t>(exponent) << mantissa_bits) | mantissa;
 }
 
 }  // namespace chain

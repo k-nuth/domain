@@ -343,13 +343,13 @@ hash_digest header::litecoin_proof_of_work_hash() const {
 #endif  //BITPRIM_CURRENCY_LTC
 
 uint256_t header::proof(uint32_t bits) {
-    auto const header_bits = compact(bits);
+    compact const header_bits(bits);
 
     if (header_bits.is_overflowed()) {
         return 0;
     }
 
-    uint256_t target(header_bits);
+    uint256_t const& target = header_bits.big();
 
     //*************************************************************************
     // CONSENSUS: satoshi will throw division by zero in the case where the
@@ -383,14 +383,15 @@ bool header::is_valid_timestamp() const {
 
 // [CheckProofOfWork]
 bool header::is_valid_proof_of_work(bool retarget) const {
-    auto const bits = compact(bits_);
+    compact const bits(bits_);
     static uint256_t const pow_limit(compact{work_limit(retarget)});
 
     if (bits.is_overflowed()) {
         return false;
     }
 
-    uint256_t target(bits);
+    // uint256_t target(bits);
+    uint256_t const& target = bits.big();
 
     // Ensure claimed work is within limits.
     if (target < 1 || target > pow_limit) {
