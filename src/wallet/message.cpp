@@ -106,7 +106,7 @@ bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed, uint8_
     return true;
 }
 
-bool sign_message(message_signature& signature, data_slice message, const ec_private& secret) {
+bool sign_message(message_signature& signature, data_slice message, ec_private const& secret) {
     return sign_message(signature, message, secret, secret.compressed());
 }
 
@@ -131,7 +131,7 @@ bool sign_message(message_signature& signature, data_slice message, ec_secret co
     return true;
 }
 
-bool verify_message(data_slice message, const payment_address& address, const message_signature& signature) {
+bool verify_message(data_slice message, payment_address const& address, const message_signature& signature) {
     auto const magic = signature.front();
     auto const compact = slice<1, message_signature_size>(signature);
 

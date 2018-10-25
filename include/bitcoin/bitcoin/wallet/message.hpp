@@ -47,7 +47,7 @@ BC_API hash_digest hash_message(data_slice message);
  * This should be base64 encoded for presentation to the user.
  * @return true if wif is valid and signature encoding is successful.
  */
-BC_API bool sign_message(message_signature& signature, data_slice message, const ec_private& secret);
+BC_API bool sign_message(message_signature& signature, data_slice message, ec_private const& secret);
 
 /**
  * Signs a message using deterministic signature.
@@ -75,7 +75,7 @@ BC_API bool sign_message(message_signature& out_signature, data_slice message, e
  * @return false if the signature does not match the address or if there are
  * any errors in the signature encoding.
  */
-BC_API bool verify_message(data_slice message, const payment_address& address, const message_signature& signature);
+BC_API bool verify_message(data_slice message, payment_address const& address, const message_signature& signature);
 
 /// Exposed primarily for independent testability.
 BC_API bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id, bool compressed);
