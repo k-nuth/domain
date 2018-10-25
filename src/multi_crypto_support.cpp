@@ -27,11 +27,12 @@ namespace libbitcoin {
 
 namespace {
 
-static config::currency currency_ = config::currency::none;
-static config::settings network_ = config::settings::none;
+// static config::currency currency_ = config::currency::none;
+// static config::settings network_ = config::settings::none;
 
 #ifdef BITPRIM_CURRENCY_BCH
-static std::string cashaddr_prefix_ = "bitcoincash";
+// static   //Note(bitprim): static is redundant in a anonymous namespace
+std::string cashaddr_prefix_ = "bitcoincash";
 #endif  // BITPRIM_CURRENCY_BCH
 
 }  // namespace

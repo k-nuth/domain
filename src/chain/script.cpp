@@ -71,6 +71,7 @@ script::script()
     : valid_(false), cached_(false) {
 }
 
+//TODO(fernando): check if it call be defaulted (this and all the special ctors)
 script::script(script&& x) noexcept
     : bytes_(std::move(x.bytes_)), valid_(x.valid_), cached_(false) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.

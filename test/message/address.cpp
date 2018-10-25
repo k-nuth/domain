@@ -22,7 +22,7 @@
 using namespace bc;
 using namespace bc::message;
 
-bool equal(const address& x, const address& y) {
+bool equal(address const& x, address const& y) {
     auto const left_addresses = x.addresses();
     auto const right_addresses = y.addresses();
 
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_1__always__invalid) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
-    const network_address::list addresses{
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
-    const network_address::list addresses{
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
-    const network_address::list addresses{
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params) {
-    const network_address::list addresses{
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
-    const network_address::list value{
+    network_address::list const value{
         network_address(
             734678u,
             5357534u,
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
-    const network_address::list value{
+    network_address::list const value{
         network_address(
             734678u,
             5357534u,
@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent) {
-    const network_address::list addresses{
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,

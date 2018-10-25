@@ -169,10 +169,6 @@ static std::string const encoded_regtest_genesis_block =
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// block::block()
-//     : validation{} {
-// }
-
 // TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list const& transactions)
     : header_(header)
