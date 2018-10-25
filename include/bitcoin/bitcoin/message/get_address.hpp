@@ -51,10 +51,9 @@ public:
         return instance;
     }
 
-    //static get_address factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
-    get_address();
+    get_address() = default;
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
@@ -65,7 +64,6 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 

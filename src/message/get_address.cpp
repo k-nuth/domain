@@ -43,16 +43,6 @@ get_address get_address::factory_from_data(uint32_t version, data_source& stream
     return instance;
 }
 
-//get_address get_address::factory_from_data(uint32_t version, reader& source)
-//{
-//    get_address instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
-get_address::get_address() {
-}
-
 bool get_address::is_valid() const {
     return true;
 }
@@ -70,12 +60,6 @@ bool get_address::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool get_address::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//    return source;
-//}
-
 data_chunk get_address::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -92,15 +76,11 @@ void get_address::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void get_address::to_data(uint32_t version, writer& sink) const
-//{
-//}
-
 size_t get_address::serialized_size(uint32_t version) const {
     return get_address::satoshi_fixed_size(version);
 }
 
-size_t get_address::satoshi_fixed_size(uint32_t version) {
+size_t get_address::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
