@@ -43,13 +43,6 @@ memory_pool memory_pool::factory_from_data(uint32_t version, data_source& stream
     return instance;
 }
 
-//memory_pool memory_pool::factory_from_data(uint32_t version, reader& source)
-//{
-//    memory_pool instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 // This is a default instance so is invalid.
 // The only way to make this valid is to deserialize it :/.
 memory_pool::memory_pool()
@@ -61,13 +54,13 @@ memory_pool::memory_pool(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-memory_pool::memory_pool(const memory_pool& x)
-    : memory_pool(x.insufficient_version_) {
-}
+// memory_pool::memory_pool(const memory_pool& x)
+//     : memory_pool(x.insufficient_version_) {
+// }
 
-memory_pool::memory_pool(memory_pool&& x)
-    : memory_pool(x.insufficient_version_) {
-}
+// memory_pool::memory_pool(memory_pool&& x) noexcept
+//     : memory_pool(x.insufficient_version_) 
+// {}
 
 bool memory_pool::is_valid() const {
     return !insufficient_version_;
@@ -88,22 +81,6 @@ bool memory_pool::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool memory_pool::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    // Initialize as valid from deserialization.
-//    insufficient_version_ = false;
-//
-//    if (version < memory_pool::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk memory_pool::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -119,10 +96,6 @@ void memory_pool::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void memory_pool::to_data(uint32_t version, writer& sink) const
-//{
-//}
 
 size_t memory_pool::serialized_size(uint32_t version) const {
     return memory_pool::satoshi_fixed_size(version);

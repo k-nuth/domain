@@ -51,12 +51,11 @@ public:
         return instance;
     }
 
-    //static memory_pool factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
     memory_pool();
-    memory_pool(const memory_pool& x);
-    memory_pool(memory_pool&& x);
+    memory_pool(memory_pool const& x) = default;
+    memory_pool(memory_pool&& x) = default;
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
