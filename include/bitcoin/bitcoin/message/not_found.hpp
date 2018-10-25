@@ -55,9 +55,7 @@ public:
         return instance;
     }
 
-    //static not_found factory_from_data(uint32_t version, reader& source);
-
-    not_found();
+    not_found() = default;
     not_found(inventory_vector::list const& values);
     not_found(inventory_vector::list&& values);
     not_found(hash_list const& hashes, type_id type);

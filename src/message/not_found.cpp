@@ -43,10 +43,6 @@ not_found not_found::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-not_found::not_found()
-    : inventory() {
-}
-
 not_found::not_found(inventory_vector::list const& values)
     : inventory(values) {
 }
