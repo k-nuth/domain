@@ -82,6 +82,14 @@ option(WITH_TESTS_NEW "Compile with unit tests." OFF)
 option(WITH_EXAMPLES "Compile with examples." OFF)
 
 
+# Implement --with-keoken and declare WITH_CACHED_RPC_DATA.
+#------------------------------------------------------------------------------
+option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
+if (WITH_CACHED_RPC_DATA)
+  message(STATUS "Bitprim: Cached RPC data enabled")
+  add_definitions(-DBITPRIM_CACHED_RPC_DATA)
+endif()
+
 # Implement --with-keoken and declare WITH_KEOKEN.
 #------------------------------------------------------------------------------
 option(WITH_KEOKEN "Keoken enabled." OFF)
