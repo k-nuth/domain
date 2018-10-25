@@ -56,8 +56,15 @@ public:
     alert() = default;
     alert(data_chunk const& payload, data_chunk const& signature);
     alert(data_chunk&& payload, data_chunk&& signature);
-    alert(alert const& x);
-    alert(alert&& x) noexcept;
+    alert(alert const& x) = default;
+    alert(alert&& x) = default;
+
+    /// This class is move assignable but not copy assignable.
+    alert& operator=(alert&& x) = default;
+    void operator=(alert const&) = delete;
+
+    bool operator==(alert const& x) const;
+    bool operator!=(alert const& x) const;
 
     data_chunk& payload();
     data_chunk const& payload() const;
@@ -104,12 +111,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    /// This class is move assignable but not copy assignable.
-    alert& operator=(alert&& x) noexcept;
-    void operator=(alert const&) = delete;
-
-    bool operator==(alert const& x) const;
-    bool operator!=(alert const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

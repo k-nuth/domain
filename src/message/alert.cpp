@@ -46,13 +46,6 @@ alert alert::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//alert alert::factory_from_data(uint32_t version, reader& source)
-//{
-//    alert instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 alert::alert(data_chunk const& payload, data_chunk const& signature)
     : payload_(payload), signature_(signature) {
 }
@@ -61,12 +54,26 @@ alert::alert(data_chunk&& payload, data_chunk&& signature)
     : payload_(std::move(payload)), signature_(std::move(signature)) {
 }
 
-alert::alert(alert const& x)
-    : alert(x.payload_, x.signature_) {
+// alert::alert(alert const& x)
+//     : alert(x.payload_, x.signature_) {
+// }
+
+// alert::alert(alert&& x) noexcept
+//     : alert(std::move(x.payload_), std::move(x.signature_)) {
+// }
+
+// alert& alert::operator=(alert&& x) noexcept {
+//     payload_ = std::move(x.payload_);
+//     signature_ = std::move(x.signature_);
+//     return *this;
+// }
+
+bool alert::operator==(alert const& x) const {
+    return (payload_ == x.payload_) && (signature_ == x.signature_);
 }
 
-alert::alert(alert&& x) noexcept
-    : alert(std::move(x.payload_), std::move(x.signature_)) {
+bool alert::operator!=(alert const& x) const {
+    return !(*this == x);
 }
 
 bool alert::is_valid() const {
@@ -90,19 +97,6 @@ bool alert::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool alert::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    payload_ = source.read_bytes(source.read_size_little_endian());
-//    signature_ = source.read_bytes(source.read_size_little_endian());
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk alert::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -118,14 +112,6 @@ void alert::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void alert::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_variable_little_endian(payload_.size());
-//    sink.write_bytes(payload_);
-//    sink.write_variable_little_endian(signature_.size());
-//    sink.write_bytes(signature_);
-//}
 
 size_t alert::serialized_size(uint32_t /*version*/) const {
     return message::variable_uint_size(payload_.size()) + payload_.size() +
@@ -164,19 +150,7 @@ void alert::set_signature(data_chunk&& value) {
     signature_ = std::move(value);
 }
 
-alert& alert::operator=(alert&& x) noexcept {
-    payload_ = std::move(x.payload_);
-    signature_ = std::move(x.signature_);
-    return *this;
-}
 
-bool alert::operator==(alert const& x) const {
-    return (payload_ == x.payload_) && (signature_ == x.signature_);
-}
-
-bool alert::operator!=(alert const& x) const {
-    return !(*this == x);
-}
 
 }  // namespace message
 }  // namespace libbitcoin
