@@ -30,50 +30,38 @@ namespace chain {
 //-------------------------------------------------------------------------
 
 point_value::point_value()
-    : point(), value_(0) {
-}
+    : value_(0) 
+{}
 
-point_value::point_value(point_value&& x)
-    : value_(x.value_), point(std::move(x)) {
-}
-
-point_value::point_value(point_value const& x)
-    : point(x), value_(x.value_) {
-}
-
-point_value::point_value(point&& instance, uint64_t value)
-    : point(std::move(instance)), value_(value) {
-}
-
-point_value::point_value(point const& instance, uint64_t value)
-    : point(instance), value_(value) {
+point_value::point_value(point const& p, uint64_t value)
+    : point(p), value_(value) {
 }
 
 // Operators.
 //-------------------------------------------------------------------------
 
 // Copy and swap idiom, see: stackoverflow.com/a/3279550/1172329
-point_value& point_value::operator=(point_value x) {
-    swap(*this, x);
-    return *this;
+// point_value& point_value::operator=(point_value x) {
+//     swap(*this, x);
+//     return *this;
+// }
+
+
+// friend
+bool operator==(point_value const& x, point_value const& y) {
+    return static_cast<point const&>(x) == static_cast<point const&>(y) && (x.value_ == y.value_);
 }
 
-bool point_value::operator==(point_value const& x) const {
-    return static_cast<point>(*this) == static_cast<point>(x) &&
-           (value_ == x.value_);
+// friend
+bool operator!=(point_value const& x, point_value const& y) {
+    return !(x == y);
 }
 
-bool point_value::operator!=(point_value const& x) const {
-    return !(*this == x);
-}
-
-// friend function, see: stackoverflow.com/a/5695855/1172329
-void swap(point_value& left, point_value& right) {
+// friend
+void swap(point_value& x, point_value& y) {
     using std::swap;
-
-    // Must be unqualified (no std namespace).
-    swap(static_cast<point&>(left), static_cast<point&>(right));
-    swap(left.value_, right.value_);
+    swap(static_cast<point&>(x), static_cast<point&>(y));
+    swap(x.value_, y.value_);
 }
 
 // Properties (accessors).

@@ -56,12 +56,8 @@ witness::witness()
     : valid_(false) {
 }
 
-witness::witness(witness&& x)
+witness::witness(witness&& x) noexcept
     : stack_(std::move(x.stack_)), valid_(x.valid_) {
-}
-
-witness::witness(witness const& x)
-    : stack_(x.stack_), valid_(x.valid_) {
 }
 
 witness::witness(data_stack const& stack) {
@@ -84,7 +80,7 @@ witness::witness(data_chunk const& encoded, bool prefix) {
 // Operators.
 //-----------------------------------------------------------------------------
 
-witness& witness::operator=(witness&& x) {
+witness& witness::operator=(witness&& x) noexcept {
     reset();
     stack_ = std::move(x.stack_);
     valid_ = x.valid_;

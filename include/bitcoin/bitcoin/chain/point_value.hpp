@@ -31,28 +31,30 @@ namespace chain {
 /// A valued point, does not implement specialized serialization methods.
 class BC_API point_value : public point {
 public:
-    typedef std::vector<point_value> list;
+    using list = std::vector<point_value>;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
     point_value();
-    point_value(point_value&& x);
-    point_value(point_value const& x);
-    point_value(point&& instance, uint64_t value);
-    point_value(point const& instance, uint64_t value);
+    point_value(point_value const& x) = default;
+    point_value(point const& p, uint64_t value);
 
     // Operators.
     //-------------------------------------------------------------------------
 
     /// This class is move assignable and copy assignable.
-    point_value& operator=(point_value x);
+    point_value& operator=(point_value const& x) = default;
 
-    bool operator==(point_value const& x) const;
-    bool operator!=(point_value const& x) const;
+    friend
+    bool operator==(point_value const& x, point_value const& y);
+
+    friend
+    bool operator!=(point_value const& x, point_value const& y);
 
     // Swap implementation required to properly handle base class.
-    friend void swap(point_value& left, point_value& right);
+    friend 
+    void swap(point_value& x, point_value& y);
 
     // Properties (accessors).
     //-------------------------------------------------------------------------

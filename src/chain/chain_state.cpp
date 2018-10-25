@@ -152,7 +152,7 @@ inline uint32_t bits_high(chain_state::data const& values) {
 }
 
 #ifdef BITPRIM_CURRENCY_BCH
-uint256_t chain_state::difficulty_adjustment_cash(uint256_t target) {
+uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
     return target + (target >> 2);
 }
 
@@ -342,7 +342,7 @@ size_t chain_state::version_count(size_t height, uint32_t forks) {
     return std::min(height, version_sample_size(retarget && !testnet));
 }
 
-size_t chain_state::timestamp_count(size_t height, uint32_t) {
+size_t chain_state::timestamp_count(size_t height, uint32_t /*unused*/) {
 #ifdef BITPRIM_CURRENCY_BCH
     return std::min(height, chain_state_timestamp_count);  //TODO(bitprim): check what happens with Bitcoin Legacy...?
 #else
@@ -480,15 +480,13 @@ timestamps_position(chain_state::timestamps const& times, bool tip) {
 std::vector<typename chain_state::timestamps::value_type>
 timestamps_subset(chain_state::timestamps const& times, bool tip) {
     auto at = timestamps_position(times, tip);
-    auto n = (std::min)((size_t)std::distance(at, times.end()), median_time_past_interval);
-
+    auto n = (std::min)(static_cast<size_t>(std::distance(at, times.end())), median_time_past_interval);
     std::vector<typename chain_state::timestamps::value_type> subset(n);
     std::copy_n(at, n, subset.begin());
-
     return subset;
 }
 
-uint32_t chain_state::median_time_past(data const& values, uint32_t, bool tip /*= true*/) {
+uint32_t chain_state::median_time_past(data const& values, uint32_t /*unused*/, bool tip /*= true*/) {
     // Create a copy for the in-place sort.
     auto subset = timestamps_subset(values.timestamp.ordered, tip);
 
@@ -559,14 +557,14 @@ inline constexpr auto select_0_2(T&& a, U&& b, R r) FN(
 
     work *= target_spacing_seconds;  //10 * 60
 
-    int64_t nActualTimespan = first_block.second - last_block.second;
-    if (nActualTimespan > 288 * target_spacing_seconds) {
-        nActualTimespan = 288 * target_spacing_seconds;
-    } else if (nActualTimespan < 72 * target_spacing_seconds) {
-        nActualTimespan = 72 * target_spacing_seconds;
+    int64_t actual_timespan = first_block.second - last_block.second;
+    if (actual_timespan > 288 * target_spacing_seconds) {
+        actual_timespan = 288 * target_spacing_seconds;
+    } else if (actual_timespan < 72 * target_spacing_seconds) {
+        actual_timespan = 72 * target_spacing_seconds;
     }
 
-    work /= nActualTimespan;
+    work /= actual_timespan;
     auto nextTarget = (-1 * work) / work;  //Compute target result
     uint256_t pow_limit(compact{retarget_proof_of_work_limit});
 
@@ -774,7 +772,7 @@ size_t chain_state::retarget_distance(size_t height) {
 //-----------------------------------------------------------------------------
 
 // static
-chain_state::map chain_state::get_map(size_t height, checkpoints const& checkpoints, uint32_t forks) {
+chain_state::map chain_state::get_map(size_t height, checkpoints const& /*checkpoints*/, uint32_t forks) {
     if (height == 0) {
         return {};
     }

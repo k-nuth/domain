@@ -21,10 +21,10 @@
 
 using namespace bc;
 
-bool equal(const message::network_address& left,
-           const message::network_address& right,
+bool equal(const message::network_address& x,
+           const message::network_address& y,
            bool with_timestamp) {
-    bool matches_timestamp = with_timestamp ? (left.timestamp() == right.timestamp()) : true;
+    bool matches_timestamp = with_timestamp ? (x.timestamp() == y.timestamp()) : true;
 
     return matches_timestamp && (left == right);
 }

@@ -22,9 +22,9 @@
 using namespace bc;
 using namespace bc::message;
 
-bool equal(const address& left, const address& right) {
-    auto const left_addresses = left.addresses();
-    auto const right_addresses = right.addresses();
+bool equal(const address& x, const address& y) {
+    auto const left_addresses = x.addresses();
+    auto const right_addresses = y.addresses();
 
     bool same = (left_addresses.size() == right_addresses.size());
 

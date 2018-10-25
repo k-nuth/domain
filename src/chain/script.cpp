@@ -390,7 +390,7 @@ operation::list const& script::operations() const {
         return operations_;
     }
 
-    operation op;
+    // operation op;
     data_source istream(bytes_);
     istream_reader stream_r(istream);
     auto const size = bytes_.size();
@@ -411,9 +411,10 @@ operation::list const& script::operations() const {
     // If an op fails it is pushed to operations and the loop terminates.
     // To validate the ops the caller must test the last op.is_valid(), or may
     // text script.is_valid_operations(), which is done in script validation.
-    while (!stream_r.is_exhausted()) {
-        op.from_data(stream_r);
-        operations_.push_back(std::move(op));
+    while ( ! stream_r.is_exhausted()) {
+        // op.from_data(stream_r);
+        // operations_.push_back(std::move(op));
+        operations_.push_back(operation::factory_from_data(stream_r));
     }
 
     operations_.shrink_to_fit();
@@ -553,9 +554,9 @@ static hash_digest sign_all(transaction const& tx, uint32_t input_index, script 
 static script strip_code_seperators(script const& script_code) {
     operation::list ops;
 
-    for (auto op = script_code.begin(); op != script_code.end(); ++op) {
-        if (op->code() != opcode::codeseparator) {
-            ops.push_back(*op);
+     for (auto const& op : script_code) {
+        if (op.code() != opcode::codeseparator) {
+            ops.push_back(op);
         }
     }
 
@@ -1022,7 +1023,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures, data_stack c
     ops.reserve(points.size() + 3);
     ops.emplace_back(op_m);
 
-    for (auto const point : points) {
+    for (auto const& point : points) {
         if ( ! is_public_key(point)) {
             return {};
         }

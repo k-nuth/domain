@@ -49,8 +49,8 @@ public:
 
     witness();
 
-    witness(witness&& x);
-    witness(witness const& x);
+    witness(witness const& x) = default;
+    witness(witness&& x) noexcept;
 
     witness(data_stack&& stack);
     witness(data_stack const& stack);
@@ -62,8 +62,8 @@ public:
     //-------------------------------------------------------------------------
 
     /// This class is move assignable and copy assignable.
-    witness& operator=(witness&& x);
     witness& operator=(witness const& x);
+    witness& operator=(witness&& x) noexcept;
 
     bool operator==(witness const& x) const;
     bool operator!=(witness const& x) const;
@@ -115,7 +115,7 @@ public:
             for (auto count = source.read_size_little_endian(); count > 0; --count)
                 stack_.push_back(read_element(source));
         } else {
-            while (!source.is_exhausted())
+            while ( ! source.is_exhausted())
                 stack_.push_back(read_element(source));
         }
 
@@ -180,8 +180,7 @@ public:
     static bool is_push_size(data_stack const& stack);
     static bool is_reserved_pattern(data_stack const& stack);
 
-    bool extract_sigop_script(script& out_script,
-                              script const& program_script) const;
+    bool extract_sigop_script(script& out_script, script const& program_script) const;
     bool extract_embedded_script(script& out_script, data_stack& out_stack, script const& program_script) const;
 
     // Validation.

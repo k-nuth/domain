@@ -102,11 +102,12 @@ public:
 
         script_.from_data(source, true);
 
+#ifndef BITPRIM_CURRENCY_BCH
         // Transaction from_data handles the discontiguous wire witness decoding.
         if (witness_val(witness) && !wire) {
             witness_.from_data(source, true);
         }
-
+#endif
         sequence_ = source.read_4_bytes_little_endian();
 
         if ( ! source)
@@ -135,10 +136,12 @@ public:
         previous_output_.to_data(sink, wire);
         script_.to_data(sink, true);
 
+#ifndef BITPRIM_CURRENCY_BCH
         // Transaction to_data handles the discontiguous wire witness encoding.
-        if (witness_val(witness) && !wire)
+        if (witness_val(witness) && !wire) {
             witness_.to_data(sink, true);
-
+        }
+#endif
         sink.write_4_bytes_little_endian(sequence_);
     }
 
@@ -209,7 +212,9 @@ private:
 
     output_point previous_output_;
     chain::script script_;
+#ifndef BITPRIM_CURRENCY_BCH
     chain::witness witness_;
+#endif
     uint32_t sequence_;
 };
 
