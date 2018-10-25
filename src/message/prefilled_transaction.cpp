@@ -60,15 +60,33 @@ prefilled_transaction::prefilled_transaction(uint64_t index,
     : index_(index), transaction_(std::move(tx)) {
 }
 
-prefilled_transaction::prefilled_transaction(
-    const prefilled_transaction& x)
-    : prefilled_transaction(x.index_, x.transaction_) {
+// prefilled_transaction::prefilled_transaction(prefilled_transaction const& x)
+//     : prefilled_transaction(x.index_, x.transaction_) {
+// }
+
+// prefilled_transaction::prefilled_transaction(prefilled_transaction&& x) noexcept
+//     : prefilled_transaction(x.index_, std::move(x.transaction_)) 
+// {}
+
+// prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction&& x) noexcept {
+//     index_ = x.index_;
+//     transaction_ = std::move(x.transaction_);
+//     return *this;
+// }
+
+// prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction const& x) {
+//     index_ = x.index_;
+//     transaction_ = x.transaction_;
+//     return *this;
+// }
+
+bool prefilled_transaction::operator==(prefilled_transaction const& x) const {
+    return (index_ == x.index_) && (transaction_ == x.transaction_);
 }
 
-prefilled_transaction::prefilled_transaction(prefilled_transaction&& x)
-    : prefilled_transaction(x.index_, std::move(x.transaction_)) {
+bool prefilled_transaction::operator!=(prefilled_transaction const& x) const {
+    return !(*this == x);
 }
-
 bool prefilled_transaction::is_valid() const {
     return (index_ < max_index) && transaction_.is_valid();
 }
@@ -104,7 +122,7 @@ void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-size_t prefilled_transaction::serialized_size(uint32_t version) const {
+size_t prefilled_transaction::serialized_size(uint32_t /*version*/) const {
     // TODO(bitprim): serialize size should use witness for ! BCH
     return message::variable_uint_size(index_) +
            transaction_.serialized_size(/*wire*/ true, witness_default()
@@ -136,26 +154,6 @@ void prefilled_transaction::set_transaction(chain::transaction const& tx) {
 
 void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
-}
-
-prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction&& x) {
-    index_ = x.index_;
-    transaction_ = std::move(x.transaction_);
-    return *this;
-}
-
-prefilled_transaction& prefilled_transaction::operator=(const prefilled_transaction& x) {
-    index_ = x.index_;
-    transaction_ = x.transaction_;
-    return *this;
-}
-
-bool prefilled_transaction::operator==(const prefilled_transaction& x) const {
-    return (index_ == x.index_) && (transaction_ == x.transaction_);
-}
-
-bool prefilled_transaction::operator!=(const prefilled_transaction& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message

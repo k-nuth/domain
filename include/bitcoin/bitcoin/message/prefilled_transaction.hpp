@@ -39,7 +39,7 @@ namespace message {
 class BC_API prefilled_transaction {
 public:
     typedef std::vector<prefilled_transaction> list;
-    typedef std::shared_ptr<const prefilled_transaction> const_ptr;
+    typedef std::shared_ptr<prefilled_transaction const> const_ptr;
 
     static prefilled_transaction factory_from_data(uint32_t version, data_chunk const& data);
     static prefilled_transaction factory_from_data(uint32_t version, data_source& stream);
@@ -56,8 +56,15 @@ public:
     prefilled_transaction();
     prefilled_transaction(uint64_t index, chain::transaction const& tx);
     prefilled_transaction(uint64_t index, chain::transaction&& tx);
-    prefilled_transaction(const prefilled_transaction& x);
-    prefilled_transaction(prefilled_transaction&& x);
+    prefilled_transaction(prefilled_transaction const& x) = default;
+    prefilled_transaction(prefilled_transaction&& x) = default;
+
+    prefilled_transaction& operator=(prefilled_transaction&& x) = default;
+    prefilled_transaction& operator=(prefilled_transaction const& x) = default;
+
+    bool operator==(prefilled_transaction const& x) const;
+    bool operator!=(prefilled_transaction const& x) const;
+
 
     uint64_t index() const;
     void set_index(uint64_t value);
@@ -102,11 +109,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    prefilled_transaction& operator=(prefilled_transaction&& x);
-    prefilled_transaction& operator=(const prefilled_transaction& x);
-
-    bool operator==(const prefilled_transaction& x) const;
-    bool operator!=(const prefilled_transaction& x) const;
 
 private:
     uint64_t index_;
