@@ -56,9 +56,6 @@ size_t header::satoshi_fixed_size(uint32_t version) {
     return chain::header::satoshi_fixed_size() + (canonical ? 0 : message::variable_uint_size(0));
 }
 
-header::header()
-{}
-
 header::header(uint32_t version,
                hash_digest const& previous_block_hash,
                hash_digest const& merkle,
