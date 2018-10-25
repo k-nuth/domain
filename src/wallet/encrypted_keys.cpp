@@ -65,7 +65,7 @@ static bool address_salt(ek_salt& salt, payment_address const& address) {
     return true;
 }
 
-static bool address_salt(ek_salt& salt, const ec_compressed& point, uint8_t version, bool compressed) {
+static bool address_salt(ek_salt& salt, ec_compressed const& point, uint8_t version, bool compressed) {
     payment_address address({point, compressed}, version);
     return address ? address_salt(salt, address) : false;
 }
@@ -81,7 +81,7 @@ static bool address_validate(const ek_salt& salt,
     return std::equal(hash.begin(), hash.begin() + salt.size(), salt.begin());
 }
 
-static bool address_validate(const ek_salt& salt, const ec_compressed& point, uint8_t version, bool compressed) {
+static bool address_validate(const ek_salt& salt, ec_compressed const& point, uint8_t version, bool compressed) {
     payment_address address({point, compressed}, version);
     return address ? address_validate(salt, address) : false;
 }
@@ -94,7 +94,7 @@ static bool address_validate(const ek_salt& salt, ec_secret const& secret, uint8
 // point_
 // ----------------------------------------------------------------------------
 
-static hash_digest point_hash(const ec_compressed& point) {
+static hash_digest point_hash(ec_compressed const& point) {
     return slice<1, ec_compressed_size>(point);
 }
 
@@ -225,7 +225,7 @@ static bool create_public_key(encrypted_public& out_public,
 bool create_key_pair(encrypted_private& out_private,
                      encrypted_public& out_public,
                      ec_compressed& out_point,
-                     const encrypted_token& token,
+                     encrypted_token const& token,
                      const ek_seed& seed,
                      uint8_t version,
                      bool compressed) {
@@ -262,7 +262,7 @@ bool create_key_pair(encrypted_private& out_private,
     return true;
 }
 
-bool create_key_pair(encrypted_private& out_private, ec_compressed& out_point, const encrypted_token& token, const ek_seed& seed, uint8_t version, bool compressed) {
+bool create_key_pair(encrypted_private& out_private, ec_compressed& out_point, encrypted_token const& token, const ek_seed& seed, uint8_t version, bool compressed) {
     encrypted_public out_public;
     return create_key_pair(out_private, out_public, out_point, token, seed,
                            version, compressed);
@@ -414,7 +414,7 @@ static bool decrypt_secret(ec_secret& out_secret,
     return true;
 }
 
-bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed, const encrypted_private& key, std::string const& passphrase) {
+bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed, encrypted_private const& key, std::string const& passphrase) {
     const parse_encrypted_private parse(key);
     if ( ! parse.valid())
         return false;
