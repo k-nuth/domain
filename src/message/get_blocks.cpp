@@ -64,12 +64,33 @@ get_blocks::get_blocks(hash_list&& start, hash_digest const& stop)
     : start_hashes_(std::move(start)), stop_hash_(std::move(stop)) {
 }
 
-get_blocks::get_blocks(const get_blocks& x)
-    : get_blocks(x.start_hashes_, x.stop_hash_) {
+// get_blocks::get_blocks(const get_blocks& x)
+//     : get_blocks(x.start_hashes_, x.stop_hash_) {
+// }
+
+// get_blocks::get_blocks(get_blocks&& x) noexcept
+//     : get_blocks(std::move(x.start_hashes_), std::move(x.stop_hash_)) 
+// {}
+
+// get_blocks& get_blocks::operator=(get_blocks&& x) noexcept {
+//     start_hashes_ = std::move(x.start_hashes_);
+//     stop_hash_ = std::move(x.stop_hash_);
+//     return *this;
+// }
+
+bool get_blocks::operator==(const get_blocks& x) const {
+    auto result = (start_hashes_.size() == x.start_hashes_.size()) &&
+                  (stop_hash_ == x.stop_hash_);
+
+    for (size_t i = 0; i < start_hashes_.size() && result; i++) {
+        result = (start_hashes_[i] == x.start_hashes_[i]);
+    }
+
+    return result;
 }
 
-get_blocks::get_blocks(get_blocks&& x)
-    : get_blocks(std::move(x.start_hashes_), std::move(x.stop_hash_)) {
+bool get_blocks::operator!=(const get_blocks& x) const {
+    return !(*this == x);
 }
 
 bool get_blocks::is_valid() const {
@@ -92,31 +113,6 @@ bool get_blocks::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool get_blocks::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    // Discard protocol version because it is stupid.
-//    source.read_4_bytes_little_endian();
-//    auto const count = source.read_size_little_endian();
-//
-//    // Guard against potential for arbitary memory allocation.
-//    if (count > max_get_blocks)
-//        source.invalidate();
-//    else
-//        start_hashes_.reserve(count);
-//
-//    for (size_t hash = 0; hash < count && source; ++hash)
-//        start_hashes_.push_back(source.read_hash());
-//
-//    stop_hash_ = source.read_hash();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk get_blocks::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -133,20 +129,8 @@ void get_blocks::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void get_blocks::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_4_bytes_little_endian(version);
-//    sink.write_variable_little_endian(start_hashes_.size());
-//
-//    for (auto const& start_hash: start_hashes_)
-//        sink.write_hash(start_hash);
-//
-//    sink.write_hash(stop_hash_);
-//}
-
-size_t get_blocks::serialized_size(uint32_t version) const {
-    return size_t(36) + message::variable_uint_size(start_hashes_.size()) +
-           hash_size * start_hashes_.size();
+size_t get_blocks::serialized_size(uint32_t /*version*/) const {
+    return size_t(36) + message::variable_uint_size(start_hashes_.size()) + hash_size * start_hashes_.size();
 }
 
 hash_list& get_blocks::start_hashes() {
@@ -175,27 +159,6 @@ hash_digest const& get_blocks::stop_hash() const {
 
 void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
-}
-
-get_blocks& get_blocks::operator=(get_blocks&& x) {
-    start_hashes_ = std::move(x.start_hashes_);
-    stop_hash_ = std::move(x.stop_hash_);
-    return *this;
-}
-
-bool get_blocks::operator==(const get_blocks& x) const {
-    auto result = (start_hashes_.size() == x.start_hashes_.size()) &&
-                  (stop_hash_ == x.stop_hash_);
-
-    for (size_t i = 0; i < start_hashes_.size() && result; i++) {
-        result = (start_hashes_[i] == x.start_hashes_[i]);
-    }
-
-    return result;
-}
-
-bool get_blocks::operator!=(const get_blocks& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message
