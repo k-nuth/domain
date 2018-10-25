@@ -43,17 +43,11 @@ ping ping::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//ping ping::factory_from_data(uint32_t version, reader& source)
-//{
-//    ping instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 size_t ping::satoshi_fixed_size(uint32_t version) {
     return version < version::level::bip31 ? 0 : sizeof(nonce_);
 }
 
+//TODO(fernando): nonceless_ is never used! Check it!
 ping::ping()
     : nonce_(0), nonceless_(false), valid_(false) {
 }
@@ -62,8 +56,23 @@ ping::ping(uint64_t nonce)
     : nonce_(nonce), nonceless_(false), valid_(true) {
 }
 
-ping::ping(const ping& x)
-    : nonce_(x.nonce_), nonceless_(x.nonceless_), valid_(x.valid_) {
+// ping::ping(const ping& x)
+//     : nonce_(x.nonce_), nonceless_(x.nonceless_), valid_(x.valid_) {
+// }
+
+// ping& ping::operator=(ping&& x) noexcept {
+//     nonce_ = x.nonce_;
+//     return *this;
+// }
+
+bool ping::operator==(const ping& x) const {
+    // Nonce should be zero if not used.
+    return (nonce_ == x.nonce_);
+}
+
+bool ping::operator!=(const ping& x) const {
+    // Nonce should be zero if not used.
+    return !(*this == x);
 }
 
 bool ping::from_data(uint32_t version, data_chunk const& data) {
@@ -75,22 +84,6 @@ bool ping::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
-
-//bool ping::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    valid_ = true;
-//    nonceless_ = (version < version::level::bip31);
-//
-//    if ( ! nonceless_)
-//        nonce_ = source.read_8_bytes_little_endian();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
 
 data_chunk ping::to_data(uint32_t version) const {
     data_chunk data;
@@ -107,12 +100,6 @@ void ping::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void ping::to_data(uint32_t version, writer& sink) const
-//{
-//    if (version >= version::level::bip31)
-//        sink.write_8_bytes_little_endian(nonce_);
-//}
 
 bool ping::is_valid() const {
     return valid_ || nonceless_ || nonce_ != 0;
@@ -134,21 +121,6 @@ uint64_t ping::nonce() const {
 
 void ping::set_nonce(uint64_t value) {
     nonce_ = value;
-}
-
-ping& ping::operator=(ping&& x) {
-    nonce_ = x.nonce_;
-    return *this;
-}
-
-bool ping::operator==(const ping& x) const {
-    // Nonce should be zero if not used.
-    return (nonce_ == x.nonce_);
-}
-
-bool ping::operator!=(const ping& x) const {
-    // Nonce should be zero if not used.
-    return !(*this == x);
 }
 
 }  // namespace message
