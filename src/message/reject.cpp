@@ -47,7 +47,7 @@ reject reject::factory_from_data(uint32_t version, data_source& stream) {
 }
 
 reject::reject()
-    : code_(reason_code::undefined), message_(), reason_(), data_(null_hash) {
+    : code_(reason_code::undefined), data_(null_hash) {
 }
 
 reject::reject(reason_code code, std::string const& message, std::string const& reason)
@@ -72,7 +72,7 @@ reject::reject(reason_code code, std::string&& message, std::string&& reason, ha
     : code_(code),
       message_(std::move(message)),
       reason_(std::move(reason)),
-      data_(std::move(data)) {
+      data_(data) {
 }
 
 // reject::reject(reject const& x)
@@ -139,7 +139,7 @@ void reject::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-size_t reject::serialized_size(uint32_t version) const {
+size_t reject::serialized_size(uint32_t /*version*/) const {
     size_t size = 1u + message::variable_uint_size(message_.size()) +
                   message_.size() + message::variable_uint_size(reason_.size()) +
                   reason_.size();
