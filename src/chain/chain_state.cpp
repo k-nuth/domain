@@ -336,7 +336,7 @@ size_t chain_state::version_count(size_t height, uint32_t forks) {
         return 0;
     }
 
-    // Regtest and testnet both use bip34 test activation.
+    // regtest and testnet both use bip34 test activation.
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     return std::min(height, version_sample_size(retarget && !testnet));
@@ -412,9 +412,8 @@ inline size_t chain_state::daa_height(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const mainnet = retarget && !testnet;
 
-    if ( ! mainnet && !testnet) {
-        // Regtest activate at block 0
-        return true;
+    if ( ! mainnet && ! testnet) {
+        return 0; // Note(bitprim): regtest activate at block 0
     }
 
     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
@@ -428,9 +427,8 @@ inline bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const mainnet = retarget && !testnet;
 
-    if ( ! mainnet && !testnet) {
-        // Regtest activate at block 0
-        return true;
+    if ( ! mainnet && ! testnet) {
+        return true;  // Note(bitprim): regtest activate at block 0
     }
 
     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
@@ -443,9 +441,8 @@ inline bool chain_state::is_daa_enabled(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const mainnet = retarget && !testnet;
 
-    if ( ! mainnet && !testnet) {
-        // Regtest activate at block 0
-        return true;
+    if ( ! mainnet && ! testnet) {
+        return true; // Note(bitprim): regtest activate at block 0
     }
 
     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
@@ -529,8 +526,8 @@ inline constexpr auto select_0_2(T&& a, U&& b, R r) FN(
 
 #ifdef BITPRIM_CURRENCY_BCH
 
-    // DAA, New algorithm: 2017-Nov-13 Hard fork
-    uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
+// DAA, New algorithm: 2017-Nov-13 Hard fork
+uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
     // precondition: values.timestamp.size() >= 147
 
     using std::make_pair;
@@ -574,7 +571,6 @@ inline constexpr auto select_0_2(T&& a, U&& b, R r) FN(
 
     return compact(nextTarget).normal();
 }
-
 #endif  //BITPRIM_CURRENCY_BCH
 
 // work_required
@@ -586,7 +582,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
         return {};
     }
 
-    // Regtest bypasses all retargeting.
+    // regtest bypasses all retargeting.
     if ( ! script::is_enabled(forks, rule_fork::retarget)) {
         return bits_high(values);
     }
@@ -872,7 +868,7 @@ chain_state::data chain_state::to_pool(const chain_state& top) {
         data.timestamp.ordered.pop_front();
     }
 
-    // Regtest does not perform retargeting.
+    // regtest does not perform retargeting.
     // If promoting from retarget height, move that timestamp into retarget.
     if (retarget && is_retarget_height(height - 1u)) {
         // The first block after a retarget saves the "retarget block" timestamp for future validations
