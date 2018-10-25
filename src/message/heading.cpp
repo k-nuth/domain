@@ -46,7 +46,7 @@ size_t heading::maximum_size() {
 // Post-Witness:
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
-size_t heading::maximum_payload_size(uint32_t, bool witness) {
+size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness) {
     /*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
@@ -73,7 +73,7 @@ heading heading::factory_from_data(data_source& stream) {
 }
 
 heading::heading()
-    : magic_(0), command_(), payload_size_(0), checksum_(0) {
+    : magic_(0), payload_size_(0), checksum_(0) {
 }
 
 heading::heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum)
