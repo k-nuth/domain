@@ -54,7 +54,7 @@ ec_private::ec_private()
     : valid_(false), compress_(true), version_(0), secret_(null_hash) {
 }
 
-ec_private::ec_private(const ec_private& x)
+ec_private::ec_private(ec_private const& x)
     : valid_(x.valid_), compress_(x.compress_), version_(x.version_), secret_(x.secret_) {
 }
 
@@ -197,7 +197,7 @@ payment_address ec_private::to_payment_address() const {
 // Operators.
 // ----------------------------------------------------------------------------
 
-ec_private& ec_private::operator=(const ec_private& x) {
+ec_private& ec_private::operator=(ec_private const& x) {
     valid_ = x.valid_;
     compress_ = x.compress_;
     version_ = x.version_;
@@ -205,16 +205,16 @@ ec_private& ec_private::operator=(const ec_private& x) {
     return *this;
 }
 
-bool ec_private::operator<(const ec_private& x) const {
+bool ec_private::operator<(ec_private const& x) const {
     return encoded() < x.encoded();
 }
 
-bool ec_private::operator==(const ec_private& x) const {
+bool ec_private::operator==(ec_private const& x) const {
     return valid_ == x.valid_ && compress_ == x.compress_ &&
            version_ == x.version_ && secret_ == x.secret_;
 }
 
-bool ec_private::operator!=(const ec_private& x) const {
+bool ec_private::operator!=(ec_private const& x) const {
     return !(*this == x);
 }
 
@@ -231,7 +231,7 @@ std::istream& operator>>(std::istream& in, ec_private& to) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ec_private& of) {
+std::ostream& operator<<(std::ostream& out, ec_private const& of) {
     out << of.encoded();
     return out;
 }
