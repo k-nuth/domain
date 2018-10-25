@@ -22,7 +22,11 @@
 #include <sstream>
 
 #include <bitcoin/bitcoin/chain/script.hpp>
+
+#ifndef BITPRIM_CURRENCY_BCH
 #include <bitcoin/bitcoin/chain/witness.hpp>
+#endif
+
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
@@ -43,17 +47,21 @@ input::input()
     : sequence_(0) {}
 
 input::input(input const& x)
-    : addresses_(x.addresses_cache()),
-      previous_output_(x.previous_output_),
-      script_(x.script_),
-      witness_(x.witness_),
-      sequence_(x.sequence_) {}
+    : addresses_(x.addresses_cache())
+    , previous_output_(x.previous_output_)
+    , script_(x.script_)
+#ifndef BITPRIM_CURRENCY_BCH
+    , witness_(x.witness_)
+#endif
+    , sequence_(x.sequence_) {}
 
 input::input(input&& x) noexcept
     : addresses_(x.addresses_cache()),
       previous_output_(std::move(x.previous_output_)),
       script_(std::move(x.script_)),
+#ifndef BITPRIM_CURRENCY_BCH
       witness_(std::move(x.witness_)),
+#endif
       sequence_(x.sequence_) {}
 
 input::input(output_point&& previous_output, chain::script&& script, uint32_t sequence)
@@ -76,37 +84,66 @@ input::addresses_ptr input::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
-input::input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence)
-    : previous_output_(std::move(previous_output)), script_(std::move(script)), witness_(std::move(witness)), sequence_(sequence) {
-}
-
+#ifdef BITPRIM_CURRENCY_BCH
+input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
+    : previous_output_(previous_output)
+    , script_(script)
+#else
 input::input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
-    : previous_output_(previous_output), script_(script), witness_(witness), sequence_(sequence) {
-}
+    : previous_output_(previous_output)
+    , script_(script)
+    , witness_(witness)
+#endif
+    , sequence_(sequence) 
+{}
+
+#ifdef BITPRIM_CURRENCY_BCH
+input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
+    : previous_output_(std::move(previous_output))
+    , script_(std::move(script))
+#else
+input::input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence)
+    : previous_output_(std::move(previous_output))
+    , script_(std::move(script))
+    , witness_(std::move(witness))
+#endif
+    , sequence_(sequence) 
+{}
+
 
 // Operators.
 //-----------------------------------------------------------------------------
-
-input& input::operator=(input&& x) noexcept {
-    addresses_ = x.addresses_cache();
-    previous_output_ = std::move(x.previous_output_);
-    script_ = std::move(x.script_);
-    witness_ = std::move(x.witness_);
-    sequence_ = x.sequence_;
-    return *this;
-}
 
 input& input::operator=(input const& x) {
     addresses_ = x.addresses_cache();
     previous_output_ = x.previous_output_;
     script_ = x.script_;
+#ifndef BITPRIM_CURRENCY_BCH
     witness_ = x.witness_;
+#endif
+    sequence_ = x.sequence_;
+    return *this;
+}
+
+input& input::operator=(input&& x) noexcept {
+    addresses_ = x.addresses_cache();
+    previous_output_ = std::move(x.previous_output_);
+    script_ = std::move(x.script_);
+#ifndef BITPRIM_CURRENCY_BCH
+    witness_ = std::move(x.witness_);
+#endif
     sequence_ = x.sequence_;
     return *this;
 }
 
 bool input::operator==(input const& x) const {
-    return (sequence_ == x.sequence_) && (previous_output_ == x.previous_output_) && (script_ == x.script_) && (witness_ == x.witness_);
+    return (sequence_ == x.sequence_) 
+        && (previous_output_ == x.previous_output_) 
+        && (script_ == x.script_) 
+#ifndef BITPRIM_CURRENCY_BCH
+        && (witness_ == x.witness_)
+#endif
+        ;
 }
 
 bool input::operator!=(input const& x) const {
@@ -179,14 +216,21 @@ bool input::from_data(data_source& stream, bool wire, bool witness) {
 void input::reset() {
     previous_output_.reset();
     script_.reset();
+#ifndef BITPRIM_CURRENCY_BCH
     witness_.reset();
+#endif
     sequence_ = 0;
 }
 
 // Since empty scripts and zero sequence are valid this relies on the prevout.
 bool input::is_valid() const {
-    return sequence_ != 0 || previous_output_.is_valid() ||
-           script_.is_valid() || witness_.is_valid();
+    return sequence_ != 0 
+        || previous_output_.is_valid() 
+        || script_.is_valid() 
+#ifndef BITPRIM_CURRENCY_BCH
+        || witness_.is_valid()
+#endif
+        ;
 }
 
 // Serialization.
@@ -229,17 +273,29 @@ void input::to_data(data_sink& stream, bool wire, bool witness) const {
 
 // Size.
 //-----------------------------------------------------------------------------
+size_t input::serialized_size_non_witness(bool wire) const {
+    return previous_output_.serialized_size(wire) 
+         + script_.serialized_size(true) 
+         + sizeof(sequence_);
+}
 
+
+#ifdef BITPRIM_CURRENCY_BCH
+size_t input::serialized_size(bool wire, bool /*witness*/) const {
+    return serialized_size_non_witness(wire);
+}
+#else
 size_t input::serialized_size(bool wire, bool witness) const {
-#ifndef BITPRIM_CURRENCY_BCH
     // Always write witness to store so that we know how to read it.
     witness |= !wire;
-#endif
 
     // Witness size added in both contexts despite that tx writes wire witness.
     // Prefix is written for both wire and store/other contexts.
-    return previous_output_.serialized_size(wire) + script_.serialized_size(true) + (witness_val(witness) ? witness_.serialized_size(true) : 0) + sizeof(sequence_);
+    return serialized_size_non_witness(wire)
+         + witness ? witness_.serialized_size(true) : 0;
 }
+#endif
+
 
 // Accessors.
 //-----------------------------------------------------------------------------
@@ -278,6 +334,7 @@ void input::set_script(chain::script&& value) {
     invalidate_cache();
 }
 
+#ifndef BITPRIM_CURRENCY_BCH
 chain::witness const& input::witness() const {
     return witness_;
 }
@@ -295,6 +352,8 @@ void input::set_witness(chain::witness&& value) {
     witness_ = std::move(value);
     invalidate_cache();
 }
+#endif // BITPRIM_CURRENCY_BCH
+
 
 uint32_t input::sequence() const {
     return sequence_;
@@ -353,9 +412,11 @@ payment_address::list input::addresses() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
+#ifndef BITPRIM_CURRENCY_BCH
 void input::strip_witness() {
     witness_.clear();
 }
+#endif
 
 // Validation helpers.
 //-----------------------------------------------------------------------------
@@ -365,8 +426,12 @@ bool input::is_final() const {
 }
 
 bool input::is_segregated() const {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#else
     // If no block tx is has witness data the commitment is optional (bip141).
     return !witness_.empty();
+#endif
 }
 
 bool input::is_locked(size_t block_height, uint32_t median_time_past) const {
@@ -406,16 +471,20 @@ size_t input::signature_operations(bool bip16, bool bip141) const {
     // Count heavy sigops in the input script.
     auto sigops = script_.sigops(false) * sigops_factor;
 
+#ifndef BITPRIM_CURRENCY_BCH
     if (bip141 && witness_.extract_sigop_script(witness, prevout)) {
         // Add sigops in the witness (bip141).
         return sigops + witness.sigops(true);
     }
+#endif
 
     if (bip16 && extract_embedded_script(embedded)) {
+#ifndef BITPRIM_CURRENCY_BCH
         if (bip141 && witness_.extract_sigop_script(witness, embedded)) {
             // Add sigops in the embedded witness (bip141).
             return sigops + witness.sigops(true);
         }
+#endif
         // Add heavy sigops in the embedded script (bip16).
         return sigops + embedded.sigops(true) * sigops_factor;
     }
@@ -445,6 +514,7 @@ bool input::extract_embedded_script(chain::script& out) const {
     return out.from_data(ops.back().data(), false);
 }
 
+#ifndef BITPRIM_CURRENCY_BCH
 bool input::extract_reserved_hash(hash_digest& out) const {
     auto const& stack = witness_.stack();
 
@@ -455,6 +525,7 @@ bool input::extract_reserved_hash(hash_digest& out) const {
     std::copy_n(stack.front().begin(), hash_size, out.begin());
     return true;
 }
+#endif // BITPRIM_CURRENCY_BCH
 
 }  // namespace chain
 }  // namespace libbitcoin

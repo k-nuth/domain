@@ -150,8 +150,11 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
+    size_t serialized_size_non_witness(bool wire) const;
+
     /// This accounts for wire witness, but does not read or write it.
     size_t serialized_size(bool wire = true, bool witness = false) const;
+
 
     output_point& previous_output();
     output_point const& previous_output() const;
@@ -165,12 +168,15 @@ public:
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
+
+#ifndef BITPRIM_CURRENCY_BCH
     // Deprecated (unsafe).
     chain::witness& witness();
 
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
+#endif // BITPRIM_CURRENCY_BCH
 
     uint32_t sequence() const;
     void set_sequence(uint32_t value);
