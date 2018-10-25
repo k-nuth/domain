@@ -64,7 +64,7 @@ payment_address::payment_address()
 }
 
 payment_address::payment_address(payment_address&& x) noexcept
-    : valid_(x.valid_), version_(x.version_), hash_(std::move(x.hash_)) 
+    : valid_(x.valid_), version_(x.version_), hash_(x.hash_) 
 {}
 
 payment_address::payment_address(payment_address const& x)

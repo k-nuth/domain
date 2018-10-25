@@ -66,7 +66,7 @@ public:
 
     /// Constructors.
     payment_address();
-    payment_address(payment_address const& x);
+    payment_address(payment_address const& x) = default;
     payment_address(payment_address&& x) noexcept;
     
     payment_address(payment const& decoded);
