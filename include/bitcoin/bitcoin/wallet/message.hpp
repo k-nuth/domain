@@ -47,7 +47,7 @@ BC_API hash_digest hash_message(data_slice message);
  * This should be base64 encoded for presentation to the user.
  * @return true if wif is valid and signature encoding is successful.
  */
-BC_API bool sign_message(message_signature& signature, data_slice message, ec_private const& secret);
+BC_API bool sign_message(message_signature& out_signature, data_slice message, ec_private const& secret);
 
 /**
  * Signs a message using deterministic signature.

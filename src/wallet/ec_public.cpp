@@ -70,6 +70,14 @@ ec_public::ec_public(ec_compressed const& point, bool compress)
     : valid_(true), compress_(compress), point_(point) {
 }
 
+// ec_public& ec_public::operator=(ec_public const& x) {
+//     valid_ = x.valid_;
+//     compress_ = x.compress_;
+//     version_ = x.version_;
+//     point_ = x.point_;
+//     return *this;
+// }
+
 // Validators.
 // ----------------------------------------------------------------------------
 
@@ -188,23 +196,11 @@ bool ec_public::to_uncompressed(ec_uncompressed& out) const {
 }
 
 payment_address ec_public::to_payment_address(uint8_t version) const {
-    return payment_address(*this, version);
+    return {*this, version};
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
-
-ec_public& ec_public::operator=(ec_public const& x) {
-    valid_ = x.valid_;
-    compress_ = x.compress_;
-    version_ = x.version_;
-    point_ = x.point_;
-    return *this;
-}
-
-bool ec_public::operator<(ec_public const& x) const {
-    return encoded() < x.encoded();
-}
 
 bool ec_public::operator==(ec_public const& x) const {
     return valid_ == x.valid_ && compress_ == x.compress_ &&
@@ -213,6 +209,10 @@ bool ec_public::operator==(ec_public const& x) const {
 
 bool ec_public::operator!=(ec_public const& x) const {
     return !(*this == x);
+}
+
+bool ec_public::operator<(ec_public const& x) const {
+    return encoded() < x.encoded();
 }
 
 std::istream& operator>>(std::istream& in, ec_public& to) {

@@ -59,7 +59,7 @@ public:
 
     //static headers factory_from_data(uint32_t version, reader& source);
 
-    headers();
+    headers() = default;
     headers(header::list const& values);
     headers(header::list&& values);
     headers(std::initializer_list<header> const& values);

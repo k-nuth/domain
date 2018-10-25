@@ -36,6 +36,7 @@ static bool decode_secret(ec_secret& secret, std::string const& encoded) {
 }
 
 ec_private::ec_private(std::string const& hexcode) {
+    //TODO(fernando): Eliminate std::stringstream everywhere (performance)
     std::stringstream(hexcode) >> *this;
 }
 

@@ -91,10 +91,6 @@ payment_address::payment_address(chain::script const& script, uint8_t version)
     : payment_address(from_script(script, version)) {
 }
 
-payment_address::payment_address(short_hash&& hash, uint8_t version)
-    : valid_(true), version_(version), hash_(std::move(hash)) {
-}
-
 payment_address::payment_address(short_hash const& hash, uint8_t version)
     : valid_(true), version_(version), hash_(hash) {
 }

@@ -72,7 +72,6 @@ public:
     payment_address(payment const& decoded);
     payment_address(ec_private const& secret);
     payment_address(std::string const& address);
-    payment_address(short_hash&& hash, uint8_t version = mainnet_p2kh);
     payment_address(short_hash const& hash, uint8_t version = mainnet_p2kh);
     payment_address(ec_public const& point, uint8_t version = mainnet_p2kh);
     payment_address(chain::script const& script, uint8_t version = mainnet_p2sh);

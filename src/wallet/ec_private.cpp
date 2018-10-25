@@ -54,20 +54,20 @@ ec_private::ec_private()
     : valid_(false), compress_(true), version_(0), secret_(null_hash) {
 }
 
-ec_private::ec_private(ec_private const& x)
-    : valid_(x.valid_), compress_(x.compress_), version_(x.version_), secret_(x.secret_) {
+// ec_private::ec_private(ec_private const& x)
+//     : valid_(x.valid_), compress_(x.compress_), version_(x.version_), secret_(x.secret_) {
+// }
+
+ec_private::ec_private(std::string const& wif, uint8_t version)
+    : ec_private(from_string(wif, version)) {
 }
 
-ec_private::ec_private(std::string const& wif, uint8_t address_version)
-    : ec_private(from_string(wif, address_version)) {
+ec_private::ec_private(const wif_compressed& wif, uint8_t version)
+    : ec_private(from_compressed(wif, version)) {
 }
 
-ec_private::ec_private(const wif_compressed& wif, uint8_t address_version)
-    : ec_private(from_compressed(wif, address_version)) {
-}
-
-ec_private::ec_private(const wif_uncompressed& wif, uint8_t address_version)
-    : ec_private(from_uncompressed(wif, address_version)) {
+ec_private::ec_private(const wif_uncompressed& wif, uint8_t version)
+    : ec_private(from_uncompressed(wif, version)) {
 }
 
 ec_private::ec_private(ec_secret const& secret, uint16_t version, bool compress)
@@ -94,19 +94,17 @@ bool ec_private::is_wif(data_slice decoded) {
 // Factories.
 // ----------------------------------------------------------------------------
 
-ec_private ec_private::from_string(std::string const& wif,
-                                   uint8_t address_version) {
+ec_private ec_private::from_string(std::string const& wif, uint8_t version) {
     data_chunk decoded;
     if ( ! decode_base58(decoded, wif) || !is_wif(decoded)) {
         return ec_private();
     }
 
     auto const compressed = decoded.size() == wif_compressed_size;
-    return compressed ? ec_private(to_array<wif_compressed_size>(decoded), address_version) : ec_private(to_array<wif_uncompressed_size>(decoded), address_version);
+    return compressed ? ec_private(to_array<wif_compressed_size>(decoded), version) : ec_private(to_array<wif_uncompressed_size>(decoded), version);
 }
 
-ec_private ec_private::from_compressed(const wif_compressed& wif,
-                                       uint8_t address_version) {
+ec_private ec_private::from_compressed(const wif_compressed& wif, uint8_t address_version) {
     if ( ! is_wif(wif)) {
         return ec_private();
     }
@@ -116,13 +114,12 @@ ec_private ec_private::from_compressed(const wif_compressed& wif,
     return ec_private(secret, version, true);
 }
 
-ec_private ec_private::from_uncompressed(const wif_uncompressed& wif,
-                                         uint8_t address_version) {
+ec_private ec_private::from_uncompressed(const wif_uncompressed& wif, uint8_t version) {
     if ( ! is_wif(wif)) {
         return ec_private();
     }
 
-    const uint16_t version = to_version(address_version, wif.front());
+    const uint16_t version = to_version(version, wif.front());
     auto const secret = slice<1, ec_secret_size + 1>(wif);
     return ec_private(secret, version, false);
 }
@@ -191,7 +188,7 @@ ec_public ec_private::to_public() const {
 }
 
 payment_address ec_private::to_payment_address() const {
-    return payment_address(*this);
+    return {*this};
 }
 
 // Operators.

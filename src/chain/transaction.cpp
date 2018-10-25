@@ -58,7 +58,7 @@ namespace chain {
 // Constructors.
 //-----------------------------------------------------------------------------
 
-transaction::transaction()  //NOLINT
+transaction::transaction()
     : version_(0), locktime_(0), validation{}
 {}
 
@@ -71,7 +71,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list const&
     , locktime_(locktime)
     , inputs_(inputs)
     , outputs_(outputs)
-#ifdef BITPRIM_CACHED_RPC_DATA    
+#ifdef BITPRIM_CACHED_RPC_DATA
     , cached_fees_(cached_fees)
     , cached_sigops_(cached_sigops)
     , cached_is_standard_(cached_is_standard)
@@ -101,7 +101,7 @@ transaction::transaction(transaction const& x)
     , locktime_(x.locktime_)
     , inputs_(x.inputs_)
     , outputs_(x.outputs_)
-#ifdef BITPRIM_CACHED_RPC_DATA    
+#ifdef BITPRIM_CACHED_RPC_DATA
     , cached_fees_(0)
     , cached_sigops_(0)
     , cached_is_standard_(false)
@@ -208,13 +208,6 @@ transaction transaction::factory_from_data(data_source& stream, bool wire, bool 
     instance.from_data(stream, wire, witness_val(witness));
     return instance;
 }
-
-// static
-//// transaction transaction::factory_from_data(reader& source, bool wire, bool witness) {
-////     transaction instance;
-////     instance.from_data(source, wire, witness_val(witness));
-////     return instance;
-//// }
 
 bool transaction::from_data(data_chunk const& data, bool wire, bool witness
 #ifdef BITPRIM_CACHED_RPC_DATA

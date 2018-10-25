@@ -44,7 +44,7 @@ parse_encrypted_public::prefix_factory(uint8_t address) {
     return splice(magic_, to_array(context));
 }
 
-parse_encrypted_public::parse_encrypted_public(const encrypted_public& key)
+parse_encrypted_public::parse_encrypted_public(encrypted_public const& key)
     : parse_encrypted_key<prefix_size>(
           slice<0, 5>(key),
           slice<5, 6>(key),

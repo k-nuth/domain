@@ -58,7 +58,7 @@
 //     network_address(uint32_t timestamp, uint64_t services, ip_address&& ip,
 //         uint16_t port);
 
-//     network_address(const network_address& x);
+//     network_address(network_address const& x);
 //     network_address(network_address&& x) noexcept;
 
 //     // Starting version 31402, addresses are prefixed with a timestamp.
@@ -90,10 +90,10 @@
 //     size_t serialized_size(uint32_t version, bool with_timestamp) const;
 
 //     network_address& operator=(network_address&& x) noexcept;
-//     network_address& operator=(const network_address& x);
+//     network_address& operator=(network_address const& x);
 
-//     bool operator==(const network_address& x) const;
-//     bool operator!=(const network_address& x) const;
+//     bool operator==(network_address const& x) const;
+//     bool operator!=(network_address const& x) const;
 
 // private:
 //     uint32_t timestamp_;

@@ -34,8 +34,8 @@ public:
     /// Constructors.
     ek_private();
     ek_private(std::string const& encoded);
-    ek_private(encrypted_private const& key);
-    ek_private(ek_private const& x);
+    ek_private(encrypted_private const& value);
+    ek_private(ek_private const& x) = default;
 
     ek_private& operator=(ek_private const& x) = default;
 

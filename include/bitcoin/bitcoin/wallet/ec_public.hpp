@@ -52,11 +52,13 @@ public:
     ec_public(ec_compressed const& point, bool compress = true);
     ec_public(const ec_uncompressed& point, bool compress = false);
 
+    ec_public& operator=(ec_public const& x) = default;
+
     /// Operators.
-    bool operator<(ec_public const& x) const;
     bool operator==(ec_public const& x) const;
     bool operator!=(ec_public const& x) const;
-    ec_public& operator=(ec_public const& x);
+    bool operator<(ec_public const& x) const;
+
     friend std::istream& operator>>(std::istream& in, ec_public& to);
     friend std::ostream& operator<<(std::ostream& out, ec_public const& of);
 

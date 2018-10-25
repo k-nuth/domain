@@ -74,7 +74,7 @@ public:
 
     /// Constructors.
     ec_private();
-    ec_private(ec_private const& x);
+    ec_private(ec_private const& x) = default;
     ec_private(std::string const& wif, uint8_t version = mainnet_p2kh);
     ec_private(const wif_compressed& wif, uint8_t version = mainnet_p2kh);
     ec_private(const wif_uncompressed& wif, uint8_t version = mainnet_p2kh);
@@ -83,11 +83,13 @@ public:
     /// the least significant byte is the address perfix. 0x8000 by default.
     ec_private(ec_secret const& secret, uint16_t version = mainnet, bool compress = true);
 
+    ec_private& operator=(ec_private const& x) = default;
+
     /// Operators.
-    bool operator<(ec_private const& x) const;
     bool operator==(ec_private const& x) const;
     bool operator!=(ec_private const& x) const;
-    ec_private& operator=(ec_private const& x);
+    bool operator<(ec_private const& x) const;
+
     friend std::istream& operator>>(std::istream& in, ec_private& to);
     friend std::ostream& operator<<(std::ostream& out, ec_private const& of);
 
@@ -115,7 +117,7 @@ private:
 
     /// Factories.
     static ec_private from_string(std::string const& wif, uint8_t version);
-    static ec_private from_compressed(const wif_compressed& wif, uint8_t version);
+    static ec_private from_compressed(const wif_compressed& wif, uint8_t address_version);
     static ec_private from_uncompressed(const wif_uncompressed& wif, uint8_t version);
 
     /// Members.

@@ -49,12 +49,12 @@ version::version()
     : value_(0), services_(0), timestamp_(0), nonce_(0), start_height_(0), relay_(false) {
 }
 
-version::version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay)
+version::version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay)
     : value_(value), services_(services), timestamp_(timestamp), address_receiver_(address_receiver), address_sender_(address_sender), nonce_(nonce), user_agent_(user_agent), start_height_(start_height), relay_(relay) {
 }
 
-version::version(uint32_t value, uint64_t services, uint64_t timestamp, network_address&& address_receiver, network_address&& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay)
-    : value_(value), services_(services), timestamp_(timestamp), address_receiver_(std::move(address_receiver)), address_sender_(std::move(address_sender)), nonce_(nonce), user_agent_(std::move(user_agent)), start_height_(start_height), relay_(relay) {
+version::version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay)
+    : value_(value), services_(services), timestamp_(timestamp), address_receiver_(address_receiver), address_sender_(address_sender), nonce_(nonce), user_agent_(std::move(user_agent)), start_height_(start_height), relay_(relay) {
 }
 
 // version::version(version const& x)
@@ -92,7 +92,15 @@ bool version::operator!=(version const& x) const {
 }
 
 bool version::is_valid() const {
-    return (value_ != 0) || (services_ != 0) || (timestamp_ != 0) || address_receiver_.is_valid() || address_sender_.is_valid() || (nonce_ != 0) || !user_agent_.empty() || (start_height_ != 0) || (relay_ != false);
+    return value_ != 0
+        || services_ != 0
+        || timestamp_ != 0
+        || address_receiver_.is_valid() 
+        || address_sender_.is_valid() 
+        || nonce_ != 0
+        || ! user_agent_.empty() 
+        || start_height_ != 0
+        || relay_;
 }
 
 void version::reset() {
@@ -180,11 +188,11 @@ network_address& version::address_receiver() {
     return address_receiver_;
 }
 
-const network_address& version::address_receiver() const {
+network_address const& version::address_receiver() const {
     return address_receiver_;
 }
 
-void version::set_address_receiver(network_address&& address) {
+void version::set_address_receiver(network_address const& address) {
     address_receiver_ = std::move(address);
 }
 
@@ -192,11 +200,11 @@ network_address& version::address_sender() {
     return address_sender_;
 }
 
-const network_address& version::address_sender() const {
+network_address const& version::address_sender() const {
     return address_sender_;
 }
 
-void version::set_address_sender(network_address&& address) {
+void version::set_address_sender(network_address const& address) {
     address_sender_ = std::move(address);
 }
 

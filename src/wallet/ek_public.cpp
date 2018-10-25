@@ -39,11 +39,11 @@ ek_public::ek_public(std::string const& encoded)
     : ek_public(from_string(encoded)) {
 }
 
-ek_public::ek_public(const ek_public& x)
+ek_public::ek_public(ek_public const& x)
     : valid_(x.valid_), public_(x.public_) {
 }
 
-ek_public::ek_public(const encrypted_public& value)
+ek_public::ek_public(encrypted_public const& value)
     : valid_(true), public_(value) {
 }
 
@@ -64,7 +64,7 @@ ek_public::operator const bool() const {
     return valid_;
 }
 
-ek_public::operator const encrypted_public&() const {
+ek_public::operator encrypted_public const&() const {
     return public_;
 }
 
@@ -78,28 +78,28 @@ std::string ek_public::encoded() const {
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const encrypted_public& ek_public::public_key() const {
+encrypted_public const& ek_public::public_key() const {
     return public_;
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_public& ek_public::operator=(const ek_public& x) {
+ek_public& ek_public::operator=(ek_public const& x) {
     valid_ = x.valid_;
     public_ = x.public_;
     return *this;
 }
 
-bool ek_public::operator<(const ek_public& x) const {
+bool ek_public::operator<(ek_public const& x) const {
     return encoded() < x.encoded();
 }
 
-bool ek_public::operator==(const ek_public& x) const {
+bool ek_public::operator==(ek_public const& x) const {
     return valid_ == x.valid_ && public_ == x.public_;
 }
 
-bool ek_public::operator!=(const ek_public& x) const {
+bool ek_public::operator!=(ek_public const& x) const {
     return !(*this == x);
 }
 
@@ -116,7 +116,7 @@ std::istream& operator>>(std::istream& in, ek_public& to) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ek_public& of) {
+std::ostream& operator<<(std::ostream& out, ek_public const& of) {
     out << of.encoded();
     return out;
 }

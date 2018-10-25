@@ -193,7 +193,7 @@ BC_API bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compr
  * @param[in]  passphrase      The passphrase of the associated token.
  * @return false if the key    checksum or passphrase is not valid.
  */
-BC_API bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compressed, const encrypted_public& key, std::string const& passphrase);
+BC_API bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compressed, encrypted_public const& key, std::string const& passphrase);
 
 #endif  // WITH_ICU
 

@@ -134,8 +134,8 @@ public:
     }
 
     version();
-    version(uint32_t value, uint64_t services, uint64_t timestamp, const network_address& address_receiver, const network_address& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
-    version(uint32_t value, uint64_t services, uint64_t timestamp, network_address&& address_receiver, network_address&& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
+    version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
+    version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
     version(version const& x) = default;
     version(version&& x) = default;
 
@@ -157,14 +157,14 @@ public:
     void set_timestamp(uint64_t timestamp);
 
     network_address& address_receiver();
-    const network_address& address_receiver() const;
-    //    void set_address_receiver(const network_address& address);
-    void set_address_receiver(network_address&& address);
+    network_address const& address_receiver() const;
+    //    void set_address_receiver(network_address const& address);
+    void set_address_receiver(network_address const& address);
 
     network_address& address_sender();
-    const network_address& address_sender() const;
-    //    void set_address_sender(const network_address& address);
-    void set_address_sender(network_address&& address);
+    network_address const& address_sender() const;
+    //    void set_address_sender(network_address const& address);
+    void set_address_sender(network_address const& address);
 
     uint64_t nonce() const;
     void set_nonce(uint64_t nonce);

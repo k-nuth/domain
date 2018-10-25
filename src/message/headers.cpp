@@ -53,9 +53,6 @@ headers headers::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-headers::headers()
-{}
-
 // Uses headers copy assignment.
 headers::headers(header::list const& values)
     : elements_(values) {

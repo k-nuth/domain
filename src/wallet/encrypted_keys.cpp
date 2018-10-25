@@ -432,7 +432,7 @@ bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed, 
 // decrypt public_key
 // ----------------------------------------------------------------------------
 
-bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compressed, const encrypted_public& key, std::string const& passphrase) {
+bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compressed, encrypted_public const& key, std::string const& passphrase) {
     const parse_encrypted_public parse(key);
     if ( ! parse.valid())
         return false;

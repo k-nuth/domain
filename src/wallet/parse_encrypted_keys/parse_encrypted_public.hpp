@@ -36,7 +36,7 @@ class parse_encrypted_public
 public:
     static byte_array<prefix_size> prefix_factory(uint8_t address);
 
-    explicit parse_encrypted_public(const encrypted_public& key);
+    explicit parse_encrypted_public(encrypted_public const& key);
 
     uint8_t address_version() const;
 
