@@ -34,11 +34,10 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API get_headers
-    : public get_blocks {
+class BC_API get_headers : public get_blocks {
 public:
     typedef std::shared_ptr<get_headers> ptr;
-    typedef std::shared_ptr<const get_headers> const_ptr;
+    typedef std::shared_ptr<get_headers const> const_ptr;
 
     static get_headers factory_from_data(uint32_t version, data_chunk const& data);
     static get_headers factory_from_data(uint32_t version, data_source& stream);
@@ -55,8 +54,16 @@ public:
     get_headers();
     get_headers(hash_list const& start, hash_digest const& stop);
     get_headers(hash_list&& start, hash_digest const& stop);
-    get_headers(const get_headers& x);
-    get_headers(get_headers&& x);
+    get_headers(get_headers const& x) = default;
+    get_headers(get_headers&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    get_headers& operator=(get_headers&& x) = default;
+    void operator=(get_headers const&) = delete;
+
+    bool operator==(get_headers const& x) const;
+    bool operator!=(get_headers const& x) const;
+
 
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
@@ -76,14 +83,6 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source) override;
-
-    // This class is move assignable but not copy assignable.
-    get_headers& operator=(get_headers&& x);
-    void operator=(const get_headers&) = delete;
-
-    bool operator==(const get_headers& x) const;
-    bool operator!=(const get_headers& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

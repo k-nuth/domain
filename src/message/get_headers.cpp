@@ -40,31 +40,34 @@ get_headers get_headers::factory_from_data(uint32_t version, data_source& stream
     return instance;
 }
 
-//get_headers get_headers::factory_from_data(uint32_t version, reader& source)
-//{
-//    get_headers instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 get_headers::get_headers()
-    : get_blocks() {
-}
+{}
 
 get_headers::get_headers(hash_list const& start, hash_digest const& stop)
     : get_blocks(start, stop) {
 }
 
+//TODO(fernando): move semantics lost
 get_headers::get_headers(hash_list&& start, hash_digest const& stop)
-    : get_headers(start, stop) {
+    : get_headers(start, stop) 
+{}
+
+// get_headers::get_headers(get_headers&& x) noexcept
+//     : get_blocks(x) 
+// {}
+
+// get_headers& get_headers::operator=(get_headers&& x) noexcept {
+//     set_start_hashes(x.start_hashes());
+//     set_stop_hash(x.stop_hash());
+//     return *this;
+// }
+
+bool get_headers::operator==(get_headers const& x) const {
+    return (static_cast<get_blocks const&>(*this) == static_cast<get_blocks const&>(x));
 }
 
-get_headers::get_headers(const get_headers& x)
-    : get_blocks(x) {
-}
-
-get_headers::get_headers(get_headers&& x)
-    : get_blocks(x) {
+bool get_headers::operator!=(get_headers const& x) const {
+    return !(*this == x);
 }
 
 bool get_headers::from_data(uint32_t version, data_chunk const& data) {
@@ -73,34 +76,6 @@ bool get_headers::from_data(uint32_t version, data_chunk const& data) {
 
 bool get_headers::from_data(uint32_t version, data_source& stream) {
     return get_blocks::from_data(version, stream);
-}
-
-//bool get_headers::from_data(uint32_t version, reader& source)
-//{
-//    if ( ! get_blocks::from_data(version, source))
-//        return false;
-//
-//    if (version < get_headers::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
-get_headers& get_headers::operator=(get_headers&& x) {
-    set_start_hashes(x.start_hashes());
-    set_stop_hash(x.stop_hash());
-    return *this;
-}
-
-bool get_headers::operator==(const get_headers& x) const {
-    return (static_cast<get_blocks>(*this) == static_cast<get_blocks>(x));
-}
-
-bool get_headers::operator!=(const get_headers& x) const {
-    return (static_cast<get_blocks>(*this) != static_cast<get_blocks>(x));
 }
 
 }  // namespace message
