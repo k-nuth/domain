@@ -66,7 +66,7 @@ ec_public::ec_public(const ec_uncompressed& point, bool compress)
     : ec_public(from_point(point, compress)) {
 }
 
-ec_public::ec_public(const ec_compressed& point, bool compress)
+ec_public::ec_public(ec_compressed const& point, bool compress)
     : valid_(true), compress_(compress), point_(point) {
 }
 
@@ -126,7 +126,7 @@ ec_public::operator const bool() const {
     return valid_;
 }
 
-ec_public::operator const ec_compressed&() const {
+ec_public::operator ec_compressed const&() const {
     return point_;
 }
 
@@ -147,7 +147,7 @@ std::string ec_public::encoded() const {
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const ec_compressed& ec_public::point() const {
+ec_compressed const& ec_public::point() const {
     return point_;
 }
 

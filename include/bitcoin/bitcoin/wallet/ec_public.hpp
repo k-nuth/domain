@@ -49,7 +49,7 @@ public:
     ec_public(ec_private const& secret);
     ec_public(data_chunk const& decoded);
     ec_public(std::string const& base16);
-    ec_public(const ec_compressed& point, bool compress = true);
+    ec_public(ec_compressed const& point, bool compress = true);
     ec_public(const ec_uncompressed& point, bool compress = false);
 
     /// Operators.
@@ -62,13 +62,13 @@ public:
 
     /// Cast operators.
     operator const bool() const;
-    operator const ec_compressed&() const;
+    operator ec_compressed const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const ec_compressed& point() const;
+    ec_compressed const& point() const;
     const uint16_t version() const;
     const uint8_t payment_version() const;
     const uint8_t wif_version() const;
