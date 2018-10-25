@@ -77,13 +77,27 @@ headers::headers(std::initializer_list<header> const& values)
     : elements_(values) {
 }
 
-headers::headers(headers const& x)
-    : headers(x.elements_) {
+// headers::headers(headers const& x)
+//     : headers(x.elements_) {
+// }
+
+// headers::headers(headers&& x) noexcept
+//     : headers(std::move(x.elements_)) 
+// {}
+
+// headers& headers::operator=(headers&& x) noexcept {
+//     elements_ = std::move(x.elements_);
+//     return *this;
+// }
+
+bool headers::operator==(headers const& x) const {
+    return elements_ == x.elements_;
 }
 
-headers::headers(headers&& x)
-    : headers(std::move(x.elements_)) {
+bool headers::operator!=(headers const& x) const {
+    return !(*this == x);
 }
+
 
 bool headers::is_valid() const {
     return !elements_.empty();
@@ -104,32 +118,6 @@ bool headers::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool headers::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    auto const count = source.read_size_little_endian();
-//
-//    // Guard against potential for arbitary memory allocation.
-//    if (count > max_get_headers)
-//        source.invalidate();
-//    else
-//        elements_.resize(count);
-//
-//    // Order is required.
-//    for (auto& element: elements_)
-//        if ( ! element.from_data(version, source))
-//            break;
-//
-//    if (version < headers::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk headers::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -145,14 +133,6 @@ void headers::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void headers::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_variable_little_endian(elements_.size());
-//
-//    for (auto const& element: elements_)
-//        element.to_data(version, sink_w);
-//}
 
 bool headers::is_sequential() const {
     if (elements_.empty()) {
@@ -212,19 +192,6 @@ void headers::set_elements(header::list const& values) {
 
 void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
-}
-
-headers& headers::operator=(headers&& x) {
-    elements_ = std::move(x.elements_);
-    return *this;
-}
-
-bool headers::operator==(headers const& x) const {
-    return (elements_ == x.elements_);
-}
-
-bool headers::operator!=(headers const& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message

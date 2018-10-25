@@ -63,8 +63,16 @@ public:
     headers(header::list const& values);
     headers(header::list&& values);
     headers(std::initializer_list<header> const& values);
-    headers(headers const& x);
-    headers(headers&& x);
+    headers(headers const& x) = default;
+    headers(headers&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    headers& operator=(headers&& x) = default;
+    void operator=(headers const&) = delete;
+
+    bool operator==(headers const& x) const;
+    bool operator!=(headers const& x) const;
+
 
     header::list& elements();
     header::list const& elements() const;
@@ -122,12 +130,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    headers& operator=(headers&& x);
-    void operator=(headers const&) = delete;
-
-    bool operator==(headers const& x) const;
-    bool operator!=(headers const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
