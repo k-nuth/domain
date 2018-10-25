@@ -43,7 +43,7 @@ pong pong::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-size_t pong::satoshi_fixed_size(uint32_t version) {
+size_t pong::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(nonce_);
 }
 
