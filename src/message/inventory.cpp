@@ -51,10 +51,6 @@ inventory inventory::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-inventory::inventory()
-    : inventories_() 
-{}
-
 inventory::inventory(inventory_vector::list const& values)
     : inventories_(values) 
 {}

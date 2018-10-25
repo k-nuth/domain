@@ -58,7 +58,7 @@ public:
         return instance;
     }
 
-    inventory();
+    inventory() = default;
     inventory(inventory_vector::list const& values);
     inventory(inventory_vector::list&& values);
     inventory(hash_list const& hashes, type_id type);
