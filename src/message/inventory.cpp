@@ -51,24 +51,17 @@ inventory inventory::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//inventory inventory::factory_from_data(uint32_t version, reader& source)
-//{
-//    inventory instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 inventory::inventory()
-    : inventories_() {
-}
+    : inventories_() 
+{}
 
 inventory::inventory(inventory_vector::list const& values)
-    : inventories_(values) {
-}
+    : inventories_(values) 
+{}
 
 inventory::inventory(inventory_vector::list&& values)
-    : inventories_(std::move(values)) {
-}
+    : inventories_(std::move(values)) 
+{}
 
 inventory::inventory(hash_list const& hashes, type_id type) {
     inventories_.clear();
@@ -81,15 +74,28 @@ inventory::inventory(hash_list const& hashes, type_id type) {
 }
 
 inventory::inventory(std::initializer_list<inventory_vector> const& values)
-    : inventories_(values) {
+    : inventories_(values) 
+{}
+
+// inventory::inventory(inventory const& x)
+//     : inventory(x.inventories_) 
+// {}
+
+// inventory::inventory(inventory&& x) noexcept
+//     : inventory(std::move(x.inventories_))
+// {}
+
+// inventory& inventory::operator=(inventory&& x) noexcept {
+//     inventories_ = std::move(x.inventories_);
+//     return *this;
+// }
+
+bool inventory::operator==(inventory const& x) const {
+    return (inventories_ == x.inventories_);
 }
 
-inventory::inventory(const inventory& x)
-    : inventory(x.inventories_) {
-}
-
-inventory::inventory(inventory&& x)
-    : inventory(std::move(x.inventories_)) {
+bool inventory::operator!=(inventory const& x) const {
+    return !(*this == x);
 }
 
 bool inventory::is_valid() const {
@@ -111,29 +117,6 @@ bool inventory::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool inventory::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    auto const count = source.read_size_little_endian();
-//
-//    // Guard against potential for arbitary memory allocation.
-//    if (count > max_inventory)
-//        source.invalidate();
-//    else
-//        inventories_.resize(count);
-//
-//    // Order is required.
-//    for (auto& inventory: inventories_)
-//        if ( ! inventory.from_data(version, source))
-//            break;
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk inventory::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -149,14 +132,6 @@ void inventory::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void inventory::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_variable_little_endian(inventories_.size());
-//
-//    for (auto const& inventory: inventories_)
-//        inventory.to_data(version, sink_w);
-//}
 
 void inventory::to_hashes(hash_list& out, type_id type) const {
     out.reserve(inventories_.size());
@@ -183,8 +158,7 @@ void inventory::reduce(inventory_vector::list& out, type_id type) const {
 }
 
 size_t inventory::serialized_size(uint32_t version) const {
-    return message::variable_uint_size(inventories_.size()) +
-           inventories_.size() * inventory_vector::satoshi_fixed_size(version);
+    return message::variable_uint_size(inventories_.size()) + inventories_.size() * inventory_vector::satoshi_fixed_size(version);
 }
 
 size_t inventory::count(type_id type) const {
@@ -209,19 +183,6 @@ void inventory::set_inventories(inventory_vector::list const& value) {
 
 void inventory::set_inventories(inventory_vector::list&& value) {
     inventories_ = std::move(value);
-}
-
-inventory& inventory::operator=(inventory&& x) {
-    inventories_ = std::move(x.inventories_);
-    return *this;
-}
-
-bool inventory::operator==(const inventory& x) const {
-    return (inventories_ == x.inventories_);
-}
-
-bool inventory::operator!=(const inventory& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message

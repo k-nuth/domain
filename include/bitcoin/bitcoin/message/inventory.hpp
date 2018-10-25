@@ -45,7 +45,7 @@ namespace message {
 class BC_API inventory {
 public:
     typedef std::shared_ptr<inventory> ptr;
-    typedef std::shared_ptr<const inventory> const_ptr;
+    typedef std::shared_ptr<inventory const> const_ptr;
     typedef inventory_vector::type_id type_id;
 
     static inventory factory_from_data(uint32_t version, data_chunk const& data);
@@ -58,15 +58,21 @@ public:
         return instance;
     }
 
-    //static inventory factory_from_data(uint32_t version, reader& source);
-
     inventory();
     inventory(inventory_vector::list const& values);
     inventory(inventory_vector::list&& values);
     inventory(hash_list const& hashes, type_id type);
     inventory(std::initializer_list<inventory_vector> const& values);
-    inventory(const inventory& x);
-    inventory(inventory&& x);
+    inventory(inventory const& x) = default;
+    inventory(inventory&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    inventory& operator=(inventory&& x) = default;
+    void operator=(inventory const&) = delete;
+
+    bool operator==(inventory const& x) const;
+    bool operator!=(inventory const& x) const;
+
 
     inventory_vector::list& inventories();
     inventory_vector::list const& inventories() const;
@@ -122,13 +128,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
     size_t count(type_id type) const;
-
-    // This class is move assignable but not copy assignable.
-    inventory& operator=(inventory&& x);
-    void operator=(const inventory&) = delete;
-
-    bool operator==(const inventory& x) const;
-    bool operator!=(const inventory& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
