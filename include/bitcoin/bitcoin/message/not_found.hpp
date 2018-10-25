@@ -43,7 +43,7 @@ class BC_API not_found
     : public inventory {
 public:
     typedef std::shared_ptr<not_found> ptr;
-    typedef std::shared_ptr<const not_found> const_ptr;
+    typedef std::shared_ptr<not_found const> const_ptr;
 
     static not_found factory_from_data(uint32_t version, data_chunk const& data);
     static not_found factory_from_data(uint32_t version, data_source& stream);
@@ -62,8 +62,16 @@ public:
     not_found(inventory_vector::list&& values);
     not_found(hash_list const& hashes, type_id type);
     not_found(std::initializer_list<inventory_vector> const& values);
-    not_found(const not_found& x);
-    not_found(not_found&& x);
+    not_found(not_found const& x) = default;
+    not_found(not_found&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    not_found& operator=(not_found&& x) = default;
+    void operator=(not_found const&) = delete;
+
+    bool operator==(not_found const& x) const;
+    bool operator!=(not_found const& x) const;
+
 
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
@@ -83,14 +91,6 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source) override;
-
-    // This class is move assignable but not copy assignable.
-    not_found& operator=(not_found&& x);
-    void operator=(const not_found&) = delete;
-
-    bool operator==(const not_found& x) const;
-    bool operator!=(const not_found& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

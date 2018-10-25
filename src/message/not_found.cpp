@@ -43,13 +43,6 @@ not_found not_found::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//not_found not_found::factory_from_data(uint32_t version, reader& source)
-//{
-//    not_found instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 not_found::not_found()
     : inventory() {
 }
@@ -70,47 +63,32 @@ not_found::not_found(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 
-not_found::not_found(const not_found& x)
-    : inventory(x) {
+// not_found::not_found(not_found const& x)
+//     : inventory(x) {
+// }
+
+// not_found::not_found(not_found&& x) noexcept
+//     : inventory(x) 
+// {}
+
+// not_found& not_found::operator=(not_found&& x) noexcept {
+//     set_inventories(x.inventories());
+//     return *this;
+// }
+
+bool not_found::operator==(not_found const& x) const {
+    return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
 
-not_found::not_found(not_found&& x)
-    : inventory(x) {
+bool not_found::operator!=(not_found const& x) const {
+    return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
-
 bool not_found::from_data(uint32_t version, data_chunk const& data) {
     return inventory::from_data(version, data);
 }
 
 bool not_found::from_data(uint32_t version, data_source& stream) {
     return inventory::from_data(version, stream);
-}
-
-//bool not_found::from_data(uint32_t version, reader& source)
-//{
-//    if ( ! inventory::from_data(version, source))
-//        return false;
-//
-//    if (version < not_found::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
-not_found& not_found::operator=(not_found&& x) {
-    set_inventories(x.inventories());
-    return *this;
-}
-
-bool not_found::operator==(const not_found& x) const {
-    return (static_cast<inventory>(*this) == static_cast<inventory>(x));
-}
-
-bool not_found::operator!=(const not_found& x) const {
-    return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
 }  // namespace message
