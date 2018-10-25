@@ -40,7 +40,7 @@ namespace message {
 class BC_API get_block_transactions {
 public:
     typedef std::shared_ptr<get_block_transactions> ptr;
-    typedef std::shared_ptr<const get_block_transactions> const_ptr;
+    typedef std::shared_ptr<get_block_transactions const> const_ptr;
 
     static get_block_transactions factory_from_data(uint32_t version, data_chunk const& data);
     static get_block_transactions factory_from_data(uint32_t version, data_source& stream);
@@ -52,15 +52,19 @@ public:
         return instance;
     }
 
-    //static get_block_transactions factory_from_data(uint32_t version, reader& source);
-
     get_block_transactions();
-    get_block_transactions(hash_digest const& block_hash,
-                           const std::vector<uint64_t>& indexes);
-    get_block_transactions(hash_digest const& block_hash,
-                           std::vector<uint64_t>&& indexes);
-    get_block_transactions(const get_block_transactions& x);
-    get_block_transactions(get_block_transactions&& x);
+    get_block_transactions(hash_digest const& block_hash, const std::vector<uint64_t>& indexes);
+    get_block_transactions(hash_digest const& block_hash, std::vector<uint64_t>&& indexes);
+    get_block_transactions(get_block_transactions const& x) = default;
+    get_block_transactions(get_block_transactions&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    get_block_transactions& operator=(get_block_transactions&& x) = default;
+    void operator=(get_block_transactions const&) = delete;
+
+    bool operator==(get_block_transactions const& x) const;
+    bool operator!=(get_block_transactions const& x) const;
+
 
     hash_digest& block_hash();
     hash_digest const& block_hash() const;
@@ -112,13 +116,6 @@ public:
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
-
-    // This class is move assignable but not copy assignable.
-    get_block_transactions& operator=(get_block_transactions&& x);
-    void operator=(const get_block_transactions&) = delete;
-
-    bool operator==(const get_block_transactions& x) const;
-    bool operator!=(const get_block_transactions& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
