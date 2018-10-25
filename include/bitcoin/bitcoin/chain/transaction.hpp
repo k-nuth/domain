@@ -142,8 +142,16 @@ public:
 
     transaction();
 
-    transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
-    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs, uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false);
+    transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs
+#ifdef BITPRIM_CACHED_RPC_DATA
+                , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
+#endif
+               );
+    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs
+#ifdef BITPRIM_CACHED_RPC_DATA
+               , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
+#endif
+               );
     transaction(transaction const& x, hash_digest const& hash);
     transaction(transaction&& x, hash_digest const& hash);
 
@@ -222,6 +230,7 @@ public:
             locktime_ = static_cast<uint32_t>(locktime);
             version_ = static_cast<uint32_t>(version);
 
+#ifdef BITPRIM_CACHED_RPC_DATA
             if (unconfirmed) {
                 auto const sigops = source.read_4_bytes_little_endian();
                 cached_sigops_ = static_cast<uint32_t>(sigops);
@@ -230,6 +239,7 @@ public:
                 auto const is_standard = source.read_byte();
                 cached_is_standard_ = static_cast<bool>(is_standard);
             }
+#endif
         }
 
         // TODO(libbitcoin): optimize by having reader skip witness data.
@@ -285,11 +295,14 @@ public:
             detail::write(sink, inputs_, wire, witness_val(witness));
             sink.write_variable_little_endian(locktime_);
             sink.write_variable_little_endian(version_);
+
+#ifdef BITPRIM_CACHED_RPC_DATA            
             if (unconfirmed) {
                 sink.write_4_bytes_little_endian(signature_operations());
                 sink.write_8_bytes_little_endian(fees());
                 sink.write_byte(is_standard());
             }
+#endif
         }
     }
 
@@ -320,9 +333,11 @@ public:
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
+#ifdef BITPRIM_CACHED_RPC_DATA
     uint64_t cached_fees() const;
     uint32_t cached_sigops() const;
     bool cached_is_standard() const;
+#endif
 
     hash_digest outputs_hash() const;
     hash_digest inpoints_hash() const;
@@ -387,17 +402,18 @@ private:
     input::list inputs_;
     output::list outputs_;
 
-    // TODO(libbitcoin): (refactor to transaction_result)
+    // TODO(bitprim): (refactor to transaction_result)
     // this 3 variables should be stored in transaction_unconfired database when the store
     // function is called. This values will be in the transaction_result object before
     // creating the transaction object
 
-    //Only accesible for unconfirmed txs
+    //Note(bitprim): Only accesible for unconfirmed txs
+#ifdef BITPRIM_CACHED_RPC_DATA
     uint64_t cached_fees_;
     uint32_t cached_sigops_;
     bool cached_is_standard_;
+#endif
 
-    // These share a mutex as they are not expected to conflict.
     // These share a mutex as they are not expected to contend.
     mutable hash_ptr hash_;
     mutable hash_ptr witness_hash_;
