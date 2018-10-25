@@ -36,7 +36,7 @@ public:
     /// Constructors.
     stealth_receiver(ec_secret const& scan_private,
                      ec_secret const& spend_private,
-                     const binary& filter,
+                     binary const& filter,
                      uint8_t version = payment_address::mainnet_p2kh);
 
     /// Caller must test after construct.
@@ -47,11 +47,11 @@ public:
 
     /// Derive a payment address to compare against the blockchain.
     bool derive_address(payment_address& out_address,
-                        const ec_compressed& ephemeral_public) const;
+                        ec_compressed const& ephemeral_public) const;
 
     /// Once address is discovered, derive the private spend key.
     bool derive_private(ec_secret& out_private,
-                        const ec_compressed& ephemeral_public) const;
+                        ec_compressed const& ephemeral_public) const;
 
 private:
     const uint8_t version_;

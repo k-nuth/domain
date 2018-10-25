@@ -43,7 +43,7 @@ parse_encrypted_private::prefix_factory(uint8_t address, bool multiplied) {
     return splice(magic_, to_array(context));
 }
 
-parse_encrypted_private::parse_encrypted_private(const encrypted_private& key)
+parse_encrypted_private::parse_encrypted_private(encrypted_private const& key)
     : parse_encrypted_key<prefix_size>(
           slice<0, 2>(key),
           slice<2, 3>(key),

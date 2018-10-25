@@ -41,7 +41,7 @@ parse_encrypted_token::prefix_factory(bool lot_sequence) {
     return splice(magic_, to_array(context));
 }
 
-parse_encrypted_token::parse_encrypted_token(const encrypted_token& value)
+parse_encrypted_token::parse_encrypted_token(encrypted_token const& value)
     : parse_encrypted_prefix(slice<0, 8>(value)),
       entropy_(slice<8, 16>(value)),
       sign_(slice<16, 17>(value)),

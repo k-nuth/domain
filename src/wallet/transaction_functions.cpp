@@ -78,7 +78,7 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
     tx.set_locktime(locktime);
 
     for (auto const& input : outputs_to_spend) {
-        //TODO: move the elements instead of pushing back
+        //TODO(bitprim): move the elements instead of pushing back
         tx.inputs().push_back(libbitcoin::config::input(input));
     }
 

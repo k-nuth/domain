@@ -1,19 +1,11 @@
 import os
 from subprocess import call
 
-files = [
-	# 'chain/block.cpp'
-	# ,'chain/header.cpp'
-	# , 'chain/input.cpp'
-	# , 'chain/output.cpp'
-	# , 'chain/output_point.cpp'
-	# ,'chain/point.cpp'
-	# , 'chain/script.cpp'
-	# , 'chain/transaction.cpp'
-	# , 'chain/witness.cpp'
 
-	'machine/operation.cpp'
-	, 'message/address.cpp'
+
+
+files = [
+	'message/address.cpp'
 	, 'message/alert.cpp'
 	, 'message/alert_payload.cpp'
 	, 'message/block.cpp'
@@ -45,7 +37,12 @@ files = [
 	, 'message/transaction.cpp'
 	, 'message/verack.cpp'
 	, 'message/version.cpp'
+	, 'wallet/bitcoin_uri.cpp'
+	, 'wallet/ec_private.cpp'
+	, 'wallet/ec_public.cpp'
+	, 'wallet/encrypted_keys.cpp'
 	, 'wallet/message.cpp'
+	, 'wallet/payment_address.cpp'
 ]
 
 def process():
@@ -78,7 +75,7 @@ def process():
             print(src)
             return
 
-        print(call(['git', 'commit', '-m', 'east const for {} class'.format(class_name)]))
+        print(call(['git', 'commit', '-m', 'canonical C++ way for {} class'.format(class_name)]))
         if ret != 0:
             print('error 3')
             return

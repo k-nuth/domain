@@ -36,26 +36,29 @@ public:
     /// Constructors.
     ek_token();
     ek_token(std::string const& encoded);
-    ek_token(const encrypted_token& key);
-    ek_token(const ek_token& x);
+    ek_token(encrypted_token const& key);
+    ek_token(ek_token const& x);
+
+
+    ek_token& operator=(ek_token const& x) = default;
 
     /// Operators.
-    bool operator<(const ek_token& x) const;
-    bool operator==(const ek_token& x) const;
-    bool operator!=(const ek_token& x) const;
-    ek_token& operator=(const ek_token& x);
+    bool operator==(ek_token const& x) const;
+    bool operator!=(ek_token const& x) const;
+    bool operator<(ek_token const& x) const;
+
     friend std::istream& operator>>(std::istream& in, ek_token& to);
-    friend std::ostream& operator<<(std::ostream& out, const ek_token& of);
+    friend std::ostream& operator<<(std::ostream& out, ek_token const& of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const encrypted_token&() const;
+    operator encrypted_token const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const encrypted_token& token() const;
+    encrypted_token const& token() const;
 
 private:
     /// Factories.

@@ -39,13 +39,19 @@ ek_private::ek_private(std::string const& encoded)
     : ek_private(from_string(encoded)) {
 }
 
-ek_private::ek_private(const ek_private& x)
+ek_private::ek_private(ek_private const& x)
     : valid_(x.valid_), private_(x.private_) {
 }
 
-ek_private::ek_private(const encrypted_private& value)
+ek_private::ek_private(encrypted_private const& value)
     : valid_(true), private_(value) {
 }
+
+// ek_private& ek_private::operator=(ek_private const& x) {
+//     valid_ = x.valid_;
+//     private_ = x.private_;
+//     return *this;
+// }
 
 // Factories.
 // ----------------------------------------------------------------------------
@@ -64,7 +70,7 @@ ek_private::operator const bool() const {
     return valid_;
 }
 
-ek_private::operator const encrypted_private&() const {
+ek_private::operator encrypted_private const&() const {
     return private_;
 }
 
@@ -78,29 +84,23 @@ std::string ek_private::encoded() const {
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const encrypted_private& ek_private::private_key() const {
+encrypted_private const& ek_private::private_key() const {
     return private_;
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_private& ek_private::operator=(const ek_private& x) {
-    valid_ = x.valid_;
-    private_ = x.private_;
-    return *this;
-}
-
-bool ek_private::operator<(const ek_private& x) const {
-    return encoded() < x.encoded();
-}
-
-bool ek_private::operator==(const ek_private& x) const {
+bool ek_private::operator==(ek_private const& x) const {
     return valid_ == x.valid_ && private_ == x.private_;
 }
 
-bool ek_private::operator!=(const ek_private& x) const {
+bool ek_private::operator!=(ek_private const& x) const {
     return !(*this == x);
+}
+
+bool ek_private::operator<(ek_private const& x) const {
+    return encoded() < x.encoded();
 }
 
 std::istream& operator>>(std::istream& in, ek_private& to) {
@@ -116,7 +116,7 @@ std::istream& operator>>(std::istream& in, ek_private& to) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ek_private& of) {
+std::ostream& operator<<(std::ostream& out, ek_private const& of) {
     out << of.encoded();
     return out;
 }

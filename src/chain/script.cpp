@@ -996,10 +996,10 @@ operation::list script::to_pay_script_hash_pattern(short_hash const& hash) {
 }
 
 operation::list script::to_pay_multisig_pattern(uint8_t signatures,
-                                                const point_list& points) {
+                                                point_list const& points) {
     data_stack chunks;
     chunks.reserve(points.size());
-    auto const conversion = [&chunks](const ec_compressed& point) {
+    auto const conversion = [&chunks](ec_compressed const& point) {
         chunks.push_back(to_chunk(point));
     };
 

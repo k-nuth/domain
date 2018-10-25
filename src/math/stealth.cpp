@@ -80,14 +80,14 @@ bool create_ephemeral_key(ec_secret& out_secret, data_chunk const& seed) {
 }
 
 // Mine a filter into the leftmost bytes of sha256(sha256(output-script)).
-bool create_stealth_data(script& out_null_data, ec_secret& out_secret, const binary& filter, data_chunk const& seed) {
+bool create_stealth_data(script& out_null_data, ec_secret& out_secret, binary const& filter, data_chunk const& seed) {
     // Create a valid ephemeral key pair using the seed and then the script.
     return create_ephemeral_key(out_secret, seed) &&
            create_stealth_script(out_null_data, out_secret, filter, seed);
 }
 
 // Mine a filter into the leftmost bytes of sha256(sha256(output-script)).
-bool create_stealth_script(script& out_null_data, ec_secret const& secret, const binary& filter, data_chunk const& seed) {
+bool create_stealth_script(script& out_null_data, ec_secret const& secret, binary const& filter, data_chunk const& seed) {
     // [ephemeral-public-key-hash:32][pad:0-44][nonce:4]
     static constexpr size_t max_pad_size = max_null_data_size - hash_size -
                                            sizeof(uint32_t);
@@ -167,7 +167,7 @@ bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
     return true;
 }
 
-bool shared_secret(ec_secret& out_shared, ec_secret const& secret, const ec_compressed& point) {
+bool shared_secret(ec_secret& out_shared, ec_secret const& secret, ec_compressed const& point) {
     auto copy = point;
     if ( ! ec_multiply(copy, secret)) {
         return false;
@@ -178,9 +178,9 @@ bool shared_secret(ec_secret& out_shared, ec_secret const& secret, const ec_comp
 }
 
 bool uncover_stealth(ec_compressed& out_stealth,
-                     const ec_compressed& ephemeral_or_scan,
+                     ec_compressed const& ephemeral_or_scan,
                      ec_secret const& scan_or_ephemeral,
-                     const ec_compressed& spend) {
+                     ec_compressed const& spend) {
     ec_secret shared;
     if ( ! shared_secret(shared, scan_or_ephemeral, ephemeral_or_scan)) {
         return false;
@@ -196,7 +196,7 @@ bool uncover_stealth(ec_compressed& out_stealth,
 }
 
 bool uncover_stealth(ec_secret& out_stealth,
-                     const ec_compressed& ephemeral_or_scan,
+                     ec_compressed const& ephemeral_or_scan,
                      ec_secret const& scan_or_ephemeral,
                      ec_secret const& spend) {
     ec_secret shared;

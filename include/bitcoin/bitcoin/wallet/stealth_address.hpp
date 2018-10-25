@@ -52,17 +52,17 @@ public:
     stealth_address();
     stealth_address(data_chunk const& decoded);
     stealth_address(std::string const& encoded);
-    stealth_address(const stealth_address& x);
-    stealth_address(const binary& filter, const ec_compressed& scan_key, const point_list& spend_keys, uint8_t signatures = 0, uint8_t version = mainnet_p2kh);
+    stealth_address(binary const& filter, ec_compressed const& scan_key, point_list const& spend_keys, uint8_t signatures = 0, uint8_t version = mainnet_p2kh);
+
+    stealth_address(stealth_address const& x) = default;
+    stealth_address& operator=(stealth_address const& x) = default;
 
     /// Operators.
-    bool operator<(const stealth_address& x) const;
-    bool operator==(const stealth_address& x) const;
-    bool operator!=(const stealth_address& x) const;
-    stealth_address& operator=(const stealth_address& x);
+    bool operator==(stealth_address const& x) const;
+    bool operator!=(stealth_address const& x) const;
+    bool operator<(stealth_address const& x) const;
     friend std::istream& operator>>(std::istream& in, stealth_address& to);
-    friend std::ostream& operator<<(std::ostream& out,
-                                    const stealth_address& of);
+    friend std::ostream& operator<<(std::ostream& out, stealth_address const& of);
 
     /// Cast operators.
     operator const bool() const;
@@ -73,10 +73,10 @@ public:
 
     /// Accessors.
     uint8_t version() const;
-    const ec_compressed& scan_key() const;
-    const point_list& spend_keys() const;
+    ec_compressed const& scan_key() const;
+    point_list const& spend_keys() const;
     uint8_t signatures() const;
-    const binary& filter() const;
+    binary const& filter() const;
 
     /// Methods.
     data_chunk to_chunk() const;
@@ -85,14 +85,14 @@ private:
     /// Factories.
     static stealth_address from_string(std::string const& encoded);
     static stealth_address from_stealth(data_chunk const& decoded);
-    static stealth_address from_stealth(const binary& filter,
-                                        const ec_compressed& scan_key,
-                                        const point_list& spend_keys,
+    static stealth_address from_stealth(binary const& filter,
+                                        ec_compressed const& scan_key,
+                                        point_list const& spend_keys,
                                         uint8_t signatures,
                                         uint8_t version);
 
     /// Parameter order is used to change the constructor signature.
-    stealth_address(uint8_t version, const binary& filter, const ec_compressed& scan_key, const point_list& spend_keys, uint8_t signatures);
+    stealth_address(uint8_t version, binary const& filter, ec_compressed const& scan_key, point_list const& spend_keys, uint8_t signatures);
 
     /// Helpers.
     bool reuse_key() const;

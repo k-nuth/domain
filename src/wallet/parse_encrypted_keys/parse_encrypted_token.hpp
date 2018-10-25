@@ -37,7 +37,7 @@ class parse_encrypted_token
 public:
     static byte_array<prefix_size> prefix_factory(bool lot_sequence);
 
-    explicit parse_encrypted_token(const encrypted_token& value);
+    explicit parse_encrypted_token(encrypted_token const& value);
 
     bool lot_sequence() const;
     hash_digest data() const;

@@ -74,8 +74,9 @@ void select_outputs::greedy(points_value& out, const points_value& unspent, uint
     std::sort(copy.begin(), copy.end(), greater);
 
     // This is naive, will not necessarily find the smallest combination.
-    for (auto point = copy.begin(); point != copy.end(); ++point) {
-        out.points.push_back(*point);
+    // for (auto point = copy.begin(); point != copy.end(); ++point) {
+    for (auto const& point : copy) {
+        out.points.push_back(point);
 
         if (out.value() >= minimum_value) {
             return;

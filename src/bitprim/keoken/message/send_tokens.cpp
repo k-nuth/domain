@@ -32,7 +32,7 @@ using bc::data_sink;
 using bc::data_source;
 using bc::istream_reader;
 using bc::ostream_writer;
-using bc::writer;
+// using bc::writer;
 
 // Constructors.
 //-------------------------------------------------------------------------

@@ -34,26 +34,28 @@ public:
     /// Constructors.
     ek_private();
     ek_private(std::string const& encoded);
-    ek_private(const encrypted_private& key);
-    ek_private(const ek_private& x);
+    ek_private(encrypted_private const& key);
+    ek_private(ek_private const& x);
+
+    ek_private& operator=(ek_private const& x) = default;
 
     /// Operators.
-    bool operator<(const ek_private& x) const;
-    bool operator==(const ek_private& x) const;
-    bool operator!=(const ek_private& x) const;
-    ek_private& operator=(const ek_private& x);
+    bool operator==(ek_private const& x) const;
+    bool operator!=(ek_private const& x) const;
+    bool operator<(ek_private const& x) const;
+
     friend std::istream& operator>>(std::istream& in, ek_private& to);
-    friend std::ostream& operator<<(std::ostream& out, const ek_private& of);
+    friend std::ostream& operator<<(std::ostream& out, ek_private const& of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const encrypted_private&() const;
+    operator encrypted_private const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const encrypted_private& private_key() const;
+    encrypted_private const& private_key() const;
 
 private:
     /// Factories.

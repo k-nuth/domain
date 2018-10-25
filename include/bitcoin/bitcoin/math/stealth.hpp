@@ -44,14 +44,14 @@ BI_API bool create_ephemeral_key(ec_secret& out_secret,
 /// Create an ephemeral secret key generated from the seed.
 BI_API bool create_stealth_data(chain::script& out_null_data,
                                 ec_secret& out_secret,
-                                const binary& filter,
+                                binary const& filter,
                                 data_chunk const& seed);
 
 /// Create a stealth null data script the specified filter prefix.
 /// Use the ephemeral secret key provided by parameter.
 BI_API bool create_stealth_script(chain::script& out_null_data,
                                   ec_secret const& secret,
-                                  const binary& filter,
+                                  binary const& filter,
                                   data_chunk const& seed);
 
 /// Extract the stealth ephemeral public key from an output script.
@@ -63,17 +63,17 @@ BI_API bool extract_ephemeral_key(hash_digest& out_unsigned_ephemeral_key,
                                   chain::script const& script);
 
 /// Calculate the shared secret.
-BI_API bool shared_secret(ec_secret& out_shared, ec_secret const& secret, const ec_compressed& point);
+BI_API bool shared_secret(ec_secret& out_shared, ec_secret const& secret, ec_compressed const& point);
 
 /// Uncover the stealth public key.
 BI_API bool uncover_stealth(ec_compressed& out_stealth,
-                            const ec_compressed& ephemeral_or_scan,
+                            ec_compressed const& ephemeral_or_scan,
                             ec_secret const& scan_or_ephemeral,
-                            const ec_compressed& spend);
+                            ec_compressed const& spend);
 
 /// Uncover the stealth secret.
 BI_API bool uncover_stealth(ec_secret& out_stealth,
-                            const ec_compressed& ephemeral_or_scan,
+                            ec_compressed const& ephemeral_or_scan,
                             ec_secret const& scan_or_ephemeral,
                             ec_secret const& spend);
 

@@ -39,13 +39,20 @@ ek_token::ek_token(std::string const& encoded)
     : ek_token(from_string(encoded)) {
 }
 
-ek_token::ek_token(const ek_token& x)
+ek_token::ek_token(ek_token const& x)
     : valid_(x.valid_), token_(x.token_) {
 }
 
-ek_token::ek_token(const encrypted_token& value)
+ek_token::ek_token(encrypted_token const& value)
     : valid_(true), token_(value) {
 }
+
+// ek_token& ek_token::operator=(ek_token const& x) {
+//     valid_ = x.valid_;
+//     token_ = x.token_;
+//     return *this;
+// }
+
 
 // Factories.
 // ----------------------------------------------------------------------------
@@ -64,7 +71,7 @@ ek_token::operator const bool() const {
     return valid_;
 }
 
-ek_token::operator const encrypted_token&() const {
+ek_token::operator encrypted_token const&() const {
     return token_;
 }
 
@@ -78,29 +85,23 @@ std::string ek_token::encoded() const {
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const encrypted_token& ek_token::token() const {
+encrypted_token const& ek_token::token() const {
     return token_;
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_token& ek_token::operator=(const ek_token& x) {
-    valid_ = x.valid_;
-    token_ = x.token_;
-    return *this;
-}
-
-bool ek_token::operator<(const ek_token& x) const {
-    return encoded() < x.encoded();
-}
-
-bool ek_token::operator==(const ek_token& x) const {
+bool ek_token::operator==(ek_token const& x) const {
     return valid_ == x.valid_ && token_ == x.token_;
 }
 
-bool ek_token::operator!=(const ek_token& x) const {
+bool ek_token::operator!=(ek_token const& x) const {
     return !(*this == x);
+}
+
+bool ek_token::operator<(ek_token const& x) const {
+    return encoded() < x.encoded();
 }
 
 std::istream& operator>>(std::istream& in, ek_token& to) {
@@ -116,7 +117,7 @@ std::istream& operator>>(std::istream& in, ek_token& to) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ek_token& of) {
+std::ostream& operator<<(std::ostream& out, ek_token const& of) {
     out << of.encoded();
     return out;
 }
