@@ -49,13 +49,6 @@ alert_payload alert_payload::factory_from_data(uint32_t version, data_source& st
     return instance;
 }
 
-//alert_payload alert_payload::factory_from_data(uint32_t version, reader& source)
-//{
-//    alert_payload instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 alert_payload::alert_payload()
     : version_(0),
       relay_until_(0),
@@ -125,38 +118,63 @@ alert_payload::alert_payload(
       reserved_(std::move(reserved)) {
 }
 
-alert_payload::alert_payload(const alert_payload& x)
-    : alert_payload(
-          x.version_,
-          x.relay_until_,
-          x.expiration_,
-          x.id_,
-          x.cancel_,
-          x.set_cancel_,
-          x.min_version_,
-          x.max_version_,
-          x.set_sub_version_,
-          x.priority_,
-          x.comment_,
-          x.status_bar_,
-          x.reserved_) {
+// alert_payload::alert_payload(const alert_payload& x)
+//     : alert_payload(
+//           x.version_,
+//           x.relay_until_,
+//           x.expiration_,
+//           x.id_,
+//           x.cancel_,
+//           x.set_cancel_,
+//           x.min_version_,
+//           x.max_version_,
+//           x.set_sub_version_,
+//           x.priority_,
+//           x.comment_,
+//           x.status_bar_,
+//           x.reserved_) {
+// }
+
+// alert_payload::alert_payload(alert_payload&& x) noexcept
+//     : alert_payload(
+//           x.version_,
+//           x.relay_until_,
+//           x.expiration_,
+//           x.id_,
+//           x.cancel_,
+//           std::move(x.set_cancel_),
+//           x.min_version_,
+//           x.max_version_,
+//           std::move(x.set_sub_version_),
+//           x.priority_,
+//           std::move(x.comment_),
+//           std::move(x.status_bar_),
+//           std::move(x.reserved_)) {
+// }
+
+// alert_payload& alert_payload::operator=(alert_payload&& x) noexcept {
+//     version_ = x.version_;
+//     relay_until_ = x.relay_until_;
+//     expiration_ = x.expiration_;
+//     id_ = x.id_;
+//     cancel_ = x.cancel_;
+//     set_cancel_ = std::move(x.set_cancel_);
+//     min_version_ = x.min_version_;
+//     max_version_ = x.max_version_;
+//     set_sub_version_ = std::move(x.set_sub_version_);
+//     priority_ = x.priority_;
+//     comment_ = std::move(x.comment_);
+//     status_bar_ = std::move(x.status_bar_);
+//     reserved_ = std::move(x.reserved_);
+//     return *this;
+// }
+
+bool alert_payload::operator==(const alert_payload& x) const {
+    return (version_ == x.version_) && (relay_until_ == x.relay_until_) && (expiration_ == x.expiration_) && (id_ == x.id_) && (cancel_ == x.cancel_) && (set_cancel_ == x.set_cancel_) && (min_version_ == x.min_version_) && (max_version_ == x.max_version_) && (set_sub_version_ == x.set_sub_version_) && (priority_ == x.priority_) && (comment_ == x.comment_) && (status_bar_ == x.status_bar_) && (reserved_ == x.reserved_);
 }
 
-alert_payload::alert_payload(alert_payload&& x) noexcept
-    : alert_payload(
-          x.version_,
-          x.relay_until_,
-          x.expiration_,
-          x.id_,
-          x.cancel_,
-          std::move(x.set_cancel_),
-          x.min_version_,
-          x.max_version_,
-          std::move(x.set_sub_version_),
-          x.priority_,
-          std::move(x.comment_),
-          std::move(x.status_bar_),
-          std::move(x.reserved_)) {
+bool alert_payload::operator!=(const alert_payload& x) const {
+    return !(*this == x);
 }
 
 bool alert_payload::is_valid() const {
@@ -194,38 +212,6 @@ bool alert_payload::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool alert_payload::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    this->version_ = source.read_4_bytes_little_endian();
-//    relay_until_ = source.read_8_bytes_little_endian();
-//    expiration_ = source.read_8_bytes_little_endian();
-//    id_ = source.read_4_bytes_little_endian();
-//    cancel_ = source.read_4_bytes_little_endian();
-//    set_cancel_.reserve(source.read_size_little_endian());
-//
-//    for (size_t i = 0; i < set_cancel_.capacity() && source; i++)
-//        set_cancel_.push_back(source.read_4_bytes_little_endian());
-//
-//    min_version_ = source.read_4_bytes_little_endian();
-//    max_version_ = source.read_4_bytes_little_endian();
-//    set_sub_version_.reserve(source.read_size_little_endian());
-//
-//    for (size_t i = 0; i < set_sub_version_.capacity() && source; i++)
-//        set_sub_version_.push_back(source.read_string());
-//
-//    priority_ = source.read_4_bytes_little_endian();
-//    comment_ = source.read_string();
-//    status_bar_ = source.read_string();
-//    reserved_ = source.read_string();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk alert_payload::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -241,31 +227,6 @@ void alert_payload::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void alert_payload::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_4_bytes_little_endian(this->version_);
-//    sink.write_8_bytes_little_endian(relay_until_);
-//    sink.write_8_bytes_little_endian(expiration_);
-//    sink.write_4_bytes_little_endian(id_);
-//    sink.write_4_bytes_little_endian(cancel_);
-//    sink.write_variable_little_endian(set_cancel_.size());
-//
-//    for (auto const& entry: set_cancel_)
-//        sink.write_4_bytes_little_endian(entry);
-//
-//    sink.write_4_bytes_little_endian(min_version_);
-//    sink.write_4_bytes_little_endian(max_version_);
-//    sink.write_variable_little_endian(set_sub_version_.size());
-//
-//    for (auto const& entry: set_sub_version_)
-//        sink.write_string(entry);
-//
-//    sink.write_4_bytes_little_endian(priority_);
-//    sink.write_string(comment_);
-//    sink.write_string(status_bar_);
-//    sink.write_string(reserved_);
-//}
 
 size_t alert_payload::serialized_size(uint32_t /*version*/) const {
     size_t size = 40u +
@@ -424,31 +385,6 @@ void alert_payload::set_reserved(std::string const& value) {
 
 void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
-}
-
-alert_payload& alert_payload::operator=(alert_payload&& x) noexcept {
-    version_ = x.version_;
-    relay_until_ = x.relay_until_;
-    expiration_ = x.expiration_;
-    id_ = x.id_;
-    cancel_ = x.cancel_;
-    set_cancel_ = std::move(x.set_cancel_);
-    min_version_ = x.min_version_;
-    max_version_ = x.max_version_;
-    set_sub_version_ = std::move(x.set_sub_version_);
-    priority_ = x.priority_;
-    comment_ = std::move(x.comment_);
-    status_bar_ = std::move(x.status_bar_);
-    reserved_ = std::move(x.reserved_);
-    return *this;
-}
-
-bool alert_payload::operator==(const alert_payload& x) const {
-    return (version_ == x.version_) && (relay_until_ == x.relay_until_) && (expiration_ == x.expiration_) && (id_ == x.id_) && (cancel_ == x.cancel_) && (set_cancel_ == x.set_cancel_) && (min_version_ == x.min_version_) && (max_version_ == x.max_version_) && (set_sub_version_ == x.set_sub_version_) && (priority_ == x.priority_) && (comment_ == x.comment_) && (status_bar_ == x.status_bar_) && (reserved_ == x.reserved_);
-}
-
-bool alert_payload::operator!=(const alert_payload& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message
