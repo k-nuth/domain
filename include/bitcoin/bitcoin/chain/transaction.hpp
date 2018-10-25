@@ -87,6 +87,7 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
     std::for_each(puts.begin(), puts.end(), serialize);
 }
 
+#ifndef BITPRIM_CURRENCY_BCH
 // Input list must be pre-populated as it determines witness count.
 template <Reader R, BITPRIM_IS_READER(R)>
 inline void read_witnesses(R& source, input::list& inputs) {
@@ -106,6 +107,8 @@ inline void write_witnesses(W& sink, input::list const& inputs) {
 
     std::for_each(inputs.begin(), inputs.end(), serialize);
 }
+#endif // not defined BITPRIM_CURRENCY_BCH
+
 }  // namespace detail
 
 class BC_API transaction {
@@ -197,7 +200,9 @@ public:
                 source.skip(1);
                 detail::read(source, inputs_, wire, witness_val(witness));
                 detail::read(source, outputs_, wire, witness_val(witness));
+#ifndef BITPRIM_CURRENCY_BCH
                 detail::read_witnesses(source, inputs_);
+#endif
             } else {
                 detail::read(source, outputs_, wire, witness_val(witness));
             }
@@ -264,7 +269,9 @@ public:
                 sink.write_byte(witness_flag);
                 detail::write(sink, inputs_, wire, witness_val(witness));
                 detail::write(sink, outputs_, wire, witness_val(witness));
+#ifndef BITPRIM_CURRENCY_BCH
                 detail::write_witnesses(sink, inputs_);
+#endif
             } else {
                 detail::write(sink, inputs_, wire, witness_val(witness));
                 detail::write(sink, outputs_, wire, witness_val(witness));
