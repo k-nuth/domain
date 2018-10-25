@@ -62,8 +62,20 @@ public:
     header();
     header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
     header(chain::header const& x);
-    header(header const& x);
-    header(header&& x);
+    header(header const& x) = default;
+    header(header&& x) = default;
+
+    header& operator=(chain::header const& x);
+
+    /// This class is move assignable but not copy assignable.
+    header& operator=(header&& x) = default;
+    header& operator=(header const&) /*= delete*/;
+
+    bool operator==(chain::header const& x) const;
+    bool operator!=(chain::header const& x) const;
+    bool operator==(header const& x) const;
+    bool operator!=(header const& x) const;
+
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, data_source& stream);
@@ -84,7 +96,6 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
@@ -96,21 +107,9 @@ public:
             sink.write_variable_little_endian(0);
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    header& operator=(chain::header const& x);
-
-    /// This class is move assignable but not copy assignable.
-    header& operator=(header&& x);
-    header& operator=(header const&) /*= delete*/;
-
-    bool operator==(chain::header const& x) const;
-    bool operator!=(chain::header const& x) const;
-
-    bool operator==(header const& x) const;
-    bool operator!=(header const& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

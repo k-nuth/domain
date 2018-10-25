@@ -65,7 +65,8 @@ size_t header::satoshi_fixed_size(uint32_t version) {
 }
 
 header::header()
-    : chain::header() {}
+    : chain::header() 
+{}
 
 header::header(uint32_t version,
                hash_digest const& previous_block_hash,
@@ -79,12 +80,43 @@ header::header(chain::header const& x)
     : chain::header(x) {
 }
 
-header::header(header const& x)
-    : chain::header(x) {
+// header::header(header const& x)
+//     : chain::header(x) {
+// }
+
+// header::header(header&& x) noexcept
+//     : chain::header(std::move(x)) 
+// {}
+
+header& header::operator=(chain::header const& x) {
+    chain::header::operator=(std::move(x));
+    return *this;
 }
 
-header::header(header&& x)
-    : chain::header(std::move(x)) {
+// header& header::operator=(header&& x) noexcept {
+//     chain::header::operator=(std::move(x));
+//     return *this;
+// }
+
+// header& header::operator=(header const& x) {
+//     chain::header::operator=(x);
+//     return *this;
+// }
+
+bool header::operator==(chain::header const& x) const {
+    return chain::header::operator==(x);
+}
+
+bool header::operator!=(chain::header const& x) const {
+    return chain::header::operator!=(x);
+}
+
+bool header::operator==(header const& x) const {
+    return chain::header::operator==(x);
+}
+
+bool header::operator!=(header const& x) const {
+    return chain::header::operator!=(x);
 }
 
 bool header::from_data(uint32_t version, data_chunk const& data) {
@@ -96,22 +128,6 @@ bool header::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
-
-//bool header::from_data(uint32_t version, reader& source)
-//{
-//    if ( ! chain::header::from_data(source))
-//        return false;
-//
-//    // The header message must trail a zero byte (yes, it's stoopid).
-//    // bitcoin.org/en/developer-reference#headers
-//    if (version != version::level::canonical && source.read_byte() != 0x00)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
 
 data_chunk header::to_data(uint32_t version) const {
     data_chunk data;
@@ -129,51 +145,12 @@ void header::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void header::to_data(uint32_t version, writer& sink) const
-//{
-//    chain::header::to_data(sink);
-//
-//    if (version != version::level::canonical)
-//        sink.write_variable_little_endian(0);
-//}
-
 void header::reset() {
     chain::header::reset();
 }
 
 size_t header::serialized_size(uint32_t version) const {
     return satoshi_fixed_size(version);
-}
-
-header& header::operator=(chain::header const& x) {
-    chain::header::operator=(std::move(x));
-    return *this;
-}
-
-header& header::operator=(header&& x) {
-    chain::header::operator=(std::move(x));
-    return *this;
-}
-
-header& header::operator=(header const& x) {
-    chain::header::operator=(x);
-    return *this;
-}
-
-bool header::operator==(chain::header const& x) const {
-    return chain::header::operator==(x);
-}
-
-bool header::operator!=(chain::header const& x) const {
-    return chain::header::operator!=(x);
-}
-
-bool header::operator==(header const& x) const {
-    return chain::header::operator==(x);
-}
-
-bool header::operator!=(header const& x) const {
-    return chain::header::operator!=(x);
 }
 
 }  // namespace message
