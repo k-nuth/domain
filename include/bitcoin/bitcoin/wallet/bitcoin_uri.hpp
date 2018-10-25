@@ -76,7 +76,7 @@ public:
     void set_r(std::string const& r);
     bool set_address(std::string const& address);
     void set_address(payment_address const& payment);
-    void set_address(const stealth_address& stealth);
+    void set_address(stealth_address const& stealth);
 
     /// uri_reader implementation.
     void set_strict(bool strict);

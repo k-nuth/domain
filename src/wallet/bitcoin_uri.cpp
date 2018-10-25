@@ -96,7 +96,7 @@ std::string bitcoin_uri::r() const {
 }
 
 payment_address bitcoin_uri::payment() const {
-    return payment_address(address_);
+    return {address_};
 }
 
 stealth_address bitcoin_uri::stealth() const {
@@ -152,7 +152,7 @@ void bitcoin_uri::set_address(payment_address const& payment) {
     address_ = payment.encoded();
 }
 
-void bitcoin_uri::set_address(const stealth_address& stealth) {
+void bitcoin_uri::set_address(stealth_address const& stealth) {
     address_ = stealth.encoded();
 }
 
@@ -194,7 +194,7 @@ bool bitcoin_uri::set_path(std::string const& path) {
     return address_.empty() && set_address(path);
 }
 
-bool bitcoin_uri::set_fragment(std::string const& fragment) {
+bool bitcoin_uri::set_fragment(std::string const& /*fragment*/) {
     return false;
 }
 
