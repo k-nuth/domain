@@ -51,21 +51,12 @@ header header::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//header header::factory_from_data(uint32_t version, reader& source)
-//{
-//    header instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 size_t header::satoshi_fixed_size(uint32_t version) {
     auto const canonical = (version == version::level::canonical);
-    return chain::header::satoshi_fixed_size() +
-           (canonical ? 0 : message::variable_uint_size(0));
+    return chain::header::satoshi_fixed_size() + (canonical ? 0 : message::variable_uint_size(0));
 }
 
 header::header()
-    : chain::header() 
 {}
 
 header::header(uint32_t version,
@@ -89,7 +80,7 @@ header::header(chain::header const& x)
 // {}
 
 header& header::operator=(chain::header const& x) {
-    chain::header::operator=(std::move(x));
+    chain::header::operator=(x);
     return *this;
 }
 
