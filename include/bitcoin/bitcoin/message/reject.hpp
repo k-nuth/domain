@@ -72,7 +72,7 @@ public:
     };
 
     typedef std::shared_ptr<reject> ptr;
-    typedef std::shared_ptr<const reject> const_ptr;
+    typedef std::shared_ptr<reject const> const_ptr;
 
     static reject factory_from_data(uint32_t version, data_chunk const& data);
     static reject factory_from_data(uint32_t version, data_source& stream);
@@ -94,8 +94,16 @@ public:
     reject(reason_code code, std::string const& message, std::string const& reason, hash_digest const& data);
     reject(reason_code code, std::string&& message, std::string&& reason, hash_digest const& data);
 
-    reject(const reject& x);
-    reject(reject&& x);
+    reject(reject const& x) = default;
+    reject(reject&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    reject& operator=(reject&& x) = default;
+    void operator=(reject const&) = delete;
+
+    bool operator==(reject const& x) const;
+    bool operator!=(reject const& x) const;
+
 
     reason_code code() const;
     void set_code(reason_code value);
@@ -165,12 +173,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    reject& operator=(reject&& x);
-    void operator=(const reject&) = delete;
-
-    bool operator==(const reject& x) const;
-    bool operator!=(const reject& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

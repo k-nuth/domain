@@ -46,13 +46,6 @@ reject reject::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//reject reject::factory_from_data(uint32_t version, reader& source)
-//{
-//    reject instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 reject::reject()
     : code_(reason_code::undefined), message_(), reason_(), data_(null_hash) {
 }
@@ -82,13 +75,30 @@ reject::reject(reason_code code, std::string&& message, std::string&& reason, ha
       data_(std::move(data)) {
 }
 
-reject::reject(const reject& x)
-    : reject(x.code_, x.message_, x.reason_, x.data_) {
+// reject::reject(reject const& x)
+//     : reject(x.code_, x.message_, x.reason_, x.data_) {
+// }
+
+// reject::reject(reject&& x) noexcept
+//     : reject(x.code_, std::move(x.message_), std::move(x.reason_), std::move(x.data_)) 
+// {}
+
+// reject& reject::operator=(reject&& x) noexcept {
+//     code_ = x.code_;
+//     reason_ = std::move(x.reason_);
+//     message_ = std::move(x.message_);
+//     data_ = std::move(x.data_);
+//     return *this;
+// }
+
+bool reject::operator==(reject const& x) const {
+    return (code_ == x.code_) && (reason_ == x.reason_) && (message_ == x.message_) && (data_ == x.data_);
 }
 
-reject::reject(reject&& x)
-    : reject(x.code_, std::move(x.message_), std::move(x.reason_), std::move(x.data_)) {
+bool reject::operator!=(reject const& x) const {
+    return !(*this == x);
 }
+
 
 bool reject::is_valid() const {
     return !message_.empty() || (code_ != reason_code::undefined) || !reason_.empty() || (data_ != null_hash);
@@ -113,34 +123,6 @@ bool reject::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool reject::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    message_ = source.read_string();
-//    code_ = reason_from_byte(source.read_byte());
-//    reason_ = source.read_string();
-//
-//    if ((message_ == block::command) ||
-//        (message_ == transaction::command))
-//    {
-//        // Some nodes do not follow the documented convention of supplying hash
-//        // for tx and block rejects. Use this to prevent error on empty stream.
-//        auto const bytes = source.read_bytes();
-//
-//        if (bytes.size() == hash_size)
-//            build_array(data_, { bytes });
-//    }
-//
-//    if (version < reject::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk reject::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -156,19 +138,6 @@ void reject::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void reject::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_string(message_);
-//    sink.write_byte(reason_to_byte(code_));
-//    sink.write_string(reason_);
-//
-//    if ((message_ == block::command) ||
-//        (message_ == transaction::command))
-//    {
-//        sink.write_hash(data_);
-//    }
-//}
 
 size_t reject::serialized_size(uint32_t version) const {
     size_t size = 1u + message::variable_uint_size(message_.size()) +
@@ -233,22 +202,6 @@ hash_digest const& reject::data() const {
 
 void reject::set_data(hash_digest const& value) {
     data_ = value;
-}
-
-reject& reject::operator=(reject&& x) {
-    code_ = x.code_;
-    reason_ = std::move(x.reason_);
-    message_ = std::move(x.message_);
-    data_ = std::move(x.data_);
-    return *this;
-}
-
-bool reject::operator==(const reject& x) const {
-    return (code_ == x.code_) && (reason_ == x.reason_) && (message_ == x.message_) && (data_ == x.data_);
-}
-
-bool reject::operator!=(const reject& x) const {
-    return !(*this == x);
 }
 
 reject::reason_code reject::reason_from_byte(uint8_t byte) {
