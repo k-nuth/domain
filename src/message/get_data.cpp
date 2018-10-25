@@ -45,17 +45,6 @@ get_data get_data::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//get_data get_data::factory_from_data(uint32_t version, reader& source)
-//{
-//    get_data instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
-get_data::get_data()
-    : inventory() {
-}
-
 get_data::get_data(inventory_vector::list const& values)
     : inventory(values) {
 }
@@ -72,12 +61,25 @@ get_data::get_data(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 
-get_data::get_data(get_data const& x)
-    : inventory(x) {
+// get_data::get_data(get_data const& x)
+//     : inventory(x) {
+// }
+
+// get_data::get_data(get_data&& x) noexcept
+//     : inventory(x) 
+// {}
+
+// get_data& get_data::operator=(get_data&& x) noexcept {
+//     set_inventories(x.inventories());
+//     return *this;
+// }
+
+bool get_data::operator==(get_data const& x) const {
+    return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
 
-get_data::get_data(get_data&& x)
-    : inventory(x) {
+bool get_data::operator!=(get_data const& x) const {
+    return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
 bool get_data::from_data(uint32_t version, data_chunk const& data) {
@@ -88,39 +90,12 @@ bool get_data::from_data(uint32_t version, data_source& stream) {
     return inventory::from_data(version, stream);
 }
 
-//bool get_data::from_data(uint32_t version, reader& source)
-//{
-//    if ( ! inventory::from_data(version, source))
-//        return false;
-//
-//    if (version < get_data::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 void get_data::to_witness() {
     auto const convert = [](inventory_vector& element) {
         element.to_witness();
     };
 
     std::for_each(inventories().begin(), inventories().end(), convert);
-}
-
-get_data& get_data::operator=(get_data&& x) {
-    set_inventories(x.inventories());
-    return *this;
-}
-
-bool get_data::operator==(get_data const& x) const {
-    return (static_cast<inventory>(*this) == static_cast<inventory>(x));
-}
-
-bool get_data::operator!=(get_data const& x) const {
-    return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
 }  // namespace message
