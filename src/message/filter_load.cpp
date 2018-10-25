@@ -46,15 +46,8 @@ filter_load filter_load::factory_from_data(uint32_t version, data_source& stream
     return instance;
 }
 
-//filter_load filter_load::factory_from_data(uint32_t version, reader& source)
-//{
-//    filter_load instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 filter_load::filter_load()
-    : filter_(), hash_functions_(0), tweak_(0), flags_(0x00) {
+    : hash_functions_(0), tweak_(0), flags_(0x00) {
 }
 
 filter_load::filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
@@ -65,12 +58,28 @@ filter_load::filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t 
     : filter_(std::move(filter)), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }
 
-filter_load::filter_load(const filter_load& x)
-    : filter_load(x.filter_, x.hash_functions_, x.tweak_, x.flags_) {
+// filter_load::filter_load(filter_load const& x)
+//     : filter_load(x.filter_, x.hash_functions_, x.tweak_, x.flags_) {
+// }
+
+// filter_load::filter_load(filter_load&& x) noexcept
+//     : filter_load(std::move(x.filter_), x.hash_functions_, x.tweak_, x.flags_) {
+// }
+
+// filter_load& filter_load::operator=(filter_load&& x) noexcept {
+//     filter_ = std::move(x.filter_);
+//     hash_functions_ = x.hash_functions_;
+//     tweak_ = x.tweak_;
+//     flags_ = x.flags_;
+//     return *this;
+// }
+
+bool filter_load::operator==(filter_load const& x) const {
+    return (filter_ == x.filter_) && (hash_functions_ == x.hash_functions_) && (tweak_ == x.tweak_) && (flags_ == x.flags_);
 }
 
-filter_load::filter_load(filter_load&& x)
-    : filter_load(std::move(x.filter_), x.hash_functions_, x.tweak_, x.flags_) {
+bool filter_load::operator!=(filter_load const& x) const {
+    return !(*this == x);
 }
 
 bool filter_load::is_valid() const {
@@ -95,34 +104,6 @@ bool filter_load::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool filter_load::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    auto const size = source.read_size_little_endian();
-//
-//    if (size > max_filter_load)
-//        source.invalidate();
-//    else
-//        filter_ = source.read_bytes(size);
-//
-//    hash_functions_ = source.read_4_bytes_little_endian();
-//
-//    if (hash_functions_ > max_filter_functions)
-//        source.invalidate();
-//
-//    tweak_ = source.read_4_bytes_little_endian();
-//    flags_ = source.read_byte();
-//
-//    if (version < filter_load::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk filter_load::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -139,18 +120,8 @@ void filter_load::to_data(uint32_t version, data_sink& stream) const {
     to_data(version, sink_w);
 }
 
-//void filter_load::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_variable_little_endian(filter_.size());
-//    sink.write_bytes(filter_);
-//    sink.write_4_bytes_little_endian(hash_functions_);
-//    sink.write_4_bytes_little_endian(tweak_);
-//    sink.write_byte(flags_);
-//}
-
-size_t filter_load::serialized_size(uint32_t version) const {
-    return 1u + 4u + 4u + message::variable_uint_size(filter_.size()) +
-           filter_.size();
+size_t filter_load::serialized_size(uint32_t /*version*/) const {
+    return 1u + 4u + 4u + message::variable_uint_size(filter_.size()) + filter_.size();
 }
 
 data_chunk& filter_load::filter() {
@@ -191,22 +162,6 @@ uint8_t filter_load::flags() const {
 
 void filter_load::set_flags(uint8_t value) {
     flags_ = value;
-}
-
-filter_load& filter_load::operator=(filter_load&& x) {
-    filter_ = std::move(x.filter_);
-    hash_functions_ = x.hash_functions_;
-    tweak_ = x.tweak_;
-    flags_ = x.flags_;
-    return *this;
-}
-
-bool filter_load::operator==(const filter_load& x) const {
-    return (filter_ == x.filter_) && (hash_functions_ == x.hash_functions_) && (tweak_ == x.tweak_) && (flags_ == x.flags_);
-}
-
-bool filter_load::operator!=(const filter_load& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message

@@ -40,7 +40,7 @@ namespace message {
 class BC_API filter_load {
 public:
     typedef std::shared_ptr<filter_load> ptr;
-    typedef std::shared_ptr<const filter_load> const_ptr;
+    typedef std::shared_ptr<filter_load const> const_ptr;
 
     static filter_load factory_from_data(uint32_t version, data_chunk const& data);
     static filter_load factory_from_data(uint32_t version, data_source& stream);
@@ -57,8 +57,16 @@ public:
     filter_load();
     filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
     filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
-    filter_load(const filter_load& x);
-    filter_load(filter_load&& x);
+    filter_load(filter_load const& x) = default;
+    filter_load(filter_load&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    filter_load& operator=(filter_load&& x) = default;
+    void operator=(filter_load const&) = delete;
+
+    bool operator==(filter_load const& x) const;
+    bool operator!=(filter_load const& x) const;
+
 
     data_chunk& filter();
     data_chunk const& filter() const;
@@ -123,12 +131,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    filter_load& operator=(filter_load&& x);
-    void operator=(const filter_load&) = delete;
-
-    bool operator==(const filter_load& x) const;
-    bool operator!=(const filter_load& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;
