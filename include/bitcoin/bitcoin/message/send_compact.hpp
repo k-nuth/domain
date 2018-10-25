@@ -39,7 +39,7 @@ namespace message {
 class BC_API send_compact {
 public:
     typedef std::shared_ptr<send_compact> ptr;
-    typedef std::shared_ptr<const send_compact> const_ptr;
+    typedef std::shared_ptr<send_compact const> const_ptr;
 
     static send_compact factory_from_data(uint32_t version, data_chunk const& data);
     static send_compact factory_from_data(uint32_t version, data_source& stream);
@@ -56,8 +56,16 @@ public:
 
     send_compact();
     send_compact(bool high_bandwidth_mode, uint64_t version);
-    send_compact(const send_compact& x);
-    send_compact(send_compact&& x);
+    send_compact(send_compact const& x) = default;
+    send_compact(send_compact&& x) = default;
+
+    /// This class is move assignable but not copy assignable.
+    send_compact& operator=(send_compact&& x) = default;
+    void operator=(send_compact const&) = delete;
+
+    bool operator==(send_compact const& x) const;
+    bool operator!=(send_compact const& x) const;
+
 
     bool high_bandwidth_mode() const;
     void set_high_bandwidth_mode(bool mode);
@@ -104,12 +112,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    /// This class is move assignable but not copy assignable.
-    send_compact& operator=(send_compact&& x);
-    void operator=(const send_compact&) = delete;
-
-    bool operator==(const send_compact& x) const;
-    bool operator!=(const send_compact& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

@@ -45,13 +45,6 @@ send_compact send_compact::factory_from_data(uint32_t version, data_source& stre
     return instance;
 }
 
-//send_compact send_compact::factory_from_data(uint32_t version, reader& source)
-//{
-//    send_compact instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 size_t send_compact::satoshi_fixed_size(uint32_t version) {
     return 9;
 }
@@ -60,18 +53,32 @@ send_compact::send_compact()
     : high_bandwidth_mode_(false), version_(0) {
 }
 
-send_compact::send_compact(bool high_bandwidth_mode,
-                           uint64_t version)
+send_compact::send_compact(bool high_bandwidth_mode, uint64_t version)
     : high_bandwidth_mode_(high_bandwidth_mode),
       version_(version) {
 }
 
-send_compact::send_compact(const send_compact& x)
-    : send_compact(x.high_bandwidth_mode_, x.version_) {
+// send_compact::send_compact(send_compact const& x)
+//     : send_compact(x.high_bandwidth_mode_, x.version_) {
+// }
+
+// send_compact::send_compact(send_compact&& x) noexcept
+//     : send_compact(x.high_bandwidth_mode_, x.version_) 
+// {}
+
+// send_compact& send_compact::operator=(send_compact&& x) noexcept {
+//     high_bandwidth_mode_ = x.high_bandwidth_mode_;
+//     version_ = x.version_;
+//     return *this;
+// }
+
+bool send_compact::operator==(send_compact const& x) const {
+    return (high_bandwidth_mode_ == x.high_bandwidth_mode_) &&
+           (version_ == x.version_);
 }
 
-send_compact::send_compact(send_compact&& x)
-    : send_compact(x.high_bandwidth_mode_, x.version_) {
+bool send_compact::operator!=(send_compact const& x) const {
+    return !(*this == x);
 }
 
 bool send_compact::is_valid() const {
@@ -93,27 +100,6 @@ bool send_compact::from_data(uint32_t version, data_source& stream) {
     return from_data(version, stream_r);
 }
 
-//bool send_compact::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    auto const mode = source.read_byte();
-//
-//    if (mode > 1)
-//        source.invalidate();
-//
-//    high_bandwidth_mode_ = (mode == 1);
-//    this->version_ = source.read_8_bytes_little_endian();
-//
-//    if (version < send_compact::version_minimum)
-//        source.invalidate();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 data_chunk send_compact::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -129,12 +115,6 @@ void send_compact::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void send_compact::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_byte(static_cast<uint8_t>(high_bandwidth_mode_));
-//    sink.write_8_bytes_little_endian(this->version_);
-//}
 
 size_t send_compact::serialized_size(uint32_t version) const {
     return send_compact::satoshi_fixed_size(version);
@@ -154,21 +134,6 @@ uint64_t send_compact::version() const {
 
 void send_compact::set_version(uint64_t version) {
     version_ = version;
-}
-
-send_compact& send_compact::operator=(send_compact&& x) {
-    high_bandwidth_mode_ = x.high_bandwidth_mode_;
-    version_ = x.version_;
-    return *this;
-}
-
-bool send_compact::operator==(const send_compact& x) const {
-    return (high_bandwidth_mode_ == x.high_bandwidth_mode_) &&
-           (version_ == x.version_);
-}
-
-bool send_compact::operator!=(const send_compact& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message
