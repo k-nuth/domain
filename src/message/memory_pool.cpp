@@ -101,7 +101,7 @@ size_t memory_pool::serialized_size(uint32_t version) const {
     return memory_pool::satoshi_fixed_size(version);
 }
 
-size_t memory_pool::satoshi_fixed_size(uint32_t version) {
+size_t memory_pool::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
