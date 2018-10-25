@@ -57,7 +57,15 @@ public:
 
     pong();
     pong(uint64_t nonce);
-    pong(const pong& x);
+    pong(const pong& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    pong& operator=(pong&& x) = default;
+    void operator=(const pong&) = delete;
+
+    bool operator==(const pong& x) const;
+    bool operator!=(const pong& x) const;
+
 
     uint64_t nonce() const;
     void set_nonce(uint64_t value);
@@ -93,12 +101,6 @@ public:
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    pong& operator=(pong&& x);
-    void operator=(const pong&) = delete;
-
-    bool operator==(const pong& x) const;
-    bool operator!=(const pong& x) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

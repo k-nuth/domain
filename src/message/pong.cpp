@@ -43,13 +43,6 @@ pong pong::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//pong pong::factory_from_data(uint32_t version, reader& source)
-//{
-//    pong instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 size_t pong::satoshi_fixed_size(uint32_t version) {
     return sizeof(nonce_);
 }
@@ -62,10 +55,22 @@ pong::pong(uint64_t nonce)
     : nonce_(nonce), valid_(true) {
 }
 
-pong::pong(const pong& x)
-    : nonce_(x.nonce_), valid_(x.valid_) {
+// pong::pong(const pong& x)
+//     : nonce_(x.nonce_), valid_(x.valid_) {
+// }
+
+// pong& pong::operator=(pong&& x) noexcept {
+//     nonce_ = x.nonce_;
+//     return *this;
+// }
+
+bool pong::operator==(const pong& x) const {
+    return (nonce_ == x.nonce_);
 }
 
+bool pong::operator!=(const pong& x) const {
+    return !(*this == x);
+}
 bool pong::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
@@ -75,19 +80,6 @@ bool pong::from_data(uint32_t version, data_source& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }
-
-//bool pong::from_data(uint32_t version, reader& source)
-//{
-//    reset();
-//
-//    valid_ = true;
-//    nonce_ = source.read_8_bytes_little_endian();
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
 
 data_chunk pong::to_data(uint32_t version) const {
     data_chunk data;
@@ -104,11 +96,6 @@ void pong::to_data(uint32_t version, data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(version, sink_w);
 }
-
-//void pong::to_data(uint32_t version, writer& sink) const
-//{
-//    sink.write_8_bytes_little_endian(nonce_);
-//}
 
 bool pong::is_valid() const {
     return valid_ || (nonce_ != 0);
@@ -129,19 +116,6 @@ uint64_t pong::nonce() const {
 
 void pong::set_nonce(uint64_t value) {
     nonce_ = value;
-}
-
-pong& pong::operator=(pong&& x) {
-    nonce_ = x.nonce_;
-    return *this;
-}
-
-bool pong::operator==(const pong& x) const {
-    return (nonce_ == x.nonce_);
-}
-
-bool pong::operator!=(const pong& x) const {
-    return !(*this == x);
 }
 
 }  // namespace message
