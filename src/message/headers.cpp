@@ -53,16 +53,8 @@ headers headers::factory_from_data(uint32_t version, data_source& stream) {
     return instance;
 }
 
-//headers headers::factory_from_data(uint32_t version, reader& source)
-//{
-//    headers instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
 headers::headers()
-    : elements_() {
-}
+{}
 
 // Uses headers copy assignment.
 headers::headers(header::list const& values)
