@@ -92,8 +92,16 @@ public:
     heading();
     heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum);
     heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum);
-    heading(const heading& x);
-    heading(heading&& x);
+    heading(const heading& x) = default;
+    heading(heading&& x) = default;
+
+    // This class is move assignable but not copy assignable.
+    heading& operator=(heading&& x) = default;
+    void operator=(const heading&) = delete;
+
+    bool operator==(const heading& x) const;
+    bool operator!=(const heading& x) const;
+
 
     uint32_t magic() const;
     void set_magic(uint32_t value);
@@ -144,12 +152,6 @@ public:
     bool is_valid() const;
     void reset();
 
-    // This class is move assignable but not copy assignable.
-    heading& operator=(heading&& x);
-    void operator=(const heading&) = delete;
-
-    bool operator==(const heading& x) const;
-    bool operator!=(const heading& x) const;
 
 private:
     uint32_t magic_;
