@@ -244,7 +244,7 @@ bool header_basis::is_valid_timestamp() const {
 }
 
 // [CheckProofOfWork]
-bool header_basis::is_valid_proof_of_work(bool retarget) const {
+bool header_basis::is_valid_proof_of_work(hash_digest const& hash, bool retarget) const {
     compact const bits(bits_);
     static uint256_t const pow_limit(compact{work_limit(retarget)});
 
@@ -261,18 +261,24 @@ bool header_basis::is_valid_proof_of_work(bool retarget) const {
     }
 
     // Ensure actual work is at least claimed amount (smaller is more work).
-#ifdef BITPRIM_CURRENCY_LTC
-    return to_uint256(litecoin_proof_of_work_hash(*this)) <= target;
-#else
-    return to_uint256(hash(*this)) <= target;
-#endif
+    return to_uint256(hash) <= target;
 }
+
+// bool header_basis::is_valid_proof_of_work(bool retarget) const {
+
+// #ifdef BITPRIM_CURRENCY_LTC
+//     return to_uint256(litecoin_proof_of_work_hash(*this)) <= target;
+// #else
+//     return to_uint256(hash(*this)) <= target;
+// #endif
+
+// }
 
 // Validation.
 //-----------------------------------------------------------------------------
 
-code header_basis::check(bool retarget) const {
-    if ( ! is_valid_proof_of_work(retarget)) {
+code header_basis::check(hash_digest const& hash, bool retarget) const {
+    if ( ! is_valid_proof_of_work(hash, retarget)) {
         return error::invalid_proof_of_work;
     }
 
@@ -283,12 +289,15 @@ code header_basis::check(bool retarget) const {
     return error::success;
 }
 
-code header_basis::accept(chain_state const& state) const {
+// code header_basis::check(bool retarget) const {
+// }
+
+code header_basis::accept(chain_state const& state, hash_digest const& hash) const {
     if (bits_ != state.work_required()) {
         return error::incorrect_proof_of_work;
     }
 
-    if (state.is_checkpoint_conflict(hash(*this))) {
+    if (state.is_checkpoint_conflict(hash)) {
         return error::checkpoints_failed;
     }
 
@@ -306,6 +315,9 @@ code header_basis::accept(chain_state const& state) const {
 
     return error::success;
 }
+
+// code header_basis::accept(chain_state const& state) const {
+// }
 
 }  // namespace chain
 }  // namespace libbitcoin

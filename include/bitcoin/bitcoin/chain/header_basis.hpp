@@ -149,10 +149,10 @@ public:
     //-----------------------------------------------------------------------------
 
     bool is_valid_timestamp() const;
-    bool is_valid_proof_of_work(bool retarget = true) const;
+    bool is_valid_proof_of_work(hash_digest const& hash, bool retarget = true) const;
 
-    code check(bool retarget = false) const;
-    code accept(chain_state const& state) const;
+    code check(hash_digest const& hash, bool retarget = false) const;
+    code accept(chain_state const& state, hash_digest const& hash) const;
 
 protected:
     // So that block may call reset from its own.

@@ -64,7 +64,6 @@ public:
 
     header() = default;
     header(header const& x, hash_digest const& hash);
-    // header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
     /// This class is copy constructible and copy assignable.
     // Note(bitprim): Cannot be defaulted because the std::mutex data member.
@@ -91,12 +90,9 @@ public:
         return instance;
     }
 
-    //static header factory_from_data(reader& source, bool wire=true);
-
     bool from_data(data_chunk const& data, bool wire = true);
 
     //TODO(fernando): check what happend when replacing std::istream to data_source
-    // bool from_data(std::istream& stream, bool wire=true);
     bool from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -113,8 +109,6 @@ public:
 
         return source;
     }
-
-    // bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
@@ -152,6 +146,12 @@ public:
 
     // Validation.
     //-----------------------------------------------------------------------------
+
+    bool is_valid_proof_of_work(bool retarget = true) const;
+
+    code check(bool retarget = false) const;
+    code accept(chain_state const& state) const;
+
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_t validation{};
