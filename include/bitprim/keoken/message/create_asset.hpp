@@ -131,7 +131,7 @@ public:
 private:
     // char name[17];      // 16 + 1. minus the \0 termination
     std::string name_;
-    amount_t amount_;  //NOLINT
+    amount_t amount_;
 };
 
 }  // namespace message

@@ -95,6 +95,13 @@ payment_address::payment_address(short_hash const& hash, uint8_t version)
     : valid_(true), version_(version), hash_(hash) {
 }
 
+// payment_address& payment_address::operator=(payment_address const& x) {
+//     valid_ = x.valid_;
+//     version_ = x.version_;
+//     hash_ = x.hash_;
+//     return *this;
+// }
+
 // Validators.
 // ----------------------------------------------------------------------------
 
@@ -106,12 +113,12 @@ bool payment_address::is_address(data_slice decoded) {
 // ----------------------------------------------------------------------------
 #ifdef BITPRIM_CURRENCY_BCH
 
-template <int frombits, int tobits, bool pad, typename O, typename I>
-bool ConvertBits(O& out, I it, I end) {
+template <unsigned int frombits, unsigned int tobits, bool pad, typename O, typename I>
+bool convert_bits(O& out, I it, I end) {
     size_t acc = 0;
     size_t bits = 0;
-    constexpr size_t maxv = (1 << tobits) - 1;
-    constexpr size_t max_acc = (1 << (frombits + tobits - 1)) - 1;
+    constexpr size_t maxv = (1u << tobits) - 1;
+    constexpr size_t max_acc = (1u << (frombits + tobits - 1)) - 1;
     while (it != end) {
         acc = ((acc << frombits) | *it) & max_acc;
         bits += frombits;
@@ -135,7 +142,7 @@ bool ConvertBits(O& out, I it, I end) {
     return true;
 }
 
-enum CashAddrType : uint8_t { PUBKEY_TYPE = 0,
+enum cash_addr_type : uint8_t { PUBKEY_TYPE = 0,
                               SCRIPT_TYPE = 1 };
 
 // CashAddrContent DecodeCashAddrContent(std::string const& address) {
@@ -143,7 +150,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     // In order to avoid using the wrong network address, the from_string method
     // only accepts the cashaddr_prefix set on the multi_crypto_support file
 
-    // TODO(libbitcoin): validate the network on RPC/Interface calls and make payment_address independent of the network
+    // TODO(bitprim): validate the network on RPC/Interface calls and make payment_address independent of the network
 
     std::string prefix;
     data_chunk payload;
@@ -165,26 +172,26 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     }
 
     uint8_t last = payload.back();
-    uint8_t mask = (1 << extrabits) - 1;
-    if (last & mask) {
+    uint8_t mask = (1u << extrabits) - 1;
+    if ((last & mask) != 0) {
         // We have non zero bits as padding.
         return {};
     }
 
     data_chunk data;
     data.reserve(payload.size() * 5 / 8);
-    ConvertBits<5, 8, false>(data, std::begin(payload), std::end(payload));
+    convert_bits<5, 8, false>(data, std::begin(payload), std::end(payload));
 
     // Decode type and size from the version.
     uint8_t version = data[0];
-    if (version & 0x80) {
+    if ((version & 0x80) != 0) {
         // First bit is reserved.
         return {};
     }
 
-    auto type = CashAddrType((version >> 3) & 0x1f);
+    auto type = cash_addr_type((version >> 3u) & 0x1f);
     uint32_t hash_size = 20 + 4 * (version & 0x03);
-    if (version & 0x04) {
+    if ((version & 0x04) != 0) {
         hash_size *= 2;
     }
 
@@ -207,9 +214,9 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
 
     if (prefix == payment_address::cashaddr_prefix_mainnet) {
-        return payment_address(hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh);
+        return {hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh};
     }
-    return payment_address(hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh);
+    return {hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh};
 
     // // Pop the version.
     // data.erase(data.begin());
@@ -290,7 +297,7 @@ std::string payment_address::encoded() const {
 // Convert the data part to a 5 bit representation.
 template <typename T>
 data_chunk pack_addr_data_(T const& id, uint8_t type) {
-    uint8_t version_byte(type << 3);
+    uint8_t version_byte(type << 3u);
     size_t size = id.size();
     uint8_t encoded_size = 0;
 
@@ -332,7 +339,7 @@ data_chunk pack_addr_data_(T const& id, uint8_t type) {
     // hash, with version byte.  Add half a byte(4) so integer math provides
     // the next multiple-of-5 that would fit all the data.
     converted.reserve(((size + 1) * 8 + 4) / 5);
-    ConvertBits<8, 5, true>(converted, std::begin(data), std::end(data));
+    convert_bits<8, 5, true>(converted, std::begin(data), std::end(data));
 
     return converted;
 }
@@ -375,14 +382,6 @@ payment payment_address::to_payment() const {
 
 // Operators.
 // ----------------------------------------------------------------------------
-
-payment_address& payment_address::operator=(payment_address const& x) {
-    valid_ = x.valid_;
-    version_ = x.version_;
-    hash_ = x.hash_;
-    return *this;
-}
-
 bool payment_address::operator<(payment_address const& x) const {
     return encoded() < x.encoded();
 }

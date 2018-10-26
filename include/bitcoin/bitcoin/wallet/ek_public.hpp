@@ -35,9 +35,9 @@ public:
     ek_public();
     ek_public(std::string const& encoded);
     ek_public(encrypted_public const& value);
-    ek_public(ek_public const& x);
+    ek_public(ek_public const& x) = default;
 
-    ek_public& operator=(ek_public const& x);
+    ek_public& operator=(ek_public const& x) = default;
 
     /// Operators.
 

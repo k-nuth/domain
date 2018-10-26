@@ -50,7 +50,7 @@ public:
     ec_public(data_chunk const& decoded);
     ec_public(std::string const& base16);
     ec_public(ec_compressed const& point, bool compress = true);
-    ec_public(const ec_uncompressed& point, bool compress = false);
+    ec_public(ec_uncompressed const& point, bool compress = false);
 
     ec_public& operator=(ec_public const& x) = default;
 
@@ -89,7 +89,7 @@ private:
     static ec_public from_data(data_chunk const& decoded);
     static ec_public from_private(ec_private const& secret);
     static ec_public from_string(std::string const& base16);
-    static ec_public from_point(const ec_uncompressed& point, bool compress);
+    static ec_public from_point(ec_uncompressed const& point, bool compress);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

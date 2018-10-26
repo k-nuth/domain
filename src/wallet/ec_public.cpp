@@ -62,7 +62,7 @@ ec_public::ec_public(std::string const& base16)
     : ec_public(from_string(base16)) {
 }
 
-ec_public::ec_public(const ec_uncompressed& point, bool compress)
+ec_public::ec_public(ec_uncompressed const& point, bool compress)
     : ec_public(from_point(point, compress)) {
 }
 
@@ -118,7 +118,7 @@ ec_public ec_public::from_data(data_chunk const& decoded) {
     return bc::compress(compressed, to_array<ec_uncompressed_size>(decoded)) ? ec_public(compressed, false) : ec_public();
 }
 
-ec_public ec_public::from_point(const ec_uncompressed& point, bool compress) {
+ec_public ec_public::from_point(ec_uncompressed const& point, bool compress) {
     if ( ! is_point(point)) {
         return ec_public();
     }

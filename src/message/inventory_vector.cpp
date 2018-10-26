@@ -143,7 +143,10 @@ size_t inventory_vector::serialized_size(uint32_t version) const {
 }
 
 size_t inventory_vector::satoshi_fixed_size(uint32_t /*version*/) {
-    return sizeof(hash_) + sizeof(uint32_t);
+    //TODO(fernando): what is the sizeof() of a std::array?
+    // return sizeof(hash_) + sizeof(uint32_t);
+    // return hash_.size() + sizeof(uint32_t);
+    return std::tuple_size<hash_digest>::value + sizeof(uint32_t);
 }
 
 bool inventory_vector::is_block_type() const {

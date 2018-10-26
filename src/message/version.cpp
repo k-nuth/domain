@@ -193,7 +193,7 @@ network_address const& version::address_receiver() const {
 }
 
 void version::set_address_receiver(network_address const& address) {
-    address_receiver_ = std::move(address);
+    address_receiver_ = address;
 }
 
 network_address& version::address_sender() {
@@ -205,7 +205,7 @@ network_address const& version::address_sender() const {
 }
 
 void version::set_address_sender(network_address const& address) {
-    address_sender_ = std::move(address);
+    address_sender_ = address;
 }
 
 uint64_t version::nonce() const {

@@ -76,7 +76,7 @@ public:
     payment_address(ec_public const& point, uint8_t version = mainnet_p2kh);
     payment_address(chain::script const& script, uint8_t version = mainnet_p2sh);
 
-    payment_address& operator=(payment_address const& x);
+    payment_address& operator=(payment_address const& x) = default;
 
     /// Operators.
     bool operator==(payment_address const& x) const;

@@ -36,8 +36,8 @@ public:
     /// Constructors.
     ek_token();
     ek_token(std::string const& encoded);
-    ek_token(encrypted_token const& key);
-    ek_token(ek_token const& x);
+    ek_token(encrypted_token const& value);
+    ek_token(ek_token const& x) = default;
 
 
     ek_token& operator=(ek_token const& x) = default;
