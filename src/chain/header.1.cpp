@@ -40,23 +40,29 @@ using wall_clock = std::chrono::system_clock;
 //-----------------------------------------------------------------------------
 
 header::header()
-    : validation{} 
-{}
+    // : header(0, null_hash, null_hash, 0, 0, 0) {
+    : version_(0), previous_block_hash_(null_hash), merkle_(null_hash), timestamp_(0), bits_(0), nonce_(0), validation{} {}
 
 header::header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
-    : validation{} 
-{}
+    : version_(version), previous_block_hash_(previous_block_hash), merkle_(merkle), timestamp_(timestamp), bits_(bits), nonce_(nonce), validation{} {}
 
 header::header(header const& x)
-    : validation(x.validation) 
-{
+    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_)
+
+    : version_(x.version_), previous_block_hash_(x.previous_block_hash_), merkle_(x.merkle_), timestamp_(x.timestamp_), bits_(x.bits_), nonce_(x.nonce_)
+      // , validation{}
+      ,
+      validation(x.validation) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     // validation = x.validation;
 }
 
 header::header(header const& x, hash_digest const& hash)
-    : validation(x.validation) 
-{
+    // : header(x.version_, x.previous_block_hash_, x.merkle_, x.timestamp_, x.bits_, x.nonce_)
+    : version_(x.version_), previous_block_hash_(x.previous_block_hash_), merkle_(x.merkle_), timestamp_(x.timestamp_), bits_(x.bits_), nonce_(x.nonce_)
+      // , validation{}
+      ,
+      validation(x.validation) {
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = x.validation;
 }
@@ -66,28 +72,23 @@ header::header(header const& x, hash_digest const& hash)
 
 header& header::operator=(header const& x) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    // version_ = x.version_;
-    // previous_block_hash_ = x.previous_block_hash_;
-    // merkle_ = x.merkle_;
-    // timestamp_ = x.timestamp_;
-    // bits_ = x.bits_;
-    // nonce_ = x.nonce_;
+    version_ = x.version_;
+    previous_block_hash_ = x.previous_block_hash_;
+    merkle_ = x.merkle_;
+    timestamp_ = x.timestamp_;
+    bits_ = x.bits_;
+    nonce_ = x.nonce_;
     validation = x.validation;
     return *this;
 }
 
-// bool header::operator==(header const& x) const {
-//     return (version_ == x.version_) 
-//         && (previous_block_hash_ == x.previous_block_hash_) 
-//         && (merkle_ == x.merkle_) 
-//         && (timestamp_ == x.timestamp_) 
-//         && (bits_ == x.bits_) 
-//         && (nonce_ == x.nonce_);
-// }
+bool header::operator==(header const& x) const {
+    return (version_ == x.version_) && (previous_block_hash_ == x.previous_block_hash_) && (merkle_ == x.merkle_) && (timestamp_ == x.timestamp_) && (bits_ == x.bits_) && (nonce_ == x.nonce_);
+}
 
-// bool header::operator!=(header const& x) const {
-//     return !(*this == x);
-// }
+bool header::operator!=(header const& x) const {
+    return !(*this == x);
+}
 
 // Deserialization.
 //-----------------------------------------------------------------------------
@@ -99,12 +100,28 @@ header header::factory_from_data(data_chunk const& data, bool wire) {
     return instance;
 }
 
+// // static
+// header header::factory_from_data(data_source& stream, bool wire)
+// {
+//     header instance;
+//     instance.from_data(stream, wire);
+//     return instance;
+// }
+
 // static
 header header::factory_from_data(data_source& stream, bool wire) {
     header instance;
     instance.from_data(stream, wire);
     return instance;
 }
+
+// static
+//header header::factory_from_data(reader& source, bool wire)
+//{
+//    header instance;
+//    instance.from_data(source, wire);
+//    return instance;
+//}
 
 bool header::from_data(data_chunk const& data, bool wire) {
     data_source istream(data);
@@ -116,25 +133,52 @@ bool header::from_data(data_source& stream, bool wire) {
     return from_data(stream_r, wire);
 }
 
+//TODO(fernando): check what happend when replacing std::istream to data_source
+// bool header::from_data(data_source& stream, bool wire)
+// {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
+
+//bool header::from_data(reader& source, bool wire)
+//{
+//    ////reset();
+//
+//    version_ = source.read_4_bytes_little_endian();
+//    previous_block_hash_ = source.read_hash();
+//    merkle_ = source.read_hash();
+//    timestamp_ = source.read_4_bytes_little_endian();
+//    bits_ = source.read_4_bytes_little_endian();
+//    nonce_ = source.read_4_bytes_little_endian();
+//
+//    if ( ! wire)
+//        validation.median_time_past = source.read_4_bytes_little_endian();
+//
+//    if ( ! source)
+//        reset();
+//
+//    return source;
+//}
+
 // protected
 void header::reset() {
-    // version_ = 0;
-    // previous_block_hash_.fill(0);
-    // merkle_.fill(0);
-    // timestamp_ = 0;
-    // bits_ = 0;
-    // nonce_ = 0;
+    version_ = 0;
+    previous_block_hash_.fill(0);
+    merkle_.fill(0);
+    timestamp_ = 0;
+    bits_ = 0;
+    nonce_ = 0;
     invalidate_cache();
 }
 
-// bool header::is_valid() const {
-//     return (version_ != 0) ||
-//            (previous_block_hash_ != null_hash) ||
-//            (merkle_ != null_hash) ||
-//            (timestamp_ != 0) ||
-//            (bits_ != 0) ||
-//            (nonce_ != 0);
-// }
+bool header::is_valid() const {
+    return (version_ != 0) ||
+           (previous_block_hash_ != null_hash) ||
+           (merkle_ != null_hash) ||
+           (timestamp_ != 0) ||
+           (bits_ != 0) ||
+           (nonce_ != 0);
+}
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -150,87 +194,106 @@ data_chunk header::to_data(bool wire) const {
     return data;
 }
 
+// void header::to_data(data_sink& stream, bool wire) const
+// {
+//     ostream_writer sink_w(stream);
+//     to_data(sink, wire);
+// }
+
 void header::to_data(data_sink& stream, bool wire) const {
     ostream_writer sink_w(stream);
     to_data(sink_w, wire);
 }
 
+//void header::to_data(writer& sink, bool wire) const
+//{
+//    sink.write_4_bytes_little_endian(version_);
+//    sink.write_hash(previous_block_hash_);
+//    sink.write_hash(merkle_);
+//    sink.write_4_bytes_little_endian(timestamp_);
+//    sink.write_4_bytes_little_endian(bits_);
+//    sink.write_4_bytes_little_endian(nonce_);
+//
+//    if ( ! wire)
+//        sink.write_4_bytes_little_endian(validation.median_time_past);
+//}
+
 // Size.
 //-----------------------------------------------------------------------------
 
 // static
-// size_t header::satoshi_fixed_size() {
-//     return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + sizeof(bits_) + sizeof(nonce_);
-// }
+size_t header::satoshi_fixed_size() {
+    return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + sizeof(bits_) + sizeof(nonce_);
+}
 
-// size_t header::serialized_size(bool wire) const {
-//     return satoshi_fixed_size() + (wire ? 0 : sizeof(uint32_t));
-// }
+size_t header::serialized_size(bool wire) const {
+    return satoshi_fixed_size() + (wire ? 0 : sizeof(uint32_t));
+}
 
 // Accessors.
 //-----------------------------------------------------------------------------
 
-// uint32_t header::version() const {
-//     return version_;
-// }
+uint32_t header::version() const {
+    return version_;
+}
 
-// void header::set_version(uint32_t value) {
-//     version_ = value;
-//     invalidate_cache();
-// }
+void header::set_version(uint32_t value) {
+    version_ = value;
+    invalidate_cache();
+}
 
-// hash_digest& header::previous_block_hash() {
-//     return previous_block_hash_;
-// }
+hash_digest& header::previous_block_hash() {
+    return previous_block_hash_;
+}
 
-// hash_digest const& header::previous_block_hash() const {
-//     return previous_block_hash_;
-// }
+hash_digest const& header::previous_block_hash() const {
+    return previous_block_hash_;
+}
 
-// void header::set_previous_block_hash(hash_digest const& value) {
-//     previous_block_hash_ = value;
-//     invalidate_cache();
-// }
+void header::set_previous_block_hash(hash_digest const& value) {
+    previous_block_hash_ = value;
+    invalidate_cache();
+}
 
-// hash_digest& header::merkle() {
-//     return merkle_;
-// }
+hash_digest& header::merkle() {
+    return merkle_;
+}
 
-// hash_digest const& header::merkle() const {
-//     return merkle_;
-// }
+hash_digest const& header::merkle() const {
+    return merkle_;
+}
 
-// void header::set_merkle(hash_digest const& value) {
-//     merkle_ = value;
-//     invalidate_cache();
-// }
+void header::set_merkle(hash_digest const& value) {
+    merkle_ = value;
+    invalidate_cache();
+}
 
-// uint32_t header::timestamp() const {
-//     return timestamp_;
-// }
+uint32_t header::timestamp() const {
+    return timestamp_;
+}
 
-// void header::set_timestamp(uint32_t value) {
-//     timestamp_ = value;
-//     invalidate_cache();
-// }
+void header::set_timestamp(uint32_t value) {
+    timestamp_ = value;
+    invalidate_cache();
+}
 
-// uint32_t header::bits() const {
-//     return bits_;
-// }
+uint32_t header::bits() const {
+    return bits_;
+}
 
-// void header::set_bits(uint32_t value) {
-//     bits_ = value;
-//     invalidate_cache();
-// }
+void header::set_bits(uint32_t value) {
+    bits_ = value;
+    invalidate_cache();
+}
 
-// uint32_t header::nonce() const {
-//     return nonce_;
-// }
+uint32_t header::nonce() const {
+    return nonce_;
+}
 
-// void header::set_nonce(uint32_t value) {
-//     nonce_ = value;
-//     invalidate_cache();
-// }
+void header::set_nonce(uint32_t value) {
+    nonce_ = value;
+    invalidate_cache();
+}
 
 // Cache.
 //-----------------------------------------------------------------------------

@@ -55,12 +55,12 @@ public:
     // Constructors.
     //-----------------------------------------------------------------------------
 
-    header_basis();
+    header_basis() = default;
     header_basis(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
     /// This class is copy assignable.
-    header_basis(header_basis const& x) = default;
-    header_basis& operator=(header_basis const& x) = default;
+    // header_basis(header_basis const& x) = default;
+    // header_basis& operator=(header_basis const& x) = default;
 
     // Operators.
     //-----------------------------------------------------------------------------
@@ -88,9 +88,7 @@ public:
     bool from_data(data_source& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire = true) {
-        ////reset();
-
+    bool from_data(R& source, bool /*wire = true*/) {
         version_ = source.read_4_bytes_little_endian();
         previous_block_hash_ = source.read_hash();
         merkle_ = source.read_hash();
@@ -114,7 +112,7 @@ public:
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <Writer W>
-    void to_data(W& sink, bool wire = true) const {
+    void to_data(W& sink, bool /*wire = true*/) const {
         sink.write_4_bytes_little_endian(version_);
         sink.write_hash(previous_block_hash_);
         sink.write_hash(merkle_);
@@ -153,12 +151,6 @@ public:
     uint32_t nonce() const;
     void set_nonce(uint32_t value);
 
-    hash_digest hash() const;
-
-#ifdef BITPRIM_CURRENCY_LTC
-    hash_digest litecoin_proof_of_work_hash() const;
-#endif  //BITPRIM_CURRENCY_LTC
-
     // Validation.
     //-----------------------------------------------------------------------------
 
@@ -168,7 +160,6 @@ public:
     code check(bool retarget = false) const;
     code accept(const chain_state& state) const;
 
-
 protected:
     // So that block may call reset from its own.
     // friend class block;
@@ -176,12 +167,12 @@ protected:
     void reset();
 
 private:
-    uint32_t version_;
-    hash_digest previous_block_hash_;
-    hash_digest merkle_;
-    uint32_t timestamp_;
-    uint32_t bits_;
-    uint32_t nonce_;
+    uint32_t version_{0};
+    hash_digest previous_block_hash_{null_hash};
+    hash_digest merkle_{null_hash};
+    uint32_t timestamp_{0};
+    uint32_t bits_{0};
+    uint32_t nonce_{0};
 };
 
 hash_digest hash(header_basis const& header);
@@ -190,10 +181,9 @@ hash_digest hash(header_basis const& header);
 hash_digest litecoin_proof_of_work_hash(header_basis const& header);
 #endif  //BITPRIM_CURRENCY_LTC
 
-
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+// #include <bitprim/concepts_undef.hpp>
 
 #endif // LIBBITCOIN_CHAIN_HEADER_BASIS_HPP_

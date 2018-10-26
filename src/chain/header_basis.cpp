@@ -39,9 +39,9 @@ using wall_clock = std::chrono::system_clock;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-header_basis::header_basis()
-    : version_(0), previous_block_hash_(null_hash), merkle_(null_hash), timestamp_(0), bits_(0), nonce_(0)
-{}
+// header_basis::header_basis()
+//     : version_(0), previous_block_hash_(null_hash), merkle_(null_hash), timestamp_(0), bits_(0), nonce_(0)
+// {}
 
 header_basis::header_basis(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
     : version_(version), previous_block_hash_(previous_block_hash), merkle_(merkle), timestamp_(timestamp), bits_(bits), nonce_(nonce)
@@ -265,9 +265,9 @@ bool header_basis::is_valid_proof_of_work(bool retarget) const {
 
     // Ensure actual work is at least claimed amount (smaller is more work).
 #ifdef BITPRIM_CURRENCY_LTC
-    return to_uint256(litecoin_proof_of_work_hash()) <= target;
+    return to_uint256(litecoin_proof_of_work_hash(*this)) <= target;
 #else
-    return to_uint256(hash()) <= target;
+    return to_uint256(hash(*this)) <= target;
 #endif
 }
 
@@ -291,7 +291,7 @@ code header_basis::accept(const chain_state& state) const {
         return error::incorrect_proof_of_work;
     }
 
-    if (state.is_checkpoint_conflict(hash())) {
+    if (state.is_checkpoint_conflict(hash(*this))) {
         return error::checkpoints_failed;
     }
 

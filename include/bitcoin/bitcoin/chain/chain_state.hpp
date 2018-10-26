@@ -42,10 +42,16 @@ public:
     using bitss = std::deque<uint32_t>;
     using versions = std::deque<uint32_t>;
     using timestamps = std::deque<uint32_t>;
-    typedef struct {
+
+    // typedef struct {
+    //     size_t count;
+    //     size_t high;
+    // } range;
+
+    using range = struct {
         size_t count;
         size_t high;
-    } range;
+    };
 
     using ptr = std::shared_ptr<chain_state>;
     using checkpoints = config::checkpoint::list;

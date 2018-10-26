@@ -27,6 +27,7 @@
 #include <vector>
 
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
+#include <bitcoin/bitcoin/chain/header_basis.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
@@ -43,11 +44,11 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API header {
+class BC_API header : public header_basis {
 public:
     using list = std::vector<header>;
     using ptr = std::shared_ptr<header>;
-    using const_ptr = std::shared_ptr<const header>;
+    using const_ptr = std::shared_ptr<header const>;
     using ptr_list = std::vector<header>;
     using const_ptr_list = std::vector<const_ptr>;
 
@@ -61,15 +62,15 @@ public:
     //-----------------------------------------------------------------------------
 
     header();
-    header(header const& x);
     header(header const& x, hash_digest const& hash);
     header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
-    // Operators.
-    //-----------------------------------------------------------------------------
-
+    header(header const& x);
     /// This class is copy assignable.
     header& operator=(header const& x);
+
+    // Operators.
+    //-----------------------------------------------------------------------------
 
     bool operator==(header const& x) const;
     bool operator!=(header const& x) const;
@@ -98,14 +99,7 @@ public:
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
-        ////reset();
-
-        version_ = source.read_4_bytes_little_endian();
-        previous_block_hash_ = source.read_hash();
-        merkle_ = source.read_hash();
-        timestamp_ = source.read_4_bytes_little_endian();
-        bits_ = source.read_4_bytes_little_endian();
-        nonce_ = source.read_4_bytes_little_endian();
+        header_basis::from_data(source, wire);
 
         if ( ! wire) {
             validation.median_time_past = source.read_4_bytes_little_endian();
@@ -131,19 +125,12 @@ public:
 
     template <Writer W>
     void to_data(W& sink, bool wire = true) const {
-        sink.write_4_bytes_little_endian(version_);
-        sink.write_hash(previous_block_hash_);
-        sink.write_hash(merkle_);
-        sink.write_4_bytes_little_endian(timestamp_);
-        sink.write_4_bytes_little_endian(bits_);
-        sink.write_4_bytes_little_endian(nonce_);
+        header_basis::to_data(sink, wire);
 
         if ( ! wire) {
             sink.write_4_bytes_little_endian(validation.median_time_past);
         }
     }
-
-    //void to_data(writer& sink, bool wire=true) const;
 
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
@@ -205,13 +192,6 @@ protected:
 private:
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
-
-    uint32_t version_;
-    hash_digest previous_block_hash_;
-    hash_digest merkle_;
-    uint32_t timestamp_;
-    uint32_t bits_;
-    uint32_t nonce_;
 };
 
 }  // namespace chain
