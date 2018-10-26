@@ -342,6 +342,7 @@ set(bitprim_domain_sources_just_libbitcoin
         src/chain/block.cpp
         src/chain/chain_state.cpp
         src/chain/compact.cpp
+        src/chain/header_basis.cpp
         src/chain/header.cpp
         src/chain/input.cpp
         src/chain/output.cpp
