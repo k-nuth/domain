@@ -237,7 +237,7 @@ block block::factory_from_data(data_chunk const& data, bool witness) {
 }
 
 // static
-block block::factory_from_data(data_source& stream, bool witness) {
+block block::factory_from_data(std::istream& stream, bool witness) {
     block instance;
     instance.from_data(stream, witness_val(witness));
     return instance;
@@ -259,46 +259,10 @@ bool block::from_data(data_chunk const& data, bool witness) {
     return from_data(istream, witness_val(witness));
 }
 
-bool block::from_data(data_source& stream, bool witness) {
+bool block::from_data(std::istream& stream, bool witness) {
     istream_reader stream_r(stream);
     return from_data(stream_r, witness_val(witness));
 }
-
-// Full block deserialization is always canonical encoding.
-//bool block::from_data(reader& source, bool witness)
-//{
-//#ifdef BITPRIM_CURRENCY_BCH
-//    witness = false;
-//#endif
-//    validation.start_deserialize = asio::steady_clock::now();
-//    reset();
-//
-//    if ( ! header_.from_data(source, true))
-//        return false;
-//
-//    auto const count = source.read_size_little_endian();
-//
-//    // Guard against potential for arbitary memory allocation.
-//    if (count > get_max_block_size())
-//        source.invalidate();
-//    else
-//        transactions_.resize(count);
-//
-//    // Order is required, explicit loop allows early termination.
-//    for (auto& tx: transactions_)
-//        if ( ! tx.from_data(source, true, witness))
-//            break;
-//
-//    // TODO(libbitcoin): optimize by having reader skip witness data.
-//    if ( ! witness)
-//        strip_witness();
-//
-//    if ( ! source)
-//        reset();
-//
-//    validation.end_deserialize = asio::steady_clock::now();
-//    return source;
-//}
 
 // private
 void block::reset() {
@@ -530,6 +494,7 @@ block::indexes block::locator_heights(size_t top) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
+#ifndef BITPRIM_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void block::strip_witness() {
     auto const strip = [](transaction& transaction) {
@@ -545,6 +510,7 @@ void block::strip_witness() {
     std::for_each(transactions_.begin(), transactions_.end(), strip);
     ///////////////////////////////////////////////////////////////////////////
 }
+#endif
 
 // Validation helpers.
 //-----------------------------------------------------------------------------

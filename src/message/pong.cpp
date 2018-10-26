@@ -37,7 +37,7 @@ pong pong::factory_from_data(uint32_t version, data_chunk const& data) {
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, data_source& stream) {
+pong pong::factory_from_data(uint32_t version, std::istream& stream) {
     pong instance;
     instance.from_data(version, stream);
     return instance;
@@ -76,7 +76,7 @@ bool pong::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool pong::from_data(uint32_t version, data_source& stream) {
+bool pong::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

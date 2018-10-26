@@ -37,7 +37,7 @@ fee_filter fee_filter::factory_from_data(uint32_t version, data_chunk const& dat
     return instance;
 }
 
-fee_filter fee_filter::factory_from_data(uint32_t version, data_source& stream) {
+fee_filter fee_filter::factory_from_data(uint32_t version, std::istream& stream) {
     fee_filter instance;
     instance.from_data(version, stream);
     return instance;
@@ -90,7 +90,7 @@ bool fee_filter::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool fee_filter::from_data(uint32_t version, data_source& stream) {
+bool fee_filter::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

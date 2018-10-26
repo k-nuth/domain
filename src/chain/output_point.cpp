@@ -53,15 +53,23 @@ output_point& output_point::operator=(point const& x) {
 }
 
 bool operator==(output_point const& x, point const& y) {
-    return x == y;  //TODO(fernando): check if it is an infinite loop
+    return static_cast<point const&>(x) == y;
 }
 
 bool operator!=(output_point const& x, point const& y) {
     return !(x == y);
 }
 
+bool operator==(point const& x, output_point const& y) {
+    return x == static_cast<point const&>(y);
+}
+
+bool operator!=(point const& x, output_point const& y) {
+    return !(x == y);
+}
+
 bool operator==(output_point const& x, output_point const& y) {
-    return x == y;  //TODO(fernando): check if it is an infinite loop
+    return static_cast<point const&>(x) == static_cast<point const&>(y);
 }
 
 bool operator!=(output_point const& x, output_point const& y) {
@@ -77,7 +85,7 @@ output_point output_point::factory_from_data(data_chunk const& data, bool wire) 
     return instance;
 }
 
-output_point output_point::factory_from_data(data_source& stream, bool wire) {
+output_point output_point::factory_from_data(std::istream& stream, bool wire) {
     output_point instance;
     instance.from_data(stream, wire);
     return instance;

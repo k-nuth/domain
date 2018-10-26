@@ -66,7 +66,7 @@ heading heading::factory_from_data(data_chunk const& data) {
     return instance;
 }
 
-heading heading::factory_from_data(data_source& stream) {
+heading heading::factory_from_data(std::istream& stream) {
     heading instance;
     instance.from_data(stream);
     return instance;
@@ -126,7 +126,7 @@ bool heading::from_data(data_chunk const& data) {
     return from_data(istream);
 }
 
-bool heading::from_data(data_source& stream) {
+bool heading::from_data(std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(stream_r);
 }

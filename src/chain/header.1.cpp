@@ -101,7 +101,7 @@ header header::factory_from_data(data_chunk const& data, bool wire) {
 }
 
 // // static
-// header header::factory_from_data(data_source& stream, bool wire)
+// header header::factory_from_data(std::istream& stream, bool wire)
 // {
 //     header instance;
 //     instance.from_data(stream, wire);
@@ -109,7 +109,7 @@ header header::factory_from_data(data_chunk const& data, bool wire) {
 // }
 
 // static
-header header::factory_from_data(data_source& stream, bool wire) {
+header header::factory_from_data(std::istream& stream, bool wire) {
     header instance;
     instance.from_data(stream, wire);
     return instance;
@@ -128,13 +128,13 @@ bool header::from_data(data_chunk const& data, bool wire) {
     return from_data(istream, wire);
 }
 
-bool header::from_data(data_source& stream, bool wire) {
+bool header::from_data(std::istream& stream, bool wire) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire);
 }
 
 //TODO(fernando): check what happend when replacing std::istream to data_source
-// bool header::from_data(data_source& stream, bool wire)
+// bool header::from_data(std::istream& stream, bool wire)
 // {
 //     istream_reader stream_r(stream);
 //     return from_data(stream_r, wire);

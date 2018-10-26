@@ -40,7 +40,7 @@ public:
     using const_ptr = std::shared_ptr<const get_headers>;
 
     static get_headers factory_from_data(uint32_t version, data_chunk const& data);
-    static get_headers factory_from_data(uint32_t version, data_source& stream);
+    static get_headers factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static get_headers factory_from_data(uint32_t version, R& source) {
@@ -66,7 +66,7 @@ public:
 
 
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way

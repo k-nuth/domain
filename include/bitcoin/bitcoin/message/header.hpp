@@ -47,7 +47,7 @@ public:
     using const_ptr_list = std::vector<const_ptr>;
 
     static header factory_from_data(uint32_t version, data_chunk const& data);
-    static header factory_from_data(uint32_t version, data_source& stream);
+    static header factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static header factory_from_data(uint32_t version, R& source) {
@@ -78,7 +78,7 @@ public:
 
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

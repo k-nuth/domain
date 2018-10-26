@@ -65,7 +65,7 @@ create_asset create_asset::factory_from_data(data_chunk const& data) {
 }
 
 // static
-create_asset create_asset::factory_from_data(data_source& stream) {
+create_asset create_asset::factory_from_data(std::istream& stream) {
     create_asset instance;
     instance.from_data(stream);
     return instance;
@@ -83,7 +83,7 @@ bool create_asset::from_data(data_chunk const& data) {
     return from_data(istream);
 }
 
-bool create_asset::from_data(data_source& stream) {
+bool create_asset::from_data(std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(stream_r);
 }

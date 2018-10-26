@@ -124,7 +124,7 @@ public:
     };
 
     static version factory_from_data(uint32_t version, data_chunk const& data);
-    static version factory_from_data(uint32_t version, data_source& stream);
+    static version factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static version factory_from_data(uint32_t version, R& source) {
@@ -182,7 +182,7 @@ public:
     void set_relay(bool relay);
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

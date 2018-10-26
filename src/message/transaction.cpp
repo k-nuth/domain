@@ -40,7 +40,7 @@ transaction transaction::factory_from_data(uint32_t version, data_chunk const& d
     return instance;
 }
 
-transaction transaction::factory_from_data(uint32_t version, data_source& stream) {
+transaction transaction::factory_from_data(uint32_t version, std::istream& stream) {
     transaction instance;
     instance.from_data(version, stream);
     return instance;
@@ -104,7 +104,7 @@ bool transaction::from_data(uint32_t /*version*/, data_chunk const& data) {
     return chain::transaction::from_data(data, true, true);
 }
 
-bool transaction::from_data(uint32_t /*version*/, data_source& stream) {
+bool transaction::from_data(uint32_t /*version*/, std::istream& stream) {
     return chain::transaction::from_data(stream, true, true);
 }
 

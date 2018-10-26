@@ -44,7 +44,7 @@ public:
     using const_ptr = std::shared_ptr<const get_data>;
 
     static get_data factory_from_data(uint32_t version, data_chunk const& data);
-    static get_data factory_from_data(uint32_t version, data_source& stream);
+    static get_data factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static get_data factory_from_data(uint32_t version, R& source) {
@@ -70,7 +70,7 @@ public:
 
 
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
@@ -87,11 +87,10 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source) override;
-
+#ifndef BITPRIM_CURRENCY_BCH
     /// Convert message types to witness types.
     void to_witness();
-
+#endif
 
     static std::string const command;
     static uint32_t const version_minimum;

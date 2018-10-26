@@ -40,7 +40,7 @@ alert alert::factory_from_data(uint32_t version, data_chunk const& data) {
     return instance;
 }
 
-alert alert::factory_from_data(uint32_t version, data_source& stream) {
+alert alert::factory_from_data(uint32_t version, std::istream& stream) {
     alert instance;
     instance.from_data(version, stream);
     return instance;
@@ -92,7 +92,7 @@ bool alert::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool alert::from_data(uint32_t version, data_source& stream) {
+bool alert::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

@@ -66,7 +66,7 @@ inventory_vector inventory_vector::factory_from_data(uint32_t version, data_chun
     return instance;
 }
 
-inventory_vector inventory_vector::factory_from_data(uint32_t version, data_source& stream) {
+inventory_vector inventory_vector::factory_from_data(uint32_t version, std::istream& stream) {
     inventory_vector instance;
     instance.from_data(version, stream);
     return instance;
@@ -106,18 +106,20 @@ void inventory_vector::reset() {
     hash_.fill(0);
 }
 
+#ifndef BITPRIM_CURRENCY_BCH
 void inventory_vector::to_witness() {
     if (type_ == type_id::block || type_ == type_id::transaction) {
         type_ = to_type(to_number(type_) | to_number(type_id::witness));
     }
 }
+#endif
 
 bool inventory_vector::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool inventory_vector::from_data(uint32_t version, data_source& stream) {
+bool inventory_vector::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

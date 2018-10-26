@@ -64,7 +64,7 @@ send_tokens send_tokens::factory_from_data(data_chunk const& data) {
 }
 
 // static
-send_tokens send_tokens::factory_from_data(data_source& stream) {
+send_tokens send_tokens::factory_from_data(std::istream& stream) {
     send_tokens instance;  //NOLINT
     instance.from_data(stream);
     return instance;
@@ -82,7 +82,7 @@ bool send_tokens::from_data(data_chunk const& data) {
     return from_data(istream);
 }
 
-bool send_tokens::from_data(data_source& stream) {
+bool send_tokens::from_data(std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(stream_r);
 }

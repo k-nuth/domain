@@ -58,7 +58,7 @@ public:
     static std::string to_string(type_id type);
 
     static inventory_vector factory_from_data(uint32_t version, data_chunk const& data);
-    static inventory_vector factory_from_data(uint32_t version, data_source& stream);
+    static inventory_vector factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static inventory_vector factory_from_data(uint32_t version, R& source) {
@@ -94,7 +94,7 @@ public:
     bool is_transaction_type() const;
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -124,7 +124,11 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
+
+#ifndef BITPRIM_CURRENCY_BCH    
     void to_witness();
+#endif
+    
     size_t serialized_size(uint32_t version) const;
 
 

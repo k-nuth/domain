@@ -37,7 +37,7 @@ get_address get_address::factory_from_data(uint32_t version, data_chunk const& d
     return instance;
 }
 
-get_address get_address::factory_from_data(uint32_t version, data_source& stream) {
+get_address get_address::factory_from_data(uint32_t version, std::istream& stream) {
     get_address instance;
     instance.from_data(version, stream);
     return instance;
@@ -55,7 +55,7 @@ bool get_address::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool get_address::from_data(uint32_t version, data_source& stream) {
+bool get_address::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

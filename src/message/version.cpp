@@ -39,7 +39,7 @@ version version::factory_from_data(uint32_t version, data_chunk const& data) {
     return instance;
 }
 
-version version::factory_from_data(uint32_t version, data_source& stream) {
+version version::factory_from_data(uint32_t version, std::istream& stream) {
     message::version instance;
     instance.from_data(version, stream);
     return instance;
@@ -121,7 +121,7 @@ bool version::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool version::from_data(uint32_t version, data_source& stream) {
+bool version::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

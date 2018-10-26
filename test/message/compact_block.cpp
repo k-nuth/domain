@@ -36,7 +36,7 @@ uint64_t convert_to_uint64t(std::string const& rawdata) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__constructor_2__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_2__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__constructor_3__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_3__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__constructor_4__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_4__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__constructor_5__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_3__valid_input__success) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__header_accessor_1__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -292,7 +292,7 @@ BOOST_AUTO_TEST_CASE(compact_block__header_accessor_1__always__returns_initializ
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__header_accessor_2__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -345,7 +345,7 @@ BOOST_AUTO_TEST_CASE(compact_block__header_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__nonce_accessor__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE(compact_block__nonce_setter__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_1__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -402,7 +402,7 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_1__always__returns_initia
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_2__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -453,7 +453,7 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_1__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -477,7 +477,7 @@ BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_1__always__returns_ini
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_2__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -526,7 +526,7 @@ BOOST_AUTO_TEST_CASE(compact_block__transactions_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__operator_assign_equals__always__matches_equivalent) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,

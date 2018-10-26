@@ -45,7 +45,7 @@ public:
     using const_ptr = std::shared_ptr<const get_blocks>;
 
     static get_blocks factory_from_data(uint32_t version, data_chunk const& data);
-    static get_blocks factory_from_data(uint32_t version, data_source& stream);
+    static get_blocks factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static get_blocks factory_from_data(uint32_t version, R& source) {
@@ -80,7 +80,7 @@ public:
     void set_stop_hash(hash_digest const& value);
 
     virtual bool from_data(uint32_t version, data_chunk const& data);
-    virtual bool from_data(uint32_t version, data_source& stream);
+    virtual bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way

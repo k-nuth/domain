@@ -43,7 +43,7 @@ public:
     using const_ptr = std::shared_ptr<const pong>;
 
     static pong factory_from_data(uint32_t version, data_chunk const& data);
-    static pong factory_from_data(uint32_t version, data_source& stream);
+    static pong factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static pong factory_from_data(uint32_t version, R& source) {
@@ -71,7 +71,7 @@ public:
     void set_nonce(uint64_t value);
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

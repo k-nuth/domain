@@ -195,7 +195,7 @@ int bc::main(int argc, char* argv[]) {
 //#endif
 //
 //    // Extracting Satoshi's words.
-//    auto block const = bc::chain::block::genesis_mainnet();
+//    auto const block = bc::chain::block::genesis_mainnet();
 //    auto const& tx = block.transactions().front();
 //    auto const& input = tx.inputs().front();
 //    auto script const = input.script().to_data(false);

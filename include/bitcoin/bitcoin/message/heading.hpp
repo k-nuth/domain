@@ -78,7 +78,7 @@ public:
     static size_t maximum_payload_size(uint32_t version, bool witness);
     static size_t satoshi_fixed_size();
     static heading factory_from_data(data_chunk const& data);
-    static heading factory_from_data(data_source& stream);
+    static heading factory_from_data(std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static heading factory_from_data(R& source) {
@@ -120,7 +120,7 @@ public:
     message_type type() const;
 
     bool from_data(data_chunk const& data);
-    bool from_data(data_source& stream);
+    bool from_data(std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source) {

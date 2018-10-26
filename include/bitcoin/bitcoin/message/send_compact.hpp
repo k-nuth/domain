@@ -42,7 +42,7 @@ public:
     using const_ptr = std::shared_ptr<const send_compact>;
 
     static send_compact factory_from_data(uint32_t version, data_chunk const& data);
-    static send_compact factory_from_data(uint32_t version, data_source& stream);
+    static send_compact factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static send_compact factory_from_data(uint32_t version, R& source) {
@@ -74,7 +74,7 @@ public:
     void set_version(uint64_t version);
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

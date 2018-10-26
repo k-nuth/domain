@@ -177,7 +177,7 @@ public:
     //-----------------------------------------------------------------------------
 
     static transaction factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    static transaction factory_from_data(data_source& stream, bool wire = true, bool witness = false);
+    static transaction factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static transaction factory_from_data(R& source, bool wire = true, bool witness = false) {
@@ -194,7 +194,7 @@ public:
 #endif
                     );
 
-    bool from_data(data_source& stream, bool wire = true, bool witness = false
+    bool from_data(std::istream& stream, bool wire = true, bool witness = false
 #ifdef BITPRIM_CACHED_RPC_DATA
                     , bool unconfirmed = false
 #endif
@@ -260,10 +260,12 @@ public:
 #endif
         }
 
+#ifndef BITPRIM_CURRENCY_BCH
         // TODO(libbitcoin): optimize by having reader skip witness data.
         if ( ! witness_val(witness)) {
             strip_witness();
         }
+#endif
 
         if ( ! source) {
             reset();
@@ -378,8 +380,10 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
+#ifndef BITPRIM_CURRENCY_BCH
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
+#endif
 
     void recompute_hash();
 

@@ -39,7 +39,7 @@ send_compact send_compact::factory_from_data(uint32_t version, data_chunk const&
     return instance;
 }
 
-send_compact send_compact::factory_from_data(uint32_t version, data_source& stream) {
+send_compact send_compact::factory_from_data(uint32_t version, std::istream& stream) {
     send_compact instance;
     instance.from_data(version, stream);
     return instance;
@@ -95,7 +95,7 @@ bool send_compact::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool send_compact::from_data(uint32_t version, data_source& stream) {
+bool send_compact::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

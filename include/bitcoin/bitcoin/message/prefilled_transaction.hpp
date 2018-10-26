@@ -42,7 +42,7 @@ public:
     using const_ptr = std::shared_ptr<const prefilled_transaction>;
 
     static prefilled_transaction factory_from_data(uint32_t version, data_chunk const& data);
-    static prefilled_transaction factory_from_data(uint32_t version, data_source& stream);
+    static prefilled_transaction factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static prefilled_transaction factory_from_data(uint32_t version, R& source) {
@@ -75,7 +75,7 @@ public:
     void set_transaction(chain::transaction&& tx);
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

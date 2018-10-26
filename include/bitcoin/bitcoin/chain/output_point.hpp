@@ -78,22 +78,23 @@ public:
     //-------------------------------------------------------------------------
 
     friend bool operator==(output_point const& x, point const& y);
-
     friend bool operator!=(output_point const& x, point const& y);
 
-    friend bool operator==(output_point const& x, output_point const& y);
+    friend bool operator==(point const& x, output_point const& y);
+    friend bool operator!=(point const& x, output_point const& y);
 
+    friend bool operator==(output_point const& x, output_point const& y);
     friend bool operator!=(output_point const& x, output_point const& y);
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
     static output_point factory_from_data(data_chunk const& data, bool wire = true);
-    static output_point factory_from_data(data_source& stream, bool wire = true);
+    static output_point factory_from_data(std::istream& stream, bool wire = true);
     // static output_point factory_from_data(reader& source, bool wire=true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static output_point factory_from_data(R& source, bool wire) {
+    static output_point factory_from_data(R& source, bool wire = true) {
         output_point instance;
         instance.from_data(source, wire);
         return instance;

@@ -100,7 +100,7 @@ point point::factory_from_data(data_chunk const& data, bool wire) {
 }
 
 // static
-point point::factory_from_data(data_source& stream, bool wire) {
+point point::factory_from_data(std::istream& stream, bool wire) {
     point instance;
     instance.from_data(stream, wire);
     return instance;
@@ -111,7 +111,7 @@ bool point::from_data(data_chunk const& data, bool wire) {
     return from_data(istream, wire);
 }
 
-bool point::from_data(data_source& stream, bool wire) {
+bool point::from_data(std::istream& stream, bool wire) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire);
 }

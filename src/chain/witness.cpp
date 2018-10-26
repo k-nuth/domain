@@ -112,7 +112,7 @@ witness witness::factory_from_data(data_chunk const& encoded, bool prefix) {
 }
 
 // static
-witness witness::factory_from_data(data_source& stream, bool prefix) {
+witness witness::factory_from_data(std::istream& stream, bool prefix) {
     witness instance;
     instance.from_data(stream, prefix);
     return instance;
@@ -131,7 +131,7 @@ bool witness::from_data(data_chunk const& encoded, bool prefix) {
     return from_data(istream, prefix);
 }
 
-bool witness::from_data(data_source& stream, bool prefix) {
+bool witness::from_data(std::istream& stream, bool prefix) {
     istream_reader stream_r(stream);
     return from_data(stream_r, prefix);
 }

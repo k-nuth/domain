@@ -40,7 +40,7 @@ reject reject::factory_from_data(uint32_t version, data_chunk const& data) {
     return instance;
 }
 
-reject reject::factory_from_data(uint32_t version, data_source& stream) {
+reject reject::factory_from_data(uint32_t version, std::istream& stream) {
     reject instance;
     instance.from_data(version, stream);
     return instance;
@@ -118,7 +118,7 @@ bool reject::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool reject::from_data(uint32_t version, data_source& stream) {
+bool reject::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

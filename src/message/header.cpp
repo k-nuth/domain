@@ -45,7 +45,7 @@ header header::factory_from_data(uint32_t version, data_chunk const& data) {
     return instance;
 }
 
-header header::factory_from_data(uint32_t version, data_source& stream) {
+header header::factory_from_data(uint32_t version, std::istream& stream) {
     header instance;
     instance.from_data(version, stream);
     return instance;
@@ -86,10 +86,10 @@ header& header::operator=(chain::header const& x) {
 //     return *this;
 // }
 
-// header& header::operator=(header const& x) {
-//     chain::header::operator=(x);
-//     return *this;
-// }
+header& header::operator=(header const& x) {
+    chain::header::operator=(x);
+    return *this;
+}
 
 bool header::operator==(chain::header const& x) const {
     return chain::header::operator==(x);
@@ -112,7 +112,7 @@ bool header::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool header::from_data(uint32_t version, data_source& stream) {
+bool header::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

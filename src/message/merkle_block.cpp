@@ -43,7 +43,7 @@ merkle_block merkle_block::factory_from_data(uint32_t version, data_chunk const&
     return instance;
 }
 
-merkle_block merkle_block::factory_from_data(uint32_t version, data_source& stream) {
+merkle_block merkle_block::factory_from_data(uint32_t version, std::istream& stream) {
     merkle_block instance;
     instance.from_data(version, stream);
     return instance;
@@ -124,7 +124,7 @@ bool merkle_block::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool merkle_block::from_data(uint32_t version, data_source& stream) {
+bool merkle_block::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

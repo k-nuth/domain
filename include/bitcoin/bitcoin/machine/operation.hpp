@@ -71,7 +71,7 @@ public:
     //-------------------------------------------------------------------------
 
     static operation factory_from_data(data_chunk const& encoded);
-    static operation factory_from_data(data_source& stream);
+    static operation factory_from_data(std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static operation factory_from_data(R& source) {
@@ -83,7 +83,7 @@ public:
     //static operation factory_from_data(reader& source);
 
     bool from_data(data_chunk const& encoded);
-    bool from_data(data_source& stream);
+    bool from_data(std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source) {

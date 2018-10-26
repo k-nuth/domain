@@ -101,7 +101,7 @@ public:
     //-------------------------------------------------------------------------
 
     static block factory_from_data(data_chunk const& data, bool witness = false);
-    static block factory_from_data(data_source& stream, bool witness = false);
+    static block factory_from_data(std::istream& stream, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static block factory_from_data(R& source, bool witness = false) {
@@ -113,7 +113,7 @@ public:
     //static block factory_from_data(reader& source, bool witness=false);
 
     bool from_data(data_chunk const& data, bool witness = false);
-    bool from_data(data_source& stream, bool witness = false);
+    bool from_data(std::istream& stream, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
@@ -136,9 +136,12 @@ public:
             if ( ! tx.from_data(source, true, witness_val(witness)))
                 break;
 
+
+#ifndef BITPRIM_CURRENCY_BCH
         // TODO(libbitcoin): optimize by having reader skip witness data.
         if ( ! witness_val(witness))
             strip_witness();
+#endif
 
         if ( ! source)
             reset();
@@ -200,8 +203,10 @@ public:
     static size_t locator_size(size_t top);
     static indexes locator_heights(size_t top);
 
+#ifndef BITPRIM_CURRENCY_BCH
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
+#endif
 
     // Validation.
     //-------------------------------------------------------------------------

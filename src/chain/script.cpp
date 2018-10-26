@@ -147,7 +147,7 @@ script script::factory_from_data(data_chunk const& encoded, bool prefix) {
 }
 
 // static
-script script::factory_from_data(data_source& stream, bool prefix) {
+script script::factory_from_data(std::istream& stream, bool prefix) {
     script instance;
     instance.from_data(stream, prefix);
     return instance;
@@ -166,7 +166,7 @@ bool script::from_data(data_chunk const& encoded, bool prefix) {
     return from_data(istream, prefix);
 }
 
-bool script::from_data(data_source& stream, bool prefix) {
+bool script::from_data(std::istream& stream, bool prefix) {
     istream_reader stream_r(stream);
     return from_data(stream_r, prefix);
 }

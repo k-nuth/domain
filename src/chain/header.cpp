@@ -18,7 +18,6 @@
  */
 #include <bitcoin/bitcoin/chain/header.hpp>
 
-#include <chrono>
 #include <cstddef>
 #include <utility>
 
@@ -33,48 +32,34 @@
 namespace libbitcoin {
 namespace chain {
 
-// Use system clock because we require accurate time of day.
-using wall_clock = std::chrono::system_clock;
-
 // Constructors.
 //-----------------------------------------------------------------------------
 
-header::header()
-    : validation{} 
-{}
-
-header::header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
-    : validation{} 
-{}
-
-header::header(header const& x)
-    : validation(x.validation) 
-{
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    // validation = x.validation;
-}
+// header::header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
+//     : header_basis(version, previous_block_hash, merkle, timestamp,bits, nonce)
+//     , validation{} 
+// {}
 
 header::header(header const& x, hash_digest const& hash)
-    : validation(x.validation) 
+    : header_basis(x)
+    , validation(x.validation)
 {
     hash_ = std::make_shared<hash_digest>(hash);
-    // validation = x.validation;
+}
+
+header::header(header const& x)
+    : header_basis(x)
+    , validation(x.validation)
+{}
+
+header& header::operator=(header const& x) {
+    header_basis::operator=(x);
+    validation = x.validation;
+    return *this;
 }
 
 // Operators.
 //-----------------------------------------------------------------------------
-
-header& header::operator=(header const& x) {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    // version_ = x.version_;
-    // previous_block_hash_ = x.previous_block_hash_;
-    // merkle_ = x.merkle_;
-    // timestamp_ = x.timestamp_;
-    // bits_ = x.bits_;
-    // nonce_ = x.nonce_;
-    validation = x.validation;
-    return *this;
-}
 
 // bool header::operator==(header const& x) const {
 //     return (version_ == x.version_) 
@@ -100,7 +85,7 @@ header header::factory_from_data(data_chunk const& data, bool wire) {
 }
 
 // static
-header header::factory_from_data(data_source& stream, bool wire) {
+header header::factory_from_data(std::istream& stream, bool wire) {
     header instance;
     instance.from_data(stream, wire);
     return instance;
@@ -111,30 +96,16 @@ bool header::from_data(data_chunk const& data, bool wire) {
     return from_data(istream, wire);
 }
 
-bool header::from_data(data_source& stream, bool wire) {
+bool header::from_data(std::istream& stream, bool wire) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire);
 }
 
 // protected
 void header::reset() {
-    // version_ = 0;
-    // previous_block_hash_.fill(0);
-    // merkle_.fill(0);
-    // timestamp_ = 0;
-    // bits_ = 0;
-    // nonce_ = 0;
+    header_basis::reset();
     invalidate_cache();
 }
-
-// bool header::is_valid() const {
-//     return (version_ != 0) ||
-//            (previous_block_hash_ != null_hash) ||
-//            (merkle_ != null_hash) ||
-//            (timestamp_ != 0) ||
-//            (bits_ != 0) ||
-//            (nonce_ != 0);
-// }
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -158,79 +129,42 @@ void header::to_data(data_sink& stream, bool wire) const {
 // Size.
 //-----------------------------------------------------------------------------
 
-// static
-// size_t header::satoshi_fixed_size() {
-//     return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + sizeof(bits_) + sizeof(nonce_);
-// }
-
-// size_t header::serialized_size(bool wire) const {
-//     return satoshi_fixed_size() + (wire ? 0 : sizeof(uint32_t));
-// }
+size_t header::serialized_size(bool wire) const {
+    return satoshi_fixed_size() + (wire ? 0 : sizeof(uint32_t));
+}
 
 // Accessors.
 //-----------------------------------------------------------------------------
 
-// uint32_t header::version() const {
-//     return version_;
-// }
+void header::set_version(uint32_t value) {
+    header_basis::set_version(value);
+    invalidate_cache();
+}
 
-// void header::set_version(uint32_t value) {
-//     version_ = value;
-//     invalidate_cache();
-// }
+void header::set_previous_block_hash(hash_digest const& value) {
+    header_basis::set_previous_block_hash(value);
+    invalidate_cache();
+}
 
-// hash_digest& header::previous_block_hash() {
-//     return previous_block_hash_;
-// }
+void header::set_merkle(hash_digest const& value) {
+    header_basis::set_merkle(value);
+    invalidate_cache();
+}
 
-// hash_digest const& header::previous_block_hash() const {
-//     return previous_block_hash_;
-// }
+void header::set_timestamp(uint32_t value) {
+    header_basis::set_timestamp(value);
+    invalidate_cache();
+}
 
-// void header::set_previous_block_hash(hash_digest const& value) {
-//     previous_block_hash_ = value;
-//     invalidate_cache();
-// }
+void header::set_bits(uint32_t value) {
+    header_basis::set_bits(value);
+    invalidate_cache();
+}
 
-// hash_digest& header::merkle() {
-//     return merkle_;
-// }
-
-// hash_digest const& header::merkle() const {
-//     return merkle_;
-// }
-
-// void header::set_merkle(hash_digest const& value) {
-//     merkle_ = value;
-//     invalidate_cache();
-// }
-
-// uint32_t header::timestamp() const {
-//     return timestamp_;
-// }
-
-// void header::set_timestamp(uint32_t value) {
-//     timestamp_ = value;
-//     invalidate_cache();
-// }
-
-// uint32_t header::bits() const {
-//     return bits_;
-// }
-
-// void header::set_bits(uint32_t value) {
-//     bits_ = value;
-//     invalidate_cache();
-// }
-
-// uint32_t header::nonce() const {
-//     return nonce_;
-// }
-
-// void header::set_nonce(uint32_t value) {
-//     nonce_ = value;
-//     invalidate_cache();
-// }
+void header::set_nonce(uint32_t value) {
+    header_basis::set_nonce(value);
+    invalidate_cache();
+}
 
 // Cache.
 //-----------------------------------------------------------------------------
@@ -278,109 +212,6 @@ hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
 #endif  //BITPRIM_CURRENCY_LTC
-
-uint256_t header::proof(uint32_t bits) {
-    compact const header_bits(bits);
-
-    if (header_bits.is_overflowed()) {
-        return 0;
-    }
-
-    uint256_t const& target = header_bits.big();
-
-    //*************************************************************************
-    // CONSENSUS: satoshi will throw division by zero in the case where the
-    // target is (2^256)-1 as the overflow will result in a zero divisor.
-    // While actually achieving this work is improbable, this method operates
-    // on user data method and therefore must be guarded.
-    //*************************************************************************
-    auto const divisor = target + 1;
-
-    // We need to compute 2**256 / (target + 1), but we can't represent 2**256
-    // as it's too large for uint256. However as 2**256 is at least as large as
-    // target + 1, it is equal to ((2**256 - target - 1) / (target + 1)) + 1, or
-    // (~target / (target + 1)) + 1.
-    return (divisor == 0) ? 0 : (~target / divisor) + 1;
-}
-
-uint256_t header::proof() const {
-    return proof(bits());
-}
-
-// Validation helpers.
-//-----------------------------------------------------------------------------
-
-/// BUGBUG: bitcoin 32bit unix time: en.wikipedia.org/wiki/Year_2038_problem
-bool header::is_valid_timestamp() const {
-    static auto const two_hours = std::chrono::seconds(timestamp_future_seconds);
-    auto const time = wall_clock::from_time_t(timestamp_);
-    auto const future = wall_clock::now() + two_hours;
-    return time <= future;
-}
-
-// [CheckProofOfWork]
-bool header::is_valid_proof_of_work(bool retarget) const {
-    compact const bits(bits_);
-    static uint256_t const pow_limit(compact{work_limit(retarget)});
-
-    if (bits.is_overflowed()) {
-        return false;
-    }
-
-    // uint256_t target(bits);
-    uint256_t const& target = bits.big();
-
-    // Ensure claimed work is within limits.
-    if (target < 1 || target > pow_limit) {
-        return false;
-    }
-
-    // Ensure actual work is at least claimed amount (smaller is more work).
-#ifdef BITPRIM_CURRENCY_LTC
-    return to_uint256(litecoin_proof_of_work_hash()) <= target;
-#else
-    return to_uint256(hash()) <= target;
-#endif
-}
-
-// Validation.
-//-----------------------------------------------------------------------------
-
-code header::check(bool retarget) const {
-    if ( ! is_valid_proof_of_work(retarget)) {
-        return error::invalid_proof_of_work;
-    }
-
-    if ( ! is_valid_timestamp()) {
-        return error::futuristic_timestamp;
-    }
-
-    return error::success;
-}
-
-code header::accept(const chain_state& state) const {
-    if (bits_ != state.work_required()) {
-        return error::incorrect_proof_of_work;
-    }
-
-    if (state.is_checkpoint_conflict(hash())) {
-        return error::checkpoints_failed;
-    }
-
-    if (state.is_under_checkpoint()) {
-        return error::success;
-    }
-
-    if (version_ < state.minimum_version()) {
-        return error::old_version_block;
-    }
-
-    if (timestamp_ <= state.median_time_past()) {
-        return error::timestamp_too_early;
-    }
-
-    return error::success;
-}
 
 }  // namespace chain
 }  // namespace libbitcoin

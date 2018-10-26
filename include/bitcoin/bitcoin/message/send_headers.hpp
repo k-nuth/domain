@@ -42,7 +42,7 @@ public:
     using const_ptr = std::shared_ptr<const send_headers>;
 
     static send_headers factory_from_data(uint32_t version, data_chunk const& data);
-    static send_headers factory_from_data(uint32_t version, data_source& stream);
+    static send_headers factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static send_headers factory_from_data(uint32_t version, R& source) {
@@ -58,7 +58,7 @@ public:
     send_headers(send_headers&& x) = default;
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

@@ -203,7 +203,7 @@ transaction transaction::factory_from_data(data_chunk const& data, bool wire, bo
 }
 
 // static
-transaction transaction::factory_from_data(data_source& stream, bool wire, bool witness) {
+transaction transaction::factory_from_data(std::istream& stream, bool wire, bool witness) {
     transaction instance;
     instance.from_data(stream, wire, witness_val(witness));
     return instance;
@@ -222,7 +222,7 @@ bool transaction::from_data(data_chunk const& data, bool wire, bool witness
                     );
 }
 
-bool transaction::from_data(data_source& stream, bool wire, bool witness
+bool transaction::from_data(std::istream& stream, bool wire, bool witness
 #ifdef BITPRIM_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
@@ -545,6 +545,7 @@ hash_digest transaction::sequences_hash() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
+#ifndef BITPRIM_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void transaction::strip_witness() {
     auto const strip = [](input& input) {
@@ -559,6 +560,7 @@ void transaction::strip_witness() {
     std::for_each(inputs_.begin(), inputs_.end(), strip);
     ///////////////////////////////////////////////////////////////////////////
 }
+#endif
 
 void transaction::recompute_hash() {
     hash_ = nullptr;

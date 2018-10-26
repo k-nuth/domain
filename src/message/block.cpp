@@ -44,7 +44,7 @@ block block::factory_from_data(uint32_t version, data_chunk const& data) {
     return instance;
 }
 
-block block::factory_from_data(uint32_t version, data_source& stream) {
+block block::factory_from_data(uint32_t version, std::istream& stream) {
     block instance;
     instance.from_data(version, stream);
     return instance;
@@ -104,7 +104,7 @@ bool block::from_data(uint32_t /*version*/, data_chunk const& data) {
     return chain::block::from_data(data, true);
 }
 
-bool block::from_data(uint32_t /*version*/, data_source& stream) {
+bool block::from_data(uint32_t /*version*/, std::istream& stream) {
     return chain::block::from_data(stream, true);
 }
 
@@ -129,11 +129,11 @@ size_t block::serialized_size(uint32_t /*unused*/) const {
 
 
 
-//TODO(fernando): check this family of functions: to_data_header_nonce
-void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
-    block.header().to_data(sink);
-    sink.write_8_bytes_little_endian(nonce);
-}
+// //TODO(fernando): check this family of functions: to_data_header_nonce
+// void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
+//     block.header().to_data(sink);
+//     sink.write_8_bytes_little_endian(nonce);
+// }
 
 // void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream) {
 void to_data_header_nonce(block const& block, uint64_t nonce, data_sink& stream) {

@@ -26,10 +26,10 @@ bool equal(address const& x, address const& y) {
     auto const left_addresses = x.addresses();
     auto const right_addresses = y.addresses();
 
-    bool same = (x_addresses.size() == y_addresses.size());
+    bool same = (left_addresses.size() == right_addresses.size());
 
-    for (size_t i = 0; (i < x_addresses.size()) && same; i++) {
-        same = (x_addresses[i] == y_addresses[i]) && (x_addresses[i].timestamp() == y_addresses[i].timestamp());
+    for (size_t i = 0; (i < left_addresses.size()) && same; i++) {
+        same = (left_addresses[i] == right_addresses[i]) && (left_addresses[i].timestamp() == right_addresses[i].timestamp());
     }
 
     return same;

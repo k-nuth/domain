@@ -53,34 +53,36 @@ public:
     using const_ptr_list = std::vector<const_ptr>;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation {
+    struct validation_t {
         size_t height = 0;
         uint32_t median_time_past = 0;
     };
 
     // Constructors.
     //-----------------------------------------------------------------------------
+    using header_basis::header_basis; // inherit constructors from header_basis
 
-    header();
+    header() = default;
     header(header const& x, hash_digest const& hash);
-    header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
+    // header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
+    /// This class is copy constructible and copy assignable.
+    // Note(bitprim): Cannot be defaulted because the std::mutex data member.
     header(header const& x);
-    /// This class is copy assignable.
     header& operator=(header const& x);
 
     // Operators.
     //-----------------------------------------------------------------------------
 
-    bool operator==(header const& x) const;
-    bool operator!=(header const& x) const;
+    // bool operator==(header const& x) const;
+    // bool operator!=(header const& x) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------
 
     static header factory_from_data(data_chunk const& data, bool wire = true);
-    // static header factory_from_data(data_source& stream, bool wire=true);
-    static header factory_from_data(data_source& stream, bool wire = true);
+    // static header factory_from_data(std::istream& stream, bool wire=true);
+    static header factory_from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static header factory_from_data(R& source, bool wire = true) {
@@ -94,8 +96,8 @@ public:
     bool from_data(data_chunk const& data, bool wire = true);
 
     //TODO(fernando): check what happend when replacing std::istream to data_source
-    // bool from_data(data_source& stream, bool wire=true);
-    bool from_data(data_source& stream, bool wire = true);
+    // bool from_data(std::istream& stream, bool wire=true);
+    bool from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
@@ -112,9 +114,7 @@ public:
         return source;
     }
 
-    //bool from_data(reader& source, bool wire=true);
-
-    bool is_valid() const;
+    // bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
@@ -134,34 +134,14 @@ public:
 
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
-    static uint256_t proof(uint32_t bits);
-    uint256_t proof() const;
 
-    static size_t satoshi_fixed_size();
     size_t serialized_size(bool wire = true) const;
 
-    uint32_t version() const;
     void set_version(uint32_t value);
-
-    // Deprecated (unsafe).
-    hash_digest& previous_block_hash();
-
-    hash_digest const& previous_block_hash() const;
     void set_previous_block_hash(hash_digest const& value);
-
-    // Deprecated (unsafe).
-    hash_digest& merkle();
-
-    hash_digest const& merkle() const;
     void set_merkle(hash_digest const& value);
-
-    uint32_t timestamp() const;
     void set_timestamp(uint32_t value);
-
-    uint32_t bits() const;
     void set_bits(uint32_t value);
-
-    uint32_t nonce() const;
     void set_nonce(uint32_t value);
 
     hash_digest hash() const;
@@ -173,14 +153,8 @@ public:
     // Validation.
     //-----------------------------------------------------------------------------
 
-    bool is_valid_timestamp() const;
-    bool is_valid_proof_of_work(bool retarget = true) const;
-
-    code check(bool retarget = false) const;
-    code accept(const chain_state& state) const;
-
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation validation;
+    mutable validation_t validation{};
 
 protected:
     // So that block may call reset from its own.

@@ -37,7 +37,7 @@ memory_pool memory_pool::factory_from_data(uint32_t version, data_chunk const& d
     return instance;
 }
 
-memory_pool memory_pool::factory_from_data(uint32_t version, data_source& stream) {
+memory_pool memory_pool::factory_from_data(uint32_t version, std::istream& stream) {
     memory_pool instance;
     instance.from_data(version, stream);
     return instance;
@@ -76,7 +76,7 @@ bool memory_pool::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool memory_pool::from_data(uint32_t version, data_source& stream) {
+bool memory_pool::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

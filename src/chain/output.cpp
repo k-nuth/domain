@@ -115,7 +115,7 @@ output output::factory_from_data(data_chunk const& data, bool wire) {
     return instance;
 }
 
-output output::factory_from_data(data_source& stream, bool wire) {
+output output::factory_from_data(std::istream& stream, bool wire) {
     output instance;
     instance.from_data(stream, wire);
     return instance;
@@ -133,7 +133,7 @@ bool output::from_data(data_chunk const& data, bool wire) {
     return from_data(istream, wire);
 }
 
-bool output::from_data(data_source& stream, bool wire) {
+bool output::from_data(std::istream& stream, bool wire) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire);
 }

@@ -49,7 +49,7 @@ public:
     using short_id_list = std::vector<short_id>;
 
     static compact_block factory_from_data(uint32_t version, data_chunk const& data);
-    static compact_block factory_from_data(uint32_t version, data_source& stream);
+    static compact_block factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static compact_block factory_from_data(uint32_t version, R& source) {
@@ -96,7 +96,7 @@ public:
     void set_transactions(prefilled_transaction::list&& value);
 
     bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

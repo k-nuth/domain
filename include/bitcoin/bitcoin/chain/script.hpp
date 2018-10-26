@@ -85,7 +85,7 @@ public:
     //-------------------------------------------------------------------------
 
     static script factory_from_data(data_chunk const& encoded, bool prefix);
-    static script factory_from_data(data_source& stream, bool prefix);
+    static script factory_from_data(std::istream& stream, bool prefix);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static script factory_from_data(R& source, bool prefix) {
@@ -98,7 +98,7 @@ public:
 
     /// Deserialization invalidates the iterator.
     bool from_data(data_chunk const& encoded, bool prefix);
-    bool from_data(data_source& stream, bool prefix);
+    bool from_data(std::istream& stream, bool prefix);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool prefix) {

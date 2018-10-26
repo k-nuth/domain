@@ -45,7 +45,7 @@ static bool all_valid(chain::transaction::list const& transactions) {
 BOOST_AUTO_TEST_SUITE(chain_block_tests)
 
 BOOST_AUTO_TEST_CASE(block__proof2__genesis_mainnet__expected) {
-    auto block const = chain::block::genesis_mainnet();
+    auto const block = chain::block::genesis_mainnet();
     BOOST_REQUIRE_EQUAL(block.proof(), 0x0000000100010001);
 }
 
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_1__always__invalid) {
 }
 
 BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(block__constructor_3__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_3__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(block__constructor_4__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(block__constructor_4__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(block__constructor_5__always__equals_params) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success) {
     BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
 
     // Reload genesis block.
-    auto block const = chain::block::factory_from_data(raw_block);
+    auto const block = chain::block::factory_from_data(raw_block);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_2__genesis_mainnet__success) {
 
     // Reload genesis block.
     data_source stream(raw_block);
-    auto block const = chain::block::factory_from_data(stream);
+    auto const block = chain::block::factory_from_data(stream);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -308,7 +308,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_3__genesis_mainnet__success) {
     // Reload genesis block.
     data_source stream(raw_block);
     istream_reader reader(stream);
-    auto block const = chain::block::factory_from_data(reader);
+    auto const block = chain::block::factory_from_data(reader);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -360,14 +360,14 @@ BOOST_AUTO_TEST_CASE(block__generate_merkle_root__block_with_multiple_transactio
     auto const serial = block100k.to_data();
     BOOST_REQUIRE(raw == serial);
 
-    auto header const = block100k.header();
+    auto const header = block100k.header();
     auto const transactions = block100k.transactions();
     BOOST_REQUIRE(all_valid(transactions));
     BOOST_REQUIRE(header.merkle() == block100k.generate_merkle_root());
 }
 
 BOOST_AUTO_TEST_CASE(block__header_accessor__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -384,7 +384,7 @@ BOOST_AUTO_TEST_CASE(block__header_accessor__always__returns_initialized_value) 
 }
 
 BOOST_AUTO_TEST_CASE(block__header_setter_1__roundtrip__success) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE(block__header_setter_1__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(block__header_setter_2__roundtrip__success) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -415,7 +415,7 @@ BOOST_AUTO_TEST_CASE(block__header_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(block__transactions_accessor__always__returns_initialized_value) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,
@@ -459,7 +459,7 @@ BOOST_AUTO_TEST_CASE(block__transactions_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(block__operator_assign_equals__always__matches_equivalent) {
-    chain::header header const(10u,
+    chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                                531234u,

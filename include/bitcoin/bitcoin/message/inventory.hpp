@@ -49,7 +49,7 @@ public:
     using type_id = inventory_vector::type_id;
 
     static inventory factory_from_data(uint32_t version, data_chunk const& data);
-    static inventory factory_from_data(uint32_t version, data_source& stream);
+    static inventory factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static inventory factory_from_data(uint32_t version, R& source) {
@@ -83,7 +83,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
 
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_source& stream);
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way

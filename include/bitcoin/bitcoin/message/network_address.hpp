@@ -78,7 +78,7 @@
 
 //     bool from_data(uint32_t version, data_chunk const& data,
 //         bool with_timestamp);
-//     bool from_data(uint32_t version, data_source& stream,
+//     bool from_data(uint32_t version, std::istream& stream,
 //         bool with_timestamp);
 //     bool from_data(uint32_t version, reader& source, bool with_timestamp);
 //     data_chunk to_data(uint32_t version, bool with_timestamp) const;

@@ -45,7 +45,7 @@ compact_block compact_block::factory_from_data(uint32_t version, data_chunk cons
     return instance;
 }
 
-compact_block compact_block::factory_from_data(uint32_t version, data_source& stream) {
+compact_block compact_block::factory_from_data(uint32_t version, std::istream& stream) {
     //std::cout << "compact_block::factory_from_data 2\n";
     compact_block instance;
     instance.from_data(version, stream);
@@ -155,7 +155,7 @@ bool compact_block::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool compact_block::from_data(uint32_t version, data_source& stream) {
+bool compact_block::from_data(uint32_t version, std::istream& stream) {
     //std::cout << "compact_block::from_data 2\n";
 
     istream_reader stream_r(stream);

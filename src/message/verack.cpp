@@ -37,7 +37,7 @@ verack verack::factory_from_data(uint32_t version, data_chunk const& data) {
     return instance;
 }
 
-verack verack::factory_from_data(uint32_t version, data_source& stream) {
+verack verack::factory_from_data(uint32_t version, std::istream& stream) {
     verack instance;
     instance.from_data(version, stream);
     return instance;
@@ -55,7 +55,7 @@ bool verack::from_data(uint32_t version, data_chunk const& data) {
     return from_data(version, istream);
 }
 
-bool verack::from_data(uint32_t version, data_source& stream) {
+bool verack::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

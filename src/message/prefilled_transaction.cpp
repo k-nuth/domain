@@ -41,7 +41,7 @@ prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version,
     return instance;
 }
 
-prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, data_source& stream) {
+prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, std::istream& stream) {
     prefilled_transaction instance;
     instance.from_data(version, stream);
     return instance;
@@ -102,7 +102,7 @@ bool prefilled_transaction::from_data(uint32_t version, data_chunk const& data) 
     return from_data(version, istream);
 }
 
-bool prefilled_transaction::from_data(uint32_t version, data_source& stream) {
+bool prefilled_transaction::from_data(uint32_t version, std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(version, stream_r);
 }

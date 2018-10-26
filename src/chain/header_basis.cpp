@@ -69,7 +69,7 @@ header_basis header_basis::factory_from_data(data_chunk const& data, bool wire) 
 }
 
 // static
-header_basis header_basis::factory_from_data(data_source& stream, bool wire) {
+header_basis header_basis::factory_from_data(std::istream& stream, bool wire) {
     header_basis instance;
     instance.from_data(stream, wire);
     return instance;
@@ -80,7 +80,7 @@ bool header_basis::from_data(data_chunk const& data, bool wire) {
     return from_data(istream, wire);
 }
 
-bool header_basis::from_data(data_source& stream, bool wire) {
+bool header_basis::from_data(std::istream& stream, bool wire) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire);
 }
@@ -131,8 +131,9 @@ size_t header_basis::satoshi_fixed_size() {
     return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + sizeof(bits_) + sizeof(nonce_);
 }
 
-size_t header_basis::serialized_size(bool wire) const {
-    return satoshi_fixed_size() + (wire ? 0 : sizeof(uint32_t));
+inline
+size_t header_basis::serialized_size(bool /*wire*/) const {
+    return satoshi_fixed_size();
 }
 
 // Accessors.

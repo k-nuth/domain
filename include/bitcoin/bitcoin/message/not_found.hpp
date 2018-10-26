@@ -39,14 +39,13 @@
 namespace libbitcoin {
 namespace message {
 
-class BC_API not_found
-    : public inventory {
+class BC_API not_found : public inventory {
 public:
     using ptr = std::shared_ptr<not_found>;
     using const_ptr = std::shared_ptr<const not_found>;
 
     static not_found factory_from_data(uint32_t version, data_chunk const& data);
-    static not_found factory_from_data(uint32_t version, data_source& stream);
+    static not_found factory_from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static not_found factory_from_data(uint32_t version, R& source) {
@@ -72,7 +71,7 @@ public:
 
 
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_source& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way

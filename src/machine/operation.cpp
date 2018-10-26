@@ -48,7 +48,7 @@ operation operation::factory_from_data(data_chunk const& encoded) {
 }
 
 // static
-operation operation::factory_from_data(data_source& stream) {
+operation operation::factory_from_data(std::istream& stream) {
     operation instance;
     instance.from_data(stream);
     return instance;
@@ -67,7 +67,7 @@ bool operation::from_data(data_chunk const& encoded) {
     return from_data(istream);
 }
 
-bool operation::from_data(data_source& stream) {
+bool operation::from_data(std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(stream_r);
 }
