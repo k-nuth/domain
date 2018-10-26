@@ -824,7 +824,7 @@ code block::check_transactions() const {
     return error::success;
 }
 
-code block::accept_transactions(const chain_state& state) const {
+code block::accept_transactions(chain_state const& state) const {
     code ec;
 
     for (auto const& tx : transactions_) {
@@ -836,7 +836,7 @@ code block::accept_transactions(const chain_state& state) const {
     return error::success;
 }
 
-code block::connect_transactions(const chain_state& state) const {
+code block::connect_transactions(chain_state const& state) const {
     code ec;
 
     for (auto const& tx : transactions_) {
@@ -985,7 +985,7 @@ code block::connect() const {
     return state ? connect(*state) : error::operation_failed;
 }
 
-code block::connect(const chain_state& state) const {
+code block::connect(chain_state const& state) const {
     validation.start_connect = asio::steady_clock::now();
 
     if (state.is_under_checkpoint()) {

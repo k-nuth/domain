@@ -39,10 +39,6 @@ using wall_clock = std::chrono::system_clock;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// header_basis::header_basis()
-//     : version_(0), previous_block_hash_(null_hash), merkle_(null_hash), timestamp_(0), bits_(0), nonce_(0)
-// {}
-
 header_basis::header_basis(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
     : version_(version), previous_block_hash_(previous_block_hash), merkle_(merkle), timestamp_(timestamp), bits_(bits), nonce_(nonce)
 {}
@@ -287,7 +283,7 @@ code header_basis::check(bool retarget) const {
     return error::success;
 }
 
-code header_basis::accept(const chain_state& state) const {
+code header_basis::accept(chain_state const& state) const {
     if (bits_ != state.work_required()) {
         return error::incorrect_proof_of_work;
     }

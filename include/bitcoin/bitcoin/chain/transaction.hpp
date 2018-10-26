@@ -416,10 +416,10 @@ public:
 
     code check(bool transaction_pool = true, bool retarget = true) const;
     code accept(bool transaction_pool = true) const;
-    code accept(const chain_state& state, bool transaction_pool = true) const;
+    code accept(chain_state const& state, bool transaction_pool = true) const;
     code connect() const;
-    code connect(const chain_state& state) const;
-    code connect_input(const chain_state& state, size_t input_index) const;
+    code connect(chain_state const& state) const;
+    code connect_input(chain_state const& state, size_t input_index) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;

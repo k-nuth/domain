@@ -835,7 +835,7 @@ uint32_t chain_state::signal_version(uint32_t forks) {
 }
 
 // This is promotion from a preceding height to the next.
-chain_state::data chain_state::to_pool(const chain_state& top) {
+chain_state::data chain_state::to_pool(chain_state const& top) {
     // Alias configured forks.
     auto const forks = top.forks_;
 
@@ -915,7 +915,7 @@ chain_state::chain_state(chain_state const& top)
 {
 }
 
-chain_state::data chain_state::to_block(const chain_state& pool,
+chain_state::data chain_state::to_block(chain_state const& pool,
                                         block const& block) {
     // Alias configured forks.
     auto const forks = pool.forks_;
@@ -975,7 +975,7 @@ chain_state::chain_state(chain_state const& pool, block const& block)
 {
 }
 
-chain_state::data chain_state::to_header(const chain_state& parent,
+chain_state::data chain_state::to_header(chain_state const& parent,
                                          header const& header) {
     // Alias configured forks.
     auto const forks = parent.forks_;

@@ -862,7 +862,7 @@ bool transaction::is_segregated() const {
 }
 
 // Coinbase transactions return success, to simplify iteration.
-code transaction::connect_input(const chain_state& state, size_t input_index) const {
+code transaction::connect_input(chain_state const& state, size_t input_index) const {
     if (input_index >= inputs_.size()) {
         return error::operation_failed;
     }
@@ -936,7 +936,7 @@ code transaction::accept(bool transaction_pool) const {
 }
 
 // These checks assume that prevout caching is completed on all tx.inputs.
-code transaction::accept(const chain_state& state, bool transaction_pool) const {
+code transaction::accept(chain_state const& state, bool transaction_pool) const {
     auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
     auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);
     auto const bip68 = state.is_enabled(bc::machine::rule_fork::bip68_rule);
@@ -1015,7 +1015,7 @@ code transaction::connect() const {
     return state ? connect(*state) : error::operation_failed;
 }
 
-code transaction::connect(const chain_state& state) const {
+code transaction::connect(chain_state const& state) const {
     code ec;
 
     for (size_t input = 0; input < inputs_.size(); ++input) {

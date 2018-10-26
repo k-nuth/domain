@@ -35,11 +35,6 @@ namespace chain {
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// header::header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce)
-//     : header_basis(version, previous_block_hash, merkle, timestamp,bits, nonce)
-//     , validation{} 
-// {}
-
 header::header(header const& x, hash_digest const& hash)
     : header_basis(x)
     , validation(x.validation)

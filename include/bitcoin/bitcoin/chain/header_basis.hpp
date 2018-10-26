@@ -58,10 +58,6 @@ public:
     header_basis() = default;
     header_basis(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
 
-    /// This class is copy assignable.
-    // header_basis(header_basis const& x) = default;
-    // header_basis& operator=(header_basis const& x) = default;
-
     // Operators.
     //-----------------------------------------------------------------------------
     
@@ -83,8 +79,6 @@ public:
 
     bool from_data(data_chunk const& data, bool wire = true);
 
-    //TODO(fernando): check what happend when replacing std::istream to data_source
-    // bool from_data(std::istream& stream, bool wire=true);
     bool from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
@@ -158,7 +152,7 @@ public:
     bool is_valid_proof_of_work(bool retarget = true) const;
 
     code check(bool retarget = false) const;
-    code accept(const chain_state& state) const;
+    code accept(chain_state const& state) const;
 
 protected:
     // So that block may call reset from its own.

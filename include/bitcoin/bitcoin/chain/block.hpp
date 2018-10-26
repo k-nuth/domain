@@ -238,11 +238,11 @@ public:
     code check() const;
     code check_transactions() const;
     code accept(bool transactions = true) const;
-    code accept(const chain_state& state, bool transactions = true) const;
-    code accept_transactions(const chain_state& state) const;
+    code accept(chain_state const& state, bool transactions = true) const;
+    code accept_transactions(chain_state const& state) const;
     code connect() const;
-    code connect(const chain_state& state) const;
-    code connect_transactions(const chain_state& state) const;
+    code connect(chain_state const& state) const;
+    code connect_transactions(chain_state const& state) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;

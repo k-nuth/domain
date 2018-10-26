@@ -421,7 +421,7 @@ code header::check(bool retarget) const {
     return error::success;
 }
 
-code header::accept(const chain_state& state) const {
+code header::accept(chain_state const& state) const {
     if (bits_ != state.work_required()) {
         return error::incorrect_proof_of_work;
     }

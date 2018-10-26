@@ -40,7 +40,7 @@ constexpr auto point_size = static_cast<unsigned>(std::tuple_size<point>::value)
 // Constructors.
 //-----------------------------------------------------------------------------
 
-point_iterator::point_iterator(const point_iterator& x)
+point_iterator::point_iterator(point_iterator const& x)
     : point_iterator(x.point_, x.current_) {
 }
 
@@ -104,11 +104,11 @@ point_iterator point_iterator::operator-(int value) const {
     return value < 0 ? increase(static_cast<unsigned>(std::abs(value))) : decrease(value);
 }
 
-bool point_iterator::operator==(const point_iterator& x) const {
+bool point_iterator::operator==(point_iterator const& x) const {
     return (current_ == x.current_) && (&point_ == &x.point_);
 }
 
-bool point_iterator::operator!=(const point_iterator& x) const {
+bool point_iterator::operator!=(point_iterator const& x) const {
     return !(*this == x);
 }
 
