@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API prefilled_transaction {
 public:
-    typedef std::vector<prefilled_transaction> list;
-    typedef std::shared_ptr<prefilled_transaction const> const_ptr;
+    using list = std::vector<prefilled_transaction>;
+    using const_ptr = std::shared_ptr<const prefilled_transaction>;
 
     static prefilled_transaction factory_from_data(uint32_t version, data_chunk const& data);
     static prefilled_transaction factory_from_data(uint32_t version, data_source& stream);

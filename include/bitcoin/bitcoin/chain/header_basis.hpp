@@ -45,11 +45,11 @@ namespace chain {
 
 class BC_API header_basis {
 public:
-    typedef std::vector<header_basis> list;
-    typedef std::shared_ptr<header_basis> ptr;
-    typedef std::shared_ptr<header_basis const> const_ptr;
-    typedef std::vector<header_basis> ptr_list;
-    typedef std::vector<const_ptr> const_ptr_list;
+    using list = std::vector<header_basis>;
+    using ptr = std::shared_ptr<header_basis>;
+    using const_ptr = std::shared_ptr<header_basis const>;
+    using ptr_list = std::vector<header_basis>;
+    using const_ptr_list = std::vector<const_ptr>;
 
 
     // Constructors.

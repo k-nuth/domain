@@ -24,7 +24,7 @@
 namespace libbitcoin {
 namespace chain {
 
-typedef point input_point;
+using input_point = point;
 
 }  // namespace chain
 }  // namespace libbitcoin

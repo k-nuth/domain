@@ -40,8 +40,8 @@ namespace message {
 
 class BC_API ping {
 public:
-    typedef std::shared_ptr<ping> ptr;
-    typedef std::shared_ptr<const ping> const_ptr;
+    using ptr = std::shared_ptr<ping>;
+    using const_ptr = std::shared_ptr<const ping>;
 
     static ping factory_from_data(uint32_t version, data_chunk const& data);
     static ping factory_from_data(uint32_t version, data_source& stream);

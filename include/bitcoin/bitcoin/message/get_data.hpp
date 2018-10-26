@@ -40,8 +40,8 @@ namespace message {
 
 class BC_API get_data : public inventory {
 public:
-    typedef std::shared_ptr<get_data> ptr;
-    typedef std::shared_ptr<const get_data> const_ptr;
+    using ptr = std::shared_ptr<get_data>;
+    using const_ptr = std::shared_ptr<const get_data>;
 
     static get_data factory_from_data(uint32_t version, data_chunk const& data);
     static get_data factory_from_data(uint32_t version, data_source& stream);

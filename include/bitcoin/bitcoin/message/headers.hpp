@@ -44,8 +44,8 @@ namespace message {
 
 class BC_API headers {
 public:
-    typedef std::shared_ptr<headers> ptr;
-    typedef std::shared_ptr<headers const> const_ptr;
+    using ptr = std::shared_ptr<headers>;
+    using const_ptr = std::shared_ptr<const headers>;
 
     static headers factory_from_data(uint32_t version, data_chunk const& data);
     static headers factory_from_data(uint32_t version, data_source& stream);

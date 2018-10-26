@@ -51,8 +51,8 @@ namespace chain {
 
 class BC_API block {
 public:
-    typedef std::vector<block> list;
-    typedef std::vector<size_t> indexes;
+    using list = std::vector<block>;
+    using indexes = std::vector<size_t>;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation {

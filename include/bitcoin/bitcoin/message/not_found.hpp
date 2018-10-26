@@ -42,8 +42,8 @@ namespace message {
 class BC_API not_found
     : public inventory {
 public:
-    typedef std::shared_ptr<not_found> ptr;
-    typedef std::shared_ptr<not_found const> const_ptr;
+    using ptr = std::shared_ptr<not_found>;
+    using const_ptr = std::shared_ptr<const not_found>;
 
     static not_found factory_from_data(uint32_t version, data_chunk const& data);
     static not_found factory_from_data(uint32_t version, data_source& stream);

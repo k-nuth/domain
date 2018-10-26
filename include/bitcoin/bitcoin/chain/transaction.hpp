@@ -113,10 +113,10 @@ inline void write_witnesses(W& sink, input::list const& inputs) {
 
 class BC_API transaction {
 public:
-    typedef input::list ins;
-    typedef output::list outs;
-    typedef std::vector<transaction> list;
-    typedef std::shared_ptr<hash_digest> hash_ptr;
+    using ins = input::list;
+    using outs = output::list;
+    using list = std::vector<transaction>;
+    using hash_ptr = std::shared_ptr<hash_digest>;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation {

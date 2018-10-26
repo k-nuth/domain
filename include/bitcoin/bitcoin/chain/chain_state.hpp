@@ -39,16 +39,16 @@ class header;
 
 class BC_API chain_state {
 public:
-    typedef std::deque<uint32_t> bitss;
-    typedef std::deque<uint32_t> versions;
-    typedef std::deque<uint32_t> timestamps;
+    using bitss = std::deque<uint32_t>;
+    using versions = std::deque<uint32_t>;
+    using timestamps = std::deque<uint32_t>;
     typedef struct {
         size_t count;
         size_t high;
     } range;
 
-    typedef std::shared_ptr<chain_state> ptr;
-    typedef config::checkpoint::list checkpoints;
+    using ptr = std::shared_ptr<chain_state>;
+    using checkpoints = config::checkpoint::list;
 
     /// Heights used to identify construction requirements.
     /// All values are lower-bounded by the genesis block height.

@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API memory_pool {
 public:
-    typedef std::shared_ptr<memory_pool> ptr;
-    typedef std::shared_ptr<const memory_pool> const_ptr;
+    using ptr = std::shared_ptr<memory_pool>;
+    using const_ptr = std::shared_ptr<const memory_pool>;
 
     static memory_pool factory_from_data(uint32_t version, data_chunk const& data);
     static memory_pool factory_from_data(uint32_t version, data_source& stream);

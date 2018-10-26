@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API send_headers {
 public:
-    typedef std::shared_ptr<send_headers> ptr;
-    typedef std::shared_ptr<send_headers const> const_ptr;
+    using ptr = std::shared_ptr<send_headers>;
+    using const_ptr = std::shared_ptr<const send_headers>;
 
     static send_headers factory_from_data(uint32_t version, data_chunk const& data);
     static send_headers factory_from_data(uint32_t version, data_source& stream);

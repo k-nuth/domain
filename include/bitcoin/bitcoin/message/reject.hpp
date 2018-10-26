@@ -71,8 +71,8 @@ public:
         checkpoint = 0x43
     };
 
-    typedef std::shared_ptr<reject> ptr;
-    typedef std::shared_ptr<reject const> const_ptr;
+    using ptr = std::shared_ptr<reject>;
+    using const_ptr = std::shared_ptr<const reject>;
 
     static reject factory_from_data(uint32_t version, data_chunk const& data);
     static reject factory_from_data(uint32_t version, data_source& stream);

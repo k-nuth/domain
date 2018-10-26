@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API filter_clear {
 public:
-    typedef std::shared_ptr<filter_clear> ptr;
-    typedef std::shared_ptr<const filter_clear> const_ptr;
+    using ptr = std::shared_ptr<filter_clear>;
+    using const_ptr = std::shared_ptr<const filter_clear>;
 
     static filter_clear factory_from_data(uint32_t version, data_chunk const& data);
     static filter_clear factory_from_data(uint32_t version, data_source& stream);

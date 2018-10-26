@@ -42,8 +42,8 @@ namespace machine {
 
 class BI_API operation {
 public:
-    typedef std::vector<operation> list;
-    typedef list::const_iterator iterator;
+    using list = std::vector<operation>;
+    using iterator = list::const_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------

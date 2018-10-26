@@ -45,11 +45,11 @@ namespace chain {
 
 class BC_API header {
 public:
-    typedef std::vector<header> list;
-    typedef std::shared_ptr<header> ptr;
-    typedef std::shared_ptr<header const> const_ptr;
-    typedef std::vector<header> ptr_list;
-    typedef std::vector<const_ptr> const_ptr_list;
+    using list = std::vector<header>;
+    using ptr = std::shared_ptr<header>;
+    using const_ptr = std::shared_ptr<const header>;
+    using ptr_list = std::vector<header>;
+    using const_ptr_list = std::vector<const_ptr>;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation {

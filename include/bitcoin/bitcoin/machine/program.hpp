@@ -36,14 +36,14 @@ namespace machine {
 
 class BC_API program {
 public:
-    typedef data_stack::value_type value_type;
-    typedef operation::iterator op_iterator;
+    using value_type = data_stack::value_type;
+    using op_iterator = operation::iterator;
 
     // Older libstdc++ does not allow erase with const iterator.
     // This is a bug that requires we up the minimum compiler version.
     // So presently stack_iterator is a non-const iterator.
     ////typedef data_stack::const_iterator stack_iterator;
-    typedef data_stack::iterator stack_iterator;
+    using stack_iterator = data_stack::iterator;
 
     /// Create an instance that does not expect to verify signatures.
     /// This is useful for script utilities but not with input validation.
@@ -141,7 +141,7 @@ public:
 
 private:
     // A space-efficient dynamic bitset (specialized).
-    typedef std::vector<bool> bool_stack;
+    using bool_stack = std::vector<bool>;
 
     void reserve_stacks();
     bool stack_to_bool(bool clean) const;

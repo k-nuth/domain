@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API alert {
 public:
-    typedef std::shared_ptr<alert> ptr;
-    typedef std::shared_ptr<const alert> const_ptr;
+    using ptr = std::shared_ptr<alert>;
+    using const_ptr = std::shared_ptr<const alert>;
 
     static alert factory_from_data(uint32_t version, data_chunk const& data);
     static alert factory_from_data(uint32_t version, data_source& stream);

@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API fee_filter {
 public:
-    typedef std::shared_ptr<fee_filter> ptr;
-    typedef std::shared_ptr<const fee_filter> const_ptr;
+    using ptr = std::shared_ptr<fee_filter>;
+    using const_ptr = std::shared_ptr<const fee_filter>;
 
     static fee_filter factory_from_data(uint32_t version, data_chunk const& data);
     static fee_filter factory_from_data(uint32_t version, data_source& stream);

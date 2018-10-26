@@ -37,10 +37,10 @@ class payment_address;
 
 /// Private keys with public key compression metadata:
 static BC_CONSTEXPR size_t wif_uncompressed_size = 37u;
-typedef byte_array<wif_uncompressed_size> wif_uncompressed;
+using wif_uncompressed = byte_array<wif_uncompressed_size>;
 
 static BC_CONSTEXPR size_t wif_compressed_size = wif_uncompressed_size + 1u;
-typedef byte_array<wif_compressed_size> wif_compressed;
+using wif_compressed = byte_array<wif_compressed_size>;
 
 /// Use to pass an ec secret with compresson and version information.
 class BC_API ec_private {

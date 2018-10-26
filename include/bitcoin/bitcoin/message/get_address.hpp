@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API get_address {
 public:
-    typedef std::shared_ptr<get_address> ptr;
-    typedef std::shared_ptr<const get_address> const_ptr;
+    using ptr = std::shared_ptr<get_address>;
+    using const_ptr = std::shared_ptr<const get_address>;
 
     static get_address factory_from_data(uint32_t version, data_chunk const& data);
     static get_address factory_from_data(uint32_t version, data_source& stream);

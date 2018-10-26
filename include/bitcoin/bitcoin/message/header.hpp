@@ -40,11 +40,11 @@ namespace message {
 
 class BC_API header : public chain::header {
 public:
-    typedef std::vector<header> list;
-    typedef std::shared_ptr<header> ptr;
-    typedef std::shared_ptr<header const> const_ptr;
-    typedef std::vector<ptr> ptr_list;
-    typedef std::vector<const_ptr> const_ptr_list;
+    using list = std::vector<header>;
+    using ptr = std::shared_ptr<header>;
+    using const_ptr = std::shared_ptr<const header>;
+    using ptr_list = std::vector<ptr>;
+    using const_ptr_list = std::vector<const_ptr>;
 
     static header factory_from_data(uint32_t version, data_chunk const& data);
     static header factory_from_data(uint32_t version, data_source& stream);

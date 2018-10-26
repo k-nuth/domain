@@ -39,8 +39,8 @@ namespace message {
 
 class BC_API address {
 public:
-    typedef std::shared_ptr<address> ptr;
-    typedef std::shared_ptr<address const> const_ptr;
+    using ptr = std::shared_ptr<address>;
+    using const_ptr = std::shared_ptr<const address>;
 
     static address factory_from_data(uint32_t version, data_chunk const& data);
     static address factory_from_data(uint32_t version, data_source& stream);

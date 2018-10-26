@@ -41,9 +41,9 @@ namespace message {
 
 class BC_API merkle_block {
 public:
-    typedef std::vector<merkle_block> list;
-    typedef std::shared_ptr<merkle_block> ptr;
-    typedef std::shared_ptr<merkle_block const> const_ptr;
+    using list = std::vector<merkle_block>;
+    using ptr = std::shared_ptr<merkle_block>;
+    using const_ptr = std::shared_ptr<const merkle_block>;
 
     static merkle_block factory_from_data(uint32_t version, data_chunk const& data);
     static merkle_block factory_from_data(uint32_t version, data_source& stream);

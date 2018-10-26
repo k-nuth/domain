@@ -33,7 +33,7 @@ namespace machine {
 
 class BC_API interpreter {
 public:
-    typedef error::error_code_t result;
+    using result = error::error_code_t;
 
     // Operations (shared).
     //-----------------------------------------------------------------------------

@@ -40,7 +40,7 @@ namespace libbitcoin {
 namespace wallet {
 
 static BC_CONSTEXPR size_t payment_size = 1u + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
-typedef byte_array<payment_size> payment;
+using payment = byte_array<payment_size>;
 
 /// A class for working with non-stealth payment addresses.
 class BC_API payment_address {
@@ -56,8 +56,8 @@ public:
     static std::string const cashaddr_prefix_testnet;
 #endif
 
-    typedef std::vector<payment_address> list;
-    typedef std::shared_ptr<payment_address> ptr;
+    using list = std::vector<payment_address>;
+    using ptr = std::shared_ptr<payment_address>;
 
     /// Extract a payment address list from an input or output script.
     static list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);

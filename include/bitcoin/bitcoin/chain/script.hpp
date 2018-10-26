@@ -52,10 +52,10 @@ class witness;
 
 class BC_API script {
 public:
-    typedef machine::operation operation;
-    typedef machine::rule_fork rule_fork;
-    typedef machine::script_pattern script_pattern;
-    typedef machine::script_version script_version;
+    using operation = machine::operation;
+    using rule_fork = machine::rule_fork;
+    using script_pattern = machine::script_pattern;
+    using script_version = machine::script_version;
 
     // Constructors.
     //-------------------------------------------------------------------------

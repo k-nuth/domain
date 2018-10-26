@@ -38,8 +38,8 @@ namespace message {
 
 class BC_API send_compact {
 public:
-    typedef std::shared_ptr<send_compact> ptr;
-    typedef std::shared_ptr<send_compact const> const_ptr;
+    using ptr = std::shared_ptr<send_compact>;
+    using const_ptr = std::shared_ptr<const send_compact>;
 
     static send_compact factory_from_data(uint32_t version, data_chunk const& data);
     static send_compact factory_from_data(uint32_t version, data_source& stream);

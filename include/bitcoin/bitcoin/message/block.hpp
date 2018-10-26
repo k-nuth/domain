@@ -42,12 +42,12 @@ namespace message {
 
 class BC_API block : public chain::block {
 public:
-    typedef std::shared_ptr<block> ptr;
-    typedef std::shared_ptr<block const> const_ptr;
-    typedef std::vector<ptr> ptr_list;
-    typedef std::vector<const_ptr> const_ptr_list;
-    typedef std::shared_ptr<const_ptr_list> const_ptr_list_ptr;
-    typedef std::shared_ptr<const const_ptr_list> const_ptr_list_const_ptr;
+    using ptr = std::shared_ptr<block>;
+    using const_ptr = std::shared_ptr<const block>;
+    using ptr_list = std::vector<ptr>;
+    using const_ptr_list = std::vector<const_ptr>;
+    using const_ptr_list_ptr = std::shared_ptr<const_ptr_list>;
+    using const_ptr_list_const_ptr = std::shared_ptr<const const_ptr_list>;
 
     static block factory_from_data(uint32_t version, data_chunk const& data);
     static block factory_from_data(uint32_t version, data_source& stream);

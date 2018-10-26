@@ -43,7 +43,7 @@ namespace chain {
 
 class BC_API output {
 public:
-    typedef std::vector<output> list;
+    using list = std::vector<output>;
 
     /// This is a sentinel used in .value to indicate not found in store.
     /// This is a sentinel used in cache.value to indicate not populated.
@@ -175,7 +175,7 @@ protected:
     void invalidate_cache() const;
 
 private:
-    typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
+    using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
 
     addresses_ptr addresses_cache() const;
 

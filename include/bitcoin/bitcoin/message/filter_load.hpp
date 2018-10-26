@@ -39,8 +39,8 @@ namespace message {
 
 class BC_API filter_load {
 public:
-    typedef std::shared_ptr<filter_load> ptr;
-    typedef std::shared_ptr<filter_load const> const_ptr;
+    using ptr = std::shared_ptr<filter_load>;
+    using const_ptr = std::shared_ptr<const filter_load>;
 
     static filter_load factory_from_data(uint32_t version, data_chunk const& data);
     static filter_load factory_from_data(uint32_t version, data_source& stream);

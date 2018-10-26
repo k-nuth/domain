@@ -39,8 +39,8 @@ namespace message {
 // The checksum is ignored by the verack command.
 class BC_API verack {
 public:
-    typedef std::shared_ptr<verack> ptr;
-    typedef std::shared_ptr<const verack> const_ptr;
+    using ptr = std::shared_ptr<verack>;
+    using const_ptr = std::shared_ptr<const verack>;
 
     static verack factory_from_data(uint32_t version, data_chunk const& data);
     static verack factory_from_data(uint32_t version, data_source& stream);

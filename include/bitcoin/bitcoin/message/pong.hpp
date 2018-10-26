@@ -39,8 +39,8 @@ namespace message {
 
 class BC_API pong {
 public:
-    typedef std::shared_ptr<pong> ptr;
-    typedef std::shared_ptr<const pong> const_ptr;
+    using ptr = std::shared_ptr<pong>;
+    using const_ptr = std::shared_ptr<const pong>;
 
     static pong factory_from_data(uint32_t version, data_chunk const& data);
     static pong factory_from_data(uint32_t version, data_source& stream);

@@ -39,7 +39,7 @@ namespace message {
 
 class BC_API inventory_vector {
 public:
-    typedef std::vector<inventory_vector> list;
+    using list = std::vector<inventory_vector>;
 
     enum class type_id : uint32_t {
         error = 0,

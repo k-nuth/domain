@@ -36,8 +36,8 @@ namespace message {
 
 class BC_API get_headers : public get_blocks {
 public:
-    typedef std::shared_ptr<get_headers> ptr;
-    typedef std::shared_ptr<get_headers const> const_ptr;
+    using ptr = std::shared_ptr<get_headers>;
+    using const_ptr = std::shared_ptr<const get_headers>;
 
     static get_headers factory_from_data(uint32_t version, data_chunk const& data);
     static get_headers factory_from_data(uint32_t version, data_source& stream);

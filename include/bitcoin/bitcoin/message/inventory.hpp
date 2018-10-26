@@ -44,9 +44,9 @@ namespace message {
 
 class BC_API inventory {
 public:
-    typedef std::shared_ptr<inventory> ptr;
-    typedef std::shared_ptr<inventory const> const_ptr;
-    typedef inventory_vector::type_id type_id;
+    using ptr = std::shared_ptr<inventory>;
+    using const_ptr = std::shared_ptr<const inventory>;
+    using type_id = inventory_vector::type_id;
 
     static inventory factory_from_data(uint32_t version, data_chunk const& data);
     static inventory factory_from_data(uint32_t version, data_source& stream);

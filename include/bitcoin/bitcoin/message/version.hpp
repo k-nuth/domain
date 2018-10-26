@@ -41,8 +41,8 @@ namespace message {
 // The checksum is ignored by the version command.
 class BC_API version {
 public:
-    typedef std::shared_ptr<version> ptr;
-    typedef std::shared_ptr<const version> const_ptr;
+    using ptr = std::shared_ptr<version>;
+    using const_ptr = std::shared_ptr<const version>;
 
     enum level : uint32_t {
         // compact blocks protocol FIX

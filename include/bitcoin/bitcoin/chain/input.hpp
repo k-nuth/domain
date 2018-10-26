@@ -209,7 +209,7 @@ protected:
     void invalidate_cache() const;
 
 private:
-    typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
+    using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
 
     addresses_ptr addresses_cache() const;
 

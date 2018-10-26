@@ -41,8 +41,8 @@ namespace chain {
 
 class BC_API witness {
 public:
-    typedef machine::operation operation;
-    typedef data_stack::const_iterator iterator;
+    using operation = machine::operation;
+    using iterator = data_stack::const_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------
