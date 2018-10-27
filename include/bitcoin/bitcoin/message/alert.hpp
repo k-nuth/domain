@@ -80,7 +80,7 @@ public:
     bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(uint32_t  /*version*/, R& source) {
         reset();
 
         payload_ = source.read_bytes(source.read_size_little_endian());
@@ -99,7 +99,7 @@ public:
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const {
+    void to_data(uint32_t  /*version*/, W& sink) const {
         sink.write_variable_little_endian(payload_.size());
         sink.write_bytes(payload_);
         sink.write_variable_little_endian(signature_.size());

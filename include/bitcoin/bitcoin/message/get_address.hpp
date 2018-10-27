@@ -59,7 +59,7 @@ public:
     bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(uint32_t  /*version*/, R& source) {
         reset();
         return source;
     }
@@ -68,7 +68,7 @@ public:
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const {
+    void to_data(uint32_t  /*version*/, W&  /*sink*/) const {
     }
 
     //void to_data(uint32_t version, writer& sink) const;

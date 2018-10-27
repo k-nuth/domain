@@ -88,7 +88,7 @@ public:
     bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(uint32_t  /*version*/, R& source) {
         return chain::transaction::from_data(source, true, true);
     }
 
@@ -97,7 +97,7 @@ public:
     void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
 
     template <Writer W>
-    void to_data(uint32_t version, W& sink, bool witness = true) const {
+    void to_data(uint32_t  /*version*/, W& sink, bool witness = true) const {
         chain::transaction::to_data(sink, true, witness);
     }
 

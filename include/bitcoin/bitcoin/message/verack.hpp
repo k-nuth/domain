@@ -61,7 +61,7 @@ public:
     bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(uint32_t  /*version*/, R& source) {
         reset();
         return source;
     }

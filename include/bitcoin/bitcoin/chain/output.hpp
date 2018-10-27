@@ -97,7 +97,7 @@ public:
     bool from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool unused = false) {
+    bool from_data(R& source, bool wire = true, bool  /*unused*/ = false) {
         reset();
 
         if ( ! wire) {
@@ -125,7 +125,7 @@ public:
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <Writer W>
-    void to_data(W& sink, bool wire = true, bool unused = false) const {
+    void to_data(W& sink, bool wire = true, bool  /*unused*/ = false) const {
         if ( ! wire) {
             auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
             sink.write_4_bytes_little_endian(height32);

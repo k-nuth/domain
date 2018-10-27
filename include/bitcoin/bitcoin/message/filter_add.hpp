@@ -104,7 +104,7 @@ public:
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const {
+    void to_data(uint32_t  /*version*/, W& sink) const {
         sink.write_variable_little_endian(data_.size());
         sink.write_bytes(data_);
     }

@@ -100,7 +100,7 @@ public:
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const {
+    void to_data(uint32_t  /*version*/, W& sink) const {
         sink.write_8_bytes_little_endian(minimum_fee_);
     }
 

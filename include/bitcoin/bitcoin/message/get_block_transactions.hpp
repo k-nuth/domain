@@ -79,7 +79,7 @@ public:
     bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(uint32_t  /*version*/, R& source) {
         reset();
 
         block_hash_ = source.read_hash();
@@ -108,7 +108,7 @@ public:
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const {
+    void to_data(uint32_t  /*version*/, W& sink) const {
         sink.write_hash(block_hash_);
         sink.write_variable_little_endian(indexes_.size());
         for (auto const& element : indexes_) {
