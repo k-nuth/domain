@@ -91,8 +91,9 @@ inline bool operation_overflow(size_t count) {
 
 inline bool program::increment_operation_count(operation const& op) {
     // Addition is safe due to script size validation.
-    if (operation::is_counted(op.code()))
+    if (operation::is_counted(op.code())) {
         ++operation_count_;
+}
 
     return !operation_overflow(operation_count_);
 }
@@ -101,8 +102,9 @@ inline bool program::increment_operation_count(int32_t public_keys) {
     static auto const max_keys = static_cast<int32_t>(max_script_public_keys);
 
     // bit.ly/2d1bsdB
-    if (public_keys < 0 || public_keys > max_keys)
+    if (public_keys < 0 || public_keys > max_keys) {
         return false;
+}
 
     // Addition is safe due to script size validation.
     operation_count_ += public_keys;
@@ -110,8 +112,9 @@ inline bool program::increment_operation_count(int32_t public_keys) {
 }
 
 inline bool program::set_jump_register(operation const& op, int32_t offset) {
-    if (script_.empty())
+    if (script_.empty()) {
         return false;
+}
 
     auto const finder = [&op](operation const& operation) {
         return &operation == &op;
@@ -121,8 +124,9 @@ inline bool program::set_jump_register(operation const& op, int32_t offset) {
     // Otherwise we must track the program counter through each evaluation.
     jump_ = std::find_if(script_.begin(), script_.end(), finder);
 
-    if (jump_ == script_.end())
+    if (jump_ == script_.end()) {
         return false;
+}
 
     // This does not require guard because op_codeseparator can only increment.
     // Even if the opcode is last in the sequnce the increment is valid (end).
@@ -163,8 +167,9 @@ inline data_chunk program::pop() {
 
 inline bool program::pop(int32_t& out_value) {
     number value;
-    if ( ! pop(value))
+    if ( ! pop(value)) {
         return false;
+}
 
     out_value = value.int32();
     return true;
@@ -187,18 +192,21 @@ inline bool program::pop_ternary(number& first, number& second, number& third) {
 // Determines if popped value is valid post-pop stack index and returns index.
 inline bool program::pop_position(stack_iterator& out_position) {
     int32_t signed_index;
-    if ( ! pop(signed_index))
+    if ( ! pop(signed_index)) {
         return false;
+}
 
     // Ensure the index is within bounds.
 
-    if (signed_index < 0)
+    if (signed_index < 0) {
         return false;
+}
 
     auto const index = static_cast<uint32_t>(signed_index);
 
-    if (index >= size())
+    if (index >= size()) {
         return false;
+}
 
     out_position = position(index);
     return true;
@@ -206,11 +214,13 @@ inline bool program::pop_position(stack_iterator& out_position) {
 
 // pop1/pop2/.../pop[count]
 inline bool program::pop(data_stack& section, size_t count) {
-    if (size() < count)
+    if (size() < count) {
         return false;
+}
 
-    for (size_t i = 0; i < count; ++i)
+    for (size_t i = 0; i < count; ++i) {
         section.push_back(pop());
+}
 
     return true;
 }
@@ -247,15 +257,17 @@ inline void program::erase(const stack_iterator& first,
 
 // private
 inline bool program::stack_to_bool(bool clean) const {
-    if (clean && primary_.size() != 1)
+    if (clean && primary_.size() != 1) {
         return false;
+}
 
     auto const& back = primary_.back();
 
     // It's not non-zero it's the terminating negative sentinel.
-    for (auto it = back.begin(); it != back.end(); ++it)
-        if (*it != 0)
+    for (auto it = back.begin(); it != back.end(); ++it) {
+        if (*it != 0) {
             return !(it == back.end() - 1 && *it == number::negative_0);
+}
 
     return false;
 }
@@ -305,8 +317,9 @@ inline program::stack_iterator program::position(size_t index) /*const*/
 inline operation::list program::subscript() const {
     operation::list ops;
 
-    for (auto op = jump(); op != end(); ++op)
+    for (auto op = jump(); op != end(); ++op) {
         ops.push_back(*op);
+}
 
     return ops;
 }

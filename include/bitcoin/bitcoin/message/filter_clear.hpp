@@ -68,11 +68,13 @@ public:
         // Initialize as valid from deserialization.
         insufficient_version_ = false;
 
-        if (version < filter_clear::version_minimum)
+        if (version < filter_clear::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

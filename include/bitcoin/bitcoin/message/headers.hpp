@@ -94,21 +94,25 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > max_get_headers)
+        if (count > max_get_headers) {
             source.invalidate();
-        else
+        } else {
             elements_.resize(count);
+}
 
         // Order is required.
-        for (auto& element : elements_)
-            if ( ! element.from_data(version, source))
+        for (auto& element : elements_) {
+            if ( ! element.from_data(version, source)) {
                 break;
+}
 
-        if (version < headers::version_minimum)
+        if (version < headers::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -121,8 +125,9 @@ public:
     void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(elements_.size());
 
-        for (auto const& element : elements_)
+        for (auto const& element : elements_) {
             element.to_data(version, sink);
+}
     }
 
     //void to_data(uint32_t version, writer& sink) const;

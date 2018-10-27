@@ -126,23 +126,26 @@ public:
         cancel_ = source.read_4_bytes_little_endian();
         set_cancel_.reserve(source.read_size_little_endian());
 
-        for (size_t i = 0; i < set_cancel_.capacity() && source; i++)
+        for (size_t i = 0; i < set_cancel_.capacity() && source; i++) {
             set_cancel_.push_back(source.read_4_bytes_little_endian());
+}
 
         min_version_ = source.read_4_bytes_little_endian();
         max_version_ = source.read_4_bytes_little_endian();
         set_sub_version_.reserve(source.read_size_little_endian());
 
-        for (size_t i = 0; i < set_sub_version_.capacity() && source; i++)
+        for (size_t i = 0; i < set_sub_version_.capacity() && source; i++) {
             set_sub_version_.push_back(source.read_string());
+}
 
         priority_ = source.read_4_bytes_little_endian();
         comment_ = source.read_string();
         status_bar_ = source.read_string();
         reserved_ = source.read_string();
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -160,15 +163,17 @@ public:
         sink.write_4_bytes_little_endian(cancel_);
         sink.write_variable_little_endian(set_cancel_.size());
 
-        for (auto const& entry : set_cancel_)
+        for (auto const& entry : set_cancel_) {
             sink.write_4_bytes_little_endian(entry);
+}
 
         sink.write_4_bytes_little_endian(min_version_);
         sink.write_4_bytes_little_endian(max_version_);
         sink.write_variable_little_endian(set_sub_version_.size());
 
-        for (auto const& entry : set_sub_version_)
+        for (auto const& entry : set_sub_version_) {
             sink.write_string(entry);
+}
 
         sink.write_4_bytes_little_endian(priority_);
         sink.write_string(comment_);

@@ -92,18 +92,21 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > max_get_blocks)
+        if (count > max_get_blocks) {
             source.invalidate();
-        else
+        } else {
             start_hashes_.reserve(count);
+}
 
-        for (size_t hash = 0; hash < count && source; ++hash)
+        for (size_t hash = 0; hash < count && source; ++hash) {
             start_hashes_.push_back(source.read_hash());
+}
 
         stop_hash_ = source.read_hash();
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -117,8 +120,9 @@ public:
         sink.write_4_bytes_little_endian(version);
         sink.write_variable_little_endian(start_hashes_.size());
 
-        for (auto const& start_hash : start_hashes_)
+        for (auto const& start_hash : start_hashes_) {
             sink.write_hash(start_hash);
+}
 
         sink.write_hash(stop_hash_);
     }

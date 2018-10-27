@@ -59,10 +59,11 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
     auto const count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
+    if (count > get_max_block_size()) {
         source.invalidate();
-    else
+    } else {
         puts.resize(count);
+}
 
     auto const deserialize = [&](Put& put) {
         result = result && put.from_data(source, wire, witness_val(witness));
@@ -242,8 +243,9 @@ public:
             auto const locktime = source.read_variable_little_endian();
             auto const version = source.read_variable_little_endian();
 
-            if (locktime > max_uint32 || version > max_uint32)
+            if (locktime > max_uint32 || version > max_uint32) {
                 source.invalidate();
+}
 
             locktime_ = static_cast<uint32_t>(locktime);
             version_ = static_cast<uint32_t>(version);

@@ -104,17 +104,19 @@ public:
 
         reset();
 
-        if ( ! header_.from_data(source))
+        if ( ! header_.from_data(source)) {
             return false;
+}
 
         nonce_ = source.read_8_bytes_little_endian();
         auto count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size())
+        if (count > get_max_block_size()) {
             source.invalidate();
-        else
+        } else {
             short_ids_.reserve(count);
+}
 
         //todo:move to function
         // Order is required.
@@ -128,22 +130,26 @@ public:
         count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size())
+        if (count > get_max_block_size()) {
             source.invalidate();
-        else
+        } else {
             transactions_.resize(count);
+}
 
         // NOTE: Witness flag is controlled by prefilled tx
         // Order is required.
-        for (auto& tx : transactions_)
-            if ( ! tx.from_data(version, source))
+        for (auto& tx : transactions_) {
+            if ( ! tx.from_data(version, source)) {
                 break;
+}
 
-        if (version < compact_block::version_minimum)
+        if (version < compact_block::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -174,8 +180,9 @@ public:
         sink.write_variable_little_endian(transactions_.size());
 
         // NOTE: Witness flag is controlled by prefilled tx
-        for (auto const& element : transactions_)
+        for (auto const& element : transactions_) {
             element.to_data(version, sink);
+}
     }
 
     //void to_data(uint32_t version, writer& sink) const;

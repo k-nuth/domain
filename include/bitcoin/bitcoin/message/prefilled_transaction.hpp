@@ -84,8 +84,9 @@ public:
         index_ = source.read_variable_little_endian();
         transaction_.from_data(source, true, witness_default());
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

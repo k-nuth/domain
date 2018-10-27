@@ -82,16 +82,19 @@ public:
 
         auto const size = source.read_size_little_endian();
 
-        if (size > max_filter_add)
+        if (size > max_filter_add) {
             source.invalidate();
-        else
+        } else {
             data_ = source.read_bytes(size);
+}
 
-        if (version < filter_add::version_minimum)
+        if (version < filter_add::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

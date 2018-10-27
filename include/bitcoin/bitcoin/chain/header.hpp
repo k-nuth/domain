@@ -139,6 +139,7 @@ public:
     void set_nonce(uint32_t value);
 
     hash_digest hash() const;
+    hash_digest hash_pow() const;
 
 #ifdef BITPRIM_CURRENCY_LTC
     hash_digest litecoin_proof_of_work_hash() const;

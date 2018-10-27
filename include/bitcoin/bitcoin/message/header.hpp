@@ -82,16 +82,19 @@ public:
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
-        if ( ! chain::header::from_data(source))
+        if ( ! chain::header::from_data(source)) {
             return false;
+}
 
         // The header message must trail a zero byte (yes, it's stoopid).
         // bitcoin.org/en/developer-reference#headers
-        if (version != version::level::canonical && source.read_byte() != 0x00)
+        if (version != version::level::canonical && source.read_byte() != 0x00) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -103,8 +106,9 @@ public:
     void to_data(uint32_t version, W& sink) const {
         chain::header::to_data(sink);
 
-        if (version != version::level::canonical)
+        if (version != version::level::canonical) {
             sink.write_variable_little_endian(0);
+}
     }
 
     void reset();

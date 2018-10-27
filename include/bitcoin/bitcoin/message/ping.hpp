@@ -81,11 +81,13 @@ public:
         valid_ = true;
         nonceless_ = (version < version::level::bip31);
 
-        if ( ! nonceless_)
+        if ( ! nonceless_) {
             nonce_ = source.read_8_bytes_little_endian();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -97,8 +99,9 @@ public:
 
     template <Writer W>
     void to_data(uint32_t version, W& sink) const {
-        if (version >= version::level::bip31)
+        if (version >= version::level::bip31) {
             sink.write_8_bytes_little_endian(nonce_);
+}
     }
 
     //void to_data(uint32_t version, writer& sink) const;

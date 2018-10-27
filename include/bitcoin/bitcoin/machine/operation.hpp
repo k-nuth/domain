@@ -95,13 +95,15 @@ public:
         // The max_script_size and max_push_data_size constants limit
         // evaluation, but not all scripts evaluate, so use max_block_size
         // to guard memory allocation here.
-        if (size > get_max_block_size())  //TODO(bitprim): max_block_size changed to get_max_block_size (check space for BCH)
+        if (size > get_max_block_size()) {  //TODO(bitprim): max_block_size changed to get_max_block_size (check space for BCH)
             source.invalidate();
-        else
+        } else {
             data_ = source.read_bytes(size);
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return valid_;
     }

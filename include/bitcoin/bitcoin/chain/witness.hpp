@@ -112,15 +112,18 @@ public:
         if (prefix) {
             // Witness prefix is an element count, not byte length (unlike script).
             // On wire each witness is prefixed with number of elements (bip144).
-            for (auto count = source.read_size_little_endian(); count > 0; --count)
+            for (auto count = source.read_size_little_endian(); count > 0; --count) {
                 stack_.push_back(read_element(source));
+}
         } else {
-            while ( ! source.is_exhausted())
+            while ( ! source.is_exhausted()) {
                 stack_.push_back(read_element(source));
+}
         }
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -139,8 +142,9 @@ public:
     template <Writer W>
     void to_data(W& sink, bool prefix) const {
         // Witness prefix is an element count, not byte length (unlike script).
-        if (prefix)
+        if (prefix) {
             sink.write_size_little_endian(stack_.size());
+}
 
         auto const serialize = [&sink](data_chunk const& element) {
             // Tokens encoded as variable integer prefixed byte array (bip144).

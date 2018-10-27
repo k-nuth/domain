@@ -86,16 +86,19 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size())
+        if (count > get_max_block_size()) {
             source.invalidate();
-        else
+        } else {
             indexes_.reserve(count);
+}
 
-        for (size_t position = 0; position < count && source; ++position)
+        for (size_t position = 0; position < count && source; ++position) {
             indexes_.push_back(source.read_size_little_endian());
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -108,8 +111,9 @@ public:
     void to_data(uint32_t version, W& sink) const {
         sink.write_hash(block_hash_);
         sink.write_variable_little_endian(indexes_.size());
-        for (auto const& element : indexes_)
+        for (auto const& element : indexes_) {
             sink.write_variable_little_endian(element);
+}
     }
 
     //void to_data(uint32_t version, writer& sink) const;

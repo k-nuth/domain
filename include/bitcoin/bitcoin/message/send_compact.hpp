@@ -82,17 +82,20 @@ public:
 
         auto const mode = source.read_byte();
 
-        if (mode > 1)
+        if (mode > 1) {
             source.invalidate();
+}
 
         high_bandwidth_mode_ = (mode == 1);
         this->version_ = source.read_8_bytes_little_endian();
 
-        if (version < send_compact::version_minimum)
+        if (version < send_compact::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

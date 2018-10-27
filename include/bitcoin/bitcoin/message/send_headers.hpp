@@ -72,8 +72,9 @@ public:
             source.invalidate();
         }
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

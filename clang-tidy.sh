@@ -10,7 +10,9 @@ python ../ci_utils/run-clang-tidy.py -checks='*,-fuchsia*,-llvm-header-guard,-mo
 
 python ../ci_utils/run-clang-tidy.py -checks='modernize*' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include
 python ../ci_utils/run-clang-tidy.py -checks='modernize-use-using*' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include/
-python ../ci_utils/run-clang-tidy.py -checks='*,-llvm-header-guard,-fuchsia*,-google-runtime-references,-cert-err58-cpp' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include
+python ../ci_utils/run-clang-tidy.py -checks='*,-llvm-header-guard,-fuchsia*,-google-runtime-references,-cert-err58-cpp,-cppcoreguidelines-special-member-functions,-modernize-pass-by-value' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include
+
+
 
 
 

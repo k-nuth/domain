@@ -44,27 +44,32 @@ public:
     template <class UriReader>
     static UriReader parse(std::string const& uri, bool strict = true) {
         wallet::uri parsed;
-        if ( ! parsed.decode(uri, strict))
+        if ( ! parsed.decode(uri, strict)) {
             return UriReader();
+}
 
         UriReader out;
         out.set_strict(strict);
         out.set_scheme(parsed.scheme());
-        if (parsed.has_authority() && !out.set_authority(parsed.authority()))
+        if (parsed.has_authority() && !out.set_authority(parsed.authority())) {
             return UriReader();
+}
 
-        if ( ! parsed.path().empty() && !out.set_path(parsed.path()))
+        if ( ! parsed.path().empty() && !out.set_path(parsed.path())) {
             return UriReader();
+}
 
-        if (parsed.has_fragment() && !out.set_fragment(parsed.fragment()))
+        if (parsed.has_fragment() && !out.set_fragment(parsed.fragment())) {
             return UriReader();
+}
 
         auto const query = parsed.decode_query();
         for (auto const& term : query) {
             auto const& key = term.first;
             auto const& value = term.second;
-            if ( ! key.empty() && !out.set_parameter(key, value))
+            if ( ! key.empty() && !out.set_parameter(key, value)) {
                 return UriReader();
+}
         }
 
         return out;

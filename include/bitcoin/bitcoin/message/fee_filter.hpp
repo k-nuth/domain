@@ -83,11 +83,13 @@ public:
 
         minimum_fee_ = source.read_8_bytes_little_endian();
 
-        if (version < fee_filter::version_minimum)
+        if (version < fee_filter::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

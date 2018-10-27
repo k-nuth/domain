@@ -86,21 +86,25 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size())
+        if (count > get_max_block_size()) {
             source.invalidate();
-        else
+        } else {
             transactions_.resize(count);
+}
 
         // Order is required.
-        for (auto& tx : transactions_)
-            if ( ! tx.from_data(source, true, witness_default()))
+        for (auto& tx : transactions_) {
+            if ( ! tx.from_data(source, true, witness_default())) {
                 break;
+}
 
-        if (version < block_transactions::version_minimum)
+        if (version < block_transactions::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

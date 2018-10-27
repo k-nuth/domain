@@ -49,8 +49,9 @@ void inline add_child(pt::ptree& out_list, std::string const& name, const pt::pt
 template <typename Values>
 pt::ptree property_tree_list(std::string const& name, const Values& values, bool json) {
     pt::ptree list;
-    for (auto const& value : values)
+    for (auto const& value : values) {
         add_child(list, name, property_list(value), json);
+}
 
     return list;
 }
@@ -69,8 +70,9 @@ pt::ptree property_tree_list_of_lists(std::string const& name,
                                       const Values& values,
                                       bool json) {
     pt::ptree list;
-    for (auto const& value : values)
+    for (auto const& value : values) {
         add_child(list, name, property_list(value, json), json);
+}
 
     return list;
 }

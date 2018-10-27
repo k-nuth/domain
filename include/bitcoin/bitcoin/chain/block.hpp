@@ -120,21 +120,24 @@ public:
         validation.start_deserialize = asio::steady_clock::now();
         reset();
 
-        if ( ! header_.from_data(source, true))
+        if ( ! header_.from_data(source, true)) {
             return false;
+}
 
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size())
+        if (count > get_max_block_size()) {
             source.invalidate();
-        else
+        } else {
             transactions_.resize(count);
+}
 
         // Order is required, explicit loop allows early termination.
-        for (auto& tx : transactions_)
-            if ( ! tx.from_data(source, true, witness_val(witness)))
+        for (auto& tx : transactions_) {
+            if ( ! tx.from_data(source, true, witness_val(witness))) {
                 break;
+}
 
 
 #ifndef BITPRIM_CURRENCY_BCH
@@ -143,8 +146,9 @@ public:
             strip_witness();
 #endif
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         validation.end_deserialize = asio::steady_clock::now();
         return source;

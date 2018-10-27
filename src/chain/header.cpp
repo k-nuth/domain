@@ -208,44 +208,36 @@ hash_digest header::litecoin_proof_of_work_hash() const {
 }
 #endif  //BITPRIM_CURRENCY_LTC
 
+inline
+hash_digest header::hash_pow() const {
+#ifdef BITPRIM_CURRENCY_LTC
+    return litecoin_proof_of_work_hash();
+#else
+    return hash();
+#endif
+
+}
+
 // Validation helpers.
 //-----------------------------------------------------------------------------
 
 // [CheckProofOfWork]
+inline
 bool header::is_valid_proof_of_work(bool retarget) const {
-
-    return header_basis::is_valid_proof_of_work(
-#ifdef BITPRIM_CURRENCY_LTC
-                litecoin_proof_of_work_hash()
-#else
-                hash()
-#endif
-                , retarget);
-
+    return header_basis::is_valid_proof_of_work(hash_pow(), retarget);
 }
 
 // Validation.
 //-----------------------------------------------------------------------------
 
+inline
 code header::check(bool retarget) const {
-    return header_basis::check(
-#ifdef BITPRIM_CURRENCY_LTC
-                litecoin_proof_of_work_hash()
-#else
-                hash()
-#endif
-                , retarget);
+    return header_basis::check(hash_pow(), retarget);
 }
 
+inline
 code header::accept(chain_state const& state) const {
-
-    return header_basis::accept(state,
-#ifdef BITPRIM_CURRENCY_LTC
-                litecoin_proof_of_work_hash()
-#else
-                hash()
-#endif
-                );
+    return header_basis::accept(state, hash_pow());
 }
 
 }  // namespace chain

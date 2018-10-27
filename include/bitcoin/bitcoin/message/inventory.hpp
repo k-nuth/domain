@@ -93,18 +93,21 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > max_inventory)
+        if (count > max_inventory) {
             source.invalidate();
-        else
+        } else {
             inventories_.resize(count);
+}
 
         // Order is required.
-        for (auto& inventory : inventories_)
-            if ( ! inventory.from_data(version, source))
+        for (auto& inventory : inventories_) {
+            if ( ! inventory.from_data(version, source)) {
                 break;
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -117,8 +120,9 @@ public:
     void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(inventories_.size());
 
-        for (auto const& inventory : inventories_)
+        for (auto const& inventory : inventories_) {
             inventory.to_data(version, sink);
+}
     }
 
     //void to_data(uint32_t version, writer& sink) const;

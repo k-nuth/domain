@@ -139,15 +139,18 @@ public:
             // for tx and block rejects. Use this to prevent error on empty stream.
             auto const bytes = source.read_bytes();
 
-            if (bytes.size() == hash_size)
+            if (bytes.size() == hash_size) {
                 build_array(data_, {bytes});
+}
         }
 
-        if (version < reject::version_minimum)
+        if (version < reject::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

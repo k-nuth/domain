@@ -99,8 +99,9 @@ public:
 
         reset();
 
-        if ( ! previous_output_.from_data(source, wire))
+        if ( ! previous_output_.from_data(source, wire)) {
             return false;
+}
 
         script_.from_data(source, true);
 
@@ -112,8 +113,9 @@ public:
 #endif
         sequence_ = source.read_4_bytes_little_endian();
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }

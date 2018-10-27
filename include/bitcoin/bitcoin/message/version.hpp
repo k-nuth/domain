@@ -214,8 +214,9 @@ public:
         relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() ||
                  (self_bip37 && source.read_byte() != 0);
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -236,8 +237,9 @@ public:
         sink.write_string(user_agent_);
         sink.write_4_bytes_little_endian(start_height_);
 
-        if (effective_version >= level::bip37)
+        if (effective_version >= level::bip37) {
             sink.write_byte(relay_ ? 1 : 0);
+}
     }
 
     //void to_data(uint32_t version, writer& sink) const;

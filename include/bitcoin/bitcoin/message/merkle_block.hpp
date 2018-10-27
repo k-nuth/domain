@@ -96,28 +96,33 @@ public:
     bool from_data(uint32_t version, R& source) {
         reset();
 
-        if ( ! header_.from_data(source))
+        if ( ! header_.from_data(source)) {
             return false;
+}
 
         total_transactions_ = source.read_4_bytes_little_endian();
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size())
+        if (count > get_max_block_size()) {
             source.invalidate();
-        else
+        } else {
             hashes_.reserve(count);
+}
 
-        for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash)
+        for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash) {
             hashes_.push_back(source.read_hash());
+}
 
         flags_ = source.read_bytes(source.read_size_little_endian());
 
-        if (version < merkle_block::version_minimum)
+        if (version < merkle_block::version_minimum) {
             source.invalidate();
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -134,8 +139,9 @@ public:
         sink.write_4_bytes_little_endian(total32);
         sink.write_variable_little_endian(hashes_.size());
 
-        for (auto const& hash : hashes_)
+        for (auto const& hash : hashes_) {
             sink.write_hash(hash);
+}
 
         sink.write_variable_little_endian(flags_.size());
         sink.write_bytes(flags_);

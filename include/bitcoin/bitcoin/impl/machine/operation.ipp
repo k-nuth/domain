@@ -59,8 +59,9 @@ operation::operation(data_chunk&& uncoded, bool minimal)
     , data_(std::move(uncoded))
     , valid_(!is_oversized())
 {
-    if ( ! valid_)
+    if ( ! valid_) {
         reset();
+}
 
     // Revert data if opcode_from_data produced a numeric encoding.
     if (minimal && !is_payload(code_)) {
@@ -75,8 +76,9 @@ operation::operation(data_chunk const& uncoded, bool minimal)
     , data_(uncoded)
     , valid_(!is_oversized())
 {
-    if ( ! valid_)
+    if ( ! valid_) {
         reset();
+}
 
     // Revert data if opcode_from_data produced a numeric encoding.
     if (minimal && !is_payload(code_)) {
@@ -210,14 +212,15 @@ opcode operation::opcode_from_size(size_t size) {
     BITCOIN_ASSERT(size <= max_uint32);
     BC_CONSTEXPR auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
 
-    if (size <= op_75)
+    if (size <= op_75) {
         return static_cast<opcode>(size);
-    else if (size <= max_uint8)
+    } else if (size <= max_uint8) {
         return opcode::push_one_size;
-    else if (size <= max_uint16)
+    } else if (size <= max_uint16) {
         return opcode::push_two_size;
-    else
+    } else {
         return opcode::push_four_size;
+}
 }
 
 inline 
@@ -227,14 +230,17 @@ opcode operation::minimal_opcode_from_data(data_chunk const& data) {
     if (size == 1) {
         auto const value = data.front();
 
-        if (value == number::negative_1)
+        if (value == number::negative_1) {
             return opcode::push_negative_1;
+}
 
-        if (value == number::positive_0)
+        if (value == number::positive_0) {
             return opcode::push_size_0;
+}
 
-        if (value >= number::positive_1 && value <= number::positive_16)
+        if (value >= number::positive_1 && value <= number::positive_16) {
             return opcode_from_positive(value);
+}
     }
 
     // Nominal encoding is minimal for multiple bytes and non-numeric values.

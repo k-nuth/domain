@@ -87,17 +87,20 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > max_address)
+        if (count > max_address) {
             source.invalidate();
-        else
+        } else {
             addresses_.resize(count);
+}
 
-        for (auto& address : addresses_)
-            if ( ! address.from_data(version, source, true))
+        for (auto& address : addresses_) {
+            if ( ! address.from_data(version, source, true)) {
                 break;
+}
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
@@ -111,8 +114,9 @@ public:
     void to_data(uint32_t version, W& sink) const {
         sink.write_variable_little_endian(addresses_.size());
 
-        for (auto const& net_address : addresses_)
+        for (auto const& net_address : addresses_) {
             net_address.to_data(version, sink, true);
+}
     }
 
     //void to_data(uint32_t version, writer& sink) const;

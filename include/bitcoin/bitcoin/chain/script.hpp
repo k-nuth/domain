@@ -113,16 +113,18 @@ public:
 
             // The max_script_size constant limits evaluation, but not all scripts
             // evaluate, so use max_block_size to guard memory allocation here.
-            if (size > get_max_block_size())
+            if (size > get_max_block_size()) {
                 source.invalidate();
-            else
+            } else {
                 bytes_ = source.read_bytes(size);
+}
         } else {
             bytes_ = source.read_bytes();
         }
 
-        if ( ! source)
+        if ( ! source) {
             reset();
+}
 
         return source;
     }
