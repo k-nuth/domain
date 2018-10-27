@@ -44,16 +44,6 @@ operation::operation()
 }
 
 inline 
-operation::operation(operation&& x) noexcept
-    : operation(x.code_, std::move(x.data_), x.valid_)
-{}
-
-inline 
-operation::operation(operation const& x)
-    : operation(x.code_, x.data_, x.valid_)
-{}
-
-inline 
 operation::operation(data_chunk&& uncoded, bool minimal)
     : code_(opcode_from_data(uncoded, minimal))
     , data_(std::move(uncoded))
@@ -61,7 +51,7 @@ operation::operation(data_chunk&& uncoded, bool minimal)
 {
     if ( ! valid_) {
         reset();
-}
+    }
 
     // Revert data if opcode_from_data produced a numeric encoding.
     if (minimal && !is_payload(code_)) {
@@ -92,36 +82,20 @@ operation::operation(opcode code)
     : code_(code), valid_(true)
 {}
 
-// protected
-inline 
-operation::operation(opcode code, data_chunk&& data, bool valid)
-    : code_(code), data_(std::move(data)), valid_(valid)
-{}
+// // protected
+// inline 
+// operation::operation(opcode code, data_chunk&& data, bool valid)
+//     : code_(code), data_(std::move(data)), valid_(valid)
+// {}
 
-// protected
-inline 
-operation::operation(opcode code, data_chunk const& data, bool valid)
-    : code_(code), data_(data), valid_(valid)
-{}
+// // protected
+// inline 
+// operation::operation(opcode code, data_chunk const& data, bool valid)
+//     : code_(code), data_(data), valid_(valid)
+// {}
 
 // Operators.
 //-----------------------------------------------------------------------------
-
-inline 
-operation& operation::operator=(operation&& x) noexcept {
-    code_ = x.code_;
-    data_ = std::move(x.data_);
-    valid_ = x.valid_;
-    return *this;
-}
-
-inline 
-operation& operation::operator=(operation const& x) {
-    code_ = x.code_;
-    data_ = x.data_;
-    valid_ = x.valid_;
-    return *this;
-}
 
 inline 
 bool operation::operator==(operation const& x) const {

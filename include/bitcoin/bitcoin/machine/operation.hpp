@@ -58,11 +58,11 @@ public:
 
     operation(opcode code);
 
+    operation& operator=(operation const& x) = default;
+    operation& operator=(operation&& x) = default;
+
     // Operators.
     //-------------------------------------------------------------------------
-
-    operation& operator=(operation&& x) noexcept;
-    operation& operator=(operation const& x);
 
     bool operator==(operation const& x) const;
     bool operator!=(operation const& x) const;
@@ -79,8 +79,6 @@ public:
         instance.from_data(source);
         return instance;
     }
-
-    //static operation factory_from_data(reader& source);
 
     bool from_data(data_chunk const& encoded);
     bool from_data(std::istream& stream);
@@ -99,16 +97,14 @@ public:
             source.invalidate();
         } else {
             data_ = source.read_bytes(size);
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return valid_;
     }
-
-    //bool from_data(reader& source);
 
     bool from_string(std::string const& mnemonic);
 

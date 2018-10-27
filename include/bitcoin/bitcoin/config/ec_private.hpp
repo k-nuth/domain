@@ -36,8 +36,7 @@ public:
     /**
      * Default constructor.
      */
-    ec_private() {
-    }
+    ec_private() = default;
 
     /**
      * Initialization constructor.
