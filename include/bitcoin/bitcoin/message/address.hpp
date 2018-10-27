@@ -91,16 +91,17 @@ public:
             source.invalidate();
         } else {
             addresses_.resize(count);
-}
+        }
 
         for (auto& address : addresses_) {
             if ( ! address.from_data(version, source, true)) {
                 break;
-}
+            }
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

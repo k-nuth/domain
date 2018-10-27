@@ -106,7 +106,7 @@ public:
 
         if ( ! header_.from_data(source)) {
             return false;
-}
+        }
 
         nonce_ = source.read_8_bytes_little_endian();
         auto count = source.read_size_little_endian();
@@ -116,7 +116,7 @@ public:
             source.invalidate();
         } else {
             short_ids_.reserve(count);
-}
+        }
 
         //todo:move to function
         // Order is required.
@@ -134,22 +134,23 @@ public:
             source.invalidate();
         } else {
             transactions_.resize(count);
-}
+        }
 
         // NOTE: Witness flag is controlled by prefilled tx
         // Order is required.
         for (auto& tx : transactions_) {
             if ( ! tx.from_data(version, source)) {
                 break;
-}
+            }
+        }
 
         if (version < compact_block::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

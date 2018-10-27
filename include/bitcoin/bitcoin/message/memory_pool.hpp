@@ -69,11 +69,11 @@ public:
 
         if (version < memory_pool::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

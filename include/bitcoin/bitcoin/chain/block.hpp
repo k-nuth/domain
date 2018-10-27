@@ -55,7 +55,7 @@ public:
     using indexes = std::vector<size_t>;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation {
+    struct validation_t {
         uint64_t originator = 0;
         code error = error::not_found;
         chain_state::ptr state = nullptr;
@@ -110,8 +110,6 @@ public:
         return instance;
     }
 
-    //static block factory_from_data(reader& source, bool witness=false);
-
     bool from_data(data_chunk const& data, bool witness = false);
     bool from_data(std::istream& stream, bool witness = false);
 
@@ -122,7 +120,7 @@ public:
 
         if ( ! header_.from_data(source, true)) {
             return false;
-}
+        }
 
         auto const count = source.read_size_little_endian();
 
@@ -131,24 +129,25 @@ public:
             source.invalidate();
         } else {
             transactions_.resize(count);
-}
+        }
 
         // Order is required, explicit loop allows early termination.
         for (auto& tx : transactions_) {
             if ( ! tx.from_data(source, true, witness_val(witness))) {
                 break;
-}
-
+            }
+        }
 
 #ifndef BITPRIM_CURRENCY_BCH
         // TODO(libbitcoin): optimize by having reader skip witness data.
-        if ( ! witness_val(witness))
+        if ( ! witness_val(witness)) {
             strip_witness();
+        }
 #endif
 
         if ( ! source) {
             reset();
-}
+        }
 
         validation.end_deserialize = asio::steady_clock::now();
         return source;
@@ -249,7 +248,7 @@ public:
     code connect_transactions(chain_state const& state) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation validation;
+    mutable validation_t validation;
 
 protected:
     void reset();

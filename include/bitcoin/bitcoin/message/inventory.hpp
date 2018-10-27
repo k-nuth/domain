@@ -97,17 +97,18 @@ public:
             source.invalidate();
         } else {
             inventories_.resize(count);
-}
+        }
 
         // Order is required.
         for (auto& inventory : inventories_) {
             if ( ! inventory.from_data(version, source)) {
                 break;
-}
+            }
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

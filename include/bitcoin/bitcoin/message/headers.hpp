@@ -98,21 +98,22 @@ public:
             source.invalidate();
         } else {
             elements_.resize(count);
-}
+        }
 
         // Order is required.
         for (auto& element : elements_) {
             if ( ! element.from_data(version, source)) {
                 break;
-}
+            }
+        }
 
         if (version < headers::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

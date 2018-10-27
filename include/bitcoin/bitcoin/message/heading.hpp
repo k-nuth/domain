@@ -132,7 +132,7 @@ public:
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

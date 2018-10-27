@@ -98,7 +98,7 @@ public:
 
         if ( ! header_.from_data(source)) {
             return false;
-}
+        }
 
         total_transactions_ = source.read_4_bytes_little_endian();
         auto const count = source.read_size_little_endian();
@@ -108,21 +108,21 @@ public:
             source.invalidate();
         } else {
             hashes_.reserve(count);
-}
+        }
 
         for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash) {
             hashes_.push_back(source.read_hash());
-}
+        }
 
         flags_ = source.read_bytes(source.read_size_little_endian());
 
         if (version < merkle_block::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

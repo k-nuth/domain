@@ -256,10 +256,11 @@ inline void program::erase(const stack_iterator& first,
 //-----------------------------------------------------------------------------
 
 // private
-inline bool program::stack_to_bool(bool clean) const {
+inline 
+bool program::stack_to_bool(bool clean) const {
     if (clean && primary_.size() != 1) {
         return false;
-}
+    }
 
     auto const& back = primary_.back();
 
@@ -267,7 +268,8 @@ inline bool program::stack_to_bool(bool clean) const {
     for (auto it = back.begin(); it != back.end(); ++it) {
         if (*it != 0) {
             return !(it == back.end() - 1 && *it == number::negative_0);
-}
+        }
+    }
 
     return false;
 }
