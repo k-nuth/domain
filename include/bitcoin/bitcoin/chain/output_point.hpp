@@ -70,7 +70,7 @@ public:
     output_point(output_point&& x) = default;
 
     // This class is move assignable and copy assignable.
-    output_point& operator=(point const&);
+    output_point& operator=(point const& /*x*/);
     output_point& operator=(output_point const&) = default;
     output_point& operator=(output_point&& x) = default;
 

@@ -42,15 +42,15 @@ static BC_CONSTEXPR auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
 // Operations (shared).
 //-----------------------------------------------------------------------------
 
-inline interpreter::result interpreter::op_nop(opcode) {
+inline interpreter::result interpreter::op_nop(opcode /*unused*/) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_disabled(opcode) {
+inline interpreter::result interpreter::op_disabled(opcode /*unused*/) {
     return error::op_disabled;
 }
 
-inline interpreter::result interpreter::op_reserved(opcode) {
+inline interpreter::result interpreter::op_reserved(opcode /*unused*/) {
     return error::op_reserved;
 }
 
@@ -148,7 +148,7 @@ inline interpreter::result interpreter::op_verify(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_return(program&) {
+inline interpreter::result interpreter::op_return(program& /*unused*/) {
     return error::op_return;
 }
 

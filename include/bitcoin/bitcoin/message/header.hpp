@@ -69,7 +69,7 @@ public:
 
     /// This class is move assignable but not copy assignable.
     header& operator=(header&& x) = default;
-    header& operator=(header const&) /*= delete*/;
+    header& operator=(header const& /*x*/) /*= delete*/;
 
     bool operator==(chain::header const& x) const;
     bool operator!=(chain::header const& x) const;

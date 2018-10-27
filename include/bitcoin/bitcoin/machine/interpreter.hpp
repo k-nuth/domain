@@ -38,9 +38,9 @@ public:
     // Operations (shared).
     //-----------------------------------------------------------------------------
 
-    static result op_nop(opcode);
-    static result op_disabled(opcode);
-    static result op_reserved(opcode);
+    static result op_nop(opcode /*unused*/);
+    static result op_disabled(opcode /*unused*/);
+    static result op_reserved(opcode /*unused*/);
     static result op_push_number(program& program, uint8_t value);
     static result op_push_size(program& program, operation const& op);
     static result op_push_data(program& program, data_chunk const& data, uint32_t size_limit);
