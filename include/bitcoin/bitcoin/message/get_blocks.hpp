@@ -64,7 +64,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     get_blocks& operator=(get_blocks&& x) = default;
-    void operator=(get_blocks const&) = delete;
+    get_blocks& operator=(get_blocks const&) = default;
 
     bool operator==(get_blocks const& x) const;
     bool operator!=(get_blocks const& x) const;

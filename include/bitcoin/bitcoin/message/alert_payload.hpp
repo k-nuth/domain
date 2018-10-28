@@ -58,7 +58,7 @@ public:
 
     /// This class is move assignable but not copy assignable.
     alert_payload& operator=(alert_payload&& x) = default;
-    void operator=(alert_payload const&) = delete;
+    alert_payload& operator=(alert_payload const&) = default;
 
     bool operator==(alert_payload const& x) const;
     bool operator!=(alert_payload const& x) const;
