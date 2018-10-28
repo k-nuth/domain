@@ -68,7 +68,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     inventory& operator=(inventory&& x) = default;
-    void operator=(inventory const&) = delete;
+    inventory& operator=(inventory const&) = default;
 
     bool operator==(inventory const& x) const;
     bool operator!=(inventory const& x) const;

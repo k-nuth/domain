@@ -61,7 +61,7 @@ public:
 
     /// This class is move assignable but not copy assignable.
     send_compact& operator=(send_compact&& x) = default;
-    void operator=(send_compact const&) = delete;
+    send_compact& operator=(send_compact const&) = default;
 
     bool operator==(send_compact const& x) const;
     bool operator!=(send_compact const& x) const;

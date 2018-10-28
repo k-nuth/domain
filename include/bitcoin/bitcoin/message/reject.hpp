@@ -99,7 +99,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     reject& operator=(reject&& x) = default;
-    void operator=(reject const&) = delete;
+    reject& operator=(reject const&) = default;
 
     bool operator==(reject const& x) const;
     bool operator!=(reject const& x) const;

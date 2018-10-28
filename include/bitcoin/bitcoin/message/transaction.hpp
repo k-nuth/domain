@@ -74,7 +74,7 @@ public:
 
     /// This class is move assignable but not copy assignable.
     transaction& operator=(transaction&& x) = default;
-    void operator=(transaction const&) = delete;
+    transaction& operator=(transaction const&) = default;
 
     bool operator==(chain::transaction const& x) const;
     bool operator!=(chain::transaction const& x) const;

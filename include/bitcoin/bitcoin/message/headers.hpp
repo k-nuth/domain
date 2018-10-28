@@ -68,7 +68,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     headers& operator=(headers&& x) = default;
-    void operator=(headers const&) = delete;
+    headers& operator=(headers const&) = default;
 
     bool operator==(headers const& x) const;
     bool operator!=(headers const& x) const;

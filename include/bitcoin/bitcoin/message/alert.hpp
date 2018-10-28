@@ -61,7 +61,7 @@ public:
 
     /// This class is move assignable but not copy assignable.
     alert& operator=(alert&& x) = default;
-    void operator=(alert const&) = delete;
+    alert& operator=(alert const&) = default;
 
     bool operator==(alert const& x) const;
     bool operator!=(alert const& x) const;

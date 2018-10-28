@@ -141,7 +141,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     version& operator=(version&& x) = default;
-    void operator=(version const&) = delete;
+    version& operator=(version const&) = default;
 
     bool operator==(version const& x) const;
     bool operator!=(version const& x) const;

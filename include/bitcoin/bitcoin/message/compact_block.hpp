@@ -72,7 +72,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     compact_block& operator=(compact_block&& x) = default;
-    void operator=(compact_block const&) = delete;
+    compact_block& operator=(compact_block const&) = default;
 
     bool operator==(compact_block const& x) const;
     bool operator!=(compact_block const& x) const;

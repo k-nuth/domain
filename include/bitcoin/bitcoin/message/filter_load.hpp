@@ -62,7 +62,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     filter_load& operator=(filter_load&& x) = default;
-    void operator=(filter_load const&) = delete;
+    filter_load& operator=(filter_load const&) = default;
 
     bool operator==(filter_load const& x) const;
     bool operator!=(filter_load const& x) const;

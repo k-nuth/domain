@@ -61,7 +61,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     pong& operator=(pong&& x) = default;
-    void operator=(pong const&) = delete;
+    pong& operator=(pong const&) = default;
 
     bool operator==(pong const& x) const;
     bool operator!=(pong const& x) const;

@@ -64,7 +64,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     not_found& operator=(not_found&& x) = default;
-    void operator=(not_found const&) = delete;
+    not_found& operator=(not_found const&) = default;
 
     bool operator==(not_found const& x) const;
     bool operator!=(not_found const& x) const;

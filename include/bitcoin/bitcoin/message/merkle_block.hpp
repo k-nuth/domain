@@ -66,7 +66,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     merkle_block& operator=(merkle_block&& x) = default;
-    void operator=(merkle_block const&) = delete;
+    merkle_block& operator=(merkle_block const&) = default;
 
     bool operator==(merkle_block const& x) const;
     bool operator!=(merkle_block const& x) const;

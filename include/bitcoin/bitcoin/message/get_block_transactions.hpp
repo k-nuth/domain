@@ -60,7 +60,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     get_block_transactions& operator=(get_block_transactions&& x) = default;
-    void operator=(get_block_transactions const&) = delete;
+    get_block_transactions& operator=(get_block_transactions const&) = default;
 
     bool operator==(get_block_transactions const& x) const;
     bool operator!=(get_block_transactions const& x) const;

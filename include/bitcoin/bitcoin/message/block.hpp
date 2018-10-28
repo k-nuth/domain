@@ -75,7 +75,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     block& operator=(block&& x) = default;
-    void operator=(block const&) = delete;
+    block& operator=(block const&) = default;
 
     bool operator==(chain::block const& x) const;
     bool operator!=(chain::block const& x) const;

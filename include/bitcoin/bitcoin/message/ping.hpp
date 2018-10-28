@@ -62,7 +62,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     ping& operator=(ping&& x) = default;
-    void operator=(ping const&) = delete;
+    ping& operator=(ping const&) = default;
 
     bool operator==(ping const& x) const;
     bool operator!=(ping const& x) const;

@@ -63,7 +63,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     get_data& operator=(get_data&& x) = default;
-    void operator=(get_data const&) = delete;
+    get_data& operator=(get_data const&) = default;
 
     bool operator==(get_data const& x) const;
     bool operator!=(get_data const& x) const;

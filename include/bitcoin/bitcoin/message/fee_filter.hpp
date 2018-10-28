@@ -62,8 +62,7 @@ public:
 
     // This class is move assignable but not copy assignable.
     fee_filter& operator=(fee_filter&& x) = default;
-    //TODO(fernando): check all the expressions of this form: 'void operator=' it has no sense
-    void operator=(fee_filter const&) = delete;
+    fee_filter& operator=(fee_filter const&) = default;
 
     bool operator==(fee_filter const& x) const;
     bool operator!=(fee_filter const& x) const;
