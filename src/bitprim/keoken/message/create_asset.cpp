@@ -39,7 +39,8 @@ using bc::ostream_writer;
 //-------------------------------------------------------------------------
 
 create_asset::create_asset(std::string name, amount_t amount)
-    : name_(std::move(name)), amount_(amount) {}
+    : name_(std::move(name)), amount_(amount) 
+{}
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -71,13 +72,6 @@ create_asset create_asset::factory_from_data(std::istream& stream) {
     return instance;
 }
 
-// // static
-// create_asset create_asset::factory_from_data(bc::reader& source) {
-//     create_asset instance;
-//     instance.from_data(source);
-//     return instance;
-// }
-
 bool create_asset::from_data(data_chunk const& data) {
     data_source istream(data);
     return from_data(istream);
@@ -87,28 +81,6 @@ bool create_asset::from_data(std::istream& stream) {
     istream_reader stream_r(stream);
     return from_data(stream_r);
 }
-
-// //Note: from_data and to_data are not longer simetrical.
-// bool create_asset::from_data(bc::reader& source) {
-//     auto name_opt = read_null_terminated_string(source, max_name_size);
-//     if ( ! name_opt) {
-//         source.invalidate();
-//         return false;
-//     }
-
-//     if (name_opt->size() < min_asset_name_size) {  //NOLINT
-//         source.invalidate();
-//         return false;
-//     }
-
-//     name_ = *name_opt;
-//     amount_ = source.read_8_bytes_big_endian();
-
-//     // if ( ! source)
-//     //     reset();
-
-//     return source;
-// }
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -128,13 +100,6 @@ void create_asset::to_data(data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(sink_w);
 }
-
-// //Note: from_data and to_data are not simetrical.
-// void create_asset::to_data(writer& sink) const {
-//     base::to_data(sink, version, type);
-//     sink.write_bytes(reinterpret_cast<uint8_t const*>(name_.data()), name_.size() + 1);  //NOLINT
-//     sink.write_8_bytes_big_endian(amount_);
-// }
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------

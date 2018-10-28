@@ -18,7 +18,8 @@
  */
 #include <bitcoin/bitcoin/message/alert.hpp>
 
-#include <bitcoin/bitcoin/message/messages.hpp>
+// #include <bitcoin/infrastructure/message/message_tools.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
@@ -149,8 +150,6 @@ void alert::set_signature(data_chunk const& value) {
 void alert::set_signature(data_chunk&& value) {
     signature_ = std::move(value);
 }
-
-
 
 }  // namespace message
 }  // namespace libbitcoin

@@ -20,6 +20,7 @@
 
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
@@ -103,7 +104,6 @@ bool heading::operator==(const heading& x) const {
 bool heading::operator!=(const heading& x) const {
     return !(*this == x);
 }
-
 
 bool heading::is_valid() const {
     return (magic_ != 0) || (payload_size_ != 0) || (checksum_ != 0) || !command_.empty();

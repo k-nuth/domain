@@ -45,7 +45,8 @@ uint32_t const output::validation::not_spent = max_uint32;
 
 output::output()
     : value_(not_found),
-      validation{} {}
+      validation{} 
+{}
 
 output::output(output&& x) noexcept
     : addresses_(x.addresses_cache()),

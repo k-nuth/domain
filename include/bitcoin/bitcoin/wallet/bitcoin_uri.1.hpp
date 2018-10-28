@@ -29,15 +29,14 @@
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_address.hpp>
-// #include <bitcoin/bitcoin/wallet/uri_reader.hpp>
+#include <bitcoin/bitcoin/wallet/uri_reader.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
 /// A bitcoin URI corresponding to BIP 21 and BIP 72.
 /// The object is not constant, setters can change state after construction.
-// class BC_API bitcoin_uri : public uri_reader {
-class BC_API bitcoin_uri {
+class BC_API bitcoin_uri : public uri_reader {
 public:
     /// Constructors.
     bitcoin_uri() = default;

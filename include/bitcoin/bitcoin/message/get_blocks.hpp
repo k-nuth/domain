@@ -79,8 +79,10 @@ public:
     hash_digest const& stop_hash() const;
     void set_stop_hash(hash_digest const& value);
 
-    virtual bool from_data(uint32_t version, data_chunk const& data);
-    virtual bool from_data(uint32_t version, std::istream& stream);
+    // virtual  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_chunk const& data);
+    // virtual  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
@@ -96,22 +98,21 @@ public:
             source.invalidate();
         } else {
             start_hashes_.reserve(count);
-}
+        }
 
         for (size_t hash = 0; hash < count && source; ++hash) {
             start_hashes_.push_back(source.read_hash());
-}
+        }
 
         stop_hash_ = source.read_hash();
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
@@ -122,12 +123,11 @@ public:
 
         for (auto const& start_hash : start_hashes_) {
             sink.write_hash(start_hash);
-}
+        }
 
         sink.write_hash(stop_hash_);
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;

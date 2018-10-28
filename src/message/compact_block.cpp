@@ -20,7 +20,8 @@
 
 #include <initializer_list>
 
-#include <bitcoin/bitcoin/message/messages.hpp>
+// #include <bitcoin/infrastructure/message/message_tools.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/math/sip_hash.hpp>

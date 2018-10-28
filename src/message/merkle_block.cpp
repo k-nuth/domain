@@ -20,7 +20,7 @@
 
 #include <bitcoin/bitcoin/chain/block.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>

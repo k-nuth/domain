@@ -42,7 +42,7 @@ class wrapper;
 /**
  * A tuple to represent settings and serialized values.
  */
-typedef std::map<std::string, std::string> settings_list;
+using settings_list = std::map<std::string, std::string>;
 
 /**
  * Generate a property list for a block header.

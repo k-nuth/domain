@@ -43,7 +43,9 @@ public:
     // This is a bug that requires we up the minimum compiler version.
     // So presently stack_iterator is a non-const iterator.
     ////typedef data_stack::const_iterator stack_iterator;
-    using stack_iterator = data_stack::iterator;
+    // using stack_iterator = data_stack::iterator;
+    using stack_iterator = data_stack::const_iterator;
+    using stack_mutable_iterator = data_stack::iterator;
 
     /// Create an instance that does not expect to verify signatures.
     /// This is useful for script utilities but not with input validation.
@@ -94,7 +96,7 @@ public:
     /// Primary push.
     void push(bool value);
     void push_move(value_type&& item);
-    void push_copy(const value_type& item);
+    void push_copy(value_type const& item);
 
     /// Primary pop.
     data_chunk pop();
@@ -107,9 +109,11 @@ public:
 
     /// Primary push/pop optimizations (active).
     void duplicate(size_t index);
+
     void swap(size_t index_left, size_t index_right);
-    void erase(const stack_iterator& position);
-    void erase(const stack_iterator& first, const stack_iterator& last);
+
+    void erase(stack_iterator const& position);
+    void erase(stack_iterator const& first, stack_iterator const& last);
 
     /// Primary push/pop optimizations (passive).
     bool empty() const;
@@ -117,9 +121,18 @@ public:
     bool stack_result(bool clean) const;
     bool is_stack_overflow() const;
     bool if_(operation const& op) const;
-    const value_type& item(size_t index) /*const*/;
-    bool top(number& out_number, size_t maxiumum_size = max_number_size) /*const*/;
-    stack_iterator position(size_t index) /*const*/;
+    
+    value_type const& item(size_t index) const;
+    value_type& item(size_t index);
+
+    bool top(number& out_number, size_t maxiumum_size = max_number_size) const;
+    // bool top(number& out_number, size_t maxiumum_size = max_number_size) /*const*/;
+
+    stack_iterator position(size_t index) const;
+    stack_mutable_iterator position(size_t index);
+
+
+
     operation::list subscript() const;
     size_t size() const;
 

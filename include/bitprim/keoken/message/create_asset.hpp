@@ -67,7 +67,7 @@ public:
     //-------------------------------------------------------------------------
 
     static create_asset factory_from_data(bc::data_chunk const& data);
-    static create_asset factory_from_data(bc::data_source& stream);
+    static create_asset factory_from_data(std::istream& stream);
 
     template <Reader R, BITPRIM_IS_READER(R)>
     static create_asset factory_from_data(R& source) {
@@ -77,7 +77,7 @@ public:
     }
 
     bool from_data(bc::data_chunk const& data);
-    bool from_data(bc::data_source& stream);
+    bool from_data(std::istream& stream);
 
     //Note: from_data and to_data are not longer simetrical.
     template <Reader R, BITPRIM_IS_READER(R)>

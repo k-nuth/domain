@@ -63,7 +63,6 @@ program::program(script const& script)
       input_index_(0),
       forks_(0),
       value_(0),
-      version_(script_version::unversioned),
       negative_count_(0),
       operation_count_(0),
       jump_(script_.begin()) {
@@ -76,7 +75,6 @@ program::program(script const& script, chain::transaction const& transaction, ui
       input_index_(input_index),
       forks_(forks),
       value_(max_uint64),
-      version_(script_version::unversioned),
       negative_count_(0),
       operation_count_(0),
       jump_(script_.begin()) {
@@ -105,7 +103,6 @@ program::program(script const& script, const program& x)
       input_index_(x.input_index_),
       forks_(x.forks_),
       value_(x.value_),
-      version_(script_version::unversioned),
       negative_count_(0),
       operation_count_(0),
       jump_(script_.begin()),
@@ -120,7 +117,6 @@ program::program(script const& script, program&& x, bool /*unused*/)
       input_index_(x.input_index_),
       forks_(x.forks_),
       value_(x.value_),
-      version_(script_version::unversioned),
       negative_count_(0),
       operation_count_(0),
       jump_(script_.begin()),

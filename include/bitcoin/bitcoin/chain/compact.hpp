@@ -31,15 +31,17 @@ namespace chain {
 class BC_API compact {
 public:
     /// Construct a normal form compact number from a 32 bit compact number.
-    explicit compact(uint32_t compact);
+    explicit 
+    compact(uint32_t compact);
 
     /// Construct a normal form compact number from a 256 bit number
-    explicit compact(uint256_t const& big);
+    explicit 
+    compact(uint256_t const& big);
 
     compact(compact&& x) noexcept;
 
     /// Copy constructor.
-    compact(const compact& x);
+    compact(compact const& x);
 
     /// True if construction overflowed.
     bool is_overflowed() const;

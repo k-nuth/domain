@@ -19,7 +19,7 @@
 #include <bitcoin/bitcoin/message/prefilled_transaction.hpp>
 
 #include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>

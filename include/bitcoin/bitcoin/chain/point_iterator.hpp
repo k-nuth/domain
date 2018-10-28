@@ -45,8 +45,8 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    point_iterator(point_iterator const& x);
     point_iterator(point const& value, unsigned index = 0);
+    point_iterator(point_iterator const& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------

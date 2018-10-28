@@ -23,7 +23,7 @@
 #include <utility>
 
 // #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>

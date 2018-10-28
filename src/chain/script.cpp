@@ -35,7 +35,8 @@
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+// #include <bitcoin/infrastructure/message/message_tools.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
@@ -68,12 +69,14 @@ static auto const one_hash = hash_literal("0000000000000000000000000000000000000
 
 //TODO(fernando): check if it call be defaulted (this and all the special ctors)
 script::script(script&& x) noexcept
-    : bytes_(std::move(x.bytes_)), valid_(x.valid_), cached_(false) {
+    : bytes_(std::move(x.bytes_)), valid_(x.valid_) 
+{
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
 }
 
 script::script(script const& x)
-    : bytes_(x.bytes_), valid_(x.valid_), cached_(false) {
+    : bytes_(x.bytes_), valid_(x.valid_) 
+{
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
 }
 

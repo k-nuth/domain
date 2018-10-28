@@ -49,8 +49,6 @@ public:
         return instance;
     }
 
-    //static get_headers factory_from_data(uint32_t version, reader& source);
-
     get_headers() = default;
     get_headers(hash_list const& start, hash_digest const& stop);
     get_headers(hash_list&& start, hash_digest const& stop);
@@ -73,15 +71,15 @@ public:
     {
         if ( ! get_blocks::from_data(version, source)) {
             return false;
-}
+        }
 
         if (version < get_headers::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

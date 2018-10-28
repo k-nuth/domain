@@ -18,7 +18,8 @@
  */
 #include <bitcoin/bitcoin/message/block_transactions.hpp>
 
-#include <bitcoin/bitcoin/message/messages.hpp>
+// #include <bitcoin/infrastructure/message/message_tools.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
@@ -45,13 +46,6 @@ block_transactions block_transactions::factory_from_data(uint32_t version, std::
     instance.from_data(version, stream);
     return instance;
 }
-
-//block_transactions block_transactions::factory_from_data(uint32_t version, reader& source)
-//{
-//    block_transactions instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
 
 block_transactions::block_transactions()
     : block_hash_(null_hash) 

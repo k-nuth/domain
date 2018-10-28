@@ -123,7 +123,7 @@
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/bitcoin/message/memory_pool.hpp>
 #include <bitcoin/bitcoin/message/merkle_block.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/math/uint256.hpp>
 // #include <bitcoin/bitcoin/message/network_address.hpp>
 #include <bitcoin/bitcoin/message/not_found.hpp>

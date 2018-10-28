@@ -69,12 +69,11 @@ public:
     output(uint64_t value, chain::script const& script);
     output(uint64_t value, chain::script&& script);
 
-    // Operators.
-    //-------------------------------------------------------------------------
-
     output& operator=(output const& x);
     output& operator=(output&& x) noexcept;
 
+    // Operators.
+    //-------------------------------------------------------------------------
     bool operator==(output const& x) const;
     bool operator!=(output const& x) const;
 
@@ -102,19 +101,17 @@ public:
 
         if ( ! wire) {
             validation.spender_height = source.read_4_bytes_little_endian();
-}
+        }
 
         value_ = source.read_8_bytes_little_endian();
         script_.from_data(source, true);
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
-
-    //bool from_data(reader& source, bool wire=true, bool unused=false);
 
     bool is_valid() const;
 
@@ -134,8 +131,6 @@ public:
         sink.write_8_bytes_little_endian(value_);
         script_.to_data(sink, true);
     }
-
-    //void to_data(writer& sink, bool wire=true, bool unused=false) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -184,7 +179,7 @@ private:
     mutable upgrade_mutex mutex_;
     mutable addresses_ptr addresses_;
 
-    uint64_t value_;
+    uint64_t value_{not_found};
     chain::script script_;
 };
 
