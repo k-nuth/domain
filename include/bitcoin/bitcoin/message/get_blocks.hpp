@@ -54,14 +54,12 @@ public:
         return instance;
     }
 
-    //static get_blocks factory_from_data(uint32_t version, reader& source);
-
     get_blocks();
     get_blocks(hash_list const& start, hash_digest const& stop);
     get_blocks(hash_list&& start, hash_digest const& stop);
+
     get_blocks(get_blocks const& x) = default;
     get_blocks(get_blocks&& x) = default;
-
     // This class is move assignable but not copy assignable.
     get_blocks& operator=(get_blocks&& x) = default;
     get_blocks& operator=(get_blocks const&) = default;
@@ -131,7 +129,6 @@ public:
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
-
 
     static std::string const command;
     static uint32_t const version_minimum;

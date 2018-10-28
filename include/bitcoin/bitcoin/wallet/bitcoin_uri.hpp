@@ -41,15 +41,16 @@ class BC_API bitcoin_uri {
 public:
     /// Constructors.
     bitcoin_uri() = default;
-    bitcoin_uri(bitcoin_uri const& x);
     bitcoin_uri(std::string const& uri, bool strict = true);
 
-    bitcoin_uri& operator=(bitcoin_uri const& x);
+    bitcoin_uri(bitcoin_uri const& x) = default;
+    bitcoin_uri& operator=(bitcoin_uri const& x) = default;
 
     /// Operators.
-    bool operator<(bitcoin_uri const& x) const;
     bool operator==(bitcoin_uri const& x) const;
     bool operator!=(bitcoin_uri const& x) const;
+
+    bool operator<(bitcoin_uri const& x) const;
 
     friend std::istream& operator>>(std::istream& in, bitcoin_uri& to);
     friend std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from);

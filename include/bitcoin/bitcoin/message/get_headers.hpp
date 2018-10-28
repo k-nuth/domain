@@ -39,6 +39,19 @@ public:
     using ptr = std::shared_ptr<get_headers>;
     using const_ptr = std::shared_ptr<const get_headers>;
 
+    get_headers() = default;
+    get_headers(hash_list const& start, hash_digest const& stop);
+    get_headers(hash_list&& start, hash_digest const& stop);
+
+    get_headers(get_headers const& x) = default;
+    get_headers(get_headers&& x) = default;
+    // This class is move assignable but not copy assignable.
+    get_headers& operator=(get_headers&& x) = default;
+    get_headers& operator=(get_headers const&) = default;
+
+    bool operator==(get_headers const& x) const;
+    bool operator!=(get_headers const& x) const;
+
     static get_headers factory_from_data(uint32_t version, data_chunk const& data);
     static get_headers factory_from_data(uint32_t version, std::istream& stream);
 
@@ -49,26 +62,11 @@ public:
         return instance;
     }
 
-    get_headers() = default;
-    get_headers(hash_list const& start, hash_digest const& stop);
-    get_headers(hash_list&& start, hash_digest const& stop);
-    get_headers(get_headers const& x) = default;
-    get_headers(get_headers&& x) = default;
-
-    // This class is move assignable but not copy assignable.
-    get_headers& operator=(get_headers&& x) = default;
-    get_headers& operator=(get_headers const&) = default;
-
-    bool operator==(get_headers const& x) const;
-    bool operator!=(get_headers const& x) const;
-
-
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    {
+    bool from_data(uint32_t version, R& source) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
         if ( ! get_blocks::from_data(version, source)) {
             return false;
         }

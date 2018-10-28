@@ -74,7 +74,7 @@ BC_API std::pair<error::error_code_t, chain::transaction> input_set(chain::scrip
 
 BC_API std::pair<error::error_code_t, chain::transaction> input_set(data_chunk const& signature,
                                                                     wallet::ec_public const& public_key,
-                                                                    chain::transaction const& tx,
+                                                                    chain::transaction const& raw_tx,
                                                                     uint32_t index = 0);
 
 }  //end namespace wallet

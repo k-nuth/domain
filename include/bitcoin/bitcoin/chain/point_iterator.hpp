@@ -46,7 +46,10 @@ public:
     //-------------------------------------------------------------------------
 
     point_iterator(point const& value, unsigned index = 0);
+
     point_iterator(point_iterator const& x) = default;
+    /// The iterator may only be assigned to another of the same point.
+    point_iterator& operator=(point_iterator const& x);
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -63,8 +66,6 @@ public:
     bool operator==(point_iterator const& x) const;
     bool operator!=(point_iterator const& x) const;
 
-    /// The iterator may only be assigned to another of the same point.
-    point_iterator& operator=(point_iterator const& x);
 
 protected:
     void increment();

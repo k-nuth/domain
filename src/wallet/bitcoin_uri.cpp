@@ -42,10 +42,6 @@ static auto const parameter_r = "r";
 static auto const parameter_req_ = "req-";
 static constexpr size_t parameter_req_length = 4;
 
-bitcoin_uri::bitcoin_uri(bitcoin_uri const& x)
-    : strict_(x.strict_), scheme_(x.scheme_), address_(x.address_), query_(x.query_) {
-}
-
 bitcoin_uri::bitcoin_uri(std::string const& uri, bool strict)
     : bitcoin_uri(uri_reader::parse<bitcoin_uri>(uri, strict)) {
 }
@@ -218,14 +214,6 @@ bool bitcoin_uri::set_parameter(std::string const& key,
 
 // Operators.
 // ----------------------------------------------------------------------------
-
-bitcoin_uri& bitcoin_uri::operator=(bitcoin_uri const& x) {
-    strict_ = x.strict_;
-    scheme_ = x.scheme_;
-    address_ = x.address_;
-    query_ = x.query_;
-    return *this;
-}
 
 bool bitcoin_uri::operator<(bitcoin_uri const& x) const {
     return encoded() < x.encoded();
