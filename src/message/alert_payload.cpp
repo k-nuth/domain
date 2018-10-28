@@ -108,7 +108,7 @@ alert_payload::alert_payload(
       reserved_(std::move(reserved)) {
 }
 
-// alert_payload::alert_payload(const alert_payload& x)
+// alert_payload::alert_payload(alert_payload const& x)
 //     : alert_payload(
 //           x.version_,
 //           x.relay_until_,
@@ -159,11 +159,11 @@ alert_payload::alert_payload(
 //     return *this;
 // }
 
-bool alert_payload::operator==(const alert_payload& x) const {
+bool alert_payload::operator==(alert_payload const& x) const {
     return (version_ == x.version_) && (relay_until_ == x.relay_until_) && (expiration_ == x.expiration_) && (id_ == x.id_) && (cancel_ == x.cancel_) && (set_cancel_ == x.set_cancel_) && (min_version_ == x.min_version_) && (max_version_ == x.max_version_) && (set_sub_version_ == x.set_sub_version_) && (priority_ == x.priority_) && (comment_ == x.comment_) && (status_bar_ == x.status_bar_) && (reserved_ == x.reserved_);
 }
 
-bool alert_payload::operator!=(const alert_payload& x) const {
+bool alert_payload::operator!=(alert_payload const& x) const {
     return !(*this == x);
 }
 
