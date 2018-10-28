@@ -49,18 +49,15 @@ public:
 
     witness() = default;
 
-    witness(witness const& x) = default;
-    witness(witness&& x) noexcept;
-
     witness(data_stack&& stack);
     witness(data_stack const& stack);
-
     witness(data_chunk&& encoded, bool prefix);
     witness(data_chunk const& encoded, bool prefix);
 
-    /// This class is move assignable and copy assignable.
-    witness& operator=(witness const& x);
-    witness& operator=(witness&& x) noexcept;
+    // witness(witness const& x) = default;
+    // witness(witness&& x) = default;
+    // witness& operator=(witness const& x) = default;
+    // witness& operator=(witness&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------

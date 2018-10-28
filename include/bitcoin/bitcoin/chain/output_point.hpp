@@ -66,13 +66,13 @@ public:
     output_point(hash_digest const& hash, uint32_t index);
 
     output_point(point const& x);
-    output_point(output_point const& x) = default;
-    output_point(output_point&& x) = default;
-
-    // This class is move assignable and copy assignable.
     output_point& operator=(point const& /*x*/);
-    output_point& operator=(output_point const&) = default;
-    output_point& operator=(output_point&& x) = default;
+
+    // output_point(output_point const& x) = default;
+    // output_point(output_point&& x) = default;
+    // // This class is move assignable and copy assignable.
+    // output_point& operator=(output_point const&) = default;
+    // output_point& operator=(output_point&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------

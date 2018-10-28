@@ -30,18 +30,18 @@
 namespace libbitcoin {
 namespace machine {
 
-static BC_CONSTEXPR auto invalid_code = opcode::disabled_xor;
+// static constexpr auto invalid_code = opcode::disabled_xor;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
-inline 
-operation::operation()
-    : code_(invalid_code)
-{
-    // The failed-state code must be disabled so it will never pass evaluation.
-    BITCOIN_ASSERT(is_disabled());
-}
+// inline 
+// operation::operation()
+//     : code_(invalid_code)
+// {
+//     // The failed-state code must be disabled so it will never pass evaluation.
+//     BITCOIN_ASSERT(is_disabled());
+// }
 
 inline 
 operation::operation(data_chunk&& uncoded, bool minimal)
@@ -210,15 +210,15 @@ opcode operation::minimal_opcode_from_data(data_chunk const& data) {
 
         if (value == number::negative_1) {
             return opcode::push_negative_1;
-}
+        }
 
         if (value == number::positive_0) {
             return opcode::push_size_0;
-}
+        }
 
         if (value >= number::positive_1 && value <= number::positive_16) {
             return opcode_from_positive(value);
-}
+        }
     }
 
     // Nominal encoding is minimal for multiple bytes and non-numeric values.

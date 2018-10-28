@@ -59,12 +59,12 @@ public:
     not_found(inventory_vector::list&& values);
     not_found(hash_list const& hashes, type_id type);
     not_found(std::initializer_list<inventory_vector> const& values);
-    not_found(not_found const& x) = default;
-    not_found(not_found&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    not_found& operator=(not_found&& x) = default;
-    not_found& operator=(not_found const&) = default;
+    // not_found(not_found const& x) = default;
+    // not_found(not_found&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // not_found& operator=(not_found&& x) = default;
+    // not_found& operator=(not_found const&) = default;
 
     bool operator==(not_found const& x) const;
     bool operator!=(not_found const& x) const;
@@ -78,15 +78,15 @@ public:
     {
         if ( ! inventory::from_data(version, source)) {
             return false;
-}
+        }
 
         if (version < not_found::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

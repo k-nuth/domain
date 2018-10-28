@@ -62,8 +62,6 @@ public:
     //static block factory_from_data(uint32_t version, reader& source);
 
     block() = default;
-    block(block const& x) = default;
-    block(block&& x) = default;
 
     block(chain::block const& x);
     block(chain::block&& x);
@@ -73,9 +71,11 @@ public:
 
     block& operator=(chain::block&& x);
 
-    // This class is move assignable but not copy assignable.
-    block& operator=(block&& x) = default;
-    block& operator=(block const&) = default;
+    // block(block const& x) = default;
+    // block(block&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // block& operator=(block&& x) = default;
+    // block& operator=(block const&) = default;
 
     bool operator==(chain::block const& x) const;
     bool operator!=(chain::block const& x) const;

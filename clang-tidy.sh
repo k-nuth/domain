@@ -10,7 +10,7 @@ python ../ci_utils/run-clang-tidy.py -checks='*,-fuchsia*,-llvm-header-guard,-mo
 
 python ../ci_utils/run-clang-tidy.py -checks='modernize*' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include
 python ../ci_utils/run-clang-tidy.py -checks='modernize-use-using*' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include/
-python ../ci_utils/run-clang-tidy.py -checks='*,-llvm-header-guard,-fuchsia*,-google-runtime-references,-cert-err58-cpp,-cppcoreguidelines-special-member-functions,-modernize-pass-by-value,-cert-dcl21-cpp,-google-explicit-constructor,-hicpp-explicit-conversions,-hicpp-member-init,-hicpp-signed-bitwise,-google-build-using-namespace,-hicpp-special-member-functions,-cppcoreguidelines-pro-type-member-init' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include
+python ../ci_utils/run-clang-tidy.py -checks='*,-llvm-header-guard,-fuchsia*,-google-runtime-references,-cert-err58-cpp,-cppcoreguidelines-special-member-functions,-modernize-pass-by-value,-cert-dcl21-cpp,-google-explicit-constructor,-hicpp-explicit-conversions,-hicpp-member-init,-hicpp-signed-bitwise,-google-build-using-namespace,-hicpp-special-member-functions,-cppcoreguidelines-pro-type-member-init,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-hicpp-no-array-decay' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include
 
 
 
@@ -22,8 +22,7 @@ python ../ci_utils/run-clang-tidy.py -checks='readability-named-parameter' -warn
 python ../ci_utils/run-clang-tidy.py -checks='readability-avoid-const-params-in-decls' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include -fix
 python ../ci_utils/run-clang-tidy.py -checks='readability-else-after-return' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include -fix
 python ../ci_utils/run-clang-tidy.py -checks='hicpp-use-equals-default' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include -fix
-
-
+python ../ci_utils/run-clang-tidy.py -checks='llvm-include-order' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/bitprim-domain/include -fix
 
 
 

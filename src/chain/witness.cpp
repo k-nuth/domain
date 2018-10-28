@@ -52,10 +52,6 @@ using namespace bc::machine;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-witness::witness(witness&& x) noexcept
-    : stack_(std::move(x.stack_)), valid_(x.valid_) {
-}
-
 witness::witness(data_stack const& stack) {
     stack_ = stack;
 }
@@ -73,22 +69,28 @@ witness::witness(data_chunk const& encoded, bool prefix) {
     from_data(encoded, prefix);
 }
 
+
+// witness::witness(witness&& x) noexcept
+//     : stack_(std::move(x.stack_)), valid_(x.valid_) {
+// }
+
+// witness& witness::operator=(witness const& x) {
+//     reset();
+//     stack_ = x.stack_;
+//     valid_ = x.valid_;
+//     return *this;
+// }
+
+// witness& witness::operator=(witness&& x) noexcept {
+//     reset();
+//     stack_ = std::move(x.stack_);
+//     valid_ = x.valid_;
+//     return *this;
+// }
+
 // Operators.
 //-----------------------------------------------------------------------------
 
-witness& witness::operator=(witness&& x) noexcept {
-    reset();
-    stack_ = std::move(x.stack_);
-    valid_ = x.valid_;
-    return *this;
-}
-
-witness& witness::operator=(witness const& x) {
-    reset();
-    stack_ = x.stack_;
-    valid_ = x.valid_;
-    return *this;
-}
 bool witness::operator==(witness const& x) const {
     return stack_ == x.stack_;
 }

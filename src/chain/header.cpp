@@ -222,7 +222,6 @@ hash_digest header::hash_pow() const {
 //-----------------------------------------------------------------------------
 
 // [CheckProofOfWork]
-inline
 bool header::is_valid_proof_of_work(bool retarget) const {
     return header_basis::is_valid_proof_of_work(hash_pow(), retarget);
 }
@@ -230,12 +229,10 @@ bool header::is_valid_proof_of_work(bool retarget) const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-inline
 code header::check(bool retarget) const {
     return header_basis::check(hash_pow(), retarget);
 }
 
-inline
 code header::accept(chain_state const& state) const {
     return header_basis::accept(state, hash_pow());
 }

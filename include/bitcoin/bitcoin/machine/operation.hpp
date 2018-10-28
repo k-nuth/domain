@@ -40,6 +40,9 @@
 namespace libbitcoin {
 namespace machine {
 
+// static constexpr auto invalid_code = opcode::disabled_xor;
+constexpr auto invalid_code = opcode::disabled_xor;
+
 class BI_API operation {
 public:
     using list = std::vector<operation>;
@@ -48,18 +51,15 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    operation();
-
-    operation(operation&& x) noexcept;
-    operation(operation const& x);
-
+    operation() = default;
     operation(data_chunk&& uncoded, bool minimal = true);
     operation(data_chunk const& uncoded, bool minimal = true);
-
     operation(opcode code);
 
-    operation& operator=(operation const& x) = default;
-    operation& operator=(operation&& x) = default;
+    // operation(operation const& x) = default;
+    // operation(operation&& x) = default;
+    // operation& operator=(operation const& x) = default;
+    // operation& operator=(operation&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -209,7 +209,7 @@ protected:
     void reset();
 
 private:
-    opcode code_;
+    opcode code_{invalid_code};
     data_chunk data_;
     bool valid_{false};
 };

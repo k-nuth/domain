@@ -58,11 +58,11 @@ public:
     get_blocks(hash_list const& start, hash_digest const& stop);
     get_blocks(hash_list&& start, hash_digest const& stop);
 
-    get_blocks(get_blocks const& x) = default;
-    get_blocks(get_blocks&& x) = default;
-    // This class is move assignable but not copy assignable.
-    get_blocks& operator=(get_blocks&& x) = default;
-    get_blocks& operator=(get_blocks const&) = default;
+    // get_blocks(get_blocks const& x) = default;
+    // get_blocks(get_blocks&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // get_blocks& operator=(get_blocks&& x) = default;
+    // get_blocks& operator=(get_blocks const&) = default;
 
     bool operator==(get_blocks const& x) const;
     bool operator!=(get_blocks const& x) const;

@@ -54,14 +54,6 @@ operation operation::factory_from_data(std::istream& stream) {
     return instance;
 }
 
-// static
-//operation operation::factory_from_data(reader& source)
-//{
-//    operation instance;
-//    instance.from_data(source);
-//    return instance;
-//}
-
 bool operation::from_data(data_chunk const& encoded) {
     data_source istream(encoded);
     return from_data(istream);
@@ -74,25 +66,6 @@ bool operation::from_data(std::istream& stream) {
 
 // TODO(libbitcoin): optimize for larger data by using a shared byte array.
 //bool operation::from_data(reader& source)
-//{
-//    ////reset();
-//    valid_ = true;
-//    code_ = static_cast<opcode>(source.read_byte());
-//    auto const size = read_data_size(code_, source);
-//
-//    // The max_script_size and max_push_data_size constants limit
-//    // evaluation, but not all scripts evaluate, so use max_block_size
-//    // to guard memory allocation here.
-//    if (size > get_max_block_size()) //TODO: bitprim max_block_size changed to get_max_block_size (check space for BCH)
-//        source.invalidate();
-//    else
-//        data_ = source.read_bytes(size);
-//
-//    if ( ! source)
-//        reset();
-//
-//    return valid_;
-//}
 
 inline bool is_push_token(std::string const& token) {
     return token.size() > 1 && token.front() == '[' && token.back() == ']';
@@ -113,7 +86,8 @@ inline std::string trim_token(std::string const& token) {
     return std::string(token.begin() + 1, token.end() - 1);
 }
 
-inline string_list split_push_token(std::string const& token) {
+inline 
+string_list split_push_token(std::string const& token) {
     return split(trim_token(token), ".", false);
 }
 
@@ -224,30 +198,6 @@ void operation::to_data(data_sink& stream) const {
     ostream_writer sink_w(stream);
     to_data(sink_w);
 }
-
-//void operation::to_data(writer& sink) const
-//{
-//    auto const size = data_.size();
-//
-//    sink.write_byte(static_cast<uint8_t>(code_));
-//
-//    switch (code_)
-//    {
-//        case opcode::push_one_size:
-//            sink.write_byte(static_cast<uint8_t>(size));
-//            break;
-//        case opcode::push_two_size:
-//            sink.write_2_bytes_little_endian(static_cast<uint16_t>(size));
-//            break;
-//        case opcode::push_four_size:
-//            sink.write_4_bytes_little_endian(static_cast<uint32_t>(size));
-//            break;
-//        default:
-//            break;
-//    }
-//
-//    sink.write_bytes(data_);
-//}
 
 static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
     // If opcode is minimal for a size-based encoding, do not set a prefix.

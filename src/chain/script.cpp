@@ -67,19 +67,6 @@ static auto const one_hash = hash_literal("0000000000000000000000000000000000000
 // Constructors.
 //-----------------------------------------------------------------------------
 
-//TODO(fernando): check if it call be defaulted (this and all the special ctors)
-script::script(script&& x) noexcept
-    : bytes_(std::move(x.bytes_)), valid_(x.valid_) 
-{
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-}
-
-script::script(script const& x)
-    : bytes_(x.bytes_), valid_(x.valid_) 
-{
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-}
-
 script::script(operation::list const& ops) {
     from_operations(ops);
 }
@@ -105,8 +92,19 @@ script::script(data_chunk const& encoded, bool prefix) {
     valid_ = from_data(encoded, prefix);
 }
 
-// Operators.
-//-----------------------------------------------------------------------------
+
+//TODO(fernando): check if it call be defaulted (this and all the special ctors)
+script::script(script&& x) noexcept
+    : bytes_(std::move(x.bytes_)), valid_(x.valid_) 
+{
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+}
+
+script::script(script const& x)
+    : bytes_(x.bytes_), valid_(x.valid_) 
+{
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+}
 
 // Concurrent read/write is not supported, so no critical section.
 script& script::operator=(script&& x) noexcept {
@@ -125,6 +123,8 @@ script& script::operator=(script const& x) {
     valid_ = x.valid_;
     return *this;
 }
+// Operators.
+//-----------------------------------------------------------------------------
 
 bool script::operator==(script const& x) const {
     return bytes_ == x.bytes_;

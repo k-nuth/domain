@@ -63,12 +63,12 @@ public:
     inventory(inventory_vector::list&& values);
     inventory(hash_list const& hashes, type_id type);
     inventory(std::initializer_list<inventory_vector> const& values);
-    inventory(inventory const& x) = default;
-    inventory(inventory&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    inventory& operator=(inventory&& x) = default;
-    inventory& operator=(inventory const&) = default;
+    // inventory(inventory const& x) = default;
+    // inventory(inventory&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // inventory& operator=(inventory&& x) = default;
+    // inventory& operator=(inventory const&) = default;
 
     bool operator==(inventory const& x) const;
     bool operator!=(inventory const& x) const;

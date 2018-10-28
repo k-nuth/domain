@@ -56,12 +56,12 @@ public:
     alert() = default;
     alert(data_chunk const& payload, data_chunk const& signature);
     alert(data_chunk&& payload, data_chunk&& signature);
-    alert(alert const& x) = default;
-    alert(alert&& x) = default;
 
-    /// This class is move assignable but not copy assignable.
-    alert& operator=(alert&& x) = default;
-    alert& operator=(alert const&) = default;
+    // alert(alert const& x) = default;
+    // alert(alert&& x) = default;
+    // /// This class is move assignable but not copy assignable.
+    // alert& operator=(alert&& x) = default;
+    // alert& operator=(alert const&) = default;
 
     bool operator==(alert const& x) const;
     bool operator!=(alert const& x) const;

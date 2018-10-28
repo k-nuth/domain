@@ -56,12 +56,12 @@ public:
 
     send_compact() = default;
     send_compact(bool high_bandwidth_mode, uint64_t version);
-    send_compact(send_compact const& x) = default;
-    send_compact(send_compact&& x) = default;
 
-    /// This class is move assignable but not copy assignable.
-    send_compact& operator=(send_compact&& x) = default;
-    send_compact& operator=(send_compact const&) = default;
+    // send_compact(send_compact const& x) = default;
+    // send_compact(send_compact&& x) = default;
+    // /// This class is move assignable but not copy assignable.
+    // send_compact& operator=(send_compact&& x) = default;
+    // send_compact& operator=(send_compact const&) = default;
 
     bool operator==(send_compact const& x) const;
     bool operator!=(send_compact const& x) const;

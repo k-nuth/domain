@@ -43,11 +43,11 @@ public:
     get_headers(hash_list const& start, hash_digest const& stop);
     get_headers(hash_list&& start, hash_digest const& stop);
 
-    get_headers(get_headers const& x) = default;
-    get_headers(get_headers&& x) = default;
-    // This class is move assignable but not copy assignable.
-    get_headers& operator=(get_headers&& x) = default;
-    get_headers& operator=(get_headers const&) = default;
+    // get_headers(get_headers const& x) = default;
+    // get_headers(get_headers&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // get_headers& operator=(get_headers&& x) = default;
+    // get_headers& operator=(get_headers const&) = default;
 
     bool operator==(get_headers const& x) const;
     bool operator!=(get_headers const& x) const;

@@ -55,12 +55,12 @@ public:
     get_block_transactions();
     get_block_transactions(hash_digest const& block_hash, const std::vector<uint64_t>& indexes);
     get_block_transactions(hash_digest const& block_hash, std::vector<uint64_t>&& indexes);
-    get_block_transactions(get_block_transactions const& x) = default;
-    get_block_transactions(get_block_transactions&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    get_block_transactions& operator=(get_block_transactions&& x) = default;
-    get_block_transactions& operator=(get_block_transactions const&) = default;
+    // get_block_transactions(get_block_transactions const& x) = default;
+    // get_block_transactions(get_block_transactions&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // get_block_transactions& operator=(get_block_transactions&& x) = default;
+    // get_block_transactions& operator=(get_block_transactions const&) = default;
 
     bool operator==(get_block_transactions const& x) const;
     bool operator!=(get_block_transactions const& x) const;

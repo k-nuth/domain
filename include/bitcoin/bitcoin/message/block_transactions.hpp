@@ -54,12 +54,12 @@ public:
     block_transactions();
     block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
     block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions);
-    block_transactions(block_transactions const& x) = default;
-    block_transactions(block_transactions&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    block_transactions& operator=(block_transactions&& x) = default;
-    block_transactions& operator=(block_transactions const&) = default;
+    // block_transactions(block_transactions const& x) = default;
+    // block_transactions(block_transactions&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // block_transactions& operator=(block_transactions&& x) = default;
+    // block_transactions& operator=(block_transactions const&) = default;
 
     bool operator==(block_transactions const& x) const;
     bool operator!=(block_transactions const& x) const;

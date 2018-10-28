@@ -101,8 +101,6 @@ public:
         return instance;
     }
 
-    //static point factory_from_data(reader& source, bool wire=true);
-
     bool from_data(data_chunk const& data, bool wire = true);
     bool from_data(std::istream& stream, bool wire = true);
 
@@ -130,8 +128,6 @@ public:
         return source;
     }
 
-    //bool from_data(reader& source, bool wire=true);
-
     // constexpr
     bool is_valid() const;
 
@@ -153,8 +149,6 @@ public:
         }
     }
 
-    //void to_data(writer& sink, bool wire=true) const;
-
     // Iteration (limited to store serialization).
     //-------------------------------------------------------------------------
 
@@ -164,10 +158,9 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
+    // constexpr
     static
-        // constexpr
-        size_t
-        satoshi_fixed_size();
+    size_t satoshi_fixed_size();
 
     // constexpr
     size_t serialized_size(bool wire = true) const;

@@ -58,12 +58,11 @@ public:
     filter_add(data_chunk const& data);
     filter_add(data_chunk&& data);
 
-    filter_add(filter_add const& x) = default;
-    filter_add(filter_add&& x) = default;
-
-    // This class is move assignable but not copy assignable.
-    filter_add& operator=(filter_add&& x) = default;
-    filter_add& operator=(filter_add const&) = default;
+    // filter_add(filter_add const& x) = default;
+    // filter_add(filter_add&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // filter_add& operator=(filter_add&& x) = default;
+    // filter_add& operator=(filter_add const&) = default;
 
     bool operator==(filter_add const& x) const;
     bool operator!=(filter_add const& x) const;

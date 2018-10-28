@@ -58,12 +58,12 @@ public:
     get_data(inventory_vector::list&& values);
     get_data(hash_list const& hashes, type_id type);
     get_data(std::initializer_list<inventory_vector> const& values);
-    get_data(get_data const& x) = default;
-    get_data(get_data&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    get_data& operator=(get_data&& x) = default;
-    get_data& operator=(get_data const&) = default;
+    // get_data(get_data const& x) = default;
+    // get_data(get_data&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // get_data& operator=(get_data&& x) = default;
+    // get_data& operator=(get_data const&) = default;
 
     bool operator==(get_data const& x) const;
     bool operator!=(get_data const& x) const;

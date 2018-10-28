@@ -97,39 +97,6 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inpu
     , validation{} 
 {}
 
-transaction::transaction(transaction const& x)
-    : version_(x.version_)
-    , locktime_(x.locktime_)
-    , inputs_(x.inputs_)
-    , outputs_(x.outputs_)
-#ifdef BITPRIM_CACHED_RPC_DATA
-    , cached_fees_(0)
-    , cached_sigops_(0)
-    , cached_is_standard_(false)
-#endif
-    , validation(x.validation) 
-{
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    // validation = x.validation;
-}
-
-transaction::transaction(transaction&& x) noexcept
-    : version_(x.version_)
-    , locktime_(x.locktime_)
-    , inputs_(std::move(x.inputs_))
-    , outputs_(std::move(x.outputs_))
-
-#ifdef BITPRIM_CACHED_RPC_DATA
-    , cached_fees_(0)
-    , cached_sigops_(0)
-    , cached_is_standard_(false)
-#endif
-    , validation(std::move(x.validation)) 
-{
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
-    // validation = std::move(x.validation);
-}
-
 transaction::transaction(transaction const& x, hash_digest const& hash)
     : version_(x.version_)
     , locktime_(x.locktime_)
@@ -162,28 +129,67 @@ transaction::transaction(transaction&& x, hash_digest const& hash)
     // validation = std::move(x.validation);
 }
 
-// Operators.
-//-----------------------------------------------------------------------------
 
-// TODO(libbitcoin): eliminate blockchain transaction copies and then delete this.
+transaction::transaction(transaction const& x)
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(x.inputs_)
+    , outputs_(x.outputs_)
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , cached_fees_(0)
+    , cached_sigops_(0)
+    , cached_is_standard_(false)
+#endif
+    , validation(x.validation) 
+{}
+
+transaction::transaction(transaction&& x) noexcept
+    : version_(x.version_)
+    , locktime_(x.locktime_)
+    , inputs_(std::move(x.inputs_))
+    , outputs_(std::move(x.outputs_))
+
+#ifdef BITPRIM_CACHED_RPC_DATA
+    , cached_fees_(0)
+    , cached_sigops_(0)
+    , cached_is_standard_(false)
+#endif
+    , validation(std::move(x.validation)) 
+{}
+
 transaction& transaction::operator=(transaction const& x) {
     version_ = x.version_;
     locktime_ = x.locktime_;
     inputs_ = x.inputs_;
     outputs_ = x.outputs_;
     validation = x.validation;
+
+#ifdef BITPRIM_CACHED_RPC_DATA
+    cached_fees_ = x.cached_fees_;
+    cached_sigops_ = x.cached_sigops_;
+    cached_is_standard_ = x.cached_is_standard_;
+#endif
+
     return *this;
 }
 
 transaction& transaction::operator=(transaction&& x) noexcept {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     version_ = x.version_;
     locktime_ = x.locktime_;
     inputs_ = std::move(x.inputs_);
     outputs_ = std::move(x.outputs_);
     validation = std::move(x.validation);
+#ifdef BITPRIM_CACHED_RPC_DATA
+    cached_fees_ = x.cached_fees_;
+    cached_sigops_ = x.cached_sigops_;
+    cached_is_standard_ = x.cached_is_standard_;
+#endif
     return *this;
 }
+
+
+// Operators.
+//-----------------------------------------------------------------------------
 
 bool transaction::operator==(transaction const& x) const {
     return (version_ == x.version_) && (locktime_ == x.locktime_) && (inputs_ == x.inputs_) && (outputs_ == x.outputs_);

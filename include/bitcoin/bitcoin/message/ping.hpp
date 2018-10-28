@@ -58,11 +58,11 @@ public:
 
     ping() = default;
     ping(uint64_t nonce);
-    ping(ping const& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    ping& operator=(ping&& x) = default;
-    ping& operator=(ping const&) = default;
+    // ping(ping const& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // ping& operator=(ping&& x) = default;
+    // ping& operator=(ping const&) = default;
 
     bool operator==(ping const& x) const;
     bool operator!=(ping const& x) const;

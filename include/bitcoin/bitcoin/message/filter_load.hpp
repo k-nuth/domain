@@ -57,12 +57,12 @@ public:
     filter_load() = default;
     filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
     filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
-    filter_load(filter_load const& x) = default;
-    filter_load(filter_load&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    filter_load& operator=(filter_load&& x) = default;
-    filter_load& operator=(filter_load const&) = default;
+    // filter_load(filter_load const& x) = default;
+    // filter_load(filter_load&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // filter_load& operator=(filter_load&& x) = default;
+    // filter_load& operator=(filter_load const&) = default;
 
     bool operator==(filter_load const& x) const;
     bool operator!=(filter_load const& x) const;

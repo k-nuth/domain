@@ -37,11 +37,10 @@ public:
     //-------------------------------------------------------------------------
 
     point_value() = default;
-    point_value(point_value const& x) = default;
     point_value(point const& p, uint64_t value);
 
-    /// This class is move assignable and copy assignable.
-    point_value& operator=(point_value const& x) = default;
+    // point_value(point_value const& x) = default;
+    // point_value& operator=(point_value const& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------

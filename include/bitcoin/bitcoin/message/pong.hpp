@@ -57,11 +57,11 @@ public:
 
     pong() = default;
     pong(uint64_t nonce);
-    pong(pong const& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    pong& operator=(pong&& x) = default;
-    pong& operator=(pong const&) = default;
+    // pong(pong const& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // pong& operator=(pong&& x) = default;
+    // pong& operator=(pong const&) = default;
 
     bool operator==(pong const& x) const;
     bool operator!=(pong const& x) const;
@@ -82,7 +82,7 @@ public:
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }

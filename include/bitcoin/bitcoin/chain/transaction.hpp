@@ -63,7 +63,7 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
         source.invalidate();
     } else {
         puts.resize(count);
-}
+    }
 
     auto const deserialize = [&](Put& put) {
         result = result && put.from_data(source, wire, witness_val(witness));
@@ -157,15 +157,11 @@ public:
     transaction(transaction&& x, hash_digest const& hash);
 
 
-
+    //Note(bitprim): cannot be defaulted because of the mutex data member.
     transaction(transaction const& x);
     transaction(transaction&& x) noexcept;
-
-    /// This class is move assignable and copy assignable.
     transaction& operator=(transaction const& x);
     transaction& operator=(transaction&& x) noexcept;
-
-
 
 
     // Operators.
@@ -245,7 +241,7 @@ public:
 
             if (locktime > max_uint32 || version > max_uint32) {
                 source.invalidate();
-}
+            }
 
             locktime_ = static_cast<uint32_t>(locktime);
             version_ = static_cast<uint32_t>(version);
@@ -356,14 +352,12 @@ public:
 
     // Deprecated (unsafe).
     ins& inputs();
-
     const ins& inputs() const;
     void set_inputs(const ins& value);
     void set_inputs(ins&& value);
 
     // Deprecated (unsafe).
     outs& outputs();
-
     const outs& outputs() const;
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);

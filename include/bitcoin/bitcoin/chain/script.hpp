@@ -62,15 +62,14 @@ public:
 
     script() = default;
 
-    script(script const& x);
-    script(script&& x) noexcept;
-
     script(operation::list const& ops);
     script(operation::list&& ops);
-
     script(data_chunk const& encoded, bool prefix);
     script(data_chunk&& encoded, bool prefix);
 
+
+    script(script const& x);
+    script(script&& x) noexcept;
     /// This class is move assignable and copy assignable.
     script& operator=(script const& x);
     script& operator=(script&& x) noexcept;
@@ -283,11 +282,7 @@ protected:
 private:
     static size_t serialized_size(operation::list const& ops);
     static data_chunk operations_to_data(operation::list const& ops);
-    static hash_digest generate_unversioned_signature_hash(
-        transaction const& tx,
-        uint32_t input_index,
-        script const& script_code,
-        uint8_t sighash_type);
+    static hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type);
 
     static hash_digest generate_version_0_signature_hash(transaction const& tx,
                                                          uint32_t input_index,

@@ -61,12 +61,12 @@ public:
     merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags);
     merkle_block(chain::header const& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
     merkle_block(chain::block const& block);
-    merkle_block(merkle_block const& x) = default;
-    merkle_block(merkle_block&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    merkle_block& operator=(merkle_block&& x) = default;
-    merkle_block& operator=(merkle_block const&) = default;
+    // merkle_block(merkle_block const& x) = default;
+    // merkle_block(merkle_block&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // merkle_block& operator=(merkle_block&& x) = default;
+    // merkle_block& operator=(merkle_block const&) = default;
 
     bool operator==(merkle_block const& x) const;
     bool operator!=(merkle_block const& x) const;

@@ -41,7 +41,7 @@ constexpr auto point_size = static_cast<unsigned>(std::tuple_size<point>::value)
 //-----------------------------------------------------------------------------
 
 point_iterator::point_iterator(point const& value, unsigned index)
-    : point_(value), current_(index) 
+    : point_(&value), current_(index) 
 {}
 
 // Operators.
@@ -54,12 +54,12 @@ point_iterator::operator bool() const {
 // private
 uint8_t point_iterator::current() const {
     if (current_ < hash_size) {
-        return point_.hash()[current_];
+        return point_->hash()[current_];
     }
 
     // TODO(libbitcoin): move the little-endian iterator into endian.hpp.
     auto const position = current_ - hash_size;
-    return static_cast<uint8_t>(point_.index() >> (position * byte_bits));
+    return static_cast<uint8_t>(point_->index() >> (position * byte_bits));
 }
 
 point_iterator::pointer point_iterator::operator->() const {
@@ -101,7 +101,7 @@ point_iterator point_iterator::operator-(int value) const {
 }
 
 bool point_iterator::operator==(point_iterator const& x) const {
-    return (current_ == x.current_) && (&point_ == &x.point_);
+    return (current_ == x.current_) && (point_ == x.point_);
 }
 
 bool point_iterator::operator!=(point_iterator const& x) const {
@@ -126,12 +126,12 @@ void point_iterator::decrement() {
 
 point_iterator point_iterator::increase(unsigned value) const {
     auto const index = ceiling_add(current_, value);
-    return point_iterator(point_, std::max(index, point_size));
+    return point_iterator(*point_, std::max(index, point_size));
 }
 
 point_iterator point_iterator::decrease(unsigned value) const {
     auto const index = floor_subtract(current_, value);
-    return point_iterator(point_, index);
+    return point_iterator(*point_, index);
 }
 
 }  // namespace chain

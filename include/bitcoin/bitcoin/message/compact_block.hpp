@@ -67,12 +67,12 @@ public:
     compact_block() = default;
     compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions);
     compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
-    compact_block(compact_block const& x) = default;
-    compact_block(compact_block&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    compact_block& operator=(compact_block&& x) = default;
-    compact_block& operator=(compact_block const&) = default;
+    // compact_block(compact_block const& x) = default;
+    // compact_block(compact_block&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // compact_block& operator=(compact_block&& x) = default;
+    // compact_block& operator=(compact_block const&) = default;
 
     bool operator==(compact_block const& x) const;
     bool operator!=(compact_block const& x) const;

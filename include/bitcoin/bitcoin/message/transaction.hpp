@@ -49,29 +49,18 @@ public:
     using const_ptr_list_ptr = std::shared_ptr<const_ptr_list>;
     using const_ptr_list_const_ptr = std::shared_ptr<const const_ptr_list>;
 
-    static transaction factory_from_data(uint32_t version, data_chunk const& data);
-    static transaction factory_from_data(uint32_t version, std::istream& stream);
-
-    template <Reader R, BITPRIM_IS_READER(R)>
-    static transaction factory_from_data(uint32_t version, R& source) {
-        transaction instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
     transaction() = default;
-
     transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs);
     transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs);
-
     transaction(chain::transaction const& x);
     transaction(chain::transaction&& x);
 
-    transaction(transaction const& x) = default;
-    transaction(transaction&& x) = default;
-
     transaction& operator=(chain::transaction&& x);
 
+
+
+    transaction(transaction const& x) = default;
+    transaction(transaction&& x) = default;
     /// This class is move assignable but not copy assignable.
     transaction& operator=(transaction&& x) = default;
     transaction& operator=(transaction const&) = default;
@@ -83,6 +72,15 @@ public:
     bool operator!=(transaction const& x) const;
 
 
+    static transaction factory_from_data(uint32_t version, data_chunk const& data);
+    static transaction factory_from_data(uint32_t version, std::istream& stream);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static transaction factory_from_data(uint32_t version, R& source) {
+        transaction instance;
+        instance.from_data(version, source);
+        return instance;
+    }
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -92,7 +90,6 @@ public:
         return chain::transaction::from_data(source, true, true);
     }
 
-    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version, bool witness = true) const;
     void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
 
@@ -101,9 +98,7 @@ public:
         chain::transaction::to_data(sink, true, witness);
     }
 
-    //void to_data(uint32_t version, writer& sink, bool witness = true) const;
     size_t serialized_size(uint32_t version) const;
-
 
     static std::string const command;
     static uint32_t const version_minimum;

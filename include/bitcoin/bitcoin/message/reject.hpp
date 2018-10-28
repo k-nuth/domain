@@ -94,12 +94,11 @@ public:
     reject(reason_code code, std::string const& message, std::string const& reason, hash_digest const& data);
     reject(reason_code code, std::string&& message, std::string&& reason, hash_digest const& data);
 
-    reject(reject const& x) = default;
-    reject(reject&& x) = default;
-
-    // This class is move assignable but not copy assignable.
-    reject& operator=(reject&& x) = default;
-    reject& operator=(reject const&) = default;
+    // reject(reject const& x) = default;
+    // reject(reject&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // reject& operator=(reject&& x) = default;
+    // reject& operator=(reject const&) = default;
 
     bool operator==(reject const& x) const;
     bool operator!=(reject const& x) const;

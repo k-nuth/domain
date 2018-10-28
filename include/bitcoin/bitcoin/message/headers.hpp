@@ -63,12 +63,12 @@ public:
     headers(header::list const& values);
     headers(header::list&& values);
     headers(std::initializer_list<header> const& values);
-    headers(headers const& x) = default;
-    headers(headers&& x) = default;
 
-    // This class is move assignable but not copy assignable.
-    headers& operator=(headers&& x) = default;
-    headers& operator=(headers const&) = default;
+    // headers(headers const& x) = default;
+    // headers(headers&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // headers& operator=(headers&& x) = default;
+    // headers& operator=(headers const&) = default;
 
     bool operator==(headers const& x) const;
     bool operator!=(headers const& x) const;

@@ -63,10 +63,10 @@ public:
     // address(address const& x);
     // address(address&& x) noexcept;
     // address& operator=(address&& x) noexcept;
-    address(address const& x) = default;
-    address(address&& x) = default;
-    address& operator=(address&& x) = default;
-    address& operator=(address const&) = default;
+    // address(address const& x) = default;
+    // address(address&& x) = default;
+    // address& operator=(address&& x) = default;
+    // address& operator=(address const&) = default;
 
     bool operator==(address const& x) const;
     bool operator!=(address const& x) const;
