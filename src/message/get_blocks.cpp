@@ -64,7 +64,7 @@ get_blocks::get_blocks(hash_list&& start, hash_digest const& stop)
     : start_hashes_(std::move(start)), stop_hash_(stop) {
 }
 
-// get_blocks::get_blocks(const get_blocks& x)
+// get_blocks::get_blocks(get_blocks const& x)
 //     : get_blocks(x.start_hashes_, x.stop_hash_) {
 // }
 
@@ -78,7 +78,7 @@ get_blocks::get_blocks(hash_list&& start, hash_digest const& stop)
 //     return *this;
 // }
 
-bool get_blocks::operator==(const get_blocks& x) const {
+bool get_blocks::operator==(get_blocks const& x) const {
     auto result = (start_hashes_.size() == x.start_hashes_.size()) &&
                   (stop_hash_ == x.stop_hash_);
 
@@ -89,7 +89,7 @@ bool get_blocks::operator==(const get_blocks& x) const {
     return result;
 }
 
-bool get_blocks::operator!=(const get_blocks& x) const {
+bool get_blocks::operator!=(get_blocks const& x) const {
     return !(*this == x);
 }
 
