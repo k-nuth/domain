@@ -81,7 +81,7 @@ heading::heading(uint32_t magic, std::string&& command, uint32_t payload_size, u
     : magic_(magic), command_(std::move(command)), payload_size_(payload_size), checksum_(checksum) {
 }
 
-// heading::heading(const heading& x)
+// heading::heading(heading const& x)
 //     : heading(x.magic_, x.command_, x.payload_size_, x.checksum_) {
 // }
 
@@ -97,11 +97,11 @@ heading::heading(uint32_t magic, std::string&& command, uint32_t payload_size, u
 //     return *this;
 // }
 
-bool heading::operator==(const heading& x) const {
+bool heading::operator==(heading const& x) const {
     return (magic_ == x.magic_) && (command_ == x.command_) && (payload_size_ == x.payload_size_) && (checksum_ == x.checksum_);
 }
 
-bool heading::operator!=(const heading& x) const {
+bool heading::operator!=(heading const& x) const {
     return !(*this == x);
 }
 
