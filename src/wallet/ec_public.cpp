@@ -43,8 +43,8 @@ const uint8_t ec_public::mainnet_p2kh = 0x00;
 #endif
 
 ec_public::ec_public()
-    : valid_(false), compress_(true), point_(null_compressed_point) {
-}
+    : point_(null_compressed_point) 
+{}
 
 ec_public::ec_public(ec_public const& x)
     : valid_(x.valid_), compress_(x.compress_), point_(x.point_) {

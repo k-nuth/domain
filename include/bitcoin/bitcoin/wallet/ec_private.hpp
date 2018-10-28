@@ -122,9 +122,9 @@ private:
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
-    bool compress_;
-    uint16_t version_;
+    bool valid_{false};
+    bool compress_{true};
+    uint16_t version_{0};
     ec_secret secret_;
 };
 

@@ -51,8 +51,8 @@ const uint8_t ec_private::testnet_p2kh = 0x6f;
 const uint16_t ec_private::testnet = to_version(testnet_p2kh, testnet_wif);
 
 ec_private::ec_private()
-    : valid_(false), compress_(true), version_(0), secret_(null_hash) {
-}
+    : secret_(null_hash) 
+{}
 
 // ec_private::ec_private(ec_private const& x)
 //     : valid_(x.valid_), compress_(x.compress_), version_(x.version_), secret_(x.secret_) {

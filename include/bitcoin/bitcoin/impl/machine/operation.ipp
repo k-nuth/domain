@@ -37,7 +37,7 @@ static BC_CONSTEXPR auto invalid_code = opcode::disabled_xor;
 
 inline 
 operation::operation()
-    : code_(invalid_code), valid_(false)
+    : code_(invalid_code)
 {
     // The failed-state code must be disabled so it will never pass evaluation.
     BITCOIN_ASSERT(is_disabled());

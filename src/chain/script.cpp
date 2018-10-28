@@ -68,8 +68,7 @@ static auto const one_hash = hash_literal("0000000000000000000000000000000000000
 
 // A default instance is invalid (until modified).
 script::script()
-    : valid_(false), cached_(false) {
-}
+{}
 
 //TODO(fernando): check if it call be defaulted (this and all the special ctors)
 script::script(script&& x) noexcept

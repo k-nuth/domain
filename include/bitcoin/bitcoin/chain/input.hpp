@@ -227,7 +227,7 @@ private:
 #ifndef BITPRIM_CURRENCY_BCH
     chain::witness witness_;
 #endif
-    uint32_t sequence_;
+    uint32_t sequence_{0};
 };
 
 }  // namespace chain

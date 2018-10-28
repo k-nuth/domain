@@ -142,9 +142,9 @@ public:
 
 private:
     data_chunk filter_;
-    uint32_t hash_functions_;
-    uint32_t tweak_;
-    uint8_t flags_;
+    uint32_t hash_functions_{0};
+    uint32_t tweak_{0};
+    uint8_t flags_{0x00};
 };
 
 }  // namespace message

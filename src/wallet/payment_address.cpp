@@ -60,8 +60,8 @@ std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
 #endif
 
 payment_address::payment_address()
-    : valid_(false), version_(0), hash_(null_short_hash) {
-}
+    : hash_(null_short_hash) 
+{}
 
 payment_address::payment_address(payment_address&& x) noexcept
     : valid_(x.valid_), version_(x.version_), hash_(x.hash_) 

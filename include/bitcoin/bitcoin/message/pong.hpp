@@ -108,8 +108,8 @@ public:
     static uint32_t const version_maximum;
 
 private:
-    uint64_t nonce_;
-    bool valid_;
+    uint64_t nonce_{0};
+    bool valid_{false};
 };
 
 }  // namespace message

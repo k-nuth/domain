@@ -44,7 +44,7 @@ using namespace bc::machine;
 //-----------------------------------------------------------------------------
 
 input::input()
-    : sequence_(0) {}
+{}
 
 input::input(input const& x)
     : addresses_(x.addresses_cache())

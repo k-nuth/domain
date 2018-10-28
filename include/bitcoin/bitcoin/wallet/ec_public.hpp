@@ -93,8 +93,8 @@ private:
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
-    bool compress_;
+    bool valid_{false};
+    bool compress_{true};
     uint8_t version_;
     ec_compressed point_;
 };

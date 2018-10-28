@@ -100,11 +100,11 @@ private:
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
-    uint8_t version_;
+    bool valid_{false};
+    uint8_t version_{0};
     ec_compressed scan_key_;
     point_list spend_keys_;
-    uint8_t signatures_;
+    uint8_t signatures_{0};
     binary filter_;
 };
 

@@ -32,8 +32,8 @@ namespace libbitcoin {
 namespace wallet {
 
 ek_public::ek_public()
-    : valid_(false), public_() {
-}
+    : public_() 
+{}
 
 ek_public::ek_public(std::string const& encoded)
     : ek_public(from_string(encoded)) {

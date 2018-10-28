@@ -434,8 +434,8 @@ protected:
     bool all_inputs_final() const;
 
 private:
-    uint32_t version_;
-    uint32_t locktime_;
+    uint32_t version_{0};
+    uint32_t locktime_{0};
     input::list inputs_;
     output::list outputs_;
 

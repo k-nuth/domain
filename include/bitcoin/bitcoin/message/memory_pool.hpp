@@ -99,7 +99,7 @@ protected:
     memory_pool(bool insufficient_version);
 
 private:
-    bool insufficient_version_;
+    bool insufficient_version_{true};
 };
 
 }  // namespace message

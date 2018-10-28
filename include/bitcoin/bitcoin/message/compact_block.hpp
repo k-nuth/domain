@@ -197,7 +197,7 @@ public:
 
 private:
     chain::header header_;
-    uint64_t nonce_;
+    uint64_t nonce_{0};
     short_id_list short_ids_;
     prefilled_transaction::list transactions_;
 };

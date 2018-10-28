@@ -67,9 +67,9 @@ private:
      * The transaction output state of this object.
      * This data is translated to an output given expected version information.
      */
-    bool is_stealth_;
-    uint64_t amount_;
-    uint8_t version_;
+    bool is_stealth_{false};
+    uint64_t amount_{0};
+    uint8_t version_{0};
     chain::script script_;
     short_hash pay_to_hash_;
 };

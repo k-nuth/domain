@@ -73,7 +73,7 @@ inventory_vector inventory_vector::factory_from_data(uint32_t version, std::istr
 }
 
 inventory_vector::inventory_vector()
-    : type_(type_id::error), hash_(null_hash) 
+    : hash_(null_hash) 
 {}
 
 inventory_vector::inventory_vector(type_id type, hash_digest const& hash)

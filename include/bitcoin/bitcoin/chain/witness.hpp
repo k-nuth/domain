@@ -202,7 +202,7 @@ private:
     static size_t serialized_size(data_stack const& stack);
     static operation::list to_pay_key_hash(data_chunk&& program);
 
-    bool valid_;
+    bool valid_{false};
     data_stack stack_;
 };
 

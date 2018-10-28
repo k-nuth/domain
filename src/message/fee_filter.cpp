@@ -49,8 +49,7 @@ size_t fee_filter::satoshi_fixed_size(uint32_t /*version*/) {
 
 // This is a default instance so is invalid.
 fee_filter::fee_filter()
-    : minimum_fee_(0), insufficient_version_(true) {
-}
+{}
 
 // This is not a default instance so is valid.
 fee_filter::fee_filter(uint64_t minimum)

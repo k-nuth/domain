@@ -211,7 +211,7 @@ protected:
 private:
     opcode code_;
     data_chunk data_;
-    bool valid_;
+    bool valid_{false};
 };
 
 }  // namespace machine

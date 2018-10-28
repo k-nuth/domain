@@ -148,13 +148,13 @@ private:
 
     chain::script const& script_;
     chain::transaction const& transaction_;
-    uint32_t const input_index_;
-    uint32_t const forks_;
-    uint64_t const value_;
+    uint32_t const input_index_{0};
+    uint32_t const forks_{0};
+    uint64_t const value_{0};
 
-    script_version version_;
-    size_t negative_count_;
-    size_t operation_count_;
+    script_version version_{script_version::unversioned};
+    size_t negative_count_{0};
+    size_t operation_count_{0};
     op_iterator jump_;
     data_stack primary_;
     data_stack alternate_;

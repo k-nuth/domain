@@ -159,7 +159,7 @@ public:
 
 private:
     chain::header header_;
-    size_t total_transactions_;
+    size_t total_transactions_{0};
     hash_list hashes_;
     data_chunk flags_;
 };

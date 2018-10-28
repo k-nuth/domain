@@ -53,8 +53,7 @@ filter_clear filter_clear::factory_from_data(uint32_t version, std::istream& str
 // This is a default instance so is invalid.
 // The only way to make this valid is to deserialize it :/.
 filter_clear::filter_clear()
-    : insufficient_version_(true) {
-}
+{}
 
 // protected
 filter_clear::filter_clear(bool insufficient_version)

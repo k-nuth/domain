@@ -38,11 +38,8 @@ namespace config {
 using namespace boost::program_options;
 
 output::output()
-    : is_stealth_(false)
-    , amount_(0)
-    , version_(0)
+    : pay_to_hash_(null_short_hash) 
     // , script_()
-    , pay_to_hash_(null_short_hash) 
 {}
 
 output::output(std::string const& tuple)

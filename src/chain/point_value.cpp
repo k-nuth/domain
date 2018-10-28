@@ -30,7 +30,6 @@ namespace chain {
 //-------------------------------------------------------------------------
 
 point_value::point_value()
-    : value_(0) 
 {}
 
 point_value::point_value(point const& p, uint64_t value)

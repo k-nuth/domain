@@ -48,8 +48,7 @@ size_t pong::satoshi_fixed_size(uint32_t /*version*/) {
 }
 
 pong::pong()
-    : nonce_(0), valid_(false) {
-}
+{}
 
 pong::pong(uint64_t nonce)
     : nonce_(nonce), valid_(true) {

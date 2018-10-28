@@ -155,10 +155,10 @@ public:
 
 
 private:
-    uint32_t magic_;
+    uint32_t magic_{0};
     std::string command_;
-    uint32_t payload_size_;
-    uint32_t checksum_;
+    uint32_t payload_size_{0};
+    uint32_t checksum_{0};
 };
 
 }  // namespace message

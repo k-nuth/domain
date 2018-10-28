@@ -205,9 +205,9 @@ protected:
     void reset();
 
 private:
-    hash_digest hash_;
-    uint32_t index_;
-    bool valid_;
+    hash_digest hash_{null_hash};
+    uint32_t index_{0};
+    bool valid_{false};
 };
 
 }  // namespace chain

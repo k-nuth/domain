@@ -254,17 +254,17 @@ public:
     static uint32_t const version_maximum;
 
 private:
-    uint32_t value_;
-    uint64_t services_;
-    uint64_t timestamp_;
+    uint32_t value_{0};
+    uint64_t services_{0};
+    uint64_t timestamp_{0};
     network_address address_receiver_;
     network_address address_sender_;
-    uint64_t nonce_;
+    uint64_t nonce_{0};
     std::string user_agent_;
-    uint32_t start_height_;
+    uint32_t start_height_{0};
 
     // version >= 70001
-    bool relay_;
+    bool relay_{false};
 };
 
 }  // namespace message

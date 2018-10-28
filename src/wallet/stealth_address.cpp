@@ -64,8 +64,8 @@ const size_t stealth_address::min_filter_bits = 1 * byte_bits;
 const size_t stealth_address::max_filter_bits = sizeof(uint32_t) * byte_bits;
 
 stealth_address::stealth_address()
-    : valid_(false), version_(0), scan_key_(null_compressed_point), signatures_(0) {
-}
+    : scan_key_(null_compressed_point) 
+{}
 
 // stealth_address::stealth_address(stealth_address const& x)
 //     : valid_(x.valid_), version_(x.version_), scan_key_(x.scan_key_), spend_keys_(x.spend_keys_), signatures_(x.signatures_), filter_(x.filter_) {

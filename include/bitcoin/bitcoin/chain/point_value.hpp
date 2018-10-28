@@ -63,7 +63,7 @@ public:
     void set_value(uint64_t value);
 
 private:
-    uint64_t value_;
+    uint64_t value_{0};
 };
 
 }  // namespace chain

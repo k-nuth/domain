@@ -50,15 +50,7 @@ alert_payload alert_payload::factory_from_data(uint32_t version, std::istream& s
 }
 
 alert_payload::alert_payload()
-    : version_(0),
-      relay_until_(0),
-      expiration_(0),
-      id_(0),
-      cancel_(0),
-      min_version_(0),
-      max_version_(0),
-      priority_(0) {
-}
+{}
 
 alert_payload::alert_payload(
     uint32_t version,

@@ -43,8 +43,7 @@ static auto const parameter_req_ = "req-";
 static constexpr size_t parameter_req_length = 4;
 
 bitcoin_uri::bitcoin_uri()
-    : strict_(true) {
-}
+{}
 
 bitcoin_uri::bitcoin_uri(const bitcoin_uri& x)
     : strict_(x.strict_), scheme_(x.scheme_), address_(x.address_), query_(x.query_) {

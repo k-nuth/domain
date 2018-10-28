@@ -52,13 +52,8 @@ void program::reserve_stacks() {
 program::program()
     : script_(default_script_),
       transaction_(default_tx_),
-      input_index_(0),
-      forks_(0),
-      value_(0),
-      version_(script_version::unversioned),
-      negative_count_(0),
-      operation_count_(0),
-      jump_(script_.begin()) {
+      jump_(script_.begin()) 
+{
     reserve_stacks();
 }
 

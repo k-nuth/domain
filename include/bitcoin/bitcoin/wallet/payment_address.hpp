@@ -123,9 +123,9 @@ private:
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
-    uint8_t version_;
-    short_hash hash_;
+    bool valid_{false};
+    uint8_t version_{0};
+    short_hash hash_{null_short_hash};
 };
 
 /// The pre-encoded structure of a payment address or other similar data.

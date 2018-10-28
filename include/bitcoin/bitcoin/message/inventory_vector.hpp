@@ -134,8 +134,8 @@ public:
 
 
 private:
-    type_id type_;
-    hash_digest hash_;
+    type_id type_{type_id::error};
+    hash_digest hash_{null_hash};
 };
 
 }  // namespace message

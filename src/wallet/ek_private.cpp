@@ -32,8 +32,8 @@ namespace libbitcoin {
 namespace wallet {
 
 ek_private::ek_private()
-    : valid_(false), private_() {
-}
+    : private_() 
+{}
 
 ek_private::ek_private(std::string const& encoded)
     : ek_private(from_string(encoded)) {

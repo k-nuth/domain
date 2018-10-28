@@ -50,8 +50,7 @@ merkle_block merkle_block::factory_from_data(uint32_t version, std::istream& str
 }
 
 merkle_block::merkle_block()
-    : total_transactions_(0) {
-}
+{}
 
 merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags)
     : header_(header), total_transactions_(total_transactions), hashes_(hashes), flags_(flags) {

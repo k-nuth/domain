@@ -298,10 +298,10 @@ private:
     void find_and_delete_(data_chunk const& endorsement);
 
     data_chunk bytes_;
-    bool valid_;
+    bool valid_{false};
 
     // These are protected by mutex.
-    mutable bool cached_;
+    mutable bool cached_{false};
     mutable operation::list operations_;
     mutable upgrade_mutex mutex_;
 };

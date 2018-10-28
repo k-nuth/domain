@@ -190,16 +190,16 @@ public:
     static const ec_uncompressed satoshi_public_key;
 
 private:
-    uint32_t version_;
-    uint64_t relay_until_;
-    uint64_t expiration_;
-    uint32_t id_;
-    uint32_t cancel_;
+    uint32_t version_{0};
+    uint64_t relay_until_{0};
+    uint64_t expiration_{0};
+    uint32_t id_{0};
+    uint32_t cancel_{0};
     std::vector<uint32_t> set_cancel_;
-    uint32_t min_version_;
-    uint32_t max_version_;
+    uint32_t min_version_{0};
+    uint32_t max_version_{0};
     std::vector<std::string> set_sub_version_;
-    uint32_t priority_;
+    uint32_t priority_{0};
     std::string comment_;
     std::string status_bar_;
     std::string reserved_;

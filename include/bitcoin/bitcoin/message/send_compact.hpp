@@ -121,8 +121,8 @@ public:
     static uint32_t const version_maximum;
 
 private:
-    bool high_bandwidth_mode_;
-    uint64_t version_;
+    bool high_bandwidth_mode_{false};
+    uint64_t version_{0};
 };
 
 }  // namespace message

@@ -63,7 +63,7 @@ private:
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
+    bool valid_{false};
     encrypted_public public_;
 };
 

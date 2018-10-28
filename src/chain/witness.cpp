@@ -53,8 +53,7 @@ using namespace bc::machine;
 
 // A default instance is invalid (until modified).
 witness::witness()
-    : valid_(false) {
-}
+{}
 
 witness::witness(witness&& x) noexcept
     : stack_(std::move(x.stack_)), valid_(x.valid_) {

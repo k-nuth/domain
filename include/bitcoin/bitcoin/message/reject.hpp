@@ -185,7 +185,7 @@ private:
     static reason_code reason_from_byte(uint8_t byte);
     static uint8_t reason_to_byte(reason_code value);
 
-    reason_code code_;
+    reason_code code_{reason_code::undefined};
     std::string message_;
     std::string reason_;
     hash_digest data_;

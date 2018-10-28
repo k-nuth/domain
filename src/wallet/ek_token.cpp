@@ -32,8 +32,8 @@ namespace libbitcoin {
 namespace wallet {
 
 ek_token::ek_token()
-    : valid_(false), token_() {
-}
+    : token_() 
+{}
 
 ek_token::ek_token(std::string const& encoded)
     : ek_token(from_string(encoded)) {

@@ -43,7 +43,8 @@ constexpr auto store_point_size = std::tuple_size<point>::value;
 // A default instance is invalid (until modified).
 // constexpr
 point::point()
-    : hash_(null_hash), index_(0), valid_(false) {}
+    : hash_(null_hash)
+{}
 
 // constexpr
 point::point(hash_digest const& hash, uint32_t index)

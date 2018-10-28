@@ -47,8 +47,8 @@ reject reject::factory_from_data(uint32_t version, std::istream& stream) {
 }
 
 reject::reject()
-    : code_(reason_code::undefined), data_(null_hash) {
-}
+    :  data_(null_hash) 
+{}
 
 reject::reject(reason_code code, std::string const& message, std::string const& reason)
     : reject(code, message, reason, null_hash) {

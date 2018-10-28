@@ -91,7 +91,7 @@ private:
     bool set_amount(std::string const& satoshis);
 
     /// Member state.
-    bool strict_;
+    bool strict_{true};
     std::string scheme_;
     std::string address_;
     std::map<std::string, std::string> query_;

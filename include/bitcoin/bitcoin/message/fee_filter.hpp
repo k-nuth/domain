@@ -119,8 +119,8 @@ protected:
     fee_filter(uint64_t minimum, bool insufficient_version);
 
 private:
-    uint64_t minimum_fee_;
-    bool insufficient_version_;
+    uint64_t minimum_fee_{0};
+    bool insufficient_version_{true};
 };
 
 }  // namespace message

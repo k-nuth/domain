@@ -59,7 +59,7 @@ namespace chain {
 //-----------------------------------------------------------------------------
 
 transaction::transaction()
-    : version_(0), locktime_(0), validation{}
+    : validation{}
 {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs
