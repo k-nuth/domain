@@ -55,16 +55,16 @@ public:
     //static pong factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
-    pong();
+    pong() = default;
     pong(uint64_t nonce);
-    pong(const pong& x) = default;
+    pong(pong const& x) = default;
 
     // This class is move assignable but not copy assignable.
     pong& operator=(pong&& x) = default;
-    void operator=(const pong&) = delete;
+    void operator=(pong const&) = delete;
 
-    bool operator==(const pong& x) const;
-    bool operator!=(const pong& x) const;
+    bool operator==(pong const& x) const;
+    bool operator!=(pong const& x) const;
 
 
     uint64_t nonce() const;

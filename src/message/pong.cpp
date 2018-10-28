@@ -47,14 +47,11 @@ size_t pong::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(nonce_);
 }
 
-pong::pong()
-{}
-
 pong::pong(uint64_t nonce)
     : nonce_(nonce), valid_(true) {
 }
 
-// pong::pong(const pong& x)
+// pong::pong(pong const& x)
 //     : nonce_(x.nonce_), valid_(x.valid_) {
 // }
 
@@ -63,11 +60,11 @@ pong::pong(uint64_t nonce)
 //     return *this;
 // }
 
-bool pong::operator==(const pong& x) const {
+bool pong::operator==(pong const& x) const {
     return (nonce_ == x.nonce_);
 }
 
-bool pong::operator!=(const pong& x) const {
+bool pong::operator!=(pong const& x) const {
     return !(*this == x);
 }
 bool pong::from_data(uint32_t version, data_chunk const& data) {

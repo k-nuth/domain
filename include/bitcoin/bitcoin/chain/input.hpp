@@ -50,7 +50,7 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    input();
+    input() = default;
 
     input(input const& x);
     input(input&& x) noexcept;

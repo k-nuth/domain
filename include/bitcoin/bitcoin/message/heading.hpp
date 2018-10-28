@@ -89,7 +89,7 @@ public:
 
     //static heading factory_from_data(reader& source);
 
-    heading();
+    heading() = default;
     heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum);
     heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum);
     heading(const heading& x) = default;

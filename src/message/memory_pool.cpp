@@ -43,11 +43,6 @@ memory_pool memory_pool::factory_from_data(uint32_t version, std::istream& strea
     return instance;
 }
 
-// This is a default instance so is invalid.
-// The only way to make this valid is to deserialize it :/.
-memory_pool::memory_pool()
-{}
-
 // protected
 memory_pool::memory_pool(bool insufficient_version)
     : insufficient_version_(insufficient_version) {

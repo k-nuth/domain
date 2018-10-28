@@ -46,9 +46,6 @@ filter_load filter_load::factory_from_data(uint32_t version, std::istream& strea
     return instance;
 }
 
-filter_load::filter_load()
-{}
-
 filter_load::filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
     : filter_(filter), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }

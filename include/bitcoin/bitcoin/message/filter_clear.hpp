@@ -54,8 +54,10 @@ public:
     //static filter_clear factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
-    filter_clear();
-    filter_clear(const filter_clear& x) = default;
+    // This is a default instance so is invalid.
+    // The only way to make this valid is to deserialize it :/.
+    filter_clear() = default;
+    filter_clear(filter_clear const& x) = default;
     filter_clear(filter_clear&& x) = default;
 
     bool from_data(uint32_t version, data_chunk const& data);

@@ -72,9 +72,6 @@ heading heading::factory_from_data(std::istream& stream) {
     return instance;
 }
 
-heading::heading()
-{}
-
 heading::heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum)
     : magic_(magic), command_(command), payload_size_(payload_size), checksum_(checksum) {
 }

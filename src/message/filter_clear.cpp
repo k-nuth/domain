@@ -50,17 +50,13 @@ filter_clear filter_clear::factory_from_data(uint32_t version, std::istream& str
 //    return instance;
 //}
 
-// This is a default instance so is invalid.
-// The only way to make this valid is to deserialize it :/.
-filter_clear::filter_clear()
-{}
 
 // protected
 filter_clear::filter_clear(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-// filter_clear::filter_clear(const filter_clear& x)
+// filter_clear::filter_clear(filter_clear const& x)
 //     : filter_clear(x.insufficient_version_) {
 // }
 

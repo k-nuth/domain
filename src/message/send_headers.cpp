@@ -47,11 +47,6 @@ size_t send_headers::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-// This is a default instance so is invalid.
-// The only way to make this valid is to deserialize it :/.
-send_headers::send_headers()
-{}
-
 // protected
 send_headers::send_headers(bool insufficient_version)
     : insufficient_version_(insufficient_version) {

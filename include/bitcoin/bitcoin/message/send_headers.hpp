@@ -53,7 +53,7 @@ public:
 
     static size_t satoshi_fixed_size(uint32_t version);
 
-    send_headers();
+    send_headers() = default;
     send_headers(send_headers const& x) = default;
     send_headers(send_headers&& x) = default;
 

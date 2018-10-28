@@ -49,9 +49,6 @@ alert_payload alert_payload::factory_from_data(uint32_t version, std::istream& s
     return instance;
 }
 
-alert_payload::alert_payload()
-{}
-
 alert_payload::alert_payload(
     uint32_t version,
     uint64_t relay_until,

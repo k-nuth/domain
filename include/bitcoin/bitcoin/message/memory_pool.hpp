@@ -53,7 +53,9 @@ public:
 
     static size_t satoshi_fixed_size(uint32_t version);
 
-    memory_pool();
+    // This is a default instance so is invalid.
+    // The only way to make this valid is to deserialize it :/.
+    memory_pool() = default;
     memory_pool(memory_pool const& x) = default;
     memory_pool(memory_pool&& x) = default;
 

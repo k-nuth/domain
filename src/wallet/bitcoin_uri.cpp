@@ -42,10 +42,7 @@ static auto const parameter_r = "r";
 static auto const parameter_req_ = "req-";
 static constexpr size_t parameter_req_length = 4;
 
-bitcoin_uri::bitcoin_uri()
-{}
-
-bitcoin_uri::bitcoin_uri(const bitcoin_uri& x)
+bitcoin_uri::bitcoin_uri(bitcoin_uri const& x)
     : strict_(x.strict_), scheme_(x.scheme_), address_(x.address_), query_(x.query_) {
 }
 
@@ -222,7 +219,7 @@ bool bitcoin_uri::set_parameter(std::string const& key,
 // Operators.
 // ----------------------------------------------------------------------------
 
-bitcoin_uri& bitcoin_uri::operator=(const bitcoin_uri& x) {
+bitcoin_uri& bitcoin_uri::operator=(bitcoin_uri const& x) {
     strict_ = x.strict_;
     scheme_ = x.scheme_;
     address_ = x.address_;
@@ -230,16 +227,16 @@ bitcoin_uri& bitcoin_uri::operator=(const bitcoin_uri& x) {
     return *this;
 }
 
-bool bitcoin_uri::operator<(const bitcoin_uri& x) const {
+bool bitcoin_uri::operator<(bitcoin_uri const& x) const {
     return encoded() < x.encoded();
 }
 
-bool bitcoin_uri::operator==(const bitcoin_uri& x) const {
+bool bitcoin_uri::operator==(bitcoin_uri const& x) const {
     return strict_ == x.strict_ && scheme_ == x.scheme_ &&
            address_ == x.address_ && query_ == x.query_;
 }
 
-bool bitcoin_uri::operator!=(const bitcoin_uri& x) const {
+bool bitcoin_uri::operator!=(bitcoin_uri const& x) const {
     return !(*this == x);
 }
 
@@ -257,7 +254,7 @@ std::istream& operator>>(std::istream& in, bitcoin_uri& to) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const bitcoin_uri& from) {
+std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from) {
     out << from.encoded();
     return out;
 }

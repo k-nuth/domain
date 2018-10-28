@@ -57,7 +57,7 @@ public:
 
     //static merkle_block factory_from_data(uint32_t version, reader& source);
 
-    merkle_block();
+    merkle_block() = default;
     merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags);
     merkle_block(chain::header const& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
     merkle_block(chain::block const& block);

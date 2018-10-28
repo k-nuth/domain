@@ -56,16 +56,16 @@ public:
     //static ping factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
-    ping();
+    ping() = default;
     ping(uint64_t nonce);
-    ping(const ping& x) = default;
+    ping(ping const& x) = default;
 
     // This class is move assignable but not copy assignable.
     ping& operator=(ping&& x) = default;
-    void operator=(const ping&) = delete;
+    void operator=(ping const&) = delete;
 
-    bool operator==(const ping& x) const;
-    bool operator!=(const ping& x) const;
+    bool operator==(ping const& x) const;
+    bool operator!=(ping const& x) const;
 
 
     uint64_t nonce() const;
@@ -83,16 +83,14 @@ public:
 
         if ( ! nonceless_) {
             nonce_ = source.read_8_bytes_little_endian();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
-
-    //bool from_data(uint32_t version, reader& source);
 
     data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
@@ -101,10 +99,9 @@ public:
     void to_data(uint32_t version, W& sink) const {
         if (version >= version::level::bip31) {
             sink.write_8_bytes_little_endian(nonce_);
-}
+        }
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;

@@ -60,7 +60,7 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    script();
+    script() = default;
 
     script(script const& x);
     script(script&& x) noexcept;
@@ -71,12 +71,12 @@ public:
     script(data_chunk const& encoded, bool prefix);
     script(data_chunk&& encoded, bool prefix);
 
-    // Operators.
-    //-------------------------------------------------------------------------
-
     /// This class is move assignable and copy assignable.
     script& operator=(script const& x);
     script& operator=(script&& x) noexcept;
+
+    // Operators.
+    //-------------------------------------------------------------------------
 
     bool operator==(script const& x) const;
     bool operator!=(script const& x) const;

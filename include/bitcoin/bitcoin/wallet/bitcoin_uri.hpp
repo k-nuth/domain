@@ -40,18 +40,18 @@ class BC_API bitcoin_uri
     : public uri_reader {
 public:
     /// Constructors.
-    bitcoin_uri();
-    bitcoin_uri(const bitcoin_uri& x);
+    bitcoin_uri() = default;
+    bitcoin_uri(bitcoin_uri const& x);
     bitcoin_uri(std::string const& uri, bool strict = true);
 
     /// Operators.
-    bool operator<(const bitcoin_uri& x) const;
-    bool operator==(const bitcoin_uri& x) const;
-    bool operator!=(const bitcoin_uri& x) const;
-    bitcoin_uri& operator=(const bitcoin_uri& x);
+    bool operator<(bitcoin_uri const& x) const;
+    bool operator==(bitcoin_uri const& x) const;
+    bool operator!=(bitcoin_uri const& x) const;
+    bitcoin_uri& operator=(bitcoin_uri const& x);
     friend std::istream& operator>>(std::istream& in, bitcoin_uri& to);
     friend std::ostream& operator<<(std::ostream& out,
-                                    const bitcoin_uri& from);
+                                    bitcoin_uri const& from);
 
     /// Test whether the URI has been initialized.
     operator const bool() const;

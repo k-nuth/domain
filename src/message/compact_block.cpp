@@ -58,9 +58,6 @@ compact_block compact_block::factory_from_block(message::block const& blk) {
     return instance;
 }
 
-compact_block::compact_block()
-{}
-
 compact_block::compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions)
     : header_(header)
     , nonce_(nonce)

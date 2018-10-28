@@ -54,7 +54,7 @@ public:
     //static send_compact factory_from_data(uint32_t version, reader& source);
     static size_t satoshi_fixed_size(uint32_t version);
 
-    send_compact();
+    send_compact() = default;
     send_compact(bool high_bandwidth_mode, uint64_t version);
     send_compact(send_compact const& x) = default;
     send_compact(send_compact&& x) = default;

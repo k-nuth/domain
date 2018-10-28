@@ -36,7 +36,7 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    point_value();
+    point_value() = default;
     point_value(point_value const& x) = default;
     point_value(point const& p, uint64_t value);
 

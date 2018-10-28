@@ -51,10 +51,6 @@ using namespace bc::machine;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// A default instance is invalid (until modified).
-witness::witness()
-{}
-
 witness::witness(witness&& x) noexcept
     : stack_(std::move(x.stack_)), valid_(x.valid_) {
 }

@@ -29,9 +29,6 @@ namespace chain {
 // Constructors.
 //-------------------------------------------------------------------------
 
-point_value::point_value()
-{}
-
 point_value::point_value(point const& p, uint64_t value)
     : point(p), value_(value) {
 }

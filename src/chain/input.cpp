@@ -43,8 +43,6 @@ using namespace bc::machine;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-input::input()
-{}
 
 input::input(input const& x)
     : addresses_(x.addresses_cache())

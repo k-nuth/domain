@@ -47,7 +47,7 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    witness();
+    witness() = default;
 
     witness(witness const& x) = default;
     witness(witness&& x) noexcept;
@@ -58,12 +58,12 @@ public:
     witness(data_chunk&& encoded, bool prefix);
     witness(data_chunk const& encoded, bool prefix);
 
-    // Operators.
-    //-------------------------------------------------------------------------
-
     /// This class is move assignable and copy assignable.
     witness& operator=(witness const& x);
     witness& operator=(witness&& x) noexcept;
+
+    // Operators.
+    //-------------------------------------------------------------------------
 
     bool operator==(witness const& x) const;
     bool operator!=(witness const& x) const;

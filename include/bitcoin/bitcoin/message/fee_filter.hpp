@@ -55,18 +55,18 @@ public:
 
     static size_t satoshi_fixed_size(uint32_t version);
 
-    fee_filter();
+    fee_filter() = default;
     fee_filter(uint64_t minimum);
-    fee_filter(const fee_filter& x) = default;
+    fee_filter(fee_filter const& x) = default;
     fee_filter(fee_filter&& x) = default;
 
     // This class is move assignable but not copy assignable.
     fee_filter& operator=(fee_filter&& x) = default;
     //TODO(fernando): check all the expressions of this form: 'void operator=' it has no sense
-    void operator=(const fee_filter&) = delete;
+    void operator=(fee_filter const&) = delete;
 
-    bool operator==(const fee_filter& x) const;
-    bool operator!=(const fee_filter& x) const;
+    bool operator==(fee_filter const& x) const;
+    bool operator!=(fee_filter const& x) const;
 
     uint64_t minimum_fee() const;
     void set_minimum_fee(uint64_t value);

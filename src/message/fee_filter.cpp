@@ -47,10 +47,6 @@ size_t fee_filter::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(minimum_fee_);
 }
 
-// This is a default instance so is invalid.
-fee_filter::fee_filter()
-{}
-
 // This is not a default instance so is valid.
 fee_filter::fee_filter(uint64_t minimum)
     : minimum_fee_(minimum), insufficient_version_(false) {
@@ -61,7 +57,7 @@ fee_filter::fee_filter(uint64_t minimum, bool insufficient_version)
     : minimum_fee_(minimum), insufficient_version_(insufficient_version) {
 }
 
-// fee_filter::fee_filter(const fee_filter& x)
+// fee_filter::fee_filter(fee_filter const& x)
 //     : fee_filter(x.minimum_fee_, x.insufficient_version_) {
 // }
 
@@ -76,11 +72,11 @@ fee_filter::fee_filter(uint64_t minimum, bool insufficient_version)
 // }
 
 //TODO(fernando): it does not compare all the data members, is it OK?
-bool fee_filter::operator==(const fee_filter& x) const {
+bool fee_filter::operator==(fee_filter const& x) const {
     return (minimum_fee_ == x.minimum_fee_);
 }
 
-bool fee_filter::operator!=(const fee_filter& x) const {
+bool fee_filter::operator!=(fee_filter const& x) const {
     return !(*this == x);
 }
 

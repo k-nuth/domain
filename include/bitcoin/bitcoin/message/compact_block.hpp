@@ -64,7 +64,7 @@ public:
 
     static compact_block factory_from_block(message::block const& blk);
 
-    compact_block();
+    compact_block() = default;
     compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions);
     compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
     compact_block(compact_block const& x) = default;

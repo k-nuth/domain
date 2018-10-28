@@ -49,9 +49,6 @@ size_t send_compact::satoshi_fixed_size(uint32_t /*version*/) {
     return 9;
 }
 
-send_compact::send_compact()
-{}
-
 send_compact::send_compact(bool high_bandwidth_mode, uint64_t version)
     : high_bandwidth_mode_(high_bandwidth_mode),
       version_(version) {
