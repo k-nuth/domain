@@ -77,7 +77,6 @@ script::script(operation::list&& ops) {
 
 script::script(data_chunk&& encoded, bool prefix) 
     : script_basis(std::move(encoded), prefix)
-    , cached_(false)
 {}
 
 script::script(data_chunk const& encoded, bool prefix)
