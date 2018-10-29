@@ -26,8 +26,8 @@
 #include <string>
 #include <type_traits>
 
-#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/chain/script_basis.hpp>
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/infrastructure/error.hpp>

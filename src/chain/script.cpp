@@ -1002,6 +1002,7 @@ script_pattern script::input_pattern() const {
 
 bool script::is_pay_to_witness(uint32_t forks) const {
 #ifdef BITPRIM_CURRENCY_BCH
+    (void)forks;    //Note(bitprim): to mute the Linter
     return false;
 #else
     // This is used internally as an optimization over using script::pattern.
