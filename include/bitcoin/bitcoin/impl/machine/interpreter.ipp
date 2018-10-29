@@ -42,40 +42,45 @@ static BC_CONSTEXPR auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
 // Operations (shared).
 //-----------------------------------------------------------------------------
 
-inline interpreter::result interpreter::op_nop(opcode /*unused*/) {
+inline
+interpreter::result interpreter::op_nop(opcode /*unused*/) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_disabled(opcode /*unused*/) {
+inline
+interpreter::result interpreter::op_disabled(opcode /*unused*/) {
     return error::op_disabled;
 }
 
-inline interpreter::result interpreter::op_reserved(opcode /*unused*/) {
+inline
+interpreter::result interpreter::op_reserved(opcode /*unused*/) {
     return error::op_reserved;
 }
 
-inline interpreter::result interpreter::op_push_number(program& program,
-                                                       uint8_t value) {
+inline
+interpreter::result interpreter::op_push_number(program& program, uint8_t value) {
     program.push_move({value});
     return error::success;
 }
 
-inline interpreter::result interpreter::op_push_size(program& program,
+inline
+interpreter::result interpreter::op_push_size(program& program,
                                                      operation const& op) {
     if (op.data().size() > op_75) {
         return error::op_push_size;
-}
+    }
 
     program.push_copy(op.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_push_data(program& program,
+inline
+interpreter::result interpreter::op_push_data(program& program,
                                                      data_chunk const& data,
                                                      uint32_t size_limit) {
     if (data.size() > size_limit) {
         return error::op_push_data;
-}
+    }
 
     program.push_copy(data);
     return error::success;
@@ -85,13 +90,14 @@ inline interpreter::result interpreter::op_push_data(program& program,
 //-----------------------------------------------------------------------------
 // All index parameters are zero-based and relative to stack top.
 
-inline interpreter::result interpreter::op_if(program& program) {
+inline
+interpreter::result interpreter::op_if(program& program) {
     auto value = false;
 
     if (program.succeeded()) {
         if (program.empty()) {
             return error::op_if;
-}
+        }
 
         value = program.stack_true(false);
         program.pop();
@@ -101,13 +107,14 @@ inline interpreter::result interpreter::op_if(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_notif(program& program) {
+inline
+interpreter::result interpreter::op_notif(program& program) {
     auto value = false;
 
     if (program.succeeded()) {
         if (program.empty()) {
             return error::op_notif;
-}
+        }
 
         value = !program.stack_true(false);
         program.pop();
@@ -117,73 +124,81 @@ inline interpreter::result interpreter::op_notif(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_else(program& program) {
+inline
+interpreter::result interpreter::op_else(program& program) {
     if (program.closed()) {
         return error::op_else;
-}
+    }
 
     program.negate();
     return error::success;
 }
 
-inline interpreter::result interpreter::op_endif(program& program) {
+inline
+interpreter::result interpreter::op_endif(program& program) {
     if (program.closed()) {
         return error::op_endif;
-}
+    }
 
     program.close();
     return error::success;
 }
 
-inline interpreter::result interpreter::op_verify(program& program) {
+inline
+interpreter::result interpreter::op_verify(program& program) {
     if (program.empty()) {
         return error::op_verify1;
-}
+    }
 
     if ( ! program.stack_true(false)) {
         return error::op_verify2;
-}
+    }
 
     program.pop();
     return error::success;
 }
 
-inline interpreter::result interpreter::op_return(program& /*unused*/) {
+inline
+interpreter::result interpreter::op_return(program& /*unused*/) {
     return error::op_return;
 }
 
-inline interpreter::result interpreter::op_to_alt_stack(program& program) {
+inline
+interpreter::result interpreter::op_to_alt_stack(program& program) {
     if (program.empty()) {
         return error::op_to_alt_stack;
-}
+    }
 
     program.push_alternate(program.pop());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_from_alt_stack(program& program) {
+inline
+interpreter::result interpreter::op_from_alt_stack(program& program) {
     if (program.empty_alternate()) {
         return error::op_from_alt_stack;
-}
+    }
 
     program.push_move(program.pop_alternate());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_drop2(program& program) {
+inline
+interpreter::result interpreter::op_drop2(program& program) {
     if (program.size() < 2) {
         return error::op_drop2;
-}
+    }
 
     program.pop();
     program.pop();
     return error::success;
 }
 
-inline interpreter::result interpreter::op_dup2(program& program) {
+inline
+interpreter::result interpreter::op_dup2(program& program) {
     if (program.size() < 2) {
         return error::op_dup2;
-}
+    }
 
     auto item1 = program.item(1);
     auto item0 = program.item(0);
@@ -193,10 +208,11 @@ inline interpreter::result interpreter::op_dup2(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_dup3(program& program) {
+inline
+interpreter::result interpreter::op_dup3(program& program) {
     if (program.size() < 3) {
         return error::op_dup3;
-}
+    }
 
     auto item2 = program.item(2);
     auto item1 = program.item(1);
@@ -208,10 +224,11 @@ inline interpreter::result interpreter::op_dup3(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_over2(program& program) {
+inline
+interpreter::result interpreter::op_over2(program& program) {
     if (program.size() < 4) {
         return error::op_over2;
-}
+    }
 
     auto item3 = program.item(3);
     auto item2 = program.item(2);
@@ -221,10 +238,11 @@ inline interpreter::result interpreter::op_over2(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_rot2(program& program) {
+inline
+interpreter::result interpreter::op_rot2(program& program) {
     if (program.size() < 6) {
         return error::op_rot2;
-}
+    }
 
     auto const position_5 = program.position(5);
     auto const position_4 = program.position(4);
@@ -238,84 +256,93 @@ inline interpreter::result interpreter::op_rot2(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_swap2(program& program) {
+inline
+interpreter::result interpreter::op_swap2(program& program) {
     if (program.size() < 4) {
         return error::op_swap2;
-}
+    }
 
     program.swap(3, 1);
     program.swap(2, 0);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_if_dup(program& program) {
+inline
+interpreter::result interpreter::op_if_dup(program& program) {
     if (program.empty()) {
         return error::op_if_dup;
-}
+    }
 
     if (program.stack_true(false)) {
         program.duplicate(0);
-}
+    }
 
     return error::success;
 }
 
-inline interpreter::result interpreter::op_depth(program& program) {
+inline
+interpreter::result interpreter::op_depth(program& program) {
     program.push_move(number(program.size()).data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_drop(program& program) {
+inline
+interpreter::result interpreter::op_drop(program& program) {
     if (program.empty()) {
         return error::op_drop;
-}
+    }
 
     program.pop();
     return error::success;
 }
 
-inline interpreter::result interpreter::op_dup(program& program) {
+inline
+interpreter::result interpreter::op_dup(program& program) {
     if (program.empty()) {
         return error::op_dup;
-}
+    }
 
     program.duplicate(0);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_nip(program& program) {
+inline
+interpreter::result interpreter::op_nip(program& program) {
     if (program.size() < 2) {
         return error::op_nip;
-}
+    }
 
     program.erase(program.position(1));
     return error::success;
 }
 
-inline interpreter::result interpreter::op_over(program& program) {
+inline
+interpreter::result interpreter::op_over(program& program) {
     if (program.size() < 2) {
         return error::op_over;
-}
+    }
 
     program.duplicate(1);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_pick(program& program) {
+inline
+interpreter::result interpreter::op_pick(program& program) {
     program::stack_iterator position;
     if ( ! program.pop_position(position)) {
         return error::op_pick;
-}
+    }
 
     program.push_copy(*position);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_roll(program& program) {
+inline
+interpreter::result interpreter::op_roll(program& program) {
     program::stack_iterator position;
     if ( ! program.pop_position(position)) {
         return error::op_roll;
-}
+    }
 
     auto copy = *position;
     program.erase(position);
@@ -323,29 +350,32 @@ inline interpreter::result interpreter::op_roll(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_rot(program& program) {
+inline
+interpreter::result interpreter::op_rot(program& program) {
     if (program.size() < 3) {
         return error::op_rot;
-}
+    }
 
     program.swap(2, 1);
     program.swap(1, 0);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_swap(program& program) {
+inline
+interpreter::result interpreter::op_swap(program& program) {
     if (program.size() < 2) {
         return error::op_swap;
-}
+    }
 
     program.swap(1, 0);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_tuck(program& program) {
+inline
+interpreter::result interpreter::op_tuck(program& program) {
     if (program.size() < 2) {
         return error::op_tuck;
-}
+    }
 
     auto first = program.pop();
     auto second = program.pop();
@@ -355,10 +385,11 @@ inline interpreter::result interpreter::op_tuck(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_size(program& program) {
+inline
+interpreter::result interpreter::op_size(program& program) {
     if (program.empty()) {
         return error::op_size;
-}
+    }
 
     auto top = program.pop();
     auto const size = top.size();
@@ -367,251 +398,276 @@ inline interpreter::result interpreter::op_size(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_equal(program& program) {
+inline
+interpreter::result interpreter::op_equal(program& program) {
     if (program.size() < 2) {
         return error::op_equal;
-}
+    }
 
     program.push(program.pop() == program.pop());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_equal_verify(program& program) {
+inline
+interpreter::result interpreter::op_equal_verify(program& program) {
     if (program.size() < 2) {
         return error::op_equal_verify1;
-}
+    }
 
     return (program.pop() == program.pop()) ? error::success : error::op_equal_verify2;
 }
 
-inline interpreter::result interpreter::op_add1(program& program) {
+inline
+interpreter::result interpreter::op_add1(program& program) {
     number number;
     if ( ! program.pop(number)) {
         return error::op_add1;
-}
+    }
 
     number += 1;
     program.push_move(number.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_sub1(program& program) {
+inline
+interpreter::result interpreter::op_sub1(program& program) {
     number number;
     if ( ! program.pop(number)) {
         return error::op_sub1;
-}
+    }
 
     number -= 1;
     program.push_move(number.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_negate(program& program) {
+inline
+interpreter::result interpreter::op_negate(program& program) {
     number number;
     if ( ! program.pop(number)) {
         return error::op_negate;
-}
+    }
 
     number = -number;
     program.push_move(number.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_abs(program& program) {
+inline
+interpreter::result interpreter::op_abs(program& program) {
     number number;
     if ( ! program.pop(number)) {
         return error::op_abs;
-}
+    }
 
     if (number < 0) {
         number = -number;
-}
+    }
 
     program.push_move(number.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_not(program& program) {
+inline
+interpreter::result interpreter::op_not(program& program) {
     number number;
     if ( ! program.pop(number)) {
         return error::op_not;
-}
+    }
 
     program.push(number.is_false());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_nonzero(program& program) {
+inline
+interpreter::result interpreter::op_nonzero(program& program) {
     number number;
     if ( ! program.pop(number)) {
         return error::op_nonzero;
-}
+    }
 
     program.push(number.is_true());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_add(program& program) {
+inline
+interpreter::result interpreter::op_add(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_add;
-}
+    }
 
     auto const result = first + second;
     program.push_move(result.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_sub(program& program) {
+inline
+interpreter::result interpreter::op_sub(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_sub;
-}
+    }
 
     auto const result = second - first;
     program.push_move(result.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_bool_and(program& program) {
+inline
+interpreter::result interpreter::op_bool_and(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_bool_and;
-}
+    }
 
     program.push(first.is_true() && second.is_true());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_bool_or(program& program) {
+inline
+interpreter::result interpreter::op_bool_or(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_bool_or;
-}
+    }
 
     program.push(first.is_true() || second.is_true());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_num_equal(program& program) {
+inline
+interpreter::result interpreter::op_num_equal(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_num_equal;
-}
+    }
 
     program.push(first == second);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_num_equal_verify(program& program) {
+inline
+interpreter::result interpreter::op_num_equal_verify(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_num_equal_verify1;
-}
+    }
 
     return (first == second) ? error::success : error::op_num_equal_verify2;
 }
 
-inline interpreter::result interpreter::op_num_not_equal(program& program) {
+inline
+interpreter::result interpreter::op_num_not_equal(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_num_not_equal;
-}
+    }
 
     program.push(first != second);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_less_than(program& program) {
+inline
+interpreter::result interpreter::op_less_than(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_less_than;
-}
+    }
 
     program.push(second < first);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_greater_than(program& program) {
+inline
+interpreter::result interpreter::op_greater_than(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_greater_than;
-}
+    }
 
     program.push(second > first);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_less_than_or_equal(program& program) {
+inline
+interpreter::result interpreter::op_less_than_or_equal(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_less_than_or_equal;
-}
+    }
 
     program.push(second <= first);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_greater_than_or_equal(
+inline
+interpreter::result interpreter::op_greater_than_or_equal(
     program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_greater_than_or_equal;
-}
+    }
 
     program.push(second >= first);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_min(program& program) {
+inline
+interpreter::result interpreter::op_min(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_min;
-}
+    }
 
     program.push_move(second < first ? second.data() : first.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_max(program& program) {
+inline
+interpreter::result interpreter::op_max(program& program) {
     number first, second;
     if ( ! program.pop_binary(first, second)) {
         return error::op_max;
-}
+    }
 
     program.push_move(second > first ? second.data() : first.data());
     return error::success;
 }
 
-inline interpreter::result interpreter::op_within(program& program) {
+inline
+interpreter::result interpreter::op_within(program& program) {
     number first, second, third;
     if ( ! program.pop_ternary(first, second, third)) {
         return error::op_within;
-}
+    }
 
     program.push(second <= third && third < first);
     return error::success;
 }
 
-inline interpreter::result interpreter::op_ripemd160(program& program) {
+inline
+interpreter::result interpreter::op_ripemd160(program& program) {
     if (program.empty()) {
         return error::op_ripemd160;
-}
+    }
 
     program.push_move(ripemd160_hash_chunk(program.pop()));
     return error::success;
 }
 
-inline interpreter::result interpreter::op_sha1(program& program) {
+inline
+interpreter::result interpreter::op_sha1(program& program) {
     if (program.empty()) {
         return error::op_sha1;
-}
+    }
 
     program.push_move(sha1_hash_chunk(program.pop()));
     return error::success;
-}
+    }
 
-inline interpreter::result interpreter::op_sha256(program& program) {
+inline
+interpreter::result interpreter::op_sha256(program& program) {
     if (program.empty()) {
         return error::op_sha256;
 }
@@ -620,33 +676,37 @@ inline interpreter::result interpreter::op_sha256(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_hash160(program& program) {
+inline
+interpreter::result interpreter::op_hash160(program& program) {
     if (program.empty()) {
         return error::op_hash160;
-}
+    }
 
     program.push_move(ripemd160_hash_chunk(sha256_hash(program.pop())));
     return error::success;
 }
 
-inline interpreter::result interpreter::op_hash256(program& program) {
+inline
+interpreter::result interpreter::op_hash256(program& program) {
     if (program.empty()) {
         return error::op_hash256;
-}
+    }
 
     program.push_move(sha256_hash_chunk(sha256_hash(program.pop())));
     return error::success;
 }
 
-inline interpreter::result interpreter::op_codeseparator(program& program,
+inline
+interpreter::result interpreter::op_codeseparator(program& program,
                                                          operation const& op) {
     return program.set_jump_register(op, +1) ? error::success : error::op_code_seperator;
 }
 
-inline interpreter::result interpreter::op_check_sig_verify(program& program) {
+inline
+interpreter::result interpreter::op_check_sig_verify(program& program) {
     if (program.size() < 2) {
         return error::op_check_sig_verify1;
-}
+    }
 
     uint8_t sighash;
     ec_signature signature;
@@ -663,17 +723,17 @@ inline interpreter::result interpreter::op_check_sig_verify(program& program) {
     // BIP143: find and delete of the signature is not applied for v0.
     if ( ! (bip143 && program.version() == script_version::zero)) {
         script_code.find_and_delete({endorsement});
-}
+    }
 
     // BIP62: An empty endorsement is not considered lax encoding.
     if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement))) {
         return error::invalid_signature_encoding;
-}
+    }
 
     // Parse DER signature into an EC signature.
     if ( ! parse_signature(signature, distinguished, bip66)) {
         return bip66 ? error::invalid_signature_lax_encoding : error::invalid_signature_encoding;
-}
+    }
 
     // Version condition preserves independence of bip141 and bip143.
     auto version = bip143 ? program.version() : script_version::unversioned;
@@ -685,7 +745,8 @@ inline interpreter::result interpreter::op_check_sig_verify(program& program) {
                : error::incorrect_signature;
 }
 
-inline interpreter::result interpreter::op_check_sig(program& program) {
+inline 
+interpreter::result interpreter::op_check_sig(program& program) {
     auto const verified = op_check_sig_verify(program);
 
     // BIP62: only lax encoding fails the operation.
@@ -697,7 +758,8 @@ inline interpreter::result interpreter::op_check_sig(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_check_multisig_verify(
+inline 
+interpreter::result interpreter::op_check_multisig_verify(
     program& program) {
     int32_t key_count;
     if ( ! program.pop(key_count)) {
@@ -789,7 +851,8 @@ inline interpreter::result interpreter::op_check_multisig_verify(
     return error::success;
 }
 
-inline interpreter::result interpreter::op_check_multisig(program& program) {
+inline
+interpreter::result interpreter::op_check_multisig(program& program) {
     auto const verified = op_check_multisig_verify(program);
 
     // BIP62: only lax encoding fails the operation.
@@ -801,7 +864,8 @@ inline interpreter::result interpreter::op_check_multisig(program& program) {
     return error::success;
 }
 
-inline interpreter::result interpreter::op_check_locktime_verify(
+inline
+interpreter::result interpreter::op_check_locktime_verify(
     program& program) {
     // BIP65: nop2 subsumed by checklocktimeverify when bip65 fork is active.
     if ( ! chain::script::is_enabled(program.forks(), rule_fork::bip65_rule)) {
@@ -845,7 +909,8 @@ inline interpreter::result interpreter::op_check_locktime_verify(
     return (locktime > tx.locktime()) ? error::op_check_locktime_verify6 : error::success;
 }
 
-inline interpreter::result interpreter::op_check_sequence_verify(
+inline
+interpreter::result interpreter::op_check_sequence_verify(
     program& program) {
     // BIP112: nop3 subsumed by checksequenceverify when bip112 fork is active.
     if ( ! chain::script::is_enabled(program.forks(), rule_fork::bip112_rule)) {
@@ -905,7 +970,8 @@ inline interpreter::result interpreter::op_check_sequence_verify(
 }
 
 // It is expected that the compiler will produce a very efficient jump table.
-inline interpreter::result interpreter::run_op(operation const& op,
+inline
+interpreter::result interpreter::run_op(operation const& op,
                                                program& program) {
     auto const code = op.code();
     BITCOIN_ASSERT(op.data().empty() || op.is_push());
