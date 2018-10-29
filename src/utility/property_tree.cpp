@@ -82,7 +82,7 @@ ptree property_tree(const std::vector<config::header>& headers, bool json) {
 
 // inputs
 
-ptree property_list(const chain::input& tx_input) {
+ptree property_list(chain::input const& tx_input) {
     ptree tree;
 
     // This does not support pay_multisig or pay_public_key (nonstandard).
@@ -107,7 +107,7 @@ ptree property_list(const chain::input& tx_input) {
     return tree;
 }
 
-ptree property_tree(const chain::input& tx_input) {
+ptree property_tree(chain::input const& tx_input) {
     ptree tree;
     tree.add_child("input", property_list(tx_input));
     return tree;
@@ -120,7 +120,7 @@ ptree property_tree(const chain::input::list& tx_inputs, bool json) {
 }
 
 ptree property_list(const config::input& input) {
-    const chain::input& tx_input = input;
+    chain::input const& tx_input = input;
     return property_list(tx_input);
 }
 

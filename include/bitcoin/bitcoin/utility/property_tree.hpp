@@ -71,14 +71,14 @@ BC_API pt::ptree property_tree(const std::vector<config::header>& headers,
  * @param[in]  tx_input  The input.
  * @return               A property list.
  */
-BC_API pt::ptree property_list(const chain::input& tx_input);
+BC_API pt::ptree property_list(chain::input const& tx_input);
 
 /**
  * Generate a property tree for a transaction input.
  * @param[in]  tx_input  The input.
  * @return               A property tree.
  */
-BC_API pt::ptree property_tree(const chain::input& tx_input);
+BC_API pt::ptree property_tree(chain::input const& tx_input);
 
 /**
  * Generate a property tree for a set of transaction inputs.
