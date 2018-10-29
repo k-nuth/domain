@@ -46,7 +46,7 @@ public:
      * Initialization constructor. Only the point is retained.
      * @param[in]  value  The value to initialize with.
      */
-    input(const chain::input& value);
+    input(chain::input const& value);
 
     input(input const& x);
 
@@ -55,13 +55,13 @@ public:
      * are defaulted.
      * @param[in]  value  The value to initialize with.
      */
-    input(const chain::input_point& value);
+    input(chain::input_point const& value);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::input&() const;
+    operator chain::input const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
