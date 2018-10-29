@@ -139,6 +139,22 @@ bool output::from_data(std::istream& stream, bool wire) {
     return from_data(stream_r, wire);
 }
 
+//bool output::from_data(reader& source, bool wire, bool)
+//{
+//    reset();
+//
+//    if ( ! wire)
+//        validation.spender_height = source.read_4_bytes_little_endian();
+//
+//    value_ = source.read_8_bytes_little_endian();
+//    script_.from_data(source, true);
+//
+//    if ( ! source)
+//        reset();
+//
+//    return source;
+//}
+
 // protected
 void output::reset() {
     value_ = output::not_found;

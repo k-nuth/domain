@@ -91,13 +91,6 @@ output_point output_point::factory_from_data(std::istream& stream, bool wire) {
     return instance;
 }
 
-// output_point output_point::factory_from_data(reader& source, bool wire)
-// {
-//     output_point instance;
-//     instance.from_data(source, wire);
-//     return instance;
-// }
-
 // Validation.
 //-----------------------------------------------------------------------------
 

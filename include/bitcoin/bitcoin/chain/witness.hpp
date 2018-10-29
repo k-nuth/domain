@@ -189,9 +189,9 @@ public:
 
     code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& program_script, uint64_t value) const;
 
-protected:
-    // So that input may call reset from its own.
-    friend class input;
+// protected:
+//     // So that input may call reset from its own.
+//     friend class input;
 
     void reset();
 

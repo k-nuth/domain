@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_INPUT_HPP
-#define LIBBITCOIN_CHAIN_INPUT_HPP
+#ifndef LIBBITCOIN_CHAIN_INPUT_BASIS_HPP_
+#define LIBBITCOIN_CHAIN_INPUT_BASIS_HPP_
 
 #include <cstddef>
 #include <cstdint>
@@ -25,12 +25,11 @@
 #include <memory>
 #include <vector>
 
-#include <bitcoin/bitcoin/chain/input_basis.hpp>
 #include <bitcoin/bitcoin/chain/output_point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
+// #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
@@ -44,46 +43,102 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API input : public input_basis {
+class BC_API input_basis {
 public:
-    using list = std::vector<input>;
+    using list = std::vector<input_basis>;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
-    input() = default;
-    input(output_point const& previous_output, chain::script const& script, uint32_t sequence);
-    input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
-    input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
-    input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
+    input_basis() = default;
+    input_basis(output_point const& previous_output, chain::script const& script, uint32_t sequence);
+    input_basis(output_point&& previous_output, chain::script&& script, uint32_t sequence);
+    input_basis(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
+    input_basis(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
 
-    input(input const& x);
-    input(input&& x) noexcept;
-    input& operator=(input&& x) noexcept;
-    input& operator=(input const& x);
+    input_basis(input_basis const& x) = default;
+    input_basis(input_basis&& x)  = default;
+    input_basis& operator=(input_basis const& x) = default;
+    input_basis& operator=(input_basis&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    // bool operator==(input const& x) const;
-    // bool operator!=(input const& x) const;
+    bool operator==(input_basis const& x) const;
+    bool operator!=(input_basis const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static input factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    // static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
-    static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
+    static input_basis factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    static input_basis factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static input factory_from_data(R& source, bool wire = true, bool witness = false) {
-        input instance;
+    static input_basis factory_from_data(R& source, bool wire = true, bool witness = false) {
+        input_basis instance;
         instance.from_data(source, wire, witness_val(witness));
         return instance;
     }
 
+    bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    bool from_data(std::istream& stream, bool wire = true, bool witness = false);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool wire = true, bool  /*witness*/ = false) {
+#ifndef BITPRIM_CURRENCY_BCH
+        // Always write witness to store so that we know how to read it.
+        witness |= !wire;
+#endif
+
+        reset();
+
+        if ( ! previous_output_.from_data(source, wire)) {
+            return false;
+        }
+
+        script_.from_data(source, true);
+
+#ifndef BITPRIM_CURRENCY_BCH
+        // Transaction from_data handles the discontiguous wire witness decoding.
+        if (witness_val(witness) && !wire) {
+            witness_.from_data(source, true);
+        }
+#endif
+        sequence_ = source.read_4_bytes_little_endian();
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
 
     bool is_valid() const;
+
+    // Serialization.
+    //-------------------------------------------------------------------------
+
+    data_chunk to_data(bool wire = true, bool witness = false) const;
+    void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
+
+    template <Writer W>
+    void to_data(W& sink, bool wire = true, bool  /*witness*/ = false) const {
+#ifndef BITPRIM_CURRENCY_BCH
+        // Always write witness to store so that we know how to read it.
+        witness |= !wire;
+#endif
+
+        previous_output_.to_data(sink, wire);
+        script_.to_data(sink, true);
+
+#ifndef BITPRIM_CURRENCY_BCH
+        // Transaction to_data handles the discontiguous wire witness encoding.
+        if (witness_val(witness) && !wire) {
+            witness_.to_data(sink, true);
+        }
+#endif
+        sink.write_4_bytes_little_endian(sequence_);
+    }
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -101,7 +156,6 @@ public:
 
     // Deprecated (unsafe).
     chain::script& script();
-
     chain::script const& script() const;
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
@@ -110,7 +164,6 @@ public:
 #ifndef BITPRIM_CURRENCY_BCH
     // Deprecated (unsafe).
     chain::witness& witness();
-
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
@@ -118,12 +171,6 @@ public:
 
     uint32_t sequence() const;
     void set_sequence(uint32_t value);
-
-    /// The first payment address extracted (may be invalid).
-    wallet::payment_address address() const;
-
-    /// The payment addresses extracted from this input as a standard script.
-    wallet::payment_address::list addresses() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
@@ -146,17 +193,8 @@ public:
 
 // protected:
     void reset();
-protected:
-    void invalidate_cache() const;
 
 private:
-    using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
-
-    addresses_ptr addresses_cache() const;
-
-    mutable upgrade_mutex mutex_;
-    mutable addresses_ptr addresses_;
-
     output_point previous_output_;
     chain::script script_;
 #ifndef BITPRIM_CURRENCY_BCH
@@ -170,4 +208,4 @@ private:
 
 //#include <bitprim/concepts_undef.hpp>
 
-#endif
+#endif // LIBBITCOIN_CHAIN_INPUT_BASIS_HPP_

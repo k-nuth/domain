@@ -193,7 +193,7 @@ public:
     // constexpr
     bool is_null() const;
 
-protected:
+// protected:
     // point(hash_digest const& hash, uint32_t index, bool valid);
     void reset();
 

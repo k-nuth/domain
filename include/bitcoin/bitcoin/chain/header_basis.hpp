@@ -154,7 +154,7 @@ public:
     code check(hash_digest const& hash, bool retarget = false) const;
     code accept(chain_state const& state, hash_digest const& hash) const;
 
-protected:
+// protected:
     // So that block may call reset from its own.
     // friend class block;
 

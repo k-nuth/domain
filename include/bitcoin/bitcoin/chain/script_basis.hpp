@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_SCRIPT_HPP
-#define LIBBITCOIN_CHAIN_SCRIPT_HPP
+#ifndef LIBBITCOIN_CHAIN_SCRIPT_BASIS_HPP_
+#define LIBBITCOIN_CHAIN_SCRIPT_BASIS_HPP_
 
 #include <cstddef>
 #include <cstdint>
@@ -27,9 +27,9 @@
 #include <type_traits>
 
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/chain/script_basis.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
+
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/machine/rule_fork.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>
@@ -42,6 +42,7 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
+
 #include <bitprim/common.hpp>
 #include <bitprim/concepts.hpp>
 
@@ -51,7 +52,7 @@ namespace chain {
 class transaction;
 class witness;
 
-class BC_API script : public script_basis {
+class BC_API script_basis {
 public:
     using operation = machine::operation;
     using rule_fork = machine::rule_fork;
@@ -61,39 +62,91 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    script() = default;
+    script_basis() = default;
+    script_basis(data_chunk const& encoded, bool prefix);
+    script_basis(data_chunk&& encoded, bool prefix);
 
-    script(operation::list const& ops);
-    script(operation::list&& ops);
-    script(data_chunk const& encoded, bool prefix);
-    script(data_chunk&& encoded, bool prefix);
-
-
-    script(script const& x);
-    script(script&& x) noexcept;
-    /// This class is move assignable and copy assignable.
-    script& operator=(script const& x);
-    script& operator=(script&& x) noexcept;
+    script_basis(script_basis const& x) = default;
+    script_basis(script_basis&& x) = default;
+    script_basis& operator=(script_basis const& x) = default;
+    script_basis& operator=(script_basis&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    // bool operator==(script const& x) const;
-    // bool operator!=(script const& x) const;
+    bool operator==(script_basis const& x) const;
+    bool operator!=(script_basis const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
+    static script_basis factory_from_data(data_chunk const& encoded, bool prefix);
+    static script_basis factory_from_data(std::istream& stream, bool prefix);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static script_basis factory_from_data(R& source, bool prefix) {
+        script_basis instance;
+        instance.from_data(source, prefix);
+        return instance;
+    }
+
     /// Deserialization invalidates the iterator.
-    void from_operations(operation::list&& ops);
+    bool from_data(data_chunk const& encoded, bool prefix);
+    bool from_data(std::istream& stream, bool prefix);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool prefix) {
+        static_assert(!std::is_same<R, data_chunk>::value, "");
+        // static_assert(   std::is_same<R, data_chunk>::value, "");
+
+        reset();
+        valid_ = true;
+
+        if (prefix) {
+            auto const size = source.read_size_little_endian();
+
+            // The max_script_size constant limits evaluation, but not all scripts
+            // evaluate, so use max_block_size to guard memory allocation here.
+            if (size > get_max_block_size()) {
+                source.invalidate();
+            } else {
+                bytes_ = source.read_bytes(size);
+            }
+        } else {
+            bytes_ = source.read_bytes();
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
+
+    /// Deserialization invalidates the iterator.
     void from_operations(operation::list const& ops);
     bool from_string(std::string const& mnemonic);
 
-    /// Script operations is valid if all push ops have the predicated size.
-    bool is_valid_operations() const;
+    /// A script object is valid if the byte count matches the prefix.
+    bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
+
+    data_chunk to_data(bool prefix) const;
+    void to_data(data_sink& stream, bool prefix) const;
+
+    template <Writer W>
+    void to_data(W& sink, bool prefix) const {
+        // TODO(libbitcoin): optimize by always storing the prefixed serialization.
+        if (prefix) {
+            sink.write_variable_little_endian(serialized_size(false));
+        }
+
+        sink.write_bytes(bytes_);
+    }
+
+    //void to_data(writer& sink, bool prefix) const;
 
     std::string to_string(uint32_t active_forks) const;
 
@@ -113,14 +166,18 @@ public:
     //-------------------------------------------------------------------------
 
     size_t serialized_size(bool prefix) const;
+
+    data_chunk const& bytes() const;
+
     operation::list const& operations() const;
+
 
     // Signing.
     //-------------------------------------------------------------------------
 
     static hash_digest generate_signature_hash(transaction const& tx,
                                                uint32_t input_index,
-                                               script const& script_code,
+                                               script_basis const& script_code,
                                                uint8_t sighash_type,
                                                script_version version = script_version::unversioned,
                                                uint64_t value = max_uint64);
@@ -128,13 +185,13 @@ public:
     static bool check_signature(ec_signature const& signature,
                                 uint8_t sighash_type,
                                 data_chunk const& public_key,
-                                script const& script_code,
+                                script_basis const& script_code,
                                 transaction const& tx,
                                 uint32_t input_index,
                                 script_version version = script_version::unversioned,
                                 uint64_t value = max_uint64);
 
-    static bool create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
+    static bool create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
@@ -201,42 +258,39 @@ public:
 
     // TODO(libbitcoin): move back to private.
 #ifdef BITPRIM_CURRENCY_BCH
-    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t value);
+    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, script_basis const& prevout_script, uint64_t value);
 #else
-    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
+    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, witness const& input_witness, script_basis const& prevout_script, uint64_t value);
 #endif
 
-// protected:
-//     // So that input and output may call reset from their own.
-//     friend class input;
-//     friend class output;
-
     void reset();
+
+// protected:
     bool is_pay_to_witness(uint32_t forks) const;
     bool is_pay_to_script_hash(uint32_t forks) const;
 
 private:
     static size_t serialized_size(operation::list const& ops);
     static data_chunk operations_to_data(operation::list const& ops);
-    static hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type);
+    static hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
 
     static hash_digest generate_version_0_signature_hash(transaction const& tx,
                                                          uint32_t input_index,
-                                                         script const& script_code,
+                                                         script_basis const& script_code,
                                                          uint64_t value,
                                                          uint8_t sighash_type);
 
     void find_and_delete_(data_chunk const& endorsement);
 
-    // These are protected by mutex.
-    mutable bool cached_{false};
-    mutable operation::list operations_;
-    mutable upgrade_mutex mutex_;
+    data_chunk bytes_;
+    bool valid_{false};
 };
+
+machine::operation::list operations(script_basis const& script);
 
 }  // namespace chain
 }  // namespace libbitcoin
 
 //#include <bitprim/concepts_undef.hpp>
 
-#endif
+#endif // LIBBITCOIN_CHAIN_SCRIPT_BASIS_HPP_

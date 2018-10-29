@@ -75,28 +75,43 @@ script::script(operation::list&& ops) {
     from_operations(std::move(ops));
 }
 
-script::script(data_chunk&& encoded, bool prefix) 
-    : script_basis(std::move(encoded), prefix)
-    , cached_(false)
-{}
+script::script(data_chunk&& encoded, bool prefix) {
+    if (prefix) {
+        valid_ = from_data(static_cast<data_chunk const&>(encoded), prefix);
+        // valid_ = from_data(encoded, prefix);
+        return;
+    }
 
-script::script(data_chunk const& encoded, bool prefix)
-    : script_basis(encoded, prefix)
-{}
+    // This is an optimization that avoids streaming the encoded bytes.
+    bytes_ = std::move(encoded);
+    cached_ = false;
+    valid_ = true;
+}
 
+script::script(data_chunk const& encoded, bool prefix) {
+    valid_ = from_data(encoded, prefix);
+}
+
+
+//TODO(fernando): check if it call be defaulted (this and all the special ctors)
 script::script(script&& x) noexcept
-    : script_basis(std::move(x))
-{}
+    : bytes_(std::move(x.bytes_)), valid_(x.valid_) 
+{
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+}
 
 script::script(script const& x)
-    : script_basis(x)
-{}
+    : bytes_(x.bytes_), valid_(x.valid_) 
+{
+    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+}
 
 // Concurrent read/write is not supported, so no critical section.
 script& script::operator=(script&& x) noexcept {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     reset();
-    script_basis::operator=(std::move(x));
+    bytes_ = std::move(x.bytes_);
+    valid_ = x.valid_;
     return *this;
 }
 
@@ -104,22 +119,83 @@ script& script::operator=(script&& x) noexcept {
 script& script::operator=(script const& x) {
     // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
     reset();
-    script_basis::operator=(x);
+    bytes_ = x.bytes_;
+    valid_ = x.valid_;
     return *this;
 }
 // Operators.
 //-----------------------------------------------------------------------------
 
-// bool script::operator==(script const& x) const {
-//     return bytes_ == x.bytes_;
-// }
+bool script::operator==(script const& x) const {
+    return bytes_ == x.bytes_;
+}
 
-// bool script::operator!=(script const& x) const {
-//     return !(*this == x);
-// }
+bool script::operator!=(script const& x) const {
+    return !(*this == x);
+}
 
 // Deserialization.
 //-----------------------------------------------------------------------------
+
+// static
+script script::factory_from_data(data_chunk const& encoded, bool prefix) {
+    script instance;
+    instance.from_data(encoded, prefix);
+    return instance;
+}
+
+// static
+script script::factory_from_data(std::istream& stream, bool prefix) {
+    script instance;
+    instance.from_data(stream, prefix);
+    return instance;
+}
+
+// static
+//script script::factory_from_data(reader& source, bool prefix)
+//{
+//    script instance;
+//    instance.from_data(source, prefix);
+//    return instance;
+//}
+
+bool script::from_data(data_chunk const& encoded, bool prefix) {
+    data_source istream(encoded);
+    return from_data(istream, prefix);
+}
+
+bool script::from_data(std::istream& stream, bool prefix) {
+    istream_reader stream_r(stream);
+    return from_data(stream_r, prefix);
+}
+
+// Concurrent read/write is not supported, so no critical section.
+//bool script::from_data(reader& source, bool prefix)
+//{
+//    reset();
+//    valid_ = true;
+//
+//    if (prefix)
+//    {
+//        auto const size = source.read_size_little_endian();
+//
+//        // The max_script_size constant limits evaluation, but not all scripts
+//        // evaluate, so use max_block_size to guard memory allocation here.
+//        if (size > get_max_block_size())
+//            source.invalidate();
+//        else
+//            bytes_ = source.read_bytes(size);
+//    }
+//    else
+//    {
+//        bytes_ = source.read_bytes();
+//    }
+//
+//    if ( ! source)
+//        reset();
+//
+//    return source;
+//}
 
 // Concurrent read/write is not supported, so no critical section.
 bool script::from_string(std::string const& mnemonic) {
@@ -143,25 +219,61 @@ bool script::from_string(std::string const& mnemonic) {
 
 // Concurrent read/write is not supported, so no critical section.
 void script::from_operations(operation::list&& ops) {
-    script_basis::from_operations(ops);
+    ////reset();
+    bytes_ = operations_to_data(ops);
     operations_ = std::move(ops);
     cached_ = true;
+    valid_ = true;
 }
 
 // Concurrent read/write is not supported, so no critical section.
 void script::from_operations(operation::list const& ops) {
-    script_basis::from_operations(ops);
+    ////reset();
+    bytes_ = operations_to_data(ops);
     operations_ = ops;
     cached_ = true;
+    valid_ = true;
+}
+
+// private/static
+data_chunk script::operations_to_data(operation::list const& ops) {
+    data_chunk out;
+    auto const size = serialized_size(ops);
+    out.reserve(size);
+    auto const concatenate = [&out](operation const& op) {
+        auto bytes = op.to_data();
+        std::move(bytes.begin(), bytes.end(), std::back_inserter(out));
+    };
+
+    std::for_each(ops.begin(), ops.end(), concatenate);
+    BITCOIN_ASSERT(out.size() == size);
+    return out;
+}
+
+// private/static
+size_t script::serialized_size(operation::list const& ops) {
+    auto const op_size = [](size_t total, operation const& op) {
+        return total + op.serialized_size();
+    };
+
+    return std::accumulate(ops.begin(), ops.end(), size_t{0}, op_size);
 }
 
 // protected
 // Concurrent read/write is not supported, so no critical section.
 void script::reset() {
-    script_basis::reset();
+    bytes_.clear();
+    bytes_.shrink_to_fit();
+    valid_ = false;
     cached_ = false;
     operations_.clear();
     operations_.shrink_to_fit();
+}
+
+bool script::is_valid() const {
+    // All script bytes are valid under some circumstance (e.g. coinbase).
+    // This returns false if a prefix and byte count does not match.
+    return valid_;
 }
 
 bool script::is_valid_operations() const {
@@ -172,6 +284,31 @@ bool script::is_valid_operations() const {
 
 // Serialization.
 //-----------------------------------------------------------------------------
+
+data_chunk script::to_data(bool prefix) const {
+    data_chunk data;
+    auto const size = serialized_size(prefix);
+    data.reserve(size);
+    data_sink ostream(data);
+    to_data(ostream, prefix);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return data;
+}
+
+void script::to_data(data_sink& stream, bool prefix) const {
+    ostream_writer sink_w(stream);
+    to_data(sink_w, prefix);
+}
+
+//void script::to_data(writer& sink, bool prefix) const
+//{
+//    // TODO(libbitcoin): optimize by always storing the prefixed serialization.
+//    if (prefix)
+//        sink.write_variable_little_endian(serialized_size(false));
+//
+//    sink.write_bytes(bytes_);
+//}
 
 std::string script::to_string(uint32_t active_forks) const {
     auto first = true;
@@ -229,54 +366,15 @@ operation::iterator script::end() const {
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
 
-// // protected
-// operation::list const& script::operations() const {
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     mutex_.lock_upgrade();
+size_t script::serialized_size(bool prefix) const {
+    auto size = bytes_.size();
 
-//     if (cached_) {
-//         mutex_.unlock_upgrade();
-//         //---------------------------------------------------------------------
-//         return operations_;
-//     }
+    if (prefix) {
+        size += message::variable_uint_size(size);
+    }
 
-//     // operation op;
-//     data_source istream(bytes_);
-//     istream_reader stream_r(istream);
-//     auto const size = bytes_.size();
-
-//     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//     mutex_.unlock_upgrade_and_lock();
-
-//     // One operation per byte is the upper limit of operations.
-//     operations_.reserve(size);
-
-//     // ************************************************************************
-//     // CONSENSUS: In the case of a coinbase script we must parse the entire
-//     // script, beyond just the BIP34 requirements, so that sigops can be
-//     // calculated from the script. These are counted despite being irrelevant.
-//     // In this case an invalid script is parsed to the extent possible.
-//     // ************************************************************************
-
-//     // If an op fails it is pushed to operations and the loop terminates.
-//     // To validate the ops the caller must test the last op.is_valid(), or may
-//     // text script.is_valid_operations(), which is done in script validation.
-//     while ( ! stream_r.is_exhausted()) {
-//         // op.from_data(stream_r);
-//         // operations_.push_back(std::move(op));
-//         operations_.push_back(operation::factory_from_data(stream_r));
-//     }
-
-//     operations_.shrink_to_fit();
-//     cached_ = true;
-
-//     mutex_.unlock();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return operations_;
-// }
-
+    return size;
+}
 
 // protected
 operation::list const& script::operations() const {
@@ -290,10 +388,34 @@ operation::list const& script::operations() const {
         return operations_;
     }
 
+    // operation op;
+    data_source istream(bytes_);
+    istream_reader stream_r(istream);
+    auto const size = bytes_.size();
+
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     mutex_.unlock_upgrade_and_lock();
 
-    operations_ = chain::operations(*this);
+    // One operation per byte is the upper limit of operations.
+    operations_.reserve(size);
+
+    // ************************************************************************
+    // CONSENSUS: In the case of a coinbase script we must parse the entire
+    // script, beyond just the BIP34 requirements, so that sigops can be
+    // calculated from the script. These are counted despite being irrelevant.
+    // In this case an invalid script is parsed to the extent possible.
+    // ************************************************************************
+
+    // If an op fails it is pushed to operations and the loop terminates.
+    // To validate the ops the caller must test the last op.is_valid(), or may
+    // text script.is_valid_operations(), which is done in script validation.
+    while ( ! stream_r.is_exhausted()) {
+        // op.from_data(stream_r);
+        // operations_.push_back(std::move(op));
+        operations_.push_back(operation::factory_from_data(stream_r));
+    }
+
+    operations_.shrink_to_fit();
     cached_ = true;
 
     mutex_.unlock();
@@ -1001,14 +1123,10 @@ script_pattern script::input_pattern() const {
 }
 
 bool script::is_pay_to_witness(uint32_t forks) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    return false;
-#else
     // This is used internally as an optimization over using script::pattern.
     // The first operations access must be method-based to guarantee the cache.
     return is_enabled(forks, rule_fork::bip141_rule) &&
            is_witness_program_pattern(operations());
-#endif
 }
 
 bool script::is_pay_to_script_hash(uint32_t forks) const {
@@ -1043,13 +1161,56 @@ size_t script::sigops(bool accurate) const {
     return total;
 }
 
+//*****************************************************************************
+// CONSENSUS: this is a pointless, broken, premature optimization attempt.
+// The comparison and erase are not limited to a single operation and so can
+// erase arbitrary upstream data from the script.
+//*****************************************************************************
+void script::find_and_delete_(data_chunk const& endorsement) {
+    // If this is empty it would produce an empty script but not operation.
+    // So we test it for empty prior to operation reserialization.
+    if (endorsement.empty()) {
+        return;
+    }
+
+    // The value must be serialized to script using non-minimal encoding.
+    // Non-minimally-encoded target values will therefore not match.
+    auto const value = operation(endorsement, false).to_data();
+
+    operation op;
+    data_source stream(bytes_);
+    istream_reader stream_r(stream);
+    std::vector<data_chunk::iterator> found;
+
+    // The exhaustion test handles stream end and op deserialization failure.
+    for (auto it = bytes_.begin(); !stream_r.is_exhausted();
+         it += stream_r ? op.serialized_size() : 0) {
+        // Track all found values for later deletion.
+        for (; starts_with(it, bytes_.end(), value); it += value.size()) {
+            stream_r.skip(value.size());
+            found.push_back(it);
+        }
+
+        // Read the next op code following last found value.
+        op.from_data(stream_r);
+    }
+
+    // Delete any found values, reversed to prevent iterator invalidation.
+    for (auto const it : reverse(found)) {
+        bytes_.erase(it, it + value.size());
+    }
+}
+
 // Concurrent read/write is not supported, so no critical section.
 void script::find_and_delete(data_stack const& endorsements) {
-    script_basis::find_and_delete(endorsements);
+    for (auto const& endorsement : endorsements) {
+        find_and_delete_(endorsement);
+    }
 
     // Invalidate the cache so that the operations may be regenerated.
     operations_.clear();
     cached_ = false;
+    bytes_.shrink_to_fit();
 }
 
 ////// This is slightly more efficient because the script does not get parsed,

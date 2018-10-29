@@ -25,7 +25,6 @@
 #include <memory>
 #include <vector>
 
-#include <bitcoin/bitcoin/chain/input_basis.hpp>
 #include <bitcoin/bitcoin/chain/output_point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
@@ -44,7 +43,7 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API input : public input_basis {
+class BC_API input {
 public:
     using list = std::vector<input>;
 
@@ -52,21 +51,24 @@ public:
     //-------------------------------------------------------------------------
 
     input() = default;
-    input(output_point const& previous_output, chain::script const& script, uint32_t sequence);
-    input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
-    input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
-    input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
 
     input(input const& x);
     input(input&& x) noexcept;
-    input& operator=(input&& x) noexcept;
-    input& operator=(input const& x);
+
+    input(output_point const& previous_output, chain::script const& script, uint32_t sequence);
+    input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
+
+    input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
+    input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    // bool operator==(input const& x) const;
-    // bool operator!=(input const& x) const;
+    input& operator=(input&& x) noexcept;
+    input& operator=(input const& x);
+
+    bool operator==(input const& x) const;
+    bool operator!=(input const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -82,8 +84,72 @@ public:
         return instance;
     }
 
+    //static input factory_from_data(reader& source, bool wire=true, bool witness=false);
+
+    bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    // bool from_data(std::istream& stream, bool wire = true, bool witness = false);
+    bool from_data(std::istream& stream, bool wire = true, bool witness = false);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool wire = true, bool  /*witness*/ = false) {
+#ifndef BITPRIM_CURRENCY_BCH
+        // Always write witness to store so that we know how to read it.
+        witness |= !wire;
+#endif
+
+        reset();
+
+        if ( ! previous_output_.from_data(source, wire)) {
+            return false;
+}
+
+        script_.from_data(source, true);
+
+#ifndef BITPRIM_CURRENCY_BCH
+        // Transaction from_data handles the discontiguous wire witness decoding.
+        if (witness_val(witness) && !wire) {
+            witness_.from_data(source, true);
+        }
+#endif
+        sequence_ = source.read_4_bytes_little_endian();
+
+        if ( ! source) {
+            reset();
+}
+
+        return source;
+    }
+
+    //bool from_data(reader& source, bool wire=true, bool witness=false);
 
     bool is_valid() const;
+
+    // Serialization.
+    //-------------------------------------------------------------------------
+
+    data_chunk to_data(bool wire = true, bool witness = false) const;
+    void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
+
+    template <Writer W>
+    void to_data(W& sink, bool wire = true, bool  /*witness*/ = false) const {
+#ifndef BITPRIM_CURRENCY_BCH
+        // Always write witness to store so that we know how to read it.
+        witness |= !wire;
+#endif
+
+        previous_output_.to_data(sink, wire);
+        script_.to_data(sink, true);
+
+#ifndef BITPRIM_CURRENCY_BCH
+        // Transaction to_data handles the discontiguous wire witness encoding.
+        if (witness_val(witness) && !wire) {
+            witness_.to_data(sink, true);
+        }
+#endif
+        sink.write_4_bytes_little_endian(sequence_);
+    }
+
+    //void to_data(writer& sink, bool wire=true, bool witness=false) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -144,9 +210,8 @@ public:
     bool extract_embedded_script(chain::script& out) const;
     bool extract_witness_script(chain::script& out, chain::script const& prevout) const;
 
-// protected:
-    void reset();
 protected:
+    void reset();
     void invalidate_cache() const;
 
 private:

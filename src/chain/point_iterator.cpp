@@ -126,12 +126,12 @@ void point_iterator::decrement() {
 
 point_iterator point_iterator::increase(unsigned value) const {
     auto const index = ceiling_add(current_, value);
-    return point_iterator(*point_, std::max(index, point_size));
+    return {*point_, std::max(index, point_size)};
 }
 
 point_iterator point_iterator::decrease(unsigned value) const {
     auto const index = floor_subtract(current_, value);
-    return point_iterator(*point_, index);
+    return {*point_, index};
 }
 
 }  // namespace chain

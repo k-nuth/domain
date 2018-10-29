@@ -167,9 +167,8 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation validation;
 
-// protected:
-    void reset();
 protected:
+    void reset();
     void invalidate_cache() const;
 
 private:

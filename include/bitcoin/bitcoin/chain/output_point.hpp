@@ -109,9 +109,9 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_type validation;
 
-protected:
-    // So that input may call reset from its own.
-    friend class input;
+// protected:
+//     // So that input may call reset from its own.
+//     friend class input;
 };
 
 }  // namespace chain

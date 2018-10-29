@@ -339,19 +339,24 @@ if (ENABLE_SHARED)
 endif()
 
 set(bitprim_domain_sources_just_libbitcoin
+        src/chain/block_basis.cpp
         src/chain/block.cpp
         src/chain/chain_state.cpp
         src/chain/compact.cpp
         src/chain/header_basis.cpp
         src/chain/header.cpp
+        src/chain/input_basis.cpp
         src/chain/input.cpp
+        src/chain/output_basis.cpp
         src/chain/output.cpp
         src/chain/output_point.cpp
         src/chain/point.cpp
         src/chain/point_iterator.cpp
         src/chain/point_value.cpp
         src/chain/points_value.cpp
+        src/chain/script_basis.cpp
         src/chain/script.cpp
+        src/chain/transaction_basis.cpp
         src/chain/transaction.cpp
         src/chain/witness.cpp
 

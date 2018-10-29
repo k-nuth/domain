@@ -422,10 +422,8 @@ public:
 
     bool is_standard() const;
 
-// protected:
-    void reset();
-
 protected:
+    void reset();
     void invalidate_cache() const;
     bool all_inputs_final() const;
 

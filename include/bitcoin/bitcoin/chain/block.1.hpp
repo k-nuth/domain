@@ -250,7 +250,7 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_t validation;
 
-// protected:
+protected:
     void reset();
     size_t non_coinbase_input_count() const;
 

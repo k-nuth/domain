@@ -27,7 +27,6 @@
 #include <type_traits>
 
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/chain/script_basis.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/infrastructure/error.hpp>
@@ -51,7 +50,7 @@ namespace chain {
 class transaction;
 class witness;
 
-class BC_API script : public script_basis {
+class BC_API script {
 public:
     using operation = machine::operation;
     using rule_fork = machine::rule_fork;
@@ -78,22 +77,87 @@ public:
     // Operators.
     //-------------------------------------------------------------------------
 
-    // bool operator==(script const& x) const;
-    // bool operator!=(script const& x) const;
+    bool operator==(script const& x) const;
+    bool operator!=(script const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
+
+    static script factory_from_data(data_chunk const& encoded, bool prefix);
+    static script factory_from_data(std::istream& stream, bool prefix);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static script factory_from_data(R& source, bool prefix) {
+        script instance;
+        instance.from_data(source, prefix);
+        return instance;
+    }
+
+    //static script factory_from_data(reader& source, bool prefix);
+
+    /// Deserialization invalidates the iterator.
+    bool from_data(data_chunk const& encoded, bool prefix);
+    bool from_data(std::istream& stream, bool prefix);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool prefix) {
+        static_assert(!std::is_same<R, data_chunk>::value, "");
+        // static_assert(   std::is_same<R, data_chunk>::value, "");
+
+        reset();
+        valid_ = true;
+
+        if (prefix) {
+            auto const size = source.read_size_little_endian();
+
+            // The max_script_size constant limits evaluation, but not all scripts
+            // evaluate, so use max_block_size to guard memory allocation here.
+            if (size > get_max_block_size()) {
+                source.invalidate();
+            } else {
+                bytes_ = source.read_bytes(size);
+}
+        } else {
+            bytes_ = source.read_bytes();
+        }
+
+        if ( ! source) {
+            reset();
+}
+
+        return source;
+    }
+
+    //bool from_data(reader& source, bool prefix);
 
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list&& ops);
     void from_operations(operation::list const& ops);
     bool from_string(std::string const& mnemonic);
 
+    /// A script object is valid if the byte count matches the prefix.
+    bool is_valid() const;
+
     /// Script operations is valid if all push ops have the predicated size.
     bool is_valid_operations() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
+
+    data_chunk to_data(bool prefix) const;
+    void to_data(data_sink& stream, bool prefix) const;
+
+    template <Writer W>
+    void to_data(W& sink, bool prefix) const {
+        // TODO(libbitcoin): optimize by always storing the prefixed serialization.
+        if (prefix) {
+            sink.write_variable_little_endian(serialized_size(false));
+        }
+
+        sink.write_bytes(bytes_);
+    }
+
+    //void to_data(writer& sink, bool prefix) const;
 
     std::string to_string(uint32_t active_forks) const;
 
@@ -206,10 +270,10 @@ public:
     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
 #endif
 
-// protected:
-//     // So that input and output may call reset from their own.
-//     friend class input;
-//     friend class output;
+protected:
+    // So that input and output may call reset from their own.
+    friend class input;
+    friend class output;
 
     void reset();
     bool is_pay_to_witness(uint32_t forks) const;
@@ -227,6 +291,9 @@ private:
                                                          uint8_t sighash_type);
 
     void find_and_delete_(data_chunk const& endorsement);
+
+    data_chunk bytes_;
+    bool valid_{false};
 
     // These are protected by mutex.
     mutable bool cached_{false};

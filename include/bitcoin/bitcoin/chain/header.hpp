@@ -157,9 +157,9 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_t validation{};
 
-protected:
+// protected:
     // So that block may call reset from its own.
-    friend class block;
+    // friend class block;
 
     void reset();
     void invalidate_cache() const;

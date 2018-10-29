@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_OUTPUT_HPP
-#define LIBBITCOIN_CHAIN_OUTPUT_HPP
+#ifndef LIBBITCOIN_CHAIN_OUTPUT_BASIS_HPP_
+#define LIBBITCOIN_CHAIN_OUTPUT_BASIS_HPP_
 
 #include <cstddef>
 #include <cstdint>
@@ -28,7 +28,7 @@
 
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
+// #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
@@ -41,56 +41,46 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API output {
+class BC_API output_basis {
 public:
-    using list = std::vector<output>;
+    using list = std::vector<output_basis>;
 
     /// This is a sentinel used in .value to indicate not found in store.
     /// This is a sentinel used in cache.value to indicate not populated.
     /// This is a consensus value used in script::generate_signature_hash.
     static uint64_t const not_found;
 
-    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation {
-        /// This is a non-consensus sentinel indicating output is unspent.
-        static uint32_t const not_spent;
-
-        size_t spender_height = validation::not_spent;
-    };
-
     // Constructors.
     //-------------------------------------------------------------------------
 
-    output();
+    output_basis();
 
-    output(output const& x);
-    output(output&& x) noexcept;
+    output_basis(uint64_t value, chain::script const& script);
+    output_basis(uint64_t value, chain::script&& script);
 
-    output(uint64_t value, chain::script const& script);
-    output(uint64_t value, chain::script&& script);
 
-    output& operator=(output const& x);
-    output& operator=(output&& x) noexcept;
+    output_basis(output_basis const& x);
+    output_basis(output_basis&& x) noexcept;
+    output_basis& operator=(output_basis const& x);
+    output_basis& operator=(output_basis&& x) noexcept;
 
     // Operators.
     //-------------------------------------------------------------------------
-    bool operator==(output const& x) const;
-    bool operator!=(output const& x) const;
+    bool operator==(output_basis const& x) const;
+    bool operator!=(output_basis const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static output factory_from_data(data_chunk const& data, bool wire = true);
-    static output factory_from_data(std::istream& stream, bool wire = true);
+    static output_basis factory_from_data(data_chunk const& data, bool wire = true);
+    static output_basis factory_from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static output factory_from_data(R& source, bool wire = true) {
-        output instance;
+    static output_basis factory_from_data(R& source, bool wire = true) {
+        output_basis instance;
         instance.from_data(source, wire);
         return instance;
     }
-
-    //static output factory_from_data(reader& source, bool wire=true);
 
     bool from_data(data_chunk const& data, bool wire = true);
     bool from_data(std::istream& stream, bool wire = true);
@@ -98,10 +88,6 @@ public:
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool  /*unused*/ = false) {
         reset();
-
-        if ( ! wire) {
-            validation.spender_height = source.read_4_bytes_little_endian();
-        }
 
         value_ = source.read_8_bytes_little_endian();
         script_.from_data(source, true);
@@ -123,11 +109,6 @@ public:
 
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool  /*unused*/ = false) const {
-        if ( ! wire) {
-            auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
-            sink.write_4_bytes_little_endian(height32);
-        }
-
         sink.write_8_bytes_little_endian(value_);
         script_.to_data(sink, true);
     }
@@ -146,16 +127,16 @@ public:
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
-    /// The payment address extracted from this output as a standard script.
-    wallet::payment_address address(bool testnet = false) const;
+    // /// The payment address extracted from this output as a standard script.
+    // wallet::payment_address address(bool testnet = false) const;
 
-    /// The first payment address extracted (may be invalid).
-    wallet::payment_address address(uint8_t p2kh_version, uint8_t p2sh_version) const;
+    // /// The first payment address extracted (may be invalid).
+    // wallet::payment_address address(uint8_t p2kh_version, uint8_t p2sh_version) const;
 
-    /// The payment addresses extracted from this output as a standard script.
-    wallet::payment_address::list addresses(
-        uint8_t p2kh_version = wallet::payment_address::mainnet_p2kh,
-        uint8_t p2sh_version = wallet::payment_address::mainnet_p2sh) const;
+    // /// The payment addresses extracted from this output as a standard script.
+    // wallet::payment_address::list addresses(
+    //     uint8_t p2kh_version = wallet::payment_address::mainnet_p2kh,
+    //     uint8_t p2sh_version = wallet::payment_address::mainnet_p2sh) const;
 
     // Validation.
     //-------------------------------------------------------------------------
@@ -164,22 +145,10 @@ public:
     bool is_dust(uint64_t minimum_output_value) const;
     bool extract_committed_hash(hash_digest& out) const;
 
-    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation validation;
-
 // protected:
     void reset();
-protected:
-    void invalidate_cache() const;
 
 private:
-    using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
-
-    addresses_ptr addresses_cache() const;
-
-    mutable upgrade_mutex mutex_;
-    mutable addresses_ptr addresses_;
-
     uint64_t value_{not_found};
     chain::script script_;
 };
@@ -189,4 +158,4 @@ private:
 
 //#include <bitprim/concepts_undef.hpp>
 
-#endif
+#endif // LIBBITCOIN_CHAIN_OUTPUT_BASIS_HPP_

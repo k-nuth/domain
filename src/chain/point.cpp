@@ -152,11 +152,11 @@ void point::to_data(data_sink& stream, bool wire) const {
 //-----------------------------------------------------------------------------
 
 point_iterator point::begin() const {
-    return point_iterator(*this);
+    return {*this};
 }
 
 point_iterator point::end() const {
-    return point_iterator(*this, static_cast<unsigned>(store_point_size));
+    return {*this, static_cast<unsigned>(store_point_size)};
 }
 
 // Properties.

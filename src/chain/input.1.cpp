@@ -43,6 +43,25 @@ using namespace bc::machine;
 // Constructors.
 //-----------------------------------------------------------------------------
 
+
+input::input(input const& x)
+    : addresses_(x.addresses_cache())
+    , previous_output_(x.previous_output_)
+    , script_(x.script_)
+#ifndef BITPRIM_CURRENCY_BCH
+    , witness_(x.witness_)
+#endif
+    , sequence_(x.sequence_) {}
+
+input::input(input&& x) noexcept
+    : addresses_(x.addresses_cache()),
+      previous_output_(std::move(x.previous_output_)),
+      script_(std::move(x.script_)),
+#ifndef BITPRIM_CURRENCY_BCH
+      witness_(std::move(x.witness_)),
+#endif
+      sequence_(x.sequence_) {}
+
 input::input(output_point&& previous_output, chain::script&& script, uint32_t sequence)
     : previous_output_(std::move(previous_output)),
       script_(std::move(script)),
@@ -90,69 +109,221 @@ input::input(output_point&& previous_output, chain::script&& script, chain::witn
 {}
 
 
-input::input(input const& x)
-    : input_basis(x)
-    , addresses_(x.addresses_cache())
-{}
-
-input::input(input&& x) noexcept
-    : input_basis(std::move(x))
-    , addresses_(x.addresses_cache())
-{}
-
 // Operators.
 //-----------------------------------------------------------------------------
 
 input& input::operator=(input const& x) {
-    input_basis::operator=(x);
     addresses_ = x.addresses_cache();
+    previous_output_ = x.previous_output_;
+    script_ = x.script_;
+#ifndef BITPRIM_CURRENCY_BCH
+    witness_ = x.witness_;
+#endif
+    sequence_ = x.sequence_;
     return *this;
 }
 
 input& input::operator=(input&& x) noexcept {
-    input_basis::operator=(std::move(x));
     addresses_ = x.addresses_cache();
+    previous_output_ = std::move(x.previous_output_);
+    script_ = std::move(x.script_);
+#ifndef BITPRIM_CURRENCY_BCH
+    witness_ = std::move(x.witness_);
+#endif
+    sequence_ = x.sequence_;
     return *this;
 }
 
-// bool input::operator==(input const& x) const {
-//     return (sequence_ == x.sequence_) 
-//         && (previous_output_ == x.previous_output_) 
-//         && (script_ == x.script_) 
-// #ifndef BITPRIM_CURRENCY_BCH
-//         && (witness_ == x.witness_)
-// #endif
-//         ;
-// }
+bool input::operator==(input const& x) const {
+    return (sequence_ == x.sequence_) 
+        && (previous_output_ == x.previous_output_) 
+        && (script_ == x.script_) 
+#ifndef BITPRIM_CURRENCY_BCH
+        && (witness_ == x.witness_)
+#endif
+        ;
+}
 
-// bool input::operator!=(input const& x) const {
-//     return !(*this == x);
-// }
+bool input::operator!=(input const& x) const {
+    return !(*this == x);
+}
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+input input::factory_from_data(data_chunk const& data, bool wire, bool witness) {
+    input instance;
+    instance.from_data(data, wire, witness_val(witness));
+    return instance;
+}
+
+// input input::factory_from_data(std::istream& stream, bool wire, bool witness) {
+input input::factory_from_data(std::istream& stream, bool wire, bool witness) {
+    input instance;
+    instance.from_data(stream, wire, witness_val(witness));
+    return instance;
+}
+
+bool input::from_data(data_chunk const& data, bool wire, bool witness) {
+    data_source istream(data);
+    return from_data(istream, wire, witness_val(witness));
+}
+
+// bool input::from_data(std::istream& stream, bool wire, bool witness) {
+bool input::from_data(std::istream& stream, bool wire, bool witness) {
+    istream_reader stream_r(stream);
+    return from_data(stream_r, wire, witness_val(witness));
+}
+
+void input::reset() {
+    previous_output_.reset();
+    script_.reset();
+#ifndef BITPRIM_CURRENCY_BCH
+    witness_.reset();
+#endif
+    sequence_ = 0;
+}
+
+// Since empty scripts and zero sequence are valid this relies on the prevout.
+bool input::is_valid() const {
+    return sequence_ != 0 
+        || previous_output_.is_valid() 
+        || script_.is_valid() 
+#ifndef BITPRIM_CURRENCY_BCH
+        || witness_.is_valid()
+#endif
+        ;
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
+data_chunk input::to_data(bool wire, bool witness) const {
+    data_chunk data;
+    auto const size = serialized_size(wire, witness_val(witness));
+    data.reserve(size);
+    data_sink ostream(data);
+    to_data(ostream, wire, witness_val(witness));
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return data;
+}
+
+void input::to_data(data_sink& stream, bool wire, bool witness) const {
+    ostream_writer sink_w(stream);
+    to_data(sink_w, wire, witness_val(witness));
+}
+
+//void input::to_data(writer& sink, bool wire, bool witness) const
+//{
+//#ifdef BITPRIM_CURRENCY_BCH
+//    witness = false;
+//#else
+//    // Always write witness to store so that we know how to read it.
+//    witness |= !wire;
+//#endif
+//
+//    previous_output_.to_data(sink, wire);
+//    script_.to_data(sink, true);
+//
+//    // Transaction to_data handles the discontiguous wire witness encoding.
+//    if (witness && !wire)
+//        witness_.to_data(sink, true);
+//
+//    sink.write_4_bytes_little_endian(sequence_);
+//}
+
+// Size.
+//-----------------------------------------------------------------------------
+size_t input::serialized_size_non_witness(bool wire) const {
+    return previous_output_.serialized_size(wire) 
+         + script_.serialized_size(true) 
+         + sizeof(sequence_);
+}
+
+
+#ifdef BITPRIM_CURRENCY_BCH
+size_t input::serialized_size(bool wire, bool /*witness*/) const {
+    return serialized_size_non_witness(wire);
+}
+#else
+size_t input::serialized_size(bool wire, bool witness) const {
+    // Always write witness to store so that we know how to read it.
+    witness |= !wire;
+
+    // Witness size added in both contexts despite that tx writes wire witness.
+    // Prefix is written for both wire and store/other contexts.
+    return serialized_size_non_witness(wire)
+         + witness ? witness_.serialized_size(true) : 0;
+}
+#endif
+
 
 // Accessors.
 //-----------------------------------------------------------------------------
 
+output_point& input::previous_output() {
+    return previous_output_;
+}
+
+output_point const& input::previous_output() const {
+    return previous_output_;
+}
+
+void input::set_previous_output(output_point const& value) {
+    previous_output_ = value;
+}
+
+void input::set_previous_output(output_point&& value) {
+    previous_output_ = std::move(value);
+}
+
+chain::script& input::script() {
+    return script_;
+}
+
+chain::script const& input::script() const {
+    return script_;
+}
+
 void input::set_script(chain::script const& value) {
-    input_basis::set_script(value);
+    script_ = value;
     invalidate_cache();
 }
 
 void input::set_script(chain::script&& value) {
-    input_basis::set_script(std::move(value));
+    script_ = std::move(value);
     invalidate_cache();
 }
 
 #ifndef BITPRIM_CURRENCY_BCH
+chain::witness const& input::witness() const {
+    return witness_;
+}
+
+chain::witness& input::witness() {
+    return witness_;
+}
+
 void input::set_witness(chain::witness const& value) {
-    input_basis::set_witness(value);
+    witness_ = value;
     invalidate_cache();
 }
 
 void input::set_witness(chain::witness&& value) {
-    input_basis::set_witness(std::move(value));
+    witness_ = std::move(value);
     invalidate_cache();
 }
 #endif // BITPRIM_CURRENCY_BCH
+
+
+uint32_t input::sequence() const {
+    return sequence_;
+}
+
+void input::set_sequence(uint32_t value) {
+    sequence_ = value;
+}
 
 // protected
 void input::invalidate_cache() const {
@@ -187,7 +358,8 @@ payment_address::list input::addresses() const {
         mutex_.unlock_upgrade_and_lock();
 
         // TODO(libbitcoin): expand to include segregated witness address extraction.
-        addresses_ = std::make_shared<payment_address::list>(payment_address::extract_input(script_));
+        addresses_ = std::make_shared<payment_address::list>(
+            payment_address::extract_input(script_));
         mutex_.unlock_and_lock_upgrade();
         //---------------------------------------------------------------------
     }
