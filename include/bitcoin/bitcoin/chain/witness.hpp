@@ -39,6 +39,11 @@
 namespace libbitcoin {
 namespace chain {
 
+#ifdef BITPRIM_CURRENCY_BCH
+
+struct witness {};
+
+#else
 class BC_API witness {
 public:
     using operation = machine::operation;
@@ -79,8 +84,6 @@ public:
         return instance;
     }
 
-    //static witness factory_from_data(reader& source, bool prefix);
-
     /// Deserialization invalidates the iterator.
     bool from_data(data_chunk const& encoded, bool prefix);
     bool from_data(std::istream& stream, bool prefix);
@@ -111,16 +114,16 @@ public:
             // On wire each witness is prefixed with number of elements (bip144).
             for (auto count = source.read_size_little_endian(); count > 0; --count) {
                 stack_.push_back(read_element(source));
-}
+            }
         } else {
             while ( ! source.is_exhausted()) {
                 stack_.push_back(read_element(source));
-}
+            }
         }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
@@ -141,7 +144,7 @@ public:
         // Witness prefix is an element count, not byte length (unlike script).
         if (prefix) {
             sink.write_size_little_endian(stack_.size());
-}
+        }
 
         auto const serialize = [&sink](data_chunk const& element) {
             // Tokens encoded as variable integer prefixed byte array (bip144).
@@ -202,6 +205,7 @@ private:
     bool valid_{false};
     data_stack stack_;
 };
+#endif // BITPRIM_CURRENCY_BCH
 
 }  // namespace chain
 }  // namespace libbitcoin
