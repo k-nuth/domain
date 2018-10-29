@@ -129,6 +129,22 @@ input& input::operator=(input&& x) noexcept {
 //     return !(*this == x);
 // }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+input input::factory_from_data(data_chunk const& data, bool wire, bool witness) {
+    input instance;
+    instance.from_data(data, wire, witness_val(witness));
+    return instance;
+}
+
+input input::factory_from_data(std::istream& stream, bool wire, bool witness) {
+    input instance;
+    instance.from_data(stream, wire, witness_val(witness));
+    return instance;
+}
+
+
 // Accessors.
 //-----------------------------------------------------------------------------
 

@@ -51,31 +51,21 @@ input_basis::input_basis(output_point const& previous_output, chain::script cons
       script_(script),
       sequence_(sequence) {}
 
-#ifdef BITPRIM_CURRENCY_BCH
-input_basis::input_basis(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
-    : previous_output_(previous_output)
-    , script_(script)
-#else
+#ifndef BITPRIM_CURRENCY_BCH
 input_basis::input_basis(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
     : previous_output_(previous_output)
     , script_(script)
     , witness_(witness)
-#endif
     , sequence_(sequence) 
 {}
 
-#ifdef BITPRIM_CURRENCY_BCH
-input_basis::input_basis(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
-    : previous_output_(std::move(previous_output))
-    , script_(std::move(script))
-#else
 input_basis::input_basis(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence)
     : previous_output_(std::move(previous_output))
     , script_(std::move(script))
     , witness_(std::move(witness))
-#endif
     , sequence_(sequence) 
 {}
+#endif
 
 
 // Operators.
@@ -118,6 +108,15 @@ bool input_basis::from_data(data_chunk const& data, bool wire, bool witness) {
 bool input_basis::from_data(std::istream& stream, bool wire, bool witness) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire, witness_val(witness));
+}
+
+void input_basis::reset() {
+    previous_output_.reset();
+    script_.reset();
+#ifndef BITPRIM_CURRENCY_BCH
+    witness_.reset();
+#endif
+    sequence_ = 0;
 }
 
 // Since empty scripts and zero sequence are valid this relies on the prevout.

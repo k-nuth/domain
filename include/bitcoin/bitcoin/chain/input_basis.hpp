@@ -53,8 +53,11 @@ public:
     input_basis() = default;
     input_basis(output_point const& previous_output, chain::script const& script, uint32_t sequence);
     input_basis(output_point&& previous_output, chain::script&& script, uint32_t sequence);
+
+#ifndef BITPRIM_CURRENCY_BCH
     input_basis(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
     input_basis(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
+#endif
 
     input_basis(input_basis const& x) = default;
     input_basis(input_basis&& x)  = default;
@@ -189,7 +192,10 @@ public:
     size_t signature_operations(bool bip16, bool bip141) const;
     bool extract_reserved_hash(hash_digest& out) const;
     bool extract_embedded_script(chain::script& out) const;
+
+#ifndef BITPRIM_CURRENCY_BCH
     bool extract_witness_script(chain::script& out, chain::script const& prevout) const;
+#endif
 
 // protected:
     void reset();
