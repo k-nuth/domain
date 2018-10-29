@@ -126,15 +126,11 @@ public:
 
     transaction_basis(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs);
     transaction_basis(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs);
-    transaction_basis(transaction_basis const& x, hash_digest const& hash);
-    transaction_basis(transaction_basis&& x, hash_digest const& hash);
 
-
-    //Note(bitprim): cannot be defaulted because of the mutex data member.
-    transaction_basis(transaction_basis const& x);
-    transaction_basis(transaction_basis&& x) noexcept;
-    transaction_basis& operator=(transaction_basis const& x);
-    transaction_basis& operator=(transaction_basis&& x) noexcept;
+    // transaction_basis(transaction_basis const& x) = default;
+    // transaction_basis(transaction_basis&& x) = default;
+    // transaction_basis& operator=(transaction_basis const& x) = default;
+    // transaction_basis& operator=(transaction_basis&& x) = default;
 
 
     // Operators.
