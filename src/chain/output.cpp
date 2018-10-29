@@ -43,32 +43,47 @@ uint32_t const output::validation::not_spent = max_uint32;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-output::output()
-    : value_(not_found),
-      validation{} 
+// output::output()
+//     : validation{} 
+// {}
+
+output::output(output const& x)
+    : output_basis(x)
+    , addresses_(x.addresses_cache())
+    , validation(x.validation) 
 {}
 
 output::output(output&& x) noexcept
-    : addresses_(x.addresses_cache()),
-      value_(x.value_),
-      script_(std::move(x.script_)),
-      validation(x.validation) {}
+    : output_basis(std::move(x))
+    , addresses_(x.addresses_cache())
+    , validation(x.validation) 
+{}
 
-output::output(output const& x)
-    : addresses_(x.addresses_cache()),
-      value_(x.value_),
-      script_(x.script_),
-      validation(x.validation) {}
+output& output::operator=(output const& x) {
+    output_basis::operator=(x);
+    addresses_ = x.addresses_cache();
+    validation = x.validation;
+    return *this;
+}
 
-output::output(uint64_t value, chain::script&& script)
-    : value_(value),
-      script_(std::move(script)),
-      validation{} {}
+output& output::operator=(output&& x) noexcept {
+    output_basis::operator=(std::move(x));
+    addresses_ = x.addresses_cache();
+    validation = x.validation;
+    return *this;
+}
 
-output::output(uint64_t value, chain::script const& script)
-    : value_(value),
-      script_(script),
-      validation{} {}
+// output::output(uint64_t value, chain::script&& script)
+//     : value_(value)
+//     , script_(std::move(script))
+//     , validation{} 
+// {}
+
+// output::output(uint64_t value, chain::script const& script)
+//     : value_(value)
+//     , script_(script)
+//     , validation{} 
+// {}
 
 // Private cache access for copy/move construction.
 output::addresses_ptr output::addresses_cache() const {
@@ -83,29 +98,14 @@ output::addresses_ptr output::addresses_cache() const {
 // Operators.
 //-----------------------------------------------------------------------------
 
-output& output::operator=(output&& x) noexcept {
-    addresses_ = x.addresses_cache();
-    value_ = x.value_;
-    script_ = std::move(x.script_);
-    validation = x.validation;
-    return *this;
-}
 
-output& output::operator=(output const& x) {
-    addresses_ = x.addresses_cache();
-    value_ = x.value_;
-    script_ = x.script_;
-    validation = x.validation;
-    return *this;
-}
+// bool output::operator==(output const& x) const {
+//     return (value_ == x.value_) && (script_ == x.script_);
+// }
 
-bool output::operator==(output const& x) const {
-    return (value_ == x.value_) && (script_ == x.script_);
-}
-
-bool output::operator!=(output const& x) const {
-    return !(*this == x);
-}
+// bool output::operator!=(output const& x) const {
+//     return !(*this == x);
+// }
 
 // Deserialization.
 //-----------------------------------------------------------------------------
@@ -122,13 +122,6 @@ output output::factory_from_data(std::istream& stream, bool wire) {
     return instance;
 }
 
-//output output::factory_from_data(reader& source, bool wire)
-//{
-//    output instance;
-//    instance.from_data(source, wire);
-//    return instance;
-//}
-
 bool output::from_data(data_chunk const& data, bool wire) {
     data_source istream(data);
     return from_data(istream, wire);
@@ -139,16 +132,16 @@ bool output::from_data(std::istream& stream, bool wire) {
     return from_data(stream_r, wire);
 }
 
-// protected
-void output::reset() {
-    value_ = output::not_found;
-    script_.reset();
-}
+// // protected
+// void output::reset() {
+//     value_ = output::not_found;
+//     script_.reset();
+// }
 
 // Empty scripts are valid, validation relies on not_found only.
-bool output::is_valid() const {
-    return value_ != output::not_found;
-}
+// bool output::is_valid() const {
+//     return value_ != output::not_found;
+// }
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -169,53 +162,25 @@ void output::to_data(data_sink& stream, bool wire) const {
     to_data(sink_w, wire);
 }
 
-//void output::to_data(writer& sink, bool wire, bool) const
-//{
-//    if ( ! wire)
-//    {
-//        auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
-//        sink.write_4_bytes_little_endian(height32);
-//    }
-//
-//    sink.write_8_bytes_little_endian(value_);
-//    script_.to_data(sink, true);
-//}
-
 // Size.
 //-----------------------------------------------------------------------------
 
 size_t output::serialized_size(bool wire) const {
     // validation.spender_height is size_t stored as uint32_t.
-    return (wire ? 0 : sizeof(uint32_t)) + sizeof(value_) +
-           script_.serialized_size(true);
+    return (wire ? 0 : sizeof(uint32_t)) 
+            + output_basis::serialized_size(wire);
 }
 
 // Accessors.
 //-----------------------------------------------------------------------------
 
-uint64_t output::value() const {
-    return value_;
-}
-
-void output::set_value(uint64_t value) {
-    value_ = value;
-}
-
-chain::script& output::script() {
-    return script_;
-}
-
-chain::script const& output::script() const {
-    return script_;
-}
-
 void output::set_script(chain::script const& value) {
-    script_ = value;
+    output_basis::set_script(value);
     invalidate_cache();
 }
 
 void output::set_script(chain::script&& value) {
-    script_ = std::move(value);
+    output_basis::set_script(std::move(value));
     invalidate_cache();
 }
 
@@ -256,9 +221,7 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     if ( ! addresses_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
-        addresses_ = std::make_shared<payment_address::list>(
-            payment_address::extract_output(script_, p2kh_version,
-                                            p2sh_version));
+        addresses_ = std::make_shared<payment_address::list>(payment_address::extract_output(script(), p2kh_version, p2sh_version));
         mutex_.unlock_and_lock_upgrade();
         //---------------------------------------------------------------------
     }
@@ -268,38 +231,6 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     ///////////////////////////////////////////////////////////////////////////
 
     return addresses;
-}
-
-// Validation helpers.
-//-----------------------------------------------------------------------------
-
-size_t output::signature_operations(bool bip141) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    bip141 = false;  // No segwit
-#endif
-    // Penalize quadratic signature operations (bip141).
-    auto const sigops_factor = bip141 ? fast_sigops_factor : 1u;
-
-    // Count heavy sigops in the output script.
-    return script_.sigops(false) * sigops_factor;
-}
-
-bool output::is_dust(uint64_t minimum_output_value) const {
-    // If provably unspendable it does not expand the unspent output set.
-    return value_ < minimum_output_value && !script_.is_unspendable();
-}
-
-bool output::extract_committed_hash(hash_digest& out) const {
-    auto const& ops = script_.operations();
-
-    if ( ! script::is_commitment_pattern(ops)) {
-        return false;
-    }
-
-    // The four byte offset for the witness commitment hash (bip141).
-    auto const start = ops[1].data().begin() + sizeof(witness_head);
-    std::copy_n(start, hash_size, out.begin());
-    return true;
 }
 
 }  // namespace chain

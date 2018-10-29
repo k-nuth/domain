@@ -39,19 +39,19 @@ uint64_t const output_basis::not_found = sighash_null_value;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-output_basis::output_basis()
-    : value_(not_found)
-{}
+// output_basis::output_basis()
+//     : value_(not_found)
+// {}
 
-output_basis::output_basis(output_basis&& x) noexcept
-    : value_(x.value_),
-      script_(std::move(x.script_))
-{}
+// output_basis::output_basis(output_basis&& x) noexcept
+//     : value_(x.value_),
+//       script_(std::move(x.script_))
+// {}
 
-output_basis::output_basis(output_basis const& x)
-    : value_(x.value_),
-      script_(x.script_)
-{}
+// output_basis::output_basis(output_basis const& x)
+//     : value_(x.value_),
+//       script_(x.script_)
+// {}
 
 output_basis::output_basis(uint64_t value, chain::script&& script)
     : value_(value),
@@ -63,20 +63,21 @@ output_basis::output_basis(uint64_t value, chain::script const& script)
       script_(script)
 {}
 
+// output_basis& output_basis::operator=(output_basis&& x) noexcept {
+//     value_ = x.value_;
+//     script_ = std::move(x.script_);
+//     return *this;
+// }
+
+// output_basis& output_basis::operator=(output_basis const& x) {
+//     value_ = x.value_;
+//     script_ = x.script_;
+//     return *this;
+// }
+
+
 // Operators.
 //-----------------------------------------------------------------------------
-
-output_basis& output_basis::operator=(output_basis&& x) noexcept {
-    value_ = x.value_;
-    script_ = std::move(x.script_);
-    return *this;
-}
-
-output_basis& output_basis::operator=(output_basis const& x) {
-    value_ = x.value_;
-    script_ = x.script_;
-    return *this;
-}
 
 bool output_basis::operator==(output_basis const& x) const {
     return (value_ == x.value_) && (script_ == x.script_);
@@ -144,7 +145,7 @@ void output_basis::to_data(data_sink& stream, bool wire) const {
 // Size.
 //-----------------------------------------------------------------------------
 
-size_t output_basis::serialized_size(bool wire) const {
+size_t output_basis::serialized_size(bool /*wire*/) const {
     return sizeof(value_) + script_.serialized_size(true);
 }
 

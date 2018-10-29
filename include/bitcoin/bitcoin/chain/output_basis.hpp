@@ -53,16 +53,14 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    output_basis();
-
+    output_basis() = default;
     output_basis(uint64_t value, chain::script const& script);
     output_basis(uint64_t value, chain::script&& script);
 
-
-    output_basis(output_basis const& x);
-    output_basis(output_basis&& x) noexcept;
-    output_basis& operator=(output_basis const& x);
-    output_basis& operator=(output_basis&& x) noexcept;
+    // output_basis(output_basis const& x) = default;
+    // output_basis(output_basis&& x) = default;
+    // output_basis& operator=(output_basis const& x) = default;
+    // output_basis& operator=(output_basis&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -86,7 +84,7 @@ public:
     bool from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool  /*unused*/ = false) {
+    bool from_data(R& source, bool /*wire*/ = true, bool /*witness*/ = false) {
         reset();
 
         value_ = source.read_8_bytes_little_endian();
@@ -108,7 +106,7 @@ public:
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <Writer W>
-    void to_data(W& sink, bool wire = true, bool  /*unused*/ = false) const {
+    void to_data(W& sink, bool /*wire*/ = true, bool /*witness*/ = false) const {
         sink.write_8_bytes_little_endian(value_);
         script_.to_data(sink, true);
     }
@@ -126,17 +124,6 @@ public:
     chain::script const& script() const;
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
-
-    // /// The payment address extracted from this output as a standard script.
-    // wallet::payment_address address(bool testnet = false) const;
-
-    // /// The first payment address extracted (may be invalid).
-    // wallet::payment_address address(uint8_t p2kh_version, uint8_t p2sh_version) const;
-
-    // /// The payment addresses extracted from this output as a standard script.
-    // wallet::payment_address::list addresses(
-    //     uint8_t p2kh_version = wallet::payment_address::mainnet_p2kh,
-    //     uint8_t p2sh_version = wallet::payment_address::mainnet_p2sh) const;
 
     // Validation.
     //-------------------------------------------------------------------------

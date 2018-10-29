@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 
+#include <bitcoin/bitcoin/chain/output_basis.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
@@ -41,7 +42,7 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API output {
+class BC_API output : public output_basis {
 public:
     using list = std::vector<output>;
 
@@ -61,21 +62,21 @@ public:
     // Constructors.
     //-------------------------------------------------------------------------
 
-    output();
+    output() = default;
+    // output(uint64_t value, chain::script const& script);
+    // output(uint64_t value, chain::script&& script);
 
+    using output_basis::output_basis;   //inherit constructors from output_basis
+    
     output(output const& x);
     output(output&& x) noexcept;
-
-    output(uint64_t value, chain::script const& script);
-    output(uint64_t value, chain::script&& script);
-
     output& operator=(output const& x);
     output& operator=(output&& x) noexcept;
 
     // Operators.
     //-------------------------------------------------------------------------
-    bool operator==(output const& x) const;
-    bool operator!=(output const& x) const;
+    // bool operator==(output const& x) const;
+    // bool operator!=(output const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -90,30 +91,18 @@ public:
         return instance;
     }
 
-    //static output factory_from_data(reader& source, bool wire=true);
-
     bool from_data(data_chunk const& data, bool wire = true);
     bool from_data(std::istream& stream, bool wire = true);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool  /*unused*/ = false) {
-        reset();
-
+    bool from_data(R& source, bool wire = true, bool witness = false) {
         if ( ! wire) {
             validation.spender_height = source.read_4_bytes_little_endian();
         }
 
-        value_ = source.read_8_bytes_little_endian();
-        script_.from_data(source, true);
-
-        if ( ! source) {
-            reset();
-        }
-
+        output_basis::from_data(source, wire, witness);
         return source;
     }
-
-    bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
@@ -122,14 +111,13 @@ public:
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <Writer W>
-    void to_data(W& sink, bool wire = true, bool  /*unused*/ = false) const {
+    void to_data(W& sink, bool wire = true, bool witness = false) const {
         if ( ! wire) {
             auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
             sink.write_4_bytes_little_endian(height32);
         }
 
-        sink.write_8_bytes_little_endian(value_);
-        script_.to_data(sink, true);
+        output_basis::to_data(sink, wire, witness);
     }
 
     // Properties (size, accessors, cache).
@@ -137,12 +125,6 @@ public:
 
     size_t serialized_size(bool wire = true) const;
 
-    uint64_t value() const;
-    void set_value(uint64_t value);
-
-    // Deprecated (unsafe).
-    chain::script& script();
-    chain::script const& script() const;
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
@@ -157,31 +139,19 @@ public:
         uint8_t p2kh_version = wallet::payment_address::mainnet_p2kh,
         uint8_t p2sh_version = wallet::payment_address::mainnet_p2sh) const;
 
-    // Validation.
-    //-------------------------------------------------------------------------
-
-    size_t signature_operations(bool bip141) const;
-    bool is_dust(uint64_t minimum_output_value) const;
-    bool extract_committed_hash(hash_digest& out) const;
-
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation validation;
+    mutable validation validation{};
 
 // protected:
-    void reset();
+    // void reset();
 protected:
     void invalidate_cache() const;
 
 private:
     using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
-
     addresses_ptr addresses_cache() const;
-
     mutable upgrade_mutex mutex_;
     mutable addresses_ptr addresses_;
-
-    uint64_t value_{not_found};
-    chain::script script_;
 };
 
 }  // namespace chain
