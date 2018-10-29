@@ -43,15 +43,15 @@ using namespace bc::machine;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-input::input(output_point&& previous_output, chain::script&& script, uint32_t sequence)
-    : previous_output_(std::move(previous_output)),
-      script_(std::move(script)),
-      sequence_(sequence) {}
+// input::input(output_point&& previous_output, chain::script&& script, uint32_t sequence)
+//     : previous_output_(std::move(previous_output)),
+//       script_(std::move(script)),
+//       sequence_(sequence) {}
 
-input::input(output_point const& previous_output, chain::script const& script, uint32_t sequence)
-    : previous_output_(previous_output),
-      script_(script),
-      sequence_(sequence) {}
+// input::input(output_point const& previous_output, chain::script const& script, uint32_t sequence)
+//     : previous_output_(previous_output),
+//       script_(script),
+//       sequence_(sequence) {}
 
 // Private cache access for copy/move construction.
 input::addresses_ptr input::addresses_cache() const {
@@ -63,31 +63,31 @@ input::addresses_ptr input::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
-input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
-    : previous_output_(previous_output)
-    , script_(script)
-#else
-input::input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
-    : previous_output_(previous_output)
-    , script_(script)
-    , witness_(witness)
-#endif
-    , sequence_(sequence) 
-{}
+// #ifdef BITPRIM_CURRENCY_BCH
+// input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
+//     : previous_output_(previous_output)
+//     , script_(script)
+// #else
+// input::input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
+//     : previous_output_(previous_output)
+//     , script_(script)
+//     , witness_(witness)
+// #endif
+//     , sequence_(sequence) 
+// {}
 
-#ifdef BITPRIM_CURRENCY_BCH
-input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
-    : previous_output_(std::move(previous_output))
-    , script_(std::move(script))
-#else
-input::input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence)
-    : previous_output_(std::move(previous_output))
-    , script_(std::move(script))
-    , witness_(std::move(witness))
-#endif
-    , sequence_(sequence) 
-{}
+// #ifdef BITPRIM_CURRENCY_BCH
+// input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
+//     : previous_output_(std::move(previous_output))
+//     , script_(std::move(script))
+// #else
+// input::input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence)
+//     : previous_output_(std::move(previous_output))
+//     , script_(std::move(script))
+//     , witness_(std::move(witness))
+// #endif
+//     , sequence_(sequence) 
+// {}
 
 
 input::input(input const& x)
@@ -187,7 +187,7 @@ payment_address::list input::addresses() const {
         mutex_.unlock_upgrade_and_lock();
 
         // TODO(libbitcoin): expand to include segregated witness address extraction.
-        addresses_ = std::make_shared<payment_address::list>(payment_address::extract_input(script_));
+        addresses_ = std::make_shared<payment_address::list>(payment_address::extract_input(script()));
         mutex_.unlock_and_lock_upgrade();
         //---------------------------------------------------------------------
     }
@@ -198,124 +198,6 @@ payment_address::list input::addresses() const {
 
     return addresses;
 }
-
-// Utilities.
-//-----------------------------------------------------------------------------
-
-#ifndef BITPRIM_CURRENCY_BCH
-void input::strip_witness() {
-    witness_.clear();
-}
-#endif
-
-// Validation helpers.
-//-----------------------------------------------------------------------------
-
-bool input::is_final() const {
-    return sequence_ == max_input_sequence;
-}
-
-bool input::is_segregated() const {
-#ifdef BITPRIM_CURRENCY_BCH
-    return false;
-#else
-    // If no block tx is has witness data the commitment is optional (bip141).
-    return !witness_.empty();
-#endif
-}
-
-bool input::is_locked(size_t block_height, uint32_t median_time_past) const {
-    if ((sequence_ & relative_locktime_disabled) != 0) {
-        return false;
-    }
-
-    // bip68: a minimum block-height constraint over the input's age.
-    auto const minimum = (sequence_ & relative_locktime_mask);
-    auto const& prevout = previous_output_.validation;
-
-    if ((sequence_ & relative_locktime_time_locked) != 0) {
-        // Median time past must be monotonically-increasing by block.
-        BITCOIN_ASSERT(median_time_past >= prevout.median_time_past);
-        auto const age_seconds = median_time_past - prevout.median_time_past;
-        return age_seconds < (minimum << relative_locktime_seconds_shift);
-    }
-
-    BITCOIN_ASSERT(block_height >= prevout.height);
-    auto const age_blocks = block_height - prevout.height;
-    return age_blocks < minimum;
-}
-
-// This requires that previous outputs have been populated.
-// This cannot overflow because each total is limited by max ops.
-size_t input::signature_operations(bool bip16, bool bip141) const {
-#ifdef BITPRIM_CURRENCY_BCH
-    bip141 = false;  // No segwit
-#endif
-    chain::script witness, embedded;
-    auto const& prevout = previous_output_.validation.cache.script();
-    ////BITCOIN_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");
-
-    // Penalize quadratic signature operations (bip141).
-    auto const sigops_factor = bip141 ? fast_sigops_factor : 1u;
-
-    // Count heavy sigops in the input script.
-    auto sigops = script_.sigops(false) * sigops_factor;
-
-#ifndef BITPRIM_CURRENCY_BCH
-    if (bip141 && witness_.extract_sigop_script(witness, prevout)) {
-        // Add sigops in the witness (bip141).
-        return sigops + witness.sigops(true);
-    }
-#endif
-
-    if (bip16 && extract_embedded_script(embedded)) {
-#ifndef BITPRIM_CURRENCY_BCH
-        if (bip141 && witness_.extract_sigop_script(witness, embedded)) {
-            // Add sigops in the embedded witness (bip141).
-            return sigops + witness.sigops(true);
-        }
-#endif
-        // Add heavy sigops in the embedded script (bip16).
-        return sigops + embedded.sigops(true) * sigops_factor;
-    }
-
-    return sigops;
-}
-
-// This requires that previous outputs have been populated.
-bool input::extract_embedded_script(chain::script& out) const {
-    ////BITCOIN_ASSERT(previous_output_.is_valid());
-    auto const& ops = script_.operations();
-    auto const& prevout_script = previous_output_.validation.cache.script();
-
-    // There are no embedded sigops when the prevout script is not p2sh.
-    if ( ! prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule)) {
-        return false;
-    }
-
-    // There are no embedded sigops when the input script is not push only.
-    // The first operations access must be method-based to guarantee the cache.
-    if (ops.empty() || !script::is_relaxed_push(ops)) {
-        return false;
-    }
-
-    // Parse the embedded script from the last input script item (data).
-    // This cannot fail because there is no prefix to invalidate the length.
-    return out.from_data(ops.back().data(), false);
-}
-
-#ifndef BITPRIM_CURRENCY_BCH
-bool input::extract_reserved_hash(hash_digest& out) const {
-    auto const& stack = witness_.stack();
-
-    if ( ! witness::is_reserved_pattern(stack)) {
-        return false;
-    }
-
-    std::copy_n(stack.front().begin(), hash_size, out.begin());
-    return true;
-}
-#endif // BITPRIM_CURRENCY_BCH
 
 }  // namespace chain
 }  // namespace libbitcoin
