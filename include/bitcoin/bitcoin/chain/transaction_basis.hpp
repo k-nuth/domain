@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_TRANSACTION_HPP
-#define LIBBITCOIN_CHAIN_TRANSACTION_HPP
+#ifndef LIBBITCOIN_CHAIN_TRANSACTION_BASIS_HPP_
+#define LIBBITCOIN_CHAIN_TRANSACTION_BASIS_HPP_
 
 #include <cstddef>
 #include <cstdint>
@@ -112,98 +112,56 @@ inline void write_witnesses(W& sink, input::list const& inputs) {
 
 }  // namespace detail
 
-class BC_API transaction {
+class BC_API transaction_basis {
 public:
     using ins = input::list;
     using outs = output::list;
-    using list = std::vector<transaction>;
+    using list = std::vector<transaction_basis>;
     using hash_ptr = std::shared_ptr<hash_digest>;
-
-    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation {
-        uint64_t originator = 0;
-        code error = error::not_found;
-        chain_state::ptr state = nullptr;
-
-        // The transaction is an unspent duplicate.
-        bool duplicate = false;
-
-        // The unconfirmed tx exists in the store.
-        bool pooled = false;
-
-        // The unconfirmed tx is validated at the block's current fork state.
-        bool current = false;
-
-        // Similate organization and instead just validate the transaction.
-        bool simulate = false;
-    };
 
     // Constructors.
     //-----------------------------------------------------------------------------
 
-    transaction();
+    transaction_basis();
 
-    transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs
-#ifdef BITPRIM_CACHED_RPC_DATA
-                , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
-#endif
-               );
-    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs
-#ifdef BITPRIM_CACHED_RPC_DATA
-               , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
-#endif
-               );
-    transaction(transaction const& x, hash_digest const& hash);
-    transaction(transaction&& x, hash_digest const& hash);
+    transaction_basis(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs);
+    transaction_basis(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs);
+    transaction_basis(transaction_basis const& x, hash_digest const& hash);
+    transaction_basis(transaction_basis&& x, hash_digest const& hash);
 
 
     //Note(bitprim): cannot be defaulted because of the mutex data member.
-    transaction(transaction const& x);
-    transaction(transaction&& x) noexcept;
-    transaction& operator=(transaction const& x);
-    transaction& operator=(transaction&& x) noexcept;
+    transaction_basis(transaction_basis const& x);
+    transaction_basis(transaction_basis&& x) noexcept;
+    transaction_basis& operator=(transaction_basis const& x);
+    transaction_basis& operator=(transaction_basis&& x) noexcept;
 
 
     // Operators.
     //-----------------------------------------------------------------------------
 
-    bool operator==(transaction const& x) const;
-    bool operator!=(transaction const& x) const;
+    bool operator==(transaction_basis const& x) const;
+    bool operator!=(transaction_basis const& x) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static transaction factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    static transaction factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
+    static transaction_basis factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    static transaction_basis factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static transaction factory_from_data(R& source, bool wire = true, bool witness = false) {
-        transaction instance;
+    static transaction_basis factory_from_data(R& source, bool wire = true, bool witness = false) {
+        transaction_basis instance;
         instance.from_data(source, wire, witness_val(witness));
         return instance;
     }
 
-    //static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
-
-    bool from_data(data_chunk const& data, bool wire = true, bool witness = false
-#ifdef BITPRIM_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                    );
-
-    bool from_data(std::istream& stream, bool wire = true, bool witness = false
-#ifdef BITPRIM_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                    );
+    bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     // Witness is not used by outputs, just for template normalization.
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool witness = false
-#ifdef BITPRIM_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                ) {
+    bool from_data(R& source, bool wire = true, bool witness = false) {
         reset();
 
         if (wire) {
@@ -245,17 +203,6 @@ public:
 
             locktime_ = static_cast<uint32_t>(locktime);
             version_ = static_cast<uint32_t>(version);
-
-#ifdef BITPRIM_CACHED_RPC_DATA
-            if (unconfirmed) {
-                auto const sigops = source.read_4_bytes_little_endian();
-                cached_sigops_ = static_cast<uint32_t>(sigops);
-                auto const fees = source.read_8_bytes_little_endian();
-                cached_fees_ = static_cast<uint64_t>(fees);
-                auto const is_standard = source.read_byte();
-                cached_is_standard_ = static_cast<bool>(is_standard);
-            }
-#endif
         }
 
 #ifndef BITPRIM_CURRENCY_BCH
@@ -277,25 +224,12 @@ public:
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire = true, bool witness = false
-#ifdef BITPRIM_CACHED_RPC_DATA
-                        , bool unconfirmed = false
-#endif
-                    ) const;
-
-    void to_data(data_sink& stream, bool wire = true, bool witness = false
-#ifdef BITPRIM_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                ) const;
+    data_chunk to_data(bool wire = true, bool witness = false) const;
+    void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     // Witness is not used by outputs, just for template normalization.
     template <Writer W>
-    void to_data(W& sink, bool wire = true, bool witness = false
-#ifdef BITPRIM_CACHED_RPC_DATA
-                , bool unconfirmed = false
-#endif
-                ) const {
+    void to_data(W& sink, bool wire = true, bool witness = false) const {
         if (wire) {
             // Witness handling must be disabled for non-segregated txs.
             witness &= is_segregated();
@@ -324,25 +258,13 @@ public:
             detail::write(sink, inputs_, wire, witness_val(witness));
             sink.write_variable_little_endian(locktime_);
             sink.write_variable_little_endian(version_);
-
-#ifdef BITPRIM_CACHED_RPC_DATA            
-            if (unconfirmed) {
-                sink.write_4_bytes_little_endian(signature_operations());
-                sink.write_8_bytes_little_endian(fees());
-                sink.write_byte(is_standard());
-            }
-#endif
         }
     }
 
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    size_t serialized_size(bool wire = true, bool witness = false
-#ifdef BITPRIM_CACHED_RPC_DATA
-                            , bool unconfirmed = false
-#endif
-                        ) const;
+    size_t serialized_size(bool wire = true, bool witness = false) const;
 
     uint32_t version() const;
     void set_version(uint32_t value);
@@ -362,12 +284,6 @@ public:
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
-#ifdef BITPRIM_CACHED_RPC_DATA
-    uint64_t cached_fees() const;
-    uint32_t cached_sigops() const;
-    bool cached_is_standard() const;
-#endif
-
     hash_digest outputs_hash() const;
     hash_digest inpoints_hash() const;
     hash_digest sequences_hash() const;
@@ -380,8 +296,6 @@ public:
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
-
-    void recompute_hash();
 
     // Validation.
     //-----------------------------------------------------------------------------
@@ -411,14 +325,11 @@ public:
     bool is_segregated() const;
 
     code check(bool transaction_pool = true, bool retarget = true) const;
-    code accept(bool transaction_pool = true) const;
-    code accept(chain_state const& state, bool transaction_pool = true) const;
-    code connect() const;
+    // code accept(bool transaction_pool = true) const;
+    code accept(chain_state const& state, bool transaction_pool = true, bool is_duplicated = false) const;
+    // code connect() const;
     code connect(chain_state const& state) const;
     code connect_input(chain_state const& state, size_t input_index) const;
-
-    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation validation;
 
     bool is_standard() const;
 
@@ -426,7 +337,6 @@ public:
     void reset();
 
 protected:
-    void invalidate_cache() const;
     bool all_inputs_final() const;
 
 private:
@@ -434,32 +344,6 @@ private:
     uint32_t locktime_{0};
     input::list inputs_;
     output::list outputs_;
-
-    // TODO(bitprim): (refactor to transaction_result)
-    // this 3 variables should be stored in transaction_unconfired database when the store
-    // function is called. This values will be in the transaction_result object before
-    // creating the transaction object
-
-    //Note(bitprim): Only accesible for unconfirmed txs
-#ifdef BITPRIM_CACHED_RPC_DATA
-    uint64_t cached_fees_;
-    uint32_t cached_sigops_;
-    bool cached_is_standard_;
-#endif
-
-    // These share a mutex as they are not expected to contend.
-    mutable hash_ptr hash_;
-    mutable hash_ptr witness_hash_;
-    mutable hash_ptr outputs_hash_;
-    mutable hash_ptr inpoints_hash_;
-    mutable hash_ptr sequences_hash_;
-    mutable upgrade_mutex hash_mutex_;
-
-    // These share a mutex as they are not expected to contend.
-    mutable boost::optional<uint64_t> total_input_value_;
-    mutable boost::optional<uint64_t> total_output_value_;
-    mutable boost::optional<bool> segregated_;
-    mutable upgrade_mutex mutex_;
 };
 
 }  // namespace chain
@@ -467,4 +351,4 @@ private:
 
 //#include <bitprim/concepts_undef.hpp>
 
-#endif
+#endif // LIBBITCOIN_CHAIN_TRANSACTION_BASIS_HPP_
