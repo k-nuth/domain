@@ -459,71 +459,71 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 // Signing (version 0).
 //-----------------------------------------------------------------------------
 
-hash_digest script_basis::to_outputs(transaction const& tx) {
-    auto const sum = [&](size_t total, output const& output) {
-        return total + output.serialized_size();
-    };
+// hash_digest script_basis::to_outputs(transaction const& tx) {
+//     auto const sum = [&](size_t total, output const& output) {
+//         return total + output.serialized_size();
+//     };
 
-    auto const& outs = tx.outputs();
-    auto size = std::accumulate(outs.begin(), outs.end(), size_t(0), sum);
-    data_chunk data;
-    data.reserve(size);
-    data_sink ostream(data);
-    ostream_writer sink_w(ostream);
+//     auto const& outs = tx.outputs();
+//     auto size = std::accumulate(outs.begin(), outs.end(), size_t(0), sum);
+//     data_chunk data;
+//     data.reserve(size);
+//     data_sink ostream(data);
+//     ostream_writer sink_w(ostream);
 
-    auto const write = [&](output const& output) {
-        output.to_data(sink_w, true);
-    };
+//     auto const write = [&](output const& output) {
+//         output.to_data(sink_w, true);
+//     };
 
-    std::for_each(outs.begin(), outs.end(), write);
-    ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
-}
+//     std::for_each(outs.begin(), outs.end(), write);
+//     ostream.flush();
+//     BITCOIN_ASSERT(data.size() == size);
+//     return bitcoin_hash(data);
+// }
 
-hash_digest script_basis::to_inpoints(transaction const& tx) {
-    auto const sum = [&](size_t total, input const& input) {
-        return total + input.previous_output().serialized_size();
-    };
+// hash_digest script_basis::to_inpoints(transaction const& tx) {
+//     auto const sum = [&](size_t total, input const& input) {
+//         return total + input.previous_output().serialized_size();
+//     };
 
-    auto const& ins = tx.inputs();
-    auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
-    data_chunk data;
-    data.reserve(size);
-    data_sink ostream(data);
-    ostream_writer sink_w(ostream);
+//     auto const& ins = tx.inputs();
+//     auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
+//     data_chunk data;
+//     data.reserve(size);
+//     data_sink ostream(data);
+//     ostream_writer sink_w(ostream);
 
-    auto const write = [&](input const& input) {
-        input.previous_output().to_data(sink_w);
-    };
+//     auto const write = [&](input const& input) {
+//         input.previous_output().to_data(sink_w);
+//     };
 
-    std::for_each(ins.begin(), ins.end(), write);
-    ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
-}
+//     std::for_each(ins.begin(), ins.end(), write);
+//     ostream.flush();
+//     BITCOIN_ASSERT(data.size() == size);
+//     return bitcoin_hash(data);
+// }
 
-hash_digest script_basis::to_sequences(transaction const& tx) {
-    auto const sum = [&](size_t total, input const& input) {
-        return total + sizeof(uint32_t);
-    };
+// hash_digest script_basis::to_sequences(transaction const& tx) {
+//     auto const sum = [&](size_t total, input const& input) {
+//         return total + sizeof(uint32_t);
+//     };
 
-    auto const& ins = tx.inputs();
-    auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
-    data_chunk data;
-    data.reserve(size);
-    data_sink ostream(data);
-    ostream_writer sink_w(ostream);
+//     auto const& ins = tx.inputs();
+//     auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
+//     data_chunk data;
+//     data.reserve(size);
+//     data_sink ostream(data);
+//     ostream_writer sink_w(ostream);
 
-    auto const write = [&](input const& input) {
-        sink_w.write_4_bytes_little_endian(input.sequence());
-    };
+//     auto const write = [&](input const& input) {
+//         sink_w.write_4_bytes_little_endian(input.sequence());
+//     };
 
-    std::for_each(ins.begin(), ins.end(), write);
-    ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
-}
+//     std::for_each(ins.begin(), ins.end(), write);
+//     ostream.flush();
+//     BITCOIN_ASSERT(data.size() == size);
+//     return bitcoin_hash(data);
+// }
 
 static size_t preimage_size(size_t script_size) {
     return sizeof(uint32_t) + hash_size + hash_size + point::satoshi_fixed_size() + script_size + sizeof(uint64_t) + sizeof(uint32_t) + hash_size + sizeof(uint32_t) + sizeof(uint32_t);
