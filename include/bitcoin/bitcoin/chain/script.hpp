@@ -152,9 +152,9 @@ public:
     //-------------------------------------------------------------------------
 
     /// Transaction helpers.
-    static hash_digest to_outputs(transaction const& tx);
-    static hash_digest to_inpoints(transaction const& tx);
-    static hash_digest to_sequences(transaction const& tx);
+    // static hash_digest to_outputs(transaction const& tx);
+    // static hash_digest to_inpoints(transaction const& tx);
+    // static hash_digest to_sequences(transaction const& tx);
 
     /// Determine if the fork is enabled in the active forks set.
     static bool is_enabled(uint32_t active_forks, rule_fork fork) {
@@ -208,15 +208,15 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
-    static code verify(transaction const& tx, uint32_t input, uint32_t forks);
+//     static code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
 
-    // TODO(libbitcoin): move back to private.
-#ifdef BITPRIM_CURRENCY_BCH
-    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t value);
-#else
-    static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
-#endif
+//     // TODO(libbitcoin): move back to private.
+// #ifdef BITPRIM_CURRENCY_BCH
+//     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t value);
+// #else
+//     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
+// #endif
 
 // protected:
 //     // So that input and output may call reset from their own.

@@ -495,71 +495,71 @@ hash_digest script::generate_unversioned_signature_hash(transaction const& tx,
 // Signing (version 0).
 //-----------------------------------------------------------------------------
 
-hash_digest script::to_outputs(transaction const& tx) {
-    auto const sum = [&](size_t total, output const& output) {
-        return total + output.serialized_size();
-    };
+// hash_digest script::to_outputs(transaction const& tx) {
+//     auto const sum = [&](size_t total, output const& output) {
+//         return total + output.serialized_size();
+//     };
 
-    auto const& outs = tx.outputs();
-    auto size = std::accumulate(outs.begin(), outs.end(), size_t(0), sum);
-    data_chunk data;
-    data.reserve(size);
-    data_sink ostream(data);
-    ostream_writer sink_w(ostream);
+//     auto const& outs = tx.outputs();
+//     auto size = std::accumulate(outs.begin(), outs.end(), size_t(0), sum);
+//     data_chunk data;
+//     data.reserve(size);
+//     data_sink ostream(data);
+//     ostream_writer sink_w(ostream);
 
-    auto const write = [&](output const& output) {
-        output.to_data(sink_w, true);
-    };
+//     auto const write = [&](output const& output) {
+//         output.to_data(sink_w, true);
+//     };
 
-    std::for_each(outs.begin(), outs.end(), write);
-    ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
-}
+//     std::for_each(outs.begin(), outs.end(), write);
+//     ostream.flush();
+//     BITCOIN_ASSERT(data.size() == size);
+//     return bitcoin_hash(data);
+// }
 
-hash_digest script::to_inpoints(transaction const& tx) {
-    auto const sum = [&](size_t total, input const& input) {
-        return total + input.previous_output().serialized_size();
-    };
+// hash_digest script::to_inpoints(transaction const& tx) {
+//     auto const sum = [&](size_t total, input const& input) {
+//         return total + input.previous_output().serialized_size();
+//     };
 
-    auto const& ins = tx.inputs();
-    auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
-    data_chunk data;
-    data.reserve(size);
-    data_sink ostream(data);
-    ostream_writer sink_w(ostream);
+//     auto const& ins = tx.inputs();
+//     auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
+//     data_chunk data;
+//     data.reserve(size);
+//     data_sink ostream(data);
+//     ostream_writer sink_w(ostream);
 
-    auto const write = [&](input const& input) {
-        input.previous_output().to_data(sink_w);
-    };
+//     auto const write = [&](input const& input) {
+//         input.previous_output().to_data(sink_w);
+//     };
 
-    std::for_each(ins.begin(), ins.end(), write);
-    ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
-}
+//     std::for_each(ins.begin(), ins.end(), write);
+//     ostream.flush();
+//     BITCOIN_ASSERT(data.size() == size);
+//     return bitcoin_hash(data);
+// }
 
-hash_digest script::to_sequences(transaction const& tx) {
-    auto const sum = [&](size_t total, input const& input) {
-        return total + sizeof(uint32_t);
-    };
+// hash_digest script::to_sequences(transaction const& tx) {
+//     auto const sum = [&](size_t total, input const& input) {
+//         return total + sizeof(uint32_t);
+//     };
 
-    auto const& ins = tx.inputs();
-    auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
-    data_chunk data;
-    data.reserve(size);
-    data_sink ostream(data);
-    ostream_writer sink_w(ostream);
+//     auto const& ins = tx.inputs();
+//     auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
+//     data_chunk data;
+//     data.reserve(size);
+//     data_sink ostream(data);
+//     ostream_writer sink_w(ostream);
 
-    auto const write = [&](input const& input) {
-        sink_w.write_4_bytes_little_endian(input.sequence());
-    };
+//     auto const write = [&](input const& input) {
+//         sink_w.write_4_bytes_little_endian(input.sequence());
+//     };
 
-    std::for_each(ins.begin(), ins.end(), write);
-    ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
-}
+//     std::for_each(ins.begin(), ins.end(), write);
+//     ostream.flush();
+//     BITCOIN_ASSERT(data.size() == size);
+//     return bitcoin_hash(data);
+// }
 
 static size_t preimage_size(size_t script_size) {
     return sizeof(uint32_t) + hash_size + hash_size + point::satoshi_fixed_size() + script_size + sizeof(uint64_t) + sizeof(uint32_t) + hash_size + sizeof(uint32_t) + sizeof(uint32_t);
@@ -570,7 +570,8 @@ hash_digest script::generate_version_0_signature_hash(transaction const& tx,
                                                       uint32_t input_index,
                                                       script const& script_code,
                                                       uint64_t value,
-                                                      uint8_t sighash_type) {
+                                                      uint8_t sighash_type
+                                                      ) {
     // Unlike unversioned algorithm this does not allow an invalid input index.
     BITCOIN_ASSERT(input_index < tx.inputs().size());
     auto const& input = tx.inputs()[input_index];
@@ -1091,105 +1092,105 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-#ifdef BITPRIM_CURRENCY_BCH
-code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
-#else
-code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
-#endif
-    code ec;
+// #ifdef BITPRIM_CURRENCY_BCH
+// code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
+// #else
+// code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
+// #endif
+//     code ec;
 
-    // Evaluate input script.
-    program input(input_script, tx, input_index, forks);
-    if ((ec = input.evaluate())) {
-        return ec;
-    }
+//     // Evaluate input script.
+//     program input(input_script, tx, input_index, forks);
+//     if ((ec = input.evaluate())) {
+//         return ec;
+//     }
 
-    // Evaluate output script using stack result from input script.
-    program prevout(prevout_script, input);
-    if ((ec = prevout.evaluate())) {
-        return ec;
-    }
+//     // Evaluate output script using stack result from input script.
+//     program prevout(prevout_script, input);
+//     if ((ec = prevout.evaluate())) {
+//         return ec;
+//     }
 
-    // This precludes bare witness programs of -0 (undocumented).
-    if ( ! prevout.stack_result(false)) {
-        return error::stack_false;
-    }
+//     // This precludes bare witness programs of -0 (undocumented).
+//     if ( ! prevout.stack_result(false)) {
+//         return error::stack_false;
+//     }
 
-#ifndef BITPRIM_CURRENCY_BCH
-    bool witnessed;
-    // Triggered by output script push of version and witness program (bip141).
-    if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
-        // The input script must be empty (bip141).
-        if ( ! input_script.empty()) {
-            return error::dirty_witness;
-        }
+// #ifndef BITPRIM_CURRENCY_BCH
+//     bool witnessed;
+//     // Triggered by output script push of version and witness program (bip141).
+//     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
+//         // The input script must be empty (bip141).
+//         if ( ! input_script.empty()) {
+//             return error::dirty_witness;
+//         }
 
-        // This is a valid witness script so validate it.
-        if ((ec = input_witness.verify(tx, input_index, forks, prevout_script, value))) {
-            return ec;
-        }
-    } else
-#endif
-    // p2sh and p2w are mutually exclusive.
-    /*else*/ 
-    if (prevout_script.is_pay_to_script_hash(forks)) {
-        if ( ! is_relaxed_push(input_script.operations())) {
-            return error::invalid_script_embed;
-        }
+//         // This is a valid witness script so validate it.
+//         if ((ec = input_witness.verify(tx, input_index, forks, prevout_script, value))) {
+//             return ec;
+//         }
+//     } else
+// #endif
+//     // p2sh and p2w are mutually exclusive.
+//     /*else*/ 
+//     if (prevout_script.is_pay_to_script_hash(forks)) {
+//         if ( ! is_relaxed_push(input_script.operations())) {
+//             return error::invalid_script_embed;
+//         }
 
-        // Embedded script must be at the top of the stack (bip16).
-        script embedded_script(input.pop(), false);
+//         // Embedded script must be at the top of the stack (bip16).
+//         script embedded_script(input.pop(), false);
 
-        program embedded(embedded_script, std::move(input), true);
-        if ((ec = embedded.evaluate())) {
-            return ec;
-        }
+//         program embedded(embedded_script, std::move(input), true);
+//         if ((ec = embedded.evaluate())) {
+//             return ec;
+//         }
 
-        // This precludes embedded witness programs of -0 (undocumented).
-        if ( ! embedded.stack_result(false)) {
-            return error::stack_false;
-        }
+//         // This precludes embedded witness programs of -0 (undocumented).
+//         if ( ! embedded.stack_result(false)) {
+//             return error::stack_false;
+//         }
 
-#ifndef BITPRIM_CURRENCY_BCH
-        // Triggered by embedded push of version and witness program (bip141).
-        if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
-            // The input script must be a push of the embedded_script (bip141).
-            if (input_script.size() != 1) {
-                return error::dirty_witness;
-            }
+// #ifndef BITPRIM_CURRENCY_BCH
+//         // Triggered by embedded push of version and witness program (bip141).
+//         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
+//             // The input script must be a push of the embedded_script (bip141).
+//             if (input_script.size() != 1) {
+//                 return error::dirty_witness;
+//             }
 
-            // This is a valid embedded witness script so validate it.
-            if ((ec = input_witness.verify(tx, input_index, forks, embedded_script, value))) {
-                return ec;
-            }
-        }
-#endif
-    }
+//             // This is a valid embedded witness script so validate it.
+//             if ((ec = input_witness.verify(tx, input_index, forks, embedded_script, value))) {
+//                 return ec;
+//             }
+//         }
+// #endif
+//     }
 
-#ifndef BITPRIM_CURRENCY_BCH
-    // Witness must be empty if no bip141 or valid witness program (bip141).
-    if ( ! witnessed && !input_witness.empty()) {
-        return error::unexpected_witness;
-    }
-#endif
+// #ifndef BITPRIM_CURRENCY_BCH
+//     // Witness must be empty if no bip141 or valid witness program (bip141).
+//     if ( ! witnessed && !input_witness.empty()) {
+//         return error::unexpected_witness;
+//     }
+// #endif
 
-    return error::success;
-}
+//     return error::success;
+// }
 
-code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
-    if (input >= tx.inputs().size()) {
-        return error::operation_failed;
-    }
+// code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
+//     if (input >= tx.inputs().size()) {
+//         return error::operation_failed;
+//     }
 
-    auto const& in = tx.inputs()[input];
-    auto const& prevout = in.previous_output().validation.cache;
+//     auto const& in = tx.inputs()[input];
+//     auto const& prevout = in.previous_output().validation.cache;
 
-#ifdef BITPRIM_CURRENCY_BCH
-    return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
-#else
-    return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
-#endif
-}
+// #ifdef BITPRIM_CURRENCY_BCH
+//     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
+// #else
+//     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
+// #endif
+// }
 
 }  // namespace chain
 }  // namespace libbitcoin
