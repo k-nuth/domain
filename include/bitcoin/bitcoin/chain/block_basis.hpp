@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CHAIN_BLOCK_HPP
-#define LIBBITCOIN_CHAIN_BLOCK_HPP
+#ifndef LIBBITCOIN_CHAIN_BLOCK_BASIS_HPP_
+#define LIBBITCOIN_CHAIN_BLOCK_BASIS_HPP_
 
 #include <cstddef>
 #include <cstdint>
@@ -49,63 +49,45 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API block {
+constexpr
+size_t weight(size_t serialized_size_true, size_t serialized_size_false) {
+    // Block weight is 3 * Base size * + 1 * Total size (bip141).
+    return base_size_contribution * serialized_size_false + total_size_contribution * serialized_size_true;
+}
+
+
+class BC_API block_basis {
 public:
-    using list = std::vector<block>;
+    using list = std::vector<block_basis>;
     using indexes = std::vector<size_t>;
-
-    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation_t {
-        uint64_t originator = 0;
-        code error = error::not_found;
-        chain_state::ptr state = nullptr;
-
-        // Similate organization and instead just validate the block.
-        bool simulate = false;
-
-        asio::time_point start_deserialize;
-        asio::time_point end_deserialize;
-        asio::time_point start_check;
-        asio::time_point start_populate;
-        asio::time_point start_accept;
-        asio::time_point start_connect;
-        asio::time_point start_notify;
-        asio::time_point start_pop;
-        asio::time_point start_push;
-        asio::time_point end_push;
-        float cache_efficiency;
-    };
 
     // Constructors.
     //-------------------------------------------------------------------------
 
-    block() = default;
-    block(chain::header const& header, transaction::list&& transactions);
-    block(chain::header const& header, transaction::list const& transactions);
+    block_basis() = default;
+    block_basis(chain::header const& header, transaction::list&& transactions);
+    block_basis(chain::header const& header, transaction::list const& transactions);
 
-    //Note(bitprim): cannot be defaulted because of the mutex data member.
-    block(block const& x);
-    block(block&& x) noexcept;
-
-    /// This class is move assignable and copy assignable.
-    block& operator=(block const& x);
-    block& operator=(block&& x) noexcept;
+    // block_basis(block_basis const& x) = default;
+    // block_basis(block_basis&& x) = default;
+    // block_basis& operator=(block_basis const& x) = default;
+    // block_basis& operator=(block_basis&& x) = default;
 
 
     // Operators.
     //-------------------------------------------------------------------------
-    bool operator==(block const& x) const;
-    bool operator!=(block const& x) const;
+    bool operator==(block_basis const& x) const;
+    bool operator!=(block_basis const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static block factory_from_data(data_chunk const& data, bool witness = false);
-    static block factory_from_data(std::istream& stream, bool witness = false);
+    static block_basis factory_from_data(data_chunk const& data, bool witness = false);
+    static block_basis factory_from_data(std::istream& stream, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    static block factory_from_data(R& source, bool witness = false) {
-        block instance;
+    static block_basis factory_from_data(R& source, bool witness = false) {
+        block_basis instance;
         instance.from_data(source, witness_val(witness));
         return instance;
     }
@@ -115,7 +97,7 @@ public:
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
-        validation.start_deserialize = asio::steady_clock::now();
+        // validation.start_deserialize = asio::steady_clock::now();
         reset();
 
         if ( ! header_.from_data(source, true)) {
@@ -149,7 +131,7 @@ public:
             reset();
         }
 
-        validation.end_deserialize = asio::steady_clock::now();
+        // validation.end_deserialize = asio::steady_clock::now();
         return source;
     }
 
@@ -160,7 +142,7 @@ public:
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool witness = false) const;
+    data_chunk to_data(size_t serialized_size, bool witness = false) const;
     void to_data(data_sink& stream, bool witness = false) const;
 
     template <Writer W>
@@ -174,7 +156,6 @@ public:
         std::for_each(transactions_.begin(), transactions_.end(), to);
     }
 
-    //void to_data(writer& sink, bool witness=false) const;
     hash_list to_hashes(bool witness = false) const;
 
     // Properties (size, accessors, cache).
@@ -184,13 +165,11 @@ public:
 
     // deprecated (unsafe)
     chain::header& header();
-
     chain::header const& header() const;
     void set_header(chain::header const& value);
 
     // deprecated (unsafe)
     transaction::list& transactions();
-
     transaction::list const& transactions() const;
     void set_transactions(transaction::list const& value);
     void set_transactions(transaction::list&& value);
@@ -200,9 +179,9 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-    static block genesis_mainnet();
-    static block genesis_testnet();
-    static block genesis_regtest();
+    static block_basis genesis_mainnet();
+    static block_basis genesis_testnet();
+    static block_basis genesis_regtest();
     static size_t locator_size(size_t top);
     static indexes locator_heights(size_t top);
 
@@ -222,10 +201,10 @@ public:
     uint64_t reward(size_t height) const;
     uint256_t proof() const;
     hash_digest generate_merkle_root(bool witness = false) const;
-    size_t signature_operations() const;
+    // size_t signature_operations() const;
     size_t signature_operations(bool bip16, bool bip141) const;
-    size_t total_inputs(bool with_coinbase = true) const;
-    size_t weight() const;
+    // size_t total_inputs(bool with_coinbase = true) const;
+    // size_t weight(size_t serialized_size_true, size_t serialized_size_false) const;
 
     bool is_extra_coinbases() const;
     bool is_final(size_t height, uint32_t block_time) const;
@@ -236,19 +215,16 @@ public:
     bool is_forward_reference() const;
     bool is_internal_double_spend() const;
     bool is_valid_merkle_root() const;
-    bool is_segregated() const;
+    // bool is_segregated() const;
 
-    code check() const;
+    code check(size_t serialized_size) const;
     code check_transactions() const;
-    code accept(bool transactions = true) const;
-    code accept(chain_state const& state, bool transactions = true) const;
+    // code accept(bool transactions = true) const;
+    code accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions = true) const;
     code accept_transactions(chain_state const& state) const;
-    code connect() const;
+    // code connect() const;
     code connect(chain_state const& state) const;
     code connect_transactions(chain_state const& state) const;
-
-    // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation_t validation;
 
 // protected:
     void reset();
@@ -257,18 +233,15 @@ public:
 private:
     chain::header header_;
     transaction::list transactions_;
-
-    // These share a mutext as they are not expected to contend.
-    mutable boost::optional<bool> segregated_;
-    mutable boost::optional<size_t> total_inputs_;
-    mutable boost::optional<size_t> base_size_;
-    mutable boost::optional<size_t> total_size_;
-    mutable upgrade_mutex mutex_;
 };
+
+size_t total_inputs(block_basis const& blk, bool with_coinbase = true);
+bool is_segregated(block_basis const& blk);
+size_t serialized_size(block_basis const& blk, bool witness = false);
 
 }  // namespace chain
 }  // namespace libbitcoin
 
 //#include <bitprim/concepts_undef.hpp>
 
-#endif
+#endif // LIBBITCOIN_CHAIN_BLOCK_BASIS_HPP_

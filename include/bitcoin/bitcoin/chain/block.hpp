@@ -29,6 +29,7 @@
 #include <boost/optional.hpp>
 
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
+#include <bitcoin/bitcoin/chain/block_basis.hpp>
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
@@ -49,7 +50,7 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API block {
+class BC_API block : public block_basis {
 public:
     using list = std::vector<block>;
     using indexes = std::vector<size_t>;
@@ -86,7 +87,6 @@ public:
     //Note(bitprim): cannot be defaulted because of the mutex data member.
     block(block const& x);
     block(block&& x) noexcept;
-
     /// This class is move assignable and copy assignable.
     block& operator=(block const& x);
     block& operator=(block&& x) noexcept;
@@ -94,8 +94,8 @@ public:
 
     // Operators.
     //-------------------------------------------------------------------------
-    bool operator==(block const& x) const;
-    bool operator!=(block const& x) const;
+    // bool operator==(block const& x) const;
+    // bool operator!=(block const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
@@ -116,86 +116,43 @@ public:
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
         validation.start_deserialize = asio::steady_clock::now();
-        reset();
-
-        if ( ! header_.from_data(source, true)) {
-            return false;
-        }
-
-        auto const count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size()) {
-            source.invalidate();
-        } else {
-            transactions_.resize(count);
-        }
-
-        // Order is required, explicit loop allows early termination.
-        for (auto& tx : transactions_) {
-            if ( ! tx.from_data(source, true, witness_val(witness))) {
-                break;
-            }
-        }
-
-#ifndef BITPRIM_CURRENCY_BCH
-        // TODO(libbitcoin): optimize by having reader skip witness data.
-        if ( ! witness_val(witness)) {
-            strip_witness();
-        }
-#endif
-
-        if ( ! source) {
-            reset();
-        }
-
+        block_basis::from_data(source, witness);
         validation.end_deserialize = asio::steady_clock::now();
         return source;
     }
 
-    //bool from_data(reader& source, bool witness=false);
 
-    bool is_valid() const;
+    // bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool witness = false) const;
-    void to_data(data_sink& stream, bool witness = false) const;
+    // data_chunk to_data(bool witness = false) const;
+    // void to_data(data_sink& stream, bool witness = false) const;
 
-    template <Writer W>
-    void to_data(W& sink, bool witness = false) const {
-        header_.to_data(sink, true);
-        sink.write_size_little_endian(transactions_.size());
-        auto const to = [&sink, witness](transaction const& tx) {
-            tx.to_data(sink, true, witness_val(witness));
-        };
+    // template <Writer W>
+    // void to_data(W& sink, bool witness = false) const {
+    //     header_.to_data(sink, true);
+    //     sink.write_size_little_endian(transactions_.size());
+    //     auto const to = [&sink, witness](transaction const& tx) {
+    //         tx.to_data(sink, true, witness_val(witness));
+    //     };
 
-        std::for_each(transactions_.begin(), transactions_.end(), to);
-    }
+    //     std::for_each(transactions_.begin(), transactions_.end(), to);
+    // }
 
-    //void to_data(writer& sink, bool witness=false) const;
-    hash_list to_hashes(bool witness = false) const;
+    // hash_list to_hashes(bool witness = false) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
     size_t serialized_size(bool witness = false) const;
 
-    // deprecated (unsafe)
-    chain::header& header();
-
-    chain::header const& header() const;
-    void set_header(chain::header const& value);
-
-    // deprecated (unsafe)
-    transaction::list& transactions();
-
-    transaction::list const& transactions() const;
+    // void set_header(chain::header const& value);
     void set_transactions(transaction::list const& value);
     void set_transactions(transaction::list&& value);
 
-    hash_digest hash() const;
+    // hash_digest hash() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
@@ -214,49 +171,47 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
-    static uint64_t subsidy(size_t height, bool retarget = true);
-    static uint256_t proof(uint32_t bits);
+    // static uint64_t subsidy(size_t height, bool retarget = true);
+    // static uint256_t proof(uint32_t bits);
 
-    uint64_t fees() const;
-    uint64_t claim() const;
-    uint64_t reward(size_t height) const;
-    uint256_t proof() const;
-    hash_digest generate_merkle_root(bool witness = false) const;
+    // uint64_t fees() const;
+    // uint64_t claim() const;
+    // uint64_t reward(size_t height) const;
+    // uint256_t proof() const;
+    // hash_digest generate_merkle_root(bool witness = false) const;
     size_t signature_operations() const;
-    size_t signature_operations(bool bip16, bool bip141) const;
+    // size_t signature_operations(bool bip16, bool bip141) const;
     size_t total_inputs(bool with_coinbase = true) const;
     size_t weight() const;
 
-    bool is_extra_coinbases() const;
-    bool is_final(size_t height, uint32_t block_time) const;
-    bool is_distinct_transaction_set() const;
-    bool is_valid_coinbase_claim(size_t height) const;
-    bool is_valid_coinbase_script(size_t height) const;
-    bool is_valid_witness_commitment() const;
-    bool is_forward_reference() const;
-    bool is_internal_double_spend() const;
-    bool is_valid_merkle_root() const;
+    // bool is_extra_coinbases() const;
+    // bool is_final(size_t height, uint32_t block_time) const;
+    // bool is_distinct_transaction_set() const;
+    // bool is_valid_coinbase_claim(size_t height) const;
+    // bool is_valid_coinbase_script(size_t height) const;
+    // bool is_valid_witness_commitment() const;
+    // bool is_forward_reference() const;
+    // bool is_internal_double_spend() const;
+    // bool is_valid_merkle_root() const;
     bool is_segregated() const;
 
     code check() const;
-    code check_transactions() const;
+    // code check_transactions() const;
     code accept(bool transactions = true) const;
     code accept(chain_state const& state, bool transactions = true) const;
-    code accept_transactions(chain_state const& state) const;
+    // code accept_transactions(chain_state const& state) const;
     code connect() const;
-    code connect(chain_state const& state) const;
-    code connect_transactions(chain_state const& state) const;
+    // code connect(chain_state const& state) const;
+    // code connect_transactions(chain_state const& state) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation_t validation;
+    mutable validation_t validation{};
 
 // protected:
-    void reset();
+    // void reset();
     size_t non_coinbase_input_count() const;
 
 private:
-    chain::header header_;
-    transaction::list transactions_;
 
     // These share a mutext as they are not expected to contend.
     mutable boost::optional<bool> segregated_;
