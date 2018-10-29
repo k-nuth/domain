@@ -66,10 +66,10 @@ public:
     script_basis(data_chunk const& encoded, bool prefix);
     script_basis(data_chunk&& encoded, bool prefix);
 
-    script_basis(script_basis const& x) = default;
-    script_basis(script_basis&& x) = default;
-    script_basis& operator=(script_basis const& x) = default;
-    script_basis& operator=(script_basis&& x) = default;
+    // script_basis(script_basis const& x) = default;
+    // script_basis(script_basis&& x) = default;
+    // script_basis& operator=(script_basis const& x) = default;
+    // script_basis& operator=(script_basis&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -96,9 +96,6 @@ public:
 
     template <Reader R, BITPRIM_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
-        static_assert(!std::is_same<R, data_chunk>::value, "");
-        // static_assert(   std::is_same<R, data_chunk>::value, "");
-
         reset();
         valid_ = true;
 
@@ -146,52 +143,37 @@ public:
         sink.write_bytes(bytes_);
     }
 
-    //void to_data(writer& sink, bool prefix) const;
-
     std::string to_string(uint32_t active_forks) const;
 
-    // Iteration.
-    //-------------------------------------------------------------------------
-
-    void clear();
-    bool empty() const;
-    size_t size() const;
-    operation const& front() const;
-    operation const& back() const;
-    operation::iterator begin() const;
-    operation::iterator end() const;
-    operation const& operator[](size_t index) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
     size_t serialized_size(bool prefix) const;
-
     data_chunk const& bytes() const;
-
-    operation::list const& operations() const;
+    // operation::list const& operations() const;
 
 
     // Signing.
     //-------------------------------------------------------------------------
 
-    static hash_digest generate_signature_hash(transaction const& tx,
-                                               uint32_t input_index,
-                                               script_basis const& script_code,
-                                               uint8_t sighash_type,
-                                               script_version version = script_version::unversioned,
-                                               uint64_t value = max_uint64);
+    // static hash_digest generate_signature_hash(transaction const& tx,
+    //                                            uint32_t input_index,
+    //                                            script_basis const& script_code,
+    //                                            uint8_t sighash_type,
+    //                                            script_version version = script_version::unversioned,
+    //                                            uint64_t value = max_uint64);
 
-    static bool check_signature(ec_signature const& signature,
-                                uint8_t sighash_type,
-                                data_chunk const& public_key,
-                                script_basis const& script_code,
-                                transaction const& tx,
-                                uint32_t input_index,
-                                script_version version = script_version::unversioned,
-                                uint64_t value = max_uint64);
+    // static bool check_signature(ec_signature const& signature,
+    //                             uint8_t sighash_type,
+    //                             data_chunk const& public_key,
+    //                             script_basis const& script_code,
+    //                             transaction const& tx,
+    //                             uint32_t input_index,
+    //                             script_version version = script_version::unversioned,
+    //                             uint64_t value = max_uint64);
 
-    static bool create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
+    // static bool create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
@@ -269,10 +251,11 @@ public:
     bool is_pay_to_witness(uint32_t forks) const;
     bool is_pay_to_script_hash(uint32_t forks) const;
 
-private:
+// private:
     static size_t serialized_size(operation::list const& ops);
+private:
     static data_chunk operations_to_data(operation::list const& ops);
-    static hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
+    // static hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
 
     static hash_digest generate_version_0_signature_hash(transaction const& tx,
                                                          uint32_t input_index,

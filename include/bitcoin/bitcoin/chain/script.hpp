@@ -81,8 +81,19 @@ public:
     // bool operator==(script const& x) const;
     // bool operator!=(script const& x) const;
 
+
     // Deserialization.
     //-------------------------------------------------------------------------
+
+    static script factory_from_data(data_chunk const& encoded, bool prefix);
+    static script factory_from_data(std::istream& stream, bool prefix);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static script factory_from_data(R& source, bool prefix) {
+        script instance;
+        instance.from_data(source, prefix);
+        return instance;
+    }
 
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list&& ops);
@@ -112,7 +123,8 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    size_t serialized_size(bool prefix) const;
+    // size_t serialized_size(bool prefix) const;
+    using script_basis::serialized_size;
     operation::list const& operations() const;
 
     // Signing.

@@ -209,7 +209,7 @@ std::string script_basis::to_string(uint32_t active_forks) const {
     auto first = true;
     std::ostringstream text;
 
-    for (auto const& op : operations()) {
+    for (auto const& op : operations(*this)) {
         text << (first ? "" : " ") << op.to_string(active_forks);
         first = false;
     }
@@ -218,14 +218,14 @@ std::string script_basis::to_string(uint32_t active_forks) const {
     return text.str();
 }
 
-// Iteration.
-//-----------------------------------------------------------------------------
-// These are syntactic sugar that allow the caller to iterate ops directly.
-// The first operations access must be method-based to guarantee the cache.
+// // Iteration.
+// //-----------------------------------------------------------------------------
+// // These are syntactic sugar that allow the caller to iterate ops directly.
+// // The first operations access must be method-based to guarantee the cache.
 
-void script_basis::clear() {
-    reset();
-}
+// void script_basis::clear() {
+//     reset();
+// }
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
@@ -603,65 +603,64 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
 // Signing (common).
 //-----------------------------------------------------------------------------
 
-// static
-hash_digest script_basis::generate_signature_hash(transaction const& tx,
-                                            uint32_t input_index,
-                                            script_basis const& script_code,
-                                            uint8_t sighash_type,
-                                            script_version version,
-                                            uint64_t value) {
-    // The way of serialization is changed (bip143).
-    switch (version) {
-        case script_version::unversioned:
-            return generate_unversioned_signature_hash(tx, input_index, script_code, sighash_type);
-        case script_version::zero:
-            return generate_version_0_signature_hash(tx, input_index, script_code, value, sighash_type);
-        case script_version::reserved:
-        default:
-            BITCOIN_ASSERT_MSG(false, "invalid script version");
-            return {};
-    }
-}
+// // static
+// hash_digest script_basis::generate_signature_hash(transaction const& tx,
+//                                             uint32_t input_index,
+//                                             script_basis const& script_code,
+//                                             uint8_t sighash_type,
+//                                             script_version version,
+//                                             uint64_t value) {
+//     // The way of serialization is changed (bip143).
+//     switch (version) {
+//         case script_version::unversioned:
+//             return generate_unversioned_signature_hash(tx, input_index, script_code, sighash_type);
+//         case script_version::zero:
+//             return generate_version_0_signature_hash(tx, input_index, script_code, value, sighash_type);
+//         case script_version::reserved:
+//         default:
+//             BITCOIN_ASSERT_MSG(false, "invalid script version");
+//             return {};
+//     }
+// }
 
-// static
-bool script_basis::check_signature(ec_signature const& signature,
-                             uint8_t sighash_type,
-                             data_chunk const& public_key,
-                             script_basis const& script_code,
-                             transaction const& tx,
-                             uint32_t input_index,
-                             script_version version,
-                             uint64_t value) {
-    if (public_key.empty()) {
-        return false;
-    }
+// // static
+// bool script_basis::check_signature(ec_signature const& signature,
+//                              uint8_t sighash_type,
+//                              data_chunk const& public_key,
+//                              script_basis const& script_code,
+//                              transaction const& tx,
+//                              uint32_t input_index,
+//                              script_version version,
+//                              uint64_t value) {
+//     if (public_key.empty()) {
+//         return false;
+//     }
 
-    // This always produces a valid signature hash, including one_hash.
-    auto const sighash = chain::script_basis::generate_signature_hash(tx,
-                                                                input_index, script_code, sighash_type, version, value);
+//     // This always produces a valid signature hash, including one_hash.
+//     auto const sighash = chain::script_basis::generate_signature_hash(tx, input_index, script_code, sighash_type, version, value);
 
-    // Validate the EC signature.
-    return verify_signature(public_key, sighash, signature);
-}
+//     // Validate the EC signature.
+//     return verify_signature(public_key, sighash, signature);
+// }
 
-// static
-bool script_basis::create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version, uint64_t value) {
-    out.reserve(max_endorsement_size);
+// // static
+// bool script_basis::create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version, uint64_t value) {
+//     out.reserve(max_endorsement_size);
 
-    // This always produces a valid signature hash, including one_hash.
-    auto const sighash = chain::script_basis::generate_signature_hash(tx, input_index, prevout_script, sighash_type, version, value);
+//     // This always produces a valid signature hash, including one_hash.
+//     auto const sighash = chain::script_basis::generate_signature_hash(tx, input_index, prevout_script, sighash_type, version, value);
 
-    // Create the EC signature and encode as DER.
-    ec_signature signature;
-    if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature)) {
-        return false;
-    }
+//     // Create the EC signature and encode as DER.
+//     ec_signature signature;
+//     if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature)) {
+//         return false;
+//     }
 
-    // Add the sighash type to the end of the DER signature -> endorsement.
-    out.push_back(sighash_type);
-    out.shrink_to_fit();
-    return true;
-}
+//     // Add the sighash type to the end of the DER signature -> endorsement.
+//     out.push_back(sighash_type);
+//     out.shrink_to_fit();
+//     return true;
+// }
 
 // Utilities (static).
 //-----------------------------------------------------------------------------
