@@ -256,7 +256,7 @@ bool block_basis::is_valid() const {
 // Serialization.
 //-----------------------------------------------------------------------------
 
-data_chunk block_basis::to_data(size_t serialized_size, bool witness) const {
+data_chunk block_basis::to_data(size_t serialized_size, bool /*witness*/) const {
     data_chunk data;
     
     // auto const size = serialized_size(witness_val(witness));
@@ -941,6 +941,7 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
 
 bool is_segregated(block_basis const& blk) {
 #ifdef BITPRIM_CURRENCY_BCH
+    (void)blk;
     return false;
 #else
     auto const segregated = [](transaction const& tx) {
@@ -948,7 +949,7 @@ bool is_segregated(block_basis const& blk) {
     };
 
     // If no block tx has witness data the commitment is optional (bip141).
-    return std::any_of(transactions_.begin(), transactions_.end(), segregated);
+    return std::any_of(blk.transactions().begin(), blk.transactions().end(), segregated);
 #endif // BITPRIM_CURRENCY_BCH
 }
 

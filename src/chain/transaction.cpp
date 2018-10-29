@@ -153,7 +153,7 @@ transaction& transaction::operator=(transaction const& x) {
 }
 
 transaction& transaction::operator=(transaction&& x) noexcept {
-    transaction_basis::operator=(std::move(x));
+    transaction_basis::operator=(std::move(static_cast<transaction_basis&&>(x)));
 
     validation = std::move(x.validation);
 #ifdef BITPRIM_CACHED_RPC_DATA
@@ -813,47 +813,10 @@ code transaction::connect_input(chain_state const& state, size_t input_index) co
 // Validation.
 //-----------------------------------------------------------------------------
 
-// // These checks are self-contained; blockchain (and so version) independent.
-// code transaction::check(bool transaction_pool, bool retarget) const {
-//     if (inputs_.empty() || outputs_.empty()) {
-//         return error::empty_transaction;
-//     }
-
-//     if (is_null_non_coinbase()) {
-//         return error::previous_output_null;
-//     }
-
-//     if (total_output_value() > max_money(retarget)) {
-//         return error::spend_overflow;
-//     }
-
-//     if ( ! transaction_pool && is_oversized_coinbase()) {
-//         return error::invalid_coinbase_script_size;
-//     }
-
-//     if (transaction_pool && is_coinbase()) {
-//         return error::coinbase_transaction;
-//     }
-
-//     if (transaction_pool && is_internal_double_spend()) {
-//         return error::transaction_internal_double_spend;
-//         // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
-//     }
-
-//     if (transaction_pool && serialized_size(true, false) >= get_max_block_size()) {
-//         return error::transaction_size_limit;
-
-//         // We cannot know if bip16/bip141 is enabled here so we do not check it.
-//         // This will not make a difference unless prevouts are populated, in which
-//         // case they are ignored. This means that p2sh sigops are not counted here.
-//         // This is a preliminary check, the final count must come from accept().
-//         // Reenable once sigop caching is implemented, otherwise is deoptimization.
-//         ////else if (transaction_pool && signature_operations(false, false) > get_max_block_sigops()
-//         ////    return error::transaction_legacy_sigop_limit;
-//     }
-
-//     return error::success;
-// }
+// These checks are self-contained; blockchain (and so version) independent.
+code transaction::check(bool transaction_pool, bool retarget) const {
+    return transaction_basis::check(total_output_value(), transaction_pool, retarget);
+}
 
 code transaction::accept(bool transaction_pool) const {
     auto const state = validation.state;

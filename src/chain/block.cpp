@@ -197,7 +197,7 @@ block& block::operator=(block const& x) {
 }
 
 block& block::operator=(block&& x) noexcept {
-    block_basis::operator=(std::move(x));
+    block_basis::operator=(std::move(static_cast<block_basis&&>(x)));
     validation = std::move(x.validation);
     return *this;
 }
@@ -525,7 +525,7 @@ size_t block::total_inputs(bool with_coinbase) const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    value = chain::total_inputs(*this);
+    value = chain::total_inputs(*this, with_coinbase);
     total_inputs_ = value;
     mutex_.unlock();
     ///////////////////////////////////////////////////////////////////////////
@@ -806,7 +806,7 @@ code block::accept(bool transactions) const {
 // These checks assume that prevout caching is completed on all tx.inputs.
 code block::accept(chain_state const& state, bool transactions) const {
     validation.start_accept = asio::steady_clock::now();
-    return block_basis::accept(state, serialized_size(), transactions);
+    return block_basis::accept(state, serialized_size(), weight(), transactions);
 }
 
 code block::connect() const {

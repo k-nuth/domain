@@ -217,7 +217,7 @@ public:
     bool is_valid_merkle_root() const;
     // bool is_segregated() const;
 
-    code check(size_t serialized_size) const;
+    code check(size_t serialized_size_false) const;
     code check_transactions() const;
     // code accept(bool transactions = true) const;
     code accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions = true) const;

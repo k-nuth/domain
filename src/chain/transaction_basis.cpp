@@ -681,6 +681,8 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     if ( ! bip141 && is_segregated) {
         return error::empty_transaction;
     }
+#else
+    (void)is_segregated;
 #endif
 
     if (transaction_pool && !is_final(state.height(), state.median_time_past())) {
@@ -783,6 +785,8 @@ hash_digest hash(transaction_basis const& tx, bool witness) {
     if (witness) {
         return hash_witness(tx);
     }
+#else
+    (void)witness;
 #endif
 
     return hash_non_witness(tx);

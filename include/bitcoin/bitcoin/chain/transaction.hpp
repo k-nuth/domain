@@ -315,6 +315,7 @@ public:
 
     using transaction_basis::accept;
 
+    code check(bool transaction_pool, bool retarget = true) const;
     code accept(bool transaction_pool = true) const;
     code accept(chain_state const& state, bool transaction_pool = true) const;
     code connect() const;
