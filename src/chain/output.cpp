@@ -67,7 +67,7 @@ output& output::operator=(output const& x) {
 }
 
 output& output::operator=(output&& x) noexcept {
-    output_basis::operator=(std::move(x));
+    output_basis::operator=(std::move(static_cast<output_basis&&>(x)));
     addresses_ = x.addresses_cache();
     validation = x.validation;
     return *this;

@@ -110,7 +110,7 @@ input& input::operator=(input const& x) {
 }
 
 input& input::operator=(input&& x) noexcept {
-    input_basis::operator=(std::move(x));
+    input_basis::operator=(std::move(static_cast<input_basis&&>(x)));
     addresses_ = x.addresses_cache();
     return *this;
 }
