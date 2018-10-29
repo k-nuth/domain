@@ -36,6 +36,7 @@
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
+// #include <bitcoin/bitcoin/machine/program.hpp>
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/error.hpp>
@@ -50,6 +51,7 @@
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
 #include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+
 
 namespace libbitcoin {
 namespace chain {
@@ -162,8 +164,10 @@ bool transaction_basis::is_valid() const {
 // Transactions with empty witnesses always use old serialization (bip144).
 // If no inputs are witness programs then witness hash is tx hash (bip141).
 data_chunk transaction_basis::to_data(bool wire, bool witness) const {
+#ifndef BITPRIM_CURRENCY_BCH
     // Witness handling must be disabled for non-segregated txs.
-    witness &= is_segregated();
+    if (witness) witness = is_segregated(*this);
+#endif
 
     data_chunk data;
     auto const size = serialized_size(wire, witness_val(witness));
@@ -181,8 +185,11 @@ data_chunk transaction_basis::to_data(bool wire, bool witness) const {
 }
 
 void transaction_basis::to_data(data_sink& stream, bool wire, bool witness) const {
+#ifndef BITPRIM_CURRENCY_BCH
     // Witness handling must be disabled for non-segregated txs.
-    witness &= is_segregated();
+    if (witness) witness = is_segregated(*this);
+#endif
+
 
     ostream_writer sink_w(stream);
     to_data(sink_w, wire, witness_val(witness));
@@ -192,8 +199,10 @@ void transaction_basis::to_data(data_sink& stream, bool wire, bool witness) cons
 //-----------------------------------------------------------------------------
 
 size_t transaction_basis::serialized_size(bool wire, bool witness) const {
+#ifndef BITPRIM_CURRENCY_BCH
     // The witness parameter must be set to false for non-segregated txs.
-    witness &= is_segregated();
+    if (witness) witness = is_segregated(*this);
+#endif
 
     // Returns space for the witness although not serialized by input.
     // Returns witness space if specified even if input not segregated.
@@ -266,105 +275,6 @@ void transaction_basis::set_outputs(output::list const& value) {
 void transaction_basis::set_outputs(output::list&& value) {
     outputs_ = std::move(value);
 }
-
-// Cache.
-//-----------------------------------------------------------------------------
-
-// hash_digest transaction_basis::hash(bool witness) const {
-//     // Witness hashing must be disabled for non-segregated txs.
-//     witness &= is_segregated();
-
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     hash_mutex_.lock_upgrade();
-
-//     if (witness_val(witness)) {
-//         if ( ! witness_hash_) {
-//             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//             hash_mutex_.unlock_upgrade_and_lock();
-
-//             // Witness coinbase tx hash is assumed to be null_hash (bip141).
-//             witness_hash_ = std::make_shared<hash_digest>(is_coinbase() ? null_hash : bitcoin_hash(to_data(true, true)));
-
-//             hash_mutex_.unlock_and_lock_upgrade();
-//             //-----------------------------------------------------------------
-//         }
-//     } else {
-//         if ( ! hash_) {
-//             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//             hash_mutex_.unlock_upgrade_and_lock();
-//             hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data(true)));
-//             hash_mutex_.unlock_and_lock_upgrade();
-//             //-----------------------------------------------------------------
-//         }
-//     }
-
-//     auto const hash = witness_val(witness) ? *witness_hash_ : *hash_;
-//     hash_mutex_.unlock_upgrade();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return hash;
-// }
-
-// hash_digest transaction_basis::outputs_hash() const {
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     hash_mutex_.lock_upgrade();
-
-//     if ( ! outputs_hash_) {
-//         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//         hash_mutex_.unlock_upgrade_and_lock();
-//         outputs_hash_ = std::make_shared<hash_digest>(script::to_outputs(*this));
-//         hash_mutex_.unlock_and_lock_upgrade();
-//         //-----------------------------------------------------------------
-//     }
-
-//     auto const hash = *outputs_hash_;
-//     hash_mutex_.unlock_upgrade();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return hash;
-// }
-
-// hash_digest transaction_basis::inpoints_hash() const {
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     hash_mutex_.lock_upgrade();
-
-//     if ( ! inpoints_hash_) {
-//         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//         hash_mutex_.unlock_upgrade_and_lock();
-//         inpoints_hash_ = std::make_shared<hash_digest>(script::to_inpoints(*this));
-//         hash_mutex_.unlock_and_lock_upgrade();
-//         //-----------------------------------------------------------------
-//     }
-
-//     auto const hash = *inpoints_hash_;
-//     hash_mutex_.unlock_upgrade();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return hash;
-// }
-
-// hash_digest transaction_basis::sequences_hash() const {
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     hash_mutex_.lock_upgrade();
-
-//     if ( ! sequences_hash_) {
-//         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//         hash_mutex_.unlock_upgrade_and_lock();
-//         sequences_hash_ = std::make_shared<hash_digest>(script::to_sequences(*this));
-//         hash_mutex_.unlock_and_lock_upgrade();
-//         //-----------------------------------------------------------------
-//     }
-
-//     auto const hash = *sequences_hash_;
-//     hash_mutex_.unlock_upgrade();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return hash;
-// }
 
 // Utilities.
 //-----------------------------------------------------------------------------
@@ -511,13 +421,13 @@ bool transaction_basis::is_locktime_conflict() const {
 //     return value;
 // }
 
-uint64_t transaction_basis::fees() const {
-    return floor_subtract(total_input_value(), total_output_value());
-}
+// uint64_t transaction_basis::fees() const {
+//     return floor_subtract(total_input_value(), total_output_value());
+// }
 
-bool transaction_basis::is_overspent() const {
-    return !is_coinbase() && total_output_value() > total_input_value();
-}
+// bool transaction_basis::is_overspent() const {
+//     return !is_coinbase() && total_output_value() > total_input_value();
+// }
 
 // // Returns max_size_t in case of overflow.
 // size_t transaction_basis::signature_operations() const {
@@ -694,14 +604,14 @@ bool transaction_basis::is_mature(size_t height) const {
 //     auto const index32 = static_cast<uint32_t>(input_index);
 
 //     // Verify the transaction input script against the previous output.
-//     return script::verify(*this, index32, forks);
+//     return verify(*this, index32, forks);
 // }
 
 // Validation.
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code transaction_basis::check(bool transaction_pool, bool retarget) const {
+code transaction_basis::check(uint64_t total_output_value, bool transaction_pool, bool retarget) const {
     if (inputs_.empty() || outputs_.empty()) {
         return error::empty_transaction;
     }
@@ -710,7 +620,8 @@ code transaction_basis::check(bool transaction_pool, bool retarget) const {
         return error::previous_output_null;
     }
 
-    if (total_output_value() > max_money(retarget)) {
+    // if (total_output_value() > max_money(retarget)) {
+    if (total_output_value > max_money(retarget)) {        
         return error::spend_overflow;
     }
 
@@ -743,7 +654,7 @@ code transaction_basis::check(bool transaction_pool, bool retarget) const {
 }
 
 // These checks assume that prevout caching is completed on all tx.inputs.
-code transaction_basis::accept(chain_state const& state, bool transaction_pool, bool is_duplicated) const {
+code transaction_basis::accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated /*= false*/, bool transaction_pool /*= true*/) const {
     auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
     auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);
     auto const bip68 = state.is_enabled(bc::machine::rule_fork::bip68_rule);
@@ -762,13 +673,18 @@ code transaction_basis::accept(chain_state const& state, bool transaction_pool, 
         // A segregated tx should appear empty if bip141 is not enabled.
     }
 
-    if ( ! bip141 && is_segregated()) {
+    // if ( ! bip141 && is_segregated()) {
+    //     return error::empty_transaction;
+    // }
+
+#ifndef BITPRIM_CURRENCY_BCH
+    if ( ! bip141 && is_segregated) {
         return error::empty_transaction;
     }
+#endif
 
     if (transaction_pool && !is_final(state.height(), state.median_time_past())) {
         return error::transaction_non_final;
-
     }
 
     //*************************************************************************
@@ -796,7 +712,8 @@ code transaction_basis::accept(chain_state const& state, bool transaction_pool, 
         return error::coinbase_maturity;
     }
 
-    if (is_overspent()) {
+    // if (is_overspent()) {
+    if (is_overspent) {
         return error::spend_exceeds_value;
     }
 
@@ -818,17 +735,17 @@ code transaction_basis::accept(chain_state const& state, bool transaction_pool, 
     return error::success;
 }
 
-code transaction_basis::connect(chain_state const& state) const {
-    code ec;
+// code transaction_basis::connect(chain_state const& state) const {
+//     code ec;
 
-    for (size_t input = 0; input < inputs_.size(); ++input) {
-        if ((ec = connect_input(state, input))) {
-            return ec;
-        }
-    }
+//     for (size_t input = 0; input < inputs_.size(); ++input) {
+//         if ((ec = connect_input(state, input))) {
+//             return ec;
+//         }
+//     }
 
-    return error::success;
-}
+//     return error::success;
+// }
 
 bool transaction_basis::is_standard() const {
     for (auto const& in : inputs()) {
@@ -845,6 +762,158 @@ bool transaction_basis::is_standard() const {
 
     return true;
 }
+
+hash_digest hash_non_witness(transaction_basis const& tx) {
+    return bitcoin_hash(tx.to_data(true));
+}
+
+#ifndef BITPRIM_CURRENCY_BCH
+hash_digest hash_witness(transaction_basis const& tx) {
+    // precondition: tx.is_segregated()
+    return tx.is_coinbase() ? null_hash : bitcoin_hash(tx.to_data(true, true));
+}
+#endif
+
+hash_digest hash(transaction_basis const& tx, bool witness) {
+
+#ifndef BITPRIM_CURRENCY_BCH
+    // Witness hashing must be disabled for non-segregated txs.
+    if (witness) witness = is_segregated(tx);
+
+    if (witness) {
+        return hash_witness(tx);
+    }
+#endif
+
+    return hash_non_witness(tx);
+}
+
+
+hash_digest outputs_hash(transaction_basis const& tx) {
+    return to_outputs(tx);
+}
+
+hash_digest inpoints_hash(transaction_basis const& tx) {
+    return to_inpoints(tx);
+}
+
+hash_digest sequences_hash(transaction_basis const& tx) {
+    return to_sequences(tx);
+}
+
+hash_digest to_outputs(transaction_basis const& tx) {
+    auto const sum = [&](size_t total, output const& output) {
+        return total + output.serialized_size();
+    };
+
+    auto const& outs = tx.outputs();
+    auto size = std::accumulate(outs.begin(), outs.end(), size_t(0), sum);
+    data_chunk data;
+    data.reserve(size);
+    data_sink ostream(data);
+    ostream_writer sink_w(ostream);
+
+    auto const write = [&](output const& output) {
+        output.to_data(sink_w, true);
+    };
+
+    std::for_each(outs.begin(), outs.end(), write);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return bitcoin_hash(data);
+}
+
+hash_digest to_inpoints(transaction_basis const& tx) {
+    auto const sum = [&](size_t total, input const& input) {
+        return total + input.previous_output().serialized_size();
+    };
+
+    auto const& ins = tx.inputs();
+    auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
+    data_chunk data;
+    data.reserve(size);
+    data_sink ostream(data);
+    ostream_writer sink_w(ostream);
+
+    auto const write = [&](input const& input) {
+        input.previous_output().to_data(sink_w);
+    };
+
+    std::for_each(ins.begin(), ins.end(), write);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return bitcoin_hash(data);
+}
+
+hash_digest to_sequences(transaction_basis const& tx) {
+    auto const sum = [&](size_t total, input const& input) {
+        return total + sizeof(uint32_t);
+    };
+
+    auto const& ins = tx.inputs();
+    auto size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
+    data_chunk data;
+    data.reserve(size);
+    data_sink ostream(data);
+    ostream_writer sink_w(ostream);
+
+    auto const write = [&](input const& input) {
+        sink_w.write_4_bytes_little_endian(input.sequence());
+    };
+
+    std::for_each(ins.begin(), ins.end(), write);
+    ostream.flush();
+    BITCOIN_ASSERT(data.size() == size);
+    return bitcoin_hash(data);
+}
+
+
+// Returns max_uint64 in case of overflow.
+uint64_t total_input_value(transaction_basis const& tx) {
+    ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
+    auto const sum = [](uint64_t total, input const& input) {
+        auto const& prevout = input.previous_output().validation.cache;
+        auto const missing = !prevout.is_valid();
+
+        // Treat missing previous outputs as zero-valued, no math on sentinel.
+        return ceiling_add(total, missing ? 0 : prevout.value());
+    };
+
+    return std::accumulate(tx.inputs().begin(), tx.inputs().end(), uint64_t(0), sum);
+}
+
+// Returns max_uint64 in case of overflow.
+uint64_t total_output_value(transaction_basis const& tx) {
+    ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
+    auto const sum = [](uint64_t total, output const& output) {
+        return ceiling_add(total, output.value());
+    };
+
+    return std::accumulate(tx.outputs().begin(), tx.outputs().end(), uint64_t(0), sum);
+}
+
+uint64_t fees(transaction_basis const& tx) {
+    return floor_subtract(total_input_value(tx), total_output_value(tx));
+}
+
+bool is_overspent(transaction_basis const& tx) {
+    return ! tx.is_coinbase() && total_output_value(tx) > total_input_value(tx);
+}
+
+bool is_segregated(transaction_basis const& tx) {
+#ifdef BITPRIM_CURRENCY_BCH
+    return false;
+#endif
+    auto const segregated = [](input const& input) {
+        return input.is_segregated();
+    };
+
+    // If no block tx is has witness data the commitment is optional (bip141).
+    return std::any_of(tx.inputs().begin(), tx.inputs().end(), segregated);
+}
+
+
+
 
 }  // namespace chain
 }  // namespace libbitcoin

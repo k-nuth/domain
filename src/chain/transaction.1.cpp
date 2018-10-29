@@ -497,7 +497,7 @@ hash_digest transaction::outputs_hash() const {
     if ( ! outputs_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
-        outputs_hash_ = std::make_shared<hash_digest>(script::to_outputs(*this));
+        outputs_hash_ = std::make_shared<hash_digest>(to_outputs(*this));
         hash_mutex_.unlock_and_lock_upgrade();
         //-----------------------------------------------------------------
     }
@@ -517,7 +517,7 @@ hash_digest transaction::inpoints_hash() const {
     if ( ! inpoints_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
-        inpoints_hash_ = std::make_shared<hash_digest>(script::to_inpoints(*this));
+        inpoints_hash_ = std::make_shared<hash_digest>(to_inpoints(*this));
         hash_mutex_.unlock_and_lock_upgrade();
         //-----------------------------------------------------------------
     }
@@ -537,7 +537,7 @@ hash_digest transaction::sequences_hash() const {
     if ( ! sequences_hash_) {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         hash_mutex_.unlock_upgrade_and_lock();
-        sequences_hash_ = std::make_shared<hash_digest>(script::to_sequences(*this));
+        sequences_hash_ = std::make_shared<hash_digest>(to_sequences(*this));
         hash_mutex_.unlock_and_lock_upgrade();
         //-----------------------------------------------------------------
     }

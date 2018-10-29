@@ -32,6 +32,7 @@
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/chain/point.hpp>
+#include <bitcoin/bitcoin/chain/transaction_basis.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/error.hpp>
@@ -51,68 +52,68 @@
 namespace libbitcoin {
 namespace chain {
 
-namespace detail {
-// Read a length-prefixed collection of inputs or outputs from the source.
-template <class Source, class Put>
-bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
-    auto result = true;
-    auto const count = source.read_size_little_endian();
+// namespace detail {
+// // Read a length-prefixed collection of inputs or outputs from the source.
+// template <class Source, class Put>
+// bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
+//     auto result = true;
+//     auto const count = source.read_size_little_endian();
 
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size()) {
-        source.invalidate();
-    } else {
-        puts.resize(count);
-    }
+//     // Guard against potential for arbitary memory allocation.
+//     if (count > get_max_block_size()) {
+//         source.invalidate();
+//     } else {
+//         puts.resize(count);
+//     }
 
-    auto const deserialize = [&](Put& put) {
-        result = result && put.from_data(source, wire, witness_val(witness));
-#ifndef NDBEUG
-        put.script().operations();
-#endif
-    };
+//     auto const deserialize = [&](Put& put) {
+//         result = result && put.from_data(source, wire, witness_val(witness));
+// #ifndef NDBEUG
+//         put.script().operations();
+// #endif
+//     };
 
-    std::for_each(puts.begin(), puts.end(), deserialize);
-    return result;
-}
+//     std::for_each(puts.begin(), puts.end(), deserialize);
+//     return result;
+// }
 
-// Write a length-prefixed collection of inputs or outputs to the sink.
-template <class Sink, class Put>
-void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
-    sink.write_variable_little_endian(puts.size());
+// // Write a length-prefixed collection of inputs or outputs to the sink.
+// template <class Sink, class Put>
+// void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
+//     sink.write_variable_little_endian(puts.size());
 
-    auto const serialize = [&](const Put& put) {
-        put.to_data(sink, wire, witness_val(witness));
-    };
+//     auto const serialize = [&](const Put& put) {
+//         put.to_data(sink, wire, witness_val(witness));
+//     };
 
-    std::for_each(puts.begin(), puts.end(), serialize);
-}
+//     std::for_each(puts.begin(), puts.end(), serialize);
+// }
 
-#ifndef BITPRIM_CURRENCY_BCH
-// Input list must be pre-populated as it determines witness count.
-template <Reader R, BITPRIM_IS_READER(R)>
-inline void read_witnesses(R& source, input::list& inputs) {
-    auto const deserialize = [&](input& input) {
-        input.witness().from_data(source, true);
-    };
+// #ifndef BITPRIM_CURRENCY_BCH
+// // Input list must be pre-populated as it determines witness count.
+// template <Reader R, BITPRIM_IS_READER(R)>
+// inline void read_witnesses(R& source, input::list& inputs) {
+//     auto const deserialize = [&](input& input) {
+//         input.witness().from_data(source, true);
+//     };
 
-    std::for_each(inputs.begin(), inputs.end(), deserialize);
-}
+//     std::for_each(inputs.begin(), inputs.end(), deserialize);
+// }
 
-// Witness count is not written as it is inferred from input count.
-template <typename W>
-inline void write_witnesses(W& sink, input::list const& inputs) {
-    auto const serialize = [&sink](input const& input) {
-        input.witness().to_data(sink, true);
-    };
+// // Witness count is not written as it is inferred from input count.
+// template <typename W>
+// inline void write_witnesses(W& sink, input::list const& inputs) {
+//     auto const serialize = [&sink](input const& input) {
+//         input.witness().to_data(sink, true);
+//     };
 
-    std::for_each(inputs.begin(), inputs.end(), serialize);
-}
-#endif // not defined BITPRIM_CURRENCY_BCH
+//     std::for_each(inputs.begin(), inputs.end(), serialize);
+// }
+// #endif // not defined BITPRIM_CURRENCY_BCH
 
-}  // namespace detail
+// }  // namespace detail
 
-class BC_API transaction {
+class BC_API transaction : public transaction_basis {
 public:
     using ins = input::list;
     using outs = output::list;
@@ -167,8 +168,8 @@ public:
     // Operators.
     //-----------------------------------------------------------------------------
 
-    bool operator==(transaction const& x) const;
-    bool operator!=(transaction const& x) const;
+    // bool operator==(transaction const& x) const;
+    // bool operator!=(transaction const& x) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------
@@ -204,75 +205,24 @@ public:
                     , bool unconfirmed = false
 #endif
                 ) {
-        reset();
 
-        if (wire) {
-            // Wire (satoshi protocol) deserialization.
-            version_ = source.read_4_bytes_little_endian();
-            detail::read(source, inputs_, wire, witness_val(witness));
-#ifdef BITPRIM_CURRENCY_BCH
-            auto const marker = false;
-#else
-            // Detect witness as no inputs (marker) and expected flag (bip144).
-            auto const marker = inputs_.size() == witness_marker && source.peek_byte() == witness_flag;
-#endif
-
-            // This is always enabled so caller should validate with is_segregated.
-            if (marker) {
-                // Skip over the peeked witness flag.
-                source.skip(1);
-                detail::read(source, inputs_, wire, witness_val(witness));
-                detail::read(source, outputs_, wire, witness_val(witness));
-#ifndef BITPRIM_CURRENCY_BCH
-                detail::read_witnesses(source, inputs_);
-#endif
-            } else {
-                detail::read(source, outputs_, wire, witness_val(witness));
-            }
-
-            locktime_ = source.read_4_bytes_little_endian();
-        } else {
-            // Database (outputs forward) serialization.
-            // Witness data is managed internal to inputs.
-            detail::read(source, outputs_, wire, witness_val(witness));
-            detail::read(source, inputs_, wire, witness_val(witness));
-            auto const locktime = source.read_variable_little_endian();
-            auto const version = source.read_variable_little_endian();
-
-            if (locktime > max_uint32 || version > max_uint32) {
-                source.invalidate();
-            }
-
-            locktime_ = static_cast<uint32_t>(locktime);
-            version_ = static_cast<uint32_t>(version);
+        transaction_basis::from_data(source, wire, witness);
 
 #ifdef BITPRIM_CACHED_RPC_DATA
-            if (unconfirmed) {
-                auto const sigops = source.read_4_bytes_little_endian();
-                cached_sigops_ = static_cast<uint32_t>(sigops);
-                auto const fees = source.read_8_bytes_little_endian();
-                cached_fees_ = static_cast<uint64_t>(fees);
-                auto const is_standard = source.read_byte();
-                cached_is_standard_ = static_cast<bool>(is_standard);
-            }
-#endif
-        }
-
-#ifndef BITPRIM_CURRENCY_BCH
-        // TODO(libbitcoin): optimize by having reader skip witness data.
-        if ( ! witness_val(witness)) {
-            strip_witness();
+        if (! wire && unconfirmed) {
+            auto const sigops = source.read_4_bytes_little_endian();
+            cached_sigops_ = static_cast<uint32_t>(sigops);
+            auto const fees = source.read_8_bytes_little_endian();
+            cached_fees_ = static_cast<uint64_t>(fees);
+            auto const is_standard = source.read_byte();
+            cached_is_standard_ = static_cast<bool>(is_standard);
         }
 #endif
-
-        if ( ! source) {
-            reset();
-        }
 
         return source;
     }
 
-    bool is_valid() const;
+    // bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
@@ -296,43 +246,16 @@ public:
                 , bool unconfirmed = false
 #endif
                 ) const {
-        if (wire) {
-            // Witness handling must be disabled for non-segregated txs.
-            witness &= is_segregated();
 
-            // Wire (satoshi protocol) serialization.
-            sink.write_4_bytes_little_endian(version_);
-
-            if (witness_val(witness)) {
-                sink.write_byte(witness_marker);
-                sink.write_byte(witness_flag);
-                detail::write(sink, inputs_, wire, witness_val(witness));
-                detail::write(sink, outputs_, wire, witness_val(witness));
-#ifndef BITPRIM_CURRENCY_BCH
-                detail::write_witnesses(sink, inputs_);
-#endif
-            } else {
-                detail::write(sink, inputs_, wire, witness_val(witness));
-                detail::write(sink, outputs_, wire, witness_val(witness));
-            }
-
-            sink.write_4_bytes_little_endian(locktime_);
-        } else {
-            // Database (outputs forward) serialization.
-            // Witness data is managed internal to inputs.
-            detail::write(sink, outputs_, wire, witness_val(witness));
-            detail::write(sink, inputs_, wire, witness_val(witness));
-            sink.write_variable_little_endian(locktime_);
-            sink.write_variable_little_endian(version_);
+        transaction_basis::to_data(sink, wire, witness);
 
 #ifdef BITPRIM_CACHED_RPC_DATA            
-            if (unconfirmed) {
-                sink.write_4_bytes_little_endian(signature_operations());
-                sink.write_8_bytes_little_endian(fees());
-                sink.write_byte(is_standard());
-            }
-#endif
+        if ( ! wire && unconfirmed) {
+            sink.write_4_bytes_little_endian(signature_operations());
+            sink.write_8_bytes_little_endian(fees());
+            sink.write_byte(is_standard());
         }
+#endif
     }
 
     // Properties (size, accessors, cache).
@@ -344,21 +267,10 @@ public:
 #endif
                         ) const;
 
-    uint32_t version() const;
     void set_version(uint32_t value);
-
-    uint32_t locktime() const;
     void set_locktime(uint32_t value);
-
-    // Deprecated (unsafe).
-    ins& inputs();
-    const ins& inputs() const;
     void set_inputs(const ins& value);
     void set_inputs(ins&& value);
-
-    // Deprecated (unsafe).
-    outs& outputs();
-    const outs& outputs() const;
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
@@ -386,39 +298,32 @@ public:
     // Validation.
     //-----------------------------------------------------------------------------
 
+    using transaction_basis::signature_operations;
+
     uint64_t fees() const;
-    point::list previous_outputs() const;
+    // point::list previous_outputs() const;
     point::list missing_previous_outputs() const;
     hash_list missing_previous_transactions() const;
     uint64_t total_input_value() const;
     uint64_t total_output_value() const;
     size_t signature_operations() const;
-    size_t signature_operations(bool bip16, bool bip141) const;
+    // size_t signature_operations(bool bip16, bool bip141) const;
     size_t weight() const;
 
-    bool is_coinbase() const;
-    bool is_null_non_coinbase() const;
-    bool is_oversized_coinbase() const;
-    bool is_mature(size_t height) const;
     bool is_overspent() const;
-    bool is_internal_double_spend() const;
-    bool is_double_spend(bool include_unconfirmed) const;
-    bool is_dusty(uint64_t minimum_output_value) const;
-    bool is_missing_previous_outputs() const;
-    bool is_final(size_t block_height, uint32_t block_time) const;
-    bool is_locked(size_t block_height, uint32_t median_time_past) const;
-    bool is_locktime_conflict() const;
     bool is_segregated() const;
 
-    code check(bool transaction_pool = true, bool retarget = true) const;
+    using transaction_basis::accept;
+
     code accept(bool transaction_pool = true) const;
     code accept(chain_state const& state, bool transaction_pool = true) const;
     code connect() const;
     code connect(chain_state const& state) const;
     code connect_input(chain_state const& state, size_t input_index) const;
 
+
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    mutable validation validation;
+    mutable validation validation{};
 
     bool is_standard() const;
 
@@ -430,10 +335,6 @@ protected:
     bool all_inputs_final() const;
 
 private:
-    uint32_t version_{0};
-    uint32_t locktime_{0};
-    input::list inputs_;
-    output::list outputs_;
 
     // TODO(bitprim): (refactor to transaction_result)
     // this 3 variables should be stored in transaction_unconfired database when the store
@@ -461,6 +362,16 @@ private:
     mutable boost::optional<bool> segregated_;
     mutable upgrade_mutex mutex_;
 };
+
+#ifdef BITPRIM_CURRENCY_BCH
+code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
+#else
+code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
+#endif
+
+code verify(transaction const& tx, uint32_t input, uint32_t forks);
+
+
 
 }  // namespace chain
 }  // namespace libbitcoin

@@ -122,8 +122,7 @@ public:
     // Constructors.
     //-----------------------------------------------------------------------------
 
-    transaction_basis();
-
+    transaction_basis() = default;
     transaction_basis(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs);
     transaction_basis(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs);
 
@@ -227,8 +226,11 @@ public:
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool witness = false) const {
         if (wire) {
+
+#ifndef BITPRIM_CURRENCY_BCH
             // Witness handling must be disabled for non-segregated txs.
-            witness &= is_segregated();
+            if (witness) witness = is_segregated();
+#endif
 
             // Wire (satoshi protocol) serialization.
             sink.write_4_bytes_little_endian(version_);
@@ -280,10 +282,10 @@ public:
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
-    hash_digest outputs_hash() const;
-    hash_digest inpoints_hash() const;
-    hash_digest sequences_hash() const;
-    hash_digest hash(bool witness = false) const;
+    // hash_digest outputs_hash() const;
+    // hash_digest inpoints_hash() const;
+    // hash_digest sequences_hash() const;
+    // hash_digest hash(bool witness = false) const;
 
     // Utilities.
     //-------------------------------------------------------------------------
@@ -301,7 +303,7 @@ public:
     point::list missing_previous_outputs() const;
     hash_list missing_previous_transactions() const;
     uint64_t total_input_value() const;
-    uint64_t total_output_value() const;
+    // uint64_t total_output_value() const;
     size_t signature_operations() const;
     size_t signature_operations(bool bip16, bool bip141) const;
     size_t weight() const;
@@ -310,7 +312,7 @@ public:
     bool is_null_non_coinbase() const;
     bool is_oversized_coinbase() const;
     bool is_mature(size_t height) const;
-    bool is_overspent() const;
+    // bool is_overspent() const;
     bool is_internal_double_spend() const;
     bool is_double_spend(bool include_unconfirmed) const;
     bool is_dusty(uint64_t minimum_output_value) const;
@@ -318,14 +320,16 @@ public:
     bool is_final(size_t block_height, uint32_t block_time) const;
     bool is_locked(size_t block_height, uint32_t median_time_past) const;
     bool is_locktime_conflict() const;
-    bool is_segregated() const;
 
-    code check(bool transaction_pool = true, bool retarget = true) const;
+    // bool is_segregated() const;
+
+    code check(uint64_t total_output_value, bool transaction_pool = true, bool retarget = true) const;
     // code accept(bool transaction_pool = true) const;
-    code accept(chain_state const& state, bool transaction_pool = true, bool is_duplicated = false) const;
+    code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
+
     // code connect() const;
-    code connect(chain_state const& state) const;
-    code connect_input(chain_state const& state, size_t input_index) const;
+    // code connect(chain_state const& state) const;
+    // code connect_input(chain_state const& state, size_t input_index) const;
 
     bool is_standard() const;
 
@@ -341,6 +345,39 @@ private:
     input::list inputs_;
     output::list outputs_;
 };
+
+
+hash_digest hash_non_witness(transaction_basis const& tx);
+
+#ifndef BITPRIM_CURRENCY_BCH
+hash_digest hash_witness(transaction_basis const& tx);
+#endif
+
+hash_digest hash(transaction_basis const& tx, bool witness);
+hash_digest outputs_hash(transaction_basis const& tx);
+hash_digest inpoints_hash(transaction_basis const& tx);
+hash_digest sequences_hash(transaction_basis const& tx);
+
+hash_digest to_outputs(transaction_basis const& tx);
+hash_digest to_inpoints(transaction_basis const& tx);
+hash_digest to_sequences(transaction_basis const& tx);
+
+uint64_t total_input_value(transaction_basis const& tx);
+uint64_t total_output_value(transaction_basis const& tx);
+uint64_t fees(transaction_basis const& tx);
+bool is_overspent(transaction_basis const& tx);
+bool is_segregated(transaction_basis const& tx);
+
+
+// #ifdef BITPRIM_CURRENCY_BCH
+// code verify(transaction_basis const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
+// #else
+// code verify(transaction_basis const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
+// #endif
+
+// code verify(transaction_basis const& tx, uint32_t input, uint32_t forks);
+
+
 
 }  // namespace chain
 }  // namespace libbitcoin
