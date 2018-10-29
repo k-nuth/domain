@@ -127,7 +127,10 @@ public:
     // Serialization.
     //-------------------------------------------------------------------------
 
-    // data_chunk to_data(bool witness = false) const;
+    using block_basis::to_data;
+    data_chunk to_data(bool witness = false) const;
+
+
     // void to_data(data_sink& stream, bool witness = false) const;
 
     // template <Writer W>

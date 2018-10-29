@@ -161,7 +161,7 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    size_t serialized_size(bool witness = false) const;
+    // size_t serialized_size(bool witness = false) const;
 
     // deprecated (unsafe)
     chain::header& header();
@@ -179,9 +179,9 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-    static block_basis genesis_mainnet();
-    static block_basis genesis_testnet();
-    static block_basis genesis_regtest();
+    // static block_basis genesis_mainnet();
+    // static block_basis genesis_testnet();
+    // static block_basis genesis_regtest();
     static size_t locator_size(size_t top);
     static indexes locator_heights(size_t top);
 

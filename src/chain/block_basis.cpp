@@ -343,38 +343,38 @@ hash_digest block_basis::hash() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-chain::block_basis block_basis::genesis_mainnet() {
-    data_chunk data;
-    decode_base16(data, encoded_mainnet_genesis_block);
-    auto const genesis = chain::block_basis::factory_from_data(data);
+// chain::block_basis block_basis::genesis_mainnet() {
+//     data_chunk data;
+//     decode_base16(data, encoded_mainnet_genesis_block);
+//     auto const genesis = chain::block_basis::factory_from_data(data);
 
-    BITCOIN_ASSERT(genesis.is_valid());
-    BITCOIN_ASSERT(genesis.transactions().size() == 1);
-    BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-    return genesis;
-}
+//     BITCOIN_ASSERT(genesis.is_valid());
+//     BITCOIN_ASSERT(genesis.transactions().size() == 1);
+//     BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+//     return genesis;
+// }
 
-chain::block_basis block_basis::genesis_testnet() {
-    data_chunk data;
-    decode_base16(data, encoded_testnet_genesis_block);
-    auto const genesis = chain::block_basis::factory_from_data(data);
+// chain::block_basis block_basis::genesis_testnet() {
+//     data_chunk data;
+//     decode_base16(data, encoded_testnet_genesis_block);
+//     auto const genesis = chain::block_basis::factory_from_data(data);
 
-    BITCOIN_ASSERT(genesis.is_valid());
-    BITCOIN_ASSERT(genesis.transactions().size() == 1);
-    BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-    return genesis;
-}
+//     BITCOIN_ASSERT(genesis.is_valid());
+//     BITCOIN_ASSERT(genesis.transactions().size() == 1);
+//     BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+//     return genesis;
+// }
 
-chain::block_basis block_basis::genesis_regtest() {
-    data_chunk data;
-    decode_base16(data, encoded_regtest_genesis_block);
-    auto const genesis = chain::block_basis::factory_from_data(data);
+// chain::block_basis block_basis::genesis_regtest() {
+//     data_chunk data;
+//     decode_base16(data, encoded_regtest_genesis_block);
+//     auto const genesis = chain::block_basis::factory_from_data(data);
 
-    BITCOIN_ASSERT(genesis.is_valid());
-    BITCOIN_ASSERT(genesis.transactions().size() == 1);
-    BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-    return genesis;
-}
+//     BITCOIN_ASSERT(genesis.is_valid());
+//     BITCOIN_ASSERT(genesis.transactions().size() == 1);
+//     BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+//     return genesis;
+// }
 
 // With a 32 bit chain the size of the result should not exceed 43 and with a
 // 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.

@@ -266,16 +266,18 @@ bool block::from_data(std::istream& stream, bool witness) {
 // Serialization.
 //-----------------------------------------------------------------------------
 
-// data_chunk block::to_data(bool witness) const {
-//     data_chunk data;
-//     auto const size = serialized_size(witness_val(witness));
-//     data.reserve(size);
-//     data_sink ostream(data);
-//     to_data(ostream);
-//     ostream.flush();
-//     BITCOIN_ASSERT(data.size() == size);
-//     return data;
-// }
+data_chunk block::to_data(bool witness) const {
+    return block_basis::to_data(serialized_size(witness_val(witness)), witness);
+
+    // data_chunk data;
+    // auto const size = serialized_size(witness_val(witness));
+    // data.reserve(size);
+    // data_sink ostream(data);
+    // to_data(ostream);
+    // ostream.flush();
+    // BITCOIN_ASSERT(data.size() == size);
+    // return data;
+}
 
 // void block::to_data(data_sink& stream, bool witness) const {
 //     ostream_writer sink_w(stream);
@@ -324,7 +326,7 @@ size_t block::serialized_size(bool witness) const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    value = block_basis::serialized_size(witness);
+    value = chain::serialized_size(*this, witness);
 
     if (witness_val(witness)) {
         total_size_ = value;
