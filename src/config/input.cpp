@@ -52,7 +52,7 @@ static bool decode_input(chain::input& input, std::string const& tuple) {
 }
 
 // input is currently a private encoding in bx.
-static std::string encode_input(const chain::input& input) {
+static std::string encode_input(chain::input const& input) {
     std::stringstream result;
     result << point(input.previous_output()) << point::delimeter
            << input.sequence();
@@ -64,16 +64,16 @@ input::input(std::string const& tuple) {
     std::stringstream(tuple) >> *this;
 }
 
-input::input(const chain::input& value)
+input::input(chain::input const& value)
     : value_(value) {}
 
 input::input(input const& x)
     : input(x.value_) {}
 
-input::input(const chain::input_point& value)
+input::input(chain::input_point const& value)
     : value_({value, {}, max_input_sequence}) {}
 
-input::operator const chain::input&() const {
+input::operator chain::input const&() const {
     return value_;
 }
 
