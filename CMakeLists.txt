@@ -358,7 +358,6 @@ set(bitprim_domain_sources_just_libbitcoin
         src/chain/script.cpp
         src/chain/transaction_basis.cpp
         src/chain/transaction.cpp
-        src/chain/witness.cpp
 
         src/machine/interpreter.cpp
         # src/machine/number.cpp
@@ -457,11 +456,12 @@ set(bitprim_domain_sources_just_bitprim
     src/wallet/transaction_functions.cpp
 )
 
-# if (${CURRENCY} STREQUAL "BCH")
-#     set(bitprim_domain_sources_just_bitprim 
-#       ${bitprim_domain_sources_just_bitprim}
-#       src/wallet/cashaddr.cpp)
-# endif()
+if (NOT ${CURRENCY} STREQUAL "BCH")
+    set(bitprim_domain_sources_just_libbitcoin 
+      ${bitprim_domain_sources_just_libbitcoin}
+      src/chain/witness.cpp
+    )
+endif()
 
 if (${CURRENCY} STREQUAL "LTC")
     set(bitprim_domain_sources_just_bitprim 
