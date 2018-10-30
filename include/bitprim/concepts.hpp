@@ -39,8 +39,24 @@ constexpr bool is_reader() {
     return is_reader_helper<R>(0);
 }
 
+template <typename W, bool result = std::is_same<decltype(((W*)nullptr)->write_size_little_endian(0u)), void>::value>  //NOLINT
+constexpr bool is_writer_helper(int /*unused*/) {
+    return result;
+}
+
+template <typename W>
+constexpr bool is_writer_helper(...) {  //NOLINT
+    return false;
+}
+
+template <typename W>
+constexpr bool is_writer() {
+    return is_writer_helper<W>(0);
+}
+
 }  // namespace bitprim
 
 #define BITPRIM_IS_READER(R) typename std::enable_if<bitprim::is_reader<R>(), int>::type = 0
+#define BITPRIM_IS_WRITER(W) typename std::enable_if<bitprim::is_writer<W>(), int>::type = 0
 
 #endif  //BITPRIM_CONCEPTS_HPP_
