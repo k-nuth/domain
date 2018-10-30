@@ -22,22 +22,21 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/chain/point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 
 namespace libbitcoin {
 namespace chain {
 
-class BC_API output_point
-  : public point
-{
+class BC_API output_point : public point {
 public:
-
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
-    struct validation_type
-    {
+    struct validation_type {
         /// An output is spent if a valid transaction has a valid claim on it.
         /// When validating blocks only long chain blocks can have a claim.
         /// When validating memory pool tx another mempool tx can have a claim.
@@ -64,36 +63,42 @@ public:
     //-------------------------------------------------------------------------
 
     output_point();
+    output_point(hash_digest const& hash, uint32_t index);
 
-    output_point(point&& other);
-    output_point(const point& value);
+    output_point(point const& x);
+    output_point& operator=(point const& /*x*/);
 
-    output_point(output_point&& other);
-    output_point(const output_point& other);
-
-    output_point(hash_digest&& hash, uint32_t index);
-    output_point(const hash_digest& hash, uint32_t index);
+    // output_point(output_point const& x) = default;
+    // output_point(output_point&& x) = default;
+    // // This class is move assignable and copy assignable.
+    // output_point& operator=(output_point const&) = default;
+    // output_point& operator=(output_point&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
-    // This class is move assignable and copy assignable.
 
-    output_point& operator=(point&& other);
-    output_point& operator=(const point&);
-    output_point& operator=(output_point&& other);
-    output_point& operator=(const output_point&);
+    friend bool operator==(output_point const& x, point const& y);
+    friend bool operator!=(output_point const& x, point const& y);
 
-    bool operator==(const point& other) const;
-    bool operator!=(const point& other) const;
-    bool operator==(const output_point& other) const;
-    bool operator!=(const output_point& other) const;
+    friend bool operator==(point const& x, output_point const& y);
+    friend bool operator!=(point const& x, output_point const& y);
+
+    friend bool operator==(output_point const& x, output_point const& y);
+    friend bool operator!=(output_point const& x, output_point const& y);
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static output_point factory_from_data(const data_chunk& data, bool wire=true);
-    static output_point factory_from_data(std::istream& stream, bool wire=true);
-    static output_point factory_from_data(reader& source, bool wire=true);
+    static output_point factory_from_data(data_chunk const& data, bool wire = true);
+    static output_point factory_from_data(std::istream& stream, bool wire = true);
+    // static output_point factory_from_data(reader& source, bool wire=true);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static output_point factory_from_data(R& source, bool wire = true) {
+        output_point instance;
+        instance.from_data(source, wire);
+        return instance;
+    }
 
     // Validation.
     //-------------------------------------------------------------------------
@@ -104,12 +109,12 @@ public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_type validation;
 
-protected:
-    // So that input may call reset from its own.
-    friend class input;
+// protected:
+//     // So that input may call reset from its own.
+//     friend class input;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

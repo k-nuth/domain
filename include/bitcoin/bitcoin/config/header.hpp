@@ -21,8 +21,9 @@
 
 #include <iostream>
 #include <string>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/header.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
 namespace config {
@@ -31,38 +32,33 @@ namespace config {
  * Serialization helper to convert between serialized and deserialized satoshi
  * header.
  */
-class BC_API header
-{
+class BC_API header {
 public:
-
-    /**
-     * Default constructor.
-     */
-    header();
+    header() = default;
 
     /**
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    header(const std::string& hexcode);
+    header(std::string const& hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    header(const chain::header& value);
+    header(chain::header const& value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    header(const header& other);
+    header(header const& x);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::header&() const;
+    operator chain::header const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -79,17 +75,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const header& argument);
+                                    header const& argument);
 
 private:
-
     /**
      * The state of this object's header data.
      */
     chain::header value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

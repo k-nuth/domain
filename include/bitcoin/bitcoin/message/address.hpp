@@ -22,61 +22,120 @@
 #include <istream>
 #include <memory>
 #include <string>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/message/network_address.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
 
-class BC_API address
-{
+class BC_API address {
 public:
-    typedef std::shared_ptr<address> ptr;
-    typedef std::shared_ptr<const address> const_ptr;
+    using ptr = std::shared_ptr<address>;
+    using const_ptr = std::shared_ptr<const address>;
 
-    static address factory_from_data(uint32_t version, const data_chunk& data);
+    static address factory_from_data(uint32_t version, data_chunk const& data);
     static address factory_from_data(uint32_t version, std::istream& stream);
-    static address factory_from_data(uint32_t version, reader& source);
 
-    address();
-    address(const network_address::list& addresses);
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static address factory_from_data(uint32_t version, R& source) {
+        address instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static address factory_from_data(uint32_t version, reader& source);
+
+    address() = default;
+    address(network_address::list const& addresses);
     address(network_address::list&& addresses);
-    address(const address& other);
-    address(address&& other);
+
+
+    /// This class is move assignable but not copy assignable.
+    // address(address const& x);
+    // address(address&& x) noexcept;
+    // address& operator=(address&& x) noexcept;
+    // address(address const& x) = default;
+    // address(address&& x) = default;
+    // address& operator=(address&& x) = default;
+    // address& operator=(address const&) = default;
+
+    bool operator==(address const& x) const;
+    bool operator!=(address const& x) const;
+
 
     network_address::list& addresses();
-    const network_address::list& addresses() const;
-    void set_addresses(const network_address::list& value);
+    network_address::list const& addresses() const;
+    void set_addresses(network_address::list const& value);
     void set_addresses(network_address::list&& value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source) {
+        reset();
+
+        auto const count = source.read_size_little_endian();
+
+        // Guard against potential for arbitary memory allocation.
+        if (count > max_address) {
+            source.invalidate();
+        } else {
+            addresses_.resize(count);
+        }
+
+        for (auto& address : addresses_) {
+            if ( ! address.from_data(version, source, true)) {
+                break;
+            }
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
+
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const {
+        sink.write_variable_little_endian(addresses_.size());
+
+        for (auto const& net_address : addresses_) {
+            net_address.to_data(version, sink, true);
+}
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
+
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    /// This class is move assignable but not copy assignable.
-    address& operator=(address&& other);
-    void operator=(const address&) = delete;
 
-    bool operator==(const address& other) const;
-    bool operator!=(const address& other) const;
-
-    static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static std::string const command;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
 private:
     network_address::list addresses_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
@@ -33,8 +34,7 @@ namespace libbitcoin {
 namespace wallet {
 
 /// A class for working with stealth payment addresses.
-class BC_API stealth_address
-{
+class BC_API stealth_address {
 public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
     static const uint8_t mainnet_p2kh;
@@ -50,68 +50,65 @@ public:
 
     /// Constructors.
     stealth_address();
-    stealth_address(const data_chunk& decoded);
-    stealth_address(const std::string& encoded);
-    stealth_address(const stealth_address& other);
-    stealth_address(const binary& filter, const ec_compressed& scan_key,
-        const point_list& spend_keys, uint8_t signatures=0,
-        uint8_t version=mainnet_p2kh);
+    stealth_address(data_chunk const& decoded);
+    stealth_address(std::string const& encoded);
+    stealth_address(binary const& filter, ec_compressed const& scan_key, point_list const& spend_keys, uint8_t signatures = 0, uint8_t version = mainnet_p2kh);
+
+    stealth_address(stealth_address const& x) = default;
+    stealth_address& operator=(stealth_address const& x) = default;
 
     /// Operators.
-    bool operator<(const stealth_address& other) const;
-    bool operator==(const stealth_address& other) const;
-    bool operator!=(const stealth_address& other) const;
-    stealth_address& operator=(const stealth_address& other);
+    bool operator==(stealth_address const& x) const;
+    bool operator!=(stealth_address const& x) const;
+    bool operator<(stealth_address const& x) const;
     friend std::istream& operator>>(std::istream& in, stealth_address& to);
-    friend std::ostream& operator<<(std::ostream& out,
-        const stealth_address& of);
+    friend std::ostream& operator<<(std::ostream& out, stealth_address const& of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const data_chunk() const;
+    operator data_chunk const() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
     uint8_t version() const;
-    const ec_compressed& scan_key() const;
-    const point_list& spend_keys() const;
+    ec_compressed const& scan_key() const;
+    point_list const& spend_keys() const;
     uint8_t signatures() const;
-    const binary& filter() const;
+    binary const& filter() const;
 
     /// Methods.
     data_chunk to_chunk() const;
 
 private:
     /// Factories.
-    static stealth_address from_string(const std::string& encoded);
-    static stealth_address from_stealth(const data_chunk& decoded);
-    static stealth_address from_stealth(const binary& filter,
-        const ec_compressed& scan_key, const point_list& spend_keys,
-        uint8_t signatures, uint8_t version);
+    static stealth_address from_string(std::string const& encoded);
+    static stealth_address from_stealth(data_chunk const& decoded);
+    static stealth_address from_stealth(binary const& filter,
+                                        ec_compressed const& scan_key,
+                                        point_list const& spend_keys,
+                                        uint8_t signatures,
+                                        uint8_t version);
 
     /// Parameter order is used to change the constructor signature.
-    stealth_address(uint8_t version, const binary& filter,
-        const ec_compressed& scan_key, const point_list& spend_keys,
-        uint8_t signatures);
+    stealth_address(uint8_t version, binary const& filter, ec_compressed const& scan_key, point_list const& spend_keys, uint8_t signatures);
 
     /// Helpers.
     bool reuse_key() const;
     uint8_t options() const;
 
-
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
-    uint8_t version_;
+    bool valid_{false};
+    uint8_t version_{0};
     ec_compressed scan_key_;
     point_list spend_keys_;
-    uint8_t signatures_;
+    uint8_t signatures_{0};
     binary filter_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

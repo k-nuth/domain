@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
@@ -32,32 +33,27 @@ namespace config {
 /**
  * Serialization helper to convert between base16/raw script and script_type.
  */
-class BC_API script
-{
+class BC_API script {
 public:
-
-    /**
-     * Default constructor.
-     */
-    script();
+    script() = default;
 
     /**
      * Initialization constructor.
      * @param[in]  mnemonic  The value to initialize with.
      */
-    script(const std::string& mnemonic);
+    script(std::string const& mnemonic);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    script(const chain::script& value);
+    script(chain::script const& value);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    script(const data_chunk& value);
+    script(data_chunk const& value);
 
     /**
      * Initialization constructor.
@@ -69,7 +65,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    script(const script& other);
+    script(script const& x);
 
     /**
      * Serialize the script to bytes according to the wire protocol.
@@ -81,13 +77,13 @@ public:
      * Return a pretty-printed copy of the script.
      * @return  A mnemonic-printed copy of the internal script.
      */
-    const std::string to_string() const;
+    std::string const to_string() const;
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::script&() const;
+    operator chain::script const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -96,7 +92,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        script& argument);
+                                    script& argument);
 
     /**
      * Overload stream out.
@@ -105,17 +101,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const script& argument);
+                                    script const& argument);
 
 private:
-
     /**
      * The state of this object.
      */
     chain::script value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

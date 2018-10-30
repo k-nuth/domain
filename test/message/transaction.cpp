@@ -16,22 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 using namespace bc::message;
 
 BOOST_AUTO_TEST_SUITE(message_transaction_tests)
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_1__always__initialized_invalid)
-{
+BOOST_AUTO_TEST_CASE(transaction__constructor_1__always__initialized_invalid) {
     transaction instance;
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_2__always__equals_transaction)
-{
+BOOST_AUTO_TEST_CASE(transaction__constructor_2__always__equals_transaction) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -49,8 +47,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_2__always__equals_transaction)
     BOOST_REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_3__always__equals_param)
-{
+BOOST_AUTO_TEST_CASE(transaction__constructor_3__always__equals_param) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -72,8 +69,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_3__always__equals_param)
     BOOST_REQUIRE(beta == alpha);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_4__always__equals_equivalent_tx)
-{
+BOOST_AUTO_TEST_CASE(transaction__constructor_4__always__equals_equivalent_tx) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -86,15 +82,14 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_4__always__equals_equivalent_tx)
 
     chain::transaction tx;
     BOOST_REQUIRE(tx.from_data(raw_tx));
-    const auto inputs = tx.inputs();
-    const auto outputs = tx.outputs();
+    auto const inputs = tx.inputs();
+    auto const outputs = tx.outputs();
     transaction instance(tx.version(), tx.locktime(), inputs, outputs);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_5__always__equals_equivalent_tx)
-{
+BOOST_AUTO_TEST_CASE(transaction__constructor_5__always__equals_equivalent_tx) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -112,8 +107,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_5__always__equals_equivalent_tx)
     BOOST_REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_6__always__equals_equivalent_tx)
-{
+BOOST_AUTO_TEST_CASE(transaction__constructor_6__always__equals_equivalent_tx) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -134,9 +128,8 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_6__always__equals_equivalent_tx)
     BOOST_REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_7__always__equals_equivalent_tx)
-{
-    transaction instance(15u, 1234u, chain::input::list{ {}, {} }, chain::output::list{ {}, {}, {} });
+BOOST_AUTO_TEST_CASE(transaction__constructor_7__always__equals_equivalent_tx) {
+    transaction instance(15u, 1234u, chain::input::list{{}, {}}, chain::output::list{{}, {}, {}});
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(instance.version() == 15u);
     BOOST_REQUIRE(instance.locktime() == 1234u);
@@ -144,16 +137,14 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_7__always__equals_equivalent_tx)
     BOOST_REQUIRE(instance.outputs().size() == 3);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_data__failure)
-{
+BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_data__failure) {
     data_chunk data(2);
     transaction instance;
     BOOST_REQUIRE_EQUAL(false, instance.from_data(version::level::minimum, data));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__valid_junk__success)
-{
+BOOST_AUTO_TEST_CASE(transaction__from_data__valid_junk__success) {
     auto junk = base16_literal(
         "000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0"
         "000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0");
@@ -166,8 +157,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__valid_junk__success)
     BOOST_REQUIRE(tx.from_data(version::level::minimum, stream));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__success)
-{
+BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__success) {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -181,7 +171,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__succes
         "00"));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
 
-    const auto tx = transaction::factory_from_data(version::level::minimum, raw_tx);
+    auto const tx = transaction::factory_from_data(version::level::minimum, raw_tx);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
@@ -192,8 +182,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__succes
     BOOST_REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_2_valid_data__success)
-{
+BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_2_valid_data__success) {
     hash_digest tx_hash = hash_literal(
         "8a6d9302fbe24f0ec756a94ecfc837eaffe16c43d1e68c62dfe980d99eea556f");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -216,7 +205,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_2_valid_data__succes
         "e61e66fe5d88ac00000000"));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
 
-    const auto tx = transaction::factory_from_data(version::level::minimum, raw_tx);
+    auto const tx = transaction::factory_from_data(version::level::minimum, raw_tx);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
@@ -226,8 +215,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_2_valid_data__succes
     BOOST_REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_1_valid_data__success)
-{
+BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_1_valid_data__success) {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -242,7 +230,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_1_valid_data__succes
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
 
     data_source stream(raw_tx);
-    const auto tx = transaction::factory_from_data(version::level::minimum, stream);
+    auto const tx = transaction::factory_from_data(version::level::minimum, stream);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
@@ -256,8 +244,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_1_valid_data__succes
     BOOST_REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_2_valid_data__success)
-{
+BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_2_valid_data__success) {
     hash_digest tx_hash = hash_literal(
         "8a6d9302fbe24f0ec756a94ecfc837eaffe16c43d1e68c62dfe980d99eea556f");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -281,7 +268,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_2_valid_data__succes
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
 
     data_source stream(raw_tx);
-    const auto tx = transaction::factory_from_data(version::level::minimum, stream);
+    auto const tx = transaction::factory_from_data(version::level::minimum, stream);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
@@ -294,8 +281,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_2_valid_data__succes
     BOOST_REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_1_valid_data__success)
-{
+BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_1_valid_data__success) {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -311,7 +297,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_1_valid_data__succes
 
     data_source stream(raw_tx);
     istream_reader source(stream);
-    const auto tx = transaction::factory_from_data(version::level::minimum, source);
+    auto const tx = transaction::factory_from_data(version::level::minimum, source);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
@@ -326,8 +312,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_1_valid_data__succes
     BOOST_REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_2_valid_data__success)
-{
+BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_2_valid_data__success) {
     hash_digest tx_hash = hash_literal(
         "8a6d9302fbe24f0ec756a94ecfc837eaffe16c43d1e68c62dfe980d99eea556f");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -352,7 +337,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_2_valid_data__succes
 
     data_source stream(raw_tx);
     istream_reader source(stream);
-    const auto tx = transaction::factory_from_data(version::level::minimum, source);
+    auto const tx = transaction::factory_from_data(version::level::minimum, source);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
@@ -366,8 +351,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_2_valid_data__succes
     BOOST_REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equivalent)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equivalent) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -394,8 +378,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equi
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equivalent)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equivalent) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -422,8 +405,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equi
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__duplicates__returns_true)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__duplicates__returns_true) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -450,8 +432,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__duplicates__returns
     BOOST_REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__differs__returns_false)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__differs__returns_false) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -477,8 +458,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__differs__returns_fa
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__duplicates__returns_false)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__duplicates__returns_false) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -505,8 +485,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__duplicates__ret
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__differs__returns_true)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__differs__returns_true) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -532,8 +511,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__differs__return
     BOOST_REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__duplicates__returns_true)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__duplicates__returns_true) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -560,8 +538,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__duplicates__returns
     BOOST_REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__differs__returns_false)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__differs__returns_false) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -587,8 +564,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__differs__returns_fa
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__duplicates__returns_false)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__duplicates__returns_false) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -615,8 +591,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__duplicates__ret
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__differs__returns_true)
-{
+BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__differs__returns_true) {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"

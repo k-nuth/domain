@@ -22,45 +22,66 @@
 #include <istream>
 #include <memory>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
+
 namespace libbitcoin {
 namespace message {
 
-class BC_API get_address
-{
+class BC_API get_address {
 public:
-    typedef std::shared_ptr<get_address> ptr;
-    typedef std::shared_ptr<const get_address> const_ptr;
+    using ptr = std::shared_ptr<get_address>;
+    using const_ptr = std::shared_ptr<const get_address>;
 
-    static get_address factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static get_address factory_from_data(uint32_t version,
-        std::istream& stream);
-    static get_address factory_from_data(uint32_t version, reader& source);
+    static get_address factory_from_data(uint32_t version, data_chunk const& data);
+    static get_address factory_from_data(uint32_t version, std::istream& stream);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static get_address factory_from_data(uint32_t version, R& source) {
+        get_address instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
     static size_t satoshi_fixed_size(uint32_t version);
 
-    get_address();
+    get_address() = default;
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t  /*version*/, R& source) {
+        reset();
+        return source;
+    }
+
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+
+    template <Writer W>
+    void to_data(uint32_t  /*version*/, W&  /*sink*/) const {
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static std::string const command;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

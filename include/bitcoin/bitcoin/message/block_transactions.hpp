@@ -20,73 +20,129 @@
 #define LIBBITCOIN_MESSAGE_BLOCK_TRANSACTIONS_HPP
 
 #include <istream>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/transaction.hpp>
+#include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
+
 namespace libbitcoin {
 namespace message {
 
-class BC_API block_transactions
-{
+class BC_API block_transactions {
 public:
-    typedef std::shared_ptr<block_transactions> ptr;
-    typedef std::shared_ptr<const block_transactions> const_ptr;
+    using ptr = std::shared_ptr<block_transactions>;
+    using const_ptr = std::shared_ptr<const block_transactions>;
 
-    static block_transactions factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static block_transactions factory_from_data(uint32_t version,
-        std::istream& stream);
-    static block_transactions factory_from_data(uint32_t version,
-        reader& source);
+    static block_transactions factory_from_data(uint32_t version, data_chunk const& data);
+    static block_transactions factory_from_data(uint32_t version, std::istream& stream);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static block_transactions factory_from_data(uint32_t version, R& source) {
+        block_transactions instance;
+        instance.from_data(version, source);
+        return instance;
+    }
 
     block_transactions();
-    block_transactions(const hash_digest& block_hash,
-        const chain::transaction::list& transactions);
-    block_transactions(hash_digest&& block_hash,
-        chain::transaction::list&& transactions);
-    block_transactions(const block_transactions& other);
-    block_transactions(block_transactions&& other);
+    block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
+    block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions);
+
+    // block_transactions(block_transactions const& x) = default;
+    // block_transactions(block_transactions&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // block_transactions& operator=(block_transactions&& x) = default;
+    // block_transactions& operator=(block_transactions const&) = default;
+
+    bool operator==(block_transactions const& x) const;
+    bool operator!=(block_transactions const& x) const;
+
 
     hash_digest& block_hash();
-    const hash_digest& block_hash() const;
-    void set_block_hash(const hash_digest& value);
-    void set_block_hash(hash_digest&& value);
+    hash_digest const& block_hash() const;
+    void set_block_hash(hash_digest const& value);
 
     chain::transaction::list& transactions();
-    const chain::transaction::list& transactions() const;
-    void set_transactions(const chain::transaction::list& other);
-    void set_transactions(chain::transaction::list&& other);
+    chain::transaction::list const& transactions() const;
+    void set_transactions(chain::transaction::list const& x);
+    void set_transactions(chain::transaction::list&& x);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source) {
+        //std::cout << "bool block_transactions::from_data(uint32_t version, R& source) \n";
+        reset();
+
+        block_hash_ = source.read_hash();
+        auto const count = source.read_size_little_endian();
+
+        // Guard against potential for arbitary memory allocation.
+        if (count > get_max_block_size()) {
+            source.invalidate();
+        } else {
+            transactions_.resize(count);
+        }
+
+        // Order is required.
+        for (auto& tx : transactions_) {
+            if ( ! tx.from_data(source, true, witness_default())) {
+                break;
+            }
+        }
+
+        if (version < block_transactions::version_minimum) {
+            source.invalidate();
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+
+    template <Writer W>
+    void to_data(uint32_t  /*version*/, W& sink) const {
+        sink.write_hash(block_hash_);
+        sink.write_variable_little_endian(transactions_.size());
+
+        for (auto const& element : transactions_) {
+            element.to_data(sink, /*wire*/ true, witness_default()
+#ifdef BITPRIM_CACHED_RPC_DATA
+                            , /*unconfirmed*/ false
+#endif
+                            );
+        }
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    block_transactions& operator=(block_transactions&& other);
-    void operator=(const block_transactions&) = delete;
-
-    bool operator==(const block_transactions& other) const;
-    bool operator!=(const block_transactions& other) const;
-
-    static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static std::string const command;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
 private:
     hash_digest block_hash_;
     chain::transaction::list transactions_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

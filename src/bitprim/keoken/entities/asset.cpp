@@ -27,16 +27,11 @@ namespace entities {
 // using namespace bc;
 using bc::wallet::payment_address;
 
-
 // Constructors.
 //-----------------------------------------------------------------------------
 
-asset::asset(asset_id_t id, std::string name, amount_t amount, bc::wallet::payment_address owner) 
-    : id_(id)
-    , name_(std::move(name))
-    , amount_(amount)
-    , owner_(std::move(owner))
-{}
+asset::asset(asset_id_t id, std::string name, amount_t amount, bc::wallet::payment_address owner)
+    : id_(id), name_(std::move(name)), amount_(amount), owner_(std::move(owner)) {}
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -50,7 +45,6 @@ bool operator==(asset const& a, asset const& b) {
 bool operator!=(asset const& a, asset const& b) {
     return !(a == b);
 }
-
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
@@ -87,7 +81,6 @@ payment_address const& asset::owner() const {
 //     owner_ = std::move(x);
 // }
 
-
-} // namespace entities
-} // namespace keoken
-} // namespace bitprim
+}  // namespace entities
+}  // namespace keoken
+}  // namespace bitprim

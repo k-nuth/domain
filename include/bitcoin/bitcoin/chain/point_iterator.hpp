@@ -22,6 +22,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iterator>
+
 #include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
@@ -30,23 +31,25 @@ namespace chain {
 class point;
 
 /// A point iterator for store serialization (does not support wire).
-class BC_API point_iterator
-{
+class BC_API point_iterator {
 public:
-    typedef uint8_t pointer;
-    typedef uint8_t reference;
-    typedef uint8_t value_type;
-    typedef ptrdiff_t difference_type;
-    typedef std::bidirectional_iterator_tag iterator_category;
+    using pointer = uint8_t;
+    using reference = uint8_t;
+    using value_type = uint8_t;
+    using difference_type = ptrdiff_t;
+    using iterator_category = std::bidirectional_iterator_tag;
 
-    typedef point_iterator iterator;
-    typedef point_iterator const_iterator;
+    using iterator = point_iterator;
+    using const_iterator = point_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
-    point_iterator(const point_iterator& other);
-    point_iterator(const point& value, unsigned index=0);
+    point_iterator(point const& value, unsigned index = 0);
+
+    // point_iterator(point_iterator const& x) = default;
+    // /// The iterator may only be assigned to another of the same point.
+    // point_iterator& operator=(point_iterator const& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
@@ -58,13 +61,11 @@ public:
     point_iterator operator++(int);
     point_iterator& operator--();
     point_iterator operator--(int);
-    point_iterator operator+(const int value) const;
-    point_iterator operator-(const int value) const;
-    bool operator==(const point_iterator& other) const;
-    bool operator!=(const point_iterator& other) const;
+    point_iterator operator+(int value) const;
+    point_iterator operator-(int value) const;
+    bool operator==(point_iterator const& x) const;
+    bool operator!=(point_iterator const& x) const;
 
-    /// The iterator may only be assigned to another of the same point.
-    point_iterator& operator=(const point_iterator& other);
 
 protected:
     void increment();
@@ -75,11 +76,11 @@ protected:
 private:
     uint8_t current() const;
 
-    const point& point_;
+    point const* point_;
     unsigned current_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

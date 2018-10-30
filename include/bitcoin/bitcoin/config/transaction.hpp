@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -31,32 +32,27 @@ namespace config {
  * Serialization helper to convert between serialized and deserialized satoshi
  * transaction.
  */
-class BC_API transaction
-{
+class BC_API transaction {
 public:
-
-    /**
-     * Default constructor.
-     */
-    transaction();
+    transaction() = default;
 
     /**
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    transaction(const std::string& hexcode);
+    transaction(std::string const& hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    transaction(const chain::transaction& value);
+    transaction(chain::transaction const& value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    transaction(const transaction& other);
+    transaction(transaction const& x);
 
     /**
      * Return a reference to the data member.
@@ -68,7 +64,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::transaction&() const;
+    operator chain::transaction const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -77,7 +73,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        transaction& argument);
+                                    transaction& argument);
 
     /**
      * Overload stream out.
@@ -86,17 +82,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const transaction& argument);
+                                    transaction const& argument);
 
 private:
-
     /**
      * The state of this object's transaction data.
      */
     chain::transaction value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

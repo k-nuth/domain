@@ -21,6 +21,7 @@
 
 #include <cstdint>
 #include <vector>
+
 #include <bitcoin/bitcoin/chain/point.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -28,32 +29,31 @@ namespace libbitcoin {
 namespace chain {
 
 /// A valued point, does not implement specialized serialization methods.
-class BC_API point_value
-  : public point
-{
+class BC_API point_value : public point {
 public:
-    typedef std::vector<point_value> list;
+    using list = std::vector<point_value>;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
-    point_value();
-    point_value(point_value&& other);
-    point_value(const point_value& other);
-    point_value(point&& instance, uint64_t value);
-    point_value(const point& instance, uint64_t value);
+    point_value() = default;
+    point_value(point const& p, uint64_t value);
+
+    // point_value(point_value const& x) = default;
+    // point_value& operator=(point_value const& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    /// This class is move assignable and copy assignable.
-    point_value& operator=(point_value other);
+    friend
+    bool operator==(point_value const& x, point_value const& y);
 
-    bool operator==(const point_value& other) const;
-    bool operator!=(const point_value& other) const;
+    friend
+    bool operator!=(point_value const& x, point_value const& y);
 
     // Swap implementation required to properly handle base class.
-    friend void swap(point_value& left, point_value& right);
+    friend 
+    void swap(point_value& x, point_value& y);
 
     // Properties (accessors).
     //-------------------------------------------------------------------------
@@ -62,10 +62,10 @@ public:
     void set_value(uint64_t value);
 
 private:
-    uint64_t value_;
+    uint64_t value_{0};
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

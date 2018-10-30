@@ -23,34 +23,37 @@
 #include <iostream>
 #include <map>
 #include <string>
+
 #include <boost/optional.hpp>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_address.hpp>
-#include <bitcoin/bitcoin/wallet/uri_reader.hpp>
+// #include <bitcoin/bitcoin/wallet/uri_reader.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
 /// A bitcoin URI corresponding to BIP 21 and BIP 72.
 /// The object is not constant, setters can change state after construction.
-class BC_API bitcoin_uri
-  : public uri_reader
-{
+// class BC_API bitcoin_uri : public uri_reader {
+class BC_API bitcoin_uri {
 public:
     /// Constructors.
-    bitcoin_uri();
-    bitcoin_uri(const bitcoin_uri& other);
-    bitcoin_uri(const std::string& uri, bool strict=true);
+    bitcoin_uri() = default;
+    bitcoin_uri(std::string const& uri, bool strict = true);
+
+    bitcoin_uri(bitcoin_uri const& x) = default;
+    bitcoin_uri& operator=(bitcoin_uri const& x) = default;
 
     /// Operators.
-    bool operator<(const bitcoin_uri& other) const;
-    bool operator==(const bitcoin_uri& other) const;
-    bool operator!=(const bitcoin_uri& other) const;
-    bitcoin_uri& operator=(const bitcoin_uri& other);
+    bool operator==(bitcoin_uri const& x) const;
+    bool operator!=(bitcoin_uri const& x) const;
+
+    bool operator<(bitcoin_uri const& x) const;
+
     friend std::istream& operator>>(std::istream& in, bitcoin_uri& to);
-    friend std::ostream& operator<<(std::ostream& out,
-        const bitcoin_uri& from);
+    friend std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from);
 
     /// Test whether the URI has been initialized.
     operator const bool() const;
@@ -66,38 +69,37 @@ public:
     std::string address() const;
     payment_address payment() const;
     stealth_address stealth() const;
-    std::string parameter(const std::string& key) const;
+    std::string parameter(std::string const& key) const;
 
     /// Property setters.
     void set_amount(uint64_t satoshis);
-    void set_label(const std::string& label);
-    void set_message(const std::string& message);
-    void set_r(const std::string& r);
-    bool set_address(const std::string& address);
-    void set_address(const payment_address& payment);
-    void set_address(const stealth_address& stealth);
+    void set_label(std::string const& label);
+    void set_message(std::string const& message);
+    void set_r(std::string const& r);
+    bool set_address(std::string const& address);
+    void set_address(payment_address const& payment);
+    void set_address(stealth_address const& stealth);
 
     /// uri_reader implementation.
     void set_strict(bool strict);
-    bool set_scheme(const std::string& scheme);
-    bool set_authority(const std::string& authority);
-    bool set_path(const std::string& path);
-    bool set_fragment(const std::string& fragment);
-    bool set_parameter(const std::string& key, const std::string& value);
+    bool set_scheme(std::string const& scheme);
+    bool set_authority(std::string const& authority);
+    bool set_path(std::string const& path);
+    bool set_fragment(std::string const& fragment);
+    bool set_parameter(std::string const& key, std::string const& value);
 
 private:
     /// Private helpers.
-    bool set_amount(const std::string& satoshis);
+    bool set_amount(std::string const& satoshis);
 
     /// Member state.
-    bool strict_;
+    bool strict_{true};
     std::string scheme_;
     std::string address_;
     std::map<std::string, std::string> query_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif
-

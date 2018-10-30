@@ -16,23 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 using namespace bc::message;
 
-bool equal(const address& left, const address& right)
-{
-    const auto left_addresses = left.addresses();
-    const auto right_addresses = right.addresses();
+bool equal(address const& x, address const& y) {
+    auto const left_addresses = x.addresses();
+    auto const right_addresses = y.addresses();
 
     bool same = (left_addresses.size() == right_addresses.size());
 
-    for (size_t i = 0; (i < left_addresses.size()) && same; i++)
-    {
-        same = (left_addresses[i] == right_addresses[i])
-            && (left_addresses[i].timestamp() == right_addresses[i].timestamp());
+    for (size_t i = 0; (i < left_addresses.size()) && same; i++) {
+        same = (left_addresses[i] == right_addresses[i]) && (left_addresses[i].timestamp() == right_addresses[i].timestamp());
     }
 
     return same;
@@ -40,16 +37,13 @@ bool equal(const address& left, const address& right)
 
 BOOST_AUTO_TEST_SUITE(address_tests)
 
-BOOST_AUTO_TEST_CASE(address__constructor_1__always__invalid)
-{
+BOOST_AUTO_TEST_CASE(address__constructor_1__always__invalid) {
     address instance;
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params)
-{
-    const network_address::list addresses
-    {
+BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -64,8 +58,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params)
             265453u,
             2115325u,
             base16_literal("19573257168426842319857321595126"),
-            159u)
-    };
+            159u)};
 
     address instance(addresses);
 
@@ -73,10 +66,8 @@ BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params)
     BOOST_REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params)
-{
-    const network_address::list addresses
-    {
+BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -91,8 +82,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params)
             265453u,
             2115325u,
             base16_literal("19573257168426842319857321595126"),
-            159u)
-    };
+            159u)};
 
     auto dup_addresses = addresses;
 
@@ -102,10 +92,8 @@ BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params)
     BOOST_REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params)
-{
-    const network_address::list addresses
-    {
+BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -120,8 +108,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params)
             265453u,
             2115325u,
             base16_literal("19573257168426842319857321595126"),
-            159u)
-    };
+            159u)};
 
     address value(addresses);
     address instance(value);
@@ -131,10 +118,8 @@ BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params)
     BOOST_REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params)
-{
-    const network_address::list addresses
-    {
+BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params) {
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -149,8 +134,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params)
             265453u,
             2115325u,
             base16_literal("19573257168426842319857321595126"),
-            159u)
-    };
+            159u)};
 
     address value(addresses);
     address instance(std::move(value));
@@ -159,87 +143,69 @@ BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params)
     BOOST_REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__from_data__insufficient_bytes__failure)
-{
-    const data_chunk raw{ 0xab };
+BOOST_AUTO_TEST_CASE(address__from_data__insufficient_bytes__failure) {
+    data_chunk const raw{0xab};
     address instance;
 
     BOOST_REQUIRE(!instance.from_data(version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success) {
     const address expected(
-    {
-        {
-            734678u,
-            5357534u,
-            base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
-            123u
-        }
-    });
+        {{734678u,
+          5357534u,
+          base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
+          123u}});
 
-    const auto data = expected.to_data(version::level::minimum);
-    const auto result = address::factory_from_data(version::level::minimum, data);
+    auto const data = expected.to_data(version::level::minimum);
+    auto const result = address::factory_from_data(version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
-    const auto serialized_size = result.serialized_size(version::level::minimum);
+    auto const serialized_size = result.serialized_size(version::level::minimum);
     BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
     const address expected(
-    {
-        {
-            734678u,
-            5357534u,
-            base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
-            123u
-        }
-    });
+        {{734678u,
+          5357534u,
+          base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
+          123u}});
 
-    const auto data = expected.to_data(version::level::minimum);
+    auto const data = expected.to_data(version::level::minimum);
     data_source istream(data);
-    const auto result = address::factory_from_data(version::level::minimum, istream);
+    auto const result = address::factory_from_data(version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
-    const auto serialized_size = result.serialized_size(version::level::minimum);
+    auto const serialized_size = result.serialized_size(version::level::minimum);
     BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success)
-{
+BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
     const address expected(
-    {
-        {
-            734678u,
-            5357534u,
-            base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
-            123u
-        }
-    });
+        {{734678u,
+          5357534u,
+          base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
+          123u}});
 
-    const data_chunk data = expected.to_data(version::level::minimum);
+    data_chunk const data = expected.to_data(version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = address::factory_from_data(version::level::minimum, source);
+    auto const result = address::factory_from_data(version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
-    const auto serialized_size = result.serialized_size(version::level::minimum);
+    auto const serialized_size = result.serialized_size(version::level::minimum);
     BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success)
-{
-    const network_address::list value
-    {
+BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
+    network_address::list const value{
         network_address(
             734678u,
             5357534u,
@@ -254,8 +220,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success)
             265453u,
             2115325u,
             base16_literal("19573257168426842319857321595126"),
-            159u)
-    };
+            159u)};
 
     address instance;
     BOOST_REQUIRE(instance.addresses() != value);
@@ -263,10 +228,8 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success)
     BOOST_REQUIRE(value == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success)
-{
-    const network_address::list value
-    {
+BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
+    network_address::list const value{
         network_address(
             734678u,
             5357534u,
@@ -281,8 +244,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success)
             265453u,
             2115325u,
             base16_literal("19573257168426842319857321595126"),
-            159u)
-    };
+            159u)};
 
     auto dup_value = value;
     address instance;
@@ -291,10 +253,8 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success)
     BOOST_REQUIRE(value == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent)
-{
-    const network_address::list addresses
-    {
+BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent) {
+    network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -309,8 +269,7 @@ BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent
             265453u,
             2115325u,
             base16_literal("19573257168426842319857321595126"),
-            159u)
-    };
+            159u)};
 
     address value(addresses);
 
@@ -324,101 +283,89 @@ BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent
     BOOST_REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__duplicates__returns_true)
-{
+BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__duplicates__returns_true) {
     const address expected(
-    {
-        network_address(
-            734678u,
-            5357534u,
-            base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
-            123u),
-        network_address(
-            34654u,
-            47653u,
-            base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
-            222u),
-        network_address(
-            265453u,
-            2115325u,
-            base16_literal("19573257168426842319857321595126"),
-            159u)
-    });
+        {network_address(
+             734678u,
+             5357534u,
+             base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
+             123u),
+         network_address(
+             34654u,
+             47653u,
+             base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+             222u),
+         network_address(
+             265453u,
+             2115325u,
+             base16_literal("19573257168426842319857321595126"),
+             159u)});
 
     address instance(expected);
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__differs__returns_false)
-{
+BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__differs__returns_false) {
     const address expected(
-    {
-        network_address(
-            734678u,
-            5357534u,
-            base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
-            123u),
-        network_address(
-            34654u,
-            47653u,
-            base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
-            222u),
-        network_address(
-            265453u,
-            2115325u,
-            base16_literal("19573257168426842319857321595126"),
-            159u)
-    });
+        {network_address(
+             734678u,
+             5357534u,
+             base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
+             123u),
+         network_address(
+             34654u,
+             47653u,
+             base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+             222u),
+         network_address(
+             265453u,
+             2115325u,
+             base16_literal("19573257168426842319857321595126"),
+             159u)});
 
     address instance;
     BOOST_REQUIRE_EQUAL(false, instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_false)
-{
+BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_false) {
     const address expected(
-    {
-        network_address(
-            734678u,
-            5357534u,
-            base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
-            123u),
-        network_address(
-            34654u,
-            47653u,
-            base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
-            222u),
-        network_address(
-            265453u,
-            2115325u,
-            base16_literal("19573257168426842319857321595126"),
-            159u)
-    });
+        {network_address(
+             734678u,
+             5357534u,
+             base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
+             123u),
+         network_address(
+             34654u,
+             47653u,
+             base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+             222u),
+         network_address(
+             265453u,
+             2115325u,
+             base16_literal("19573257168426842319857321595126"),
+             159u)});
 
     address instance(expected);
     BOOST_REQUIRE_EQUAL(false, instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__differs__returns_true)
-{
+BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__differs__returns_true) {
     const address expected(
-    {
-        network_address(
-            734678u,
-            5357534u,
-            base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
-            123u),
-        network_address(
-            34654u,
-            47653u,
-            base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
-            222u),
-        network_address(
-            265453u,
-            2115325u,
-            base16_literal("19573257168426842319857321595126"),
-            159u)
-    });
+        {network_address(
+             734678u,
+             5357534u,
+             base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
+             123u),
+         network_address(
+             34654u,
+             47653u,
+             base16_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+             222u),
+         network_address(
+             265453u,
+             2115325u,
+             base16_literal("19573257168426842319857321595126"),
+             159u)});
 
     address instance;
     BOOST_REQUIRE(instance != expected);

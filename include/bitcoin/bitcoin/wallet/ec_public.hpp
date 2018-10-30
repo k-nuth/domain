@@ -22,9 +22,10 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
@@ -35,8 +36,7 @@ class payment_address;
 
 /// Use to pass an ec point as either ec_compressed or ec_uncompressed.
 /// ec_public doesn't carry a version for address creation or base58 encoding.
-class BC_API ec_public
-{
+class BC_API ec_public {
 public:
     static const uint8_t compressed_even;
     static const uint8_t compressed_odd;
@@ -45,30 +45,32 @@ public:
 
     /// Constructors.
     ec_public();
-    ec_public(const ec_public& other);
-    ec_public(const ec_private& secret);
-    ec_public(const data_chunk& decoded);
-    ec_public(const std::string& base16);
-    ec_public(const ec_compressed& point, bool compress=true);
-    ec_public(const ec_uncompressed& point, bool compress=false);
+    ec_public(ec_public const& x);
+    ec_public(ec_private const& secret);
+    ec_public(data_chunk const& decoded);
+    ec_public(std::string const& base16);
+    ec_public(ec_compressed const& point, bool compress = true);
+    ec_public(ec_uncompressed const& point, bool compress = false);
+
+    ec_public& operator=(ec_public const& x) = default;
 
     /// Operators.
-    bool operator<(const ec_public& other) const;
-    bool operator==(const ec_public& other) const;
-    bool operator!=(const ec_public& other) const;
-    ec_public& operator=(const ec_public& other);
+    bool operator==(ec_public const& x) const;
+    bool operator!=(ec_public const& x) const;
+    bool operator<(ec_public const& x) const;
+
     friend std::istream& operator>>(std::istream& in, ec_public& to);
-    friend std::ostream& operator<<(std::ostream& out, const ec_public& of);
+    friend std::ostream& operator<<(std::ostream& out, ec_public const& of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const ec_compressed&() const;
+    operator ec_compressed const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const ec_compressed& point() const;
+    ec_compressed const& point() const;
     const uint16_t version() const;
     const uint8_t payment_version() const;
     const uint8_t wif_version() const;
@@ -77,27 +79,27 @@ public:
     /// Methods.
     bool to_data(data_chunk& out) const;
     bool to_uncompressed(ec_uncompressed& out) const;
-    payment_address to_payment_address(uint8_t version=mainnet_p2kh) const;
+    payment_address to_payment_address(uint8_t version = mainnet_p2kh) const;
 
 private:
     /// Validators.
     static bool is_point(data_slice decoded);
 
     /// Factories.
-    static ec_public from_data(const data_chunk& decoded);
-    static ec_public from_private(const ec_private& secret);
-    static ec_public from_string(const std::string& base16);
-    static ec_public from_point(const ec_uncompressed& point, bool compress);
+    static ec_public from_data(data_chunk const& decoded);
+    static ec_public from_private(ec_private const& secret);
+    static ec_public from_string(std::string const& base16);
+    static ec_public from_point(ec_uncompressed const& point, bool compress);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
-    bool compress_;
+    bool valid_{false};
+    bool compress_{true};
     uint8_t version_;
     ec_compressed point_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

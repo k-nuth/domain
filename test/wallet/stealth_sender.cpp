@@ -20,7 +20,7 @@
 
 #include <bitcoin/bitcoin.hpp>
 
-// TODO: test sender in isolation.
+// TODO(libbitcoin): test sender in isolation.
 BOOST_AUTO_TEST_SUITE(stealth_sender_tests)
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -18,7 +18,7 @@
  */
 #include <bitcoin/bitcoin/message/ping.hpp>
 
-#include <bitcoin/bitcoin/message/version.hpp>
+// #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
@@ -27,83 +27,63 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string ping::command = "ping";
-const uint32_t ping::version_minimum = version::level::minimum;
-const uint32_t ping::version_maximum = version::level::maximum;
+std::string const ping::command = "ping";
+uint32_t const ping::version_minimum = version::level::minimum;
+uint32_t const ping::version_maximum = version::level::maximum;
 
-ping ping::factory_from_data(uint32_t version, const data_chunk& data)
-{
+ping ping::factory_from_data(uint32_t version, data_chunk const& data) {
     ping instance;
     instance.from_data(version, data);
     return instance;
 }
 
-ping ping::factory_from_data(uint32_t version, std::istream& stream)
-{
+ping ping::factory_from_data(uint32_t version, std::istream& stream) {
     ping instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-ping ping::factory_from_data(uint32_t version, reader& source)
-{
-    ping instance;
-    instance.from_data(version, source);
-    return instance;
-}
-
-size_t ping::satoshi_fixed_size(uint32_t version)
-{
+size_t ping::satoshi_fixed_size(uint32_t version) {
     return version < version::level::bip31 ? 0 : sizeof(nonce_);
 }
 
-ping::ping()
-  : nonce_(0), nonceless_(false), valid_(false)
-{
-}
-
+//TODO(fernando): nonceless_ is never used! Check it!
 ping::ping(uint64_t nonce)
-  : nonce_(nonce), nonceless_(false), valid_(true)
-{
+    : nonce_(nonce), valid_(true) {
 }
 
-ping::ping(const ping& other)
-  : nonce_(other.nonce_), nonceless_(other.nonceless_), valid_(other.valid_)
-{
+// ping::ping(ping const& x)
+//     : nonce_(x.nonce_), nonceless_(x.nonceless_), valid_(x.valid_) {
+// }
+
+// ping& ping::operator=(ping&& x) noexcept {
+//     nonce_ = x.nonce_;
+//     return *this;
+// }
+
+bool ping::operator==(ping const& x) const {
+    // Nonce should be zero if not used.
+    return (nonce_ == x.nonce_);
 }
 
-bool ping::from_data(uint32_t version, const data_chunk& data)
-{
+bool ping::operator!=(ping const& x) const {
+    // Nonce should be zero if not used.
+    return !(*this == x);
+}
+
+bool ping::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool ping::from_data(uint32_t version, std::istream& stream)
-{
-    istream_reader source(stream);
-    return from_data(version, source);
+bool ping::from_data(uint32_t version, std::istream& stream) {
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool ping::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    valid_ = true;
-    nonceless_ = (version < version::level::bip31);
-
-    if (!nonceless_)
-        nonce_ = source.read_8_bytes_little_endian();
-
-    if (!source)
-        reset();
-
-    return source;
-}
-
-data_chunk ping::to_data(uint32_t version) const
-{
+data_chunk ping::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -112,62 +92,32 @@ data_chunk ping::to_data(uint32_t version) const
     return data;
 }
 
-void ping::to_data(uint32_t version, std::ostream& stream) const
-{
-    ostream_writer sink(stream);
-    to_data(version, sink);
+void ping::to_data(uint32_t version, data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void ping::to_data(uint32_t version, writer& sink) const
-{
-    if (version >= version::level::bip31)
-        sink.write_8_bytes_little_endian(nonce_);
-}
-
-bool ping::is_valid() const
-{
+bool ping::is_valid() const {
     return valid_ || nonceless_ || nonce_ != 0;
 }
 
-void ping::reset()
-{
+void ping::reset() {
     nonce_ = 0;
     nonceless_ = false;
     valid_ = false;
 }
 
-size_t ping::serialized_size(uint32_t version) const
-{
+size_t ping::serialized_size(uint32_t version) const {
     return satoshi_fixed_size(version);
 }
 
-uint64_t ping::nonce() const
-{
+uint64_t ping::nonce() const {
     return nonce_;
 }
 
-void ping::set_nonce(uint64_t value)
-{
+void ping::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-ping& ping::operator=(ping&& other)
-{
-    nonce_ = other.nonce_;
-    return *this;
-}
-
-bool ping::operator==(const ping& other) const
-{
-    // Nonce should be zero if not used.
-    return (nonce_ == other.nonce_);
-}
-
-bool ping::operator!=(const ping& other) const
-{
-    // Nonce should be zero if not used.
-    return !(*this == other);
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

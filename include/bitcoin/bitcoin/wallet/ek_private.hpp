@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
 
@@ -28,44 +29,45 @@ namespace libbitcoin {
 namespace wallet {
 
 /// Use to pass an encrypted private key.
-class BC_API ek_private
-{
+class BC_API ek_private {
 public:
     /// Constructors.
     ek_private();
-    ek_private(const std::string& encoded);
-    ek_private(const encrypted_private& key);
-    ek_private(const ek_private& other);
+    ek_private(std::string const& encoded);
+    ek_private(encrypted_private const& value);
+    ek_private(ek_private const& x) = default;
+
+    ek_private& operator=(ek_private const& x) = default;
 
     /// Operators.
-    bool operator<(const ek_private& other) const;
-    bool operator==(const ek_private& other) const;
-    bool operator!=(const ek_private& other) const;
-    ek_private& operator=(const ek_private& other);
+    bool operator==(ek_private const& x) const;
+    bool operator!=(ek_private const& x) const;
+    bool operator<(ek_private const& x) const;
+
     friend std::istream& operator>>(std::istream& in, ek_private& to);
-    friend std::ostream& operator<<(std::ostream& out, const ek_private& of);
+    friend std::ostream& operator<<(std::ostream& out, ek_private const& of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const encrypted_private&() const;
+    operator encrypted_private const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const encrypted_private& private_key() const;
+    encrypted_private const& private_key() const;
 
 private:
     /// Factories.
-    static ek_private from_string(const std::string& encoded);
+    static ek_private from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
+    bool valid_{false};
     encrypted_private private_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

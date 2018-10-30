@@ -1,3 +1,5 @@
+# clang-format -i -style=file /home/fernando/dev/new-repos/bitprim-domain/src/chain/transaction.cpp
+
 #!/bin/bash
 #
 # Copyright (c) 2017 Bitprim developers (see AUTHORS)

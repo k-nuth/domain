@@ -21,9 +21,12 @@
 
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
+
 // Platform check.
 static_assert(std::is_same<std::uint8_t, char>::value || std::is_same<std::uint8_t, unsigned char>::value,
-    "Bitprim requires std::uint8_t to be implemented as char or unsigned char.");
+              "Bitprim requires std::uint8_t to be implemented as char or unsigned char.");
 
 namespace bitprim {
 namespace keoken {
@@ -32,12 +35,17 @@ namespace message {
 namespace base {
 
 size_t serialized_size();
-void to_data(bc::writer& sink, uint16_t version, uint16_t type);
 
-} // namespace base
+template <Writer W>
+void to_data(W& sink, uint16_t version, uint16_t type) {
+    sink.write_2_bytes_big_endian(version);
+    sink.write_2_bytes_big_endian(type);
+}
 
-} // namespace message
-} // namespace keoken
-} // namespace bitprim
+}  // namespace base
 
-#endif //BITPRIM_KEOKEN_MESSAGE_BASE_HPP_
+}  // namespace message
+}  // namespace keoken
+}  // namespace bitprim
+
+#endif  //BITPRIM_KEOKEN_MESSAGE_BASE_HPP_

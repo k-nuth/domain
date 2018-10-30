@@ -20,31 +20,30 @@
 #define LIBBITCOIN_MACHINE_INTERPRETER_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
+#include <bitcoin/infrastructure/error.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
 namespace machine {
 
-class BC_API interpreter
-{
+class BC_API interpreter {
 public:
-    typedef error::error_code_t result;
+    using result = error::error_code_t;
 
     // Operations (shared).
     //-----------------------------------------------------------------------------
 
-    static result op_nop(opcode);
-    static result op_disabled(opcode);
-    static result op_reserved(opcode);
+    static result op_nop(opcode /*unused*/);
+    static result op_disabled(opcode /*unused*/);
+    static result op_reserved(opcode /*unused*/);
     static result op_push_number(program& program, uint8_t value);
-    static result op_push_size(program& program, const operation& op);
-    static result op_push_data(program& program, const data_chunk& data,
-        uint32_t size_limit);
+    static result op_push_size(program& program, operation const& op);
+    static result op_push_data(program& program, data_chunk const& data, uint32_t size_limit);
 
     // Operations (not shared).
     //-----------------------------------------------------------------------------
@@ -102,7 +101,7 @@ public:
     static result op_sha256(program& program);
     static result op_hash160(program& program);
     static result op_hash256(program& program);
-    static result op_codeseparator(program& program, const operation& op);
+    static result op_codeseparator(program& program, operation const& op);
     static result op_check_sig_verify(program& program);
     static result op_check_sig(program& program);
     static result op_check_multisig_verify(program& program);
@@ -115,14 +114,14 @@ public:
 
     /// Run individual operations (idependent of the script).
     /// For best performance use script runner for a sequence of operations.
-    static code run(const operation& op, program& program);
+    static code run(operation const& op, program& program);
 
 private:
-    static result run_op(const operation& op, program& program);
+    static result run_op(operation const& op, program& program);
 };
 
-} // namespace machine
-} // namespace libbitcoin
+}  // namespace machine
+}  // namespace libbitcoin
 
 #include <bitcoin/bitcoin/impl/machine/interpreter.ipp>
 

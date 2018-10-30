@@ -21,25 +21,24 @@
 
 #include <cstdint>
 #include <vector>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/input_point.hpp>
 #include <bitcoin/bitcoin/chain/output_point.hpp>
 #include <bitcoin/bitcoin/chain/point.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
 namespace chain {
 
 /// Use "kind" for union differentiation.
-enum class point_kind : uint32_t
-{
+enum class point_kind : uint32_t {
     output = 0,
     spend = 1
 };
 
 /// This structure models the client-server protocol in v1/v2/v3.
-struct BC_API history_compact
-{
-    typedef std::vector<history_compact> list;
+struct BC_API history_compact {
+    using list = std::vector<history_compact>;
 
     // The type of point (output or spend).
     point_kind kind;
@@ -50,8 +49,7 @@ struct BC_API history_compact
     /// The height of the point.
     uint32_t height;
 
-    union
-    {
+    union {
         /// If output, then satoshi value of output.
         uint64_t value;
 
@@ -65,9 +63,8 @@ struct BC_API history_compact
 /// This structure is used between client and API callers in v3.
 /// This structure models the client-server protocol in v1/v2.
 /// The height values here are 64 bit, but 32 bits on the wire.
-struct BC_API history
-{
-    typedef std::vector<history> list;
+struct BC_API history {
+    using list = std::vector<history>;
 
     /// If there is no output this is null_hash:max.
     output_point output;
@@ -79,8 +76,7 @@ struct BC_API history
     /// If there is no spend this is null_hash:max.
     input_point spend;
 
-    union
-    {
+    union {
         /// The height of the spend or max if no spend.
         uint64_t spend_height;
 
@@ -89,7 +85,7 @@ struct BC_API history
     };
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

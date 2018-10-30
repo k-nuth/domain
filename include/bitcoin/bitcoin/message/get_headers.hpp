@@ -22,48 +22,73 @@
 #include <istream>
 #include <memory>
 #include <string>
-#include <bitcoin/infrastructure/math/hash.hpp>
+
 #include <bitcoin/bitcoin/message/get_blocks.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
 
-class BC_API get_headers
-  : public get_blocks
-{
+class BC_API get_headers : public get_blocks {
 public:
-    typedef std::shared_ptr<get_headers> ptr;
-    typedef std::shared_ptr<const get_headers> const_ptr;
+    using ptr = std::shared_ptr<get_headers>;
+    using const_ptr = std::shared_ptr<const get_headers>;
 
-    static get_headers factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static get_headers factory_from_data(uint32_t version,
-        std::istream& stream);
-    static get_headers factory_from_data(uint32_t version, reader& source);
+    get_headers() = default;
+    get_headers(hash_list const& start, hash_digest const& stop);
+    get_headers(hash_list&& start, hash_digest const& stop);
 
-    get_headers();
-    get_headers(const hash_list& start, const hash_digest& stop);
-    get_headers(hash_list&& start, hash_digest&& stop);
-    get_headers(const get_headers& other);
-    get_headers(get_headers&& other);
+    // get_headers(get_headers const& x) = default;
+    // get_headers(get_headers&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // get_headers& operator=(get_headers&& x) = default;
+    // get_headers& operator=(get_headers const&) = default;
 
-    bool from_data(uint32_t version, const data_chunk& data) override;
-    bool from_data(uint32_t version, std::istream& stream) override;
-    bool from_data(uint32_t version, reader& source) override;
+    bool operator==(get_headers const& x) const;
+    bool operator!=(get_headers const& x) const;
 
-    // This class is move assignable but not copy assignable.
-    get_headers& operator=(get_headers&& other);
-    void operator=(const get_headers&) = delete;
+    static get_headers factory_from_data(uint32_t version, data_chunk const& data);
+    static get_headers factory_from_data(uint32_t version, std::istream& stream);
 
-    bool operator==(const get_headers& other) const;
-    bool operator!=(const get_headers& other) const;
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static get_headers factory_from_data(uint32_t version, R& source) {
+        get_headers instance;
+        instance.from_data(version, source);
+        return instance;
+    }
 
-    static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+        if ( ! get_blocks::from_data(version, source)) {
+            return false;
+        }
+
+        if (version < get_headers::version_minimum) {
+            source.invalidate();
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
+
+
+    static std::string const command;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

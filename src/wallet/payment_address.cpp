@@ -23,19 +23,20 @@
 #include <iostream>
 #include <string>
 #include <utility>
+
 #include <boost/program_options.hpp>
+
+#include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <bitcoin/bitcoin/wallet/ec_private.hpp>
+#include <bitcoin/bitcoin/wallet/ec_public.hpp>
 #include <bitcoin/infrastructure/formats/base_58.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/bitcoin/wallet/ec_private.hpp>
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
 
 #ifdef BITPRIM_CURRENCY_BCH
 #include <bitcoin/infrastructure/wallet/cashaddr.hpp>
-#endif //BITPRIM_CURRENCY_BCH
-
+#endif  //BITPRIM_CURRENCY_BCH
 
 namespace libbitcoin {
 namespace wallet {
@@ -54,66 +55,57 @@ const uint8_t payment_address::testnet_p2kh = 0x6f;
 const uint8_t payment_address::testnet_p2sh = 0xc4;
 
 #ifdef BITPRIM_CURRENCY_BCH
-const std::string payment_address::cashaddr_prefix_mainnet = "bitcoincash";
-const std::string payment_address::cashaddr_prefix_testnet = "bchtest";
+std::string const payment_address::cashaddr_prefix_mainnet = "bitcoincash";
+std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
 #endif
 
 payment_address::payment_address()
-  : valid_(false), version_(0), hash_(null_short_hash)
-{
+    : hash_(null_short_hash) 
+{}
+
+payment_address::payment_address(payment_address&& x) noexcept
+    : valid_(x.valid_), version_(x.version_), hash_(x.hash_) 
+{}
+
+// payment_address::payment_address(payment_address const& x)
+//     : valid_(x.valid_), version_(x.version_), hash_(x.hash_) {
+// }
+
+payment_address::payment_address(payment const& decoded)
+    : payment_address(from_payment(decoded)) {
 }
 
-payment_address::payment_address(payment_address&& other)
-  : valid_(other.valid_), version_(other.version_),
-    hash_(std::move(other.hash_))
-{
+payment_address::payment_address(std::string const& address)
+    : payment_address(from_string(address)) {
 }
 
-payment_address::payment_address(const payment_address& other)
-  : valid_(other.valid_), version_(other.version_), hash_(other.hash_)
-{
+payment_address::payment_address(ec_private const& secret)
+    : payment_address(from_private(secret)) {
 }
 
-payment_address::payment_address(const payment& decoded)
-  : payment_address(from_payment(decoded))
-{
+payment_address::payment_address(ec_public const& point, uint8_t version)
+    : payment_address(from_public(point, version)) {
 }
 
-payment_address::payment_address(const std::string& address)
-  : payment_address(from_string(address))
-{
+payment_address::payment_address(chain::script const& script, uint8_t version)
+    : payment_address(from_script(script, version)) {
 }
 
-payment_address::payment_address(const ec_private& secret)
-  : payment_address(from_private(secret))
-{
+payment_address::payment_address(short_hash const& hash, uint8_t version)
+    : valid_(true), version_(version), hash_(hash) {
 }
 
-payment_address::payment_address(const ec_public& point, uint8_t version)
-  : payment_address(from_public(point, version))
-{
-}
-
-payment_address::payment_address(const chain::script& script, uint8_t version)
-  : payment_address(from_script(script, version))
-{
-}
-
-payment_address::payment_address(short_hash&& hash, uint8_t version)
-  : valid_(true), version_(version), hash_(std::move(hash))
-{
-}
-
-payment_address::payment_address(const short_hash& hash, uint8_t version)
-  : valid_(true), version_(version), hash_(hash)
-{
-}
+// payment_address& payment_address::operator=(payment_address const& x) {
+//     valid_ = x.valid_;
+//     version_ = x.version_;
+//     hash_ = x.hash_;
+//     return *this;
+// }
 
 // Validators.
 // ----------------------------------------------------------------------------
 
-bool payment_address::is_address(data_slice decoded)
-{
+bool payment_address::is_address(data_slice decoded) {
     return (decoded.size() == payment_size) && verify_checksum(decoded);
 }
 
@@ -121,12 +113,12 @@ bool payment_address::is_address(data_slice decoded)
 // ----------------------------------------------------------------------------
 #ifdef BITPRIM_CURRENCY_BCH
 
-template <int frombits, int tobits, bool pad, typename O, typename I>
-bool ConvertBits(O &out, I it, I end) {
+template <unsigned int frombits, unsigned int tobits, bool pad, typename O, typename I>
+bool convert_bits(O& out, I it, I end) {
     size_t acc = 0;
     size_t bits = 0;
-    constexpr size_t maxv = (1 << tobits) - 1;
-    constexpr size_t max_acc = (1 << (frombits + tobits - 1)) - 1;
+    constexpr size_t maxv = (1u << tobits) - 1;
+    constexpr size_t max_acc = (1u << (frombits + tobits - 1)) - 1;
     while (it != end) {
         acc = ((acc << frombits) | *it) & max_acc;
         bits += frombits;
@@ -138,7 +130,7 @@ bool ConvertBits(O &out, I it, I end) {
     }
 
     // We have remaining bits to encode but do not pad.
-    if (!pad && bits) {
+    if ( ! pad && bits) {
         return false;
     }
 
@@ -150,61 +142,62 @@ bool ConvertBits(O &out, I it, I end) {
     return true;
 }
 
- enum CashAddrType : uint8_t { PUBKEY_TYPE = 0, SCRIPT_TYPE = 1 };
+enum cash_addr_type : uint8_t { PUBKEY_TYPE = 0,
+                              SCRIPT_TYPE = 1 };
 
 // CashAddrContent DecodeCashAddrContent(std::string const& address) {
 payment_address payment_address::from_string_cashaddr(std::string const& address) {
     // In order to avoid using the wrong network address, the from_string method
     // only accepts the cashaddr_prefix set on the multi_crypto_support file
 
-    // TODO: validate the network on RPC/Interface calls and make payment_address independent of the network
+    // TODO(bitprim): validate the network on RPC/Interface calls and make payment_address independent of the network
 
     std::string prefix;
     data_chunk payload;
     std::tie(prefix, payload) = cashaddr::decode(address, cashaddr_prefix());
 
     if (prefix != cashaddr_prefix()) {
-        return{};
+        return {};
     }
 
     if (payload.empty()) {
-        return{};
+        return {};
     }
 
     // Check that the padding is zero.
     size_t extrabits = payload.size() * 5 % 8;
     if (extrabits >= 5) {
         // We have more padding than allowed.
-        return{};
+        return {};
     }
 
     uint8_t last = payload.back();
-    uint8_t mask = (1 << extrabits) - 1;
-    if (last & mask) {
+    uint8_t mask = (1u << extrabits) - 1;
+    if ((last & mask) != 0) {
         // We have non zero bits as padding.
-        return{};
+        return {};
     }
 
     data_chunk data;
     data.reserve(payload.size() * 5 / 8);
-    ConvertBits<5, 8, false>(data, std::begin(payload), std::end(payload));
+    convert_bits<5, 8, false>(data, std::begin(payload), std::end(payload));
 
     // Decode type and size from the version.
     uint8_t version = data[0];
-    if (version & 0x80) {
+    if ((version & 0x80) != 0) {
         // First bit is reserved.
-        return{};
+        return {};
     }
 
-    auto type = CashAddrType((version >> 3) & 0x1f);
+    auto type = cash_addr_type((version >> 3u) & 0x1f);
     uint32_t hash_size = 20 + 4 * (version & 0x03);
-    if (version & 0x04) {
+    if ((version & 0x04) != 0) {
         hash_size *= 2;
     }
 
     // Check that we decoded the exact number of bytes we expected.
     if (data.size() != hash_size + 1) {
-        return{};
+        return {};
     }
 
     //uint8_t version2;
@@ -221,78 +214,74 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
 
     if (prefix == payment_address::cashaddr_prefix_mainnet) {
-        return payment_address(hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh);
-    } else {
-        return payment_address(hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh);
+        return {hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh};
     }
+    return {hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh};
 
     // // Pop the version.
     // data.erase(data.begin());
     // return {type, std::move(data)};
 }
 
-#endif //BITPRIM_CURRENCY_BCH
+#endif  //BITPRIM_CURRENCY_BCH
 
-payment_address payment_address::from_string(const std::string& address) {
+payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
     if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
 #ifdef BITPRIM_CURRENCY_BCH
-    return from_string_cashaddr(address);
+        return from_string_cashaddr(address);
 #else
-    return{};
-#endif //BITPRIM_CURRENCY_BCH
+        return {};
+#endif  //BITPRIM_CURRENCY_BCH
     }
-    return{ decoded };
+
+    return {decoded};
 }
 
-payment_address payment_address::from_payment(const payment& decoded)
-{
-    if (!is_address(decoded))
-        return{};
+payment_address payment_address::from_payment(payment const& decoded) {
+    if ( ! is_address(decoded)) {
+        return {};
+    }
 
-    const auto hash = slice<1, short_hash_size + 1>(decoded);
-    return{ hash, decoded.front() };
+    auto const hash = slice<1, short_hash_size + 1>(decoded);
+    return {hash, decoded.front()};
 }
 
-payment_address payment_address::from_private(const ec_private& secret)
-{
-    if (!secret)
-        return{};
+payment_address payment_address::from_private(ec_private const& secret) {
+    if ( ! secret) {
+        return {};
+    }
 
-    return{ secret.to_public(), secret.payment_version() };
+    return {secret.to_public(), secret.payment_version()};
 }
 
-payment_address payment_address::from_public(const ec_public& point,
-    uint8_t version)
-{
-    if (!point)
-        return{};
+payment_address payment_address::from_public(ec_public const& point, uint8_t version) {
+    if ( ! point) {
+        return {};
+    }
 
     data_chunk data;
-    if (!point.to_data(data))
-        return{};
+    if ( ! point.to_data(data)) {
+        return {};
+    }
 
-    return{ bitcoin_short_hash(data), version };
+    return {bitcoin_short_hash(data), version};
 }
 
-payment_address payment_address::from_script(const chain::script& script,
-    uint8_t version)
-{
+payment_address payment_address::from_script(chain::script const& script, uint8_t version) {
     // Working around VC++ CTP compiler break here.
-    const auto data = script.to_data(false);
-    return{ bitcoin_short_hash(data), version };
+    auto const data = script.to_data(false);
+    return {bitcoin_short_hash(data), version};
 }
 
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-payment_address::operator const bool() const
-{
+payment_address::operator const bool() const {
     return valid_;
 }
 
-payment_address::operator const short_hash&() const
-{
+payment_address::operator short_hash const&() const {
     return hash_;
 }
 
@@ -308,7 +297,7 @@ std::string payment_address::encoded() const {
 // Convert the data part to a 5 bit representation.
 template <typename T>
 data_chunk pack_addr_data_(T const& id, uint8_t type) {
-    uint8_t version_byte(type << 3);
+    uint8_t version_byte(type << 3u);
     size_t size = id.size();
     uint8_t encoded_size = 0;
 
@@ -342,7 +331,7 @@ data_chunk pack_addr_data_(T const& id, uint8_t type) {
     }
 
     version_byte |= encoded_size;
-    data_chunk data = { version_byte };
+    data_chunk data = {version_byte};
     data.insert(data.end(), std::begin(id), std::end(id));
 
     data_chunk converted;
@@ -350,7 +339,7 @@ data_chunk pack_addr_data_(T const& id, uint8_t type) {
     // hash, with version byte.  Add half a byte(4) so integer math provides
     // the next multiple-of-5 that would fit all the data.
     converted.reserve(((size + 1) * 8 + 4) / 5);
-    ConvertBits<8, 5, true>(converted, std::begin(data), std::end(data));
+    convert_bits<8, 5, true>(converted, std::begin(data), std::end(data));
 
     return converted;
 }
@@ -359,7 +348,8 @@ std::string encode_cashaddr_(payment_address const& wallet) {
     if (wallet.version() == payment_address::mainnet_p2kh || wallet.version() == payment_address::mainnet_p2sh) {
         // Mainnet
         return cashaddr::encode(payment_address::cashaddr_prefix_mainnet, pack_addr_data_(wallet.hash(), wallet.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
-    } else if (wallet.version() == payment_address::testnet_p2kh || wallet.version() == payment_address::testnet_p2sh) {
+    }
+    if (wallet.version() == payment_address::testnet_p2kh || wallet.version() == payment_address::testnet_p2sh) {
         // Testnet
         return cashaddr::encode(payment_address::cashaddr_prefix_testnet, pack_addr_data_(wallet.hash(), wallet.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }
@@ -370,64 +360,47 @@ std::string payment_address::encoded_cashaddr() const {
     return encode_cashaddr_(*this);
 }
 
-#endif //BITPRIM_CURRENCY_BCH
+#endif  //BITPRIM_CURRENCY_BCH
 
 // Accessors.
 // ----------------------------------------------------------------------------
 
-uint8_t payment_address::version() const
-{
+uint8_t payment_address::version() const {
     return version_;
 }
 
-const short_hash& payment_address::hash() const
-{
+short_hash const& payment_address::hash() const {
     return hash_;
 }
 
 // Methods.
 // ----------------------------------------------------------------------------
 
-payment payment_address::to_payment() const
-{
+payment payment_address::to_payment() const {
     return wrap(version_, hash_);
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
-
-payment_address& payment_address::operator=(const payment_address& other)
-{
-    valid_ = other.valid_;
-    version_ = other.version_;
-    hash_ = other.hash_;
-    return *this;
+bool payment_address::operator<(payment_address const& x) const {
+    return encoded() < x.encoded();
 }
 
-bool payment_address::operator<(const payment_address& other) const
-{
-    return encoded() < other.encoded();
+bool payment_address::operator==(payment_address const& x) const {
+    return valid_ == x.valid_ && version_ == x.version_ &&
+           hash_ == x.hash_;
 }
 
-bool payment_address::operator==(const payment_address& other) const
-{
-    return valid_ == other.valid_ && version_ == other.version_ &&
-        hash_ == other.hash_;
+bool payment_address::operator!=(payment_address const& x) const {
+    return !(*this == x);
 }
 
-bool payment_address::operator!=(const payment_address& other) const
-{
-    return !(*this == other);
-}
-
-std::istream& operator>>(std::istream& in, payment_address& to)
-{
+std::istream& operator>>(std::istream& in, payment_address& to) {
     std::string value;
     in >> value;
     to = payment_address(value);
 
-    if (!to)
-    {
+    if ( ! to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }
@@ -435,8 +408,7 @@ std::istream& operator>>(std::istream& in, payment_address& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const payment_address& of)
-{
+std::ostream& operator<<(std::ostream& out, payment_address const& of) {
     out << of.encoded();
     return out;
 }
@@ -445,40 +417,27 @@ std::ostream& operator<<(std::ostream& out, const payment_address& of)
 // ----------------------------------------------------------------------------
 
 // Context free input extraction is provably ambiguous (see extract_input).
-payment_address::list payment_address::extract(const chain::script& script,
-    uint8_t p2kh_version, uint8_t p2sh_version)
-{
-    const auto input = extract_input(script, p2kh_version, p2sh_version);
-    return input.empty() ? extract_output(script, p2kh_version, p2sh_version) :
-        input;
+payment_address::list payment_address::extract(chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version) {
+    auto const input = extract_input(script, p2kh_version, p2sh_version);
+    return input.empty() ? extract_output(script, p2kh_version, p2sh_version) : input;
 }
 
 // Context free input extraction is provably ambiguous. See inline comments.
-payment_address::list payment_address::extract_input(
-    const chain::script& script, uint8_t p2kh_version, uint8_t p2sh_version)
-{
+payment_address::list payment_address::extract_input(chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version) {
     // A sign_key_hash result always implies sign_script_hash as well.
-    const auto pattern = script.input_pattern();
+    auto const pattern = script.input_pattern();
 
-    switch (pattern)
-    {
+    switch (pattern) {
         // Given lack of context (prevout) sign_key_hash is always ambiguous
         // with sign_script_hash, so return both potentially-correct addresses.
         // A server can differentiate by extracting from the previous output.
-        case script_pattern::sign_key_hash:
-        {
-            return
-            {
-                { ec_public{ script[1].data() }, p2kh_version },
-                { bitcoin_short_hash(script.back().data()), p2sh_version }
-            };
+        case script_pattern::sign_key_hash: {
+            return {
+                {ec_public{script[1].data()}, p2kh_version},
+                {bitcoin_short_hash(script.back().data()), p2sh_version}};
         }
-        case script_pattern::sign_script_hash:
-        {
-            return
-            {
-                { bitcoin_short_hash(script.back().data()), p2sh_version }
-            };
+        case script_pattern::sign_script_hash: {
+            return {{bitcoin_short_hash(script.back().data()), p2sh_version}};
         }
 
         // There is no address in sign_public_key script (signature only)
@@ -495,54 +454,43 @@ payment_address::list payment_address::extract_input(
         // output, but bare multisig does not associate a payment address.
         case script_pattern::sign_multisig:
         case script_pattern::non_standard:
-        default:
-        {
-            return{};
+        default: {
+            return {};
         }
     }
 }
 
 // A server should use this against the prevout instead of using extract_input.
 payment_address::list payment_address::extract_output(
-    const chain::script& script, uint8_t p2kh_version, uint8_t p2sh_version)
-{
-    const auto pattern = script.output_pattern();
+    chain::script const& script,
+    uint8_t p2kh_version,
+    uint8_t p2sh_version) {
+    auto const pattern = script.output_pattern();
 
-    switch (pattern)
-    {
-        case script_pattern::pay_key_hash:
-        {
-            return
-            {
-                { to_array<short_hash_size>(script[2].data()), p2kh_version }
-            };
+    switch (pattern) {
+        case script_pattern::pay_key_hash: {
+            return {
+                {to_array<short_hash_size>(script[2].data()), p2kh_version}};
         }
-        case script_pattern::pay_script_hash:
-        {
-            return
-            {
-                { to_array<short_hash_size>(script[1].data()), p2sh_version }
-            };
+        case script_pattern::pay_script_hash: {
+            return {
+                {to_array<short_hash_size>(script[1].data()), p2sh_version}};
         }
-        case script_pattern::pay_public_key:
-        {
-            return
-            {
+        case script_pattern::pay_public_key: {
+            return {
                 // pay_public_key is not p2kh but we conflate for tracking.
-                { ec_public{ script[0].data() }, p2kh_version }
-            };
+                {ec_public{script[0].data()}, p2kh_version}};
         }
 
         // Bare multisig and null data do not associate a payment address.
         case script_pattern::pay_multisig:
         case script_pattern::null_data:
         case script_pattern::non_standard:
-        default:
-        {
-            return{};
+        default: {
+            return {};
         }
     }
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin

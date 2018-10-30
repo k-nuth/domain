@@ -22,8 +22,9 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 
 namespace libbitcoin {
@@ -33,10 +34,8 @@ namespace config {
  * Serialization helper to convert between a base58-string:number and
  * a vector of chain::output.
  */
-class BC_API output
-{
+class BC_API output {
 public:
-
     /**
      * Default constructor.
      */
@@ -46,14 +45,14 @@ public:
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    output(const std::string& tuple);
+    output(std::string const& tuple);
 
     /// Parsed properties
     bool is_stealth() const;
     uint64_t amount() const;
     uint8_t version() const;
-    const chain::script& script() const;
-    const short_hash& pay_to_hash() const;
+    chain::script const& script() const;
+    short_hash const& pay_to_hash() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -64,19 +63,18 @@ public:
     friend std::istream& operator>>(std::istream& input, output& argument);
 
 private:
-
     /**
      * The transaction output state of this object.
      * This data is translated to an output given expected version information.
      */
-    bool is_stealth_;
-    uint64_t amount_;
-    uint8_t version_;
+    bool is_stealth_{false};
+    uint64_t amount_{0};
+    uint8_t version_{0};
     chain::script script_;
     short_hash pay_to_hash_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

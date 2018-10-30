@@ -20,6 +20,7 @@
 
 #include <istream>
 #include <utility>
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -29,148 +30,102 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string transaction::command = "tx";
-const uint32_t transaction::version_minimum = version::level::minimum;
-const uint32_t transaction::version_maximum = version::level::maximum;
+std::string const transaction::command = "tx";
+uint32_t const transaction::version_minimum = version::level::minimum;
+uint32_t const transaction::version_maximum = version::level::maximum;
 
-transaction transaction::factory_from_data(uint32_t version,
-    const data_chunk& data)
-{
+transaction transaction::factory_from_data(uint32_t version, data_chunk const& data) {
     transaction instance;
     instance.from_data(version, data);
     return instance;
 }
 
-transaction transaction::factory_from_data(uint32_t version,
-    std::istream& stream)
-{
+transaction transaction::factory_from_data(uint32_t version, std::istream& stream) {
     transaction instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-transaction transaction::factory_from_data(uint32_t version,
-    reader& source)
-{
-    transaction instance;
-    instance.from_data(version, source);
-    return instance;
+transaction::transaction(chain::transaction&& x)
+    : chain::transaction(std::move(x)) {
 }
 
-transaction::transaction()
-  : chain::transaction()
-{
+transaction::transaction(chain::transaction const& x)
+    : chain::transaction(x) {
 }
 
-transaction::transaction(transaction&& other)
-  : chain::transaction(std::move(other))
-{
+transaction::transaction(uint32_t version, uint32_t locktime, chain::input::list&& inputs, chain::output::list&& outputs)
+    : chain::transaction(version, locktime, std::move(inputs), std::move(outputs)) {
 }
 
-transaction::transaction(const transaction& other)
-  : chain::transaction(other)
-{
+transaction::transaction(uint32_t version, uint32_t locktime, const chain::input::list& inputs, const chain::output::list& outputs)
+    : chain::transaction(version, locktime, inputs, outputs) {
 }
 
-transaction::transaction(chain::transaction&& other)
-  : chain::transaction(std::move(other))
-{
+// transaction::transaction(transaction&& x) noexcept
+//     : chain::transaction(std::move(x)) 
+// {}
+
+// transaction::transaction(transaction const& x)
+//     : chain::transaction(x) {
+// }
+
+// transaction& transaction::operator=(transaction&& x) noexcept {
+//     chain::transaction::operator=(std::move(x));
+//     return *this;
+// }
+
+transaction& transaction::operator=(chain::transaction&& x) {
+    reset();
+    chain::transaction::operator=(std::move(x));
+    return *this;
 }
 
-transaction::transaction(const chain::transaction& other)
-  : chain::transaction(other)
-{
+bool transaction::operator==(chain::transaction const& x) const {
+    return chain::transaction::operator==(x);
 }
 
-transaction::transaction(uint32_t version, uint32_t locktime,
-    chain::input::list&& inputs, chain::output::list&& outputs)
-  : chain::transaction(version, locktime, std::move(inputs),
-        std::move(outputs))
-{
+bool transaction::operator!=(chain::transaction const& x) const {
+    return chain::transaction::operator!=(x);
 }
 
-transaction::transaction(uint32_t version, uint32_t locktime,
-    const chain::input::list& inputs, const chain::output::list& outputs)
-  : chain::transaction(version, locktime, inputs, outputs)
-{
+bool transaction::operator==(transaction const& x) const {
+    return chain::transaction::operator==(x);
+}
+
+bool transaction::operator!=(transaction const& x) const {
+    return !(*this == x);
 }
 
 // Witness is always deserialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-bool transaction::from_data(uint32_t, const data_chunk& data)
-{
+bool transaction::from_data(uint32_t /*version*/, data_chunk const& data) {
     return chain::transaction::from_data(data, true, true);
 }
 
-bool transaction::from_data(uint32_t, std::istream& stream)
-{
+bool transaction::from_data(uint32_t /*version*/, std::istream& stream) {
     return chain::transaction::from_data(stream, true, true);
-}
-
-bool transaction::from_data(uint32_t, reader& source)
-{
-    return chain::transaction::from_data(source, true, true);
 }
 
 // Witness is always serialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-data_chunk transaction::to_data(uint32_t, bool witness) const
-{
+data_chunk transaction::to_data(uint32_t /*version*/, bool witness) const {
     return chain::transaction::to_data(true, witness);
 }
 
-void transaction::to_data(uint32_t, std::ostream& stream, bool witness) const
-{
+void transaction::to_data(uint32_t /*version*/, data_sink& stream, bool witness) const {
     chain::transaction::to_data(stream, true, witness);
 }
 
-void transaction::to_data(uint32_t, writer& sink, bool witness) const
-{
-    chain::transaction::to_data(sink, true, witness);
-}
 
 // Witness size is always counted if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-size_t transaction::serialized_size(uint32_t) const
-{
+size_t transaction::serialized_size(uint32_t /*unused*/) const {
     return chain::transaction::serialized_size(true, true);
 }
 
-transaction& transaction::operator=(chain::transaction&& other)
-{
-    reset();
-    chain::transaction::operator=(std::move(other));
-    return *this;
-}
-
-transaction& transaction::operator=(transaction&& other)
-{
-    chain::transaction::operator=(std::move(other));
-    return *this;
-}
-
-bool transaction::operator==(const chain::transaction& other) const
-{
-    return chain::transaction::operator==(other);
-}
-
-bool transaction::operator!=(const chain::transaction& other) const
-{
-    return chain::transaction::operator!=(other);
-}
-
-bool transaction::operator==(const transaction& other) const
-{
-    return chain::transaction::operator==(other);
-}
-
-bool transaction::operator!=(const transaction& other) const
-{
-    return !(*this == other);
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

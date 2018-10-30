@@ -19,8 +19,9 @@
 #ifndef LIBBITCOIN_CHAIN_POINTS_VALUE_HPP
 #define LIBBITCOIN_CHAIN_POINTS_VALUE_HPP
 
-#include <numeric>
 #include <cstdint>
+#include <numeric>
+
 #include <bitcoin/bitcoin/chain/point_value.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/limits.hpp>
@@ -28,8 +29,7 @@
 namespace libbitcoin {
 namespace chain {
 
-class BC_API points_value
-{
+class BC_API points_value {
 public:
     /// A set of valued points.
     point_value::list points;
@@ -38,7 +38,7 @@ public:
     uint64_t value() const;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

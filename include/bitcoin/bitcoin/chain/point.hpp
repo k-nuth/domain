@@ -23,68 +23,131 @@
 #include <istream>
 #include <string>
 #include <vector>
+
 #include <boost/functional/hash.hpp>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/point_iterator.hpp>
+#include <bitcoin/bitcoin/constants.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
+
 namespace libbitcoin {
 namespace chain {
 
-class BC_API point
-{
+class BC_API point {
 public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
-    static const uint32_t null_index;
+    static constexpr uint32_t null_index = no_previous_output;
 
-    typedef std::vector<point> list;
-    typedef std::vector<uint32_t> indexes;
+    using list = std::vector<point>;
+    using indexes = std::vector<uint32_t>;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
+    // constexpr
     point();
 
-    point(point&& other);
-    point(const point& other);
+    // constexpr
+    point(hash_digest const& hash, uint32_t index);
 
-    point(hash_digest&& hash, uint32_t index);
-    point(const hash_digest& hash, uint32_t index);
+    // constexpr
+    point(point const& x) = default;
+
+    // constexpr
+    point& operator=(point const& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    /// This class is move assignable and copy assignable.
-    point& operator=(point&& other);
-    point& operator=(const point& other);
+    // constexpr    //Note(bitprim): Could be constexpr in C++20
+    friend bool operator==(point const& x, point const& y);
 
-    bool operator<(const point& other) const;
-    bool operator==(const point& other) const;
-    bool operator!=(const point& other) const;
+    // constexpr    //Note(bitprim): Could be constexpr in C++20
+    friend bool operator!=(point const& x, point const& y);
+
+    // constexpr
+    friend bool operator<(point const& x, point const& y);
+
+    // constexpr
+    friend bool operator>(point const& x, point const& y);
+
+    // constexpr
+    friend bool operator<=(point const& x, point const& y);
+
+    // constexpr
+    friend bool operator>=(point const& x, point const& y);
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static point factory_from_data(const data_chunk& data, bool wire=true);
-    static point factory_from_data(std::istream& stream, bool wire=true);
-    static point factory_from_data(reader& source, bool wire=true);
+    static point factory_from_data(data_chunk const& data, bool wire = true);
 
-    bool from_data(const data_chunk& data, bool wire=true);
-    bool from_data(std::istream& stream, bool wire=true);
-    bool from_data(reader& source, bool wire=true);
+    static point factory_from_data(std::istream& stream, bool wire = true);
 
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static point factory_from_data(R& source, bool wire = true) {
+        point instance;
+        instance.from_data(source, wire);
+        return instance;
+    }
+
+    bool from_data(data_chunk const& data, bool wire = true);
+    bool from_data(std::istream& stream, bool wire = true);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source, bool wire = true) {
+        reset();
+
+        valid_ = true;
+        hash_ = source.read_hash();
+
+        if (wire) {
+            index_ = source.read_4_bytes_little_endian();
+        } else {
+            index_ = source.read_2_bytes_little_endian();
+
+            if (index_ == max_uint16) {
+                index_ = null_index;
+            }
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
+
+    // constexpr
     bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire=true) const;
-    void to_data(std::ostream& stream, bool wire=true) const;
-    void to_data(writer& sink, bool wire=true) const;
+    data_chunk to_data(bool wire = true) const;
+    void to_data(data_sink& stream, bool wire = true) const;
+
+    template <Writer W>
+    void to_data(W& sink, bool wire = true) const {
+        sink.write_hash(hash_);
+
+        if (wire) {
+            sink.write_4_bytes_little_endian(index_);
+        } else {
+            BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
+            sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
+        }
+    }
 
     // Iteration (limited to store serialization).
     //-------------------------------------------------------------------------
@@ -95,17 +158,27 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    static size_t satoshi_fixed_size();
-    size_t serialized_size(bool wire=true) const;
+    // constexpr
+    static
+    size_t satoshi_fixed_size();
+
+    // constexpr
+    size_t serialized_size(bool wire = true) const;
 
     // deprecated (unsafe)
+    // constexpr
     hash_digest& hash();
 
-    const hash_digest& hash() const;
-    void set_hash(hash_digest&& value);
-    void set_hash(const hash_digest& value);
+    // constexpr
+    hash_digest const& hash() const;
 
+    // constexpr
+    void set_hash(hash_digest const& value);
+
+    // constexpr
     uint32_t index() const;
+
+    // constexpr
     void set_index(uint32_t value);
 
     // Utilities.
@@ -117,35 +190,31 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
+    // constexpr
     bool is_null() const;
 
-protected:
-    point(hash_digest&& hash, uint32_t index, bool valid);
-    point(const hash_digest& hash, uint32_t index, bool valid);
+// protected:
+    // point(hash_digest const& hash, uint32_t index, bool valid);
     void reset();
 
 private:
-    hash_digest hash_;
-    uint32_t index_;
-    bool valid_;
+    hash_digest hash_{null_hash};
+    uint32_t index_{0};
+    bool valid_{false};
 };
 
-} // namespace chain
-} // namespace libbitcoin
-
+}  // namespace chain
+}  // namespace libbitcoin
 
 // Standard hash.
 //-----------------------------------------------------------------------------
 
-namespace std
-{
+namespace std {
 
 // Extend std namespace with our hash wrapper (database key, not checksum).
 template <>
-struct hash<bc::chain::point>
-{
-    size_t operator()(const bc::chain::point& point) const
-    {
+struct hash<bc::chain::point> {
+    size_t operator()(const bc::chain::point& point) const {
         size_t seed = 0;
         boost::hash_combine(seed, point.hash());
         boost::hash_combine(seed, point.index());
@@ -155,17 +224,16 @@ struct hash<bc::chain::point>
 
 // Extend std namespace with the non-wire size of point (database key size).
 template <>
-struct tuple_size<bc::chain::point>
-{
-    static const auto value = std::tuple_size<bc::hash_digest>::value +
-        sizeof(uint16_t);
+struct tuple_size<bc::chain::point> {
+    static auto const value = std::tuple_size<bc::hash_digest>::value + sizeof(uint16_t);
 
-    operator std::size_t() const
-    {
+    operator std::size_t() const {
         return value;
     }
 };
 
-} // namespace std
+}  // namespace std
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif

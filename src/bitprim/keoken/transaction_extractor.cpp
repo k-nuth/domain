@@ -21,8 +21,8 @@
 
 #include <type_traits>
 
-#include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
+#include <bitcoin/infrastructure/machine/opcode.hpp>
 
 #include <bitprim/keoken/constants.hpp>
 
@@ -32,32 +32,47 @@ namespace keoken {
 using bc::data_chunk;
 using bc::machine::opcode;
 using bc::machine::operation;
- 
+
 template <typename I>
 data_chunk get_keoken_data(I f, I l) {
-    //precondition:  
+    //precondition:
     //postcondition: if return value is an empty vector, it is not a keoken output.
 
-    if (f == l) return data_chunk{};
+    if (f == l) {
+        return data_chunk{};
+    }
 
-    if (f->code() != opcode::return_) return data_chunk{};
+    if (f->code() != opcode::return_) {
+        return data_chunk{};
+    }
 
-    ++f;        //move to the next machine::operation
-    if (f == l) return data_chunk{};
+    ++f;  //move to the next machine::operation
+    if (f == l) {
+        return data_chunk{};
+    }
 
-    if (f->code() != opcode::push_size_4) return data_chunk{};
+    if (f->code() != opcode::push_size_4) {
+        return data_chunk{};
+    }
 
     if ( ! std::equal(f->data().begin(), f->data().end(), static_cast<uint8_t const*>(protocol_name))) {
         return data_chunk{};
     }
 
-    ++f;        //move to the next machine::operation
-    if (f == l) return data_chunk{};
+    ++f;  //move to the next machine::operation
+    if (f == l) {
+        return data_chunk{};
+    }
 
-    if (to_underlying(f->code()) < kp_min_size) return data_chunk{};
-    if (to_underlying(f->code()) > kp_max_size) return data_chunk{};
+    if (to_underlying(f->code()) < kp_min_size) {
+        return data_chunk{};
+    }
 
-    return f->data();   //TODO(fernando): check if we can std::move this vector
+    if (to_underlying(f->code()) > kp_max_size) {
+        return data_chunk{};
+    }
+
+    return f->data();  //TODO(fernando): check if we can std::move this vector
 }
 
 data_chunk get_keoken_data(operation::list const& ops) {
@@ -75,5 +90,5 @@ data_chunk first_keoken_output(bc::chain::transaction const& tx) {
     return data_chunk{};
 }
 
-} // namespace keoken
-} // namespace bitprim
+}  // namespace keoken
+}  // namespace bitprim

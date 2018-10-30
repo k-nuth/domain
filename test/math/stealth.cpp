@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 
-// TODO: split out individual functions and standardize test names.
+// TODO(libbitcoin): split out individual functions and standardize test names.
 BOOST_AUTO_TEST_SUITE(stealth_tests)
 
 #define SCAN_PRIVATE "fa63521e333e4b9f6a98a142680d3aef4d8e7f79723ce0043691db55c36bd905"
@@ -42,8 +42,7 @@ BOOST_AUTO_TEST_SUITE(stealth_tests)
 // $ bx ec-add 03d5b3853bbee336b551ff999b0b1d656e65a7649037ae0dcb02b3c4ff5f29e5be 4b4974266ee6c8bed9eff2cd1087bbc1101f17bad9c37814f8561b67f550c544 | bx ec-to-address - v 111
 // #define P2PKH_ADDRESS_TESTNET "mwSnRsXSEq3d7LTGqe7AtJYNqhATwHdhMb"
 
-BOOST_AUTO_TEST_CASE(stealth_round_trip)
-{
+BOOST_AUTO_TEST_CASE(stealth_round_trip) {
     ec_secret expected_stealth_private;
     BOOST_REQUIRE(decode_base16(expected_stealth_private, STEALTH_PRIVATE));
 
@@ -93,61 +92,54 @@ BOOST_AUTO_TEST_CASE(stealth_round_trip)
     BOOST_REQUIRE_EQUAL(address.encoded(), P2PKH_ADDRESS);
 }
 
-BOOST_AUTO_TEST_CASE(verify_string_constructor)
-{
-    const std::string value = "01100110000";
+BOOST_AUTO_TEST_CASE(verify_string_constructor) {
+    std::string const value = "01100110000";
     binary prefix(value);
     BOOST_REQUIRE_EQUAL(value.size(), prefix.size());
-    for (size_t i = 0; i < value.size(); ++i)
-    {
-        const auto comparison = value[i] == '1';
+    for (size_t i = 0; i < value.size(); ++i) {
+        auto const comparison = value[i] == '1';
         BOOST_REQUIRE_EQUAL(prefix[i], comparison);
     }
 }
 
-// Binary as a value on the left, padded with zeros to the right.
-BOOST_AUTO_TEST_CASE(compare_constructor_results)
-{
+// Binary as a value on the left, padded with zeros to the y.
+BOOST_AUTO_TEST_CASE(compare_constructor_results) {
     std::string value = "01100111000";
     binary prefix(value);
-    data_chunk blocks{ { 0x67, 0x00 } };
+    data_chunk blocks{{0x67, 0x00}};
     binary prefix2(value.size(), blocks);
     BOOST_REQUIRE_EQUAL(prefix, prefix2);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test1)
-{
+BOOST_AUTO_TEST_CASE(bitfield_test1) {
     binary prefix("01100111001");
-    data_chunk raw_bitfield{ { 0x67, 0x20, 0x00, 0x0 } };
+    data_chunk raw_bitfield{{0x67, 0x20, 0x00, 0x0}};
     BOOST_REQUIRE_GE(raw_bitfield.size() * 8, prefix.size());
     binary compare(prefix.size(), raw_bitfield);
     BOOST_REQUIRE_EQUAL(prefix, compare);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test2)
-{
-    const data_chunk blocks{ { 0x8b, 0xf4, 0x1c, 0x69 } };
+BOOST_AUTO_TEST_CASE(bitfield_test2) {
+    data_chunk const blocks{{0x8b, 0xf4, 0x1c, 0x69}};
     const binary prefix(27, blocks);
-    const data_chunk raw_bitfield{ { 0x8b, 0xf4, 0x1c, 0x79 } };
+    data_chunk const raw_bitfield{{0x8b, 0xf4, 0x1c, 0x79}};
     BOOST_REQUIRE_GE(raw_bitfield.size() * 8, prefix.size());
     const binary compare(prefix.size(), raw_bitfield);
     BOOST_REQUIRE_EQUAL(prefix, compare);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test3)
-{
-    const data_chunk blocks{ { 0x69, 0x1c, 0xf4, 0x8b } };
+BOOST_AUTO_TEST_CASE(bitfield_test3) {
+    data_chunk const blocks{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary prefix(32, blocks);
-    const data_chunk raw_bitfield{ { 0x69, 0x1c, 0xf4, 0x8b } };
+    data_chunk const raw_bitfield{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary compare(prefix.size(), raw_bitfield);
     BOOST_REQUIRE_EQUAL(prefix, compare);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test4)
-{
-    const data_chunk blocks{ { 0x69, 0x1c, 0xf4, 0x8b } };
+BOOST_AUTO_TEST_CASE(bitfield_test4) {
+    data_chunk const blocks{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary prefix(29, blocks);
-    const data_chunk raw_bitfield{ { 0x69, 0x1c, 0xf4, 0x8b } };
+    data_chunk const raw_bitfield{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary compare(prefix.size(), raw_bitfield);
     BOOST_REQUIRE_EQUAL(prefix, compare);
 }

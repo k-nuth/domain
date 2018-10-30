@@ -32,27 +32,23 @@ namespace entities {
 
 class BC_API asset {
 public:
-
     asset(asset_id_t id, std::string name, amount_t amount, bc::wallet::payment_address owner);
 
     // Semiregular.
     //-------------------------------------------------------------------------
 
     asset() = default;
-    // asset(asset const& other) = default;
-    // asset(asset&& other) = default;
-    // asset& operator=(asset const& other) = default;
-    // asset& operator=(asset&& other) = default;
+    // asset(asset const& x) = default;
+    // asset(asset&& x) = default;
+    // asset& operator=(asset const& x) = default;
+    // asset& operator=(asset&& x) = default;
 
     // Regular.
     //-------------------------------------------------------------------------
 
-    friend
-    bool operator==(asset const& a, asset const& b);
-    
-    friend
-    bool operator!=(asset const& a, asset const& b);
+    friend bool operator==(asset const& a, asset const& b);
 
+    friend bool operator!=(asset const& a, asset const& b);
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -69,7 +65,6 @@ public:
     bc::wallet::payment_address const& owner() const;
     // void set_owner(bc::::wallet::payment_address x);
 
-
 private:
     asset_id_t id_;
     std::string name_;
@@ -77,8 +72,8 @@ private:
     bc::wallet::payment_address owner_;
 };
 
-} // namespace entities
-} // namespace keoken
-} // namespace bitprim
+}  // namespace entities
+}  // namespace keoken
+}  // namespace bitprim
 
-#endif //BITPRIM_KEOKEN_ENTITIES_ASSET_HPP_
+#endif  //BITPRIM_KEOKEN_ENTITIES_ASSET_HPP_

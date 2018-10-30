@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <numeric>
 #include <cstdint>
+#include <numeric>
+
 #include <bitcoin/bitcoin/chain/point_value.hpp>
 #include <bitcoin/bitcoin/chain/points_value.hpp>
 #include <bitcoin/infrastructure/utility/limits.hpp>
@@ -25,15 +26,13 @@
 namespace libbitcoin {
 namespace chain {
 
-uint64_t points_value::value() const
-{
-    const auto sum = [](uint64_t total, const point_value& point)
-    {
+uint64_t points_value::value() const {
+    auto const sum = [](uint64_t total, point_value const& point) {
         return safe_add(total, point.value());
     };
 
     return std::accumulate(points.begin(), points.end(), uint64_t(0), sum);
 }
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin

@@ -23,56 +23,90 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/define.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
+
 namespace libbitcoin {
 namespace machine {
 
-class BI_API operation
-{
+// static constexpr auto invalid_code = opcode::disabled_xor;
+constexpr auto invalid_code = opcode::disabled_xor;
+
+class BI_API operation {
 public:
-    typedef std::vector<operation> list;
-    typedef list::const_iterator iterator;
+    using list = std::vector<operation>;
+    using iterator = list::const_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
-    operation();
-
-    operation(operation&& other);
-    operation(const operation& other);
-
-    operation(data_chunk&& uncoded, bool minimal=true);
-    operation(const data_chunk& uncoded, bool minimal=true);
-
+    operation() = default;
+    operation(data_chunk&& uncoded, bool minimal = true);
+    operation(data_chunk const& uncoded, bool minimal = true);
     operation(opcode code);
+
+    // operation(operation const& x) = default;
+    // operation(operation&& x) = default;
+    // operation& operator=(operation const& x) = default;
+    // operation& operator=(operation&& x) = default;
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    operation& operator=(operation&& other);
-    operation& operator=(const operation& other);
-
-    bool operator==(const operation& other) const;
-    bool operator!=(const operation& other) const;
+    bool operator==(operation const& x) const;
+    bool operator!=(operation const& x) const;
 
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static operation factory_from_data(const data_chunk& encoded);
+    static operation factory_from_data(data_chunk const& encoded);
     static operation factory_from_data(std::istream& stream);
-    static operation factory_from_data(reader& source);
 
-    bool from_data(const data_chunk& encoded);
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static operation factory_from_data(R& source) {
+        operation instance;
+        instance.from_data(source);
+        return instance;
+    }
+
+    bool from_data(data_chunk const& encoded);
     bool from_data(std::istream& stream);
-    bool from_data(reader& source);
 
-    bool from_string(const std::string& mnemonic);
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(R& source) {
+        ////reset();
+        valid_ = true;
+        code_ = static_cast<opcode>(source.read_byte());
+        auto const size = read_data_size(code_, source);
+
+        // The max_script_size and max_push_data_size constants limit
+        // evaluation, but not all scripts evaluate, so use max_block_size
+        // to guard memory allocation here.
+        if (size > get_max_block_size()) {  //TODO(bitprim): max_block_size changed to get_max_block_size (check space for BCH)
+            source.invalidate();
+        } else {
+            data_ = source.read_bytes(size);
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return valid_;
+    }
+
+    bool from_string(std::string const& mnemonic);
 
     bool is_valid() const;
 
@@ -80,8 +114,32 @@ public:
     //-------------------------------------------------------------------------
 
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(data_sink& stream) const;
+
+    template <Writer W>
+    void to_data(W& sink) const {
+        auto const size = data_.size();
+
+        sink.write_byte(static_cast<uint8_t>(code_));
+
+        switch (code_) {
+            case opcode::push_one_size:
+                sink.write_byte(static_cast<uint8_t>(size));
+                break;
+            case opcode::push_two_size:
+                sink.write_2_bytes_little_endian(static_cast<uint16_t>(size));
+                break;
+            case opcode::push_four_size:
+                sink.write_4_bytes_little_endian(static_cast<uint32_t>(size));
+                break;
+            default:
+                break;
+        }
+
+        sink.write_bytes(data_);
+    }
+
+    //void to_data(writer& sink) const;
 
     std::string to_string(uint32_t active_forks) const;
 
@@ -94,7 +152,7 @@ public:
     opcode code() const;
 
     /// Get the data, empty if not a push code or if invalid.
-    const data_chunk& data() const;
+    data_chunk const& data() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
@@ -104,11 +162,11 @@ public:
 
     /// Compute the minimal data opcode for a given chunk of data.
     /// Caller should clear data if converting to non-payload opcode.
-    static opcode minimal_opcode_from_data(const data_chunk& data);
+    static opcode minimal_opcode_from_data(data_chunk const& data);
 
     /// Compute the nominal data opcode for a given chunk of data.
     /// Restricted to sized data, avoids conversion to numeric opcodes.
-    static opcode nominal_opcode_from_data(const data_chunk& data);
+    static opcode nominal_opcode_from_data(data_chunk const& data);
 
     /// Convert the [1..16] value to the corresponding opcode (or undefined).
     static opcode opcode_from_positive(uint8_t value);
@@ -142,20 +200,23 @@ public:
 
 protected:
     operation(opcode code, data_chunk&& data, bool valid);
-    operation(opcode code, const data_chunk& data, bool valid);
-    static uint32_t read_data_size(opcode code, reader& source);
-    opcode opcode_from_data(const data_chunk& data, bool minimal);
+    operation(opcode code, data_chunk const& data, bool valid);
+
+    template <typename R>
+    static uint32_t read_data_size(opcode code, R& source);
+
+    opcode opcode_from_data(data_chunk const& data, bool minimal);
     void reset();
 
 private:
-    opcode code_;
+    opcode code_{invalid_code};
     data_chunk data_;
-    bool valid_;
+    bool valid_{false};
 };
 
-} // namespace machine
-} // namespace libbitcoin
+}  // namespace machine
+}  // namespace libbitcoin
 
-#include <bitcoin/infrastructure/impl/machine/operation.ipp>
+#include <bitcoin/bitcoin/impl/machine/operation.ipp>
 
 #endif

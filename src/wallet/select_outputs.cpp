@@ -20,27 +20,26 @@
 
 #include <algorithm>
 #include <cstdint>
+
+#include <bitcoin/bitcoin/chain/points_value.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/bitcoin/chain/points_value.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
 using namespace bc::chain;
 
-void select_outputs::greedy(points_value& out, const points_value& unspent,
-    uint64_t minimum_value)
-{
+void select_outputs::greedy(points_value& out, const points_value& unspent, uint64_t minimum_value) {
     out.points.clear();
 
     // The minimum required value does not exist.
-    if (unspent.value() < minimum_value)
+    if (unspent.value() < minimum_value) {
         return;
+    }
 
     // Optimization for simple case not requiring search.
-    if (unspent.points.size() == 1)
-    {
+    if (unspent.points.size() == 1) {
         out.points.push_back(unspent.points.front());
         return;
     }
@@ -48,29 +47,25 @@ void select_outputs::greedy(points_value& out, const points_value& unspent,
     // Copy the points list for safe manipulation.
     auto copy = unspent.points;
 
-    const auto below = [minimum_value](const point_value& point)
-    {
+    auto const below = [minimum_value](point_value const& point) {
         return point.value() < minimum_value;
     };
 
-    const auto lesser = [](const point_value& left, const point_value& right)
-    {
-        return left.value() < right.value();
+    auto const lesser = [](point_value const& x, point_value const& y) {
+        return x.value() < y.value();
     };
 
-    const auto greater = [](const point_value& left, const point_value& right)
-    {
-        return left.value() > right.value();
+    auto const greater = [](point_value const& x, point_value const& y) {
+        return x.value() > y.value();
     };
 
     // Reorder list beteen values that exceed minimum and those that do not.
-    const auto sufficient = std::partition(copy.begin(), copy.end(), below);
+    auto const sufficient = std::partition(copy.begin(), copy.end(), below);
 
     // If there are values large enough, return the smallest (of the largest).
-    const auto minimum = std::min_element(sufficient, copy.end(), lesser);
+    auto const minimum = std::min_element(sufficient, copy.end(), lesser);
 
-    if (minimum != copy.end())
-    {
+    if (minimum != copy.end()) {
         out.points.push_back(*minimum);
         return;
     }
@@ -79,31 +74,31 @@ void select_outputs::greedy(points_value& out, const points_value& unspent,
     std::sort(copy.begin(), copy.end(), greater);
 
     // This is naive, will not necessarily find the smallest combination.
-    for (auto point = copy.begin(); point != copy.end(); ++point)
-    {
-        out.points.push_back(*point);
+    // for (auto point = copy.begin(); point != copy.end(); ++point) {
+    for (auto const& point : copy) {
+        out.points.push_back(point);
 
-        if (out.value() >= minimum_value)
+        if (out.value() >= minimum_value) {
             return;
+        }
     }
 
     BITCOIN_ASSERT_MSG(false, "unreachable code reached");
 }
 
-void select_outputs::individual(points_value& out, const points_value& unspent,
-    uint64_t minimum_value)
-{
+void select_outputs::individual(points_value& out, const points_value& unspent, uint64_t minimum_value) {
     out.points.clear();
     out.points.reserve(unspent.points.size());
 
     // Select all individual points that satisfy the minimum.
-    for (const auto& point: unspent.points)
-        if (point.value() >= minimum_value)
+    for (auto const& point : unspent.points) {
+        if (point.value() >= minimum_value) {
             out.points.push_back(point);
+        }
+    }
 
-    const auto lesser = [](const point_value& left, const point_value& right)
-    {
-        return left.value() < right.value();
+    auto const lesser = [](point_value const& x, point_value const& y) {
+        return x.value() < y.value();
     };
 
     // Return in ascending order by value.
@@ -111,24 +106,19 @@ void select_outputs::individual(points_value& out, const points_value& unspent,
     std::sort(out.points.begin(), out.points.end(), lesser);
 }
 
-void select_outputs::select(points_value& out, const points_value& unspent,
-    uint64_t minimum_value, algorithm option)
-{
-    switch(option)
-    {
-        case algorithm::individual:
-        {
+void select_outputs::select(points_value& out, const points_value& unspent, uint64_t minimum_value, algorithm option) {
+    switch (option) {
+        case algorithm::individual: {
             individual(out, unspent, minimum_value);
             break;
         }
         case algorithm::greedy:
-        default:
-        {
+        default: {
             greedy(out, unspent, minimum_value);
             break;
         }
     }
 }
 
-} // namspace wallet
-} // namspace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin

@@ -76,3 +76,6 @@ CMakeSettings.json
 
 check_files.py
 test_marchs.py
+
+build2/
+

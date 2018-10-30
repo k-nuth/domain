@@ -19,46 +19,42 @@
 #ifndef LIBBITCOIN_PARSE_ENCRYPTED_PREFIX_IPP
 #define LIBBITCOIN_PARSE_ENCRYPTED_PREFIX_IPP
 
-#include <cstdint>
 #include <cstddef>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <cstdint>
+
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
-template<size_t Size>
+template <size_t Size>
 parse_encrypted_prefix<Size>::parse_encrypted_prefix(
     const byte_array<Size>& value)
-  : prefix_(value), valid_(false)
-{
+    : prefix_(value), valid_(false) {
 }
 
-template<size_t Size>
-uint8_t parse_encrypted_prefix<Size>::context() const
-{
+template <size_t Size>
+uint8_t parse_encrypted_prefix<Size>::context() const {
     return prefix_.back();
 }
 
-template<size_t Size>
-byte_array<Size> parse_encrypted_prefix<Size>::prefix() const
-{
+template <size_t Size>
+byte_array<Size> parse_encrypted_prefix<Size>::prefix() const {
     return prefix_;
 }
 
-template<size_t Size>
-bool parse_encrypted_prefix<Size>::valid() const
-{
+template <size_t Size>
+bool parse_encrypted_prefix<Size>::valid() const {
     return valid_;
 }
 
-template<size_t Size>
-void parse_encrypted_prefix<Size>::valid(bool value)
-{
+template <size_t Size>
+void parse_encrypted_prefix<Size>::valid(bool value) {
     valid_ = value;
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

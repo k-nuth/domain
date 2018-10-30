@@ -23,131 +23,93 @@
 #include <initializer_list>
 #include <istream>
 #include <utility>
-#include <bitcoin/infrastructure/utility/limits.hpp>
+
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
 namespace libbitcoin {
 namespace message {
 
-const std::string headers::command = "headers";
-const uint32_t headers::version_minimum = version::level::headers;
-const uint32_t headers::version_maximum = version::level::maximum;
+std::string const headers::command = "headers";
+uint32_t const headers::version_minimum = version::level::headers;
+uint32_t const headers::version_maximum = version::level::maximum;
 
-headers headers::factory_from_data(uint32_t version,
-    const data_chunk& data)
-{
+headers headers::factory_from_data(uint32_t version, data_chunk const& data) {
     headers instance;
     instance.from_data(version, data);
     return instance;
 }
 
-headers headers::factory_from_data(uint32_t version,
-    std::istream& stream)
-{
+headers headers::factory_from_data(uint32_t version, std::istream& stream) {
     headers instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-headers headers::factory_from_data(uint32_t version,
-    reader& source)
-{
-    headers instance;
-    instance.from_data(version, source);
-    return instance;
-}
-
-headers::headers()
-  : elements_()
-{
-}
-
 // Uses headers copy assignment.
-headers::headers(const header::list& values)
-  : elements_(values)
-{
+headers::headers(header::list const& values)
+    : elements_(values) {
 }
 
 headers::headers(header::list&& values)
-  : elements_(std::move(values))
-{
+    : elements_(std::move(values)) {
 }
 
-headers::headers(const std::initializer_list<header>& values)
-  : elements_(values)
-{
+headers::headers(std::initializer_list<header> const& values)
+    : elements_(values) {
 }
 
-headers::headers(const headers& other)
-  : headers(other.elements_)
-{
+// headers::headers(headers const& x)
+//     : headers(x.elements_) {
+// }
+
+// headers::headers(headers&& x) noexcept
+//     : headers(std::move(x.elements_)) 
+// {}
+
+// headers& headers::operator=(headers&& x) noexcept {
+//     elements_ = std::move(x.elements_);
+//     return *this;
+// }
+
+bool headers::operator==(headers const& x) const {
+    return elements_ == x.elements_;
 }
 
-headers::headers(headers&& other)
-  : headers(std::move(other.elements_))
-{
+bool headers::operator!=(headers const& x) const {
+    return !(*this == x);
 }
 
-bool headers::is_valid() const
-{
+
+bool headers::is_valid() const {
     return !elements_.empty();
 }
 
-void headers::reset()
-{
+void headers::reset() {
     elements_.clear();
     elements_.shrink_to_fit();
 }
 
-bool headers::from_data(uint32_t version, const data_chunk& data)
-{
+bool headers::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool headers::from_data(uint32_t version, std::istream& stream)
-{
-    istream_reader source(stream);
-    return from_data(version, source);
+bool headers::from_data(uint32_t version, std::istream& stream) {
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool headers::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > max_get_headers)
-        source.invalidate();
-    else
-        elements_.resize(count);
-
-    // Order is required.
-    for (auto& element: elements_)
-        if (!element.from_data(version, source))
-            break;
-
-    if (version < headers::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
-
-data_chunk headers::to_data(uint32_t version) const
-{
+data_chunk headers::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -156,31 +118,22 @@ data_chunk headers::to_data(uint32_t version) const
     return data;
 }
 
-void headers::to_data(uint32_t version, std::ostream& stream) const
-{
-    ostream_writer sink(stream);
-    to_data(version, sink);
+void headers::to_data(uint32_t version, data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void headers::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_variable_little_endian(elements_.size());
-
-    for (const auto& element: elements_)
-        element.to_data(version, sink);
-}
-
-bool headers::is_sequential() const
-{
-    if (elements_.empty())
+bool headers::is_sequential() const {
+    if (elements_.empty()) {
         return true;
+    }
 
     auto previous = elements_.front().hash();
 
-    for (auto it = elements_.begin() + 1; it != elements_.end(); ++it)
-    {
-        if (it->previous_block_hash() != previous)
+    for (auto it = elements_.begin() + 1; it != elements_.end(); ++it) {
+        if (it->previous_block_hash() != previous) {
             return false;
+        }
 
         previous = it->hash();
     }
@@ -188,12 +141,10 @@ bool headers::is_sequential() const
     return true;
 }
 
-void headers::to_hashes(hash_list& out) const
-{
+void headers::to_hashes(hash_list& out) const {
     out.clear();
     out.reserve(elements_.size());
-    const auto map = [&out](const header& header)
-    {
+    auto const map = [&out](header const& header) {
         out.push_back(header.hash());
     };
 
@@ -201,59 +152,36 @@ void headers::to_hashes(hash_list& out) const
 }
 
 void headers::to_inventory(inventory_vector::list& out,
-    inventory::type_id type) const
-{
+                           inventory::type_id type) const {
     out.clear();
     out.reserve(elements_.size());
-    const auto map = [&out, type](const header& header)
-    {
+    auto const map = [&out, type](header const& header) {
         out.emplace_back(type, header.hash());
     };
 
     std::for_each(elements_.begin(), elements_.end(), map);
 }
 
-size_t headers::serialized_size(uint32_t version) const
-{
+size_t headers::serialized_size(uint32_t version) const {
     return message::variable_uint_size(elements_.size()) +
-        (elements_.size() * header::satoshi_fixed_size(version));
+           (elements_.size() * header::satoshi_fixed_size(version));
 }
 
-header::list& headers::elements()
-{
+header::list& headers::elements() {
     return elements_;
 }
 
-const header::list& headers::elements() const
-{
+header::list const& headers::elements() const {
     return elements_;
 }
 
-void headers::set_elements(const header::list& values)
-{
+void headers::set_elements(header::list const& values) {
     elements_ = values;
 }
 
-void headers::set_elements(header::list&& values)
-{
+void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
 }
 
-headers& headers::operator=(headers&& other)
-{
-    elements_ = std::move(other.elements_);
-    return *this;
-}
-
-bool headers::operator==(const headers& other) const
-{
-    return (elements_ == other.elements_);
-}
-
-bool headers::operator!=(const headers& other) const
-{
-    return !(*this == other);
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

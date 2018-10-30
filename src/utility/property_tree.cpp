@@ -22,18 +22,19 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+
 #include <boost/property_tree/ptree.hpp>
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/config/base16.hpp>
+
 #include <bitcoin/bitcoin/config/header.hpp>
-#include <bitcoin/infrastructure/config/hash160.hpp>
-#include <bitcoin/infrastructure/config/hash256.hpp>
 #include <bitcoin/bitcoin/config/input.hpp>
 #include <bitcoin/bitcoin/config/output.hpp>
 #include <bitcoin/bitcoin/config/transaction.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/math/stealth.hpp>
+#include <bitcoin/infrastructure/config/base16.hpp>
+#include <bitcoin/infrastructure/config/hash160.hpp>
+#include <bitcoin/infrastructure/config/hash256.hpp>
 #include <bitcoin/infrastructure/utility/collection.hpp>
-
 
 namespace libbitcoin {
 
@@ -53,9 +54,8 @@ using namespace bc::wallet;
 
 // headers
 
-ptree property_list(const config::header& header)
-{
-    const chain::header& block_header = header;
+ptree property_list(const config::header& header) {
+    chain::header const& block_header = header;
 
     ptree tree;
     tree.put("bits", block_header.bits());
@@ -68,15 +68,13 @@ ptree property_list(const config::header& header)
     return tree;
 }
 
-ptree property_tree(const config::header& header)
-{
+ptree property_tree(const config::header& header) {
     ptree tree;
     tree.add_child("header", property_list(header));
     return tree;
 }
 
-ptree property_tree(const std::vector<config::header>& headers, bool json)
-{
+ptree property_tree(const std::vector<config::header>& headers, bool json) {
     ptree tree;
     tree.add_child("headers", property_tree_list("header", headers, json));
     return tree;
@@ -84,58 +82,56 @@ ptree property_tree(const std::vector<config::header>& headers, bool json)
 
 // inputs
 
-ptree property_list(const chain::input& tx_input)
-{
+ptree property_list(chain::input const& tx_input) {
     ptree tree;
 
     // This does not support pay_multisig or pay_public_key (nonstandard).
     // This will have default versioning, but the address version is unused.
-    const auto address = tx_input.address();
+    auto const address = tx_input.address();
 
-    if (address)
+    if (address) {
         tree.put("address_hash", hash160(address.hash()));
+    }
 
     tree.put("previous_output.hash", hash256(tx_input.previous_output().hash()));
     tree.put("previous_output.index", tx_input.previous_output().index());
     tree.put("script", tx_input.script().to_string(rule_fork::all_rules));
     tree.put("sequence", tx_input.sequence());
 
-    if (tx_input.is_segregated())
+#ifndef BITPRIM_CURRENCY_BCH
+    if (tx_input.is_segregated()) {
         tree.put("witness", tx_input.witness().to_string());
+    }
+#endif
 
     return tree;
 }
 
-ptree property_tree(const chain::input& tx_input)
-{
+ptree property_tree(chain::input const& tx_input) {
     ptree tree;
     tree.add_child("input", property_list(tx_input));
     return tree;
 }
 
-ptree property_tree(const chain::input::list& tx_inputs, bool json)
-{
+ptree property_tree(const chain::input::list& tx_inputs, bool json) {
     ptree tree;
     tree.add_child("inputs", property_tree_list("input", tx_inputs, json));
     return tree;
 }
 
-ptree property_list(const config::input& input)
-{
-    const chain::input& tx_input = input;
+ptree property_list(const config::input& input) {
+    chain::input const& tx_input = input;
     return property_list(tx_input);
 }
 
-ptree property_tree(const config::input& input)
-{
+ptree property_tree(const config::input& input) {
     ptree tree;
     tree.add_child("input", property_list(input));
     return tree;
 }
 
-ptree property_tree(const std::vector<config::input>& inputs, bool json)
-{
-    const auto tx_inputs = cast<input, chain::input>(inputs);
+ptree property_tree(const std::vector<config::input>& inputs, bool json) {
+    auto const tx_inputs = cast<input, chain::input>(inputs);
 
     ptree tree;
     tree.add_child("inputs", property_tree_list("input", tx_inputs, json));
@@ -144,30 +140,28 @@ ptree property_tree(const std::vector<config::input>& inputs, bool json)
 
 // outputs
 
-ptree property_list(const chain::output& tx_output)
-{
+ptree property_list(const chain::output& tx_output) {
     ptree tree;
 
     // This does not support pay_multisig or pay_public_key (nonstandard).
     // This will have default versioning, but the address version is unused.
-    const auto address = tx_output.address();
+    auto const address = tx_output.address();
 
-    if (address)
+    if (address) {
         tree.put("address_hash", hash160(address.hash()));
+    }
 
     tree.put("script", tx_output.script().to_string(rule_fork::all_rules));
 
-    // TODO: this will eventually change due to privacy problems, see:
+    // TODO(libbitcoin): this will eventually change due to privacy problems, see:
     // lists.dyne.org/lurker/message/20140812.214120.317490ae.en.html
 
-    if (!address)
-    {
+    if ( ! address) {
         uint32_t stealth_prefix;
         ec_compressed ephemeral_key;
 
         if (to_stealth_prefix(stealth_prefix, tx_output.script()) &&
-            extract_ephemeral_key(ephemeral_key, tx_output.script()))
-        {
+            extract_ephemeral_key(ephemeral_key, tx_output.script())) {
             tree.put("stealth.prefix", stealth_prefix);
             tree.put("stealth.ephemeral_public_key", ec_public(ephemeral_key));
         }
@@ -177,15 +171,13 @@ ptree property_list(const chain::output& tx_output)
     return tree;
 }
 
-ptree property_tree(const chain::output& tx_output)
-{
+ptree property_tree(const chain::output& tx_output) {
     ptree tree;
     tree.add_child("output", property_list(tx_output));
     return tree;
 }
 
-ptree property_tree(const chain::output::list& tx_outputs, bool json)
-{
+ptree property_tree(const chain::output::list& tx_outputs, bool json) {
     ptree tree;
     tree.add_child("outputs", property_tree_list("output", tx_outputs, json));
     return tree;
@@ -193,8 +185,7 @@ ptree property_tree(const chain::output::list& tx_outputs, bool json)
 
 // points
 
-ptree property_list(const chain::point_value& point)
-{
+ptree property_list(const chain::point_value& point) {
     ptree tree;
     tree.put("hash", hash256(point.hash()));
     tree.put("index", point.index());
@@ -202,8 +193,7 @@ ptree property_list(const chain::point_value& point)
     return tree;
 }
 
-ptree property_tree(const chain::points_value& values, bool json)
-{
+ptree property_tree(const chain::points_value& values, bool json) {
     ptree tree;
     tree.add_child("points", property_tree_list("point", values.points, json));
     return tree;
@@ -211,9 +201,8 @@ ptree property_tree(const chain::points_value& values, bool json)
 
 // transactions
 
-ptree property_list(const config::transaction& transaction, bool json)
-{
-    const chain::transaction& tx = transaction;
+ptree property_list(const config::transaction& transaction, bool json) {
+    chain::transaction const& tx = transaction;
 
     ptree tree;
     tree.put("hash", hash256(tx.hash()));
@@ -224,25 +213,22 @@ ptree property_list(const config::transaction& transaction, bool json)
     return tree;
 }
 
-ptree property_tree(const config::transaction& transaction, bool json)
-{
+ptree property_tree(const config::transaction& transaction, bool json) {
     ptree tree;
     tree.add_child("transaction", property_list(transaction, json));
     return tree;
 }
 
-ptree property_tree(const std::vector<config::transaction>& transactions, bool json)
-{
+ptree property_tree(const std::vector<config::transaction>& transactions, bool json) {
     ptree tree;
     tree.add_child("transactions", property_tree_list_of_lists("transaction",
-        transactions, json));
+                                                               transactions, json));
     return tree;
 }
 
 // wrapper
 
-ptree property_list(const wallet::wrapped_data& wrapper)
-{
+ptree property_list(const wallet::wrapped_data& wrapper) {
     ptree tree;
     tree.put("checksum", wrapper.checksum);
     tree.put("payload", base16(wrapper.payload));
@@ -250,8 +236,7 @@ ptree property_list(const wallet::wrapped_data& wrapper)
     return tree;
 }
 
-ptree property_tree(const wallet::wrapped_data& wrapper)
-{
+ptree property_tree(const wallet::wrapped_data& wrapper) {
     ptree tree;
     tree.add_child("wrapper", property_list(wrapper));
     return tree;
@@ -259,8 +244,7 @@ ptree property_tree(const wallet::wrapped_data& wrapper)
 
 // metadata
 
-ptree property_list(const hash_digest& hash, size_t height, size_t index)
-{
+ptree property_list(hash_digest const& hash, size_t height, size_t index) {
     ptree tree;
     tree.put("hash", hash256(hash));
     tree.put("height", height);
@@ -268,8 +252,7 @@ ptree property_list(const hash_digest& hash, size_t height, size_t index)
     return tree;
 }
 
-ptree property_tree(const hash_digest& hash, size_t height, size_t index)
-{
+ptree property_tree(hash_digest const& hash, size_t height, size_t index) {
     ptree tree;
     tree.add_child("metadata", property_list(hash, height, index));
     return tree;
@@ -277,16 +260,16 @@ ptree property_tree(const hash_digest& hash, size_t height, size_t index)
 
 // settings
 
-ptree property_tree(const settings_list& settings)
-{
+ptree property_tree(const settings_list& settings) {
     ptree list;
 
-    for (const auto& setting: settings)
+    for (auto const& setting : settings) {
         list.put(setting.first, setting.second);
+    }
 
     ptree tree;
     tree.add_child("settings", list);
     return tree;
 }
 
-} // namespace libbitcoin
+}  // namespace libbitcoin

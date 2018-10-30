@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
 
@@ -28,44 +29,45 @@ namespace libbitcoin {
 namespace wallet {
 
 /// Use to pass an encrypted public key.
-class BC_API ek_public
-{
+class BC_API ek_public {
 public:
     /// Constructors.
     ek_public();
-    ek_public(const std::string& encoded);
-    ek_public(const encrypted_public& key);
-    ek_public(const ek_public& other);
+    ek_public(std::string const& encoded);
+    ek_public(encrypted_public const& value);
+    ek_public(ek_public const& x) = default;
+
+    ek_public& operator=(ek_public const& x) = default;
 
     /// Operators.
-    bool operator<(const ek_public& other) const;
-    bool operator==(const ek_public& other) const;
-    bool operator!=(const ek_public& other) const;
-    ek_public& operator=(const ek_public& other);
+
+    bool operator==(ek_public const& x) const;
+    bool operator!=(ek_public const& x) const;
+    bool operator<(ek_public const& x) const;
     friend std::istream& operator>>(std::istream& in, ek_public& to);
-    friend std::ostream& operator<<(std::ostream& out, const ek_public& of);
+    friend std::ostream& operator<<(std::ostream& out, ek_public const& of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const encrypted_public&() const;
+    operator encrypted_public const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const encrypted_public& public_key() const;
+    encrypted_public const& public_key() const;
 
 private:
     /// Factories.
-    static ek_public from_string(const std::string& encoded);
+    static ek_public from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
+    bool valid_{false};
     encrypted_public public_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

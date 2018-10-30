@@ -22,13 +22,15 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin/config/point.hpp>
 #include <bitcoin/bitcoin/config/script.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/infrastructure/utility/string.hpp>
 #include <bitcoin/bitcoin/wallet/stealth_address.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/string.hpp>
 
 namespace libbitcoin {
 namespace config {
@@ -36,67 +38,56 @@ namespace config {
 using namespace boost::program_options;
 
 output::output()
-  : is_stealth_(false), amount_(0), version_(0), script_(),
-    pay_to_hash_(null_short_hash)
-{
-}
+    : pay_to_hash_(null_short_hash) 
+    // , script_()
+{}
 
-output::output(const std::string& tuple)
-  : output()
-{
+output::output(std::string const& tuple)
+    : output() {
     std::stringstream(tuple) >> *this;
 }
 
-bool output::is_stealth() const
-{
+bool output::is_stealth() const {
     return is_stealth_;
 }
 
-uint64_t output::amount() const
-{
+uint64_t output::amount() const {
     return amount_;
 }
 
-uint8_t output::version() const
-{
+uint8_t output::version() const {
     return version_;
 }
 
-const chain::script& output::script() const
-{
+chain::script const& output::script() const {
     return script_;
 }
 
-const short_hash& output::pay_to_hash() const
-{
+short_hash const& output::pay_to_hash() const {
     return pay_to_hash_;
 }
 
-std::istream& operator>>(std::istream& input, output& argument)
-{
+std::istream& operator>>(std::istream& input, output& argument) {
     std::string tuple;
     input >> tuple;
 
-    const auto tokens = split(tuple, point::delimeter);
-    if (tokens.size() < 2 || tokens.size() > 3)
-    {
+    auto const tokens = split(tuple, point::delimeter);
+    if (tokens.size() < 2 || tokens.size() > 3) {
         BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
     }
 
     uint64_t amount;
     deserialize(amount, tokens[1], true);
-    if (amount > max_money())
-    {
+    if (amount > max_money()) {
         BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
     }
 
     argument.amount_ = amount;
-    const auto& target = tokens.front();
+    auto const& target = tokens.front();
 
     // Is the target a payment address?
     const wallet::payment_address payment(target);
-    if (payment)
-    {
+    if (payment) {
         argument.version_ = payment.version();
         argument.pay_to_hash_ = payment.hash();
         return input;
@@ -104,32 +95,27 @@ std::istream& operator>>(std::istream& input, output& argument)
 
     // Is the target a stealth address?
     const wallet::stealth_address stealth(target);
-    if (stealth)
-    {
-        // TODO: finish stealth multisig implemetation (p2sh and !p2sh).
+    if (stealth) {
+        // TODO(libbitcoin): finish stealth multisig implemetation (p2sh and !p2sh).
 
-        if (stealth.spend_keys().size() != 1 || tokens.size() != 3)
-        {
+        if (stealth.spend_keys().size() != 1 || tokens.size() != 3) {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 
         data_chunk seed;
-        if (!decode_base16(seed, tokens[2]) || seed.size() < minimum_seed_size)
-        {
+        if ( ! decode_base16(seed, tokens[2]) || seed.size() < minimum_seed_size) {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 
         ec_secret ephemeral_secret;
-        if (!create_stealth_data(argument.script_, ephemeral_secret,
-            stealth.filter(), seed))
-        {
+        if ( ! create_stealth_data(argument.script_, ephemeral_secret,
+                                 stealth.filter(), seed)) {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 
         ec_compressed stealth_key;
-        if (!uncover_stealth(stealth_key, stealth.scan_key(), ephemeral_secret,
-            stealth.spend_keys().front()))
-        {
+        if ( ! uncover_stealth(stealth_key, stealth.scan_key(), ephemeral_secret,
+                             stealth.spend_keys().front())) {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 
@@ -143,8 +129,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     // Note that it is possible for a base16 encoded script to be interpreted
     // as an address above. That is unlikely but considered intended behavior.
     data_chunk decoded;
-    if (!decode_base16(decoded, target))
-    {
+    if ( ! decode_base16(decoded, target)) {
         BOOST_THROW_EXCEPTION(invalid_option_value(target));
     }
 
@@ -152,5 +137,5 @@ std::istream& operator>>(std::istream& input, output& argument)
     return input;
 }
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin

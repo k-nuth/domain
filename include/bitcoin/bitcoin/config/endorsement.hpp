@@ -20,9 +20,10 @@
 #define LIBBITCOIN_ENDORSEMENT_HPP
 
 #include <array>
+#include <cstdint>
 #include <iostream>
 #include <string>
-#include <cstdint>
+
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -32,48 +33,42 @@ namespace config {
 /**
  * Serialization helper to convert between endorsement string and data_chunk.
  */
-class BC_API endorsement
-{
+class BC_API endorsement {
 public:
-
-    /**
-     * Default constructor.
-     */
-    endorsement();
+    endorsement() = default;
 
     /**
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    endorsement(const std::string& hexcode);
+    endorsement(std::string const& hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    endorsement(const data_chunk& value);
+    endorsement(data_chunk const& value);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    template<size_t Size>
+    template <size_t Size>
     endorsement(const byte_array<Size>& value)
-      : value_(value.begin(), value.end())
-    {
+        : value_(value.begin(), value.end()) {
     }
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    endorsement(const endorsement& other);
+    endorsement(const endorsement& x);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const data_chunk&() const;
+    operator data_chunk const&() const;
 
     /**
      * Overload cast to generic data reference.
@@ -88,7 +83,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        endorsement& argument);
+                                    endorsement& argument);
 
     /**
      * Overload stream out.
@@ -97,17 +92,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const endorsement& argument);
+                                    const endorsement& argument);
 
 private:
-
     /**
      * The state of this object.
      */
     data_chunk value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

@@ -21,12 +21,14 @@
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
+
 #include <boost/program_options.hpp>
+
+#include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/formats/base_58.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/bitcoin/math/stealth.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/binary.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
@@ -49,84 +51,72 @@ static constexpr uint8_t max_spend_key_count = max_uint8;
 // [filter:prefix_number_bits / 8, round up][checksum:4]
 // Estimate assumes N = 0 and prefix_length = 0:
 constexpr size_t min_address_size = version_size + options_size +
-    ec_compressed_size + number_keys_size + number_sigs_size +
-    filter_length_size + checksum_size;
+                                    ec_compressed_size + number_keys_size + number_sigs_size +
+                                    filter_length_size + checksum_size;
 
 // Document the assumption that the prefix is defined with an 8 bit block size.
 static_assert(binary::bits_per_block == byte_bits,
-    "The stealth prefix must use an 8 bit block size.");
+              "The stealth prefix must use an 8 bit block size.");
 
 const uint8_t stealth_address::mainnet_p2kh = 0x2a;
-const uint8_t stealth_address::reuse_key_flag = 1 << 0;
+const uint8_t stealth_address::reuse_key_flag = 1u << 0u;
 const size_t stealth_address::min_filter_bits = 1 * byte_bits;
 const size_t stealth_address::max_filter_bits = sizeof(uint32_t) * byte_bits;
 
 stealth_address::stealth_address()
-  : valid_(false), version_(0), scan_key_(null_compressed_point),
-    spend_keys_(), signatures_(0), filter_()
-{
+    : scan_key_(null_compressed_point) 
+{}
+
+// stealth_address::stealth_address(stealth_address const& x)
+//     : valid_(x.valid_), version_(x.version_), scan_key_(x.scan_key_), spend_keys_(x.spend_keys_), signatures_(x.signatures_), filter_(x.filter_) {
+// }
+
+stealth_address::stealth_address(std::string const& encoded)
+    : stealth_address(from_string(encoded)) {
 }
 
-stealth_address::stealth_address(const stealth_address& other)
-  : valid_(other.valid_), version_(other.version_), scan_key_(other.scan_key_),
-    spend_keys_(other.spend_keys_), signatures_(other.signatures_),
-    filter_(other.filter_)
-{
+stealth_address::stealth_address(data_chunk const& decoded)
+    : stealth_address(from_stealth(decoded)) {
 }
 
-stealth_address::stealth_address(const std::string& encoded)
-  : stealth_address(from_string(encoded))
-{
+stealth_address::stealth_address(binary const& filter,
+                                 ec_compressed const& scan_key,
+                                 point_list const& spend_keys,
+                                 uint8_t signatures,
+                                 uint8_t version)
+    : stealth_address(from_stealth(filter, scan_key, spend_keys, signatures, version)) {
 }
 
-stealth_address::stealth_address(const data_chunk& decoded)
-  : stealth_address(from_stealth(decoded))
-{
-}
-
-stealth_address::stealth_address(const binary& filter,
-    const ec_compressed& scan_key, const point_list& spend_keys,
-    uint8_t signatures, uint8_t version)
-  : stealth_address(from_stealth(filter, scan_key, spend_keys, signatures,
-        version))
-{
-}
-
-stealth_address::stealth_address(uint8_t version, const binary& filter,
-    const ec_compressed& scan_key, const point_list& spend_keys,
-    uint8_t signatures)
-  : valid_(true), filter_(filter), scan_key_(scan_key),
-    spend_keys_(spend_keys), signatures_(signatures), version_(version)
-{
+stealth_address::stealth_address(uint8_t version, binary const& filter, ec_compressed const& scan_key, point_list const& spend_keys, uint8_t signatures)
+    : valid_(true), filter_(filter), scan_key_(scan_key), spend_keys_(spend_keys), signatures_(signatures), version_(version) {
 }
 
 // Factories.
 // ----------------------------------------------------------------------------
 
-stealth_address stealth_address::from_string(const std::string& encoded)
-{
+stealth_address stealth_address::from_string(std::string const& encoded) {
     data_chunk decoded;
-    return decode_base58(decoded, encoded) ? stealth_address(decoded) :
-        stealth_address();
+    return decode_base58(decoded, encoded) ? stealth_address(decoded) : stealth_address();
 }
 
 // This is the stealth address parser.
-stealth_address stealth_address::from_stealth(const data_chunk& decoded)
-{
+stealth_address stealth_address::from_stealth(data_chunk const& decoded) {
     // Size is guarded until we get to N.
     auto required_size = min_address_size;
-    if (decoded.size() < required_size || !verify_checksum(decoded))
-        return{};
+    if (decoded.size() < required_size || !verify_checksum(decoded)) {
+        return {};
+    }
 
     // [version:1 = 0x2a]
     auto iterator = decoded.begin();
-    const auto version = *iterator;
+    auto const version = *iterator;
 
     // [options:1]
     ++iterator;
-    const auto options = *iterator;
-    if (options > reuse_key_flag)
-        return{};
+    auto const options = *iterator;
+    if (options > reuse_key_flag) {
+        return {};
+    }
 
     // [scan_pubkey:33]
     ++iterator;
@@ -141,18 +131,19 @@ stealth_address stealth_address::from_stealth(const data_chunk& decoded)
 
     // Adjust and retest required size. for pubkey list.
     required_size += number_spend_pubkeys * ec_compressed_size;
-    if (decoded.size() < required_size)
-        return{};
+    if (decoded.size() < required_size) {
+        return {};
+    }
 
     // We don't explicitly save 'reuse', instead we add to spend_keys_.
     point_list spend_keys;
-    if (options == reuse_key_flag)
+    if (options == reuse_key_flag) {
         spend_keys.push_back(scan_key);
+    }
 
     // [spend_pubkey_1:33]..[spend_pubkey_N:33]
     ec_compressed point;
-    for (auto key = 0; key < number_spend_pubkeys; ++key)
-    {
+    for (auto key = 0; key < number_spend_pubkeys; ++key) {
         auto spend_key_begin = iterator;
         iterator += ec_compressed_size;
         std::copy_n(spend_key_begin, ec_compressed_size, point.begin());
@@ -160,112 +151,108 @@ stealth_address stealth_address::from_stealth(const data_chunk& decoded)
     }
 
     // [number_signatures:1]
-    const auto signatures = *iterator;
+    auto const signatures = *iterator;
     ++iterator;
 
     // [prefix_number_bits:1]
-    const auto filter_bits = *iterator;
-    if (filter_bits > max_filter_bits)
-        return{};
+    auto const filter_bits = *iterator;
+    if (filter_bits > max_filter_bits) {
+        return {};
+    }
 
     // [prefix:prefix_number_bits / 8, round up]
     ++iterator;
-    const auto filter_bytes = (filter_bits + (byte_bits - 1)) / byte_bits;
+    auto const filter_bytes = (filter_bits + (byte_bits - 1)) / byte_bits;
 
     // Adjust and retest required size.
     required_size += filter_bytes;
-    if (decoded.size() != required_size)
-        return{};
+    if (decoded.size() != required_size) {
+        return {};
+    }
 
     // Deserialize the filter bytes/blocks.
-    const data_chunk raw_filter(iterator, iterator + filter_bytes);
+    data_chunk const raw_filter(iterator, iterator + filter_bytes);
     const binary filter(filter_bits, raw_filter);
-    return{ filter, scan_key, spend_keys, signatures, version };
+    return {filter, scan_key, spend_keys, signatures, version};
 }
 
 // This corrects signature and spend_keys.
-stealth_address stealth_address::from_stealth(const binary& filter,
-    const ec_compressed& scan_key, const point_list& spend_keys,
-    uint8_t signatures, uint8_t version)
-{
+stealth_address stealth_address::from_stealth(binary const& filter,
+                                              ec_compressed const& scan_key,
+                                              point_list const& spend_keys,
+                                              uint8_t signatures,
+                                              uint8_t version) {
     // Ensure there is at least one spend key.
     auto spenders = spend_keys;
-    if (spenders.empty())
+    if (spenders.empty()) {
         spenders.push_back(scan_key);
+    }
 
     // Guard against too many keys.
-    const auto spend_keys_size = spenders.size();
-    if (spend_keys_size > max_spend_key_count)
-        return{};
+    auto const spend_keys_size = spenders.size();
+    if (spend_keys_size > max_spend_key_count) {
+        return {};
+    };
 
     // Guard against prefix too long.
     auto prefix_number_bits = filter.size();
-    if (prefix_number_bits > max_filter_bits)
-        return{};
+    if (prefix_number_bits > max_filter_bits) {
+        return {};
+    }
 
     // Coerce signatures to a valid range.
-    const auto maximum = signatures == 0 || signatures > spend_keys_size;
-    const auto coerced = maximum ? static_cast<uint8_t>(spend_keys_size) :
-        signatures;
+    auto const maximum = signatures == 0 || signatures > spend_keys_size;
+    auto const coerced = maximum ? static_cast<uint8_t>(spend_keys_size) : signatures;
 
     // Parameter order is used to change the constructor signature.
-    return{ version, filter, scan_key, spenders, coerced };
+    return {version, filter, scan_key, spenders, coerced};
 }
 
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-stealth_address::operator const bool() const
-{
+stealth_address::operator const bool() const {
     return valid_;
 }
 
-stealth_address::operator const data_chunk() const
-{
+stealth_address::operator data_chunk const() const {
     return to_chunk();
 }
 
 // Serializer.
 // ----------------------------------------------------------------------------
 
-std::string stealth_address::encoded() const
-{
+std::string stealth_address::encoded() const {
     return encode_base58(to_chunk());
 }
 
-uint8_t stealth_address::version() const
-{
+uint8_t stealth_address::version() const {
     return version_;
 }
 
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const binary& stealth_address::filter() const
-{
+binary const& stealth_address::filter() const {
     return filter_;
 }
 
-const ec_compressed& stealth_address::scan_key() const
-{
+ec_compressed const& stealth_address::scan_key() const {
     return scan_key_;
 }
 
-uint8_t stealth_address::signatures() const
-{
+uint8_t stealth_address::signatures() const {
     return signatures_;
 }
 
-const point_list& stealth_address::spend_keys() const
-{
+point_list const& stealth_address::spend_keys() const {
     return spend_keys_;
 }
 
 // Methods.
 // ----------------------------------------------------------------------------
 
-data_chunk stealth_address::to_chunk() const
-{
+data_chunk stealth_address::to_chunk() const {
     data_chunk address;
     address.push_back(version());
     address.push_back(options());
@@ -275,21 +262,24 @@ data_chunk stealth_address::to_chunk() const
     auto number_spend_pubkeys = static_cast<uint8_t>(spend_keys_.size());
 
     // Adjust for key reuse.
-    if (reuse_key())
+    if (reuse_key()) {
         --number_spend_pubkeys;
+    }
 
     address.push_back(number_spend_pubkeys);
 
     // Serialize the spend keys, excluding any that match the scan key.
-    for (const auto& key : spend_keys_)
-        if (key != scan_key_)
+    for (auto const& key : spend_keys_) {
+        if (key != scan_key_) {
             extend_data(address, key);
+        }
+    }
 
     address.push_back(signatures_);
 
     // The prefix must be guarded against a size greater than 32
     // so that the bitfield can convert into uint32_t and sized by uint8_t.
-    const auto prefix_number_bits = static_cast<uint8_t>(filter_.size());
+    auto const prefix_number_bits = static_cast<uint8_t>(filter_.size());
 
     // Serialize the prefix bytes/blocks.
     address.push_back(prefix_number_bits);
@@ -299,19 +289,16 @@ data_chunk stealth_address::to_chunk() const
     return address;
 }
 
-
 // Helpers.
 // ----------------------------------------------------------------------------
 
-bool stealth_address::reuse_key() const
-{
+bool stealth_address::reuse_key() const {
     // If the spend_keys_ contains the scan_key_ then the key is reused.
     return std::find(spend_keys_.begin(), spend_keys_.end(), scan_key_) !=
-        spend_keys_.end();
+           spend_keys_.end();
 }
 
-uint8_t stealth_address::options() const
-{
+uint8_t stealth_address::options() const {
     // There is currently only one option.
     return reuse_key() ? reuse_key_flag : 0x00;
 }
@@ -319,42 +306,36 @@ uint8_t stealth_address::options() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-stealth_address& stealth_address::operator=(const stealth_address& other)
-{
-    valid_ = other.valid_;
-    version_ = other.version_;
-    scan_key_ = other.scan_key_;
-    spend_keys_ = other.spend_keys_;
-    signatures_ = other.signatures_;
-    filter_ = other.filter_;
-    return *this;
+// stealth_address& stealth_address::operator=(stealth_address const& x) {
+//     valid_ = x.valid_;
+//     version_ = x.version_;
+//     scan_key_ = x.scan_key_;
+//     spend_keys_ = x.spend_keys_;
+//     signatures_ = x.signatures_;
+//     filter_ = x.filter_;
+//     return *this;
+// }
+
+bool stealth_address::operator<(stealth_address const& x) const {
+    return encoded() < x.encoded();
 }
 
-bool stealth_address::operator<(const stealth_address& other) const
-{
-    return encoded() < other.encoded();
+bool stealth_address::operator==(stealth_address const& x) const {
+    return valid_ == x.valid_ && version_ == x.version_ &&
+           scan_key_ == x.scan_key_ && spend_keys_ == x.spend_keys_ &&
+           signatures_ == x.signatures_ && filter_ == x.filter_;
 }
 
-bool stealth_address::operator==(const stealth_address& other) const
-{
-    return valid_ == other.valid_ && version_ == other.version_ &&
-        scan_key_ == other.scan_key_&& spend_keys_ == other.spend_keys_ &&
-        signatures_ == other.signatures_ && filter_ == other.filter_;
+bool stealth_address::operator!=(stealth_address const& x) const {
+    return !(*this == x);
 }
 
-bool stealth_address::operator!=(const stealth_address& other) const
-{
-    return !(*this == other);
-}
-
-std::istream& operator>>(std::istream& in, stealth_address& to)
-{
+std::istream& operator>>(std::istream& in, stealth_address& to) {
     std::string value;
     in >> value;
     to = stealth_address(value);
 
-    if (!to)
-    {
+    if ( ! to) {
         using namespace boost::program_options;
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }
@@ -362,11 +343,10 @@ std::istream& operator>>(std::istream& in, stealth_address& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const stealth_address& of)
-{
+std::ostream& operator<<(std::ostream& out, stealth_address const& of) {
     out << of.encoded();
     return out;
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin

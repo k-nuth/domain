@@ -19,129 +19,99 @@
 #include <bitcoin/bitcoin/message/get_block_transactions.hpp>
 
 #include <initializer_list>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
-
 
 namespace libbitcoin {
 namespace message {
 
-const std::string get_block_transactions::command = "getblocktxn";
-const uint32_t get_block_transactions::version_minimum = version::level::bip152;
-const uint32_t get_block_transactions::version_maximum = version::level::bip152;
+std::string const get_block_transactions::command = "getblocktxn";
+uint32_t const get_block_transactions::version_minimum = version::level::bip152;
+uint32_t const get_block_transactions::version_maximum = version::level::bip152;
 
-get_block_transactions get_block_transactions::factory_from_data(
-    uint32_t version, const data_chunk& data)
-{
+get_block_transactions get_block_transactions::factory_from_data(uint32_t version, data_chunk const& data) {
     get_block_transactions instance;
     instance.from_data(version, data);
     return instance;
 }
 
-get_block_transactions get_block_transactions::factory_from_data(
-    uint32_t version, std::istream& stream)
-{
+get_block_transactions get_block_transactions::factory_from_data(uint32_t version, std::istream& stream) {
     get_block_transactions instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-get_block_transactions get_block_transactions::factory_from_data(
-    uint32_t version, reader& source)
-{
-    get_block_transactions instance;
-    instance.from_data(version, source);
-    return instance;
-}
-
 get_block_transactions::get_block_transactions()
-  : block_hash_(null_hash), indexes_()
-{
+    : block_hash_(null_hash) 
+{}
+
+get_block_transactions::get_block_transactions(hash_digest const& block_hash, const std::vector<uint64_t>& indexes)
+    : block_hash_(block_hash)
+    , indexes_(indexes) 
+{}
+
+get_block_transactions::get_block_transactions(hash_digest const& block_hash, std::vector<uint64_t>&& indexes)
+    : block_hash_(block_hash)
+    , indexes_(std::move(indexes)) 
+{}
+
+// get_block_transactions::get_block_transactions(get_block_transactions const& x)
+//     // : get_block_transactions(x.block_hash_, x.indexes_) 
+//     : block_hash_(x.block_hash_)
+//     , indexes_(x.indexes_) 
+// {}
+
+// get_block_transactions::get_block_transactions(get_block_transactions&& x) noexcept
+//     // : get_block_transactions(x.block_hash_, std::move(x.indexes_)) 
+//     : block_hash_(x.block_hash_)
+//     , indexes_(std::move(x.indexes_)) 
+// {}
+
+// get_block_transactions& get_block_transactions::operator=(get_block_transactions&& x) noexcept {
+//     block_hash_ = x.block_hash_;
+//     indexes_ = x.indexes_;
+//     return *this;
+// }
+
+bool get_block_transactions::operator==(get_block_transactions const& x) const {
+    return (block_hash_ == x.block_hash_) && (indexes_ == x.indexes_);
 }
 
-get_block_transactions::get_block_transactions(const hash_digest& block_hash,
-    const std::vector<uint64_t>& indexes)
-  : block_hash_(block_hash), indexes_(indexes)
-{
+bool get_block_transactions::operator!=(get_block_transactions const& x) const {
+    return !(*this == x);
 }
 
-get_block_transactions::get_block_transactions(hash_digest&& block_hash,
-    std::vector<uint64_t>&& indexes)
-  : block_hash_(std::move(block_hash)), indexes_(std::move(indexes))
-{
-}
 
-get_block_transactions::get_block_transactions(
-    const get_block_transactions& other)
-  : get_block_transactions(other.block_hash_, other.indexes_)
-{
-}
-
-get_block_transactions::get_block_transactions(get_block_transactions&& other)
-  : get_block_transactions(std::move(other.block_hash_),
-      std::move(other.indexes_))
-{
-}
-
-bool get_block_transactions::is_valid() const
-{
+bool get_block_transactions::is_valid() const {
     return (block_hash_ != null_hash);
 }
 
-void get_block_transactions::reset()
-{
+void get_block_transactions::reset() {
     block_hash_ = null_hash;
     indexes_.clear();
     indexes_.shrink_to_fit();
 }
 
-bool get_block_transactions::from_data(uint32_t version,
-    const data_chunk& data)
-{
+bool get_block_transactions::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool get_block_transactions::from_data(uint32_t version,
-    std::istream& stream)
-{
-    istream_reader source(stream);
-    return from_data(version, source);
+bool get_block_transactions::from_data(uint32_t version, std::istream& stream) {
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool get_block_transactions::from_data(uint32_t version,
-    reader& source)
-{
-    reset();
-
-    block_hash_ = source.read_hash();
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
-        source.invalidate();
-    else
-        indexes_.reserve(count);
-
-    for (size_t position = 0; position < count && source; ++position)
-        indexes_.push_back(source.read_size_little_endian());
-
-    if (!source)
-        reset();
-
-    return source;
-}
-
-data_chunk get_block_transactions::to_data(uint32_t version) const
-{
+data_chunk get_block_transactions::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -150,92 +120,48 @@ data_chunk get_block_transactions::to_data(uint32_t version) const
     return data;
 }
 
-void get_block_transactions::to_data(uint32_t version,
-    std::ostream& stream) const
-{
-    ostream_writer sink(stream);
-    to_data(version, sink);
+void get_block_transactions::to_data(uint32_t version, data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void get_block_transactions::to_data(uint32_t version,
-    writer& sink) const
-{
-    sink.write_hash(block_hash_);
-    sink.write_variable_little_endian(indexes_.size());
-    for (const auto& element: indexes_)
-        sink.write_variable_little_endian(element);
-}
-
-size_t get_block_transactions::serialized_size(uint32_t version) const
-{
+size_t get_block_transactions::serialized_size(uint32_t /*version*/) const {
     auto size = hash_size + message::variable_uint_size(indexes_.size());
 
-    for (const auto& element: indexes_)
+    for (auto const& element : indexes_) {
         size += message::variable_uint_size(element);
+    }
 
     return size;
 }
 
-hash_digest& get_block_transactions::block_hash()
-{
+hash_digest& get_block_transactions::block_hash() {
     return block_hash_;
 }
 
-const hash_digest& get_block_transactions::block_hash() const
-{
+hash_digest const& get_block_transactions::block_hash() const {
     return block_hash_;
 }
 
-void get_block_transactions::set_block_hash(const hash_digest& value)
-{
+void get_block_transactions::set_block_hash(hash_digest const& value) {
     block_hash_ = value;
 }
 
-void get_block_transactions::set_block_hash(hash_digest&& value)
-{
-    block_hash_ = std::move(value);
-}
-
-std::vector<uint64_t>& get_block_transactions::indexes()
-{
+std::vector<uint64_t>& get_block_transactions::indexes() {
     return indexes_;
 }
 
-const std::vector<uint64_t>& get_block_transactions::indexes() const
-{
+const std::vector<uint64_t>& get_block_transactions::indexes() const {
     return indexes_;
 }
 
-void get_block_transactions::set_indexes(const std::vector<uint64_t>& values)
-{
+void get_block_transactions::set_indexes(const std::vector<uint64_t>& values) {
     indexes_ = values;
 }
 
-void get_block_transactions::set_indexes(std::vector<uint64_t>&& values)
-{
+void get_block_transactions::set_indexes(std::vector<uint64_t>&& values) {
     indexes_ = values;
 }
 
-get_block_transactions& get_block_transactions::operator=(
-    get_block_transactions&& other)
-{
-    block_hash_ = other.block_hash_;
-    indexes_ = other.indexes_;
-    return *this;
-}
-
-bool get_block_transactions::operator==(
-    const get_block_transactions& other) const
-{
-    return (block_hash_ == other.block_hash_)
-        && (indexes_ == other.indexes_);
-}
-
-bool get_block_transactions::operator!=(
-    const get_block_transactions& other) const
-{
-    return !(*this == other);
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

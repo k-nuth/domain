@@ -19,71 +19,75 @@
 #include <bitcoin/bitcoin/wallet/stealth_sender.hpp>
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/math/stealth.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/utility/binary.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 
 namespace libbitcoin {
 namespace wallet {
 
-stealth_sender::stealth_sender(const stealth_address& address,
-    const data_chunk& seed, const binary& filter, uint8_t version)
-  : version_(version)
-{
+stealth_sender::stealth_sender(stealth_address const& address,
+                               data_chunk const& seed,
+                               binary const& filter,
+                               uint8_t version)
+    : version_(version) {
     ec_secret ephemeral_private;
-    if (create_ephemeral_key(ephemeral_private, seed))
+    if (create_ephemeral_key(ephemeral_private, seed)) {
         initialize(ephemeral_private, address, seed, filter);
+    }
 }
 
-stealth_sender::stealth_sender(const ec_secret& ephemeral_private,
-    const stealth_address& address, const data_chunk& seed,
-    const binary& filter, uint8_t version)
-  : version_(version)
-{
+stealth_sender::stealth_sender(ec_secret const& ephemeral_private,
+                               stealth_address const& address,
+                               data_chunk const& seed,
+                               binary const& filter,
+                               uint8_t version)
+    : version_(version) {
     initialize(ephemeral_private, address, seed, filter);
 }
 
-stealth_sender::operator const bool() const
-{
+stealth_sender::operator const bool() const {
     return address_;
 }
 
 // private
-// TODO: convert to factory and make script_ and address_ const.
-void stealth_sender::initialize(const ec_secret& ephemeral_private,
-    const stealth_address& address, const data_chunk& seed,
-    const binary& filter)
-{
+// TODO(libbitcoin): convert to factory and make script_ and address_ const.
+void stealth_sender::initialize(ec_secret const& ephemeral_private,
+                                stealth_address const& address,
+                                data_chunk const& seed,
+                                binary const& filter) {
     ec_compressed ephemeral_public;
-    if (!secret_to_public(ephemeral_public, ephemeral_private))
+    if ( ! secret_to_public(ephemeral_public, ephemeral_private)) {
         return;
+    }
 
-    const auto& spend_keys = address.spend_keys();
-    if (spend_keys.size() != 1)
+    auto const& spend_keys = address.spend_keys();
+    if (spend_keys.size() != 1) {
         return;
+    }
 
     ec_compressed sender_public;
-    if (!uncover_stealth(sender_public, address.scan_key(), ephemeral_private,
-        spend_keys.front()))
+    if ( ! uncover_stealth(sender_public, address.scan_key(), ephemeral_private, spend_keys.front())) {
         return;
+    }
 
-    if (create_stealth_script(script_, ephemeral_private, filter, seed))
-        address_ = { sender_public, version_ };
+    if (create_stealth_script(script_, ephemeral_private, filter, seed)) {
+        address_ = {sender_public, version_};
+    }
 }
 
 // Will be invalid if construct fails.
-const chain::script& stealth_sender::stealth_script() const
-{
+chain::script const& stealth_sender::stealth_script() const {
     return script_;
 }
 
 // Will be invalid if construct fails.
-const wallet::payment_address& stealth_sender::payment_address() const
-{
+const wallet::payment_address& stealth_sender::payment_address() const {
     return address_;
 }
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin

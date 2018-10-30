@@ -18,138 +18,98 @@
  */
 #include <bitcoin/bitcoin/message/block_transactions.hpp>
 
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+// #include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <bitcoin/infrastructure/utility/limits.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
-
 
 namespace libbitcoin {
 namespace message {
 
-const std::string block_transactions::command = "blocktxn";
-const uint32_t block_transactions::version_minimum = version::level::bip152;
-const uint32_t block_transactions::version_maximum = version::level::bip152;
+std::string const block_transactions::command = "blocktxn";
+uint32_t const block_transactions::version_minimum = version::level::bip152;
+uint32_t const block_transactions::version_maximum = version::level::bip152;
 
-block_transactions block_transactions::factory_from_data(uint32_t version,
-    const data_chunk& data)
-{
+block_transactions block_transactions::factory_from_data(uint32_t version, data_chunk const& data) {
     block_transactions instance;
     instance.from_data(version, data);
     return instance;
 }
 
-block_transactions block_transactions::factory_from_data(uint32_t version,
-    std::istream& stream)
-{
+block_transactions block_transactions::factory_from_data(uint32_t version, std::istream& stream) {
     block_transactions instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-block_transactions block_transactions::factory_from_data(uint32_t version,
-    reader& source)
-{
-    block_transactions instance;
-    instance.from_data(version, source);
-    return instance;
-}
-
 block_transactions::block_transactions()
-  : block_hash_(null_hash), transactions_()
-{
+    : block_hash_(null_hash) 
+{}
+
+block_transactions::block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions)
+    : block_hash_(block_hash)
+    , transactions_(transactions) 
+{}
+
+block_transactions::block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions)
+    : block_hash_(block_hash)
+    , transactions_(std::move(transactions)) 
+{}
+
+// block_transactions::block_transactions(block_transactions const& x)
+//     // : block_transactions(x.block_hash_, x.transactions_) 
+//     : block_hash_(x.block_hash_)
+//     , transactions_(x.transactions_) 
+// {}
+
+// block_transactions::block_transactions(block_transactions&& x) noexcept
+//     // : block_transactions(std::move(x.block_hash_), std::move(x.transactions_)) 
+//     : block_hash_(x.block_hash_)
+//     , transactions_(std::move(x.transactions_)) 
+// {}
+
+// block_transactions& block_transactions::operator=(block_transactions&& x) noexcept {
+//     block_hash_ = std::move(x.block_hash_);
+//     transactions_ = std::move(x.transactions_);
+//     return *this;
+// }
+
+bool block_transactions::operator==(block_transactions const& x) const {
+    return (block_hash_ == x.block_hash_) && (transactions_ == x.transactions_);
 }
 
-block_transactions::block_transactions(const hash_digest& block_hash,
-    const chain::transaction::list& transactions)
-  : block_hash_(block_hash), transactions_(transactions)
-{
+bool block_transactions::operator!=(block_transactions const& x) const {
+    return !(*this == x);
 }
 
-block_transactions::block_transactions(hash_digest&& block_hash,
-    chain::transaction::list&& transactions)
-  : block_hash_(std::move(block_hash)), transactions_(std::move(transactions))
-{
-}
-
-block_transactions::block_transactions(const block_transactions& other)
-  : block_transactions(other.block_hash_, other.transactions_)
-{
-}
-
-block_transactions::block_transactions(block_transactions&& other)
-  : block_transactions(std::move(other.block_hash_),
-      std::move(other.transactions_))
-{
-}
-
-bool block_transactions::is_valid() const
-{
+bool block_transactions::is_valid() const {
     return (block_hash_ != null_hash);
 }
 
-void block_transactions::reset()
-{
+void block_transactions::reset() {
     block_hash_ = null_hash;
     transactions_.clear();
     transactions_.shrink_to_fit();
 }
 
-bool block_transactions::from_data(uint32_t version,
-    const data_chunk& data)
-{
+bool block_transactions::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool block_transactions::from_data(uint32_t version,
-    std::istream& stream)
-{
-    istream_reader source(stream);
-    return from_data(version, source);
+bool block_transactions::from_data(uint32_t version, std::istream& stream) {
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool block_transactions::from_data(uint32_t version, reader& source)
-{
-    //std::cout << "bool block_transactions::from_data(uint32_t version, reader& source) \n";
-    reset();
-    
-    block_hash_ = source.read_hash();
-    const auto count = source.read_size_little_endian();
-
-    // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size())
-        source.invalidate();
-    else
-        transactions_.resize(count);
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-
-    // Order is required.
-    for (auto& tx: transactions_)
-        if ( ! tx.from_data(source, true, witness))
-            break;
-
-    if (version < block_transactions::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
-
-data_chunk block_transactions::to_data(uint32_t version) const
-{
+data_chunk block_transactions::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -158,101 +118,53 @@ data_chunk block_transactions::to_data(uint32_t version) const
     return data;
 }
 
-void block_transactions::to_data(uint32_t version,
-    std::ostream& stream) const
-{
-    ostream_writer sink(stream);
-    to_data(version, sink);
+void block_transactions::to_data(uint32_t version, data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void block_transactions::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_hash(block_hash_);
-    sink.write_variable_little_endian(transactions_.size());
-
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-    for (const auto& element: transactions_) {
-        element.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
-    }
-}
-
-size_t block_transactions::serialized_size(uint32_t version) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-
+size_t block_transactions::serialized_size(uint32_t /*version*/) const {
     auto size = hash_size + message::variable_uint_size(transactions_.size());
 
-    for (const auto& element: transactions_)
-        size += element.serialized_size(/*wire*/ true, witness, /*unconfirmed*/ false);
+    for (auto const& element : transactions_) {
+        size += element.serialized_size(/*wire*/ true, witness_default()
+#ifdef BITPRIM_CACHED_RPC_DATA
+                                       , /*unconfirmed*/ false
+#endif
+                                       );
+    }
 
     return size;
 }
 
-hash_digest& block_transactions::block_hash()
-{
+hash_digest& block_transactions::block_hash() {
     return block_hash_;
 }
 
-const hash_digest& block_transactions::block_hash() const
-{
+hash_digest const& block_transactions::block_hash() const {
     return block_hash_;
 }
 
-void block_transactions::set_block_hash(const hash_digest& value)
-{
+void block_transactions::set_block_hash(hash_digest const& value) {
     block_hash_ = value;
 }
 
-void block_transactions::set_block_hash(hash_digest&& value)
-{
-    block_hash_ = std::move(value);
-}
-
-chain::transaction::list& block_transactions::transactions()
-{
+chain::transaction::list& block_transactions::transactions() {
     return transactions_;
 }
 
-const chain::transaction::list& block_transactions::transactions() const
-{
+chain::transaction::list const& block_transactions::transactions() const {
     return transactions_;
 }
 
-void block_transactions::set_transactions(const chain::transaction::list& value)
-{
-    transactions_ = value;
+void block_transactions::set_transactions(chain::transaction::list const& x) {
+    transactions_ = x;
 }
 
-void block_transactions::set_transactions(chain::transaction::list&& value)
-{
-    transactions_ = std::move(value);
+void block_transactions::set_transactions(chain::transaction::list&& x) {
+    transactions_ = std::move(x);
 }
 
-block_transactions& block_transactions::operator=(block_transactions&& other)
-{
-    block_hash_ = std::move(other.block_hash_);
-    transactions_ = std::move(other.transactions_);
-    return *this;
-}
 
-bool block_transactions::operator==(const block_transactions& other) const
-{
-    return (block_hash_ == other.block_hash_)
-        && (transactions_ == other.transactions_);
-}
-
-bool block_transactions::operator!=(const block_transactions& other) const
-{
-    return !(*this == other);
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

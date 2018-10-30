@@ -19,11 +19,13 @@
 #ifndef LIBBITCOIN_PARSE_ENCRYPTED_TOKEN_HPP
 #define LIBBITCOIN_PARSE_ENCRYPTED_TOKEN_HPP
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+
+#include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
+
 #include "parse_encrypted_key.hpp"
 
 namespace libbitcoin {
@@ -31,12 +33,11 @@ namespace wallet {
 
 // Swap not defined.
 class parse_encrypted_token
-  : public parse_encrypted_prefix<8u>
-{
+    : public parse_encrypted_prefix<8u> {
 public:
     static byte_array<prefix_size> prefix_factory(bool lot_sequence);
 
-    explicit parse_encrypted_token(const encrypted_token& value);
+    explicit parse_encrypted_token(encrypted_token const& value);
 
     bool lot_sequence() const;
     hash_digest data() const;
@@ -53,10 +54,10 @@ private:
 
     const ek_entropy entropy_;
     const one_byte sign_;
-    const hash_digest data_;
+    hash_digest const data_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

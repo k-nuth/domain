@@ -20,10 +20,12 @@
 
 // #define LIBBITCOIN_VERSION BITPRIM_DOMAIN_VERSION
 
-namespace libbitcoin { namespace domain {
-     
+namespace libbitcoin {
+namespace domain {
+
 char const* version();
 
-}} /*namespace libbitcoin::domain*/
- 
-#endif // LIBBITCOIN_VERSION_HPP_
+}  // namespace domain
+}  // namespace libbitcoin
+
+#endif  // LIBBITCOIN_VERSION_HPP_

@@ -21,8 +21,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <utility>
-#include <bitcoin/bitcoin/constants.hpp>
+
 #include <bitcoin/bitcoin/chain/point.hpp>
+#include <bitcoin/bitcoin/constants.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -31,112 +32,62 @@ namespace chain {
 //-----------------------------------------------------------------------------
 
 output_point::output_point()
-  : point{}, validation{}
-{
-}
+    : validation{} 
+{}
 
-output_point::output_point(point&& value)
-  : point(std::move(value)), validation{}
-{
-}
+output_point::output_point(hash_digest const& hash, uint32_t index)
+    : point(hash, index), validation{} 
+{}
 
-output_point::output_point(const point& value)
-  : point(value), validation{}
-{
-}
-
-output_point::output_point(const output_point& other)
-  : point(other), validation(other.validation)
-{
-}
-
-output_point::output_point(output_point&& other)
-  : point(std::move(other)), validation(std::move(other.validation))
-{
-}
-
-output_point::output_point(hash_digest&& hash, uint32_t index)
-  : point({ std::move(hash), index }), validation{}
-{
-}
-
-output_point::output_point(const hash_digest& hash, uint32_t index)
-  : point(hash, index), validation{}
-{
-}
+output_point::output_point(point const& x)
+    : point(x), validation{} 
+{}
 
 // Operators.
 //-----------------------------------------------------------------------------
 
-output_point& output_point::operator=(point&& other)
-{
+output_point& output_point::operator=(point const& x) {
     reset();
-    point::operator=(std::move(other));
+    point::operator=(x);
     return *this;
 }
 
-output_point& output_point::operator=(const point& other)
-{
-    reset();
-    point::operator=(other);
-    return *this;
+bool operator==(output_point const& x, point const& y) {
+    return static_cast<point const&>(x) == y;
 }
 
-output_point& output_point::operator=(output_point&& other)
-{
-    point::operator=(std::move(other));
-    validation = std::move(other.validation);
-    return *this;
+bool operator!=(output_point const& x, point const& y) {
+    return !(x == y);
 }
 
-output_point& output_point::operator=(const output_point& other)
-{
-    point::operator=(other);
-    validation = other.validation;
-    return *this;
+bool operator==(point const& x, output_point const& y) {
+    return x == static_cast<point const&>(y);
 }
 
-bool output_point::operator==(const point& other) const
-{
-    return point::operator==(other);
+bool operator!=(point const& x, output_point const& y) {
+    return !(x == y);
 }
 
-bool output_point::operator!=(const point& other) const
-{
-    return point::operator!=(other);
+bool operator==(output_point const& x, output_point const& y) {
+    return static_cast<point const&>(x) == static_cast<point const&>(y);
 }
 
-bool output_point::operator==(const output_point& other) const
-{
-    return point::operator==(other);
-}
-
-bool output_point::operator!=(const output_point& other) const
-{
-    return !(*this == other);
+bool operator!=(output_point const& x, output_point const& y) {
+    return !(x == y);
 }
 
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-output_point output_point::factory_from_data(const data_chunk& data, bool wire)
-{
+output_point output_point::factory_from_data(data_chunk const& data, bool wire) {
     output_point instance;
     instance.from_data(data, wire);
     return instance;
 }
 
-output_point output_point::factory_from_data(std::istream& stream, bool wire)
-{
+output_point output_point::factory_from_data(std::istream& stream, bool wire) {
     output_point instance;
     instance.from_data(stream, wire);
-    return instance;
-}
-
-output_point output_point::factory_from_data(reader& source, bool wire)
-{
-    output_point instance;
-    instance.from_data(source, wire);
     return instance;
 }
 
@@ -144,15 +95,15 @@ output_point output_point::factory_from_data(reader& source, bool wire)
 //-----------------------------------------------------------------------------
 
 // For tx pool validation height is that of the candidate block.
-bool output_point::is_mature(size_t height) const
-{
+bool output_point::is_mature(size_t height) const {
     // Coinbase (null) inputs and those with non-coinbase prevouts are mature.
-    if (!validation.coinbase || is_null())
+    if ( ! validation.coinbase || is_null()) {
         return true;
+    }
 
     // The (non-coinbase) input refers to a coinbase output, so validate depth.
     return floor_subtract(height, validation.height) >= coinbase_maturity;
 }
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin

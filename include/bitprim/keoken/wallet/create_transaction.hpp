@@ -41,7 +41,7 @@ static constexpr uint64_t fees = 2000;
 
 using result_t = std::pair<libbitcoin::error::error_code_t, libbitcoin::chain::transaction>;
 
-BC_API 
+BC_API
 result_t tx_encode_create_asset(libbitcoin::chain::input_point::list const& outputs_to_spend,
                                 libbitcoin::wallet::payment_address const& asset_owner,
                                 uint64_t utxo_satoshis,
@@ -51,7 +51,7 @@ result_t tx_encode_create_asset(libbitcoin::chain::input_point::list const& outp
                                 uint32_t tx_version = 1,
                                 uint8_t script_version = 5);
 
-BC_API 
+BC_API
 result_t tx_encode_send_token(libbitcoin::chain::input_point::list const& outputs_to_spend,
                               libbitcoin::wallet::payment_address const& asset_owner,
                               uint64_t utxo_satoshis,
@@ -63,7 +63,7 @@ result_t tx_encode_send_token(libbitcoin::chain::input_point::list const& output
                               uint32_t tx_version = 1,
                               uint8_t script_version = 5);
 
-BC_API 
+BC_API
 result_t create_asset_tx_complete(libbitcoin::chain::input_point const& output_to_spend,
                                   libbitcoin::chain::script const& output_script,
                                   libbitcoin::ec_secret const& private_key,
@@ -73,7 +73,7 @@ result_t create_asset_tx_complete(libbitcoin::chain::input_point const& output_t
                                   std::string const& asset_name,
                                   amount_t asset_amount);
 
-BC_API 
+BC_API
 result_t send_token_tx_complete(libbitcoin::chain::input_point const& output_to_spend,
                                 libbitcoin::chain::script const& output_script,
                                 libbitcoin::ec_secret const& private_key,
@@ -85,8 +85,8 @@ result_t send_token_tx_complete(libbitcoin::chain::input_point const& output_to_
                                 asset_id_t asset_id,
                                 amount_t asset_amount);
 
-} // namespace wallet
-} // namespace keoken
-} // namespace bitprim
+}  // namespace wallet
+}  // namespace keoken
+}  // namespace bitprim
 
-#endif //BITPRIM_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_
+#endif  //BITPRIM_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_

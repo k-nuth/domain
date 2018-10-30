@@ -21,9 +21,10 @@
 #include <cstdint>
 #include <sstream>
 #include <utility>
-#include <bitcoin/bitcoin/constants.hpp>
+
+// #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
@@ -34,171 +35,106 @@
 namespace libbitcoin {
 namespace chain {
 
-static const auto store_point_size = std::tuple_size<point>::value;
-
-// This sentinel is serialized and defined by consensus, not implementation.
-const uint32_t point::null_index = no_previous_output;
+constexpr auto store_point_size = std::tuple_size<point>::value;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
 // A default instance is invalid (until modified).
+// constexpr
 point::point()
-  : hash_(null_hash), index_(0), valid_(false)
-{
-}
+    : hash_(null_hash)
+{}
 
-point::point(const hash_digest& hash, uint32_t index)
-  : hash_(hash), index_(index), valid_(true)
-{
-}
+// constexpr
+point::point(hash_digest const& hash, uint32_t index)
+    : hash_(hash), index_(index), valid_(true) {}
 
-point::point(hash_digest&& hash, uint32_t index)
-  : hash_(std::move(hash)), index_(index), valid_(true)
-{
-}
-
-// protected
-point::point(const hash_digest& hash, uint32_t index, bool valid)
-  : hash_(hash), index_(index), valid_(valid)
-{
-}
-
-// protected
-point::point(hash_digest&& hash, uint32_t index, bool valid)
-  : hash_(std::move(hash)), index_(index), valid_(valid)
-{
-}
-
-point::point(const point& other)
-  : point(other.hash_, other.index_, other.valid_)
-{
-}
-
-point::point(point&& other)
-  : point(std::move(other.hash_), other.index_, other.valid_)
-{
-}
+// // protected
+// point::point(hash_digest const& hash, uint32_t index, bool valid)
+//     : hash_(hash), index_(index), valid_(valid)
+// {}
 
 // Operators.
 //-----------------------------------------------------------------------------
 
-point& point::operator=(point&& other)
-{
-    hash_ = std::move(other.hash_);
-    index_ = other.index_;
-    return *this;
+// constexpr    //Note(bitprim): Could be constexpr in C++20
+bool operator==(point const& x, point const& y) {
+    return (x.hash_ == y.hash_) && (x.index_ == y.index_);
 }
 
-point& point::operator=(const point& other)
-{
-    hash_ = other.hash_;
-    index_ = other.index_;
-    return *this;
+// constexpr
+bool operator!=(point const& x, point const& y) {
+    return !(x == y);
 }
 
 // This arbitrary order is produced to support set uniqueness determinations.
-bool point::operator<(const point& other) const
-{
+// constexpr
+bool operator<(point const& x, point const& y) {
     // The index is primary only because its comparisons are simpler.
-    return index_ == other.index_ ? hash_ < other.hash_ :
-        index_ < other.index_;
+    return x.index_ == y.index_ ? x.hash_ < y.hash_ : x.index_ < y.index_;
 }
 
-bool point::operator==(const point& other) const
-{
-    return (hash_ == other.hash_) && (index_ == other.index_);
+// constexpr
+bool operator>(point const& x, point const& y) {
+    return y < x;
 }
 
-bool point::operator!=(const point& other) const
-{
-    return !(*this == other);
+// constexpr
+bool operator<=(point const& x, point const& y) {
+    return !(y < x);
+}
+
+// constexpr
+bool operator>=(point const& x, point const& y) {
+    return !(x < y);
 }
 
 // Deserialization.
 //-----------------------------------------------------------------------------
 
 // static
-point point::factory_from_data(const data_chunk& data, bool wire)
-{
+point point::factory_from_data(data_chunk const& data, bool wire) {
     point instance;
     instance.from_data(data, wire);
     return instance;
 }
 
 // static
-point point::factory_from_data(std::istream& stream, bool wire)
-{
+point point::factory_from_data(std::istream& stream, bool wire) {
     point instance;
     instance.from_data(stream, wire);
     return instance;
 }
 
-// static
-point point::factory_from_data(reader& source, bool wire)
-{
-    point instance;
-    instance.from_data(source, wire);
-    return instance;
-}
-
-bool point::from_data(const data_chunk& data, bool wire)
-{
+bool point::from_data(data_chunk const& data, bool wire) {
     data_source istream(data);
     return from_data(istream, wire);
 }
 
-bool point::from_data(std::istream& stream, bool wire)
-{
-    istream_reader source(stream);
-    return from_data(source, wire);
-}
-
-bool point::from_data(reader& source, bool wire)
-{
-    reset();
-
-    valid_ = true;
-    hash_ = source.read_hash();
-
-    if (wire)
-    {
-        index_ = source.read_4_bytes_little_endian();
-    }
-    else
-    {
-        index_ = source.read_2_bytes_little_endian();
-
-        if (index_ == max_uint16)
-            index_ = null_index;
-    }
-
-    if (!source)
-        reset();
-
-    return source;
+bool point::from_data(std::istream& stream, bool wire) {
+    istream_reader stream_r(stream);
+    return from_data(stream_r, wire);
 }
 
 // protected
-void point::reset()
-{
+void point::reset() {
     valid_ = false;
     hash_ = null_hash;
     index_ = 0;
 }
 
-bool point::is_valid() const
-{
+// constexpr
+bool point::is_valid() const {
     return valid_ || (hash_ != null_hash) || (index_ != 0);
 }
 
 // Serialization.
 //-----------------------------------------------------------------------------
 
-data_chunk point::to_data(bool wire) const
-{
+data_chunk point::to_data(bool wire) const {
     data_chunk data;
-    const auto size = serialized_size(wire);
+    auto const size = serialized_size(wire);
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream, wire);
@@ -207,84 +143,59 @@ data_chunk point::to_data(bool wire) const
     return data;
 }
 
-void point::to_data(std::ostream& stream, bool wire) const
-{
-    ostream_writer sink(stream);
-    to_data(sink, wire);
-}
-
-void point::to_data(writer& sink, bool wire) const
-{
-    sink.write_hash(hash_);
-
-    if (wire)
-    {
-        sink.write_4_bytes_little_endian(index_);
-    }
-    else
-    {
-        BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
-        sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
-    }
+void point::to_data(data_sink& stream, bool wire) const {
+    ostream_writer sink_w(stream);
+    to_data(sink_w, wire);
 }
 
 // Iterator.
 //-----------------------------------------------------------------------------
 
-point_iterator point::begin() const
-{
-    return point_iterator(*this);
+point_iterator point::begin() const {
+    return {*this};
 }
 
-point_iterator point::end() const
-{
-    return point_iterator(*this, static_cast<unsigned>(store_point_size));
+point_iterator point::end() const {
+    return {*this, static_cast<unsigned>(store_point_size)};
 }
 
 // Properties.
 //-----------------------------------------------------------------------------
 
-size_t point::serialized_size(bool wire) const
-{
+// constexpr
+size_t point::serialized_size(bool wire /*= true*/) const {
     return wire ? point::satoshi_fixed_size() : store_point_size;
 }
 
-size_t point::satoshi_fixed_size()
-{
+// constexpr
+size_t point::satoshi_fixed_size() {
     return hash_size + sizeof(index_);
 }
 
-hash_digest& point::hash()
-{
+// constexpr
+hash_digest& point::hash() {
     return hash_;
 }
 
-const hash_digest& point::hash() const
-{
+// constexpr
+hash_digest const& point::hash() const {
     return hash_;
 }
 
-void point::set_hash(const hash_digest& value)
-{
+// constexpr
+void point::set_hash(hash_digest const& value) {
     // This is no longer a default instance, so valid.
     valid_ = true;
     hash_ = value;
 }
 
-void point::set_hash(hash_digest&& value)
-{
-    // This is no longer a default instance, so valid.
-    valid_ = true;
-    hash_ = std::move(value);
-}
-
-uint32_t point::index() const
-{
+// constexpr
+uint32_t point::index() const {
     return index_;
 }
 
-void point::set_index(uint32_t value)
-{
+// constexpr
+void point::set_index(uint32_t value) {
     // This is no longer a default instance, so valid.
     valid_ = true;
     index_ = value;
@@ -297,29 +208,28 @@ void point::set_index(uint32_t value)
 // This is used with output_point identification within a set of history rows
 // of the same address. Collision will result in miscorrelation of points by
 // client callers. This is stored in database. This is NOT a bitcoin checksum.
-uint64_t point::checksum() const
-{
+uint64_t point::checksum() const {
     // Reserve 49 bits for the tx hash and 15 bits (32768) for the input index.
     static constexpr uint64_t mask = 0xffffffffffff8000;
 
     // Use an offset to the middle of the hash to avoid coincidental mining
     // of values into the front or back of tx hash (not a security feature).
     // Use most possible bits of tx hash to make intentional collision hard.
-    const auto tx = from_little_endian_unsafe<uint64_t>(hash_.begin() + 12);
-    const auto index = static_cast<uint64_t>(index_);
+    auto const tx = from_little_endian_unsafe<uint64_t>(hash_.begin() + 12);
+    auto const index = static_cast<uint64_t>(index_);
 
-    const auto tx_upper_49_bits = tx & mask;
-    const auto index_lower_15_bits = index & ~mask;
+    auto const tx_upper_49_bits = tx & mask;
+    auto const index_lower_15_bits = index & ~mask;
     return tx_upper_49_bits | index_lower_15_bits;
 }
 
 // Validation.
 //-----------------------------------------------------------------------------
 
-bool point::is_null() const
-{
+// constexpr
+bool point::is_null() const {
     return (index_ == null_index) && (hash_ == null_hash);
 }
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin

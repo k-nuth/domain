@@ -21,7 +21,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <boost/program_options.hpp>
+
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/infrastructure/config/base16.hpp>
 
@@ -30,54 +32,41 @@ namespace config {
 
 using namespace boost::program_options;
 
-transaction::transaction()
-  : value_()
-{
-}
-
-transaction::transaction(const std::string& hexcode)
-{
+transaction::transaction(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;
 }
 
-transaction::transaction(const chain::transaction& value)
-  : value_(value)
-{
+transaction::transaction(chain::transaction const& value)
+    : value_(value) {
 }
 
-transaction::transaction(const transaction& other)
-  : transaction(other.value_)
-{
+transaction::transaction(transaction const& x)
+    : transaction(x.value_) {
 }
 
-chain::transaction& transaction::data()
-{
+chain::transaction& transaction::data() {
     return value_;
 }
 
-transaction::operator const chain::transaction&() const
-{
+transaction::operator chain::transaction const&() const {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, transaction& argument)
-{
+std::istream& operator>>(std::istream& input, transaction& argument) {
     std::string hexcode;
     input >> hexcode;
 
-    if (!argument.value_.from_data(base16(hexcode)))
-    {
+    if ( ! argument.value_.from_data(base16(hexcode))) {
         BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
     }
 
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const transaction& argument)
-{
+std::ostream& operator<<(std::ostream& output, transaction const& argument) {
     output << base16(argument.value_.to_data());
     return output;
 }
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin

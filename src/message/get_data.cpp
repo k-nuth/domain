@@ -20,126 +20,96 @@
 
 #include <algorithm>
 #include <initializer_list>
-#include <bitcoin/infrastructure/math/hash.hpp>
+
 #include <bitcoin/bitcoin/message/inventory.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/istream_reader.hpp>
 
 namespace libbitcoin {
 namespace message {
 
-const std::string get_data::command = "getdata";
-const uint32_t get_data::version_minimum = version::level::minimum;
-const uint32_t get_data::version_maximum = version::level::maximum;
+std::string const get_data::command = "getdata";
+uint32_t const get_data::version_minimum = version::level::minimum;
+uint32_t const get_data::version_maximum = version::level::maximum;
 
-get_data get_data::factory_from_data(uint32_t version,
-    const data_chunk& data)
-{
+get_data get_data::factory_from_data(uint32_t version, data_chunk const& data) {
     get_data instance;
-    instance.from_data(version,data);
+    instance.from_data(version, data);
     return instance;
 }
 
-get_data get_data::factory_from_data(uint32_t version,
-    std::istream& stream)
-{
+get_data get_data::factory_from_data(uint32_t version, std::istream& stream) {
     get_data instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-get_data get_data::factory_from_data(uint32_t version,
-    reader& source)
-{
-    get_data instance;
-    instance.from_data(version, source);
-    return instance;
-}
-
-get_data::get_data()
-  : inventory()
-{
-}
-
-get_data::get_data(const inventory_vector::list& values)
-  : inventory(values)
-{
+get_data::get_data(inventory_vector::list const& values)
+    : inventory(values) {
 }
 
 get_data::get_data(inventory_vector::list&& values)
-  : inventory(values)
-{
+    : inventory(values) {
 }
 
-get_data::get_data(const hash_list& hashes, inventory::type_id type)
-  : inventory(hashes, type)
-{
+get_data::get_data(hash_list const& hashes, inventory::type_id type)
+    : inventory(hashes, type) {
 }
 
-get_data::get_data(const std::initializer_list<inventory_vector>& values)
-  : inventory(values)
-{
+get_data::get_data(std::initializer_list<inventory_vector> const& values)
+    : inventory(values) {
 }
 
-get_data::get_data(const get_data& other)
-  : inventory(other)
-{
+// get_data::get_data(get_data const& x)
+//     : inventory(x) {
+// }
+
+// get_data::get_data(get_data&& x) noexcept
+//     : inventory(x) 
+// {}
+
+// get_data& get_data::operator=(get_data&& x) noexcept {
+//     set_inventories(x.inventories());
+//     return *this;
+// }
+
+bool get_data::operator==(get_data const& x) const {
+    return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
 
-get_data::get_data(get_data&& other)
-  : inventory(other)
-{
+bool get_data::operator!=(get_data const& x) const {
+    return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
-bool get_data::from_data(uint32_t version, const data_chunk& data)
-{
-    return inventory::from_data(version, data);
+// bool get_data::from_data(uint32_t version, data_chunk const& data) {
+//     return inventory::from_data(version, data);
+// }
+
+// bool get_data::from_data(uint32_t version, std::istream& stream) {
+//     return inventory::from_data(version, stream);
+// }
+
+bool get_data::from_data(uint32_t version, data_chunk const& data) {
+    data_source istream(data);
+    return from_data(version, istream);
 }
 
-bool get_data::from_data(uint32_t version, std::istream& stream)
-{
-    return inventory::from_data(version, stream);
+bool get_data::from_data(uint32_t version, std::istream& stream) {
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool get_data::from_data(uint32_t version, reader& source)
-{
-    if (!inventory::from_data(version, source))
-        return false;
-
-    if (version < get_data::version_minimum)
-        source.invalidate();
-
-    if (!source)
-        reset();
-
-    return source;
-}
-
-void get_data::to_witness()
-{
-    const auto convert = [](inventory_vector& element)
-    {
+#ifndef BITPRIM_CURRENCY_BCH
+void get_data::to_witness() {
+    auto const convert = [](inventory_vector& element) {
         element.to_witness();
     };
 
     std::for_each(inventories().begin(), inventories().end(), convert);
 }
+#endif
 
-get_data& get_data::operator=(get_data&& other)
-{
-    set_inventories(other.inventories());
-    return *this;
-}
-
-bool get_data::operator==(const get_data& other) const
-{
-    return (static_cast<inventory>(*this) == static_cast<inventory>(other));
-}
-
-bool get_data::operator!=(const get_data& other) const
-{
-    return (static_cast<inventory>(*this) != static_cast<inventory>(other));
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

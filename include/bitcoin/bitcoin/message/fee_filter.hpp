@@ -23,62 +23,106 @@
 #include <istream>
 #include <memory>
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
 
-class BC_API fee_filter
-{
+class BC_API fee_filter {
 public:
-    typedef std::shared_ptr<fee_filter> ptr;
-    typedef std::shared_ptr<const fee_filter> const_ptr;
+    using ptr = std::shared_ptr<fee_filter>;
+    using const_ptr = std::shared_ptr<const fee_filter>;
 
-    static fee_filter factory_from_data(uint32_t version, const data_chunk& data);
+    static fee_filter factory_from_data(uint32_t version, data_chunk const& data);
     static fee_filter factory_from_data(uint32_t version, std::istream& stream);
-    static fee_filter factory_from_data(uint32_t version, reader& source);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static fee_filter factory_from_data(uint32_t version, R& source) {
+        fee_filter instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    //static fee_filter factory_from_data(uint32_t version, reader& source);
+
     static size_t satoshi_fixed_size(uint32_t version);
 
-    fee_filter();
+    fee_filter() = default;
     fee_filter(uint64_t minimum);
-    fee_filter(const fee_filter& other);
-    fee_filter(fee_filter&& other);
+
+    // fee_filter(fee_filter const& x) = default;
+    // fee_filter(fee_filter&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // fee_filter& operator=(fee_filter&& x) = default;
+    // fee_filter& operator=(fee_filter const&) = default;
+
+    bool operator==(fee_filter const& x) const;
+    bool operator!=(fee_filter const& x) const;
 
     uint64_t minimum_fee() const;
     void set_minimum_fee(uint64_t value);
 
-    bool from_data(uint32_t version, const data_chunk& data);
+    bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    bool from_data(uint32_t version, R& source) {
+        reset();
+
+        // Initialize as valid from deserialization.
+        insufficient_version_ = false;
+
+        minimum_fee_ = source.read_8_bytes_little_endian();
+
+        if (version < fee_filter::version_minimum) {
+            source.invalidate();
+}
+
+        if ( ! source) {
+            reset();
+}
+
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
+
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+
+    template <Writer W>
+    void to_data(uint32_t  /*version*/, W& sink) const {
+        sink.write_8_bytes_little_endian(minimum_fee_);
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
+
     bool is_valid() const;
     void reset();
     size_t serialized_size(uint32_t version) const;
 
-    // This class is move assignable but not copy assignable.
-    fee_filter& operator=(fee_filter&& other);
-    void operator=(const fee_filter&) = delete;
 
-    bool operator==(const fee_filter& other) const;
-    bool operator!=(const fee_filter& other) const;
-
-    static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static std::string const command;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
 protected:
     fee_filter(uint64_t minimum, bool insufficient_version);
 
 private:
-    uint64_t minimum_fee_;
-    bool insufficient_version_;
+    uint64_t minimum_fee_{0};
+    bool insufficient_version_{true};
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

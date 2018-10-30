@@ -18,186 +18,144 @@
  */
 #include <bitcoin/bitcoin/message/block.hpp>
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <utility>
-#include <bitcoin/bitcoin/message/version.hpp>
+
 #include <bitcoin/bitcoin/chain/header.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
+#include <bitcoin/bitcoin/message/version.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <bitcoin/infrastructure/utility/reader.hpp>
 
 namespace libbitcoin {
 namespace message {
 
-const std::string block::command = "block";
-const uint32_t block::version_minimum = version::level::minimum;
-const uint32_t block::version_maximum = version::level::maximum;
+std::string const block::command = "block";
+uint32_t const block::version_minimum = version::level::minimum;
+uint32_t const block::version_maximum = version::level::maximum;
 
-block block::factory_from_data(uint32_t version, const data_chunk& data)
-{
+block block::factory_from_data(uint32_t version, data_chunk const& data) {
     block instance;
     instance.from_data(version, data);
     return instance;
 }
 
-block block::factory_from_data(uint32_t version, std::istream& stream)
-{
+block block::factory_from_data(uint32_t version, std::istream& stream) {
     block instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-block block::factory_from_data(uint32_t version, reader& source)
-{
-    block instance;
-    instance.from_data(version, source);
-    return instance;
+block::block(chain::block&& x)
+    : chain::block(std::move(x)) 
+{}
+
+block::block(chain::block const& x)
+    : chain::block(x) 
+{}
+
+block::block(chain::header const& header, chain::transaction::list&& transactions)
+    : chain::block(header, std::move(transactions)) 
+{}
+
+block::block(chain::header const& header, chain::transaction::list const& transactions)
+    : chain::block(header, transactions) 
+{}
+
+// block::block(block&& x) noexcept
+//     : chain::block(std::move(x)) 
+// {}
+
+block& block::operator=(chain::block&& x) {
+    reset();
+    chain::block::operator=(std::move(x));
+    return *this;
 }
 
-block::block()
-  : chain::block()
-{
+// block& block::operator=(block&& x) noexcept {
+//     chain::block::operator=(std::move(x));
+//     return *this;
+// }
+
+bool block::operator==(chain::block const& x) const {
+    return chain::block::operator==(x);
 }
 
-block::block(block&& other)
-  : chain::block(std::move(other))
-{
+bool block::operator!=(chain::block const& x) const {
+    return chain::block::operator!=(x);
 }
 
-block::block(const block& other)
-  : chain::block(other)
-{
+bool block::operator==(block const& x) const {
+    return chain::block::operator==(x);
 }
 
-block::block(chain::block&& other)
-  : chain::block(std::move(other))
-{
-}
-
-block::block(const chain::block& other)
-  : chain::block(other)
-{
-}
-
-block::block(chain::header&& header, chain::transaction::list&& transactions)
-  : chain::block(std::move(header), std::move(transactions))
-{
-}
-
-block::block(const chain::header& header,
-    const chain::transaction::list& transactions)
-  : chain::block(header, transactions)
-{
+bool block::operator!=(block const& x) const {
+    return !(*this == x);
 }
 
 // Witness is always deserialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-bool block::from_data(uint32_t, const data_chunk& data)
-{
+bool block::from_data(uint32_t /*version*/, data_chunk const& data) {
     return chain::block::from_data(data, true);
 }
 
-bool block::from_data(uint32_t, std::istream& stream)
-{
+bool block::from_data(uint32_t /*version*/, std::istream& stream) {
     return chain::block::from_data(stream, true);
 }
 
-bool block::from_data(uint32_t, reader& source)
-{
-    return chain::block::from_data(source, true);
-}
 
 // Witness is always serialized if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-data_chunk block::to_data(uint32_t) const
-{
+data_chunk block::to_data(uint32_t /*unused*/) const {
     return chain::block::to_data(true);
 }
 
-void block::to_data(uint32_t, std::ostream& stream) const
-{
+void block::to_data(uint32_t /*version*/, data_sink& stream) const {
     chain::block::to_data(stream, true);
-}
-
-void block::to_data(uint32_t, writer& sink) const
-{
-    chain::block::to_data(sink, true);
 }
 
 // Witness size is always counted if present.
 // NOTE: Witness on bch is dissabled on the chain::block class
 
-size_t block::serialized_size(uint32_t) const
-{
+size_t block::serialized_size(uint32_t /*unused*/) const {
     return chain::block::serialized_size(true);
 }
 
-block& block::operator=(chain::block&& other)
-{
-    reset();
-    chain::block::operator=(std::move(other));
-    return *this;
-}
-
-block& block::operator=(block&& other)
-{
-    chain::block::operator=(std::move(other));
-    return *this;
-}
-
-bool block::operator==(const chain::block& other) const
-{
-    return chain::block::operator==(other);
-}
-
-bool block::operator!=(const chain::block& other) const
-{
-    return chain::block::operator!=(other);
-}
-
-bool block::operator==(const block& other) const
-{
-    return chain::block::operator==(other);
-}
-
-bool block::operator!=(const block& other) const
-{
-    return !(*this == other);
-}
 
 
-void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
-    block.header().to_data(sink);
-    sink.write_8_bytes_little_endian(nonce);
-}
+// //TODO(fernando): check this family of functions: to_data_header_nonce
+// void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
+//     block.header().to_data(sink);
+//     sink.write_8_bytes_little_endian(nonce);
+// }
 
-void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream) {
-    ostream_writer sink(stream);
-    to_data_header_nonce(block, nonce, sink);
+// void to_data_header_nonce(block const& block, uint64_t nonce, std::ostream& stream) {
+void to_data_header_nonce(block const& block, uint64_t nonce, data_sink& stream) {
+    ostream_writer sink_w(stream);
+    to_data_header_nonce(block, nonce, sink_w);
 }
 
 data_chunk to_data_header_nonce(block const& block, uint64_t nonce) {
-   
     data_chunk data;
     auto size = chain::header::satoshi_fixed_size() + sizeof(nonce);
 
     data.reserve(size);
     data_sink ostream(data);
-    to_data_header_nonce(block,nonce, ostream);
+    to_data_header_nonce(block, nonce, ostream);
     ostream.flush();
     BITCOIN_ASSERT(data.size() == size);
     return data;
 }
 
 hash_digest hash(block const& block, uint64_t nonce) {
-    return sha256_hash(to_data_header_nonce(block,nonce));
+    return sha256_hash(to_data_header_nonce(block, nonce));
 }
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

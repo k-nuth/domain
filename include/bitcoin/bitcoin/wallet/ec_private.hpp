@@ -22,12 +22,13 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <bitcoin/infrastructure/compat.hpp>
+
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/wallet/ec_public.hpp>
+#include <bitcoin/infrastructure/compat.hpp>
 #include <bitcoin/infrastructure/math/checksum.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
 
 namespace libbitcoin {
 namespace wallet {
@@ -36,14 +37,13 @@ class payment_address;
 
 /// Private keys with public key compression metadata:
 static BC_CONSTEXPR size_t wif_uncompressed_size = 37u;
-typedef byte_array<wif_uncompressed_size> wif_uncompressed;
+using wif_uncompressed = byte_array<wif_uncompressed_size>;
 
 static BC_CONSTEXPR size_t wif_compressed_size = wif_uncompressed_size + 1u;
-typedef byte_array<wif_compressed_size> wif_compressed;
+using wif_compressed = byte_array<wif_compressed_size>;
 
 /// Use to pass an ec secret with compresson and version information.
-class BC_API ec_private
-{
+class BC_API ec_private {
 public:
     static const uint8_t compressed_sentinel;
 
@@ -59,51 +59,49 @@ public:
     static const uint8_t testnet_p2kh;
     static const uint16_t testnet;
 
-    static uint8_t to_address_prefix(uint16_t version)
-    {
+    static uint8_t to_address_prefix(uint16_t version) {
         return version & 0x00FF;
     }
 
-    static uint8_t to_wif_prefix(uint16_t version)
-    {
+    static uint8_t to_wif_prefix(uint16_t version) {
         return version >> 8;
     }
 
     // Unfortunately can't use this below to define mainnet (MSVC).
-    static uint16_t to_version(uint8_t address, uint8_t wif)
-    {
+    static uint16_t to_version(uint8_t address, uint8_t wif) {
         return uint16_t(wif) << 8 | address;
     }
 
     /// Constructors.
     ec_private();
-    ec_private(const ec_private& other);
-    ec_private(const std::string& wif, uint8_t version=mainnet_p2kh);
-    ec_private(const wif_compressed& wif, uint8_t version=mainnet_p2kh);
-    ec_private(const wif_uncompressed& wif, uint8_t version=mainnet_p2kh);
+    ec_private(ec_private const& x) = default;
+    ec_private(std::string const& wif, uint8_t version = mainnet_p2kh);
+    ec_private(wif_compressed const& wif, uint8_t version = mainnet_p2kh);
+    ec_private(const wif_uncompressed& wif, uint8_t version = mainnet_p2kh);
 
     /// The version is 16 bits. The most significant byte is the WIF prefix and
     /// the least significant byte is the address perfix. 0x8000 by default.
-    ec_private(const ec_secret& secret, uint16_t version=mainnet,
-        bool compress=true);
+    ec_private(ec_secret const& secret, uint16_t version = mainnet, bool compress = true);
+
+    ec_private& operator=(ec_private const& x) = default;
 
     /// Operators.
-    bool operator<(const ec_private& other) const;
-    bool operator==(const ec_private& other) const;
-    bool operator!=(const ec_private& other) const;
-    ec_private& operator=(const ec_private& other);
+    bool operator==(ec_private const& x) const;
+    bool operator!=(ec_private const& x) const;
+    bool operator<(ec_private const& x) const;
+
     friend std::istream& operator>>(std::istream& in, ec_private& to);
-    friend std::ostream& operator<<(std::ostream& out, const ec_private& of);
+    friend std::ostream& operator<<(std::ostream& out, ec_private const& of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const ec_secret&() const;
+    operator ec_secret const&() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const ec_secret& secret() const;
+    ec_secret const& secret() const;
     const uint16_t version() const;
     const uint8_t payment_version() const;
     const uint8_t wif_version() const;
@@ -118,19 +116,19 @@ private:
     static bool is_wif(data_slice decoded);
 
     /// Factories.
-    static ec_private from_string(const std::string& wif, uint8_t version);
-    static ec_private from_compressed(const wif_compressed& wif, uint8_t version);
-    static ec_private from_uncompressed(const wif_uncompressed& wif, uint8_t version);
+    static ec_private from_string(std::string const& wif, uint8_t version);
+    static ec_private from_compressed(wif_compressed const& wif, uint8_t address_version);
+    static ec_private from_uncompressed(const wif_uncompressed& wif, uint8_t address_version);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
-    bool valid_;
-    bool compress_;
-    uint16_t version_;
+    bool valid_{false};
+    bool compress_{true};
+    uint16_t version_{0};
     ec_secret secret_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

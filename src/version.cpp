@@ -19,11 +19,12 @@
 
 #include <bitcoin/bitcoin/version.hpp>
 
-namespace libbitcoin { namespace domain {
+namespace libbitcoin {
+namespace domain {
 
 char const* version() {
     return BITPRIM_DOMAIN_VERSION;
 }
 
-}} /*namespace libbitcoin::domain*/
-
+}  // namespace domain
+}  // namespace libbitcoin

@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 
@@ -30,34 +31,30 @@ namespace config {
 /**
  * Serialization helper to convert between base16 string and ec_secret.
  */
-class BC_API ec_private
-{
+class BC_API ec_private {
 public:
-
     /**
      * Default constructor.
      */
-    ec_private()
-    {
-    }
+    ec_private() = default;
 
     /**
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    ec_private(const std::string& hexcode);
+    ec_private(std::string const& hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  secret  The value to initialize with.
      */
-    ec_private(const ec_secret& secret);
+    ec_private(ec_secret const& secret);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const ec_secret&() const;
+    operator ec_secret const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -66,7 +63,7 @@ public:
      * @return                The input stream reference.
      */
     friend std::istream& operator>>(std::istream& input,
-        ec_private& argument);
+                                    ec_private& argument);
 
     /**
      * Overload stream out.
@@ -75,17 +72,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const ec_private& argument);
+                                    ec_private const& argument);
 
 private:
-
     /**
      * The state of this object.
      */
     ec_secret value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

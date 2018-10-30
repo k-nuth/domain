@@ -42,6 +42,7 @@ class BitprimDomainConan(BitprimConanFile):
                "fix_march": [True, False],
                "verbose": [True, False],
                "keoken": [True, False],
+               "cached_rpc_data": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
     }
@@ -59,6 +60,7 @@ class BitprimDomainConan(BitprimConanFile):
         "fix_march=False", \
         "verbose=False", \
         "keoken=False", \
+        "cached_rpc_data=False", \
         "cxxflags=_DUMMY_", \
         "cflags=_DUMMY_"
 
@@ -72,17 +74,12 @@ class BitprimDomainConan(BitprimConanFile):
     package_files = "build/lbitprim-domain.a"
     build_policy = "missing"
 
-    # requires = (("boost/1.66.0@bitprim/stable"),
-    #            ("secp256k1/0.3@bitprim/stable"),
-    #            ("bitprim-infrastructure/0.11.0@%s/%s" % (get_user(), get_channel())),
-    #            ("bitprim-crypto/0.11.0@%s/%s" % (get_user(), get_channel())))
-
     @property
     def is_keoken(self):
         return self.options.currency == "BCH" and self.options.get_safe("keoken")
 
     def requirements(self):
-        self.requires("boost/1.66.0@bitprim/stable")
+        self.requires("boost/1.68.0@bitprim/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
         self.requires("bitprim-infrastructure/0.X@%s/%s" % (self.user, self.channel))
         # self.requires("bitprim-crypto/0.X@%s/%s" % (self.user, self.channel))
@@ -156,6 +153,7 @@ class BitprimDomainConan(BitprimConanFile):
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
 
+        cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
         cmake.definitions["WITH_KEOKEN"] = option_on_off(self.is_keoken)
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_TESTS_NEW"] = option_on_off(self.options.with_tests)

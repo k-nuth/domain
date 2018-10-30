@@ -27,80 +27,59 @@
 namespace libbitcoin {
 namespace message {
 
-const std::string pong::command = "pong";
-const uint32_t pong::version_minimum = version::level::minimum;
-const uint32_t pong::version_maximum = version::level::maximum;
+std::string const pong::command = "pong";
+uint32_t const pong::version_minimum = version::level::minimum;
+uint32_t const pong::version_maximum = version::level::maximum;
 
-pong pong::factory_from_data(uint32_t version, const data_chunk& data)
-{
+pong pong::factory_from_data(uint32_t version, data_chunk const& data) {
     pong instance;
     instance.from_data(version, data);
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, std::istream& stream)
-{
+pong pong::factory_from_data(uint32_t version, std::istream& stream) {
     pong instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, reader& source)
-{
-    pong instance;
-    instance.from_data(version, source);
-    return instance;
-}
-
-size_t pong::satoshi_fixed_size(uint32_t version)
-{
+size_t pong::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(nonce_);
 }
 
-pong::pong()
-  : nonce_(0), valid_(false)
-{
-}
-
 pong::pong(uint64_t nonce)
-  : nonce_(nonce), valid_(true)
-{
+    : nonce_(nonce), valid_(true) {
 }
 
-pong::pong(const pong& other)
-  : nonce_(other.nonce_), valid_(other.valid_)
-{
+// pong::pong(pong const& x)
+//     : nonce_(x.nonce_), valid_(x.valid_) {
+// }
+
+// pong& pong::operator=(pong&& x) noexcept {
+//     nonce_ = x.nonce_;
+//     return *this;
+// }
+
+bool pong::operator==(pong const& x) const {
+    return (nonce_ == x.nonce_);
 }
 
-bool pong::from_data(uint32_t version, const data_chunk& data)
-{
+bool pong::operator!=(pong const& x) const {
+    return !(*this == x);
+}
+bool pong::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool pong::from_data(uint32_t version, std::istream& stream)
-{
-    istream_reader source(stream);
-    return from_data(version, source);
+bool pong::from_data(uint32_t version, std::istream& stream) {
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool pong::from_data(uint32_t version, reader& source)
-{
-    reset();
-
-    valid_ = true;
-    nonce_ = source.read_8_bytes_little_endian();
-
-    if (!source)
-        reset();
-
-    return source;
-}
-
-data_chunk pong::to_data(uint32_t version) const
-{
+data_chunk pong::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -109,58 +88,31 @@ data_chunk pong::to_data(uint32_t version) const
     return data;
 }
 
-void pong::to_data(uint32_t version, std::ostream& stream) const
-{
-    ostream_writer sink(stream);
-    to_data(version, sink);
+void pong::to_data(uint32_t version, data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void pong::to_data(uint32_t version, writer& sink) const
-{
-    sink.write_8_bytes_little_endian(nonce_);
-}
-
-bool pong::is_valid() const
-{
+bool pong::is_valid() const {
     return valid_ || (nonce_ != 0);
 }
 
-void pong::reset()
-{
+void pong::reset() {
     nonce_ = 0;
     valid_ = false;
 }
 
-size_t pong::serialized_size(uint32_t version) const
-{
+size_t pong::serialized_size(uint32_t version) const {
     return satoshi_fixed_size(version);
 }
 
-uint64_t pong::nonce() const
-{
+uint64_t pong::nonce() const {
     return nonce_;
 }
 
-void pong::set_nonce(uint64_t value)
-{
+void pong::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-pong& pong::operator=(pong&& other)
-{
-    nonce_ = other.nonce_;
-    return *this;
-}
-
-bool pong::operator==(const pong& other) const
-{
-    return (nonce_ == other.nonce_);
-}
-
-bool pong::operator!=(const pong& other) const
-{
-    return !(*this == other);
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

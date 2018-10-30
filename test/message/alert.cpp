@@ -16,23 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 
 BOOST_AUTO_TEST_SUITE(alert_tests)
 
-BOOST_AUTO_TEST_CASE(alert__constructor_1__always__invalid)
-{
+BOOST_AUTO_TEST_CASE(alert__constructor_1__always__invalid) {
     message::alert instance;
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_2__always__equals_params)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__constructor_2__always__equals_params) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
 
@@ -41,10 +39,9 @@ BOOST_AUTO_TEST_CASE(alert__constructor_2__always__equals_params)
     BOOST_REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_3__always__equals_params)
-{
-    const auto payload = to_chunk(base16_literal("0123456789abcdef"));
-    const auto signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__constructor_3__always__equals_params) {
+    auto const payload = to_chunk(base16_literal("0123456789abcdef"));
+    auto const signature = to_chunk(base16_literal("fedcba9876543210"));
     auto dup_payload = payload;
     auto dup_signature = signature;
 
@@ -55,10 +52,9 @@ BOOST_AUTO_TEST_CASE(alert__constructor_3__always__equals_params)
     BOOST_REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_4__always__equals_params)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__constructor_4__always__equals_params) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
     message::alert instance(value);
@@ -69,10 +65,9 @@ BOOST_AUTO_TEST_CASE(alert__constructor_4__always__equals_params)
     BOOST_REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_5__always__equals_params)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__constructor_5__always__equals_params) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
     message::alert instance(std::move(value));
@@ -82,19 +77,16 @@ BOOST_AUTO_TEST_CASE(alert__constructor_5__always__equals_params)
     BOOST_REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__from_data__insufficient_bytes__failure)
-{
-    const data_chunk raw{ 0xab, 0x11 };
+BOOST_AUTO_TEST_CASE(alert__from_data__insufficient_bytes__failure) {
+    data_chunk const raw{0xab, 0x11};
     message::alert instance;
 
     BOOST_REQUIRE(!instance.from_data(message::version::level::minimum, raw));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
-{
-    const data_chunk raw_payload
-    {
+BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success) {
+    data_chunk const raw_payload{
         0x01, 0x00, 0x00, 0x00, 0x37, 0x66, 0x40, 0x4f, 0x00,
         0x00, 0x00, 0x00, 0xb3, 0x05, 0x43, 0x4f, 0x00, 0x00, 0x00,
         0x00, 0xf2, 0x03, 0x00, 0x00, 0xf1, 0x03, 0x00, 0x00, 0x00,
@@ -106,11 +98,9 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
         0x72, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x20, 0x63, 0x6f, 0x6e,
         0x6e, 0x65, 0x63, 0x74, 0x69, 0x6e, 0x67, 0x20, 0x61, 0x66,
         0x74, 0x65, 0x72, 0x20, 0x32, 0x30, 0x20, 0x46, 0x65, 0x62,
-        0x72, 0x75, 0x61, 0x72, 0x79, 0x00
-    };
+        0x72, 0x75, 0x61, 0x72, 0x79, 0x00};
 
-    const data_chunk raw_signature
-    {
+    data_chunk const raw_signature{
         0x30, 0x45, 0x02, 0x21, 0x00, 0x83, 0x89, 0xdf, 0x45, 0xf0,
         0x70, 0x3f, 0x39, 0xec, 0x8c, 0x1c, 0xc4, 0x2c, 0x13, 0x81,
         0x0f, 0xfc, 0xae, 0x14, 0x99, 0x5b, 0xb6, 0x48, 0x34, 0x02,
@@ -118,11 +108,9 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
         0xec, 0x65, 0xe1, 0xc1, 0xaa, 0xee, 0xc1, 0xfd, 0x33, 0x4c,
         0x6b, 0x68, 0x4b, 0xde, 0x2b, 0x3f, 0x57, 0x30, 0x60, 0xd5,
         0xb7, 0x0c, 0x3a, 0x46, 0x72, 0x33, 0x26, 0xe4, 0xe8, 0xa4,
-        0xf1
-    };
+        0xf1};
 
-    const data_chunk raw
-    {
+    data_chunk const raw{
         0x73, 0x01, 0x00, 0x00, 0x00, 0x37, 0x66, 0x40, 0x4f, 0x00,
         0x00, 0x00, 0x00, 0xb3, 0x05, 0x43, 0x4f, 0x00, 0x00, 0x00,
         0x00, 0xf2, 0x03, 0x00, 0x00, 0xf1, 0x03, 0x00, 0x00, 0x00,
@@ -141,33 +129,29 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success)
         0xb6, 0x3b, 0x53, 0xeb, 0x02, 0x20, 0x09, 0xec, 0x65, 0xe1,
         0xc1, 0xaa, 0xee, 0xc1, 0xfd, 0x33, 0x4c, 0x6b, 0x68, 0x4b,
         0xde, 0x2b, 0x3f, 0x57, 0x30, 0x60, 0xd5, 0xb7, 0x0c, 0x3a,
-        0x46, 0x72, 0x33, 0x26, 0xe4, 0xe8, 0xa4, 0xf1
-    };
+        0x46, 0x72, 0x33, 0x26, 0xe4, 0xe8, 0xa4, 0xf1};
 
-    const message::alert expected{ raw_payload, raw_signature };
-    const auto result = message::alert::factory_from_data(
+    const message::alert expected{raw_payload, raw_signature};
+    auto const result = message::alert::factory_from_data(
         message::version::level::minimum, raw);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(raw.size(), result.serialized_size(message::version::level::minimum));
     BOOST_REQUIRE(result == expected);
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
 
     BOOST_REQUIRE_EQUAL(raw.size(), data.size());
     BOOST_REQUIRE_EQUAL(data.size(), expected.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__roundtrip__success)
-{
-    const message::alert expected
-    {
-        { 0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 },
-        { 0x04, 0xff, 0xab, 0xcd, 0xee }
-    };
+BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__roundtrip__success) {
+    const message::alert expected{
+        {0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+        {0x04, 0xff, 0xab, 0xcd, 0xee}};
 
-    const auto data = expected.to_data(message::version::level::minimum);
-    const auto result = message::alert::factory_from_data(
+    auto const data = expected.to_data(message::version::level::minimum);
+    auto const result = message::alert::factory_from_data(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -176,17 +160,14 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__roundtrip__success)
     BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert__factory_from_data_2__roundtrip__success)
-{
-    const message::alert expected
-    {
-        { 0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 },
-        { 0x04, 0xff, 0xab, 0xcd, 0xee }
-    };
+BOOST_AUTO_TEST_CASE(alert__factory_from_data_2__roundtrip__success) {
+    const message::alert expected{
+        {0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+        {0x04, 0xff, 0xab, 0xcd, 0xee}};
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    const auto result = message::alert::factory_from_data(message::version::level::minimum, istream);
+    auto const result = message::alert::factory_from_data(message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -194,18 +175,15 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_2__roundtrip__success)
     BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success)
-{
-    const message::alert expected
-    {
-        { 0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 },
-        { 0x04, 0xff, 0xab, 0xcd, 0xee }
-    };
+BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success) {
+    const message::alert expected{
+        {0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+        {0x04, 0xff, 0xab, 0xcd, 0xee}};
 
-    const auto data = expected.to_data(message::version::level::minimum);
+    auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    const auto result = message::alert::factory_from_data(
+    auto const result = message::alert::factory_from_data(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
@@ -214,36 +192,32 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success)
     BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_accessor_1__always__returns_initialized)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__payload_accessor_1__always__returns_initialized) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
     BOOST_REQUIRE(payload == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_accessor_2__always__returns_initialized)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__payload_accessor_2__always__returns_initialized) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     const message::alert instance(payload, signature);
     BOOST_REQUIRE(payload == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_setter_1__roundtrip__success)
-{
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+BOOST_AUTO_TEST_CASE(alert__payload_setter_1__roundtrip__success) {
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     message::alert instance;
     BOOST_REQUIRE(instance.payload() != value);
     instance.set_payload(value);
     BOOST_REQUIRE(value == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_setter_2__roundtrip__success)
-{
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+BOOST_AUTO_TEST_CASE(alert__payload_setter_2__roundtrip__success) {
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     auto dup_value = value;
     message::alert instance;
     BOOST_REQUIRE(instance.payload() != value);
@@ -251,36 +225,32 @@ BOOST_AUTO_TEST_CASE(alert__payload_setter_2__roundtrip__success)
     BOOST_REQUIRE(value == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_accessor_1__always__returns_initialized)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__signature_accessor_1__always__returns_initialized) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
     BOOST_REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_accessor_2__always__returns_initialized)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__signature_accessor_2__always__returns_initialized) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     const message::alert instance(payload, signature);
     BOOST_REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_setter_1__roundtrip__success)
-{
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+BOOST_AUTO_TEST_CASE(alert__signature_setter_1__roundtrip__success) {
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     message::alert instance;
     BOOST_REQUIRE(instance.signature() != value);
     instance.set_signature(value);
     BOOST_REQUIRE(value == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_setter_2__roundtrip__success)
-{
-    const auto value = to_chunk(base16_literal("aabbccddeeff"));
+BOOST_AUTO_TEST_CASE(alert__signature_setter_2__roundtrip__success) {
+    auto const value = to_chunk(base16_literal("aabbccddeeff"));
     auto dup_value = value;
     message::alert instance;
     BOOST_REQUIRE(instance.signature() != value);
@@ -288,10 +258,9 @@ BOOST_AUTO_TEST_CASE(alert__signature_setter_2__roundtrip__success)
     BOOST_REQUIRE(value == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_assign_equals__always__matches_equivalent)
-{
-    const data_chunk payload = to_chunk(base16_literal("0123456789abcdef"));
-    const data_chunk signature = to_chunk(base16_literal("fedcba9876543210"));
+BOOST_AUTO_TEST_CASE(alert__operator_assign_equals__always__matches_equivalent) {
+    data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
+    data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
 
@@ -306,8 +275,7 @@ BOOST_AUTO_TEST_CASE(alert__operator_assign_equals__always__matches_equivalent)
     BOOST_REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__duplicates__returns_true)
-{
+BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__duplicates__returns_true) {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));
@@ -316,8 +284,7 @@ BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__duplicates__returns_true)
     BOOST_REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__differs__returns_false)
-{
+BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__differs__returns_false) {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));
@@ -326,8 +293,7 @@ BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__differs__returns_false)
     BOOST_REQUIRE_EQUAL(false, instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_not_equals__duplicates__returns_false)
-{
+BOOST_AUTO_TEST_CASE(alert__operator_boolean_not_equals__duplicates__returns_false) {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));
@@ -336,8 +302,7 @@ BOOST_AUTO_TEST_CASE(alert__operator_boolean_not_equals__duplicates__returns_fal
     BOOST_REQUIRE_EQUAL(false, instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_not_equals__differs__returns_true)
-{
+BOOST_AUTO_TEST_CASE(alert__operator_boolean_not_equals__differs__returns_true) {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));

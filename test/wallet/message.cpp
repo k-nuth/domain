@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/test/unit_test.hpp>
 #include <bitcoin/bitcoin.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace bc;
 using namespace bc::wallet;
@@ -40,8 +40,7 @@ BOOST_AUTO_TEST_SUITE(message_tests)
 
 BOOST_AUTO_TEST_SUITE(message__recovery_magic)
 
-BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__uncompressed_valid__expected)
-{
+BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__uncompressed_valid__expected) {
     uint8_t out_magic;
     BOOST_REQUIRE(recovery_id_to_magic(out_magic, 0, false));
     BOOST_REQUIRE_EQUAL(out_magic, 0x1b);
@@ -53,8 +52,7 @@ BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__uncompressed_valid__expected
     BOOST_REQUIRE_EQUAL(out_magic, 0x1e);
 }
 
-BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__compressed_valid__expected)
-{
+BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__compressed_valid__expected) {
     uint8_t out_magic;
     BOOST_REQUIRE(recovery_id_to_magic(out_magic, 0, true));
     BOOST_REQUIRE_EQUAL(out_magic, 0x1f);
@@ -66,8 +64,7 @@ BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__compressed_valid__expected)
     BOOST_REQUIRE_EQUAL(out_magic, 0x22);
 }
 
-BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__uncompressed__expected)
-{
+BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__uncompressed__expected) {
     bool out_compressed = true;
     uint8_t out_recovery_id = 0xff;
     BOOST_REQUIRE(magic_to_recovery_id(out_recovery_id, out_compressed, 0x1b));
@@ -84,8 +81,7 @@ BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__uncompressed__expected)
     BOOST_REQUIRE_EQUAL(out_recovery_id, 3u);
 }
 
-BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__compressed__expected) {
     bool out_compressed = false;
     uint8_t out_recovery_id = 0xff;
     BOOST_REQUIRE(magic_to_recovery_id(out_recovery_id, out_compressed, 0x1f));
@@ -102,22 +98,19 @@ BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__compressed__expected)
     BOOST_REQUIRE_EQUAL(out_recovery_id, 3u);
 }
 
-BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__uncompressed_invalid__false)
-{
+BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__uncompressed_invalid__false) {
     uint8_t out_magic;
     BOOST_REQUIRE(!recovery_id_to_magic(out_magic, 4, false));
     BOOST_REQUIRE(!recovery_id_to_magic(out_magic, max_uint8, false));
 }
 
-BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__compressed_invalid__false)
-{
+BOOST_AUTO_TEST_CASE(message__recovery_id_to_magic__compressed_invalid__false) {
     uint8_t out_magic;
     BOOST_REQUIRE(!recovery_id_to_magic(out_magic, 4, true));
     BOOST_REQUIRE(!recovery_id_to_magic(out_magic, max_uint8, true));
 }
 
-BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__invalid__false)
-{
+BOOST_AUTO_TEST_CASE(message__magic_to_recovery_id__invalid__false) {
     bool out_compressed;
     uint8_t out_recovery_id;
     BOOST_REQUIRE(!magic_to_recovery_id(out_recovery_id, out_compressed, 0));
@@ -128,53 +121,48 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(message__sign_message)
 
-BOOST_AUTO_TEST_CASE(message__sign_message__compressed__expected)
-{
-    const auto compressed = true;
-    const auto secret = base16_literal(SECRET);
-    const payment_address address({ secret, 0x00, compressed });
-    const auto message = to_chunk(std::string("Compressed"));
+BOOST_AUTO_TEST_CASE(message__sign_message__compressed__expected) {
+    auto const compressed = true;
+    auto const secret = base16_literal(SECRET);
+    const payment_address address({secret, 0x00, compressed});
+    auto const message = to_chunk(std::string("Compressed"));
     message_signature out_signature;
     BOOST_REQUIRE(sign_message(out_signature, message, secret, compressed));
     BOOST_REQUIRE_EQUAL(encode_base16(out_signature), SIGNATURE_COMPRESSED);
 }
 
-BOOST_AUTO_TEST_CASE(message__sign_message__uncompressed__expected)
-{
-    const auto compressed = false;
-    const auto secret = base16_literal(SECRET);
-    const payment_address address({ secret, 0x00, compressed });
-    const auto message = to_chunk(std::string("Uncompressed"));
+BOOST_AUTO_TEST_CASE(message__sign_message__uncompressed__expected) {
+    auto const compressed = false;
+    auto const secret = base16_literal(SECRET);
+    const payment_address address({secret, 0x00, compressed});
+    auto const message = to_chunk(std::string("Uncompressed"));
     message_signature out_signature;
     BOOST_REQUIRE(sign_message(out_signature, message, secret, compressed));
     BOOST_REQUIRE_EQUAL(encode_base16(out_signature), SIGNATURE_UNCOMPRESSED);
 }
 
-BOOST_AUTO_TEST_CASE(message__sign_message_secret__compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(message__sign_message_secret__compressed__expected) {
     ec_private secret(WIF_COMPRESSED);
     const payment_address address(secret);
-    const auto message = to_chunk(std::string("Compressed"));
+    auto const message = to_chunk(std::string("Compressed"));
     message_signature out_signature;
     BOOST_REQUIRE(sign_message(out_signature, message, secret));
     BOOST_REQUIRE_EQUAL(encode_base16(out_signature), SIGNATURE_WIF_COMPRESSED);
 }
 
-BOOST_AUTO_TEST_CASE(message__sign_message_wif__compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(message__sign_message_wif__compressed__expected) {
     ec_private secret(WIF_COMPRESSED);
     const payment_address address(secret);
-    const auto message = to_chunk(std::string("Compressed"));
+    auto const message = to_chunk(std::string("Compressed"));
     message_signature out_signature;
     BOOST_REQUIRE(sign_message(out_signature, message, secret, secret.compressed()));
     BOOST_REQUIRE_EQUAL(encode_base16(out_signature), SIGNATURE_WIF_COMPRESSED);
 }
 
-BOOST_AUTO_TEST_CASE(message__sign_message_wif__uncompressed__expected)
-{
+BOOST_AUTO_TEST_CASE(message__sign_message_wif__uncompressed__expected) {
     ec_private secret(WIF_UNCOMPRESSED);
     const payment_address address(secret);
-    const auto message = to_chunk(std::string("Uncompressed"));
+    auto const message = to_chunk(std::string("Uncompressed"));
     message_signature out_signature;
     BOOST_REQUIRE(sign_message(out_signature, message, secret, secret.compressed()));
     BOOST_REQUIRE_EQUAL(encode_base16(out_signature), SIGNATURE_WIF_UNCOMPRESSED);
@@ -184,59 +172,53 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(message__verify_message)
 
-BOOST_AUTO_TEST_CASE(message__verify_message__compressed__expected)
-{
+BOOST_AUTO_TEST_CASE(message__verify_message__compressed__expected) {
     const payment_address address(base16_literal(SECRET));
-    const auto message = to_chunk(std::string("Compressed"));
-    const auto signature = base16_literal(SIGNATURE_COMPRESSED);
+    auto const message = to_chunk(std::string("Compressed"));
+    auto const signature = base16_literal(SIGNATURE_COMPRESSED);
     BOOST_REQUIRE(verify_message(message, address, signature));
 }
 
-BOOST_AUTO_TEST_CASE(message__verify_message__uncompressed__expected)
-{
-    const payment_address address({ base16_literal(SECRET), 0x00, false });
-    const auto message = to_chunk(std::string("Uncompressed"));
-    const auto signature = base16_literal(SIGNATURE_UNCOMPRESSED);
+BOOST_AUTO_TEST_CASE(message__verify_message__uncompressed__expected) {
+    const payment_address address({base16_literal(SECRET), 0x00, false});
+    auto const message = to_chunk(std::string("Uncompressed"));
+    auto const signature = base16_literal(SIGNATURE_UNCOMPRESSED);
     BOOST_REQUIRE(verify_message(message, address, signature));
 }
 
-BOOST_AUTO_TEST_CASE(message__verify_message_wif__compressed__round_trip)
-{
+BOOST_AUTO_TEST_CASE(message__verify_message_wif__compressed__round_trip) {
     ec_private secret(WIF_COMPRESSED);
     const payment_address address(secret);
-    const auto message = to_chunk(std::string("Compressed"));
-    const auto signature = base16_literal(SIGNATURE_WIF_COMPRESSED);
+    auto const message = to_chunk(std::string("Compressed"));
+    auto const signature = base16_literal(SIGNATURE_WIF_COMPRESSED);
     BOOST_REQUIRE(verify_message(message, address, signature));
 }
 
-BOOST_AUTO_TEST_CASE(message__verify_message_wif__uncompressed__round_trip)
-{
+BOOST_AUTO_TEST_CASE(message__verify_message_wif__uncompressed__round_trip) {
     ec_private secret(WIF_UNCOMPRESSED);
     const payment_address address(secret);
-    const auto message = to_chunk(std::string("Uncompressed"));
-    const auto signature = base16_literal(SIGNATURE_WIF_UNCOMPRESSED);
+    auto const message = to_chunk(std::string("Uncompressed"));
+    auto const signature = base16_literal(SIGNATURE_WIF_UNCOMPRESSED);
     BOOST_REQUIRE(verify_message(message, address, signature));
 }
 
-BOOST_AUTO_TEST_CASE(message__verify_message__electrum_compressed__okay)
-{
+BOOST_AUTO_TEST_CASE(message__verify_message__electrum_compressed__okay) {
     message_signature signature;
     BOOST_REQUIRE(decode_base16(signature, ELECTRUM_SIGNATURE));
 
     // Address of the compressed public key of the message signer.
     const payment_address address("1PeChFbhxDD9NLbU21DfD55aQBC4ZTR3tE");
-    const auto message = to_chunk(std::string("Nakomoto"));
+    auto const message = to_chunk(std::string("Nakomoto"));
     BOOST_REQUIRE(verify_message(message, address, signature));
 }
 
-BOOST_AUTO_TEST_CASE(message__verify_message__electrum_incorrect_address__false)
-{
+BOOST_AUTO_TEST_CASE(message__verify_message__electrum_incorrect_address__false) {
     message_signature signature;
     BOOST_REQUIRE(decode_base16(signature, ELECTRUM_SIGNATURE));
 
     // Address of the uncompressed public key of the message signer (incorrect).
     const payment_address address("1Em1SX7qQq1pTmByqLRafhL1ypx2V786tP");
-    const auto message = to_chunk(std::string("Nakomoto"));
+    auto const message = to_chunk(std::string("Nakomoto"));
     BOOST_REQUIRE(!verify_message(message, address, signature));
 }
 

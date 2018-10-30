@@ -19,8 +19,8 @@
 #include <bitcoin/bitcoin/message/prefilled_transaction.hpp>
 
 #include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/message/messages.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
+#include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
@@ -31,109 +31,85 @@ namespace message {
 
 #ifdef BITPRIM_CURRENCY_BCH
 constexpr size_t max_index = max_uint32;
-#else 
+#else
 constexpr size_t max_index = max_uint16;
 #endif
 
-prefilled_transaction prefilled_transaction::factory_from_data(
-    uint32_t version, const data_chunk& data)
-{
+prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, data_chunk const& data) {
     prefilled_transaction instance;
     instance.from_data(version, data);
     return instance;
 }
 
-prefilled_transaction prefilled_transaction::factory_from_data(
-    uint32_t version, std::istream& stream)
-{
+prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, std::istream& stream) {
     prefilled_transaction instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-prefilled_transaction prefilled_transaction::factory_from_data(
-    uint32_t version, reader& source)
-{
-    prefilled_transaction instance;
-    instance.from_data(version, source);
-    return instance;
-}
-
 prefilled_transaction::prefilled_transaction()
-    : index_(max_index), transaction_()
+    : index_(max_index) 
 {}
 
 prefilled_transaction::prefilled_transaction(uint64_t index,
-    const chain::transaction& tx)
-  : index_(index), transaction_(tx)
-{
+                                             chain::transaction const& tx)
+    : index_(index), transaction_(tx) {
 }
 
 prefilled_transaction::prefilled_transaction(uint64_t index,
-    chain::transaction&& tx)
-  : index_(index), transaction_(std::move(tx))
-{
+                                             chain::transaction&& tx)
+    : index_(index), transaction_(std::move(tx)) {
 }
 
-prefilled_transaction::prefilled_transaction(
-    const prefilled_transaction& other)
-  : prefilled_transaction(other.index_, other.transaction_)
-{
+// prefilled_transaction::prefilled_transaction(prefilled_transaction const& x)
+//     : prefilled_transaction(x.index_, x.transaction_) {
+// }
+
+// prefilled_transaction::prefilled_transaction(prefilled_transaction&& x) noexcept
+//     : prefilled_transaction(x.index_, std::move(x.transaction_)) 
+// {}
+
+// prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction&& x) noexcept {
+//     index_ = x.index_;
+//     transaction_ = std::move(x.transaction_);
+//     return *this;
+// }
+
+// prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction const& x) {
+//     index_ = x.index_;
+//     transaction_ = x.transaction_;
+//     return *this;
+// }
+
+bool prefilled_transaction::operator==(prefilled_transaction const& x) const {
+    return (index_ == x.index_) && (transaction_ == x.transaction_);
 }
 
-prefilled_transaction::prefilled_transaction(prefilled_transaction&& other)
-  : prefilled_transaction(other.index_, std::move(other.transaction_))
-{
+bool prefilled_transaction::operator!=(prefilled_transaction const& x) const {
+    return !(*this == x);
 }
-
-bool prefilled_transaction::is_valid() const
-{
+bool prefilled_transaction::is_valid() const {
     return (index_ < max_index) && transaction_.is_valid();
 }
 
-void prefilled_transaction::reset()
-{
+void prefilled_transaction::reset() {
     index_ = max_index;
     transaction_ = chain::transaction{};
 }
 
-bool prefilled_transaction::from_data(uint32_t version,
-    const data_chunk& data)
-{
+bool prefilled_transaction::from_data(uint32_t version, data_chunk const& data) {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool prefilled_transaction::from_data(uint32_t version,
-    std::istream& stream)
-{
-    istream_reader source(stream);
-    return from_data(version, source);
+bool prefilled_transaction::from_data(uint32_t version, std::istream& stream) {
+    istream_reader stream_r(stream);
+    return from_data(version, stream_r);
 }
 
-bool prefilled_transaction::from_data(uint32_t version,
-    reader& source)
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-    reset();
-
-    index_ = source.read_variable_little_endian();
-    transaction_.from_data(source, true, witness);
-
-    if (!source)
-        reset();
-
-    return source;
-}
-
-data_chunk prefilled_transaction::to_data(uint32_t version) const
-{
+data_chunk prefilled_transaction::to_data(uint32_t version) const {
     data_chunk data;
-    const auto size = serialized_size(version);
+    auto const size = serialized_size(version);
     data.reserve(size);
     data_sink ostream(data);
     to_data(version, ostream);
@@ -142,90 +118,44 @@ data_chunk prefilled_transaction::to_data(uint32_t version) const
     return data;
 }
 
-void prefilled_transaction::to_data(uint32_t version,
-    std::ostream& stream) const
-{
-    ostream_writer sink(stream);
-    to_data(version, sink);
+void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(version, sink_w);
 }
 
-void prefilled_transaction::to_data(uint32_t version,
-    writer& sink) const
-{
-    sink.write_variable_little_endian(index_);
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-    transaction_.to_data(sink, /*wire*/ true, witness, /*unconfirmed*/ false);
-}
-
-size_t prefilled_transaction::serialized_size(uint32_t version) const
-{
-#ifdef BITPRIM_CURRENCY_BCH
-    bool witness = false;
-#else
-    bool witness = true;
-#endif
-    // TODO: serialize size should use witness for ! BCH
+size_t prefilled_transaction::serialized_size(uint32_t /*version*/) const {
+    // TODO(bitprim): serialize size should use witness for ! BCH
     return message::variable_uint_size(index_) +
-        transaction_.serialized_size(/*wire*/ true, witness , /*unconfirmed*/ false);
+           transaction_.serialized_size(/*wire*/ true, witness_default()
+#ifdef BITPRIM_CACHED_RPC_DATA           
+                                      , /*unconfirmed*/ false
+#endif
+                                       );
 }
 
-uint64_t prefilled_transaction::index() const
-{
+uint64_t prefilled_transaction::index() const {
     return index_;
 }
 
-void prefilled_transaction::set_index(uint64_t value)
-{
+void prefilled_transaction::set_index(uint64_t value) {
     index_ = value;
 }
 
-chain::transaction& prefilled_transaction::transaction()
-{
+chain::transaction& prefilled_transaction::transaction() {
     return transaction_;
 }
 
-const chain::transaction& prefilled_transaction::transaction() const
-{
+chain::transaction const& prefilled_transaction::transaction() const {
     return transaction_;
 }
 
-void prefilled_transaction::set_transaction(const chain::transaction& tx)
-{
+void prefilled_transaction::set_transaction(chain::transaction const& tx) {
     transaction_ = tx;
 }
 
-void prefilled_transaction::set_transaction(chain::transaction&& tx)
-{
+void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
 }
 
-prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction&& other)
-{
-    index_ = other.index_;
-    transaction_ = std::move(other.transaction_);
-    return *this;
-}
-
-prefilled_transaction& prefilled_transaction::operator=(const prefilled_transaction& other)
-{
-    index_ = other.index_;
-    transaction_ = other.transaction_;
-    return *this;
-}
-
-bool prefilled_transaction::operator==(const prefilled_transaction& other) const
-{
-    return (index_ == other.index_) && (transaction_ == other.transaction_);
-}
-
-bool prefilled_transaction::operator!=(const prefilled_transaction& other) const
-{
-    return !(*this == other);
-}
-
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin

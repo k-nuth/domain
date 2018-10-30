@@ -25,47 +25,108 @@
 #include <istream>
 #include <memory>
 #include <string>
+
+#include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
+
 namespace libbitcoin {
 namespace message {
 
-class BC_API inventory
-{
+class BC_API inventory {
 public:
-    typedef std::shared_ptr<inventory> ptr;
-    typedef std::shared_ptr<const inventory> const_ptr;
-    typedef inventory_vector::type_id type_id;
+    using ptr = std::shared_ptr<inventory>;
+    using const_ptr = std::shared_ptr<const inventory>;
+    using type_id = inventory_vector::type_id;
 
-    static inventory factory_from_data(uint32_t version,
-        const data_chunk& data);
+    static inventory factory_from_data(uint32_t version, data_chunk const& data);
     static inventory factory_from_data(uint32_t version, std::istream& stream);
-    static inventory factory_from_data(uint32_t version, reader& source);
 
-    inventory();
-    inventory(const inventory_vector::list& values);
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static inventory factory_from_data(uint32_t version, R& source) {
+        inventory instance;
+        instance.from_data(version, source);
+        return instance;
+    }
+
+    inventory() = default;
+    inventory(inventory_vector::list const& values);
     inventory(inventory_vector::list&& values);
-    inventory(const hash_list& hashes, type_id type);
-    inventory(const std::initializer_list<inventory_vector>& values);
-    inventory(const inventory& other);
-    inventory(inventory&& other);
+    inventory(hash_list const& hashes, type_id type);
+    inventory(std::initializer_list<inventory_vector> const& values);
+
+    // inventory(inventory const& x) = default;
+    // inventory(inventory&& x) = default;
+    // // This class is move assignable but not copy assignable.
+    // inventory& operator=(inventory&& x) = default;
+    // inventory& operator=(inventory const&) = default;
+
+    bool operator==(inventory const& x) const;
+    bool operator!=(inventory const& x) const;
+
 
     inventory_vector::list& inventories();
-    const inventory_vector::list& inventories() const;
-    void set_inventories(const inventory_vector::list& value);
+    inventory_vector::list const& inventories() const;
+    void set_inventories(inventory_vector::list const& value);
     void set_inventories(inventory_vector::list&& value);
 
-    virtual bool from_data(uint32_t version, const data_chunk& data);
-    virtual bool from_data(uint32_t version, std::istream& stream);
-    virtual bool from_data(uint32_t version, reader& source);
+    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, data_chunk const& data);
+
+    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, std::istream& stream);
+
+    template <Reader R, BITPRIM_IS_READER(R)>
+    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(uint32_t version, R& source) {
+        reset();
+
+        auto const count = source.read_size_little_endian();
+
+        // Guard against potential for arbitary memory allocation.
+        if (count > max_inventory) {
+            source.invalidate();
+        } else {
+            inventories_.resize(count);
+        }
+
+        // Order is required.
+        for (auto& inventory : inventories_) {
+            if ( ! inventory.from_data(version, source)) {
+                break;
+            }
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
+
+    //bool from_data(uint32_t version, reader& source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, data_sink& stream) const;
+
+    template <Writer W>
+    void to_data(uint32_t version, W& sink) const {
+        sink.write_variable_little_endian(inventories_.size());
+
+        for (auto const& inventory : inventories_) {
+            inventory.to_data(version, sink);
+}
+    }
+
+    //void to_data(uint32_t version, writer& sink) const;
     void to_hashes(hash_list& out, type_id type) const;
     void reduce(inventory_vector::list& out, type_id type) const;
     bool is_valid() const;
@@ -73,22 +134,15 @@ public:
     size_t serialized_size(uint32_t version) const;
     size_t count(type_id type) const;
 
-    // This class is move assignable but not copy assignable.
-    inventory& operator=(inventory&& other);
-    void operator=(const inventory&) = delete;
-
-    bool operator==(const inventory& other) const;
-    bool operator!=(const inventory& other) const;
-
-    static const std::string command;
-    static const uint32_t version_minimum;
-    static const uint32_t version_maximum;
+    static std::string const command;
+    static uint32_t const version_minimum;
+    static uint32_t const version_maximum;
 
 private:
     inventory_vector::list inventories_;
 };
 
-} // namespace message
-} // namespace libbitcoin
+}  // namespace message
+}  // namespace libbitcoin
 
 #endif

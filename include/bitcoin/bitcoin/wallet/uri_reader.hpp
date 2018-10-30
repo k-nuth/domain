@@ -20,6 +20,7 @@
 #define LIBBITCOIN_WALLET_URI_READER_HPP
 
 #include <string>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/wallet/uri.hpp>
 
@@ -31,10 +32,8 @@ namespace wallet {
  * The URI parser calls these methods as it extracts each URI component.
  * A false return from any setter is expected to terminate the parser.
  */
-class BC_API uri_reader
-{
+class BC_API uri_reader {
 public:
-
     /**
      * Parses any URI string into its individual components.
      * @param[in]  uri     The URI to parse.
@@ -43,31 +42,34 @@ public:
      * according to the  `UriReader`.
      */
     template <class UriReader>
-    static UriReader parse(const std::string& uri, bool strict=true)
-    {
+    static UriReader parse(std::string const& uri, bool strict = true) {
         wallet::uri parsed;
-        if (!parsed.decode(uri, strict))
+        if ( ! parsed.decode(uri, strict)) {
             return UriReader();
+        }
 
         UriReader out;
         out.set_strict(strict);
         out.set_scheme(parsed.scheme());
-        if (parsed.has_authority() && !out.set_authority(parsed.authority()))
+        if (parsed.has_authority() && !out.set_authority(parsed.authority())) {
             return UriReader();
+        }
 
-        if (!parsed.path().empty() && !out.set_path(parsed.path()))
+        if ( ! parsed.path().empty() && !out.set_path(parsed.path())) {
             return UriReader();
+        }
 
-        if (parsed.has_fragment() && !out.set_fragment(parsed.fragment()))
+        if (parsed.has_fragment() && !out.set_fragment(parsed.fragment())) {
             return UriReader();
+        }
 
-        const auto query = parsed.decode_query();
-        for (const auto& term: query)
-        {
-            const auto& key = term.first;
-            const auto& value = term.second;
-            if (!key.empty() && !out.set_parameter(key, value))
+        auto const query = parsed.decode_query();
+        for (auto const& term : query) {
+            auto const& key = term.first;
+            auto const& value = term.second;
+            if ( ! key.empty() && !out.set_parameter(key, value)) {
                 return UriReader();
+            }
         }
 
         return out;
@@ -75,15 +77,14 @@ public:
 
     /// uri_reader interface.
     virtual void set_strict(bool strict) = 0;
-    virtual bool set_scheme(const std::string& scheme) = 0;
-    virtual bool set_authority(const std::string& authority) = 0;
-    virtual bool set_path(const std::string& path) = 0;
-    virtual bool set_fragment(const std::string& fragment) = 0;
-    virtual bool set_parameter(const std::string& key,
-        const std::string& value) = 0;
+    virtual bool set_scheme(std::string const& scheme) = 0;
+    virtual bool set_authority(std::string const& authority) = 0;
+    virtual bool set_path(std::string const& path) = 0;
+    virtual bool set_fragment(std::string const& fragment) = 0;
+    virtual bool set_parameter(std::string const& key, std::string const& value) = 0;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #endif

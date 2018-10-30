@@ -46,9 +46,9 @@ project(bitprim-domain
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Check for baseline language coverage in the compiler for the C++11 standard.
+# Check for baseline language coverage in the compiler for the C++14 standard.
 #------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Process options.
@@ -81,6 +81,14 @@ option(WITH_TESTS_NEW "Compile with unit tests." OFF)
 #------------------------------------------------------------------------------
 option(WITH_EXAMPLES "Compile with examples." OFF)
 
+
+# Implement --with-keoken and declare WITH_CACHED_RPC_DATA.
+#------------------------------------------------------------------------------
+option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
+if (WITH_CACHED_RPC_DATA)
+  message(STATUS "Bitprim: Cached RPC data enabled")
+  add_definitions(-DBITPRIM_CACHED_RPC_DATA)
+endif()
 
 # Implement --with-keoken and declare WITH_KEOKEN.
 #------------------------------------------------------------------------------
@@ -331,20 +339,25 @@ if (ENABLE_SHARED)
 endif()
 
 set(bitprim_domain_sources_just_libbitcoin
+        src/chain/block_basis.cpp
         src/chain/block.cpp
         src/chain/chain_state.cpp
         src/chain/compact.cpp
+        src/chain/header_basis.cpp
         src/chain/header.cpp
+        src/chain/input_basis.cpp
         src/chain/input.cpp
+        src/chain/output_basis.cpp
         src/chain/output.cpp
         src/chain/output_point.cpp
         src/chain/point.cpp
         src/chain/point_iterator.cpp
         src/chain/point_value.cpp
         src/chain/points_value.cpp
+        src/chain/script_basis.cpp
         src/chain/script.cpp
+        src/chain/transaction_basis.cpp
         src/chain/transaction.cpp
-        src/chain/witness.cpp
 
         src/machine/interpreter.cpp
         # src/machine/number.cpp
@@ -443,11 +456,12 @@ set(bitprim_domain_sources_just_bitprim
     src/wallet/transaction_functions.cpp
 )
 
-# if (${CURRENCY} STREQUAL "BCH")
-#     set(bitprim_domain_sources_just_bitprim 
-#       ${bitprim_domain_sources_just_bitprim}
-#       src/wallet/cashaddr.cpp)
-# endif()
+if (NOT ${CURRENCY} STREQUAL "BCH")
+    set(bitprim_domain_sources_just_libbitcoin 
+      ${bitprim_domain_sources_just_libbitcoin}
+      src/chain/witness.cpp
+    )
+endif()
 
 if (${CURRENCY} STREQUAL "LTC")
     set(bitprim_domain_sources_just_bitprim 

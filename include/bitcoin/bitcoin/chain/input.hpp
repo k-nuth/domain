@@ -24,98 +24,72 @@
 #include <istream>
 #include <memory>
 #include <vector>
+
+#include <bitcoin/bitcoin/chain/input_basis.hpp>
 #include <bitcoin/bitcoin/chain/output_point.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/witness.hpp>
 #include <bitcoin/bitcoin/define.hpp>
+#include <bitcoin/bitcoin/wallet/payment_address.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/utility/container_sink.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
+
+#include <bitprim/common.hpp>
+#include <bitprim/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
 
-class BC_API input
-{
+class BC_API input : public input_basis {
 public:
-    typedef std::vector<input> list;
+    using list = std::vector<input>;
 
     // Constructors.
     //-------------------------------------------------------------------------
 
-    input();
+    input() = default;
+    // input(output_point const& previous_output, chain::script const& script, uint32_t sequence);
+    // input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
+    // input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
+    // input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
 
-    input(input&& other);
-    input(const input& other);
+    using input_basis::input_basis; // inherit constructors from input_basis
 
-    input(output_point&& previous_output, chain::script&& script,
-        uint32_t sequence);
-    input(const output_point& previous_output, const chain::script& script,
-        uint32_t sequence);
-
-    input(output_point&& previous_output, chain::script&& script,
-        chain::witness&& witness, uint32_t sequence);
-    input(const output_point& previous_output, const chain::script& script,
-        const chain::witness& witness, uint32_t sequence);
+    input(input const& x);
+    input(input&& x) noexcept;
+    input& operator=(input&& x) noexcept;
+    input& operator=(input const& x);
 
     // Operators.
     //-------------------------------------------------------------------------
 
-    input& operator=(input&& other);
-    input& operator=(const input& other);
+    // bool operator==(input const& x) const;
+    // bool operator!=(input const& x) const;
 
-    bool operator==(const input& other) const;
-    bool operator!=(const input& other) const;
+    static input factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    // Deserialization.
-    //-------------------------------------------------------------------------
-
-    static input factory_from_data(const data_chunk& data, bool wire=true, bool witness=false);
-    static input factory_from_data(std::istream& stream, bool wire=true, bool witness=false);
-    static input factory_from_data(reader& source, bool wire=true, bool witness=false);
-
-    bool from_data(const data_chunk& data, bool wire=true, bool witness=false);
-    bool from_data(std::istream& stream, bool wire=true, bool witness=false);
-    bool from_data(reader& source, bool wire=true, bool witness=false);
-
-    bool is_valid() const;
-
-    // Serialization.
-    //-------------------------------------------------------------------------
-
-    data_chunk to_data(bool wire=true, bool witness=false) const;
-    void to_data(std::ostream& stream, bool wire=true, bool witness=false) const;
-    void to_data(writer& sink, bool wire=true, bool witness=false) const;
+    template <Reader R, BITPRIM_IS_READER(R)>
+    static input factory_from_data(R& source, bool wire = true, bool witness = false) {
+        input instance;
+        instance.from_data(source, wire, witness_val(witness));
+        return instance;
+    }
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    /// This accounts for wire witness, but does not read or write it.
-    size_t serialized_size(bool wire=true, bool witness=false) const;
-
-    output_point& previous_output();
-    const output_point& previous_output() const;
-    void set_previous_output(const output_point& value);
-    void set_previous_output(output_point&& value);
-
-    // Deprecated (unsafe).
-    chain::script& script();
-
-    const chain::script& script() const;
-    void set_script(const chain::script& value);
+    void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
-    // Deprecated (unsafe).
-    chain::witness& witness();
-
-    const chain::witness& witness() const;
-    void set_witness(const chain::witness& value);
+#ifndef BITPRIM_CURRENCY_BCH
+    void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
-
-    uint32_t sequence() const;
-    void set_sequence(uint32_t value);
+#endif // BITPRIM_CURRENCY_BCH
 
     /// The first payment address extracted (may be invalid).
     wallet::payment_address address() const;
@@ -126,40 +100,32 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-    /// Clear witness.
-    void strip_witness();
-
     // Validation.
     //-------------------------------------------------------------------------
 
-    bool is_final() const;
-    bool is_segregated() const;
-    bool is_locked(size_t block_height, uint32_t median_time_past) const;
-    size_t signature_operations(bool bip16, bool bip141) const;
-    bool extract_reserved_hash(hash_digest& out) const;
-    bool extract_embedded_script(chain::script& out) const;
-    bool extract_witness_script(chain::script& out,
-        const chain::script& prevout) const;
+    // bool is_final() const;
+    // bool is_segregated() const;
+    // bool is_locked(size_t block_height, uint32_t median_time_past) const;
+    // size_t signature_operations(bool bip16, bool bip141) const;
+    // bool extract_reserved_hash(hash_digest& out) const;
+    // bool extract_embedded_script(chain::script& out) const;
+    // bool extract_witness_script(chain::script& out, chain::script const& prevout) const;
 
-protected:
+// protected:
     void reset();
+protected:
     void invalidate_cache() const;
 
 private:
-    typedef std::shared_ptr<wallet::payment_address::list> addresses_ptr;
-
+    using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
     addresses_ptr addresses_cache() const;
-
     mutable upgrade_mutex mutex_;
     mutable addresses_ptr addresses_;
-
-    output_point previous_output_;
-    chain::script script_;
-    chain::witness witness_;
-    uint32_t sequence_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
+
+//#include <bitprim/concepts_undef.hpp>
 
 #endif

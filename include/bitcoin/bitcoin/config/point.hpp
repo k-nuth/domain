@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/output_point.hpp>
 #include <bitcoin/bitcoin/define.hpp>
@@ -31,21 +32,17 @@ namespace config {
 /**
  * Serialization helper to convert between text and an output_point.
  */
-class BC_API point
-{
+class BC_API point {
 public:
-    static const std::string delimeter;
+    static std::string const delimeter;
 
-    /**
-     * Default constructor.
-     */
-    point();
+    point() = default;
 
     /**
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    point(const std::string& tuple);
+    point(std::string const& tuple);
 
     /**
      * Initialization constructor.
@@ -53,11 +50,7 @@ public:
      */
     point(const chain::output_point& value);
 
-    /**
-     * Copy constructor.
-     * @param[in]  other  The object to copy into self on construct.
-     */
-    point(const point& other);
+    point(point const& x);
 
     /**
      * Overload cast to internal type.
@@ -80,17 +73,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const point& argument);
+                                    point const& argument);
 
 private:
-
     /**
      * The state of this object.
      */
     chain::output_point value_;
 };
 
-} // namespace config
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

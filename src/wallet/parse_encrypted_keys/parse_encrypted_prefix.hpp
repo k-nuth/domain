@@ -19,10 +19,11 @@
 #ifndef LIBBITCOIN_PARSE_ENCRYPTED_PREFIX_HPP
 #define LIBBITCOIN_PARSE_ENCRYPTED_PREFIX_HPP
 
-#include <cstdint>
 #include <cstddef>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <cstdint>
+
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
+#include <bitcoin/infrastructure/utility/data.hpp>
 
 // BIP38
 // Alt-chain implementers should exploit the address hash for [identification].
@@ -35,9 +36,8 @@
 namespace libbitcoin {
 namespace wallet {
 
-template<size_t Size>
-class parse_encrypted_prefix
-{
+template <size_t Size>
+class parse_encrypted_prefix {
 public:
     bool valid() const;
 
@@ -59,8 +59,8 @@ private:
     bool valid_;
 };
 
-} // namespace wallet
-} // namespace libbitcoin
+}  // namespace wallet
+}  // namespace libbitcoin
 
 #include "parse_encrypted_prefix.ipp"
 

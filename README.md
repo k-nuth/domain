@@ -13,7 +13,7 @@ Detailed instructions are provided below.
 
 ### Debian/Ubuntu
 
-Bitprim requires a C++11 compiler, currently minimum [GCC 4.8.0](https://gcc.gnu.org/projects/cxx0x.html) or Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html).
+Bitprim requires a C++14 compiler, currently minimum [GCC 5.0.0](https://gcc.gnu.org/projects/cxx-status.html#cxx14) or Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html).
 
 To see your GCC version:
 ```sh
@@ -70,7 +70,7 @@ bitprim-domain is now installed in `/usr/local/`.
 
 The OSX installation differs from Linux in the installation of the compiler and packaged dependencies. Bitprim supports both [Homebrew](http://brew.sh) and [MacPorts](https://www.macports.org) package managers. Both require Apple's [Xcode](https://developer.apple.com/xcode) command line tools. Neither requires Xcode as the tools may be installed independently.
 
-Bitprim compiles with Clang on OSX and requires C++11 support. Installation has been verified using Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html). This version or newer should be installed as part of the Xcode command line tools.
+Bitprim compiles with Clang on OSX and requires C++14 support. Installation has been verified using Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html). This version or newer should be installed as part of the Xcode command line tools.
 
 To see your Clang/LLVM  version:
 ```sh

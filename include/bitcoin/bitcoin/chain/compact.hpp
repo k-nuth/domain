@@ -20,6 +20,7 @@
 #define LIBBITCOIN_CHAIN_COMPACT_HPP
 
 #include <cstdint>
+
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 
@@ -27,20 +28,20 @@ namespace libbitcoin {
 namespace chain {
 
 /// A signed but zero-floored scientific notation in 32 bits.
-class BC_API compact
-{
+class BC_API compact {
 public:
     /// Construct a normal form compact number from a 32 bit compact number.
-    explicit compact(uint32_t compact);
+    explicit 
+    compact(uint32_t compact);
 
     /// Construct a normal form compact number from a 256 bit number
-    explicit compact(const uint256_t& big);
+    explicit 
+    compact(uint256_t const& big);
 
-    /// Move constructor.
-    compact(compact&& other);
+    compact(compact&& x) noexcept;
 
     /// Copy constructor.
-    compact(const compact& other);
+    compact(compact const& x);
 
     /// True if construction overflowed.
     bool is_overflowed() const;
@@ -51,18 +52,19 @@ public:
 
     /// Big number that the compact number represents.
     /// This is either saved or generated from the construction parameter.
-    operator const uint256_t&() const;
+    operator uint256_t const&() const;
+    uint256_t const& big() const;
 
 private:
     static bool from_compact(uint256_t& out, uint32_t compact);
-    static uint32_t from_big(const uint256_t& big);
+    static uint32_t from_big(uint256_t const& big);
 
     uint256_t big_;
     uint32_t normal_;
     bool overflowed_;
 };
 
-} // namespace chain
-} // namespace libbitcoin
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

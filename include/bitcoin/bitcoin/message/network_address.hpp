@@ -38,7 +38,7 @@
 //     typedef std::vector<network_address> list;
 
 //     static network_address factory_from_data(uint32_t version,
-//         const data_chunk& data, bool with_timestamp);
+//         data_chunk const& data, bool with_timestamp);
 //     static network_address factory_from_data(uint32_t version,
 //         std::istream& stream, bool with_timestamp);
 //     static network_address factory_from_data(uint32_t version,
@@ -58,8 +58,8 @@
 //     network_address(uint32_t timestamp, uint64_t services, ip_address&& ip,
 //         uint16_t port);
 
-//     network_address(const network_address& other);
-//     network_address(network_address&& other);
+//     network_address(network_address const& x);
+//     network_address(network_address&& x) noexcept;
 
 //     // Starting version 31402, addresses are prefixed with a timestamp.
 //     uint32_t timestamp() const;
@@ -76,24 +76,24 @@
 //     uint16_t port() const;
 //     void set_port(uint16_t value);
 
-//     bool from_data(uint32_t version, const data_chunk& data,
+//     bool from_data(uint32_t version, data_chunk const& data,
 //         bool with_timestamp);
 //     bool from_data(uint32_t version, std::istream& stream,
 //         bool with_timestamp);
 //     bool from_data(uint32_t version, reader& source, bool with_timestamp);
 //     data_chunk to_data(uint32_t version, bool with_timestamp) const;
-//     void to_data(uint32_t version, std::ostream& stream,
+//     void to_data(uint32_t version, data_sink& stream,
 //         bool with_timestamp) const;
 //     void to_data(uint32_t version, writer& sink, bool with_timestamp) const;
 //     bool is_valid() const;
 //     void reset();
 //     size_t serialized_size(uint32_t version, bool with_timestamp) const;
 
-//     network_address& operator=(network_address&& other);
-//     network_address& operator=(const network_address& other);
+//     network_address& operator=(network_address&& x) noexcept;
+//     network_address& operator=(network_address const& x);
 
-//     bool operator==(const network_address& other) const;
-//     bool operator!=(const network_address& other) const;
+//     bool operator==(network_address const& x) const;
+//     bool operator!=(network_address const& x) const;
 
 // private:
 //     uint32_t timestamp_;

@@ -21,29 +21,40 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <memory>
 #include <deque>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
+#include <memory>
+
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
+#include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/infrastructure/machine/opcode.hpp>
 #include <bitcoin/infrastructure/machine/rule_fork.hpp>
+#include <bitcoin/infrastructure/math/hash.hpp>
 
-namespace libbitcoin { namespace chain {
+namespace libbitcoin {
+namespace chain {
 
 class block;
 class header;
 
 class BC_API chain_state {
 public:
-    typedef std::deque<uint32_t> bitss;
-    typedef std::deque<uint32_t> versions;
-    typedef std::deque<uint32_t> timestamps;
-    typedef struct { size_t count; size_t high; } range;
+    using bitss = std::deque<uint32_t>;
+    using versions = std::deque<uint32_t>;
+    using timestamps = std::deque<uint32_t>;
 
-    typedef std::shared_ptr<chain_state> ptr;
-    typedef config::checkpoint::list checkpoints;
+    // typedef struct {
+    //     size_t count;
+    //     size_t high;
+    // } range;
+
+    using range = struct {
+        size_t count;
+        size_t high;
+    };
+
+    using ptr = std::shared_ptr<chain_state>;
+    using checkpoints = config::checkpoint::list;
 
     /// Heights used to identify construction requirements.
     /// All values are lower-bounded by the genesis block height.
@@ -134,14 +145,16 @@ public:
     chain_state(chain_state const& pool, const chain::block& block);
 
     /// Create header state from header pool chain state of previous height.
-    chain_state(chain_state const& parent, const chain::header& header);
+    chain_state(chain_state const& parent, chain::header const& header);
 
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, const checkpoints& checkpoints, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-                , uint64_t monolith_activation_time, uint64_t magnetic_anomaly_activation_time
-#endif //BITPRIM_CURRENCY_BCH
+                ,
+                uint64_t monolith_activation_time,
+                uint64_t magnetic_anomaly_activation_time
+#endif  //BITPRIM_CURRENCY_BCH
     );
 
     /// Properties.
@@ -154,7 +167,7 @@ public:
 #ifdef BITPRIM_CURRENCY_BCH
     uint64_t monolith_activation_time() const;
     uint64_t magnetic_anomaly_activation_time() const;
-#endif //BITPRIM_CURRENCY_BCH
+#endif  //BITPRIM_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
     bool is_valid() const;
@@ -163,28 +176,26 @@ public:
     bool is_enabled(machine::rule_fork fork) const;
 
     /// Determine if this block hash fails a checkpoint at this height.
-    bool is_checkpoint_conflict(const hash_digest& hash) const;
+    bool is_checkpoint_conflict(hash_digest const& hash) const;
 
     /// This block height is less than or equal to that of the top checkpoint.
     bool is_under_checkpoint() const;
 
-    static bool is_retarget_height(size_t height); //Need to be public, for Litecoin
+    static bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
 #ifdef BITPRIM_CURRENCY_BCH
-    static uint256_t difficulty_adjustment_cash(uint256_t);
-#endif //BITPRIM_CURRENCY_BCH
+    static uint256_t difficulty_adjustment_cash(uint256_t const& target);
+#endif  //BITPRIM_CURRENCY_BCH
 
     uint32_t get_next_work_required(uint32_t time_now);
 
-
 #ifdef BITPRIM_CURRENCY_BCH
-    static
-    bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
+    static bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
     bool is_monolith_enabled() const;
 
     bool is_replay_protection_enabled() const;
-#endif //BITPRIM_CURRENCY_BCH
+#endif  //BITPRIM_CURRENCY_BCH
 
 protected:
     struct activations {
@@ -197,13 +208,15 @@ protected:
 
     static activations activation(data const& values, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-                                , uint64_t monolith_activation_time, uint64_t magnetic_anomaly_activation_time
-#endif //BITPRIM_CURRENCY_BCH
+                                  ,
+                                  uint64_t monolith_activation_time,
+                                  uint64_t magnetic_anomaly_activation_time
+#endif  //BITPRIM_CURRENCY_BCH
     );
 
     static uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
 
-//    static uint32_t work_required(data const& values, uint32_t forks, bool bitcoin_cash = false);
+    //    static uint32_t work_required(data const& values, uint32_t forks, bool bitcoin_cash = false);
     static uint32_t work_required(data const& values, uint32_t forks);
 
 private:
@@ -212,29 +225,21 @@ private:
     static size_t timestamp_count(size_t height, uint32_t forks);
 
     // TODO(bitprim): make function private again. Moved to public in the litecoin merge
-    static 
-    size_t retarget_height(size_t height, uint32_t forks);
-    
-    static 
-    size_t collision_height(size_t height, uint32_t forks);
-    
-    static 
-    size_t bip9_bit0_height(size_t height, uint32_t forks);
+    static size_t retarget_height(size_t height, uint32_t forks);
 
-    static
-    size_t bip9_bit1_height(size_t height, uint32_t forks);
+    static size_t collision_height(size_t height, uint32_t forks);
 
-    static 
-    size_t uahf_height(size_t height, uint32_t forks);
+    static size_t bip9_bit0_height(size_t height, uint32_t forks);
 
-    static 
-    size_t daa_height(size_t height, uint32_t forks);
+    static size_t bip9_bit1_height(size_t height, uint32_t forks);
 
-    static 
-    bool is_uahf_enabled(size_t height, uint32_t forks);
+    static size_t uahf_height(size_t height, uint32_t forks);
 
-    static 
-    bool is_daa_enabled(size_t height, uint32_t forks);
+    static size_t daa_height(size_t height, uint32_t forks);
+
+    static bool is_uahf_enabled(size_t height, uint32_t forks);
+
+    static bool is_daa_enabled(size_t height, uint32_t forks);
 
     static data to_pool(chain_state const& top);
     static data to_block(chain_state const& pool, block const& block);
@@ -242,7 +247,6 @@ private:
 
     static uint32_t work_required_retarget(data const& values);
     static uint32_t retarget_timespan(chain_state::data const& values);
-
 
     // TODO(bitprim): make function private again. Moved to public in the litecoin merge
     // static bool is_retarget_height(size_t height);
@@ -254,16 +258,16 @@ private:
 #ifdef BITPRIM_CURRENCY_BCH
     static uint32_t cash_difficulty_adjustment(data const& values);
     static uint32_t work_required_adjust_cash(data const& values);
-#endif //BITPRIM_CURRENCY_BCH
-    
+#endif  //BITPRIM_CURRENCY_BCH
+
     static uint32_t work_required_easy(data const& values);
     static uint32_t elapsed_time_limit(chain_state::data const& values);
-    static bool is_retarget_or_non_limit(size_t height, uint32_t bits); 
-    
+    static bool is_retarget_or_non_limit(size_t height, uint32_t bits);
+
     static uint32_t easy_work_required(data const& values, bool daa_active);
     static uint32_t easy_time_limit(chain_state::data const& values);
     static size_t retarget_distance(size_t height);
-    
+
     // This is retained as an optimization for other constructions.
     // A similar height clone can be partially computed, reducing query cost.
     data const data_;
@@ -282,9 +286,10 @@ private:
 #ifdef BITPRIM_CURRENCY_BCH
     uint64_t const monolith_activation_time_;
     uint64_t const magnetic_anomaly_activation_time_;
-#endif //BITPRIM_CURRENCY_BCH
+#endif  //BITPRIM_CURRENCY_BCH
 };
 
-}} // namespace libbitcoin::chain
+}  // namespace chain
+}  // namespace libbitcoin
 
 #endif

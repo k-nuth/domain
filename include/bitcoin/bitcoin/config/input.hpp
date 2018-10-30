@@ -21,9 +21,10 @@
 
 #include <iostream>
 #include <string>
-#include <bitcoin/bitcoin/define.hpp>
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/input_point.hpp>
+#include <bitcoin/bitcoin/define.hpp>
 
 namespace libbitcoin {
 namespace config {
@@ -31,45 +32,36 @@ namespace config {
 /**
  * Serialization helper stub for chain::input.
  */
-class BC_API input
-{
+class BC_API input {
 public:
-
-    /**
-     * Default constructor.
-     */
-    input();
+    input() = default;
 
     /**
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    input(const std::string& tuple);
+    input(std::string const& tuple);
 
     /**
      * Initialization constructor. Only the point is retained.
      * @param[in]  value  The value to initialize with.
      */
-    input(const chain::input& value);
+    input(chain::input const& value);
+
+    input(input const& x);
 
     /**
-     * Copy constructor.
-     * @param[in]  other  The object to copy into self on construct.
-     */
-    input(const input& other);
-
-    /**
-     * Initialization constructor. Aspects of the input other than the point
+     * Initialization constructor. Aspects of the input x than the point
      * are defaulted.
      * @param[in]  value  The value to initialize with.
      */
-    input(const chain::input_point& value);
+    input(chain::input_point const& value);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::input&() const;
+    operator chain::input const&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -86,17 +78,16 @@ public:
      * @return                The output stream reference.
      */
     friend std::ostream& operator<<(std::ostream& output,
-        const input& argument);
+                                    input const& argument);
 
 private:
-
     /**
      * The state of this object.
      */
     chain::input value_;
 };
 
-} // namespace explorer
-} // namespace libbitcoin
+}  // namespace config
+}  // namespace libbitcoin
 
 #endif

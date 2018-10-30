@@ -21,6 +21,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <utility>
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
@@ -36,11 +37,10 @@ using namespace bc::chain;
 // Fixed tuning parameters, max_stack_size ensures no reallocation.
 static constexpr size_t stack_capactity = max_stack_size;
 static constexpr size_t condition_capactity = max_counted_ops;
-static const chain::transaction default_tx_;
-static const chain::script default_script_;
+static chain::transaction const default_tx_;
+static chain::script const default_script_;
 
-void program::reserve_stacks()
-{
+void program::reserve_stacks() {
     primary_.reserve(stack_capactity);
     alternate_.reserve(stack_capactity);
     condition_.reserve(condition_capactity);
@@ -50,111 +50,90 @@ void program::reserve_stacks()
 //-----------------------------------------------------------------------------
 
 program::program()
-  : script_(default_script_),
-    transaction_(default_tx_),
-    input_index_(0),
-    forks_(0),
-    value_(0),
-    version_(script_version::unversioned),
-    negative_count_(0),
-    operation_count_(0),
-    jump_(script_.begin())
+    : script_(default_script_),
+      transaction_(default_tx_),
+      jump_(script_.begin()) 
 {
     reserve_stacks();
 }
 
-program::program(const script& script)
-  : script_(script),
-    transaction_(default_tx_),
-    input_index_(0),
-    forks_(0),
-    value_(0),
-    version_(script_version::unversioned),
-    negative_count_(0),
-    operation_count_(0),
-    jump_(script_.begin())
-{
+program::program(script const& script)
+    : script_(script),
+      transaction_(default_tx_),
+      input_index_(0),
+      forks_(0),
+      value_(0),
+      negative_count_(0),
+      operation_count_(0),
+      jump_(script_.begin()) {
     reserve_stacks();
 }
 
-program::program(const script& script, const chain::transaction& transaction,
-    uint32_t input_index, uint32_t forks)
-  : script_(script),
-    transaction_(transaction),
-    input_index_(input_index),
-    forks_(forks),
-    value_(max_uint64),
-    version_(script_version::unversioned),
-    negative_count_(0),
-    operation_count_(0),
-    jump_(script_.begin())
-{
+program::program(script const& script, chain::transaction const& transaction, uint32_t input_index, uint32_t forks)
+    : script_(script),
+      transaction_(transaction),
+      input_index_(input_index),
+      forks_(forks),
+      value_(max_uint64),
+      negative_count_(0),
+      operation_count_(0),
+      jump_(script_.begin()) {
     reserve_stacks();
 }
 
 // Condition, alternate, jump and operation_count are not copied.
-program::program(const script& script, const chain::transaction& transaction,
-    uint32_t input_index, uint32_t forks, data_stack&& stack, uint64_t value,
-    script_version version)
-  : script_(script),
-    transaction_(transaction),
-    input_index_(input_index),
-    forks_(forks),
-    value_(value),
-    version_(version),
-    negative_count_(0),
-    operation_count_(0),
-    jump_(script_.begin()),
-    primary_(std::move(stack))
-{
+program::program(script const& script, chain::transaction const& transaction, uint32_t input_index, uint32_t forks, data_stack&& stack, uint64_t value, script_version version)
+    : script_(script),
+      transaction_(transaction),
+      input_index_(input_index),
+      forks_(forks),
+      value_(value),
+      version_(version),
+      negative_count_(0),
+      operation_count_(0),
+      jump_(script_.begin()),
+      primary_(std::move(stack)) {
     reserve_stacks();
 }
 
-
 // Condition, alternate, jump and operation_count are not copied.
-program::program(const script& script, const program& other)
-  : script_(script),
-    transaction_(other.transaction_),
-    input_index_(other.input_index_),
-    forks_(other.forks_),
-    value_(other.value_),
-    version_(script_version::unversioned),
-    negative_count_(0),
-    operation_count_(0),
-    jump_(script_.begin()),
-    primary_(other.primary_)
-{
+program::program(script const& script, const program& x)
+    : script_(script),
+      transaction_(x.transaction_),
+      input_index_(x.input_index_),
+      forks_(x.forks_),
+      value_(x.value_),
+      negative_count_(0),
+      operation_count_(0),
+      jump_(script_.begin()),
+      primary_(x.primary_) {
     reserve_stacks();
 }
 
 // Condition, alternate, jump and operation_count are not moved.
-program::program(const script& script, program&& other, bool)
-  : script_(script),
-    transaction_(other.transaction_),
-    input_index_(other.input_index_),
-    forks_(other.forks_),
-    value_(other.value_),
-    version_(script_version::unversioned),
-    negative_count_(0),
-    operation_count_(0),
-    jump_(script_.begin()),
-    primary_(std::move(other.primary_))
-{
+program::program(script const& script, program&& x, bool /*unused*/)
+    : script_(script),
+      transaction_(x.transaction_),
+      input_index_(x.input_index_),
+      forks_(x.forks_),
+      value_(x.value_),
+      negative_count_(0),
+      operation_count_(0),
+      jump_(script_.begin()),
+      primary_(std::move(x.primary_)) {
     reserve_stacks();
 }
 
 // Instructions.
 //-----------------------------------------------------------------------------
 
-code program::evaluate()
-{
+code program::evaluate() {
     return interpreter::run(*this);
 }
 
-code program::evaluate(const operation& op)
-{
+code program::evaluate(operation const& op) {
     return interpreter::run(op, *this);
 }
 
-} // namespace machine
-} // namespace libbitcoin
+}  // namespace machine
+}  // namespace libbitcoin

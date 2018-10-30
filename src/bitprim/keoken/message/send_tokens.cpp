@@ -28,19 +28,17 @@ namespace keoken {
 namespace message {
 
 using bc::data_chunk;
-using bc::data_source;
 using bc::data_sink;
+using bc::data_source;
 using bc::istream_reader;
 using bc::ostream_writer;
-using bc::writer;
-    
+// using bc::writer;
+
 // Constructors.
 //-------------------------------------------------------------------------
 
 send_tokens::send_tokens(asset_id_t asset_id, amount_t amount)
-    : asset_id_(asset_id)
-    , amount_(amount)
-{}
+    : asset_id_(asset_id), amount_(amount) {}
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -60,24 +58,24 @@ bool operator!=(send_tokens const& a, send_tokens const& b) {
 
 // static
 send_tokens send_tokens::factory_from_data(data_chunk const& data) {
-    send_tokens instance;       //NOLINT
+    send_tokens instance;  //NOLINT
     instance.from_data(data);
     return instance;
 }
 
 // static
 send_tokens send_tokens::factory_from_data(std::istream& stream) {
-    send_tokens instance;       //NOLINT
+    send_tokens instance;  //NOLINT
     instance.from_data(stream);
     return instance;
 }
 
-// static
-send_tokens send_tokens::factory_from_data(bc::reader& source) {
-    send_tokens instance;       //NOLINT
-    instance.from_data(source);
-    return instance;
-}
+// // static
+// send_tokens send_tokens::factory_from_data(bc::reader& source) {
+//     send_tokens instance;  //NOLINT
+//     instance.from_data(source);
+//     return instance;
+// }
 
 bool send_tokens::from_data(data_chunk const& data) {
     data_source istream(data);
@@ -85,27 +83,27 @@ bool send_tokens::from_data(data_chunk const& data) {
 }
 
 bool send_tokens::from_data(std::istream& stream) {
-    istream_reader source(stream);
-    return from_data(source);
+    istream_reader stream_r(stream);
+    return from_data(stream_r);
 }
 
-//Note: from_data and to_data are not longer simetrical.
-bool send_tokens::from_data(bc::reader& source) {
-    asset_id_ = source.read_4_bytes_big_endian();
-    amount_ = source.read_8_bytes_big_endian();
+// //Note: from_data and to_data are not longer simetrical.
+// bool send_tokens::from_data(bc::reader& source) {
+//     asset_id_ = source.read_4_bytes_big_endian();
+//     amount_ = source.read_8_bytes_big_endian();
 
-    // if ( ! source)
-    //     reset();
+//     // if ( ! source)
+//     //     reset();
 
-    return source;
-}
+//     return source;
+// }
 
 // Serialization.
 //-----------------------------------------------------------------------------
 
 data_chunk send_tokens::to_data() const {
     data_chunk data;
-    const auto size = serialized_size();
+    auto const size = serialized_size();
     data.reserve(size);
     data_sink ostream(data);
     to_data(ostream);
@@ -114,25 +112,24 @@ data_chunk send_tokens::to_data() const {
     return data;
 }
 
-void send_tokens::to_data(std::ostream& stream) const {
-    ostream_writer sink(stream);
-    to_data(sink);
+void send_tokens::to_data(data_sink& stream) const {
+    ostream_writer sink_w(stream);
+    to_data(sink_w);
 }
 
-//Note: from_data and to_data are not longer simetrical.
-void send_tokens::to_data(writer& sink) const {
-    base::to_data(sink, version, type);
-    sink.write_4_bytes_big_endian(asset_id_);
-    sink.write_8_bytes_big_endian(amount_);
-}
-
+// //Note: from_data and to_data are not longer simetrical.
+// void send_tokens::to_data(writer& sink) const {
+//     base::to_data(sink, version, type);
+//     sink.write_4_bytes_big_endian(asset_id_);
+//     sink.write_8_bytes_big_endian(amount_);
+// }
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
 
 size_t send_tokens::serialized_size() const {
     return base::serialized_size() +
-           sizeof(asset_id_) + 
+           sizeof(asset_id_) +
            sizeof(amount_);
 }
 
@@ -152,6 +149,6 @@ void send_tokens::set_amount(amount_t x) {
     amount_ = x;
 }
 
-} // namespace message
-} // namespace keoken
-} // namespace bitprim
+}  // namespace message
+}  // namespace keoken
+}  // namespace bitprim
