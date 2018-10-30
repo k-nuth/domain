@@ -136,6 +136,7 @@
 #include <bitcoin/bitcoin/message/transaction.hpp>
 #include <bitcoin/bitcoin/message/verack.hpp>
 #include <bitcoin/bitcoin/message/version.hpp>
+#include <bitcoin/bitcoin/message/messages.hpp>
 // #include <bitcoin/infrastructure/unicode/console_streambuf.hpp>
 // #include <bitcoin/infrastructure/unicode/file_lock.hpp>
 // #include <bitcoin/infrastructure/unicode/ifstream.hpp>
