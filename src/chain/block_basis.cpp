@@ -588,6 +588,9 @@ size_t block_basis::non_coinbase_input_count() const {
     return std::accumulate(txs.begin() + 1, txs.end(), size_t(0), counter);
 }
 
+
+//Note(bitprim): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
+//               and for BitcoinCash (BCH) before 2018-Nov-15.
 //****************************************************************************
 // CONSENSUS: This is only necessary because satoshi stores and queries as it
 // validates, imposing an otherwise unnecessary partial transaction ordering.
@@ -607,6 +610,17 @@ bool block_basis::is_forward_reference() const {
     }
 
     return false;
+}
+
+bool block_basis::is_canonical_ordered() const {
+    //precondition: transactions_.size() > 1
+    
+    auto const hash_cmp = [](transaction const& a, transaction const& b){
+        return a.hash() < b.hash();
+    };
+
+    // Skip the coinbase
+    std::is_sorted(transactions_.begin() + 1, transactions_.end(), hash_cmp);
 }
 
 // This is an early check that is redundant with block pool accept checks.
@@ -796,15 +810,21 @@ code block_basis::check(size_t serialized_size_false) const {
         // TODO(libbitcoin): determinable from tx pool graph.
     }
 
+#if ! defined(BITPRIM_CURRENCY_BCH) // BTC and LTC
+    //Note(bitprim): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
+    //               and for BitcoinCash (BCH) before 2018-Nov-15.
     if (is_forward_reference()) {
         return error::forward_reference;
-
-        // This is subset of is_internal_double_spend if collisions cannot happen.
-        ////else if ( ! is_distinct_transaction_set())
-        ////    return error::internal_duplicate;
-
-        // TODO(libbitcoin): determinable from tx pool graph.
     }
+#endif
+
+
+    // This is subset of is_internal_double_spend if collisions cannot happen.
+    ////else if ( ! is_distinct_transaction_set())
+    ////    return error::internal_duplicate;
+
+    // TODO(libbitcoin): determinable from tx pool graph.
+
 
     if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
@@ -871,6 +891,21 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
         // NOTE: for BCH bit141 is set as false
     }
 
+#if defined(BITPRIM_CURRENCY_BCH)
+    //Note(bitprim): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
+    //               and for BitcoinCash (BCH) before 2018-Nov-15.
+
+    if (state.is_magnetic_anomaly_enabled()) {
+        if (is_canonical_ordered()) {
+            return error::non_canonical_ordered;
+        }
+    } else {
+        if (is_forward_reference()) {
+            return error::forward_reference;
+        }
+    }
+#endif
+
     // if (bip141 && weight() > max_block_weight) {
     if (bip141 && weight > max_block_weight) {
         return error::block_weight_limit;
@@ -879,22 +914,20 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;
 
-        // TODO(libbitcoin): relates height to total of tx.fee (pool cach).
     }
-
+    // TODO(libbitcoin): relates height to total of tx.fee (pool cach).
     if ( ! is_valid_coinbase_claim(state.height())) {
         return error::coinbase_value_limit;
 
-        // TODO(libbitcoin): relates median time past to tx.locktime (pool cache min tx.time).
     }
 
+    // TODO(libbitcoin): relates median time past to tx.locktime (pool cache min tx.time).
     if ( ! is_final(state.height(), block_time)) {
         return error::block_non_final;
-
-        // TODO(libbitcoin): relates height to tx.hash(true) (pool cache).
-        // NOTE: for BCH bit141 is set as false
     }
 
+    // TODO(libbitcoin): relates height to tx.hash(true) (pool cache).
+    // NOTE: for BCH bit141 is set as false
     if (bip141 && !is_valid_witness_commitment()) {
         return error::invalid_witness_commitment;
 
