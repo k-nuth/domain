@@ -223,6 +223,8 @@ enum class opcode : uint8_t
     checksigverify = 173,
     checkmultisig = 174,
     checkmultisigverify = 175,
+
+
     nop1 = 176,
     nop2 = 177,
     checklocktimeverify = nop2,
@@ -235,8 +237,17 @@ enum class opcode : uint8_t
     nop8 = 183,
     nop9 = 184,
     nop10 = 185,
+
+    //Note(bitprim): This is implemented through Bitcoin-ABC...
+    //TODO(bitprim): Implement in the libbitcoin way.
+    // OP_CHECKDATASIG = CScriptOp(0xba)
+    // OP_CHECKDATASIGVERIFY = CScriptOp(0xbb)
+    // checkdatasig = 186,
+    // checkdatasigverigy = 187,
+
     reserved_186 = 186,
     reserved_187 = 187,
+
     reserved_188 = 188,
     reserved_189 = 189,
     reserved_190 = 190,

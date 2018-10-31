@@ -330,6 +330,9 @@ std::string opcode_to_string(opcode value, uint32_t active_forks) {
             return "nop9";
         case opcode::nop10:
             return "nop10";
+
+        //TODO(bitprim): Implement OP_CHECKDATASIG and OP_CHECKDATASIGVERIFY
+
         case opcode::reserved_186:
         case opcode::reserved_187:
         case opcode::reserved_188:
