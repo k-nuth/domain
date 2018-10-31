@@ -673,10 +673,15 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
         // A segregated tx should appear empty if bip141 is not enabled.
     }
 
+#ifdef BITPRIM_CURRENCY_BCH
+    if (state.is_magnetic_anomaly_enabled() && serialized_size(true, false) < min_transaction_size) {
+        return error::transaction_size_limit;
+    }
+#endif
+
     // if ( ! bip141 && is_segregated()) {
     //     return error::empty_transaction;
     // }
-
 #ifndef BITPRIM_CURRENCY_BCH
     if ( ! bip141 && is_segregated) {
         return error::empty_transaction;
