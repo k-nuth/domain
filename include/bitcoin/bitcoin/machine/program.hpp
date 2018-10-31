@@ -27,7 +27,7 @@
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/infrastructure/machine/script_version.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
