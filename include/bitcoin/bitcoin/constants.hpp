@@ -211,8 +211,8 @@ BC_CONSTEXPR uint32_t bip9_version_bit1 = 1u << 1;
 BC_CONSTEXPR uint32_t bip9_version_base = 0x20000000;
 
 #ifdef BITPRIM_CURRENCY_BCH
-// BC_CONSTEXPR size_t   bch_activation_height = 478559 //478558;                       //2017-August-01 hard fork
-// BC_CONSTEXPR uint32_t bch_daa_activation_time = 1510600000;                 //2017-November-13 hard fork
+// BC_CONSTEXPR size_t   bch_activation_height = 478559 //478558;         //2017-August-01 hard fork
+// BC_CONSTEXPR uint32_t bch_daa_activation_time = 1510600000;            //2017-November-13 hard fork
 BC_CONSTEXPR uint32_t bch_monolith_activation_time = 1526400000;          //2018-May hard fork
 BC_CONSTEXPR uint32_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November hard fork
 

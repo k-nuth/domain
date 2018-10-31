@@ -854,10 +854,10 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
     if ((ec = header_.accept(state))) {
         return ec;
-        //In Bitcoin Cash, block size check is now dependent on the Blockchain state.
     }
 
 #if defined(BITPRIM_CURRENCY_BCH)
+    //Note(bitprim): In Bitcoin Cash, block size check is now dependent on the Blockchain state.
     // if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old) {
     if ( ! state.is_monolith_enabled() && serialized_size > max_block_size_old) {
         return error::block_size_limit;

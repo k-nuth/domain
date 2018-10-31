@@ -162,7 +162,8 @@ uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
 // }
 
 //static
-inline bool chain_state::is_mtp_activated(uint32_t median_time_past, uint32_t activation_time) {
+inline 
+bool chain_state::is_mtp_activated(uint32_t median_time_past, uint32_t activation_time) {
     return (median_time_past >= activation_time);
 }
 
@@ -170,7 +171,7 @@ bool chain_state::is_monolith_enabled() const {
     return is_mtp_activated(median_time_past(), monolith_activation_time());
 }
 
-bool chain_state::is_replay_protection_enabled() const {
+bool chain_state::is_magnetic_anomaly_enabled() const {
     return is_mtp_activated(median_time_past(), magnetic_anomaly_activation_time());
 }
 #endif  //BITPRIM_CURRENCY_BCH

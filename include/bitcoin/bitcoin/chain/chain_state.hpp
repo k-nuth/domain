@@ -190,11 +190,11 @@ public:
     uint32_t get_next_work_required(uint32_t time_now);
 
 #ifdef BITPRIM_CURRENCY_BCH
-    static bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
+    static 
+    bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
     bool is_monolith_enabled() const;
-
-    bool is_replay_protection_enabled() const;
+    bool is_magnetic_anomaly_enabled() const;
 #endif  //BITPRIM_CURRENCY_BCH
 
 protected:
