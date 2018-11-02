@@ -170,7 +170,7 @@ size_t input_basis::serialized_size(bool wire, bool witness) const {
     // Witness size added in both contexts despite that tx writes wire witness.
     // Prefix is written for both wire and store/other contexts.
     return serialized_size_non_witness(wire)
-         + witness ? witness_.serialized_size(true) : 0;
+         + (witness ? witness_.serialized_size(true) : 0);
 }
 #endif
 
