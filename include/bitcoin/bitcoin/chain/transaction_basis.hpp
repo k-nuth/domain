@@ -112,6 +112,31 @@ inline void write_witnesses(W& sink, input::list const& inputs) {
 
 }  // namespace detail
 
+
+class transaction_basis;
+
+hash_digest hash_non_witness(transaction_basis const& tx);
+
+#ifndef BITPRIM_CURRENCY_BCH
+hash_digest hash_witness(transaction_basis const& tx);
+#endif
+
+hash_digest hash(transaction_basis const& tx, bool witness);
+hash_digest outputs_hash(transaction_basis const& tx);
+hash_digest inpoints_hash(transaction_basis const& tx);
+hash_digest sequences_hash(transaction_basis const& tx);
+
+hash_digest to_outputs(transaction_basis const& tx);
+hash_digest to_inpoints(transaction_basis const& tx);
+hash_digest to_sequences(transaction_basis const& tx);
+
+uint64_t total_input_value(transaction_basis const& tx);
+uint64_t total_output_value(transaction_basis const& tx);
+uint64_t fees(transaction_basis const& tx);
+bool is_overspent(transaction_basis const& tx);
+bool is_segregated(transaction_basis const& tx);
+
+
 class BC_API transaction_basis {
 public:
     using ins = input::list;
@@ -226,12 +251,6 @@ public:
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool witness = false) const {
         if (wire) {
-
-#ifndef BITPRIM_CURRENCY_BCH
-            // Witness handling must be disabled for non-segregated txs.
-            if (witness) witness = is_segregated();
-#endif
-
             // Wire (satoshi protocol) serialization.
             sink.write_4_bytes_little_endian(version_);
 
@@ -347,26 +366,6 @@ private:
 };
 
 
-hash_digest hash_non_witness(transaction_basis const& tx);
-
-#ifndef BITPRIM_CURRENCY_BCH
-hash_digest hash_witness(transaction_basis const& tx);
-#endif
-
-hash_digest hash(transaction_basis const& tx, bool witness);
-hash_digest outputs_hash(transaction_basis const& tx);
-hash_digest inpoints_hash(transaction_basis const& tx);
-hash_digest sequences_hash(transaction_basis const& tx);
-
-hash_digest to_outputs(transaction_basis const& tx);
-hash_digest to_inpoints(transaction_basis const& tx);
-hash_digest to_sequences(transaction_basis const& tx);
-
-uint64_t total_input_value(transaction_basis const& tx);
-uint64_t total_output_value(transaction_basis const& tx);
-uint64_t fees(transaction_basis const& tx);
-bool is_overspent(transaction_basis const& tx);
-bool is_segregated(transaction_basis const& tx);
 
 
 // #ifdef BITPRIM_CURRENCY_BCH

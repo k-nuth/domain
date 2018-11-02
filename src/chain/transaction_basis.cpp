@@ -164,11 +164,6 @@ bool transaction_basis::is_valid() const {
 // Transactions with empty witnesses always use old serialization (bip144).
 // If no inputs are witness programs then witness hash is tx hash (bip141).
 data_chunk transaction_basis::to_data(bool wire, bool witness) const {
-#ifndef BITPRIM_CURRENCY_BCH
-    // Witness handling must be disabled for non-segregated txs.
-    if (witness) witness = is_segregated(*this);
-#endif
-
     data_chunk data;
     auto const size = serialized_size(wire, witness_val(witness));
 
@@ -185,12 +180,6 @@ data_chunk transaction_basis::to_data(bool wire, bool witness) const {
 }
 
 void transaction_basis::to_data(data_sink& stream, bool wire, bool witness) const {
-#ifndef BITPRIM_CURRENCY_BCH
-    // Witness handling must be disabled for non-segregated txs.
-    if (witness) witness = is_segregated(*this);
-#endif
-
-
     ostream_writer sink_w(stream);
     to_data(sink_w, wire, witness_val(witness));
 }
@@ -199,11 +188,6 @@ void transaction_basis::to_data(data_sink& stream, bool wire, bool witness) cons
 //-----------------------------------------------------------------------------
 
 size_t transaction_basis::serialized_size(bool wire, bool witness) const {
-#ifndef BITPRIM_CURRENCY_BCH
-    // The witness parameter must be set to false for non-segregated txs.
-    if (witness) witness = is_segregated(*this);
-#endif
-
     // Returns space for the witness although not serialized by input.
     // Returns witness space if specified even if input not segregated.
     auto const ins = [wire, witness](size_t size, input const& input) {
@@ -779,8 +763,8 @@ hash_digest hash_witness(transaction_basis const& tx) {
 hash_digest hash(transaction_basis const& tx, bool witness) {
 
 #ifndef BITPRIM_CURRENCY_BCH
-    // Witness hashing must be disabled for non-segregated txs.
-    if (witness) witness = is_segregated(tx);
+    // // Witness hashing must be disabled for non-segregated txs.
+    // if (witness) witness = is_segregated(tx);
 
     if (witness) {
         return hash_witness(tx);

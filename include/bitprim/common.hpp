@@ -41,6 +41,16 @@ constexpr inline
 #endif
 }
 
+#ifdef BITPRIM_CURRENCY_BCH
+#define BITPRIM_DECL_WITN_ARG bool /*witness*/ = false
+#define BITPRIM_DEF_WITN_ARG bool /*witness = false*/
+#else
+#define BITPRIM_DECL_WITN_ARG bool witness = false
+#define BITPRIM_DEF_WITN_ARG bool witness /*= false*/
+#endif
+
+
+
 }  // namespace libbitcoin
 
 #endif  //BITPRIM_COMMON_HPP_

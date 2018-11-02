@@ -247,6 +247,10 @@ public:
 #endif
                 ) const {
 
+#ifndef BITPRIM_CURRENCY_BCH
+        // Witness handling must be disabled for non-segregated txs.
+        witness = witness && is_segregated();
+#endif
         transaction_basis::to_data(sink, wire, witness);
 
 #ifdef BITPRIM_CACHED_RPC_DATA            

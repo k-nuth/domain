@@ -248,7 +248,7 @@ data_chunk transaction::to_data(bool wire, bool witness
     ) const {
 #ifndef BITPRIM_CURRENCY_BCH
     // Witness handling must be disabled for non-segregated txs.
-    if (witness) witness = is_segregated();
+    witness = witness && is_segregated();
 #endif
 
     data_chunk data;
@@ -281,7 +281,7 @@ void transaction::to_data(data_sink& stream, bool wire, bool witness
     ) const {
 #ifndef BITPRIM_CURRENCY_BCH
     // Witness handling must be disabled for non-segregated txs.
-    if (witness) witness = is_segregated();
+    witness = witness && is_segregated();
 #endif
 
     ostream_writer sink_w(stream);
@@ -300,6 +300,12 @@ size_t transaction::serialized_size(bool wire, bool witness
     , bool unconfirmed
 #endif
     ) const {
+
+#ifndef BITPRIM_CURRENCY_BCH
+    // Witness hashing must be disabled for non-segregated txs.
+    witness = witness && is_segregated();
+#endif
+
 
     // Must be both witness and wire encoding for bip144 serialization.
     return transaction_basis::serialized_size(wire, witness)
@@ -390,7 +396,7 @@ void transaction::invalidate_cache() const {
 hash_digest transaction::hash(bool witness) const {
 #ifndef BITPRIM_CURRENCY_BCH
     // Witness hashing must be disabled for non-segregated txs.
-    if (witness) witness = is_segregated();
+    witness = witness && is_segregated();
 #endif
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -489,16 +495,12 @@ hash_digest transaction::sequences_hash() const {
 #ifndef BITPRIM_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void transaction::strip_witness() {
-    auto const strip = [](input& input) {
-        input.strip_witness();
-    };
-
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     unique_lock lock(mutex_);
 
     segregated_ = false;
-    std::for_each(inputs_.begin(), inputs_.end(), strip);
+    transaction_basis::strip_witness();
     ///////////////////////////////////////////////////////////////////////////
 }
 #endif
