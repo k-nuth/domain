@@ -2,19 +2,31 @@
 
 set -x
 
-sudo apt-get update
+# sudo apt-get update
 
 # apt-get install clang-tidy-6.0
 #PATH=/usr/lib/llvm-6.0/bin/:$PATH
 
-sudo apt-get install clang-tidy-7
-PATH=/usr/lib/llvm-7/bin/:$PATH
+# sudo apt-get install clang-tidy-7
+# PATH=/usr/lib/llvm-7/bin/:$PATH
+
+
+wget http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+tar -xJvf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+ls /home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin
+PATH=/home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
 
 sudo find / -name "clang-tidy"
 clang-tidy --version
 
 conan user
 conan --version
+
+echo $CONAN_CHANNEL
+eval $(python ci_utils/set_envvars_and_files.py)
+echo $CONAN_CHANNEL
+
+
 conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
 
 cd /home/conan/project
