@@ -154,6 +154,7 @@ void transaction_basis::reset() {
     outputs_.shrink_to_fit();
 }
 
+
 bool transaction_basis::is_valid() const {
     return (version_ != 0) || (locktime_ != 0) || !inputs_.empty() || !outputs_.empty();
 }
@@ -174,10 +175,13 @@ data_chunk transaction_basis::to_data(bool wire, bool witness) const {
     data_sink ostream(data);
     to_data(ostream, wire, witness_val(witness));
 
+    auto temp = data.size();
+
     ostream.flush();
     BITCOIN_ASSERT(data.size() == size);
     return data;
 }
+
 
 void transaction_basis::to_data(data_sink& stream, bool wire, bool witness) const {
     ostream_writer sink_w(stream);

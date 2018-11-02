@@ -1,5 +1,5 @@
-mkdir build2
-cd build2
+mkdir build
+cd build
 # rm -rf *
-conan install .. -o with_tests=True -s build_type=Debug
+conan install .. -o currency=BTC -o with_tests=True -s build_type=Debug
 conan build ..
