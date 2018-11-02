@@ -12,7 +12,8 @@ set -x
 
 
 wget http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-tar -xJvf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+# tar -xJvf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+tar -xJf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
 ls /home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin
 PATH=/home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
 
@@ -22,14 +23,13 @@ clang-tidy --version
 conan user
 conan --version
 
-echo $CONAN_CHANNEL
-eval $(python ci_utils/set_envvars_and_files.py)
-echo $CONAN_CHANNEL
-
-
 conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
 
 cd /home/conan/project
+
+echo $CONAN_CHANNEL
+eval $(python ci_utils/set_envvars_and_files.py)
+echo $CONAN_CHANNEL
 
 # git clone --depth=50 --branch=dev https://github.com/bitprim/bitprim-domain.git bitprim/bitprim-domain
 # cd bitprim/bitprim-domain
