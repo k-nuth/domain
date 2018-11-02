@@ -175,8 +175,6 @@ data_chunk transaction_basis::to_data(bool wire, bool witness) const {
     data_sink ostream(data);
     to_data(ostream, wire, witness_val(witness));
 
-    auto temp = data.size();
-
     ostream.flush();
     BITCOIN_ASSERT(data.size() == size);
     return data;
