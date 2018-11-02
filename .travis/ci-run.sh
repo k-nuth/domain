@@ -1,14 +1,16 @@
 #!/bin/bash
 
-apt-get update
+set -x
+
+sudo apt-get update
 
 # apt-get install clang-tidy-6.0
 #PATH=/usr/lib/llvm-6.0/bin/:$PATH
 
-apt-get install clang-tidy-7
+sudo apt-get install clang-tidy-7
 PATH=/usr/lib/llvm-7/bin/:$PATH
 
-find / -name "clang-tidy"
+sudo find / -name "clang-tidy"
 clang-tidy --version
 
 conan user
