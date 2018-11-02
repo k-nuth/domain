@@ -15,7 +15,7 @@ clang-tidy --version
 
 conan user
 conan --version
-# conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
+conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
 
 cd /home/conan/project
 
