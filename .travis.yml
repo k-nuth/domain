@@ -34,6 +34,9 @@ branches:
 env:
    global:
      - CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
+     # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+     #   via the "travis encrypt" command using the project repo's public key
+     - secure: "zmnprZPwibJ3tet1PRZvt3W3UkARdVb19lsSkAhfQCfq0GU2psBy8F8MAY92cHBOVwUNEOoxBIZUfPq6J+/S0V0qNTT2hvTmv8SlyZ5GdpUOJYURNHZarVneTm+43Gpd93o0M33heIz2/w0khXZUydKFSoK/pKi7wwc5Lpt5IaW9QzFl5LchfVtD+Cwhgd7Nwrw7w7hlcJyOwuDfJzXxZER2YxE4zIWQoWF4ZLln+BXWH+bxjCM8FuLG7GjMCp4NFM6ap8nfxTd6pSgJ1COUweOeyhC9DAE17KebU2kPoflDAtANGo+6fBWCEdUCx2gm+dKjfyTvT2r1d3XGdiYX4vxxVjOgWJkc+mSoefDuysQwbU00X6hDMKaK3OmFMGlirmZoGjoNOrT8yA+GqF6bgdah3eQ/vBGXyIoKIf07/OvCdPEsSujJHZupFBzDYSby/X3uY9JdhMOH8mJrADgpmMMAqFAOd0HOGBq83WH11od1ZozCIAfhmNjXWWcnNxVF2vtzMpFC1sXUiVN8CwNxH5Mg5rWjJe44yDJQWDNafq1mIExvi3sPjrSfTBSav0Q3WVBDn63F/HKKwCqCAbKd7SGkM5a5UQQQeAu+yzmhuWROi/kYx+TqB/iCN7Rw7I3g70RExcIXDitmubHCUYqw6KPmREMew4+OuXz6uwODD1g="
 
 linux: &linux
    os: linux
@@ -98,6 +101,32 @@ script:
 
 jobs:
   include:
+
+# Coverity Scan Test ----------------------------------------------
+    - stage: coverity scan
+      os: linux
+      sudo: required
+      language: python
+      python: "3.6"
+      services:
+        - docker
+      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=lasote/conangcc8
+           BITPRIM_CI_CURRENCY=BCH
+           BITPRIM_WITH_KEOKEN=true
+           BITPRIM_COVERITY_SCAN=1
+      if: branch =~ /^(dev).+$/    #Just releases
+      before_install:
+        - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+      addons:
+        coverity_scan:
+          project:
+            name: "bitprim/bitprim-domain"
+            description: "Bitprim Domain"
+          notification_email: fpelliccioni@gmail.com
+          build_command_prepend: ""
+          build_command: "conan create . bitprim-domain/0.2.0@bitprim/testing"
+          branch_pattern: dev
+
 
 # Wait for dependencies ----------------------------------------------
     - stage: wait for dependencies
