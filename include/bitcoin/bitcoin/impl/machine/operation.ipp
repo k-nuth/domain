@@ -21,9 +21,9 @@
 
 #include <cstdint>
 
+#include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/infrastructure/constants.hpp>
 #include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 

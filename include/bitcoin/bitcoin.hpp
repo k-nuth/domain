@@ -87,11 +87,11 @@
 // #include <bitcoin/bitcoin/log/features/rate.hpp>
 // #include <bitcoin/bitcoin/log/features/timer.hpp>
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
-#include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/infrastructure/machine/number.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>
 #include <bitcoin/infrastructure/machine/script_version.hpp>
 #include <bitcoin/infrastructure/machine/sighash_algorithm.hpp>

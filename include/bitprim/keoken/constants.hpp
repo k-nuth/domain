@@ -19,8 +19,8 @@
 #ifndef BITPRIM_KEOKEN_CONSTANTS_HPP_
 #define BITPRIM_KEOKEN_CONSTANTS_HPP_
 
-#include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/operation.hpp>
 
 #include <bitprim/keoken/utility.hpp>
 
