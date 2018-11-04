@@ -896,8 +896,8 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     //               and for BitcoinCash (BCH) before 2018-Nov-15.
 
     if (state.is_magnetic_anomaly_enabled()) {
-        if (is_canonical_ordered()) {
-            return is_canonical_ordered;
+        if ( ! is_canonical_ordered()) {
+            return error::non_canonical_ordered;
         }
     } else {
         if (is_forward_reference()) {
