@@ -619,7 +619,6 @@ if (WITH_TESTS)
         test/chain/point.cpp
         test/chain/point_iterator.cpp
         test/chain/satoshi_words.cpp
-        test/chain/machine/opcode.cpp
         # test/chain/script/script.cpp
         # test/chain/script/script.hpp
         test/chain/script.cpp
@@ -628,6 +627,7 @@ if (WITH_TESTS)
 
         test/main.cpp
         
+        test/machine/opcode.cpp
         test/machine/operation.cpp
 
         # test/math/big_number.cpp
