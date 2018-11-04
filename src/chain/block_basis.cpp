@@ -616,11 +616,11 @@ bool block_basis::is_canonical_ordered() const {
     //precondition: transactions_.size() > 1
     
     auto const hash_cmp = [](transaction const& a, transaction const& b){
-        return a.hash() < b.hash();
+        return std::lexicographical_compare(a.hash().rbegin(), a.hash().rend(), b.hash().rbegin(), b.hash().rend());
     };
 
     // Skip the coinbase
-    std::is_sorted(transactions_.begin() + 1, transactions_.end(), hash_cmp);
+    return std::is_sorted(transactions_.begin() + 1, transactions_.end(), hash_cmp);
 }
 
 // This is an early check that is redundant with block pool accept checks.
