@@ -71,6 +71,7 @@ test_script:
         python ci_utils/process_conan_reqs.py
         conan remote remove bitprim
       }
+
   - ps: |
       If ($env:WAIT_FOR_DEPS -eq 1) {
         conan user
@@ -84,10 +85,12 @@ test_script:
         }
         Write-Host "secp256k1/0.X@bitprim/staging found"
       }
-      Else {
-        python build.py
-      }
+      # Else {
+      #   # python build.py
+      #   PowerShell .\.appveyor\build.ps1
+      # }
 
+  - PowerShell .\.appveyor\build.ps1
 
 
 for:

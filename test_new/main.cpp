@@ -21,8 +21,9 @@
 #include "doctest.h"
 
 #include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/utility/container_source.hpp>
+// #include <bitcoin/bitcoin/utility/container_source.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
+#include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
 

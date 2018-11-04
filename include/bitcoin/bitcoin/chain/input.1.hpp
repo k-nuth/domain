@@ -91,7 +91,7 @@ public:
     bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     template <Reader R, BITPRIM_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool  /*witness*/ = false) {
+    bool from_data(R& source, bool wire = true, bool /*witness*/ = false) {
 #ifndef BITPRIM_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
@@ -131,7 +131,7 @@ public:
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     template <Writer W>
-    void to_data(W& sink, bool wire = true, bool  /*witness*/ = false) const {
+    void to_data(W& sink, bool wire = true, bool /*witness*/ = false) const {
 #ifndef BITPRIM_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;

@@ -704,7 +704,7 @@ bool block_basis::is_valid_witness_commitment() const {
     }
 
     // If no txs in block are segregated the commitment is optional (bip141).
-    return !is_segregated();
+    return !is_segregated(*this);
 #endif // BITPRIM_CURRENCY_BCH
 }
 
