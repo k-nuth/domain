@@ -102,30 +102,30 @@ script:
 jobs:
   include:
 
-# Coverity Scan Test ----------------------------------------------
-    - stage: coverity scan
-      os: linux
-      sudo: required
-      language: python
-      python: "3.6"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=lasote/conangcc8
-           BITPRIM_CI_CURRENCY=BCH
-           BITPRIM_WITH_KEOKEN=true
-           BITPRIM_COVERITY_SCAN=1
-      if: branch =~ /^(feature|dev).*$/    #Just development
-      before_install:
-        - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-      addons:
-        coverity_scan:
-          project:
-            name: "bitprim/bitprim-domain"
-            description: "Bitprim Domain"
-          notification_email: fpelliccioni@gmail.com
-          build_command_prepend: ""
-          build_command: "conan create . bitprim-domain/0.2.0@bitprim/testing"
-          branch_pattern: dev
+# # Coverity Scan Test ----------------------------------------------
+#     - stage: coverity scan
+#       os: linux
+#       sudo: required
+#       language: python
+#       python: "3.6"
+#       services:
+#         - docker
+#       env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=lasote/conangcc8
+#            BITPRIM_CI_CURRENCY=BCH
+#            BITPRIM_WITH_KEOKEN=true
+#            BITPRIM_COVERITY_SCAN=1
+#       if: branch =~ /^(feature|dev).*$/    #Just development
+#       before_install:
+#         - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+#       addons:
+#         coverity_scan:
+#           project:
+#             name: "bitprim/bitprim-domain"
+#             description: "Bitprim Domain"
+#           notification_email: fpelliccioni@gmail.com
+#           build_command_prepend: ""
+#           build_command: "conan create . bitprim-domain/0.2.0@bitprim/testing"
+#           branch_pattern: dev
 
 
 # Wait for dependencies ----------------------------------------------
