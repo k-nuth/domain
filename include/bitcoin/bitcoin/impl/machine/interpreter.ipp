@@ -29,7 +29,7 @@
 #include <bitcoin/bitcoin/machine/program.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
@@ -1268,6 +1268,9 @@ interpreter::result interpreter::run_op(operation const& op,
         case opcode::nop9:
         case opcode::nop10:
             return op_nop(code);
+
+        //TODO(bitprim): Implement OP_CHECKDATASIG and OP_CHECKDATASIGVERIFY
+            
         case opcode::reserved_186:
         case opcode::reserved_187:
         case opcode::reserved_188:

@@ -22,7 +22,7 @@
 #include <type_traits>
 
 #include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
 
 #include <bitprim/keoken/constants.hpp>
 

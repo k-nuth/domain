@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
- * This file is part of Bitprim.
+ * This file is part of libbitcoin.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,23 +16,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_KEOKEN_CONSTANTS_HPP_
-#define BITPRIM_KEOKEN_CONSTANTS_HPP_
+#ifndef BITPRIM_BUILT_IN_TYPE_HPP_
+#define BITPRIM_BUILT_IN_TYPE_HPP_
 
-#include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
+// #include <cstddef>
+// #include <cstdint>
 
-#include <bitprim/keoken/utility.hpp>
+namespace libbitcoin {
 
-namespace bitprim {
-namespace keoken {
+template <typename T>
+struct built_in_t {
+    constexpr
+    built_in_t() = default;
 
-uint8_t const protocol_name[] = {0x00, 0x00, 0x4b, 0x50};  //"  KP"
-constexpr size_t kp_min_size = to_underlying(bc::machine::opcode::push_size_4);
-constexpr size_t kp_max_size = to_underlying(bc::machine::opcode::push_four_size);
-constexpr size_t min_asset_name_size = 1;
+    constexpr
+    built_in_t(T x)
+        : val_(x)
+    {}
 
-}  // namespace keoken
-}  // namespace bitprim
+    constexpr
+    // explicit
+    operator T() {
+        return val_;
+    }
 
-#endif  //BITPRIM_KEOKEN_CONSTANTS_HPP_
+private:
+    T val_;
+};
+
+}  // namespace libbitcoin
+
+#endif // BITPRIM_BUILT_IN_TYPE_HPP_

@@ -25,7 +25,7 @@
 
 // #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/infrastructure/utility/assert.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>

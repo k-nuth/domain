@@ -40,8 +40,8 @@
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
-#include <bitcoin/infrastructure/machine/rule_fork.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/collection.hpp>
@@ -659,10 +659,15 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
         // A segregated tx should appear empty if bip141 is not enabled.
     }
 
+#ifdef BITPRIM_CURRENCY_BCH
+    if (state.is_magnetic_anomaly_enabled() && serialized_size(true, false) < min_transaction_size) {
+        return error::transaction_size_limit;
+    }
+#endif
+
     // if ( ! bip141 && is_segregated()) {
     //     return error::empty_transaction;
     // }
-
 #ifndef BITPRIM_CURRENCY_BCH
     if ( ! bip141 && is_segregated) {
         return error::empty_transaction;

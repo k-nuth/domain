@@ -380,7 +380,7 @@ set(bitprim_domain_sources_just_libbitcoin
 
         src/machine/interpreter.cpp
         # src/machine/number.cpp
-        # src/machine/opcode.cpp
+        src/machine/opcode.cpp
         src/machine/operation.cpp
         src/machine/program.cpp
 
@@ -619,7 +619,7 @@ if (WITH_TESTS)
         test/chain/point.cpp
         test/chain/point_iterator.cpp
         test/chain/satoshi_words.cpp
-        # test/chain/machine/opcode.cpp      #TODO: check the new test sources to be added after the Feb2017 merge
+        test/chain/machine/opcode.cpp
         # test/chain/script/script.cpp
         # test/chain/script/script.hpp
         test/chain/script.cpp

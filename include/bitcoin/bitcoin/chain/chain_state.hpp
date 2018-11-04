@@ -27,8 +27,8 @@
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/config/checkpoint.hpp>
-#include <bitcoin/infrastructure/machine/opcode.hpp>
-#include <bitcoin/infrastructure/machine/rule_fork.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 
 namespace libbitcoin {
@@ -151,9 +151,8 @@ public:
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, const checkpoints& checkpoints, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-                ,
-                uint64_t monolith_activation_time,
-                uint64_t magnetic_anomaly_activation_time
+                , magnetic_anomaly_t magnetic_anomaly_activation_time
+                , great_wall_t great_wall_activation_time
 #endif  //BITPRIM_CURRENCY_BCH
     );
 
@@ -165,8 +164,8 @@ public:
     uint32_t work_required() const;
 
 #ifdef BITPRIM_CURRENCY_BCH
-    uint64_t monolith_activation_time() const;
-    uint64_t magnetic_anomaly_activation_time() const;
+    magnetic_anomaly_t magnetic_anomaly_activation_time() const;
+    great_wall_t great_wall_activation_time() const;
 #endif  //BITPRIM_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
@@ -190,11 +189,13 @@ public:
     uint32_t get_next_work_required(uint32_t time_now);
 
 #ifdef BITPRIM_CURRENCY_BCH
-    static bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
+    static 
+    bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
     bool is_monolith_enabled() const;
+    bool is_magnetic_anomaly_enabled() const;
+    bool is_great_wall_enabled() const;
 
-    bool is_replay_protection_enabled() const;
 #endif  //BITPRIM_CURRENCY_BCH
 
 protected:
@@ -208,9 +209,8 @@ protected:
 
     static activations activation(data const& values, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-                                  ,
-                                  uint64_t monolith_activation_time,
-                                  uint64_t magnetic_anomaly_activation_time
+            , magnetic_anomaly_t magnetic_anomaly_activation_time
+            , great_wall_t great_wall_activation_time
 #endif  //BITPRIM_CURRENCY_BCH
     );
 
@@ -233,13 +233,13 @@ private:
 
     static size_t bip9_bit1_height(size_t height, uint32_t forks);
 
-    static size_t uahf_height(size_t height, uint32_t forks);
+    // static size_t uahf_height(size_t height, uint32_t forks);
+    // static size_t daa_height(size_t height, uint32_t forks);
 
-    static size_t daa_height(size_t height, uint32_t forks);
-
+    static bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
     static bool is_uahf_enabled(size_t height, uint32_t forks);
-
     static bool is_daa_enabled(size_t height, uint32_t forks);
+    static bool is_monolith_enabled(size_t height, uint32_t forks);
 
     static data to_pool(chain_state const& top);
     static data to_block(chain_state const& pool, block const& block);
@@ -284,8 +284,8 @@ private:
     uint32_t const work_required_;
 
 #ifdef BITPRIM_CURRENCY_BCH
-    uint64_t const monolith_activation_time_;
-    uint64_t const magnetic_anomaly_activation_time_;
+    magnetic_anomaly_t const magnetic_anomaly_activation_time_;
+    great_wall_t const great_wall_activation_time_;
 #endif  //BITPRIM_CURRENCY_BCH
 };
 
