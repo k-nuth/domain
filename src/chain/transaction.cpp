@@ -38,10 +38,10 @@
 #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/collection.hpp>

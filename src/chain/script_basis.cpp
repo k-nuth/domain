@@ -36,11 +36,11 @@
 // #include <bitcoin/bitcoin/machine/operation.hpp>
 #include <bitcoin/bitcoin/machine/program.hpp>
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/infrastructure/machine/script_pattern.hpp>
 #include <bitcoin/infrastructure/machine/script_version.hpp>
 #include <bitcoin/infrastructure/machine/sighash_algorithm.hpp>

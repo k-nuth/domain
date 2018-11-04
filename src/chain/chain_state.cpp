@@ -27,10 +27,10 @@
 #include <bitcoin/bitcoin/chain/compact.hpp>
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/rule_fork.hpp>
+#include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/unicode/unicode.hpp>
 #include <bitcoin/infrastructure/utility/limits.hpp>

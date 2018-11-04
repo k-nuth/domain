@@ -38,13 +38,13 @@
 #include <bitcoin/bitcoin/chain/script.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
+#include <bitcoin/bitcoin/machine/opcode.hpp>
+#include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/bitcoin/multi_crypto_support.hpp>
 #include <bitcoin/infrastructure/config/checkpoint.hpp>
 #include <bitcoin/infrastructure/error.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
 #include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 #include <bitcoin/infrastructure/message/message_tools.hpp>
 #include <bitcoin/infrastructure/utility/asio.hpp>
