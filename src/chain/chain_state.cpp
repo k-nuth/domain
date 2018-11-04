@@ -467,7 +467,7 @@ inline
 bool chain_state::is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-    auto const mainnet = retarget && !testnet;
+    // auto const mainnet = retarget && !testnet;
 
     // if ( ! mainnet && ! testnet) {
     if ( ! retarget && ! testnet) {
