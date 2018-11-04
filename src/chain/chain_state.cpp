@@ -189,7 +189,7 @@ bool chain_state::is_great_wall_enabled() const {
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
         , magnetic_anomaly_t magnetic_anomaly_activation_time
-        , great_wall_t great_wall_activation_time
+        , great_wall_t /*great_wall_activation_time*/
 #endif  //BITPRIM_CURRENCY_BCH
 ) {
     auto const height = values.height;
