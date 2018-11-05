@@ -862,7 +862,7 @@ set(_bitprim_domain_headers
     # bitcoin/bitcoin/config/hash160.hpp
     # bitcoin/bitcoin/config/hash256.hpp
     # bitcoin/bitcoin/config/parameter.hpp
-    # bitcoin/bitcoin/config/parser.hpp
+    bitcoin/bitcoin/config/parser.hpp
     # bitcoin/bitcoin/config/printer.hpp
     # bitcoin/bitcoin/config/settings.hpp
     # bitcoin/bitcoin/config/sodium.hpp

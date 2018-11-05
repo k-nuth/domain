@@ -55,7 +55,9 @@
 // #include <bitcoin/bitcoin/config/input.hpp>
 // #include <bitcoin/bitcoin/config/output.hpp>
 // #include <bitcoin/bitcoin/config/parameter.hpp>
-// #include <bitcoin/bitcoin/config/parser.hpp>
+
+#include <bitcoin/bitcoin/config/parser.hpp>
+
 // #include <bitcoin/bitcoin/config/point.hpp>
 // #include <bitcoin/bitcoin/config/printer.hpp>
 // #include <bitcoin/bitcoin/config/script.hpp>
