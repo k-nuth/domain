@@ -370,6 +370,7 @@ protected:
     }
 };
 
-}} // namespace libbitcoin::config
+} // namespace config
+} // namespace libbitcoin
 
 #endif
