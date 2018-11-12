@@ -215,7 +215,7 @@ public:
 
 // protected:
     // void reset();
-    size_t non_coinbase_input_count() const;
+    // size_t non_coinbase_input_count() const;
 
 private:
 
