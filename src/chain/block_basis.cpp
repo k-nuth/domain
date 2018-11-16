@@ -810,21 +810,23 @@ code block_basis::check(size_t serialized_size_false) const {
         // TODO(libbitcoin): determinable from tx pool graph.
     }
 
-#if ! defined(BITPRIM_CURRENCY_BCH) // BTC and LTC
-    //Note(bitprim): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
-    //               and for BitcoinCash (BCH) before 2018-Nov-15.
+#if defined(BITPRIM_CURRENCY_BCH)
+    //Note(bitprim): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) and Litecoin (LTC)
+    //               and for BitcoinCash (BCH) before 2018-Nov-15, protected by checkpoints.
+    if ( ! is_canonical_ordered()) {
+        return error::non_canonical_ordered;
+    }
+#else // BTC and LTC
     if (is_forward_reference()) {
         return error::forward_reference;
     }
 #endif
-
 
     // This is subset of is_internal_double_spend if collisions cannot happen.
     ////else if ( ! is_distinct_transaction_set())
     ////    return error::internal_duplicate;
 
     // TODO(libbitcoin): determinable from tx pool graph.
-
 
     if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
@@ -891,20 +893,20 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
         // NOTE: for BCH bit141 is set as false
     }
 
-#if defined(BITPRIM_CURRENCY_BCH)
-    //Note(bitprim): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
-    //               and for BitcoinCash (BCH) before 2018-Nov-15.
+// #if defined(BITPRIM_CURRENCY_BCH)
+//     //Note(bitprim): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
+//     //               and for BitcoinCash (BCH) before 2018-Nov-15.
 
-    if (state.is_magnetic_anomaly_enabled()) {
-        if ( ! is_canonical_ordered()) {
-            return error::non_canonical_ordered;
-        }
-    } else {
-        if (is_forward_reference()) {
-            return error::forward_reference;
-        }
-    }
-#endif
+//     if (state.is_magnetic_anomaly_enabled()) {
+//         if ( ! is_canonical_ordered()) {
+//             return error::non_canonical_ordered;
+//         }
+//     } else {
+//         if (is_forward_reference()) {
+//             return error::forward_reference;
+//         }
+//     }
+// #endif
 
     // if (bip141 && weight() > max_block_weight) {
     if (bip141 && weight > max_block_weight) {
