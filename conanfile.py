@@ -113,7 +113,7 @@ class BitprimDomainConan(BitprimConanFile):
 
     def configure(self):
         # super(Foo, self).baz(arg)
-        BitprimConanFile.configure(self)
+        # BitprimConanFile.configure(self)
 
         # self.output.info("glibcxx_supports_cxx11_abi: %s" % (glibcxx_supports_cxx11_abi(),))
 
@@ -142,6 +142,8 @@ class BitprimDomainConan(BitprimConanFile):
         self.output.info("Compiling for currency: %s" % (self.options.currency,))
 
     def package_id(self):
+        BitprimConanFile.package_id(self)
+
         self.info.options.with_tests = "ANY"
         self.info.options.with_examples = "ANY"
         self.info.options.verbose = "ANY"
@@ -150,6 +152,7 @@ class BitprimDomainConan(BitprimConanFile):
         self.info.options.cflags = "ANY"
         
         self.output.info("libcxx: %s" % (str(self.settings.compiler.libcxx),))
+        self.output.info("libcxx: %s" % (str(self.info.settings.compiler.libcxx),))
 
         # #For Bitprim Packages libstdc++ and libstdc++11 are the same
         # if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
