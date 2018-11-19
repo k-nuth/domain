@@ -787,11 +787,9 @@ code block_basis::check(size_t serialized_size_false) const {
 
     if ((ec = header_.check())) {
         return ec;
-
-        // TODO(libbitcoin): relates to total of tx.size(false) (pool cache). -> no witness size
     }
 
-    // if (serialized_size(false) > get_max_block_size()) {
+    // TODO(libbitcoin): relates to total of tx.size(false) (pool cache). -> no witness size
     if (serialized_size_false > get_max_block_size()) {
         return error::block_size_limit;
     }
@@ -806,8 +804,6 @@ code block_basis::check(size_t serialized_size_false) const {
 
     if (is_extra_coinbases()) {
         return error::extra_coinbases;
-
-        // TODO(libbitcoin): determinable from tx pool graph.
     }
 
 #if defined(BITPRIM_CURRENCY_BCH)
@@ -817,6 +813,7 @@ code block_basis::check(size_t serialized_size_false) const {
         return error::non_canonical_ordered;
     }
 #else // BTC and LTC
+    // TODO(libbitcoin): determinable from tx pool graph.
     if (is_forward_reference()) {
         return error::forward_reference;
     }
@@ -831,34 +828,28 @@ code block_basis::check(size_t serialized_size_false) const {
     if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
 
-        // TODO(libbitcoin): relates height to tx.hash(false) (pool cache).
     }
 
+    // TODO(libbitcoin): relates height to tx.hash(false) (pool cache).
     if ( ! is_valid_merkle_root()) {
         return error::merkle_mismatch;
-
-        // We cannot know if bip16 is enabled at this point so we disable it.
-        // This will not make a difference unless prevouts are populated, in which
-        // case they are ignored. This means that p2sh sigops are not counted here.
-        // This is a preliminary check, the final count must come from connect().
-        // Reenable once sigop caching is implemented, otherwise is deoptimization.
-        ////else if (signature_operations(false, false) > get_max_block_sigops())
-        ////    return error::block_legacy_sigop_limit;
     }
+
+    // We cannot know if bip16 is enabled at this point so we disable it.
+    // This will not make a difference unless prevouts are populated, in which
+    // case they are ignored. This means that p2sh sigops are not counted here.
+    // This is a preliminary check, the final count must come from connect().
+    // Reenable once sigop caching is implemented, otherwise is deoptimization.
+    ////else if (signature_operations(false, false) > get_max_block_sigops())
+    ////    return error::block_legacy_sigop_limit;
 
     return check_transactions();
 }
-
-// code block_basis::accept(bool transactions) const {
-//     auto const state = validation.state;
-//     return state ? accept(*state, transactions) : error::operation_failed;
-// }
 
 // These checks assume that prevout caching is completed on all tx.inputs.
 code block_basis::accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions) const {
     // validation.start_accept = asio::steady_clock::now();
 
-    code ec;
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
@@ -874,6 +865,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     // size_t allowed_sigops = get_allowed_sigops(serialized_size());
     size_t allowed_sigops = get_allowed_sigops(serialized_size);
 
+    code ec;
     if ((ec = header_.accept(state))) {
         return ec;
     }
@@ -949,11 +941,6 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
     return ec;
 }
-
-// code block_basis::connect() const {
-//     auto const state = validation.state;
-//     return state ? connect(*state) : error::operation_failed;
-// }
 
 code block_basis::connect(chain_state const& state) const {
     // validation.start_connect = asio::steady_clock::now();
