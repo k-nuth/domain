@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from conans import CMake
-from ci_utils import option_on_off, march_conan_manip, pass_march_to_compiler
+from ci_utils import option_on_off, march_conan_manip, pass_march_to_compiler, glibcxx_supports_cxx11_abi
 from ci_utils import BitprimConanFile
 
 class BitprimDomainConan(BitprimConanFile):
@@ -108,6 +108,15 @@ class BitprimDomainConan(BitprimConanFile):
 
 
     def configure(self):
+
+        self.output.info("glibcxx_supports_cxx11_abi: %s" % (glibcxx_supports_cxx11_abi(),))
+
+        if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
+            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+                if not glibcxx_supports_cxx11_abi():
+                    raise Exception ("C++ Standard library implementation not supported, run with option `--build`.")
+
+
         if self.settings.arch == "x86_64" and self.options.microarchitecture == "_DUMMY_":
             del self.options.fix_march
             # self.options.remove("fix_march")
