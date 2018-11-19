@@ -48,7 +48,7 @@ class BitprimDomainConan(BitprimConanFile):
                "cached_rpc_data": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
-               "dont_fix_glibcxx_abi": [True, False],
+               "glibcxx_supports_cxx11_abi": "ANY",
     }
 
     #    "with_png": [True, False],
@@ -67,7 +67,7 @@ class BitprimDomainConan(BitprimConanFile):
         "cached_rpc_data=False", \
         "cxxflags=_DUMMY_", \
         "cflags=_DUMMY_", \
-        "dont_fix_glibcxx_abi=False"
+        "glibcxx_supports_cxx11_abi=_DUMMY_"
 
         # "with_png=False", \
 
@@ -113,7 +113,7 @@ class BitprimDomainConan(BitprimConanFile):
 
     def configure(self):
         # super(Foo, self).baz(arg)
-        # BitprimConanFile.configure(self)
+        BitprimConanFile.configure(self)
 
         # self.output.info("glibcxx_supports_cxx11_abi: %s" % (glibcxx_supports_cxx11_abi(),))
 
