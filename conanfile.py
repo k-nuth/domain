@@ -18,9 +18,12 @@
 #
 from conans import CMake
 from ci_utils import option_on_off, march_conan_manip, pass_march_to_compiler, glibcxx_supports_cxx11_abi
-from ci_utils import BitprimConanFile
+from ci_utils import BitprimConanFile #, BitprimCxx11ABIFixer
 
 class BitprimDomainConan(BitprimConanFile):
+# class BitprimDomainConan(BitprimCxx11ABIFixer):
+
+    
     name = "bitprim-domain"
     # version = get_version()
     license = "http://www.boost.org/users/license.html"
@@ -45,6 +48,7 @@ class BitprimDomainConan(BitprimConanFile):
                "cached_rpc_data": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
+               "dont_fix_glibcxx_abi": [True, False],
     }
 
     #    "with_png": [True, False],
@@ -62,8 +66,8 @@ class BitprimDomainConan(BitprimConanFile):
         "keoken=False", \
         "cached_rpc_data=False", \
         "cxxflags=_DUMMY_", \
-        "cflags=_DUMMY_"
-
+        "cflags=_DUMMY_", \
+        "dont_fix_glibcxx_abi=False"
 
         # "with_png=False", \
 
@@ -108,13 +112,15 @@ class BitprimDomainConan(BitprimConanFile):
 
 
     def configure(self):
+        # super(Foo, self).baz(arg)
+        BitprimConanFile.configure(self)
 
-        self.output.info("glibcxx_supports_cxx11_abi: %s" % (glibcxx_supports_cxx11_abi(),))
+        # self.output.info("glibcxx_supports_cxx11_abi: %s" % (glibcxx_supports_cxx11_abi(),))
 
-        if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
-            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
-                if not glibcxx_supports_cxx11_abi():
-                    raise Exception ("C++ Standard library implementation not supported, run with option `--build`.")
+        # if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
+        #     if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+        #         if not glibcxx_supports_cxx11_abi():
+        #             raise Exception ("C++ Standard library implementation not supported, run with option `--build`.")
 
 
         if self.settings.arch == "x86_64" and self.options.microarchitecture == "_DUMMY_":
@@ -142,11 +148,13 @@ class BitprimDomainConan(BitprimConanFile):
         self.info.options.fix_march = "ANY"
         self.info.options.cxxflags = "ANY"
         self.info.options.cflags = "ANY"
+        
+        self.output.info("libcxx: %s" % (str(self.settings.compiler.libcxx),))
 
-        #For Bitprim Packages libstdc++ and libstdc++11 are the same
-        if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
-            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
-                self.info.settings.compiler.libcxx = "ANY"
+        # #For Bitprim Packages libstdc++ and libstdc++11 are the same
+        # if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
+        #     if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+        #         self.info.settings.compiler.libcxx = "ANY"
 
     def build(self):
         # for dep in self.deps_cpp_info.deps:
