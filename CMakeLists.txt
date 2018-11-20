@@ -82,7 +82,7 @@ option(WITH_TESTS_NEW "Compile with unit tests." OFF)
 option(WITH_EXAMPLES "Compile with examples." OFF)
 
 
-# Implement --with-keoken and declare WITH_CACHED_RPC_DATA.
+# Implement --with-cached-rpc-data and declare WITH_CACHED_RPC_DATA.
 #------------------------------------------------------------------------------
 option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
 if (WITH_CACHED_RPC_DATA)
