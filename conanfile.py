@@ -151,8 +151,8 @@ class BitprimDomainConan(BitprimConanFile):
         self.info.options.cxxflags = "ANY"
         self.info.options.cflags = "ANY"
         
-        self.output.info("libcxx: %s" % (str(self.settings.compiler.libcxx),))
-        self.output.info("libcxx: %s" % (str(self.info.settings.compiler.libcxx),))
+        # self.output.info("libcxx: %s" % (str(self.settings.compiler.libcxx),))
+        # self.output.info("libcxx: %s" % (str(self.info.settings.compiler.libcxx),))
 
         # #For Bitprim Packages libstdc++ and libstdc++11 are the same
         # if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
