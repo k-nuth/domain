@@ -101,7 +101,6 @@ BC_CONSTEXPR size_t max_block_size_new = 32000000;  //thirty two million bytes
 
 BC_CONSTEXPR size_t min_transaction_size = 100;   //one hundred bytes
 
-
 #else
 
 BC_CONSTEXPR size_t max_block_size = 1000000;  //one million bytes
@@ -481,6 +480,16 @@ BC_CONSTEXPR size_t base_size_contribution = 3;
 BC_CONSTEXPR size_t total_size_contribution = 1;
 BC_CONSTEXPR size_t min_witness_program = 2;
 BC_CONSTEXPR size_t max_witness_program = 40;
+
+constexpr inline
+size_t get_max_block_weight() {
+#ifdef BITPRIM_CURRENCY_BCH
+    return get_max_block_size(); 
+#else
+    return max_block_weight;
+#endif //BITPRIM_CURRENCY_BCH
+}
+
 
 // Currency unit constants (uint64_t).
 //-----------------------------------------------------------------------------
