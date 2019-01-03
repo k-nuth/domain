@@ -137,6 +137,9 @@ public:
 
         // Similate organization and instead just validate the transaction.
         bool simulate = false;
+
+        // The transaction was validated before its insertion in the mempool.
+        bool validated = false;
     };
 
     // Constructors.

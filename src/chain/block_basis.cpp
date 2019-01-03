@@ -758,7 +758,7 @@ code block_basis::accept_transactions(chain_state const& state) const {
     code ec;
 
     for (auto const& tx : transactions_) {
-        if ((ec = tx.accept(state, false))) {
+        if ( ! tx.validation.validated && (ec = tx.accept(state, false))) {
             return ec;
         }
     }
@@ -770,7 +770,7 @@ code block_basis::connect_transactions(chain_state const& state) const {
     code ec;
 
     for (auto const& tx : transactions_) {
-        if ((ec = tx.connect(state))) {
+        if ( ! tx.validation.validated && (ec = tx.connect(state))) {
             return ec;
         }
     }
