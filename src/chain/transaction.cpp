@@ -827,7 +827,7 @@ code transaction::accept(bool transaction_pool) const {
 
 // These checks assume that prevout caching is completed on all tx.inputs.
 code transaction::accept(chain_state const& state, bool transaction_pool) const {
-    return transaction_basis::accept(state, is_segregated(), validation.duplicate, transaction_pool);
+    return transaction_basis::accept(state, is_segregated(), is_overspent(), validation.duplicate, transaction_pool);
 
 //     auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
 //     auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);

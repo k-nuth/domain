@@ -139,7 +139,7 @@ BC_CONSTEXPR size_t max_block_sigops_new = max_block_size_new / max_sigops_facto
 BC_CONSTEXPR size_t max_block_sigops = max_block_size / max_sigops_factor;
 #endif  //BITPRIM_CURRENCY_BCH
 
-constexpr inline size_t get_max_block_size() {
+constexpr inline size_t get_max_block_size() noexcept {
 #ifdef BITPRIM_CURRENCY_BCH
     return max_block_size_new;
 #else
@@ -482,7 +482,7 @@ BC_CONSTEXPR size_t min_witness_program = 2;
 BC_CONSTEXPR size_t max_witness_program = 40;
 
 constexpr inline
-size_t get_max_block_weight() {
+size_t get_max_block_weight() noexcept {
 #ifdef BITPRIM_CURRENCY_BCH
     return get_max_block_size(); 
 #else
