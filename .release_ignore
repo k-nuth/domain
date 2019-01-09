@@ -1,3 +1,6 @@
+.release_ignore
+README.md
+
 .appveyor.yml
 .travis.yml
 .gitignore
@@ -11,3 +14,5 @@ build.py
 helpers/*
 AUTHORS
 doc/*
+test/*
+test_new/*
