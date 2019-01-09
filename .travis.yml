@@ -284,17 +284,17 @@ jobs:
 
 # Builds ------------------------------------------------------
     # Linux, GCC, libstdc++ ------------------------------------------------------
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      python: "3.6"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=lasote/conangcc8
-           BITPRIM_CI_CURRENCY=BCH
-           BITPRIM_WITH_KEOKEN=true
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   python: "3.6"
+    #   services:
+    #     - docker
+    #   env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=lasote/conangcc8
+    #        BITPRIM_CI_CURRENCY=BCH
+    #        BITPRIM_WITH_KEOKEN=true
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -317,18 +317,18 @@ jobs:
            BITPRIM_CI_CURRENCY=BTC
       if: branch =~ /^(release|hotfix).+$/    #Just releases
 
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      python: "3.6"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=lasote/conangcc7 
-           BITPRIM_RUN_TESTS=true
-           BITPRIM_CI_CURRENCY=BCH
-           BITPRIM_WITH_KEOKEN=true
-      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   python: "3.6"
+    #   services:
+    #     - docker
+    #   env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=lasote/conangcc7 
+    #        BITPRIM_RUN_TESTS=true
+    #        BITPRIM_CI_CURRENCY=BCH
+    #        BITPRIM_WITH_KEOKEN=true
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -353,17 +353,17 @@ jobs:
            BITPRIM_CI_CURRENCY=BTC
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      python: "3.6"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=lasote/conangcc6
-           BITPRIM_CI_CURRENCY=BCH
-           BITPRIM_WITH_KEOKEN=true
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   python: "3.6"
+    #   services:
+    #     - docker
+    #   env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=lasote/conangcc6
+    #        BITPRIM_CI_CURRENCY=BCH
+    #        BITPRIM_WITH_KEOKEN=true
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -387,17 +387,17 @@ jobs:
       if: branch =~ /^(release|hotfix).+$/    #Just releases
 
 
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      python: "3.6"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=lasote/conangcc5
-           BITPRIM_CI_CURRENCY=BCH
-           BITPRIM_WITH_KEOKEN=true
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   python: "3.6"
+    #   services:
+    #     - docker
+    #   env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=lasote/conangcc5
+    #        BITPRIM_CI_CURRENCY=BCH
+    #        BITPRIM_WITH_KEOKEN=true
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -433,17 +433,17 @@ jobs:
 
 
     # Linux, Clang, libstdc++ ----------------------------------------------------
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      python: "3.6"
-      services:
-        - docker
-      env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=lasote/conanclang60
-           BITPRIM_CI_CURRENCY=BCH
-           BITPRIM_WITH_KEOKEN=true
-      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   python: "3.6"
+    #   services:
+    #     - docker
+    #   env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=lasote/conanclang60
+    #        BITPRIM_CI_CURRENCY=BCH
+    #        BITPRIM_WITH_KEOKEN=true
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -496,15 +496,15 @@ jobs:
     #   env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=lasote/conanclang39
 
     # macOS, apple-Clang, libc++ -------------------------------------------------
-    - stage: build and upload binaries
-      os: osx
-      language: generic
-      osx_image: xcode9.3
-      env: CONAN_APPLE_CLANG_VERSIONS=9.1
-           BITPRIM_RUN_TESTS=true
-           BITPRIM_CI_CURRENCY=BCH
-           BITPRIM_WITH_KEOKEN=true
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: osx
+    #   language: generic
+    #   osx_image: xcode9.3
+    #   env: CONAN_APPLE_CLANG_VERSIONS=9.1
+    #        BITPRIM_RUN_TESTS=true
+    #        BITPRIM_CI_CURRENCY=BCH
+    #        BITPRIM_WITH_KEOKEN=true
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: osx
       language: generic
