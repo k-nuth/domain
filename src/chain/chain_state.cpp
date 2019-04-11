@@ -173,11 +173,16 @@ bool chain_state::is_monolith_enabled() const {
 }
 
 bool chain_state::is_magnetic_anomaly_enabled() const {
-    return is_mtp_activated(median_time_past(), magnetic_anomaly_activation_time());
+    // return is_mtp_activated(median_time_past(), magnetic_anomaly_activation_time());
+    return is_magnetic_anomaly_enabled(height(), enabled_forks());
 }
 
 bool chain_state::is_great_wall_enabled() const {
     return is_mtp_activated(median_time_past(), great_wall_activation_time());
+}
+
+bool chain_state::is_graviton_enabled() const {
+    return is_mtp_activated(median_time_past(), graviton_activation_time());
 }
 
 #endif  //BITPRIM_CURRENCY_BCH
@@ -188,8 +193,9 @@ bool chain_state::is_great_wall_enabled() const {
 
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-        , magnetic_anomaly_t magnetic_anomaly_activation_time
+        // , magnetic_anomaly_t magnetic_anomaly_activation_time
         , great_wall_t great_wall_activation_time
+        , graviton_t graviton_activation_time
 #endif  //BITPRIM_CURRENCY_BCH
 ) {
     auto const height = values.height;
@@ -316,14 +322,37 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     //     result.forks |= (rule_fork::cash_monolith_opcodes & forks);
     // }
 
-    auto mtp = median_time_past(values, 0);
-    if (is_mtp_activated(mtp, magnetic_anomaly_activation_time)) {
+    // if (is_mtp_activated(mtp, magnetic_anomaly_activation_time)) {
+    if (is_magnetic_anomaly_enabled(values.height, forks)) {
         result.forks |= (rule_fork::cash_checkdatasig & forks);
     }
 
+    auto mtp = median_time_past(values, 0);
     if (is_mtp_activated(mtp, great_wall_activation_time)) {
+        result.forks |= (rule_fork::cash_schnorr & forks);
+        result.forks |= (rule_fork::cash_segwit_recovery & forks);
+    }
+
+    if (is_mtp_activated(mtp, graviton_activation_time)) {
+        //Note(Fernando): Move this to the next fork rules
         result.forks |= (rule_fork::cash_replay_protection & forks);
     }
+
+    // if (IsReplayProtectionEnabledForCurrentBlock(config)) {
+    //     extraFlags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
+    // }
+
+    // if (IsMagneticAnomalyEnabledForCurrentBlock(config)) {
+    //     extraFlags |= SCRIPT_ENABLE_CHECKDATASIG;
+    // }
+
+    // if (IsGreatWallEnabledForCurrentBlock(config)) {
+    //     if (!fRequireStandard) {
+    //         extraFlags |= SCRIPT_ALLOW_SEGWIT_RECOVERY;
+    //     }
+    //     extraFlags |= SCRIPT_ENABLE_SCHNORR;
+    // }
+
 #endif  //BITPRIM_CURRENCY_BCH
 
     return result;
@@ -496,7 +525,16 @@ bool chain_state::is_monolith_enabled(size_t height, uint32_t forks) {
     return is_rule_enabled(height, forks, mainnet_monolith_active_checkpoint.height(), testnet_monolith_active_checkpoint.height());
 }
 
-//2018-November hard fork
+//2018-Nov hard fork
+inline 
+bool chain_state::is_magnetic_anomaly_enabled(size_t height, uint32_t forks) {
+    return is_rule_enabled(height, forks, mainnet_magnetic_anomaly_active_checkpoint.height(), testnet_magnetic_anomaly_active_checkpoint.height());
+}
+
+//2019-May hard fork
+// Complete after the hard fork
+
+//2019-November hard fork
 // Complete after the hard fork
 
 
@@ -949,15 +987,17 @@ chain_state::data chain_state::to_pool(chain_state const& top) {
 chain_state::chain_state(chain_state const& top)
     : data_(to_pool(top)), forks_(top.forks_), checkpoints_(top.checkpoints_), active_(activation(data_, forks_
 #ifdef BITPRIM_CURRENCY_BCH
-            , top.magnetic_anomaly_activation_time_
+            // , top.magnetic_anomaly_activation_time_
             , top.great_wall_activation_time_
+            , top.graviton_activation_time_
 #endif  //BITPRIM_CURRENCY_BCH
         )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
 #ifdef BITPRIM_CURRENCY_BCH
-      , magnetic_anomaly_activation_time_(top.magnetic_anomaly_activation_time_)
+    //   , magnetic_anomaly_activation_time_(top.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(top.great_wall_activation_time_)
+      , graviton_activation_time_(top.graviton_activation_time_)
 #endif  //BITPRIM_CURRENCY_BCH
 {
 }
@@ -1007,15 +1047,17 @@ chain_state::data chain_state::to_block(chain_state const& pool,
 chain_state::chain_state(chain_state const& pool, block const& block)
     : data_(to_block(pool, block)), forks_(pool.forks_), checkpoints_(pool.checkpoints_), active_(activation(data_, forks_
 #ifdef BITPRIM_CURRENCY_BCH
-        , pool.magnetic_anomaly_activation_time_
+        // , pool.magnetic_anomaly_activation_time_
         , pool.great_wall_activation_time_
+        , pool.graviton_activation_time_
 #endif  //BITPRIM_CURRENCY_BCH
         )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
 #ifdef BITPRIM_CURRENCY_BCH
-      , magnetic_anomaly_activation_time_(pool.magnetic_anomaly_activation_time_)
+    //   , magnetic_anomaly_activation_time_(pool.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(pool.great_wall_activation_time_)
+      , graviton_activation_time_(pool.graviton_activation_time_)
 #endif  //BITPRIM_CURRENCY_BCH
 {}
 
@@ -1063,15 +1105,17 @@ chain_state::data chain_state::to_header(chain_state const& parent,
 chain_state::chain_state(chain_state const& parent, header const& header)
     : data_(to_header(parent, header)), forks_(parent.forks_), checkpoints_(parent.checkpoints_), active_(activation(data_, forks_
 #ifdef BITPRIM_CURRENCY_BCH
-        , parent.magnetic_anomaly_activation_time_
+        // , parent.magnetic_anomaly_activation_time_
         , parent.great_wall_activation_time_
+        , parent.graviton_activation_time_
 #endif  //BITPRIM_CURRENCY_BCH
                                                                                                                      )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
 #ifdef BITPRIM_CURRENCY_BCH
-      , magnetic_anomaly_activation_time_(parent.magnetic_anomaly_activation_time_)
+    //   , magnetic_anomaly_activation_time_(parent.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(parent.great_wall_activation_time_)
+      , graviton_activation_time_(parent.graviton_activation_time_)
 #endif  //BITPRIM_CURRENCY_BCH
 {}
 
@@ -1079,21 +1123,24 @@ chain_state::chain_state(chain_state const& parent, header const& header)
 // The allow_collisions hard fork is always activated (not configurable).
 chain_state::chain_state(data&& values, checkpoints const& checkpoints, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-        , magnetic_anomaly_t magnetic_anomaly_activation_time
+        // , magnetic_anomaly_t magnetic_anomaly_activation_time
         , great_wall_t great_wall_activation_time
+        , graviton_t graviton_activation_time
 #endif  //BITPRIM_CURRENCY_BCH
                          )
     : data_(std::move(values)), forks_(forks | rule_fork::allow_collisions), checkpoints_(checkpoints), active_(activation(data_, forks_
 #ifdef BITPRIM_CURRENCY_BCH
-            , magnetic_anomaly_activation_time
+            // , magnetic_anomaly_activation_time
             , great_wall_activation_time
+            , graviton_activation_time
 #endif  //BITPRIM_CURRENCY_BCH
                                                                                                                            )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
 #ifdef BITPRIM_CURRENCY_BCH
-      , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
+    //   , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
       , great_wall_activation_time_(great_wall_activation_time)
+      , graviton_activation_time_(graviton_activation_time)
 #endif  //BITPRIM_CURRENCY_BCH
 {
 }
@@ -1133,12 +1180,16 @@ uint32_t chain_state::work_required() const {
 //     return monolith_activation_time_;
 // }
 
-magnetic_anomaly_t chain_state::magnetic_anomaly_activation_time() const {
-    return magnetic_anomaly_activation_time_;
-}
+// magnetic_anomaly_t chain_state::magnetic_anomaly_activation_time() const {
+//     return magnetic_anomaly_activation_time_;
+// }
 
 great_wall_t chain_state::great_wall_activation_time() const {
     return great_wall_activation_time_;
+}
+
+graviton_t chain_state::graviton_activation_time() const {
+    return graviton_activation_time_;
 }
 #endif  //BITPRIM_CURRENCY_BCH
 

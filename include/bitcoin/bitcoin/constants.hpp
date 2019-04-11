@@ -229,11 +229,34 @@ struct great_wall_t : built_in_t<uint64_t> {
     using base::base;
 };
 
+struct graviton_t : built_in_t<uint64_t> {
+    using base = built_in_t<uint64_t>;
+    using base::base;
+};
+
+
+// // August 1, 2017 hard fork
+// consensus.uahfHeight = 478558;
+
+// // November 13, 2017 hard fork
+// consensus.daaHeight = 504031;
+
+// // November 15, 2018 hard fork
+// consensus.magneticAnomalyHeight = 556766;
+
+// // Wed, 15 May 2019 12:00:00 UTC hard fork
+// consensus.greatWallActivationTime = 1557921600;
+
+// // Nov 15, 2019 12:00:00 UTC protocol upgrade
+// consensus.gravitonActivationTime = 1573819200;
+
+
 // BC_CONSTEXPR size_t          bch_activation_height = 478559 //478558;            //2017-August-01   hard fork
 // BC_CONSTEXPR uint32_t        bch_daa_activation_time = 1510600000;               //2017-November-13 hard fork
 // BC_CONSTEXPR uint32_t        bch_monolith_activation_time = 1526400000;          //2018-May-15      hard fork
-BC_CONSTEXPR magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November-15 hard fork
+// BC_CONSTEXPR magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November-15 hard fork
 BC_CONSTEXPR great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15      hard fork
+BC_CONSTEXPR graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
 
 // inline constexpr
 // bool is_uahf_enabled(const Config &config, int nHeight) {
@@ -423,6 +446,34 @@ static const config::checkpoint testnet_monolith_active_checkpoint{
     "0000000000327972b8470c11755adf8f4319796bafae01f5a6650490b98a17db", 1233078};
 
 //2018-November hard fork
+static const config::checkpoint mainnet_magnetic_anomaly_active_checkpoint{
+    "0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c", 556767};
+
+static const config::checkpoint testnet_magnetic_anomaly_active_checkpoint{
+    "00000000000001fae0095cd4bea16f1ce8ab63f3f660a03c6d8171485f484b24", 1267996};
+
+
+        // // August 1, 2017 hard fork
+        // consensus.uahfHeight = 1155875;
+
+        // // November 13, 2017 hard fork
+        // consensus.daaHeight = 1188697;
+
+        // // November 15, 2018 hard fork
+        // consensus.magneticAnomalyHeight = 1267996;
+
+        // // Wed, 15 May 2019 12:00:00 UTC hard fork
+        // consensus.greatWallActivationTime = 1557921600;
+
+        // // Nov 15, 2019 12:00:00 UTC protocol upgrade
+        // consensus.gravitonActivationTime = 1573819200;
+
+
+
+//2019-May hard fork
+// Complete after the hard fork
+
+//2019-November hard fork
 // Complete after the hard fork
 
 #endif

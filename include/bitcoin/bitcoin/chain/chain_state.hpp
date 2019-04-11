@@ -151,8 +151,9 @@ public:
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, const checkpoints& checkpoints, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-                , magnetic_anomaly_t magnetic_anomaly_activation_time
+                // , magnetic_anomaly_t magnetic_anomaly_activation_time
                 , great_wall_t great_wall_activation_time
+                , graviton_t graviton_activation_time
 #endif  //BITPRIM_CURRENCY_BCH
     );
 
@@ -164,8 +165,9 @@ public:
     uint32_t work_required() const;
 
 #ifdef BITPRIM_CURRENCY_BCH
-    magnetic_anomaly_t magnetic_anomaly_activation_time() const;
+    // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
     great_wall_t great_wall_activation_time() const;
+    graviton_t graviton_activation_time() const;
 #endif  //BITPRIM_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
@@ -195,6 +197,7 @@ public:
     bool is_monolith_enabled() const;
     bool is_magnetic_anomaly_enabled() const;
     bool is_great_wall_enabled() const;
+    bool is_graviton_enabled() const;
 
 #endif  //BITPRIM_CURRENCY_BCH
 
@@ -209,8 +212,9 @@ protected:
 
     static activations activation(data const& values, uint32_t forks
 #ifdef BITPRIM_CURRENCY_BCH
-            , magnetic_anomaly_t magnetic_anomaly_activation_time
+            // , magnetic_anomaly_t magnetic_anomaly_activation_time
             , great_wall_t great_wall_activation_time
+            , graviton_t graviton_activation_time
 #endif  //BITPRIM_CURRENCY_BCH
     );
 
@@ -240,6 +244,7 @@ private:
     static bool is_uahf_enabled(size_t height, uint32_t forks);
     static bool is_daa_enabled(size_t height, uint32_t forks);
     static bool is_monolith_enabled(size_t height, uint32_t forks);
+    static bool is_magnetic_anomaly_enabled(size_t height, uint32_t forks);
 
     static data to_pool(chain_state const& top);
     static data to_block(chain_state const& pool, block const& block);
@@ -284,8 +289,9 @@ private:
     uint32_t const work_required_;
 
 #ifdef BITPRIM_CURRENCY_BCH
-    magnetic_anomaly_t const magnetic_anomaly_activation_time_;
+    // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
     great_wall_t const great_wall_activation_time_;
+    graviton_t const graviton_activation_time_;
 #endif  //BITPRIM_CURRENCY_BCH
 };
 

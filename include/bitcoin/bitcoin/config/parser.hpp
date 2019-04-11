@@ -147,6 +147,8 @@ public:
             checkpoints.emplace_back("00000000000002773f8970352e4a3368a1ce6ef91eb606b64389b36fdbf1bd56", 1267997); //time: 1542300144 - Nov 15, 2018 2:13:43 PM
 
             //2019-May Hardfork - (1557921600)
+            //2019-Nov Hardfork - (1573819200)
+
         } else if (get_network(easy_blocks, retarget) == config::settings::mainnet) {
             // BCH Mainnet
             checkpoints.reserve(32);
@@ -199,7 +201,11 @@ public:
             checkpoints.emplace_back("00000000000000000102d94fde9bd0807a2cc7582fe85dd6349b73ce4e8d9322", 556766);  //time: 1542304321 - Nov 15, 2018 2:52:01 PM
             checkpoints.emplace_back("0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c", 556767);  //time: 1542304936 - Nov 15, 2018 3:02:16 PM
 
+            checkpoints.emplace_back("0000000000000000039f4e03a756eaa5deb89ef9fa0d565a25473d5deb5e7b0d", 560000);
+            checkpoints.emplace_back("000000000000000003428b04e49a9a303afbedefe2ac9094d44dd127d7366a97", 575000);
+
             //2019-May Hardfork - (1557921600)
+            //2019-Nov Hardfork - (1573819200)
         } else {
             // BCH Regtest
             checkpoints.reserve(1);

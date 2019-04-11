@@ -67,6 +67,8 @@ enum rule_fork : uint32_t {
     cash_verify_flags_script_enable_sighash_forkid = 1u << 16,
     cash_replay_protection = 1u << 17,
     cash_checkdatasig = 1u << 18,
+    cash_schnorr = 1u << 19,
+    cash_segwit_recovery = 1u << 20,
 // #endif //BITPRIM_CURRENCY_BCH
 
     /// Segregated witness consensus layer (soft fork, feature).
