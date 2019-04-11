@@ -624,7 +624,9 @@ BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_single_output__exp
     BOOST_REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
 
     auto const result = encode_base16(out);
-    auto const expected = "3045022100e428d3cc67a724cb6cfe8634aa299e58f189d9c46c02641e936c40cc16c7e8ed0220083949910fe999c21734a1f33e42fca15fb463ea2e08f0a1bccd952aacaadbb801";
+    // auto const expected = "3045022100e428d3cc67a724cb6cfe8634aa299e58f189d9c46c02641e936c40cc16c7e8ed0220083949910fe999c21734a1f33e42fca15fb463ea2e08f0a1bccd952aacaadbb801";
+    auto const expected = "304402200245ea46be39d72fed03c899aabc446b3c9baf93f57c2b382757856c3209854b0220795946074804a08c0053116eafe851c1a37b24414199afecf286f1eb4d82167801";
+    
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
@@ -645,7 +647,8 @@ BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_no_output__expecte
     BOOST_REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
 
     auto const result = encode_base16(out);
-    auto const expected = "3045022100ba57820be5f0b93a0d5b880fbf2a86f819d959ecc24dc31b6b2d4f6ed286f253022071ccd021d540868ee10ca7634f4d270dfac7aea0d5912cf2b104111ac9bc756b01";
+    // auto const expected = "3045022100ba57820be5f0b93a0d5b880fbf2a86f819d959ecc24dc31b6b2d4f6ed286f253022071ccd021d540868ee10ca7634f4d270dfac7aea0d5912cf2b104111ac9bc756b01";
+    auto const expected = "304402202d32085880e02b7f58a23db8a01eebfe105b6efda19e426960148d152ae67c76022028868ba8d97a4983252b247ae7f3203106c691a6ff83cc0f9b11289115ce4f3801";
     BOOST_REQUIRE_EQUAL(result, expected);
 }
 
