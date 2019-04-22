@@ -34,21 +34,24 @@ branches:
 build: false
 
 environment:
-    PYTHON: "C:\\Python27"
-    PYTHON_VERSION: "2.7.8"
+    PYTHON: "C:\\Python37"
+    PYTHON_VERSION: "3.7.3"
     PYTHON_ARCH: "32"
     CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
 
 install:
-  - set PATH=%PATH%;%PYTHON%/Scripts/
-  - python -m pip install --upgrade pip
+
+  - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%;
+  - python.exe --version
+  - python.exe -m pip install --upgrade pip
+  - pip.exe install conan==1.14.3 > NUL
+  - pip.exe install conan_package_tools==0.25.1 > NUL
+  - pip.exe install cpuid --upgrade > NUL
 
   # - pip.exe install conan --upgrade > NUL
-  # - pip.exe install conan_package_tools > NUL
-  - pip.exe install conan==1.9.1 > NUL
-  - pip.exe install conan_package_tools==0.20.0 > NUL
+  # - pip.exe install conan==1.0.0b5 > NUL
+  # - pip.exe install conan_package_tools --upgrade > NUL
 
-  - pip.exe install cpuid --upgrade > NUL
   - conan user # It creates the conan data directory
 
 test_script:
@@ -73,6 +76,7 @@ test_script:
         # conan info . --only None
         # conan info . --only None -s compiler=gcc -s compiler.version=5 -s compiler.libcxx=libstdc++
         python ci_utils/process_conan_reqs.py
+        conan remove "*" -f
         conan remote remove bitprim
       }
 
@@ -80,14 +84,14 @@ test_script:
       If ($env:WAIT_FOR_DEPS -eq 1) {
         conan user
         conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
-        echo "waiting for secp256k1/0.X@bitprim/staging ..."
-        conan search secp256k1/0.X@bitprim/staging -r bitprim_temp > $null
+        echo "waiting for bitprim-infrastructure/0.X@bitprim/staging ..."
+        conan search bitprim-infrastructure/0.X@bitprim/staging -r bitprim_temp > $null
         while($env:lastExitCode -eq 1) {
           Write-Host "."
           Start-Sleep -s 10
-          conan search secp256k1/0.X@bitprim/staging -r bitprim_temp > $null
+          conan search bitprim-infrastructure/0.X@bitprim/staging -r bitprim_temp > $null
         }
-        Write-Host "secp256k1/0.X@bitprim/staging found"
+        Write-Host "bitprim-infrastructure/0.X@bitprim/staging found"
       }
       # Else {
       #   # python build.py
