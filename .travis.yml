@@ -41,8 +41,9 @@ env:
 linux: &linux
    os: linux
    sudo: required
+   dist: xenial
    language: python
-   python: "3.6"
+   python: "3.7"
    services:
      - docker
 
@@ -107,7 +108,8 @@ jobs:
 #       os: linux
 #       sudo: required
 #       language: python
-#       python: "3.6"
+#       dist: xenial
+#       python: "3.7"
 #       services:
 #         - docker
 #       env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
@@ -133,7 +135,8 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
@@ -159,7 +162,8 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
@@ -247,7 +251,7 @@ jobs:
 #         - export PATH=$PATH:/usr/local/opt/llvm/bin/
 #         - clang-tidy --version
 #         # - sudo find / -name "run-clang-tidy.py"
-#         # - /usr/local/Cellar/llvm/6.0.0/share/clang/run-clang-tidy.py -checks='*,-modernize-use-using,-hicpp-deprecated-headers,-modernize-deprecated-headers' -header-filter=${TRAVIS_BUILD_DIR}/include
+#         # - /usr/local/Cellar/llvm/7.0.0/share/clang/run-clang-tidy.py -checks='*,-modernize-use-using,-hicpp-deprecated-headers,-modernize-deprecated-headers' -header-filter=${TRAVIS_BUILD_DIR}/include
 #         # - python ci_utils/run-clang-tidy.py -checks='*,-modernize-use-using,-hicpp-deprecated-headers,-modernize-deprecated-headers' -warnings-as-errors='*,-modernize-use-using,-hicpp-deprecated-headers,-modernize-deprecated-headers' -header-filter=${TRAVIS_BUILD_DIR}/include
 #         - python ../ci_utils/run-clang-tidy.py -checks='*,-android-*,-modernize-use-using,-hicpp-deprecated-headers,-modernize-deprecated-headers,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-hicpp-vararg,-hicpp-no-malloc,-fuchsia-default-arguments,-google-runtime-references,-cppcoreguidelines-no-malloc,-hicpp-no-malloc,-llvm-header-guard,-android-cloexec-fopen,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-const-cast,-hicpp-braces-around-statements,-hicpp-special-member-functions,-readability-braces-around-statements,-coreguidelines-special-member-function,-cppcoreguidelines-special-member-functions,-clang-diagnostic-static-inline-explicit-instantiation,-fuchsia-overloaded-operator,-cppcoreguidelines-pro-type-member-init,-hicpp-member-init' -warnings-as-errors='*' -header-filter=${TRAVIS_BUILD_DIR}/include/knuth
 
@@ -267,10 +271,11 @@ jobs:
 #       os: linux
 #       sudo: required
 #       language: python
-#       python: "3.6"
+#       dist: xenial
+#       python: "3.7"
 #       services:
 #         - docker
-#       env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+#       env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
 #       # if: branch =~ /^(release|hotfix).+$/    #Just releases
 #       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 #       install: skip
@@ -288,10 +293,11 @@ jobs:
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
-    #   env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+    #   env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc9
     #        KNUTH_CI_CURRENCY=BCH
     #        KNUTH_WITH_KEOKEN=true
     #   if: branch =~ /^(release|hotfix).+$/    #Just releases
@@ -299,10 +305,11 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc9
            KNUTH_CI_CURRENCY=BCH
            KNUTH_WITH_KEOKEN=Flase
       if: branch =~ /^(release|hotfix).+$/    #Just releases
@@ -310,54 +317,103 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc9
            KNUTH_CI_CURRENCY=BTC
       if: branch =~ /^(release|hotfix).+$/    #Just releases
+
+
 
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+    #        KNUTH_CI_CURRENCY=BCH
+    #        KNUTH_WITH_KEOKEN=true
+    #   #if: branch =~ /^(release|hotfix).+$/    #Just releases
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    - stage: build and upload binaries
+      os: linux
+      sudo: required
+      language: python
+      dist: xenial
+      python: "3.7"
+      services:
+        - docker
+      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+           KNUTH_CI_CURRENCY=BCH
+           KNUTH_WITH_KEOKEN=Flase
+      #if: branch =~ /^(release|hotfix).+$/    #Just releases
+      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    - stage: build and upload binaries
+      os: linux
+      sudo: required
+      language: python
+      dist: xenial
+      python: "3.7"
+      services:
+        - docker
+      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+           KNUTH_CI_CURRENCY=BTC
+      # if: branch =~ /^(release|hotfix).+$/    #Just releases
+      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
     #   env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=conanio/gcc7 
     #        KNUTH_RUN_TESTS=true
     #        KNUTH_CI_CURRENCY=BCH
     #        KNUTH_WITH_KEOKEN=true
-    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    #   #if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=conanio/gcc7 
            KNUTH_RUN_TESTS=true
            KNUTH_CI_CURRENCY=BCH
            KNUTH_WITH_KEOKEN=false
-      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+      #if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+      if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=conanio/gcc7 
            KNUTH_RUN_TESTS=true
            KNUTH_CI_CURRENCY=BTC
-      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+      # if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+      if: branch =~ /^(release|hotfix).+$/    #Just releases
 
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
     #   env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
@@ -368,7 +424,8 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
@@ -379,7 +436,8 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
@@ -391,7 +449,8 @@ jobs:
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
     #   env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
@@ -402,7 +461,8 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
@@ -413,7 +473,8 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
       env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
@@ -425,7 +486,8 @@ jobs:
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
     #   env: CONAN_GCC_VERSIONS=4.9 CONAN_DOCKER_IMAGE=conanio/gcc49
@@ -437,10 +499,11 @@ jobs:
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
-    #   env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+    #   env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
     #        KNUTH_CI_CURRENCY=BCH
     #        KNUTH_WITH_KEOKEN=true
     #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
@@ -448,10 +511,11 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
-      env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+      env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
            KNUTH_CI_CURRENCY=BCH
            KNUTH_WITH_KEOKEN=false
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
@@ -459,18 +523,56 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       services:
         - docker
-      env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+      env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
            KNUTH_CI_CURRENCY=BTC
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+
+    # # - stage: build and upload binaries
+    # #   os: linux
+    # #   sudo: required
+    # #   language: python
+    # #   dist: xenial
+    # #   python: "3.7"
+    # #   services:
+    # #     - docker
+    # #   env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+    # #        KNUTH_CI_CURRENCY=BCH
+    # #        KNUTH_WITH_KEOKEN=true
+    # #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+    #        KNUTH_CI_CURRENCY=BCH
+    #        KNUTH_WITH_KEOKEN=false
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+    #        KNUTH_CI_CURRENCY=BTC
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
     #   env: CONAN_CLANG_VERSIONS=5.0 CONAN_DOCKER_IMAGE=conanio/clang50
@@ -480,7 +582,8 @@ jobs:
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
     #   env: CONAN_CLANG_VERSIONS=4.0 CONAN_DOCKER_IMAGE=conanio/clang40
@@ -490,7 +593,8 @@ jobs:
     #   os: linux
     #   sudo: required
     #   language: python
-    #   python: "3.6"
+    #   dist: xenial
+    #   python: "3.7"
     #   services:
     #     - docker
     #   env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=conanio/clang39
@@ -556,7 +660,8 @@ jobs:
       os: linux
       sudo: required
       language: python
-      python: "3.6"
+      dist: xenial
+      python: "3.7"
       # install: skip
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
       script:
