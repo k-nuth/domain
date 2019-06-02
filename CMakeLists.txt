@@ -163,10 +163,10 @@ message(STATUS "Knuth: Cryptocurrency: ${CURRENCY}")
 
 # Conan infrastructure
 #==============================================================================
-if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/kthbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/kthbuildinfo.cmake)
+if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
 else()
-    message( STATUS "kthbuildinfo doent exists")
+    message( STATUS "knuthbuildinfo doent exists")
 endif()
 
 
