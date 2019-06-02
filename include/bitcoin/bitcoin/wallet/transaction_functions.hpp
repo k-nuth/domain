@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BITPRIM_TRANSACTION_FUNCTIONS_HPP
-#define BITPRIM_TRANSACTION_FUNCTIONS_HPP
+#ifndef KNUTH_TRANSACTION_FUNCTIONS_HPP
+#define KNUTH_TRANSACTION_FUNCTIONS_HPP
 
 #include <string>
 #include <utility>
@@ -80,4 +80,4 @@ BC_API std::pair<error::error_code_t, chain::transaction> input_set(data_chunk c
 }  //end namespace wallet
 }  //end namespace libbitcoin
 
-#endif  //BITPRIM_TRANSACTION_FUNCTIONS_HPP
+#endif  //KNUTH_TRANSACTION_FUNCTIONS_HPP

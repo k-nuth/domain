@@ -30,21 +30,21 @@ namespace {
 // static config::currency currency_ = config::currency::none;
 // static config::settings network_ = config::settings::none;
 
-#ifdef BITPRIM_CURRENCY_BCH
-// static   //Note(bitprim): static is redundant in a anonymous namespace
+#ifdef KNUTH_CURRENCY_BCH
+// static   //Note(kth): static is redundant in a anonymous namespace
 std::string cashaddr_prefix_ = "bitcoincash";
-#endif  // BITPRIM_CURRENCY_BCH
+#endif  // KNUTH_CURRENCY_BCH
 
 }  // namespace
 
 config::currency get_currency() {
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
     return config::currency::litecoin;
-#elif defined(BITPRIM_CURRENCY_BCH)
+#elif defined(KNUTH_CURRENCY_BCH)
     return config::currency::bitcoin_cash;
 #else
     return config::currency::bitcoin;
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 }
 
 // void set_network(config::settings x) {
@@ -52,14 +52,14 @@ config::currency get_currency() {
 // }
 
 // void set_network(uint32_t identifier) {
-// #ifdef BITPRIM_CURRENCY_LTC
+// #ifdef KNUTH_CURRENCY_LTC
 //     switch(identifier) {
 //         case netmagic::ltc_mainnet: set_network(config::settings::mainnet); break;
 //         case netmagic::ltc_testnet: set_network(config::settings::testnet); break;
 //         case netmagic::ltc_regtest: set_network(config::settings::regtest); break;
 //         default: set_network(config::settings::none);
 //     }
-// #elif defined(BITPRIM_CURRENCY_BCH)
+// #elif defined(KNUTH_CURRENCY_BCH)
 //     switch(identifier) {
 //         case netmagic::bch_mainnet: set_network(config::settings::mainnet); break;
 //         case netmagic::bch_testnet: set_network(config::settings::testnet); break;
@@ -73,7 +73,7 @@ config::currency get_currency() {
 //         case netmagic::btc_regtest: set_network(config::settings::regtest); break;
 //         default: set_network(config::settings::none);
 //     }
-// #endif //BITPRIM_CURRENCY_LTC
+// #endif //KNUTH_CURRENCY_LTC
 // }
 
 // config::settings get_network() {
@@ -81,7 +81,7 @@ config::currency get_currency() {
 // }
 
 config::settings get_network(uint32_t identifier) {
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
     switch (identifier) {
         case netmagic::ltc_mainnet:
             return config::settings::mainnet;
@@ -92,7 +92,7 @@ config::settings get_network(uint32_t identifier) {
         default:
             return config::settings::none;
     }
-#elif defined(BITPRIM_CURRENCY_BCH)
+#elif defined(KNUTH_CURRENCY_BCH)
     switch (identifier) {
         case netmagic::bch_mainnet:
             return config::settings::mainnet;
@@ -114,7 +114,7 @@ config::settings get_network(uint32_t identifier) {
         default:
             return config::settings::none;
     }
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 }
 
 config::settings get_network(bool easy_blocks, bool retarget) {
@@ -124,7 +124,7 @@ config::settings get_network(bool easy_blocks, bool retarget) {
     return easy_blocks ? config::settings::testnet : config::settings::mainnet;
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 std::string cashaddr_prefix() {
     return cashaddr_prefix_;
 }
@@ -132,10 +132,10 @@ std::string cashaddr_prefix() {
 void set_cashaddr_prefix(std::string const& x) {
     cashaddr_prefix_ = x;
 }
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 // bool is_testnet(uint32_t identifier, bool bitcoin_cash) {
-// #ifdef BITPRIM_CURRENCY_LTC
+// #ifdef KNUTH_CURRENCY_LTC
 //     return identifier == 0xf1c8d2fdu //4056470269u; //Litecoin Testnet Netmagic
 // #else
 //     if (bitcoin_cash) {
@@ -143,7 +143,7 @@ void set_cashaddr_prefix(std::string const& x) {
 //     } else {
 //         return identifier == 0x0709110bu;  //Bitcoin Testnet Netmagic
 //     }
-// #endif //BITPRIM_CURRENCY_LTC
+// #endif //KNUTH_CURRENCY_LTC
 // }
 
 } /*namespace libbitcoin*/

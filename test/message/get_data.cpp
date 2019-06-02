@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_3__valid_input__success) {
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(get_data__to_witness__error__unchanged) {
     static auto const expected = inventory_vector::type_id::error;
     get_data instance{{expected, {}}};
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__block_error_transaction__expected) {
     BOOST_REQUIRE(instance.inventories()[1].type() == inventory_vector::type_id::error);
     BOOST_REQUIRE(instance.inventories()[2].type() == inventory_vector::type_id::witness_transaction);
 }
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
 BOOST_AUTO_TEST_CASE(get_data__operator_assign_equals__always__matches_equivalent) {
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");

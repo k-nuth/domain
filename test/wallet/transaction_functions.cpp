@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
 #define SIGNATURE "304402200f9a99b998eb71db23e179226c8e2068b6fb1dc58ea428ef75b7e07acf8a2f3c02201398ee98bffd4a9f16abc0513131bc67f9b4e432bd80a0b48e5b6259dd3cb27341"
 #define COMPLETE_TX "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d98010000006a47304402200f9a99b998eb71db23e179226c8e2068b6fb1dc58ea428ef75b7e07acf8a2f3c02201398ee98bffd4a9f16abc0513131bc67f9b4e432bd80a0b48e5b6259dd3cb2734121027a45d4abb6ebb00214796e2c7cf61d18c9185ba771fe9ed75b303eb7a8e9028bffffffff0118beeb0b000000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac00000000"
 
-// Helpers to replicate the bitprim-dojo functionality
+// Helpers to replicate the kth-dojo functionality
 
 libbitcoin::ec_secret create_secret_from_seed(std::string const& seed_str) {
     libbitcoin::data_chunk seed;
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(create_transaction__test) {
 
 // TODO(libbitcoin): make test for BTC and LTC signatures
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(sign_transaction__test) {
     // Priv key
     auto const private_key = create_secret_from_seed(SEED);

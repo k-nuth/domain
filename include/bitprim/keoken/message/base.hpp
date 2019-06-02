@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_KEOKEN_MESSAGE_BASE_HPP_
-#define BITPRIM_KEOKEN_MESSAGE_BASE_HPP_
+#ifndef KNUTH_KEOKEN_MESSAGE_BASE_HPP_
+#define KNUTH_KEOKEN_MESSAGE_BASE_HPP_
 
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 // Platform check.
 static_assert(std::is_same<std::uint8_t, char>::value || std::is_same<std::uint8_t, unsigned char>::value,
-              "Bitprim requires std::uint8_t to be implemented as char or unsigned char.");
+              "Knuth requires std::uint8_t to be implemented as char or unsigned char.");
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 namespace message {
 
@@ -46,6 +46,6 @@ void to_data(W& sink, uint16_t version, uint16_t type) {
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth
 
-#endif  //BITPRIM_KEOKEN_MESSAGE_BASE_HPP_
+#endif  //KNUTH_KEOKEN_MESSAGE_BASE_HPP_

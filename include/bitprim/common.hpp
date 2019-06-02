@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_COMMON_HPP_
-#define BITPRIM_COMMON_HPP_
+#ifndef KNUTH_COMMON_HPP_
+#define KNUTH_COMMON_HPP_
 
 namespace libbitcoin {
 
 constexpr inline bool witness_default() {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return false;
 #else
     return true;
@@ -30,7 +30,7 @@ constexpr inline bool witness_default() {
 }
 
 constexpr inline
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     bool
     witness_val(bool /*x*/) {
     return false;
@@ -41,16 +41,16 @@ constexpr inline
 #endif
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
-#define BITPRIM_DECL_WITN_ARG bool /*witness*/ = false
-#define BITPRIM_DEF_WITN_ARG bool /*witness = false*/
+#ifdef KNUTH_CURRENCY_BCH
+#define KNUTH_DECL_WITN_ARG bool /*witness*/ = false
+#define KNUTH_DEF_WITN_ARG bool /*witness = false*/
 #else
-#define BITPRIM_DECL_WITN_ARG bool witness = false
-#define BITPRIM_DEF_WITN_ARG bool witness /*= false*/
+#define KNUTH_DECL_WITN_ARG bool witness = false
+#define KNUTH_DEF_WITN_ARG bool witness /*= false*/
 #endif
 
 
 
 }  // namespace libbitcoin
 
-#endif  //BITPRIM_COMMON_HPP_
+#endif  //KNUTH_COMMON_HPP_

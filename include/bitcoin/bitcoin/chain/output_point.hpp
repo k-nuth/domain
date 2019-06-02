@@ -97,7 +97,7 @@ public:
     static output_point factory_from_data(std::istream& stream, bool wire = true);
     // static output_point factory_from_data(reader& source, bool wire=true);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static output_point factory_from_data(R& source, bool wire = true) {
         output_point instance;
         instance.from_data(source, wire);

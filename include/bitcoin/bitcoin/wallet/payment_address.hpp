@@ -51,7 +51,7 @@ public:
     static const uint8_t testnet_p2kh;
     static const uint8_t testnet_p2sh;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     static std::string const cashaddr_prefix_mainnet;
     static std::string const cashaddr_prefix_testnet;
 #endif
@@ -93,9 +93,9 @@ public:
     /// Serializer.
     std::string encoded() const;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     std::string encoded_cashaddr() const;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     /// Accessors.
     uint8_t version() const;
@@ -111,9 +111,9 @@ private:
     /// Factories.
     static payment_address from_string(std::string const& address);
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     static payment_address from_string_cashaddr(std::string const& address);
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     static payment_address from_payment(payment const& decoded);
     static payment_address from_private(ec_private const& secret);

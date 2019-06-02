@@ -38,8 +38,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -73,7 +73,7 @@ public:
     static input factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
     static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static input factory_from_data(R& source, bool wire = true, bool witness = false) {
         input instance;
         instance.from_data(source, wire, witness_val(witness));
@@ -86,10 +86,10 @@ public:
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
     /// The first payment address extracted (may be invalid).
     wallet::payment_address address() const;
@@ -126,6 +126,6 @@ private:
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif

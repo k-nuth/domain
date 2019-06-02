@@ -58,10 +58,10 @@ config::currency get_currency();
 config::settings get_network(uint32_t identifier);
 config::settings get_network(bool easy_blocks, bool retarget);
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 std::string cashaddr_prefix();
 void set_cashaddr_prefix(std::string const& x);
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 } /*namespace libbitcoin*/
 

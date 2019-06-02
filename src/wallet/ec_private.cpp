@@ -36,13 +36,13 @@ namespace libbitcoin {
 namespace wallet {
 
 const uint8_t ec_private::compressed_sentinel = 0x01;
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 const uint8_t ec_private::mainnet_wif = 0xb0;
 const uint8_t ec_private::mainnet_p2kh = 0x30;
-#else   //BITPRIM_CURRENCY_LTC
+#else   //KNUTH_CURRENCY_LTC
 const uint8_t ec_private::mainnet_wif = 0x80;
 const uint8_t ec_private::mainnet_p2kh = 0x00;
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
 const uint16_t ec_private::mainnet = to_version(mainnet_p2kh, mainnet_wif);
 

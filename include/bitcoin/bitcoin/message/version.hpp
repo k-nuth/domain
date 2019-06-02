@@ -32,8 +32,8 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -82,7 +82,7 @@ public:
         no_blocks_start = 32000,
 
     // This preceded the BIP system.
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
         headers = 70002,
 #else
         headers = 31800,
@@ -118,15 +118,15 @@ public:
         // The node is capable of responding to witness inventory requests.
         node_witness = (1u << 3),
 
-#ifdef BITPRIM_CURRENCY_BCH
-        node_network_cash = (1 << 5)  //TODO(bitprim): check what happens with node_network (or node_network_cash)
-#endif                                //BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
+        node_network_cash = (1 << 5)  //TODO(kth): check what happens with node_network (or node_network_cash)
+#endif                                //KNUTH_CURRENCY_BCH
     };
 
     static version factory_from_data(uint32_t version, data_chunk const& data);
     static version factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static version factory_from_data(uint32_t version, R& source) {
         message::version instance;
         instance.from_data(version, source);
@@ -184,7 +184,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         reset();
 

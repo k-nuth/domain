@@ -43,8 +43,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -85,7 +85,7 @@ public:
     static block_basis factory_from_data(data_chunk const& data, bool witness = false);
     static block_basis factory_from_data(std::istream& stream, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static block_basis factory_from_data(R& source, bool witness = false) {
         block_basis instance;
         instance.from_data(source, witness_val(witness));
@@ -95,7 +95,7 @@ public:
     bool from_data(data_chunk const& data, bool witness = false);
     bool from_data(std::istream& stream, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
         // validation.start_deserialize = asio::steady_clock::now();
         reset();
@@ -120,7 +120,7 @@ public:
             }
         }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         // TODO(libbitcoin): optimize by having reader skip witness data.
         if ( ! witness_val(witness)) {
             strip_witness();
@@ -185,7 +185,7 @@ public:
     static size_t locator_size(size_t top);
     static indexes locator_heights(size_t top);
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
@@ -243,6 +243,6 @@ size_t serialized_size(block_basis const& blk, bool witness = false);
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif // LIBBITCOIN_CHAIN_BLOCK_BASIS_HPP_

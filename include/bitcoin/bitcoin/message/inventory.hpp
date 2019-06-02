@@ -36,8 +36,8 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -51,7 +51,7 @@ public:
     static inventory factory_from_data(uint32_t version, data_chunk const& data);
     static inventory factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static inventory factory_from_data(uint32_t version, R& source) {
         inventory instance;
         instance.from_data(version, source);
@@ -85,7 +85,7 @@ public:
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, R& source) {
         reset();

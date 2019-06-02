@@ -37,8 +37,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -70,7 +70,7 @@ public:
     static header_basis factory_from_data(data_chunk const& data, bool wire = true);
     static header_basis factory_from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static header_basis factory_from_data(R& source, bool wire = true) {
         header_basis instance;
         instance.from_data(source, wire);
@@ -81,7 +81,7 @@ public:
 
     bool from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source, bool /*wire = true*/) {
         version_ = source.read_4_bytes_little_endian();
         previous_block_hash_ = source.read_hash();
@@ -171,13 +171,13 @@ private:
 
 hash_digest hash(header_basis const& header);
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 hash_digest litecoin_proof_of_work_hash(header_basis const& header);
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
 }  // namespace chain
 }  // namespace libbitcoin
 
-// #include <bitprim/concepts_undef.hpp>
+// #include <knuth/concepts_undef.hpp>
 
 #endif // LIBBITCOIN_CHAIN_HEADER_BASIS_HPP_

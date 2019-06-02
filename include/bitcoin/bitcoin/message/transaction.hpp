@@ -34,8 +34,8 @@
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -75,7 +75,7 @@ public:
     static transaction factory_from_data(uint32_t version, data_chunk const& data);
     static transaction factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static transaction factory_from_data(uint32_t version, R& source) {
         transaction instance;
         instance.from_data(version, source);
@@ -85,7 +85,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(uint32_t  /*version*/, R& source) {
         return chain::transaction::from_data(source, true, true);
     }

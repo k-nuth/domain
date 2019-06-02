@@ -64,7 +64,7 @@ transaction::transaction()
 {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
                         , uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard
 #endif
                         )
@@ -72,7 +72,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list const&
     , locktime_(locktime)
     , inputs_(inputs)
     , outputs_(outputs)
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , cached_fees_(cached_fees)
     , cached_sigops_(cached_sigops)
     , cached_is_standard_(cached_is_standard)
@@ -81,7 +81,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list const&
 {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
                        , uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard
 #endif
                         )
@@ -89,7 +89,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inpu
     , locktime_(locktime)
     , inputs_(std::move(inputs))
     , outputs_(std::move(outputs))
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , cached_fees_(cached_fees)
     , cached_sigops_(cached_sigops)
     , cached_is_standard_(cached_is_standard)
@@ -102,7 +102,7 @@ transaction::transaction(transaction const& x, hash_digest const& hash)
     , locktime_(x.locktime_)
     , inputs_(x.inputs_)
     , outputs_(x.outputs_)
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , cached_fees_(x.cached_fees_)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
@@ -118,7 +118,7 @@ transaction::transaction(transaction&& x, hash_digest const& hash)
     , locktime_(x.locktime_)
     , inputs_(std::move(x.inputs_))
     , outputs_(std::move(x.outputs_))
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , cached_fees_(x.cached_fees_)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
@@ -135,7 +135,7 @@ transaction::transaction(transaction const& x)
     , locktime_(x.locktime_)
     , inputs_(x.inputs_)
     , outputs_(x.outputs_)
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , cached_fees_(0)
     , cached_sigops_(0)
     , cached_is_standard_(false)
@@ -149,7 +149,7 @@ transaction::transaction(transaction&& x) noexcept
     , inputs_(std::move(x.inputs_))
     , outputs_(std::move(x.outputs_))
 
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , cached_fees_(0)
     , cached_sigops_(0)
     , cached_is_standard_(false)
@@ -164,7 +164,7 @@ transaction& transaction::operator=(transaction const& x) {
     outputs_ = x.outputs_;
     validation = x.validation;
 
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     cached_fees_ = x.cached_fees_;
     cached_sigops_ = x.cached_sigops_;
     cached_is_standard_ = x.cached_is_standard_;
@@ -179,7 +179,7 @@ transaction& transaction::operator=(transaction&& x) noexcept {
     inputs_ = std::move(x.inputs_);
     outputs_ = std::move(x.outputs_);
     validation = std::move(x.validation);
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     cached_fees_ = x.cached_fees_;
     cached_sigops_ = x.cached_sigops_;
     cached_is_standard_ = x.cached_is_standard_;
@@ -217,26 +217,26 @@ transaction transaction::factory_from_data(std::istream& stream, bool wire, bool
 }
 
 bool transaction::from_data(data_chunk const& data, bool wire, bool witness
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) {
     data_source istream(data);
     return from_data(istream, wire, witness_val(witness)
-#ifdef BITPRIM_CACHED_RPC_DATA    
+#ifdef KNUTH_CACHED_RPC_DATA    
                     , unconfirmed
 #endif
                     );
 }
 
 bool transaction::from_data(std::istream& stream, bool wire, bool witness
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire, witness_val(witness)
-#ifdef BITPRIM_CACHED_RPC_DATA    
+#ifdef KNUTH_CACHED_RPC_DATA    
                     , unconfirmed
 #endif
 
@@ -270,7 +270,7 @@ bool transaction::is_valid() const {
 // Transactions with empty witnesses always use old serialization (bip144).
 // If no inputs are witness programs then witness hash is tx hash (bip141).
 data_chunk transaction::to_data(bool wire, bool witness
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) const {
@@ -279,7 +279,7 @@ data_chunk transaction::to_data(bool wire, bool witness
 
     data_chunk data;
     auto const size = serialized_size(wire, witness_val(witness)
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
                                      , unconfirmed
 #endif
                                      );
@@ -290,7 +290,7 @@ data_chunk transaction::to_data(bool wire, bool witness
 
     data_sink ostream(data);
     to_data(ostream, wire, witness_val(witness)
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
            , unconfirmed
 #endif
            );
@@ -301,7 +301,7 @@ data_chunk transaction::to_data(bool wire, bool witness
 }
 
 void transaction::to_data(data_sink& stream, bool wire, bool witness
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) const {
@@ -310,7 +310,7 @@ void transaction::to_data(data_sink& stream, bool wire, bool witness
 
     ostream_writer sink_w(stream);
     to_data(sink_w, wire, witness_val(witness)
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
            , unconfirmed
 #endif
            );
@@ -320,7 +320,7 @@ void transaction::to_data(data_sink& stream, bool wire, bool witness
 //-----------------------------------------------------------------------------
 
 size_t transaction::serialized_size(bool wire, bool witness
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) const {
@@ -345,7 +345,7 @@ size_t transaction::serialized_size(bool wire, bool witness
          + message::variable_uint_size(inputs_.size()) + message::variable_uint_size(outputs_.size()) 
          + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins) 
          + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs) 
-#ifdef BITPRIM_CACHED_RPC_DATA         
+#ifdef KNUTH_CACHED_RPC_DATA         
          + ((!wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t) : 0)
 #endif
          ;
@@ -417,7 +417,7 @@ void transaction::set_outputs(output::list&& value) {
     total_output_value_ = boost::none;
 }
 
-#ifdef BITPRIM_CACHED_RPC_DATA
+#ifdef KNUTH_CACHED_RPC_DATA
 uint64_t transaction::cached_fees() const {
     return cached_fees_;
 }
@@ -429,7 +429,7 @@ uint32_t transaction::cached_sigops() const {
 bool transaction::cached_is_standard() const {
     return cached_is_standard_;
 }
-#endif // BITPRIM_CACHED_RPC_DATA
+#endif // KNUTH_CACHED_RPC_DATA
 
 // Cache.
 //-----------------------------------------------------------------------------
@@ -552,7 +552,7 @@ hash_digest transaction::sequences_hash() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void transaction::strip_witness() {
     auto const strip = [](input& input) {
@@ -718,7 +718,7 @@ bool transaction::is_overspent() const {
 size_t transaction::signature_operations() const {
     auto const state = validation.state;
     auto const bip16_enabled = state->is_enabled(bc::machine::rule_fork::bip16_rule);
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     auto const bip141_enabled = false;
 #else
     auto const bip141_enabled = state->is_enabled(bc::machine::rule_fork::bip141_rule);
@@ -728,7 +728,7 @@ size_t transaction::signature_operations() const {
 
 // Returns max_size_t in case of overflow.
 size_t transaction::signature_operations(bool bip16, bool bip141) const {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
     auto const in = [bip16, bip141](size_t total, input const& input) {
@@ -837,7 +837,7 @@ bool transaction::is_mature(size_t height) const {
 }
 
 bool transaction::is_segregated() const {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return false;
 #endif
     bool value;
@@ -947,7 +947,7 @@ code transaction::accept(chain_state const& state, bool transaction_pool) const 
     auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
     auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);
     auto const bip68 = state.is_enabled(bc::machine::rule_fork::bip68_rule);
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state.is_enabled(bc::machine::rule_fork::bip141_rule);

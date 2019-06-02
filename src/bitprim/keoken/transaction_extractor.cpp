@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2017-2018 Bitprim Inc.
+ * Copyright (c) 2017-2019 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <bitprim/keoken/transaction_extractor.hpp>
+#include <knuth/keoken/transaction_extractor.hpp>
 
 #include <type_traits>
 
 #include <bitcoin/bitcoin/machine/opcode.hpp>
 #include <bitcoin/bitcoin/machine/operation.hpp>
 
-#include <bitprim/keoken/constants.hpp>
+#include <knuth/keoken/constants.hpp>
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 
 using bc::data_chunk;
@@ -91,4 +91,4 @@ data_chunk first_keoken_output(bc::chain::transaction const& tx) {
 }
 
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth

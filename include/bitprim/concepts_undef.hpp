@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_CONCEPTS_UNDEF_HPP_
-#define BITPRIM_CONCEPTS_UNDEF_HPP_
+#ifndef KNUTH_CONCEPTS_UNDEF_HPP_
+#define KNUTH_CONCEPTS_UNDEF_HPP_
 
 #undef Reader
 #undef Writer
 
-#endif  //BITPRIM_CONCEPTS_HPP_
+#endif  //KNUTH_CONCEPTS_HPP_

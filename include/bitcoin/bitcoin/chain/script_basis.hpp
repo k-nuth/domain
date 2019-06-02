@@ -43,8 +43,8 @@
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -83,7 +83,7 @@ public:
     static script_basis factory_from_data(data_chunk const& encoded, bool prefix);
     static script_basis factory_from_data(std::istream& stream, bool prefix);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static script_basis factory_from_data(R& source, bool prefix) {
         script_basis instance;
         instance.from_data(source, prefix);
@@ -94,7 +94,7 @@ public:
     bool from_data(data_chunk const& encoded, bool prefix);
     bool from_data(std::istream& stream, bool prefix);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
         reset();
         valid_ = true;
@@ -239,7 +239,7 @@ public:
 
 
 //     // TODO(libbitcoin): move back to private.
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 //     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, script_basis const& prevout_script, uint64_t value);
 // #else
 //     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, witness const& input_witness, script_basis const& prevout_script, uint64_t value);
@@ -274,6 +274,6 @@ machine::operation::list operations(script_basis const& script);
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif // LIBBITCOIN_CHAIN_SCRIPT_BASIS_HPP_

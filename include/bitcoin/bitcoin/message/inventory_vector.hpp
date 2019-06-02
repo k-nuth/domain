@@ -31,8 +31,8 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -60,7 +60,7 @@ public:
     static inventory_vector factory_from_data(uint32_t version, data_chunk const& data);
     static inventory_vector factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static inventory_vector factory_from_data(uint32_t version, R& source) {
         inventory_vector instance;
         instance.from_data(version, source);
@@ -96,7 +96,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(uint32_t  /*version*/, R& source) {
         reset();
 
@@ -126,7 +126,7 @@ public:
     bool is_valid() const;
     void reset();
 
-#ifndef BITPRIM_CURRENCY_BCH    
+#ifndef KNUTH_CURRENCY_BCH    
     void to_witness();
 #endif
     

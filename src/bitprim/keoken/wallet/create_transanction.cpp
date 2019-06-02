@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2017-2018 Bitprim Inc.
+ * Copyright (c) 2017-2019 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitprim/keoken/wallet/create_transaction.hpp>
+#include <knuth/keoken/wallet/create_transaction.hpp>
 
 #include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
 #include <bitcoin/infrastructure/formats/base_16.hpp>
 
-#include <bitprim/keoken/constants.hpp>
-#include <bitprim/keoken/message/base.hpp>
-#include <bitprim/keoken/message/create_asset.hpp>
-#include <bitprim/keoken/message/send_tokens.hpp>
+#include <knuth/keoken/constants.hpp>
+#include <knuth/keoken/message/base.hpp>
+#include <knuth/keoken/message/create_asset.hpp>
+#include <knuth/keoken/message/send_tokens.hpp>
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 namespace wallet {
 
@@ -156,4 +156,4 @@ result_t send_token_tx_complete(input_point const& output_to_spend,
 
 }  // namespace wallet
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth

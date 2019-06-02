@@ -35,8 +35,8 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace message {
@@ -80,7 +80,7 @@ public:
     static heading factory_from_data(data_chunk const& data);
     static heading factory_from_data(std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static heading factory_from_data(R& source) {
         heading instance;
         instance.from_data(source);
@@ -122,7 +122,7 @@ public:
     bool from_data(data_chunk const& data);
     bool from_data(std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source) {
         reset();
         magic_ = source.read_4_bytes_little_endian();

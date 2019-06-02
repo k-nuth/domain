@@ -198,11 +198,11 @@ hash_digest hash(header_basis const& header) {
     return bitcoin_hash(header.to_data());
 }
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 hash_digest litecoin_proof_of_work_hash(header_basis const& header) {
     return litecoin_hash(header.to_data());
 }
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
 uint256_t header_basis::proof(uint32_t bits) {
     compact const header_bits(bits);
@@ -266,7 +266,7 @@ bool header_basis::is_valid_proof_of_work(hash_digest const& hash, bool retarget
 
 // bool header_basis::is_valid_proof_of_work(bool retarget) const {
 
-// #ifdef BITPRIM_CURRENCY_LTC
+// #ifdef KNUTH_CURRENCY_LTC
 //     return to_uint256(litecoin_proof_of_work_hash(*this)) <= target;
 // #else
 //     return to_uint256(hash(*this)) <= target;

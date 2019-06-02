@@ -28,7 +28,7 @@ function format() {
         echo "${FMT} -i -style=file ${f}";
         ${FMT} -i -style=file ${f};
 
-        # clang-format -i -style=file /home/fernando/dev/new-repos/bitprim-domain/src/chain/transaction.cpp
+        # clang-format -i -style=file /home/fernando/dev/new-repos/kth-domain/src/chain/transaction.cpp
     done
 
     echo "~~~ $@ Done ~~~";

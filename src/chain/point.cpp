@@ -58,7 +58,7 @@ point::point(hash_digest const& hash, uint32_t index)
 // Operators.
 //-----------------------------------------------------------------------------
 
-// constexpr    //Note(bitprim): Could be constexpr in C++20
+// constexpr    //Note(kth): Could be constexpr in C++20
 bool operator==(point const& x, point const& y) {
     return (x.hash_ == y.hash_) && (x.index_ == y.index_);
 }

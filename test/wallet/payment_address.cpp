@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(payment_address__hash__compressed_point__expected) {
     BOOST_REQUIRE_EQUAL(encode_base16(address.hash()), COMPRESSED_HASH);
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 //cashAddr payment_address
 BOOST_AUTO_TEST_CASE(payment_address__cashAddr__mainnet__encode) {
     const payment_address address(ec_public("04278f7bfee4ef625f85279c3a01d57c22e2877a902128b2df85071f9d6c95b290f094f5bd1bff5880d09cc231c774d71ac22d3ab9bdd9dda2e75017b52d893367"),

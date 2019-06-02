@@ -331,7 +331,7 @@ std::string opcode_to_string(opcode value, uint32_t active_forks) {
         case opcode::nop10:
             return "nop10";
 
-        //TODO(bitprim): Implement OP_CHECKDATASIG and OP_CHECKDATASIGVERIFY
+        //TODO(kth): Implement OP_CHECKDATASIG and OP_CHECKDATASIGVERIFY
 
         case opcode::reserved_186:
         case opcode::reserved_187:

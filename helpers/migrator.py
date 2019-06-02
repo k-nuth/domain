@@ -3,8 +3,8 @@
 
 import os
 
-src_dir = '/home/fernando/dev/new-repos/bitprim-domain/src'
-include_dir = '/home/fernando/dev/new-repos/bitprim-domain/include/bitcoin/bitcoin'
+src_dir = '/home/fernando/dev/new-repos/kth-domain/src'
+include_dir = '/home/fernando/dev/new-repos/kth-domain/include/bitcoin/bitcoin'
 
 source_list = [
     # 'chain/header'
@@ -106,8 +106,8 @@ source_list = [
     'wallet/ec_public'
 ]
 
-# ./src/bitprim/keoken/message/create_asset.cpp
-# ./src/bitprim/keoken/message/send_tokens.cpp
+# ./src/knuth/keoken/message/create_asset.cpp
+# ./src/knuth/keoken/message/send_tokens.cpp
 
 
 def extract_function(content, frm):

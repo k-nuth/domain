@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
-#define BITPRIM_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
+#ifndef KNUTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
+#define KNUTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
 
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 
 bc::data_chunk first_keoken_output(bc::chain::transaction const& tx);
 
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth
 
-#endif  //BITPRIM_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
+#endif  //KNUTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_

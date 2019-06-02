@@ -23,7 +23,7 @@
 
 #include <bitcoin/bitcoin/chain/script.hpp>
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 #include <bitcoin/bitcoin/chain/witness.hpp>
 #endif
 
@@ -63,7 +63,7 @@ input::addresses_ptr input::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 // input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
 //     : previous_output_(previous_output)
 //     , script_(script)
@@ -76,7 +76,7 @@ input::addresses_ptr input::addresses_cache() const {
 //     , sequence_(sequence) 
 // {}
 
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 // input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
 //     : previous_output_(std::move(previous_output))
 //     , script_(std::move(script))
@@ -119,7 +119,7 @@ input& input::operator=(input&& x) noexcept {
 //     return (sequence_ == x.sequence_) 
 //         && (previous_output_ == x.previous_output_) 
 //         && (script_ == x.script_) 
-// #ifndef BITPRIM_CURRENCY_BCH
+// #ifndef KNUTH_CURRENCY_BCH
 //         && (witness_ == x.witness_)
 // #endif
 //         ;
@@ -158,7 +158,7 @@ void input::set_script(chain::script&& value) {
     invalidate_cache();
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 void input::set_witness(chain::witness const& value) {
     input_basis::set_witness(value);
     invalidate_cache();
@@ -168,7 +168,7 @@ void input::set_witness(chain::witness&& value) {
     input_basis::set_witness(std::move(value));
     invalidate_cache();
 }
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
 // protected
 void input::invalidate_cache() const {

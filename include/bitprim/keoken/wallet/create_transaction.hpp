@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_
-#define BITPRIM_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_
+#ifndef KNUTH_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_
+#define KNUTH_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_
 
 #include <bitcoin/bitcoin/chain/input.hpp>
 #include <bitcoin/bitcoin/chain/input_point.hpp>
@@ -29,10 +29,10 @@
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
 
-#include <bitprim/keoken/message/base.hpp>
-#include <bitprim/keoken/primitives.hpp>
+#include <knuth/keoken/message/base.hpp>
+#include <knuth/keoken/primitives.hpp>
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 namespace wallet {
 
@@ -87,6 +87,6 @@ result_t send_token_tx_complete(libbitcoin::chain::input_point const& output_to_
 
 }  // namespace wallet
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth
 
-#endif  //BITPRIM_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_
+#endif  //KNUTH_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_

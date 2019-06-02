@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_3__valid_input__success
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__error__unchanged) {
     static auto const expected = inventory_vector::type_id::error;
     inventory_vector instance{expected, {}};
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__transaction__expected) {
     instance.to_witness();
     BOOST_REQUIRE(instance.type() == inventory_vector::type_id::witness_transaction);
 }
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
 BOOST_AUTO_TEST_CASE(inventory_vector__is_block_type__block__returns_true) {
     inventory_vector instance;

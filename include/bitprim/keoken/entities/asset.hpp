@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_KEOKEN_ENTITIES_ASSET_HPP_
-#define BITPRIM_KEOKEN_ENTITIES_ASSET_HPP_
+#ifndef KNUTH_KEOKEN_ENTITIES_ASSET_HPP_
+#define KNUTH_KEOKEN_ENTITIES_ASSET_HPP_
 
 #include <string>
 
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/bitcoin/wallet/payment_address.hpp>
 
-#include <bitprim/keoken/primitives.hpp>
+#include <knuth/keoken/primitives.hpp>
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 namespace entities {
 
@@ -74,6 +74,6 @@ private:
 
 }  // namespace entities
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth
 
-#endif  //BITPRIM_KEOKEN_ENTITIES_ASSET_HPP_
+#endif  //KNUTH_KEOKEN_ENTITIES_ASSET_HPP_

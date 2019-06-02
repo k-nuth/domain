@@ -37,8 +37,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -77,7 +77,7 @@ public:
     // static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
     static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static input factory_from_data(R& source, bool wire = true, bool witness = false) {
         input instance;
         instance.from_data(source, wire, witness_val(witness));
@@ -90,9 +90,9 @@ public:
     // bool from_data(std::istream& stream, bool wire = true, bool witness = false);
     bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool /*witness*/ = false) {
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -105,7 +105,7 @@ public:
 
         script_.from_data(source, true);
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         // Transaction from_data handles the discontiguous wire witness decoding.
         if (witness_val(witness) && !wire) {
             witness_.from_data(source, true);
@@ -132,7 +132,7 @@ public:
 
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool /*witness*/ = false) const {
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -140,7 +140,7 @@ public:
         previous_output_.to_data(sink, wire);
         script_.to_data(sink, true);
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         // Transaction to_data handles the discontiguous wire witness encoding.
         if (witness_val(witness) && !wire) {
             witness_.to_data(sink, true);
@@ -173,14 +173,14 @@ public:
     void set_script(chain::script&& value);
 
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     // Deprecated (unsafe).
     chain::witness& witness();
 
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
     uint32_t sequence() const;
     void set_sequence(uint32_t value);
@@ -194,7 +194,7 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     /// Clear witness.
     void strip_witness();
 #endif
@@ -224,7 +224,7 @@ private:
 
     output_point previous_output_;
     chain::script script_;
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     chain::witness witness_;
 #endif
     uint32_t sequence_{0};
@@ -233,6 +233,6 @@ private:
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif

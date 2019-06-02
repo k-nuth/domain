@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2017-2018 Bitprim Inc.
+ * Copyright (c) 2017-2019 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitprim/keoken/entities/asset.hpp>
+#include <knuth/keoken/entities/asset.hpp>
 
-#include <bitprim/keoken/primitives.hpp>
+#include <knuth/keoken/primitives.hpp>
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 namespace entities {
 
@@ -83,4 +83,4 @@ payment_address const& asset::owner() const {
 
 }  // namespace entities
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth

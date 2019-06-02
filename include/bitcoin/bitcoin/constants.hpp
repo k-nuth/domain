@@ -36,7 +36,7 @@ namespace libbitcoin {
 // This guards assumptions within the codebase.
 static_assert(sizeof(size_t) >= sizeof(uint32_t), "unsupported size_t");
 
-// #define BC_USER_AGENT "/bitprim:" LIBBITCOIN_VERSION "/"
+// #define BC_USER_AGENT "/knuth:" LIBBITCOIN_VERSION "/"
 
 // Generic constants.
 //-----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ BC_CONSTEXPR size_t max_coinbase_size = 100;
 
 BC_CONSTEXPR size_t median_time_past_interval = 11;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 BC_CONSTEXPR size_t bitcoin_cash_retarget_blocks = 6;
 //BC_CONSTEXPR size_t chain_state_timestamp_count = median_time_past_interval + bitcoin_cash_retarget_blocks;
 
@@ -105,24 +105,24 @@ BC_CONSTEXPR size_t min_transaction_size = 100;   //one hundred bytes
 
 BC_CONSTEXPR size_t max_block_size = 1000000;  //one million bytes
 
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 BC_CONSTEXPR size_t coinbase_maturity = 100;
 // BC_CONSTEXPR size_t median_time_past_interval = 11;
 BC_CONSTEXPR size_t locktime_threshold = 500000000;
 // BC_CONSTEXPR size_t max_block_size = 1000000;
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 //0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 BC_CONSTEXPR uint32_t retarget_proof_of_work_limit = 0x1e0fffff;
 BC_CONSTEXPR uint32_t no_retarget_proof_of_work_limit = 0x207fffff;  // TODO(libbitcoin): merge version3. check the no_retarget value for LTC
-#else                                                                // BITPRIM_CURRENCY_LTC
+#else                                                                // KNUTH_CURRENCY_LTC
 BC_CONSTEXPR size_t max_work_bits = 0x1d00ffff;
 BC_CONSTEXPR uint32_t retarget_proof_of_work_limit = 0x1d00ffff;
 BC_CONSTEXPR uint32_t no_retarget_proof_of_work_limit = 0x207fffff;
 // This may not be flexible, keep internal.
 //0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-#endif                                                               // BITPRIM_CURRENCY_LTC
+#endif                                                               // KNUTH_CURRENCY_LTC
 
 BC_CONSTFUNC uint32_t work_limit(bool retarget = true) {
     return retarget ? retarget_proof_of_work_limit : no_retarget_proof_of_work_limit;
@@ -132,27 +132,27 @@ BC_CONSTFUNC uint32_t work_limit(bool retarget = true) {
 BC_CONSTEXPR size_t max_sigops_factor = 50;
 
 // BC_CONSTEXPR size_t max_block_sigops = max_block_size / max_sigops_factor;
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 BC_CONSTEXPR size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
 BC_CONSTEXPR size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 #else
 BC_CONSTEXPR size_t max_block_sigops = max_block_size / max_sigops_factor;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 constexpr inline size_t get_max_block_size() noexcept {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return max_block_size_new;
 #else
     return max_block_size;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 }
 
 constexpr inline size_t get_max_block_sigops() {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return max_block_sigops_new;
 #else
     return max_block_sigops;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 }
 
 BC_CONSTEXPR size_t one_million_bytes_block = 1000000;
@@ -177,15 +177,15 @@ BC_CONSTEXPR uint32_t relative_locktime_time_locked = 0x00400000;
 
 BC_CONSTEXPR uint32_t retargeting_factor = 4;
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 15;
 BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15;
-#else   //BITPRIM_CURRENCY_LTC
+#else   //KNUTH_CURRENCY_LTC
 BC_CONSTEXPR uint32_t target_spacing_seconds = 10 * 60;
 BC_CONSTEXPR uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60;
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
-BC_CONSTEXPR uint32_t timestamp_future_seconds = 2 * 60 * 60;  //TODO(bitprim): New on v3.3.0 merge (September 2017), see how this affects Litecoin
+BC_CONSTEXPR uint32_t timestamp_future_seconds = 2 * 60 * 60;  //TODO(kth): New on v3.3.0 merge (September 2017), see how this affects Litecoin
 BC_CONSTEXPR uint32_t easy_spacing_factor = 2;
 
 // BC_CONSTEXPR uint32_t easy_spacing_seconds = 20 * 60;
@@ -212,7 +212,7 @@ BC_CONSTEXPR uint32_t bip9_version_bit0 = 1u << 0;
 BC_CONSTEXPR uint32_t bip9_version_bit1 = 1u << 1;
 BC_CONSTEXPR uint32_t bip9_version_base = 0x20000000;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 
 struct monolith_t : built_in_t<uint64_t> {
     using base = built_in_t<uint64_t>;
@@ -263,9 +263,9 @@ BC_CONSTEXPR graviton_t         bch_graviton_activation_time = 1573819200;      
 //     return nHeight >= config.GetChainParams().GetConsensus().uahfHeight;
 // }
 
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 
 // Mainnet activation parameters (bip34-style activations).
 BC_CONSTEXPR size_t mainnet_active = 750;
@@ -319,7 +319,7 @@ static const config::checkpoint testnet_bip34_active_checkpoint{
 static const config::checkpoint regtest_bip34_active_checkpoint{
     "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 100000000};
 
-#else  //BITPRIM_CURRENCY_LTC
+#else  //KNUTH_CURRENCY_LTC
 // Mainnet activation parameters (bip34-style activations).
 BC_CONSTEXPR size_t mainnet_active = 750;
 BC_CONSTEXPR size_t mainnet_enforce = 950;
@@ -371,9 +371,9 @@ static const config::checkpoint regtest_bip34_active_checkpoint{
     // Since bip90 assumes a historical bip34 activation block, use genesis.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 
 // These cannot be reactivated in a future branch due to window expiration.
 static const config::checkpoint mainnet_bip9_bit0_active_checkpoint{
@@ -415,7 +415,7 @@ static const config::checkpoint regtest_bip9_bit1_active_checkpoint{
 
 
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 
 //2017-August-01 hard fork
 //TODO(fernando): remove this commented lines (old code)
@@ -534,11 +534,11 @@ BC_CONSTEXPR size_t max_witness_program = 40;
 
 constexpr inline
 size_t get_max_block_weight() noexcept {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return get_max_block_size(); 
 #else
     return max_block_weight;
-#endif //BITPRIM_CURRENCY_BCH
+#endif //KNUTH_CURRENCY_BCH
 }
 
 
@@ -561,15 +561,15 @@ BC_CONSTFUNC inline uint64_t initial_block_subsidy_satoshi() {
     return bitcoin_to_satoshi(initial_block_subsidy_bitcoin);
 }
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 840000;
 BC_CONSTEXPR uint64_t retarget_subsidy_interval = 840000;
 BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150;  // TODO(libbitcoin): merge version3. check the no_retarget (regtest) value for LTC
-#else                                                      //BITPRIM_CURRENCY_LTC
+#else                                                      //KNUTH_CURRENCY_LTC
 // BC_CONSTEXPR uint64_t reward_interval = 210000;
 BC_CONSTEXPR uint64_t retarget_subsidy_interval = 210000;
 BC_CONSTEXPR uint64_t no_retarget_subsidy_interval = 150;
-#endif                                                     //BITPRIM_CURRENCY_LTC
+#endif                                                     //KNUTH_CURRENCY_LTC
 
 BC_CONSTEXPR uint64_t recursive_money = 0x02540be3f5;
 

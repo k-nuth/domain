@@ -336,11 +336,11 @@ hash_digest header::hash() const {
     return hash;
 }
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
 uint256_t header::proof(uint32_t bits) {
     compact const header_bits(bits);
@@ -399,7 +399,7 @@ bool header::is_valid_proof_of_work(bool retarget) const {
     }
 
     // Ensure actual work is at least claimed amount (smaller is more work).
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
     return to_uint256(litecoin_proof_of_work_hash()) <= target;
 #else
     return to_uint256(hash()) <= target;

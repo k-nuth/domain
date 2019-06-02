@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_CONCEPTS_HPP_
-#define BITPRIM_CONCEPTS_HPP_
+#ifndef KNUTH_CONCEPTS_HPP_
+#define KNUTH_CONCEPTS_HPP_
 
 #define Reader typename
 #define Writer typename
 
-namespace bitprim {
+namespace knuth {
 
 template <typename R, bool result = std::is_same<decltype(((R*)nullptr)->read_size_little_endian()), size_t>::value>  //NOLINT
 constexpr bool is_reader_helper(int /*unused*/) {
@@ -54,9 +54,9 @@ constexpr bool is_writer() {
     return is_writer_helper<W>(0);
 }
 
-}  // namespace bitprim
+}  // namespace knuth
 
-#define BITPRIM_IS_READER(R) typename std::enable_if<bitprim::is_reader<R>(), int>::type = 0
-#define BITPRIM_IS_WRITER(W) typename std::enable_if<bitprim::is_writer<W>(), int>::type = 0
+#define KNUTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0
+#define KNUTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0
 
-#endif  //BITPRIM_CONCEPTS_HPP_
+#endif  //KNUTH_CONCEPTS_HPP_

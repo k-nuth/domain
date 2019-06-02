@@ -45,8 +45,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -88,9 +88,9 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
     std::for_each(puts.begin(), puts.end(), serialize);
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 // Input list must be pre-populated as it determines witness count.
-template <Reader R, BITPRIM_IS_READER(R)>
+template <Reader R, KNUTH_IS_READER(R)>
 inline void read_witnesses(R& source, input::list& inputs) {
     auto const deserialize = [&](input& input) {
         input.witness().from_data(source, true);
@@ -108,7 +108,7 @@ inline void write_witnesses(W& sink, input::list const& inputs) {
 
     std::for_each(inputs.begin(), inputs.end(), serialize);
 }
-#endif // not defined BITPRIM_CURRENCY_BCH
+#endif // not defined KNUTH_CURRENCY_BCH
 
 }  // namespace detail
 
@@ -117,7 +117,7 @@ class transaction_basis;
 
 hash_digest hash_non_witness(transaction_basis const& tx);
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 hash_digest hash_witness(transaction_basis const& tx);
 #endif
 
@@ -169,7 +169,7 @@ public:
     static transaction_basis factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
     static transaction_basis factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static transaction_basis factory_from_data(R& source, bool wire = true, bool witness = false) {
         transaction_basis instance;
         instance.from_data(source, wire, witness_val(witness));
@@ -180,7 +180,7 @@ public:
     bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     // Witness is not used by outputs, just for template normalization.
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool witness = false) {
         reset();
 
@@ -188,7 +188,7 @@ public:
             // Wire (satoshi protocol) deserialization.
             version_ = source.read_4_bytes_little_endian();
             detail::read(source, inputs_, wire, witness_val(witness));
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
             auto const marker = false;
 #else
             // Detect witness as no inputs (marker) and expected flag (bip144).
@@ -201,7 +201,7 @@ public:
                 source.skip(1);
                 detail::read(source, inputs_, wire, witness_val(witness));
                 detail::read(source, outputs_, wire, witness_val(witness));
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
                 detail::read_witnesses(source, inputs_);
 #endif
             } else {
@@ -225,7 +225,7 @@ public:
             version_ = static_cast<uint32_t>(version);
         }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         // TODO(libbitcoin): optimize by having reader skip witness data.
         if ( ! witness_val(witness)) {
             strip_witness();
@@ -259,7 +259,7 @@ public:
                 sink.write_byte(witness_flag);
                 detail::write(sink, inputs_, wire, witness_val(witness));
                 detail::write(sink, outputs_, wire, witness_val(witness));
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
                 detail::write_witnesses(sink, inputs_);
 #endif
             } else {
@@ -309,7 +309,7 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
@@ -368,7 +368,7 @@ private:
 
 
 
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 // code verify(transaction_basis const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
 // #else
 // code verify(transaction_basis const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
@@ -381,6 +381,6 @@ private:
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif // LIBBITCOIN_CHAIN_TRANSACTION_BASIS_HPP_

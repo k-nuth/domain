@@ -38,8 +38,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -66,7 +66,7 @@ public:
     header(header const& x, hash_digest const& hash);
 
     /// This class is copy constructible and copy assignable.
-    // Note(bitprim): Cannot be defaulted because the std::mutex data member.
+    // Note(kth): Cannot be defaulted because the std::mutex data member.
     header(header const& x);
     header& operator=(header const& x);
 
@@ -83,7 +83,7 @@ public:
     // static header factory_from_data(std::istream& stream, bool wire=true);
     static header factory_from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static header factory_from_data(R& source, bool wire = true) {
         header instance;
         instance.from_data(source, wire);
@@ -95,7 +95,7 @@ public:
     //TODO(fernando): check what happend when replacing std::istream to data_source
     bool from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
         header_basis::from_data(source, wire);
 
@@ -141,9 +141,9 @@ public:
     hash_digest hash() const;
     hash_digest hash_pow() const;
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
     hash_digest litecoin_proof_of_work_hash() const;
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
     // Validation.
     //-----------------------------------------------------------------------------
@@ -172,6 +172,6 @@ private:
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif

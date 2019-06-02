@@ -42,8 +42,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -88,7 +88,7 @@ public:
     static script factory_from_data(data_chunk const& encoded, bool prefix);
     static script factory_from_data(std::istream& stream, bool prefix);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static script factory_from_data(R& source, bool prefix) {
         script instance;
         instance.from_data(source, prefix);
@@ -212,7 +212,7 @@ public:
 
 
 //     // TODO(libbitcoin): move back to private.
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 //     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t value);
 // #else
 //     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
@@ -249,6 +249,6 @@ private:
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif

@@ -23,7 +23,7 @@
 
 #include <bitcoin/bitcoin/chain/script.hpp>
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 #include <bitcoin/bitcoin/chain/witness.hpp>
 #endif
 
@@ -51,7 +51,7 @@ input_basis::input_basis(output_point const& previous_output, chain::script cons
       script_(script),
       sequence_(sequence) {}
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 input_basis::input_basis(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
     : previous_output_(previous_output)
     , script_(script)
@@ -75,7 +75,7 @@ bool input_basis::operator==(input_basis const& x) const {
     return (sequence_ == x.sequence_) 
         && (previous_output_ == x.previous_output_) 
         && (script_ == x.script_) 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         && (witness_ == x.witness_)
 #endif
         ;
@@ -113,7 +113,7 @@ bool input_basis::from_data(std::istream& stream, bool wire, bool witness) {
 void input_basis::reset() {
     previous_output_.reset();
     script_.reset();
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     witness_.reset();
 #endif
     sequence_ = 0;
@@ -124,7 +124,7 @@ bool input_basis::is_valid() const {
     return sequence_ != 0 
         || previous_output_.is_valid() 
         || script_.is_valid() 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         || witness_.is_valid()
 #endif
         ;
@@ -158,7 +158,7 @@ size_t input_basis::serialized_size_non_witness(bool wire) const {
 }
 
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 size_t input_basis::serialized_size(bool wire, bool /*witness*/) const {
     return serialized_size_non_witness(wire);
 }
@@ -210,7 +210,7 @@ void input_basis::set_script(chain::script&& value) {
     script_ = std::move(value);
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 chain::witness const& input_basis::witness() const {
     return witness_;
 }
@@ -226,7 +226,7 @@ void input_basis::set_witness(chain::witness const& value) {
 void input_basis::set_witness(chain::witness&& value) {
     witness_ = std::move(value);
 }
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
 
 uint32_t input_basis::sequence() const {
@@ -241,7 +241,7 @@ void input_basis::set_sequence(uint32_t value) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 void input_basis::strip_witness() {
     witness_.clear();
 }
@@ -255,7 +255,7 @@ bool input_basis::is_final() const {
 }
 
 bool input_basis::is_segregated() const {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return false;
 #else
     // If no block tx is has witness data the commitment is optional (bip141).
@@ -287,7 +287,7 @@ bool input_basis::is_locked(size_t block_height, uint32_t median_time_past) cons
 // This requires that previous outputs have been populated.
 // This cannot overflow because each total is limited by max ops.
 size_t input_basis::signature_operations(bool bip16, bool bip141) const {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
     chain::script witness, embedded;
@@ -300,7 +300,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
     // Count heavy sigops in the input script.
     auto sigops = script_.sigops(false) * sigops_factor;
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     if (bip141 && witness_.extract_sigop_script(witness, prevout)) {
         // Add sigops in the witness (bip141).
         return sigops + witness.sigops(true);
@@ -308,7 +308,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
 #endif
 
     if (bip16 && extract_embedded_script(embedded)) {
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
         if (bip141 && witness_.extract_sigop_script(witness, embedded)) {
             // Add sigops in the embedded witness (bip141).
             return sigops + witness.sigops(true);
@@ -343,7 +343,7 @@ bool input_basis::extract_embedded_script(chain::script& out) const {
     return out.from_data(ops.back().data(), false);
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 bool input_basis::extract_reserved_hash(hash_digest& out) const {
     auto const& stack = witness_.stack();
 
@@ -354,7 +354,7 @@ bool input_basis::extract_reserved_hash(hash_digest& out) const {
     std::copy_n(stack.front().begin(), hash_size, out.begin());
     return true;
 }
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
 }  // namespace chain
 }  // namespace libbitcoin

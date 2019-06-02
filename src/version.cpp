@@ -23,7 +23,7 @@ namespace libbitcoin {
 namespace domain {
 
 char const* version() {
-    return BITPRIM_DOMAIN_VERSION;
+    return KNUTH_DOMAIN_VERSION;
 }
 
 }  // namespace domain

@@ -1,7 +1,7 @@
 #
-# Copyright (c) 2017-2018 Bitprim Inc.
+# Copyright (c) 2017-2019 Knuth Project.
 #
-# This file is part of Bitprim.
+# This file is part of Knuth Project.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -18,16 +18,16 @@
 #
 from conans import CMake
 from ci_utils import option_on_off, march_conan_manip, pass_march_to_compiler, glibcxx_supports_cxx11_abi
-from ci_utils import BitprimConanFile #, BitprimCxx11ABIFixer
+from ci_utils import KnuthConanFile #, KnuthCxx11ABIFixer
 
-class BitprimDomainConan(BitprimConanFile):
-# class BitprimDomainConan(BitprimCxx11ABIFixer):
+class KnuthDomainConan(KnuthConanFile):
+# class KnuthDomainConan(KnuthCxx11ABIFixer):
 
     
-    name = "bitprim-domain"
+    name = "kth-domain"
     # version = get_version()
     license = "http://www.boost.org/users/license.html"
-    url = "https://github.com/bitprim/bitprim-domain"
+    url = "https://github.com/k-nuth/kth-domain"
     description = "Bitcoin Cross-Platform C++ Development Toolkit"
     settings = "os", "compiler", "build_type", "arch"
 
@@ -73,9 +73,9 @@ class BitprimDomainConan(BitprimConanFile):
 
     generators = "cmake"
     exports = "conan_*", "ci_utils/*"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-domainConfig.cmake.in", "include/*", "test/*", "examples/*", "test_new/*"
+    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "kth-domainConfig.cmake.in", "include/*", "test/*", "examples/*", "test_new/*"
 
-    package_files = "build/lbitprim-domain.a"
+    package_files = "build/lkth-domain.a"
     build_policy = "missing"
 
     @property
@@ -83,13 +83,13 @@ class BitprimDomainConan(BitprimConanFile):
         return self.options.currency == "BCH" and self.options.get_safe("keoken")
 
     def requirements(self):
-        self.requires("boost/1.69.0@bitprim/stable")
+        self.requires("boost/1.69.0@kth/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
-        self.requires("bitprim-infrastructure/0.X@%s/%s" % (self.user, self.channel))
-        # self.requires("bitprim-crypto/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("kth-infrastructure/0.X@%s/%s" % (self.user, self.channel))
+        # self.requires("kth-crypto/0.X@%s/%s" % (self.user, self.channel))
 
         # if self.options.with_png:
-        #     self.requires("libpng/1.6.34@bitprim/stable")
+        #     self.requires("libpng/1.6.34@kth/stable")
             
         if self.options.currency == "LTC":
             self.requires("OpenSSL/1.0.2l@conan/stable")
@@ -113,7 +113,7 @@ class BitprimDomainConan(BitprimConanFile):
 
     def configure(self):
         # super(Foo, self).baz(arg)
-        BitprimConanFile.configure(self)
+        KnuthConanFile.configure(self)
 
         # self.output.info("glibcxx_supports_cxx11_abi: %s" % (glibcxx_supports_cxx11_abi(),))
 
@@ -142,7 +142,7 @@ class BitprimDomainConan(BitprimConanFile):
         self.output.info("Compiling for currency: %s" % (self.options.currency,))
 
     def package_id(self):
-        BitprimConanFile.package_id(self)
+        KnuthConanFile.package_id(self)
 
         self.info.options.with_tests = "ANY"
         self.info.options.with_examples = "ANY"
@@ -154,7 +154,7 @@ class BitprimDomainConan(BitprimConanFile):
         # self.output.info("libcxx: %s" % (str(self.settings.compiler.libcxx),))
         # self.output.info("libcxx: %s" % (str(self.info.settings.compiler.libcxx),))
 
-        # #For Bitprim Packages libstdc++ and libstdc++11 are the same
+        # #For Knuth Packages libstdc++ and libstdc++11 are the same
         # if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
         #     if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
         #         self.info.settings.compiler.libcxx = "ANY"
@@ -199,7 +199,7 @@ class BitprimDomainConan(BitprimConanFile):
 
 
         cmake.definitions["MICROARCHITECTURE"] = self.options.microarchitecture
-        cmake.definitions["BITPRIM_PROJECT_VERSION"] = self.version
+        cmake.definitions["KNUTH_PROJECT_VERSION"] = self.version
 
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
@@ -239,7 +239,7 @@ class BitprimDomainConan(BitprimConanFile):
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["bitprim-domain"]
+        self.cpp_info.libs = ["kth-domain"]
 
         if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
             self.cpp_info.libs.append("pthread")

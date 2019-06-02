@@ -62,7 +62,7 @@ using namespace bc::config;
 using namespace bc::machine;
 using namespace boost::adaptors;
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 //Litecoin mainnet genesis block
 static std::string const encoded_mainnet_genesis_block =
     "01000000"                                                                                                                                          //version
@@ -104,7 +104,7 @@ static std::string const encoded_testnet_genesis_block =
     "43"                                                                                                                                                //pk_script length
     "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
     "00000000";           //NOLINT                                                                                                                      //locktime
-#else  //BITPRIM_CURRENCY_LTC
+#else  //KNUTH_CURRENCY_LTC
 
 static std::string const encoded_mainnet_genesis_block =
     "01000000"
@@ -145,7 +145,7 @@ static std::string const encoded_testnet_genesis_block =
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000"; //NOLINT
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
 static std::string const encoded_regtest_genesis_block =
     "01000000"
@@ -233,7 +233,7 @@ block block::factory_from_data(std::istream& stream, bool witness) {
 // static
 //block block::factory_from_data(reader& source, bool witness)
 //{
-//#ifdef BITPRIM_CURRENCY_BCH
+//#ifdef KNUTH_CURRENCY_BCH
 //    witness = false;
 //#endif
 //    block instance;
@@ -441,7 +441,7 @@ block::indexes block::locator_heights(size_t top) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void block::strip_witness() {
     auto const strip = [](transaction& transaction) {
@@ -482,7 +482,7 @@ void block::strip_witness() {
 size_t block::signature_operations() const {
     auto const state = validation.state;
     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
@@ -492,7 +492,7 @@ size_t block::signature_operations() const {
 
 // // Returns max_size_t in case of overflow.
 // size_t block::signature_operations(bool bip16, bool bip141) const {
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 //     bip141 = false;  // No segwit
 // #endif
 //     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
@@ -699,7 +699,7 @@ size_t block::weight() const {
 // }
 
 // bool block::is_valid_witness_commitment() const {
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 //     return false;
 // #else
 //     if (transactions_.empty() || transactions_.front().inputs().empty()) {
@@ -720,11 +720,11 @@ size_t block::weight() const {
 
 //     // If no txs in block are segregated the commitment is optional (bip141).
 //     return !is_segregated();
-// #endif // BITPRIM_CURRENCY_BCH
+// #endif // KNUTH_CURRENCY_BCH
 // }
 
 bool block::is_segregated() const {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return false;
 #else
     bool value;
@@ -750,7 +750,7 @@ bool block::is_segregated() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return value;
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 }
 
 // code block::check_transactions() const {

@@ -1,5 +1,5 @@
 git remote -v
-git remote add upstream https://github.com/bitprim/bitprim-core.git
+git remote add upstream https://github.com/k-nuth/kth-core.git
 git remote -v
 
 git fetch upstream

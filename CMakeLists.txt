@@ -1,7 +1,7 @@
 #
-# Copyright (c) 2017-2018 Bitprim developers (see AUTHORS)
+# Copyright (c) 2017-2018 Knuth Project.
 #
-# This file is part of Bitprim.
+# This file is part of Knuth Project.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -19,9 +19,9 @@
 
 cmake_minimum_required(VERSION 3.4)
 
-# bitprim-domain
+# kth-domain
 #==============================================================================
-project(bitprim-domain
+project(kth-domain
   VERSION 0
   LANGUAGES CXX C)
   # VERSION 0.11.0
@@ -86,15 +86,15 @@ option(WITH_EXAMPLES "Compile with examples." OFF)
 #------------------------------------------------------------------------------
 option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
 if (WITH_CACHED_RPC_DATA)
-  message(STATUS "Bitprim: Cached RPC data enabled")
-  add_definitions(-DBITPRIM_CACHED_RPC_DATA)
+  message(STATUS "Knuth: Cached RPC data enabled")
+  add_definitions(-DKNUTH_CACHED_RPC_DATA)
 endif()
 
 # Implement --with-keoken and declare WITH_KEOKEN.
 #------------------------------------------------------------------------------
 option(WITH_KEOKEN "Keoken enabled." OFF)
 if (WITH_KEOKEN)
-  message(STATUS "Bitprim: Keoken enabled")
+  message(STATUS "Knuth: Keoken enabled")
   add_definitions(-DWITH_KEOKEN)
 endif()
 
@@ -127,46 +127,46 @@ if (WITH_QRENCODE)
 endif()
 
 
-# Implement --JUST_BITPRIM_SOURCES for linting.
+# Implement --JUST_KNUTH_SOURCES for linting.
 #------------------------------------------------------------------------------
-option(JUST_BITPRIM_SOURCES "Just Bitprim source code to be linted." OFF)
-if (JUST_BITPRIM_SOURCES)
-  message(STATUS "Bitprim: Just Bitprim source code to be linted: enabled")
+option(JUST_KNUTH_SOURCES "Just Knuth source code to be linted." OFF)
+if (JUST_KNUTH_SOURCES)
+  message(STATUS "Knuth: Just Knuth source code to be linted: enabled")
 endif()
 
 
 
-set(BITPRIM_PROJECT_VERSION "-" CACHE STRING "Specify the Bitprim Project Version.")
-# message(${BITPRIM_PROJECT_VERSION})
-message( STATUS "Bitprim: Compiling version ${BITPRIM_PROJECT_VERSION}")
+set(KNUTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
+# message(${KNUTH_PROJECT_VERSION})
+message( STATUS "Knuth: Compiling version ${KNUTH_PROJECT_VERSION}")
 
 set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
-message( STATUS "Bitprim: Compiling for ${MICROARCHITECTURE}")
-# add_definitions(-DBITPRIM_MICROARCHITECTURE=${MICROARCHITECTURE})
-# add_definitions(-DBITPRIM_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+message( STATUS "Knuth: Compiling for ${MICROARCHITECTURE}")
+# add_definitions(-DKNUTH_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DKNUTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
 
 
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
 if (${CURRENCY} STREQUAL "BCH")
-  add_definitions(-DBITPRIM_CURRENCY_BCH)
+  add_definitions(-DKNUTH_CURRENCY_BCH)
 elseif (${CURRENCY} STREQUAL "BTC")
-  add_definitions(-DBITPRIM_CURRENCY_BTC)
+  add_definitions(-DKNUTH_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
-  add_definitions(-DBITPRIM_CURRENCY_LTC)
+  add_definitions(-DKNUTH_CURRENCY_LTC)
 else()
   message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
 endif()
 
-message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
+message(STATUS "Knuth: Cryptocurrency: ${CURRENCY}")
 
 
 # Conan infrastructure
 #==============================================================================
-if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
+if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/kthbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/kthbuildinfo.cmake)
 else()
-    message( STATUS "bitprimbuildinfo doent exists")
+    message( STATUS "kthbuildinfo doent exists")
 endif()
 
 
@@ -268,7 +268,7 @@ include(CheckCXXCompilerFlag)
 #------------------------------------------------------------------------------
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
 
-include(BitprimTools)
+include(KnuthTools)
 
 
 # Warn on all stuff.
@@ -350,14 +350,14 @@ endif()
 # Build
 #==============================================================================
 
-# src/bitprim-domain.la => ${libdir}
+# src/kth-domain.la => ${libdir}
 #------------------------------------------------------------------------------
 set(MODE STATIC)
 if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-set(bitprim_domain_sources_just_libbitcoin
+set(kth_domain_sources_just_libbitcoin
         src/chain/block_basis.cpp
         src/chain/block.cpp
         src/chain/chain_state.cpp
@@ -471,93 +471,93 @@ set(bitprim_domain_sources_just_libbitcoin
         # src/wallet/uri.cpp
 )
 
-set(bitprim_domain_sources_just_bitprim
+set(kth_domain_sources_just_kth
     src/wallet/transaction_functions.cpp
 )
 
 if (NOT ${CURRENCY} STREQUAL "BCH")
-    set(bitprim_domain_sources_just_libbitcoin 
-      ${bitprim_domain_sources_just_libbitcoin}
+    set(kth_domain_sources_just_libbitcoin 
+      ${kth_domain_sources_just_libbitcoin}
       src/chain/witness.cpp
     )
 endif()
 
 if (${CURRENCY} STREQUAL "LTC")
-    set(bitprim_domain_sources_just_bitprim 
-      ${bitprim_domain_sources_just_bitprim}         
+    set(kth_domain_sources_just_kth 
+      ${kth_domain_sources_just_kth}         
       src/math/hash.cpp
       src/math/external/scrypt.cpp
       src/math/external/scrypt-sse2.cpp)
 endif()
 
 if (WITH_KEOKEN)
-  set(bitprim_domain_sources_just_bitprim 
-    ${bitprim_domain_sources_just_bitprim}
-    src/bitprim/keoken/transaction_extractor.cpp
-    src/bitprim/keoken/entities/asset.cpp
-    src/bitprim/keoken/message/base.cpp
-    src/bitprim/keoken/message/create_asset.cpp
-    src/bitprim/keoken/message/send_tokens.cpp
-    src/bitprim/keoken/wallet/create_transanction.cpp
+  set(kth_domain_sources_just_kth 
+    ${kth_domain_sources_just_kth}
+    src/knuth/keoken/transaction_extractor.cpp
+    src/knuth/keoken/entities/asset.cpp
+    src/knuth/keoken/message/base.cpp
+    src/knuth/keoken/message/create_asset.cpp
+    src/knuth/keoken/message/send_tokens.cpp
+    src/knuth/keoken/wallet/create_transanction.cpp
   )
 endif()
 
-if (NOT JUST_BITPRIM_SOURCES)
-  set(bitprim_domain_sources 
-    ${bitprim_domain_sources_just_libbitcoin}
+if (NOT JUST_KNUTH_SOURCES)
+  set(kth_domain_sources 
+    ${kth_domain_sources_just_libbitcoin}
   )
 endif()
 
-set(bitprim_domain_sources 
-  ${bitprim_domain_sources}   
-  ${bitprim_domain_sources_just_bitprim}         
+set(kth_domain_sources 
+  ${kth_domain_sources}   
+  ${kth_domain_sources_just_kth}         
 )
 
-add_library(bitprim-domain ${MODE} ${bitprim_domain_sources})
+add_library(kth-domain ${MODE} ${kth_domain_sources})
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
-    set_property(TARGET bitprim-domain PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET kth-domain PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
 
 
 
-#set_target_properties(bitprim-domain PROPERTIES CXX_VISIBILITY_PRESET hidden)
-#set_target_properties(bitprim-domain PROPERTIES CXX_VISIBILITY_PRESET internal)
+#set_target_properties(kth-domain PROPERTIES CXX_VISIBILITY_PRESET hidden)
+#set_target_properties(kth-domain PROPERTIES CXX_VISIBILITY_PRESET internal)
 
 #-fvisibility=default|internal|hidden|protected
 
-# add_library(bitprim-domain ${MODE}
+# add_library(kth-domain ${MODE}
 #        src/wallet/uri.cpp)
 
-target_include_directories(bitprim-domain PUBLIC
+target_include_directories(kth-domain PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
   
 if (NOT ENABLE_SHARED)
-    target_compile_definitions(bitprim-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+    target_compile_definitions(kth-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
-target_compile_definitions(bitprim-domain PUBLIC -DBITPRIM_PROJECT_VERSION="${BITPRIM_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-domain PUBLIC -DKNUTH_PROJECT_VERSION="${KNUTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 
 
-target_include_directories(bitprim-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+target_include_directories(kth-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
 # if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
-  target_include_directories(bitprim-domain SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+  target_include_directories(kth-domain SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
 endif()
 
 if (NOT NO_CONAN_AT_ALL)
-  target_link_libraries(bitprim-domain PUBLIC ${CONAN_LIBS})
+  target_link_libraries(kth-domain PUBLIC ${CONAN_LIBS})
 else()
   if (MSVC)
-    target_link_libraries(bitprim-domain PUBLIC
+    target_link_libraries(kth-domain PUBLIC
       ${Boost_ATOMIC_LIBRARY}
       ${Boost_LOG_SETUP_LIBRARY}
     )
   endif()
 
-  target_link_libraries(bitprim-domain PUBLIC
+  target_link_libraries(kth-domain PUBLIC
     ${Boost_CHRONO_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
@@ -571,22 +571,22 @@ else()
   )
 endif()
 
-target_link_libraries(bitprim-domain PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
+target_link_libraries(kth-domain PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
 
 # if (NO_CONAN_AT_ALL)
     if (MINGW) #(WIN32)
-        target_link_libraries(bitprim-domain PUBLIC ws2_32 wsock32)
+        target_link_libraries(kth-domain PUBLIC ws2_32 wsock32)
     endif()
 # endif()
 
 if (WITH_PNG)
     if (NO_CONAN_AT_ALL)
-        target_link_libraries(bitprim-domain PUBLIC png)
+        target_link_libraries(kth-domain PUBLIC png)
     endif (NO_CONAN_AT_ALL)
 endif()
 
 if (${CURRENCY} STREQUAL "LTC")
-  target_link_libraries(bitprim-domain PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
+  target_link_libraries(kth-domain PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
 
   # OPENSSL_CRYPTO_LIBRARY
   # OPENSSL_SSL_LIBRARY
@@ -594,10 +594,10 @@ if (${CURRENCY} STREQUAL "LTC")
 endif()
 
 if (NOT USE_CONAN)
-  target_link_libraries(bitprim-domain PUBLIC secp256k1)
+  target_link_libraries(kth-domain PUBLIC secp256k1)
 endif()
 
-_group_sources(bitprim-domain "${CMAKE_CURRENT_LIST_DIR}")
+_group_sources(kth-domain "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
@@ -606,11 +606,11 @@ if (WITH_TESTS OR WITH_TESTS_NEW)
   enable_testing()
 endif()
 
-# local: test/bitprim_domain_test
+# local: test/kth_domain_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
 
-  add_executable(bitprim_domain_test
+  add_executable(kth_domain_test
         test/chain/block.cpp
         test/chain/header.cpp
         test/chain/input.cpp
@@ -695,12 +695,12 @@ if (WITH_TESTS)
         test/wallet/transaction_functions.cpp
     )
 
-    target_link_libraries(bitprim_domain_test PUBLIC bitprim-domain)
+    target_link_libraries(kth_domain_test PUBLIC kth-domain)
 
-_group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
+_group_sources(kth_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
 #    TODO: Fer: chequear si hay nuevos tests en los makefiles (no Cmake)
-  _add_tests(bitprim_domain_test
+  _add_tests(kth_domain_test
     address_tests
     alert_payload_tests
     alert_tests
@@ -766,54 +766,54 @@ _group_sources(bitprim_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
   )
 
   if (WITH_PNG)
-    _add_tests(bitprim_domain_test png_tests)
+    _add_tests(kth_domain_test png_tests)
   endif()
 
   if (WITH_QRENCODE)
-    _add_tests(bitprim_domain_test qrcode_tests)
+    _add_tests(kth_domain_test qrcode_tests)
   endif()
 endif()
 
 if (WITH_TESTS_NEW)
   if (WITH_KEOKEN)
-    add_executable(bitprim_domain_test_new
+    add_executable(kth_domain_test_new
             test_new/main.cpp
             test_new/create_transaction.cpp
     )
-    target_link_libraries(bitprim_domain_test_new PUBLIC bitprim-domain)
+    target_link_libraries(kth_domain_test_new PUBLIC kth-domain)
 
-    add_test(NAME bitprim_domain_test_new COMMAND bitprim_domain_test_new)
+    add_test(NAME kth_domain_test_new COMMAND kth_domain_test_new)
   endif()
 endif()
 
 
 # Examples
 #==============================================================================
-# local: examples/bitprim_domain_examples
+# local: examples/kth_domain_examples
 #------------------------------------------------------------------------------
 if (WITH_EXAMPLES)
-  add_executable(bitprim_domain_examples
+  add_executable(kth_domain_examples
     examples/main.cpp)
 
-  target_link_libraries(bitprim_domain_examples PUBLIC bitprim-domain)
+  target_link_libraries(kth_domain_examples PUBLIC kth-domain)
 
-  _group_sources(bitprim_domain_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
+  _group_sources(kth_domain_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
 endif()
 
 # Install
 #==============================================================================
-install(TARGETS bitprim-domain EXPORT bitprim-domain
+install(TARGETS kth-domain EXPORT kth-domain
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
 )
 
-#install(EXPORT bitprim-domainTargets
+#install(EXPORT kth-domainTargets
 #
 #)
 
-set(_bitprim_domain_headers
+set(_kth_domain_headers
     bitcoin/bitcoin/multi_crypto_support.hpp
     bitcoin/bitcoin/compat.h
     bitcoin/bitcoin/compat.hpp
@@ -957,7 +957,7 @@ set(_bitprim_domain_headers
     bitcoin/bitcoin.hpp
     )
 
-foreach (_header ${_bitprim_domain_headers})
+foreach (_header ${_kth_domain_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")
 endforeach()
@@ -966,9 +966,9 @@ endforeach()
 #==============================================================================
 include(CMakePackageConfigHelpers)
 
-export(EXPORT bitprim-domain
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainTargets.cmake")
-export(PACKAGE bitprim-domain)
+export(EXPORT kth-domain
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/kth-domainTargets.cmake")
+export(PACKAGE kth-domain)
 
 if (UNIX)
   set(_config_package_location "lib/cmake")
@@ -976,21 +976,21 @@ elseif (WIN32)
   set(_config_package_location "cmake")
 endif()
 
-install(EXPORT bitprim-domain
-  FILE bitprim-domainTargets.cmake
+install(EXPORT kth-domain
+  FILE kth-domainTargets.cmake
   DESTINATION ${_config_package_location})
 
-configure_file(bitprim-domainConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfig.cmake"
+configure_file(kth-domainConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfig.cmake"
   @ONLY)
 
 write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(
   FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-domainConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfigVersion.cmake"
   DESTINATION ${_config_package_location})

@@ -34,16 +34,16 @@
 #include <bitcoin/infrastructure/math/elliptic_curve.hpp>
 #include <bitcoin/infrastructure/math/hash.hpp>
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 #include <bitcoin/infrastructure/wallet/cashaddr.hpp>
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 namespace libbitcoin {
 namespace wallet {
 
 using namespace bc::machine;
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 const uint8_t payment_address::mainnet_p2kh = 0x30;
 #else
 const uint8_t payment_address::mainnet_p2kh = 0x00;
@@ -54,7 +54,7 @@ const uint8_t payment_address::mainnet_p2sh = 0x05;
 const uint8_t payment_address::testnet_p2kh = 0x6f;
 const uint8_t payment_address::testnet_p2sh = 0xc4;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 std::string const payment_address::cashaddr_prefix_mainnet = "bitcoincash";
 std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
 #endif
@@ -111,7 +111,7 @@ bool payment_address::is_address(data_slice decoded) {
 
 // Factories.
 // ----------------------------------------------------------------------------
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 
 template <unsigned int frombits, unsigned int tobits, bool pad, typename O, typename I>
 bool convert_bits(O& out, I it, I end) {
@@ -150,7 +150,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     // In order to avoid using the wrong network address, the from_string method
     // only accepts the cashaddr_prefix set on the multi_crypto_support file
 
-    // TODO(bitprim): validate the network on RPC/Interface calls and make payment_address independent of the network
+    // TODO(kth): validate the network on RPC/Interface calls and make payment_address independent of the network
 
     std::string prefix;
     data_chunk payload;
@@ -223,16 +223,16 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     // return {type, std::move(data)};
 }
 
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
     if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
         return from_string_cashaddr(address);
 #else
         return {};
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
     }
 
     return {decoded};
@@ -292,7 +292,7 @@ std::string payment_address::encoded() const {
     return encode_base58(wrap(version_, hash_));
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 
 // Convert the data part to a 5 bit representation.
 template <typename T>
@@ -360,7 +360,7 @@ std::string payment_address::encoded_cashaddr() const {
     return encode_cashaddr_(*this);
 }
 
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 // Accessors.
 // ----------------------------------------------------------------------------

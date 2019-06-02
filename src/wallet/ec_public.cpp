@@ -36,7 +36,7 @@ namespace wallet {
 const uint8_t ec_public::compressed_even = 0x02;
 const uint8_t ec_public::compressed_odd = 0x03;
 const uint8_t ec_public::uncompressed = 0x04;
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 const uint8_t ec_public::mainnet_p2kh = 0x30;
 #else
 const uint8_t ec_public::mainnet_p2kh = 0x00;

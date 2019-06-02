@@ -202,15 +202,15 @@ hash_digest header::hash() const {
     return hash;
 }
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
 hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 
 inline
 hash_digest header::hash_pow() const {
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
     return litecoin_proof_of_work_hash();
 #else
     return hash();

@@ -32,7 +32,7 @@ namespace libbitcoin {
 namespace machine {
 
 /// Determine if the fork is enabled in the active forks set.
-//TODO(fernando): duplicated in chain::script (bitprim-domain)
+//TODO(fernando): duplicated in chain::script (kth-domain)
 static 
 bool is_enabled(uint32_t active_forks, rule_fork fork) {
     return (fork & active_forks) != 0;
@@ -238,8 +238,8 @@ enum class opcode : uint8_t
     nop9 = 184,
     nop10 = 185,
 
-    //Note(bitprim): This is implemented through Bitcoin-ABC...
-    //TODO(bitprim): Implement in the libbitcoin way.
+    //Note(kth): This is implemented through Bitcoin-ABC...
+    //TODO(kth): Implement in the libbitcoin way.
     // OP_CHECKDATASIG = CScriptOp(0xba)
     // OP_CHECKDATASIGVERIFY = CScriptOp(0xbb)
     // checkdatasig = 186,

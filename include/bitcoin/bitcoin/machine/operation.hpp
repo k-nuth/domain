@@ -34,8 +34,8 @@
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace machine {
@@ -73,7 +73,7 @@ public:
     static operation factory_from_data(data_chunk const& encoded);
     static operation factory_from_data(std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static operation factory_from_data(R& source) {
         operation instance;
         instance.from_data(source);
@@ -83,7 +83,7 @@ public:
     bool from_data(data_chunk const& encoded);
     bool from_data(std::istream& stream);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source) {
         ////reset();
         valid_ = true;
@@ -93,7 +93,7 @@ public:
         // The max_script_size and max_push_data_size constants limit
         // evaluation, but not all scripts evaluate, so use max_block_size
         // to guard memory allocation here.
-        if (size > get_max_block_size()) {  //TODO(bitprim): max_block_size changed to get_max_block_size (check space for BCH)
+        if (size > get_max_block_size()) {  //TODO(kth): max_block_size changed to get_max_block_size (check space for BCH)
             source.invalidate();
         } else {
             data_ = source.read_bytes(size);

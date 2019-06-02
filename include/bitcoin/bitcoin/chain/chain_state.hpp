@@ -150,11 +150,11 @@ public:
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, const checkpoints& checkpoints, uint32_t forks
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
                 // , magnetic_anomaly_t magnetic_anomaly_activation_time
                 , great_wall_t great_wall_activation_time
                 , graviton_t graviton_activation_time
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
     );
 
     /// Properties.
@@ -164,11 +164,11 @@ public:
     uint32_t median_time_past() const;
     uint32_t work_required() const;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
     great_wall_t great_wall_activation_time() const;
     graviton_t graviton_activation_time() const;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
     bool is_valid() const;
@@ -184,13 +184,13 @@ public:
 
     static bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     static uint256_t difficulty_adjustment_cash(uint256_t const& target);
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     uint32_t get_next_work_required(uint32_t time_now);
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     static 
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
@@ -199,7 +199,7 @@ public:
     bool is_great_wall_enabled() const;
     bool is_graviton_enabled() const;
 
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 protected:
     struct activations {
@@ -211,11 +211,11 @@ protected:
     };
 
     static activations activation(data const& values, uint32_t forks
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
             , great_wall_t great_wall_activation_time
             , graviton_t graviton_activation_time
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
     );
 
     static uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
@@ -228,7 +228,7 @@ private:
     static size_t version_count(size_t height, uint32_t forks);
     static size_t timestamp_count(size_t height, uint32_t forks);
 
-    // TODO(bitprim): make function private again. Moved to public in the litecoin merge
+    // TODO(kth): make function private again. Moved to public in the litecoin merge
     static size_t retarget_height(size_t height, uint32_t forks);
 
     static size_t collision_height(size_t height, uint32_t forks);
@@ -253,17 +253,17 @@ private:
     static uint32_t work_required_retarget(data const& values);
     static uint32_t retarget_timespan(chain_state::data const& values);
 
-    // TODO(bitprim): make function private again. Moved to public in the litecoin merge
+    // TODO(kth): make function private again. Moved to public in the litecoin merge
     // static bool is_retarget_height(size_t height);
 
     // easy blocks
 
-    //TODO(bitprim):
+    //TODO(kth):
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     static uint32_t cash_difficulty_adjustment(data const& values);
     static uint32_t work_required_adjust_cash(data const& values);
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     static uint32_t work_required_easy(data const& values);
     static uint32_t elapsed_time_limit(chain_state::data const& values);
@@ -288,11 +288,11 @@ private:
     uint32_t const median_time_past_;
     uint32_t const work_required_;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
     great_wall_t const great_wall_activation_time_;
     graviton_t const graviton_activation_time_;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 };
 
 }  // namespace chain

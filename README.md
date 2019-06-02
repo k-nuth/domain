@@ -1,4 +1,4 @@
-# Bitprim Domain <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/bitprim/bitprim-domain">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/bitprim/bitprim-domain">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
+# Knuth Domain <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/kth-domain">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/k-nuth/kth-domain">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/k-nuth/Lobby">![Gitter Chat][badge.Gitter]</a>
 
 > Domain functionality
 
@@ -9,29 +9,29 @@
 
 ## Installation Procedure
 
-The *Bitprim* libraries can be installed on Linux, macOS, FreeBSD, Windows and others. These binaries are pre-built for the most usual operating system/compiler combinations and hosted in an online repository. If there are no pre-built binaries for your platform, a build from source will be attempted.
+The *Knuth* libraries can be installed on Linux, macOS, FreeBSD, Windows and others. These binaries are pre-built for the most usual operating system/compiler combinations and hosted in an online repository. If there are no pre-built binaries for your platform, a build from source will be attempted.
 
 So, for any platform, an installation can be performed in 2 simple steps:
 
 1. Configure the Conan remote:
 ```
-conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
+conan remote add kth https://api.bintray.com/conan/k-nuth/kth
 ```
 
 2. Install the appropriate library:
 
 ```
-conan install bitprim-domain/0.X@bitprim/stable 
+conan install kth-domain/0.X@kth/stable 
 ```
 
-In you want to tune the installation for better performance, please refer to [this](https://bitprim.github.io/docfx/content/user_guide/installation.html#advanced-installation).
+In you want to tune the installation for better performance, please refer to [this](https://kth.github.io/docfx/content/user_guide/installation.html#advanced-installation).
 
 
 <!-- Links -->
-[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-domain?svg=true&branch=dev
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/kth-domain?svg=true&branch=dev
 [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
-[badge.Travis]: https://travis-ci.org/bitprim/bitprim-domain.svg?branch=master
-[badge.version]: https://badge.fury.io/gh/bitprim%2Fbitprim-domain.svg
+[badge.Travis]: https://travis-ci.org/k-nuth/kth-domain.svg?branch=master
+[badge.version]: https://badge.fury.io/gh/kth%2Fkth-domain.svg
 
 [CMake]: http://www.cmake.org
 [Doxygen]: http://www.doxygen.org

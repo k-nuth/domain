@@ -106,7 +106,7 @@ void inventory_vector::reset() {
     hash_.fill(0);
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 void inventory_vector::to_witness() {
     if (type_ == type_id::block || type_ == type_id::transaction) {
         type_ = to_type(to_number(type_) | to_number(type_id::witness));

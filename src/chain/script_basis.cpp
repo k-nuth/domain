@@ -549,17 +549,17 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
     auto const sighash = to_sighash_enum(sighash_type);
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
 
-    //Note(bitprim: Not used for the moment:
+    //Note(kth: Not used for the moment:
     // auto const none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
 
     auto const all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::cash_forkid_all);
 #else
     auto const single = (sighash == sighash_algorithm::single);
 
-    //Note(bitprim: Not used for the moment:
+    //Note(kth: Not used for the moment:
     // auto const none = (sighash == sighash_algorithm::none);
 
     auto const all = (sighash == sighash_algorithm::all);
@@ -1038,7 +1038,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 // Validation.
 //-----------------------------------------------------------------------------
 
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 // code script_basis::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, script_basis const& prevout_script, uint64_t /*value*/) {
 // #else
 // code script_basis::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, witness const& input_witness, script_basis const& prevout_script, uint64_t value) {
@@ -1062,7 +1062,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 //         return error::stack_false;
 //     }
 
-// #ifndef BITPRIM_CURRENCY_BCH
+// #ifndef KNUTH_CURRENCY_BCH
 //     bool witnessed;
 //     // Triggered by output script push of version and witness program (bip141).
 //     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
@@ -1097,7 +1097,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 //             return error::stack_false;
 //         }
 
-// #ifndef BITPRIM_CURRENCY_BCH
+// #ifndef KNUTH_CURRENCY_BCH
 //         // Triggered by embedded push of version and witness program (bip141).
 //         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
 //             // The input script must be a push of the embedded_script (bip141).
@@ -1113,7 +1113,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 // #endif
 //     }
 
-// #ifndef BITPRIM_CURRENCY_BCH
+// #ifndef KNUTH_CURRENCY_BCH
 //     // Witness must be empty if no bip141 or valid witness program (bip141).
 //     if ( ! witnessed && !input_witness.empty()) {
 //         return error::unexpected_witness;
@@ -1131,7 +1131,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 //     auto const& in = tx.inputs()[input];
 //     auto const& prevout = in.previous_output().validation.cache;
 
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
 //     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 // #else
 //     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());

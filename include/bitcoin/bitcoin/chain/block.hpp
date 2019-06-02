@@ -44,8 +44,8 @@
 #include <bitcoin/infrastructure/utility/thread.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
 
-#include <bitprim/common.hpp>
-#include <bitprim/concepts.hpp>
+#include <knuth/common.hpp>
+#include <knuth/concepts.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -84,7 +84,7 @@ public:
     block(chain::header const& header, transaction::list&& transactions);
     block(chain::header const& header, transaction::list const& transactions);
 
-    //Note(bitprim): cannot be defaulted because of the mutex data member.
+    //Note(kth): cannot be defaulted because of the mutex data member.
     block(block const& x);
     block(block&& x) noexcept;
     /// This class is move assignable and copy assignable.
@@ -103,7 +103,7 @@ public:
     static block factory_from_data(data_chunk const& data, bool witness = false);
     static block factory_from_data(std::istream& stream, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     static block factory_from_data(R& source, bool witness = false) {
         block instance;
         instance.from_data(source, witness_val(witness));
@@ -113,7 +113,7 @@ public:
     bool from_data(data_chunk const& data, bool witness = false);
     bool from_data(std::istream& stream, bool witness = false);
 
-    template <Reader R, BITPRIM_IS_READER(R)>
+    template <Reader R, KNUTH_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
         validation.start_deserialize = asio::steady_clock::now();
         block_basis::from_data(source, witness);
@@ -166,7 +166,7 @@ public:
     static size_t locator_size(size_t top);
     static indexes locator_heights(size_t top);
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
@@ -230,6 +230,6 @@ private:
 }  // namespace chain
 }  // namespace libbitcoin
 
-//#include <bitprim/concepts_undef.hpp>
+//#include <knuth/concepts_undef.hpp>
 
 #endif

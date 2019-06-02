@@ -290,7 +290,7 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
 //-----------------------------------------------------------------------------
 
 size_t output::signature_operations(bool bip141) const {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
     // Penalize quadratic signature operations (bip141).

@@ -61,7 +61,7 @@ enum rule_fork : uint32_t {
     bip113_rule = 1u << 10,
 
     //TODO(fernando): check if we have to cancel the following values for coins not equal to BCH
-// #ifdef BITPRIM_CURRENCY_BCH
+// #ifdef KNUTH_CURRENCY_BCH
     cash_low_s_rule = 1u << 15,
     // cash_monolith_opcodes = 1u << 16,
     cash_verify_flags_script_enable_sighash_forkid = 1u << 16,
@@ -69,7 +69,7 @@ enum rule_fork : uint32_t {
     cash_checkdatasig = 1u << 18,
     cash_schnorr = 1u << 19,
     cash_segwit_recovery = 1u << 20,
-// #endif //BITPRIM_CURRENCY_BCH
+// #endif //KNUTH_CURRENCY_BCH
 
     /// Segregated witness consensus layer (soft fork, feature).
     bip141_rule = 1u << 11,

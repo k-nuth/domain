@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2016-2018 Bitprim Inc.
+ * Copyright (c) 2016-2018 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,13 +27,13 @@
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
 
-#include <bitprim/keoken/message/base.hpp>
-#include <bitprim/keoken/message/create_asset.hpp>
-#include <bitprim/keoken/message/send_tokens.hpp>
-#include <bitprim/keoken/transaction_extractor.hpp>
-#include <bitprim/keoken/utility.hpp>
+#include <knuth/keoken/message/base.hpp>
+#include <knuth/keoken/message/create_asset.hpp>
+#include <knuth/keoken/message/send_tokens.hpp>
+#include <knuth/keoken/transaction_extractor.hpp>
+#include <knuth/keoken/utility.hpp>
 
-using namespace bitprim::keoken;
+using namespace knuth::keoken;
 
 using libbitcoin::base16_literal;
 using libbitcoin::data_chunk;
@@ -203,7 +203,7 @@ TEST_CASE("[test_get_keoken_output_create_asset_valid]") {
 
     auto msg = message::create_asset::factory_from_data(source);
     auto name = msg.name();
-    REQUIRE(name == "Bitprim");
+    REQUIRE(name == "Knuth");
 
     auto amount = msg.amount();
     REQUIRE(amount == 1000000);

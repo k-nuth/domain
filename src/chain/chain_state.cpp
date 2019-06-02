@@ -98,7 +98,7 @@ inline bool bip9_bit0_active(size_t height, bool mainnet, bool testnet) {
 }
 
 inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet) {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
@@ -108,7 +108,7 @@ inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet
 }
 
 inline bool bip9_bit1_active(size_t height, bool mainnet, bool testnet) {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
@@ -121,7 +121,7 @@ inline bool bip34(size_t height, bool frozen, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return frozen &&
            ((mainnet && height >= mainnet_bip34_freeze) || (testnet && height >= testnet_bip34_freeze) || (regtest
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
                                                                                                            && height >= regtest_bip34_freeze
 #endif
                                                                                                            ));
@@ -151,7 +151,7 @@ inline uint32_t bits_high(chain_state::data const& values) {
     return values.bits.ordered.back();
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
     return target + (target >> 2);
 }
@@ -185,18 +185,18 @@ bool chain_state::is_graviton_enabled() const {
     return is_mtp_activated(median_time_past(), graviton_activation_time());
 }
 
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 // Statics.
 // activation
 //-----------------------------------------------------------------------------
 
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
         // , magnetic_anomaly_t magnetic_anomaly_activation_time
         , great_wall_t great_wall_activation_time
         , graviton_t graviton_activation_time
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
     auto const version = values.version.self;
@@ -255,7 +255,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bip30_rule & forks);
     }
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
     if (bip34_ice) {
         result.forks |= (rule_fork::bip34_rule & forks);
     }
@@ -285,7 +285,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     if (bip9_bit0_active(values.bip9_bit0_hash, mainnet, testnet)) {
         result.forks |= (rule_fork::bip9_bit0_group & forks);
     }
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     // Activate the segwit rules only if not bch
     // bip9_bit1 forks are enforced above the bip9_bit1 checkpoint.
     if (bip9_bit1_active(values.bip9_bit1_hash, mainnet, testnet)) {
@@ -304,7 +304,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.minimum_version = first_version;
     }
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     // if (is_bch_daa_enabled(median_time_past(values, 0))) {
     //     result.forks |= (rule_fork::cash_low_s_rule & forks);
     // }
@@ -317,7 +317,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::cash_low_s_rule & forks);
     }
 
-    //Note(bitprim): the Bitcoin-ABC Consensus rules no longer uses this flag.
+    //Note(kth): the Bitcoin-ABC Consensus rules no longer uses this flag.
     // if (is_monolith_enabled(values.height, forks)) {
     //     result.forks |= (rule_fork::cash_monolith_opcodes & forks);
     // }
@@ -353,7 +353,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     //     extraFlags |= SCRIPT_ENABLE_SCHNORR;
     // }
 
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     return result;
 }
@@ -363,11 +363,11 @@ size_t chain_state::bits_count(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const easy_work = testnet && retarget && !is_retarget_height(height);
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return easy_work ? std::min(height, retargeting_interval) : std::min(height, chain_state_timestamp_count);
 #else
     return easy_work ? std::min(height, retargeting_interval) : 1;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 }
 
 size_t chain_state::version_count(size_t height, uint32_t forks) {
@@ -382,11 +382,11 @@ size_t chain_state::version_count(size_t height, uint32_t forks) {
 }
 
 size_t chain_state::timestamp_count(size_t height, uint32_t /*unused*/) {
-#ifdef BITPRIM_CURRENCY_BCH
-    return std::min(height, chain_state_timestamp_count);  //TODO(bitprim): check what happens with Bitcoin Legacy...?
+#ifdef KNUTH_CURRENCY_BCH
+    return std::min(height, chain_state_timestamp_count);  //TODO(kth): check what happens with Bitcoin Legacy...?
 #else
     return std::min(height, median_time_past_interval);
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 }
 
 size_t chain_state::retarget_height(size_t height, uint32_t forks) {
@@ -422,7 +422,7 @@ size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks) {
 }
 
 size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     return map::unrequested;
 #endif
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
@@ -436,7 +436,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 // median_time_past
 //-----------------------------------------------------------------------------
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 
 // inline size_t chain_state::uahf_height(size_t height, uint32_t forks) {
 //     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
@@ -452,7 +452,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 //     auto const mainnet = retarget && !testnet;
 
 //     if ( ! mainnet && ! testnet) {
-//         return 0; // Note(bitprim): regtest activate at block 0
+//         return 0; // Note(kth): regtest activate at block 0
 //     }
 
 //     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
@@ -468,7 +468,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 //     auto const mainnet = retarget && !testnet;
 
 //     if ( ! mainnet && ! testnet) {
-//         return true;  // Note(bitprim): regtest activate at block 0
+//         return true;  // Note(kth): regtest activate at block 0
 //     }
 
 //     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
@@ -482,7 +482,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 //     auto const mainnet = retarget && !testnet;
 
 //     if ( ! mainnet && ! testnet) {
-//         return true; // Note(bitprim): regtest activate at block 0
+//         return true; // Note(kth): regtest activate at block 0
 //     }
 
 //     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
@@ -500,7 +500,7 @@ bool chain_state::is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_
 
     // if ( ! mainnet && ! testnet) {
     if ( ! retarget && ! testnet) {
-        return true;  // Note(bitprim): regtest activate at block 0
+        return true;  // Note(kth): regtest activate at block 0
     }
 
     auto const activation_height = testnet ? testnet_height : mainnet_height;
@@ -538,11 +538,11 @@ bool chain_state::is_magnetic_anomaly_enabled(size_t height, uint32_t forks) {
 // Complete after the hard fork
 
 
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
 typename chain_state::timestamps::const_iterator
 timestamps_position(chain_state::timestamps const& times, bool tip) {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     if (tip) {
         if (times.size() >= bitcoin_cash_offset_tip) {
             return times.begin() + bitcoin_cash_offset_tip;
@@ -552,7 +552,7 @@ timestamps_position(chain_state::timestamps const& times, bool tip) {
             return times.begin() + bitcoin_cash_offset_tip_minus_6;
         }
     }
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     if (times.size() > 11) {
         return times.begin() + (times.size() - 11);
@@ -611,7 +611,7 @@ inline constexpr auto select_0_2(T&& a, U&& b, R r) FN(
 #undef FN
 // ------------------------------------------------------------------------------------------------------------
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 
 // DAA, New algorithm: 2017-Nov-13 Hard fork
 uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
@@ -658,7 +658,7 @@ uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
 
     return compact(nextTarget).normal();
 }
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 // work_required
 //-----------------------------------------------------------------------------
@@ -676,12 +676,12 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
 
     auto last_time_span = median_time_past(values, 0, true);
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     // bool const daa_active = is_bch_daa_enabled(last_time_span);
     bool const daa_active = is_daa_enabled(values.height, forks);
 #else
     bool const daa_active = false;
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     if (is_retarget_height(values.height) && !(daa_active)) {
         return work_required_retarget(values);
@@ -691,7 +691,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
         return easy_work_required(values, daa_active);
     }
 
-    // #ifdef BITPRIM_CURRENCY_BCH
+    // #ifdef KNUTH_CURRENCY_BCH
     //     if (values.height >= bch_activation_height) {
     //         if ( ! daa_active) {
     //             auto six_time_span = median_time_past(values, 0, false);
@@ -703,9 +703,9 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     //             return cash_difficulty_adjustment(values);
     // 	    }
     //     }
-    // #endif //BITPRIM_CURRENCY_BCH
+    // #endif //KNUTH_CURRENCY_BCH
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     if (is_uahf_enabled(values.height, forks)) {
         if (is_daa_enabled(values.height, forks)) {
             return cash_difficulty_adjustment(values);
@@ -717,12 +717,12 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
             return work_required_adjust_cash(values);
         }
     }
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
     return bits_high(values);
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 uint32_t chain_state::work_required_adjust_cash(data const& values) {
     const compact bits(bits_high(values));
     uint256_t target(bits);
@@ -730,13 +730,13 @@ uint32_t chain_state::work_required_adjust_cash(data const& values) {
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 }
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 // [CalculateNextWorkRequired]
 uint32_t chain_state::work_required_retarget(data const& values) {
     const compact bits(bits_high(values));
 
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
     uint256_t target(bits);
     static uint256_t const pow_limit("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     // hash_number retarget_new;
@@ -764,7 +764,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 
-#else   //BITPRIM_CURRENCY_LTC
+#else   //KNUTH_CURRENCY_LTC
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
     BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
 
@@ -774,7 +774,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
     // The proof_of_work_limit constant is pre-normalized.
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
-#endif  //BITPRIM_CURRENCY_LTC
+#endif  //KNUTH_CURRENCY_LTC
 }
 
 // Get the bounded total time spanning the highest 2016 blocks.
@@ -802,11 +802,11 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
     auto& bits = values.bits.ordered;
 
     if (daa_active) {
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
         return cash_difficulty_adjustment(values);
 #else
 //Note: Could not happend: DAA and not BCH
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
     }
     // Reverse iterate the ordered-by-height list of header bits.
     for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit) {
@@ -959,7 +959,7 @@ chain_state::data chain_state::to_pool(chain_state const& top) {
     // If promoting from retarget height, move that timestamp into retarget.
     if (retarget && is_retarget_height(height - 1u)) {
         // The first block after a retarget saves the "retarget block" timestamp for future validations
-#ifdef BITPRIM_CURRENCY_LTC
+#ifdef KNUTH_CURRENCY_LTC
         // LTC retarget function is like BTC/BCH but uses the index -1.
         // data.timestamps.orderder.back() = current block timestamp = data.timestamp.self (this is used for BTC)
         // data.timestamps.orderder.at(size-2) = retarget block timestamp
@@ -986,19 +986,19 @@ chain_state::data chain_state::to_pool(chain_state const& top) {
 // This generates a state for the pool above the presumed top block state.
 chain_state::chain_state(chain_state const& top)
     : data_(to_pool(top)), forks_(top.forks_), checkpoints_(top.checkpoints_), active_(activation(data_, forks_
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
             // , top.magnetic_anomaly_activation_time_
             , top.great_wall_activation_time_
             , top.graviton_activation_time_
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
         )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(top.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(top.great_wall_activation_time_)
       , graviton_activation_time_(top.graviton_activation_time_)
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 {
 }
 
@@ -1033,7 +1033,7 @@ chain_state::data chain_state::to_block(chain_state const& pool,
         data.bip9_bit0_hash = data.hash;
     }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet))
         data.bip9_bit1_hash = data.hash;
@@ -1046,19 +1046,19 @@ chain_state::data chain_state::to_block(chain_state const& pool,
 // This assumes that the pool state is the same height as the block.
 chain_state::chain_state(chain_state const& pool, block const& block)
     : data_(to_block(pool, block)), forks_(pool.forks_), checkpoints_(pool.checkpoints_), active_(activation(data_, forks_
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
         // , pool.magnetic_anomaly_activation_time_
         , pool.great_wall_activation_time_
         , pool.graviton_activation_time_
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
         )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(pool.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(pool.great_wall_activation_time_)
       , graviton_activation_time_(pool.graviton_activation_time_)
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 {}
 
 chain_state::data chain_state::to_header(chain_state const& parent,
@@ -1091,7 +1091,7 @@ chain_state::data chain_state::to_header(chain_state const& parent,
         data.bip9_bit0_hash = data.hash;
     }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet))
         data.bip9_bit1_hash = data.hash;
@@ -1104,44 +1104,44 @@ chain_state::data chain_state::to_header(chain_state const& parent,
 // This assumes that parent is the state of the header's previous block.
 chain_state::chain_state(chain_state const& parent, header const& header)
     : data_(to_header(parent, header)), forks_(parent.forks_), checkpoints_(parent.checkpoints_), active_(activation(data_, forks_
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
         // , parent.magnetic_anomaly_activation_time_
         , parent.great_wall_activation_time_
         , parent.graviton_activation_time_
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
                                                                                                                      )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(parent.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(parent.great_wall_activation_time_)
       , graviton_activation_time_(parent.graviton_activation_time_)
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 {}
 
 // Constructor (from raw data).
 // The allow_collisions hard fork is always activated (not configurable).
 chain_state::chain_state(data&& values, checkpoints const& checkpoints, uint32_t forks
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
         // , magnetic_anomaly_t magnetic_anomaly_activation_time
         , great_wall_t great_wall_activation_time
         , graviton_t graviton_activation_time
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
                          )
     : data_(std::move(values)), forks_(forks | rule_fork::allow_collisions), checkpoints_(checkpoints), active_(activation(data_, forks_
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
             // , magnetic_anomaly_activation_time
             , great_wall_activation_time
             , graviton_activation_time
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
                                                                                                                            )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
       , great_wall_activation_time_(great_wall_activation_time)
       , graviton_activation_time_(graviton_activation_time)
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 {
 }
 
@@ -1175,7 +1175,7 @@ uint32_t chain_state::work_required() const {
     return work_required_;
 }
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 // uint64_t chain_state::monolith_activation_time() const {
 //     return monolith_activation_time_;
 // }
@@ -1191,7 +1191,7 @@ great_wall_t chain_state::great_wall_activation_time() const {
 graviton_t chain_state::graviton_activation_time() const {
     return graviton_activation_time_;
 }
-#endif  //BITPRIM_CURRENCY_BCH
+#endif  //KNUTH_CURRENCY_BCH
 
 // Forks.
 //-----------------------------------------------------------------------------

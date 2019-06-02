@@ -101,7 +101,7 @@ bool get_data::from_data(uint32_t version, std::istream& stream) {
     return from_data(version, stream_r);
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
 void get_data::to_witness() {
     auto const convert = [](inventory_vector& element) {
         element.to_witness();

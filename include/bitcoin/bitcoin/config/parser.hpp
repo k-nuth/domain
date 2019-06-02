@@ -111,7 +111,7 @@ public:
         config::checkpoint::list checkpoints;
 
     //TODO(fernando): Set Litecoin checkpoints
-#if defined(BITPRIM_CURRENCY_BCH)
+#if defined(KNUTH_CURRENCY_BCH)
         if (get_network(easy_blocks, retarget) == config::settings::testnet) {
             // BCH Testnet
             checkpoints.reserve(17);
@@ -211,7 +211,7 @@ public:
             checkpoints.reserve(1);
             checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);
         }
-#elif defined(BITPRIM_CURRENCY_BTC)
+#elif defined(KNUTH_CURRENCY_BTC)
         if (get_network(easy_blocks, retarget) == config::settings::testnet) {
             // BTC Testnet
             checkpoints.reserve(15);
@@ -277,7 +277,7 @@ public:
             checkpoints.reserve(1);
             checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);    //TODO(fernando): check if BTC-Regtest-genesis == BCH-Regtest-genesis
         }
-#endif //defined(BITPRIM_CURRENCY_BCH)
+#endif //defined(KNUTH_CURRENCY_BCH)
 
         return checkpoints;
     }

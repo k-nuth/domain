@@ -308,8 +308,8 @@ BOOST_AUTO_TEST_CASE(heading__maximum_size__always__matches_satoshi_fixed_size) 
     BOOST_REQUIRE_EQUAL(heading::satoshi_fixed_size(), heading::maximum_size());
 }
 
-#ifndef BITPRIM_CURRENCY_BCH
-// TODO(bitprim): This test is broken for networks bigger than 4Mbs
+#ifndef KNUTH_CURRENCY_BCH
+// TODO(kth): This test is broken for networks bigger than 4Mbs
 //BOOST_AUTO_TEST_CASE(heading__maximum_payload_size__non_witness__matches_expected)
 //{
 //    static const size_t expected = 3u + (sizeof(uint32_t) + hash_size) * 50000u;

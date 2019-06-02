@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BITPRIM_BUILT_IN_TYPE_HPP_
-#define BITPRIM_BUILT_IN_TYPE_HPP_
+#ifndef KNUTH_BUILT_IN_TYPE_HPP_
+#define KNUTH_BUILT_IN_TYPE_HPP_
 
 // #include <cstddef>
 // #include <cstdint>
@@ -46,4 +46,4 @@ private:
 
 }  // namespace libbitcoin
 
-#endif // BITPRIM_BUILT_IN_TYPE_HPP_
+#endif // KNUTH_BUILT_IN_TYPE_HPP_

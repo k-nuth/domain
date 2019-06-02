@@ -12,13 +12,13 @@
  * For interpretation of the versioning scheme see: http://semver.org
  */
 
-#ifdef BITPRIM_PROJECT_VERSION
-#define BITPRIM_DOMAIN_VERSION BITPRIM_PROJECT_VERSION
+#ifdef KNUTH_PROJECT_VERSION
+#define KNUTH_DOMAIN_VERSION KNUTH_PROJECT_VERSION
 #else
-#define BITPRIM_DOMAIN_VERSION "0.0.0"
+#define KNUTH_DOMAIN_VERSION "0.0.0"
 #endif
 
-// #define LIBBITCOIN_VERSION BITPRIM_DOMAIN_VERSION
+// #define LIBBITCOIN_VERSION KNUTH_DOMAIN_VERSION
 
 namespace libbitcoin {
 namespace domain {

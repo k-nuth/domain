@@ -29,7 +29,7 @@
 namespace libbitcoin {
 namespace message {
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 constexpr size_t max_index = max_uint32;
 #else
 constexpr size_t max_index = max_uint16;
@@ -124,10 +124,10 @@ void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t prefilled_transaction::serialized_size(uint32_t /*version*/) const {
-    // TODO(bitprim): serialize size should use witness for ! BCH
+    // TODO(kth): serialize size should use witness for ! BCH
     return message::variable_uint_size(index_) +
            transaction_.serialized_size(/*wire*/ true, witness_default()
-#ifdef BITPRIM_CACHED_RPC_DATA           
+#ifdef KNUTH_CACHED_RPC_DATA           
                                       , /*unconfirmed*/ false
 #endif
                                        );

@@ -98,7 +98,7 @@ ptree property_list(chain::input const& tx_input) {
     tree.put("script", tx_input.script().to_string(rule_fork::all_rules));
     tree.put("sequence", tx_input.sequence());
 
-#ifndef BITPRIM_CURRENCY_BCH
+#ifndef KNUTH_CURRENCY_BCH
     if (tx_input.is_segregated()) {
         tree.put("witness", tx_input.witness().to_string());
     }

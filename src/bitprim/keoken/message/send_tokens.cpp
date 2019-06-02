@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2017-2018 Bitprim Inc.
+ * Copyright (c) 2017-2019 Knuth Project.
  *
- * This file is part of Bitprim.
+ * This file is part of Knuth Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitprim/keoken/message/send_tokens.hpp>
+#include <knuth/keoken/message/send_tokens.hpp>
 
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/istream_reader.hpp>
 #include <bitcoin/infrastructure/utility/ostream_writer.hpp>
 
-namespace bitprim {
+namespace knuth {
 namespace keoken {
 namespace message {
 
@@ -151,4 +151,4 @@ void send_tokens::set_amount(amount_t x) {
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace bitprim
+}  // namespace knuth
