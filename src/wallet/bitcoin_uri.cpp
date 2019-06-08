@@ -49,7 +49,7 @@ bitcoin_uri::bitcoin_uri(std::string const& uri, bool strict)
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-bitcoin_uri::operator const bool() const {
+bitcoin_uri::operator bool() const {
     // An uninitialized URI returns false.
     return !address_.empty() || !query_.empty() || !scheme_.empty();
 }
