@@ -492,7 +492,7 @@ interpreter::result interpreter::op_nonzero(program& program) {
 
 inline
 interpreter::result interpreter::op_add(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_add;
     }
@@ -504,7 +504,7 @@ interpreter::result interpreter::op_add(program& program) {
 
 inline
 interpreter::result interpreter::op_sub(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_sub;
     }
@@ -516,7 +516,7 @@ interpreter::result interpreter::op_sub(program& program) {
 
 inline
 interpreter::result interpreter::op_bool_and(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_bool_and;
     }
@@ -527,7 +527,7 @@ interpreter::result interpreter::op_bool_and(program& program) {
 
 inline
 interpreter::result interpreter::op_bool_or(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_bool_or;
     }
@@ -538,7 +538,7 @@ interpreter::result interpreter::op_bool_or(program& program) {
 
 inline
 interpreter::result interpreter::op_num_equal(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_num_equal;
     }
@@ -549,7 +549,7 @@ interpreter::result interpreter::op_num_equal(program& program) {
 
 inline
 interpreter::result interpreter::op_num_equal_verify(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_num_equal_verify1;
     }
@@ -559,7 +559,7 @@ interpreter::result interpreter::op_num_equal_verify(program& program) {
 
 inline
 interpreter::result interpreter::op_num_not_equal(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_num_not_equal;
     }
@@ -570,7 +570,7 @@ interpreter::result interpreter::op_num_not_equal(program& program) {
 
 inline
 interpreter::result interpreter::op_less_than(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_less_than;
     }
@@ -581,7 +581,7 @@ interpreter::result interpreter::op_less_than(program& program) {
 
 inline
 interpreter::result interpreter::op_greater_than(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_greater_than;
     }
@@ -592,7 +592,7 @@ interpreter::result interpreter::op_greater_than(program& program) {
 
 inline
 interpreter::result interpreter::op_less_than_or_equal(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_less_than_or_equal;
     }
@@ -604,7 +604,7 @@ interpreter::result interpreter::op_less_than_or_equal(program& program) {
 inline
 interpreter::result interpreter::op_greater_than_or_equal(
     program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_greater_than_or_equal;
     }
@@ -615,7 +615,7 @@ interpreter::result interpreter::op_greater_than_or_equal(
 
 inline
 interpreter::result interpreter::op_min(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_min;
     }
@@ -626,7 +626,7 @@ interpreter::result interpreter::op_min(program& program) {
 
 inline
 interpreter::result interpreter::op_max(program& program) {
-    number first, second;
+    number first, second; //NOLINT
     if ( ! program.pop_binary(first, second)) {
         return error::op_max;
     }
@@ -637,7 +637,7 @@ interpreter::result interpreter::op_max(program& program) {
 
 inline
 interpreter::result interpreter::op_within(program& program) {
-    number first, second, third;
+    number first, second, third; //NOLINT
     if ( ! program.pop_ternary(first, second, third)) {
         return error::op_within;
     }
@@ -670,7 +670,7 @@ inline
 interpreter::result interpreter::op_sha256(program& program) {
     if (program.empty()) {
         return error::op_sha256;
-}
+    }
 
     program.push_move(sha256_hash_chunk(program.pop()));
     return error::success;
