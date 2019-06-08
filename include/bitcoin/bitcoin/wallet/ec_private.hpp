@@ -94,7 +94,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, ec_private const& of);
 
     /// Cast operators.
-    operator bool const() const;
+    operator bool() const;
     operator ec_secret const&() const;
 
     /// Serializer.
@@ -102,10 +102,10 @@ public:
 
     /// Accessors.
     ec_secret const& secret() const;
-    uint16_t const version() const;
-    uint8_t const payment_version() const;
-    uint8_t const wif_version() const;
-    bool const compressed() const;
+    uint16_t version() const;
+    uint8_t payment_version() const;
+    uint8_t wif_version() const;
+    bool compressed() const;
 
     /// Methods.
     ec_public to_public() const;

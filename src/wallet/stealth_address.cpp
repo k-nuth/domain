@@ -211,11 +211,11 @@ stealth_address stealth_address::from_stealth(binary const& filter,
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-stealth_address::operator bool const() const {
+stealth_address::operator bool() const {
     return valid_;
 }
 
-stealth_address::operator data_chunk const() const {
+stealth_address::operator data_chunk() const {
     return to_chunk();
 }
 

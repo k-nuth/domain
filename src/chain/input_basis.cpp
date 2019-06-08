@@ -290,7 +290,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
 #ifdef KNUTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
-    chain::script witness, embedded;
+    
     auto const& prevout = previous_output_.validation.cache.script();
     ////BITCOIN_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");
 
@@ -300,13 +300,15 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
     // Count heavy sigops in the input script.
     auto sigops = script_.sigops(false) * sigops_factor;
 
-#ifndef KNUTH_CURRENCY_BCH
+#if ! defined(KNUTH_CURRENCY_BCH)
+    chain::script witness;
     if (bip141 && witness_.extract_sigop_script(witness, prevout)) {
         // Add sigops in the witness (bip141).
         return sigops + witness.sigops(true);
     }
 #endif
 
+    chain::script embedded;
     if (bip16 && extract_embedded_script(embedded)) {
 #ifndef KNUTH_CURRENCY_BCH
         if (bip141 && witness_.extract_sigop_script(witness, embedded)) {

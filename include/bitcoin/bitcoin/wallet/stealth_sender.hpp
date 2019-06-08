@@ -47,7 +47,7 @@ public:
                    uint8_t version = payment_address::mainnet_p2kh);
 
     /// Caller must test after construct.
-    operator bool const() const;
+    operator bool() const;
 
     /// Attach this script to the output before the send output.
     chain::script const& stealth_script() const;

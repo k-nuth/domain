@@ -87,7 +87,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, payment_address const& of);
 
     /// Cast operators.
-    operator bool const() const;
+    operator bool() const;
     operator short_hash const&() const;
 
     /// Serializer.

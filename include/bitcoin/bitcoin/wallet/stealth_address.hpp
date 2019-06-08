@@ -65,8 +65,8 @@ public:
     friend std::ostream& operator<<(std::ostream& out, stealth_address const& of);
 
     /// Cast operators.
-    operator bool const() const;
-    operator data_chunk const() const;
+    operator bool() const;
+    operator data_chunk() const;
 
     /// Serializer.
     std::string encoded() const;

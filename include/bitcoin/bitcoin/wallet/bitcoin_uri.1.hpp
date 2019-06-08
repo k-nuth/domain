@@ -54,7 +54,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from);
 
     /// Test whether the URI has been initialized.
-    operator bool const() const;
+    operator bool() const;
 
     /// Get the serialized URI representation.
     std::string encoded() const;

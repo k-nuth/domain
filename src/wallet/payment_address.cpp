@@ -277,7 +277,7 @@ payment_address payment_address::from_script(chain::script const& script, uint8_
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-payment_address::operator bool const() const {
+payment_address::operator bool() const {
     return valid_;
 }
 

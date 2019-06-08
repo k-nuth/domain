@@ -48,7 +48,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, ek_private const& of);
 
     /// Cast operators.
-    operator bool const() const;
+    operator bool() const;
     operator encrypted_private const&() const;
 
     /// Serializer.
