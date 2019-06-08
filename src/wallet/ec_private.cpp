@@ -170,19 +170,19 @@ ec_secret const& ec_private::secret() const {
     return secret_;
 }
 
-uint16_t const ec_private::version() const {
+uint16_t ec_private::version() const {
     return version_;
 }
 
-uint8_t const ec_private::payment_version() const {
+uint8_t ec_private::payment_version() const {
     return to_address_prefix(version_);
 }
 
-uint8_t const ec_private::wif_version() const {
+uint8_t ec_private::wif_version() const {
     return to_wif_prefix(version_);
 }
 
-bool const ec_private::compressed() const {
+bool ec_private::compressed() const {
     return compress_;
 }
 
