@@ -57,11 +57,11 @@ script::script(script const& x)
     : script(x.value_) {
 }
 
-data_chunk const script::to_data() const {
+data_chunk script::to_data() const {
     return value_.to_data(false);
 }
 
-std::string const script::to_string() const {
+std::string script::to_string() const {
     static constexpr auto flags = machine::rule_fork::all_rules;
     return value_.to_string(flags);
 }
