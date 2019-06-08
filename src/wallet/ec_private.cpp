@@ -35,20 +35,20 @@
 namespace libbitcoin {
 namespace wallet {
 
-const uint8_t ec_private::compressed_sentinel = 0x01;
+uint8_t const ec_private::compressed_sentinel = 0x01;
 #ifdef KNUTH_CURRENCY_LTC
-const uint8_t ec_private::mainnet_wif = 0xb0;
-const uint8_t ec_private::mainnet_p2kh = 0x30;
+uint8_t const ec_private::mainnet_wif = 0xb0;
+uint8_t const ec_private::mainnet_p2kh = 0x30;
 #else   //KNUTH_CURRENCY_LTC
-const uint8_t ec_private::mainnet_wif = 0x80;
-const uint8_t ec_private::mainnet_p2kh = 0x00;
+uint8_t const ec_private::mainnet_wif = 0x80;
+uint8_t const ec_private::mainnet_p2kh = 0x00;
 #endif  //KNUTH_CURRENCY_LTC
 
-const uint16_t ec_private::mainnet = to_version(mainnet_p2kh, mainnet_wif);
+uint16_t const ec_private::mainnet = to_version(mainnet_p2kh, mainnet_wif);
 
-const uint8_t ec_private::testnet_wif = 0xef;
-const uint8_t ec_private::testnet_p2kh = 0x6f;
-const uint16_t ec_private::testnet = to_version(testnet_p2kh, testnet_wif);
+uint8_t const ec_private::testnet_wif = 0xef;
+uint8_t const ec_private::testnet_p2kh = 0x6f;
+uint16_t const ec_private::testnet = to_version(testnet_p2kh, testnet_wif);
 
 ec_private::ec_private()
     : secret_(null_hash) 
@@ -118,7 +118,7 @@ ec_private ec_private::from_compressed(wif_compressed const& wif, uint8_t addres
         return ec_private();
     }
 
-    const uint16_t version = to_version(address_version, wif.front());
+    uint16_t const version = to_version(address_version, wif.front());
     auto const secret = slice<1, ec_secret_size + 1>(wif);
     return ec_private(secret, version, true);
 }
@@ -128,7 +128,7 @@ ec_private ec_private::from_uncompressed(const wif_uncompressed& wif, uint8_t ad
         return ec_private();
     }
 
-    const uint16_t version = to_version(address_version, wif.front());
+    uint16_t const version = to_version(address_version, wif.front());
     auto const secret = slice<1, ec_secret_size + 1>(wif);
     return ec_private(secret, version, false);
 }
@@ -170,19 +170,19 @@ ec_secret const& ec_private::secret() const {
     return secret_;
 }
 
-const uint16_t ec_private::version() const {
+uint16_t const ec_private::version() const {
     return version_;
 }
 
-const uint8_t ec_private::payment_version() const {
+uint8_t const ec_private::payment_version() const {
     return to_address_prefix(version_);
 }
 
-const uint8_t ec_private::wif_version() const {
+uint8_t const ec_private::wif_version() const {
     return to_wif_prefix(version_);
 }
 
-const bool ec_private::compressed() const {
+bool const ec_private::compressed() const {
     return compress_;
 }
 

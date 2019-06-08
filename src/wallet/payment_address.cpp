@@ -44,15 +44,15 @@ namespace wallet {
 using namespace bc::machine;
 
 #ifdef KNUTH_CURRENCY_LTC
-const uint8_t payment_address::mainnet_p2kh = 0x30;
+uint8_t const payment_address::mainnet_p2kh = 0x30;
 #else
-const uint8_t payment_address::mainnet_p2kh = 0x00;
+uint8_t const payment_address::mainnet_p2kh = 0x00;
 #endif
 
-const uint8_t payment_address::mainnet_p2sh = 0x05;
+uint8_t const payment_address::mainnet_p2sh = 0x05;
 
-const uint8_t payment_address::testnet_p2kh = 0x6f;
-const uint8_t payment_address::testnet_p2sh = 0xc4;
+uint8_t const payment_address::testnet_p2kh = 0x6f;
+uint8_t const payment_address::testnet_p2sh = 0xc4;
 
 #ifdef KNUTH_CURRENCY_BCH
 std::string const payment_address::cashaddr_prefix_mainnet = "bitcoincash";
@@ -277,7 +277,7 @@ payment_address payment_address::from_script(chain::script const& script, uint8_
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-payment_address::operator const bool() const {
+payment_address::operator bool const() const {
     return valid_;
 }
 

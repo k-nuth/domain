@@ -37,10 +37,10 @@ namespace wallet {
 class BC_API stealth_address {
 public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
-    static const uint8_t mainnet_p2kh;
+    static uint8_t const mainnet_p2kh;
 
     /// If set and the spend_keys contains the scan_key then the key is reused.
-    static const uint8_t reuse_key_flag;
+    static uint8_t const reuse_key_flag;
 
     /// This is advisory in nature and likely to be enforced by a server.
     static const size_t min_filter_bits;
@@ -65,7 +65,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, stealth_address const& of);
 
     /// Cast operators.
-    operator const bool() const;
+    operator bool const() const;
     operator data_chunk const() const;
 
     /// Serializer.

@@ -33,13 +33,13 @@
 namespace libbitcoin {
 namespace wallet {
 
-const uint8_t ec_public::compressed_even = 0x02;
-const uint8_t ec_public::compressed_odd = 0x03;
-const uint8_t ec_public::uncompressed = 0x04;
+uint8_t const ec_public::compressed_even = 0x02;
+uint8_t const ec_public::compressed_odd = 0x03;
+uint8_t const ec_public::uncompressed = 0x04;
 #ifdef KNUTH_CURRENCY_LTC
-const uint8_t ec_public::mainnet_p2kh = 0x30;
+uint8_t const ec_public::mainnet_p2kh = 0x30;
 #else
-const uint8_t ec_public::mainnet_p2kh = 0x00;
+uint8_t const ec_public::mainnet_p2kh = 0x00;
 #endif
 
 ec_public::ec_public()
@@ -130,7 +130,7 @@ ec_public ec_public::from_point(ec_uncompressed const& point, bool compress) {
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-ec_public::operator const bool() const {
+ec_public::operator bool const() const {
     return valid_;
 }
 
@@ -159,7 +159,7 @@ ec_compressed const& ec_public::point() const {
     return point_;
 }
 
-const bool ec_public::compressed() const {
+bool const ec_public::compressed() const {
     return compress_;
 }
 

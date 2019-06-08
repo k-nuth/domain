@@ -40,7 +40,7 @@ public:
                      uint8_t version = payment_address::mainnet_p2kh);
 
     /// Caller must test after construct.
-    operator const bool() const;
+    operator bool const() const;
 
     /// Get the stealth address.
     const wallet::stealth_address& stealth_address() const;
@@ -54,7 +54,7 @@ public:
                         ec_compressed const& ephemeral_public) const;
 
 private:
-    const uint8_t version_;
+    uint8_t const version_;
     ec_secret const scan_private_;
     ec_secret const spend_private_;
     ec_compressed spend_public_;

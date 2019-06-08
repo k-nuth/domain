@@ -45,11 +45,11 @@ using payment = byte_array<payment_size>;
 /// A class for working with non-stealth payment addresses.
 class BC_API payment_address {
 public:
-    static const uint8_t mainnet_p2kh;
-    static const uint8_t mainnet_p2sh;
+    static uint8_t const mainnet_p2kh;
+    static uint8_t const mainnet_p2sh;
 
-    static const uint8_t testnet_p2kh;
-    static const uint8_t testnet_p2sh;
+    static uint8_t const testnet_p2kh;
+    static uint8_t const testnet_p2sh;
 
 #ifdef KNUTH_CURRENCY_BCH
     static std::string const cashaddr_prefix_mainnet;
@@ -87,7 +87,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, payment_address const& of);
 
     /// Cast operators.
-    operator const bool() const;
+    operator bool const() const;
     operator short_hash const&() const;
 
     /// Serializer.

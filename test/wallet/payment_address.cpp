@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(payment_address__version__default__mainnet) {
 }
 
 BOOST_AUTO_TEST_CASE(payment_address__version__testnet__testnet) {
-    const uint8_t testnet = 0x6f;
+    uint8_t const testnet = 0x6f;
     const payment_address address(ec_public(COMPRESSED), testnet);
     BOOST_REQUIRE(address);
     BOOST_REQUIRE_EQUAL(address.version(), testnet);

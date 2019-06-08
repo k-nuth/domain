@@ -38,10 +38,10 @@ class payment_address;
 /// ec_public doesn't carry a version for address creation or base58 encoding.
 class BC_API ec_public {
 public:
-    static const uint8_t compressed_even;
-    static const uint8_t compressed_odd;
-    static const uint8_t uncompressed;
-    static const uint8_t mainnet_p2kh;
+    static uint8_t const compressed_even;
+    static uint8_t const compressed_odd;
+    static uint8_t const uncompressed;
+    static uint8_t const mainnet_p2kh;
 
     /// Constructors.
     ec_public();
@@ -63,7 +63,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, ec_public const& of);
 
     /// Cast operators.
-    operator const bool() const;
+    operator bool const() const;
     operator ec_compressed const&() const;
 
     /// Serializer.
@@ -71,10 +71,10 @@ public:
 
     /// Accessors.
     ec_compressed const& point() const;
-    const uint16_t version() const;
-    const uint8_t payment_version() const;
-    const uint8_t wif_version() const;
-    const bool compressed() const;
+    uint16_t const version() const;
+    uint8_t const payment_version() const;
+    uint8_t const wif_version() const;
+    bool const compressed() const;
 
     /// Methods.
     bool to_data(data_chunk& out) const;

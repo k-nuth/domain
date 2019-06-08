@@ -37,8 +37,8 @@ namespace message {
 
 class BC_API send_tokens {
 public:
-    static const uint16_t version = 0;
-    static const uint16_t type = 1;
+    static uint16_t const version = 0;
+    static uint16_t const type = 1;
 
     // Constructors.
     //-------------------------------------------------------------------------

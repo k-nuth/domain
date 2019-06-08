@@ -757,7 +757,7 @@ namespace detail {
     template <typename T>
     struct deferred_false
     // cppcheck-suppress unusedStructMember
-    { static const bool value = false; };
+    { static bool const value = false; };
 
     namespace has_insertion_operator_impl {
         typedef char no;
@@ -780,7 +780,7 @@ namespace detail {
         {
             static std::ostream& s;
             static const DOCTEST_REF_WRAP(T) t;
-            static const bool value = sizeof(testStreamable(s << t)) == sizeof(yes);
+            static bool const value = sizeof(testStreamable(s << t)) == sizeof(yes);
         };
     } // namespace has_insertion_operator_impl
 
@@ -4193,7 +4193,7 @@ namespace detail {
         m_string = getTlsOssResult();
         DOCTEST_ITERATE_THROUGH_REPORTERS(log_message, *this);
 
-        const bool isWarn = m_severity & assertType::is_warn;
+        bool const isWarn = m_severity & assertType::is_warn;
 
         // warn is just a message in this context so we dont treat it as an assert
         if(!isWarn) {
@@ -4312,7 +4312,7 @@ namespace {
         void test_run_end(const TestRunStats& p) override {
             separator_to_stream();
 
-            const bool anythingFailed = p.numTestCasesFailed > 0 || p.numAssertsFailed > 0;
+            bool const anythingFailed = p.numTestCasesFailed > 0 || p.numAssertsFailed > 0;
             s << Color::Cyan << "[doctest] " << Color::None << "test cases: " << std::setw(6)
               << p.numTestCasesPassingFilters << " | "
               << ((p.numTestCasesPassingFilters == 0 || anythingFailed) ? Color::None :

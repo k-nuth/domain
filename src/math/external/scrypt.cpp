@@ -48,7 +48,7 @@
 #endif
 
 static inline uint32_t be32dec(const void* pp) {
-    const uint8_t* p = (uint8_t const*)pp;
+    uint8_t const* p = (uint8_t const*)pp;
     return ((uint32_t)(p[3]) + ((uint32_t)(p[2]) << 8) +
             ((uint32_t)(p[1]) << 16) + ((uint32_t)(p[0]) << 24));
 }
@@ -131,7 +131,7 @@ HMAC_SHA256_Final(unsigned char digest[32], HMAC_SHA256_CTX* ctx) {
  * Compute PBKDF2(passwd, salt, c, dkLen) using HMAC-SHA256 as the PRF, and
  * write the output to buf.  The value dkLen must be at most 32 * (2^32 - 1).
  */
-void PBKDF2_SHA256(const uint8_t* passwd, size_t passwdlen, const uint8_t* salt, size_t saltlen, uint64_t c, uint8_t* buf, size_t dkLen) {
+void PBKDF2_SHA256(uint8_t const* passwd, size_t passwdlen, uint8_t const* salt, size_t saltlen, uint64_t c, uint8_t* buf, size_t dkLen) {
     HMAC_SHA256_CTX PShctx, hctx;
     size_t i;
     uint8_t ivec[4];
@@ -271,7 +271,7 @@ void scrypt_1024_1_1_256_sp_generic(const char* input, char* output, char* scrat
 
     V = (uint32_t*)(((uintptr_t)(scratchpad) + 63) & ~(uintptr_t)(63));
 
-    PBKDF2_SHA256((const uint8_t*)input, 80, (const uint8_t*)input, 80, 1, B, 128);
+    PBKDF2_SHA256((uint8_t const*)input, 80, (uint8_t const*)input, 80, 1, B, 128);
 
     for (k = 0; k < 32; k++)
         X[k] = le32dec(&B[4 * k]);
@@ -292,7 +292,7 @@ void scrypt_1024_1_1_256_sp_generic(const char* input, char* output, char* scrat
     for (k = 0; k < 32; k++)
         le32enc(&B[4 * k], X[k]);
 
-    PBKDF2_SHA256((const uint8_t*)input, 80, B, 128, 1, (uint8_t*)output, 32);
+    PBKDF2_SHA256((uint8_t const*)input, 80, B, 128, 1, (uint8_t*)output, 32);
 }
 
 #if defined(USE_SSE2)

@@ -58,8 +58,8 @@ constexpr size_t min_address_size = version_size + options_size +
 static_assert(binary::bits_per_block == byte_bits,
               "The stealth prefix must use an 8 bit block size.");
 
-const uint8_t stealth_address::mainnet_p2kh = 0x2a;
-const uint8_t stealth_address::reuse_key_flag = 1u << 0u;
+uint8_t const stealth_address::mainnet_p2kh = 0x2a;
+uint8_t const stealth_address::reuse_key_flag = 1u << 0u;
 const size_t stealth_address::min_filter_bits = 1 * byte_bits;
 const size_t stealth_address::max_filter_bits = sizeof(uint32_t) * byte_bits;
 
@@ -211,7 +211,7 @@ stealth_address stealth_address::from_stealth(binary const& filter,
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-stealth_address::operator const bool() const {
+stealth_address::operator bool const() const {
     return valid_;
 }
 

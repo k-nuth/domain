@@ -721,7 +721,7 @@ BOOST_AUTO_TEST_CASE(version__start_height_setter__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(version__relay_accessor__always__returns_initialized_value) {
-    const bool expected = true;
+    bool const expected = true;
     const message::version instance(
         210u,
         1515u,
@@ -745,7 +745,7 @@ BOOST_AUTO_TEST_CASE(version__relay_accessor__always__returns_initialized_value)
 }
 
 BOOST_AUTO_TEST_CASE(version__relay_setter__roundtrip__success) {
-    const bool expected = true;
+    bool const expected = true;
     message::version instance;
     instance.set_relay(expected);
     BOOST_REQUIRE_EQUAL(expected, instance.relay());

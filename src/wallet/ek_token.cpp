@@ -67,7 +67,7 @@ ek_token ek_token::from_string(std::string const& encoded) {
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-ek_token::operator const bool() const {
+ek_token::operator bool const() const {
     return valid_;
 }
 

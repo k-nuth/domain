@@ -100,9 +100,9 @@ static hash_digest point_hash(ec_compressed const& point) {
 
 static one_byte point_sign(uint8_t byte, hash_digest const& hash) {
     static constexpr uint8_t low_bit_mask = 0x01;
-    const uint8_t last_byte = hash.back();
-    const uint8_t last_byte_odd_field = last_byte & low_bit_mask;
-    const uint8_t sign_byte = byte ^ last_byte_odd_field;
+    uint8_t const last_byte = hash.back();
+    uint8_t const last_byte_odd_field = last_byte & low_bit_mask;
+    uint8_t const sign_byte = byte ^ last_byte_odd_field;
     return to_array(sign_byte);
 }
 

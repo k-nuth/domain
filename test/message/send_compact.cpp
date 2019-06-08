@@ -115,13 +115,13 @@ BOOST_AUTO_TEST_CASE(send_compact__from_data_1__insufficient_version__failure) {
 }
 
 BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_accessor__always__returns_initialized_value) {
-    const bool expected = true;
+    bool const expected = true;
     const message::send_compact instance(expected, 210u);
     BOOST_REQUIRE_EQUAL(expected, instance.high_bandwidth_mode());
 }
 
 BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_setter__roundtrip__success) {
-    const bool expected = true;
+    bool const expected = true;
     message::send_compact instance;
     BOOST_REQUIRE(expected != instance.high_bandwidth_mode());
     instance.set_high_bandwidth_mode(expected);

@@ -45,19 +45,19 @@ using wif_compressed = byte_array<wif_compressed_size>;
 /// Use to pass an ec secret with compresson and version information.
 class BC_API ec_private {
 public:
-    static const uint8_t compressed_sentinel;
+    static uint8_t const compressed_sentinel;
 
     // WIF carries a compression flag for payment address generation but
     // assumes a mapping to payment address version. This is insufficient
     // as a parameterized mapping is required, so we use the same technique as
     // with hd keys, merging the two necessary values into one version.
-    static const uint8_t mainnet_wif;
-    static const uint8_t mainnet_p2kh;
-    static const uint16_t mainnet;
+    static uint8_t const mainnet_wif;
+    static uint8_t const mainnet_p2kh;
+    static uint16_t const mainnet;
 
-    static const uint8_t testnet_wif;
-    static const uint8_t testnet_p2kh;
-    static const uint16_t testnet;
+    static uint8_t const testnet_wif;
+    static uint8_t const testnet_p2kh;
+    static uint16_t const testnet;
 
     static uint8_t to_address_prefix(uint16_t version) {
         return version & 0x00FF;
@@ -94,7 +94,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, ec_private const& of);
 
     /// Cast operators.
-    operator const bool() const;
+    operator bool const() const;
     operator ec_secret const&() const;
 
     /// Serializer.
@@ -102,10 +102,10 @@ public:
 
     /// Accessors.
     ec_secret const& secret() const;
-    const uint16_t version() const;
-    const uint8_t payment_version() const;
-    const uint8_t wif_version() const;
-    const bool compressed() const;
+    uint16_t const version() const;
+    uint8_t const payment_version() const;
+    uint8_t const wif_version() const;
+    bool const compressed() const;
 
     /// Methods.
     ec_public to_public() const;

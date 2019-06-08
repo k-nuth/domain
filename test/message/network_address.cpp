@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE(network_address__ip_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(network_address__port_accessor__always__returns_initialized_value) {
-    const uint16_t port = 123u;
+    uint16_t const port = 123u;
     message::network_address instance(
         734678u,
         5357534u,
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(network_address__port_accessor__always__returns_initialized
 }
 
 BOOST_AUTO_TEST_CASE(network_address__port_setter__roundtrip__success) {
-    const uint16_t port = 853u;
+    uint16_t const port = 853u;
     message::network_address instance;
     BOOST_REQUIRE(port != instance.port());
     instance.set_port(port);

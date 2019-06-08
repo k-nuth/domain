@@ -51,7 +51,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, ek_token const& of);
 
     /// Cast operators.
-    operator const bool() const;
+    operator bool const() const;
     operator encrypted_token const&() const;
 
     /// Serializer.

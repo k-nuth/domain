@@ -47,7 +47,7 @@ public:
                    uint8_t version = payment_address::mainnet_p2kh);
 
     /// Caller must test after construct.
-    operator const bool() const;
+    operator bool const() const;
 
     /// Attach this script to the output before the send output.
     chain::script const& stealth_script() const;
@@ -61,7 +61,7 @@ private:
                     data_chunk const& seed,
                     binary const& filter);
 
-    const uint8_t version_;
+    uint8_t const version_;
     chain::script script_;
     wallet::payment_address address_;
 };
