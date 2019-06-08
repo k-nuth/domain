@@ -841,7 +841,7 @@ hash_digest to_inpoints(transaction_basis const& tx) {
 }
 
 hash_digest to_sequences(transaction_basis const& tx) {
-    auto const sum = [&](size_t total, input const& input) {
+    auto const sum = [&](size_t total, input const& /*input*/) {
         return total + sizeof(uint32_t);
     };
 
