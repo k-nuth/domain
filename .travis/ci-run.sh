@@ -20,6 +20,8 @@ PATH=/home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
 sudo find / -name "clang-tidy"
 clang-tidy --version
 
+pip install kthbuild --upgrade
+
 conan user
 conan --version
 
