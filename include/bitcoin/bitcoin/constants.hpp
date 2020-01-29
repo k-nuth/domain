@@ -36,7 +36,7 @@ namespace libbitcoin {
 // This guards assumptions within the codebase.
 static_assert(sizeof(size_t) >= sizeof(uint32_t), "unsupported size_t");
 
-static_assert(sizeof(short) == 2, "16-bit short assumed");
+static_assert(sizeof(short) == 2, "16-bit short assumed");      //NOLINT
 static_assert(sizeof(int) == 4, "32-bit int assumed");
 
 // Assumption: We assume 8-bit bytes, because 32-bit int and 16-bit short are assumed.
