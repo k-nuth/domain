@@ -25,8 +25,8 @@ pip install kthbuild --upgrade
 conan user
 conan --version
 
-conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
-conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
+conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth || true
+conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim || true
 
 cd /home/conan/project
 
