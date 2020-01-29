@@ -32,7 +32,7 @@ namespace libbitcoin {
 namespace machine {
 
 /// Determine if the fork is enabled in the active forks set.
-//TODO(fernando): duplicated in chain::script (kth-domain)
+//TODO(fernando): duplicated in chain::script (domain)
 static 
 bool is_enabled(uint32_t active_forks, rule_fork fork) {
     return (fork & active_forks) != 0;

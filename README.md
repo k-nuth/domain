@@ -1,4 +1,4 @@
-# Knuth Domain <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/kth-domain">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/k-nuth/kth-domain">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/k-nuth/Lobby">![Gitter Chat][badge.Gitter]</a>
+# Knuth Domain <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/domain">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/k-nuth/domain">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/k-nuth/Lobby">![Gitter Chat][badge.Gitter]</a>
 
 > Domain functionality
 
@@ -21,17 +21,17 @@ conan remote add kth https://api.bintray.com/conan/k-nuth/kth
 2. Install the appropriate library:
 
 ```
-conan install kth-domain/0.X@kth/stable 
+conan install domain/0.X@kth/stable 
 ```
 
 In you want to tune the installation for better performance, please refer to [this](https://kth.github.io/docfx/content/user_guide/installation.html#advanced-installation).
 
 
 <!-- Links -->
-[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/kth-domain?svg=true&branch=dev
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/domain?svg=true&branch=dev
 [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
-[badge.Travis]: https://travis-ci.org/k-nuth/kth-domain.svg?branch=master
-[badge.version]: https://badge.fury.io/gh/kth%2Fkth-domain.svg
+[badge.Travis]: https://travis-ci.org/k-nuth/domain.svg?branch=master
+[badge.version]: https://badge.fury.io/gh/kth%2Fdomain.svg
 
 [CMake]: http://www.cmake.org
 [Doxygen]: http://www.doxygen.org

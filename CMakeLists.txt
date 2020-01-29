@@ -46,9 +46,9 @@ project(kth-domain
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Check for baseline language coverage in the compiler for the C++14 standard.
+# Check for baseline language coverage in the compiler for the C++17 standard.
 #------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Process options.
@@ -145,6 +145,8 @@ message( STATUS "Knuth: Compiling for ${MICROARCHITECTURE}")
 # add_definitions(-DKNUTH_MICROARCHITECTURE=${MICROARCHITECTURE})
 # add_definitions(-DKNUTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
 
+set(MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
+message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
 
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
@@ -202,13 +204,15 @@ if (NO_CONAN_AT_ALL)
 
   if (MSVC)
     find_package(
-      Boost 1.56.0 REQUIRED
-      COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options regex system thread unit_test_framework
+      Boost 1.66.0 REQUIRED
+      COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options system thread unit_test_framework
+      # regex
     )
   else()
     find_package(
-      Boost 1.56.0 REQUIRED
-      COMPONENTS chrono date_time filesystem iostreams locale log program_options regex system thread unit_test_framework
+      Boost 1.66.0 REQUIRED
+      COMPONENTS chrono date_time filesystem iostreams locale log program_options system thread unit_test_framework
+      # regex
     )
   endif()
 endif()
@@ -565,7 +569,7 @@ else()
     ${Boost_LOCALE_LIBRARY}
     ${Boost_LOG_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${Boost_REGEX_LIBRARY}
+    # ${Boost_REGEX_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_THREAD_LIBRARY}
   )

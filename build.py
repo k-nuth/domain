@@ -2,11 +2,11 @@ import copy
 import os
 import cpuid
 import platform
-from ci_utils import get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
+from kthbuild import get_base_march_ids, get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
 
 if __name__ == "__main__":
     full_build = os.getenv('KNUTH_FULL_BUILD', '0') == '1'
-    builder, name = get_builder()
+    builder, name = get_builder(os.path.dirname(os.path.abspath(__file__)))
     builder.add_common_builds(shared_option_name="%s:shared" % name)
 
     filtered_builds = []
@@ -21,11 +21,13 @@ if __name__ == "__main__":
                 options["%s:with_tests" % name] = "True"
                 options["%s:with_examples" % name] = "False"
 
-            if full_build:
-                marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
-                # marchs = ["x86-64"]
-            else:
-                marchs = ["x86-64"]
+            # if full_build:
+            #     marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
+            #     # marchs = ["x86-64"]
+            # else:
+            #     marchs = ["x86-64"]
+
+            march_ids = get_base_march_ids()
 
             ci_currency = os.getenv('KNUTH_CI_CURRENCY', None)
             with_keoken = os.getenv('KNUTH_WITH_KEOKEN', 'false') == 'true'
@@ -41,13 +43,13 @@ if __name__ == "__main__":
                 opts_btc["%s:currency" % name] = "BTC"
                 # opts_ltc["%s:currency" % name] = "LTC"
 
-                handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
-                handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_btc, env_vars, build_requires)
-                # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_ltc, env_vars, build_requires)
+                handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_bch, env_vars, build_requires)
+                handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_btc, env_vars, build_requires)
+                # handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_ltc, env_vars, build_requires)
             else:
                 options["%s:currency" % name] = ci_currency
                 options["%s:keoken" % name] = with_keoken
-                handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, options, env_vars, build_requires)
+                handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, options, env_vars, build_requires)
 
             filter_marchs_tests(name, filtered_builds, ["%s:with_tests" % name, "%s:with_examples" % name])
 

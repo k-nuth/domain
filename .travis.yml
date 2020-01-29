@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017-2019 Knuth Project.
+# Copyright (c) 2016-2020 Knuth Project.
 #
 # This file is part of Knuth Project.
 #
@@ -122,11 +122,11 @@ jobs:
 #       addons:
 #         coverity_scan:
 #           project:
-#             name: "kth/kth-domain"
+#             name: "kth/domain"
 #             description: "Knuth Domain"
 #           notification_email: fpelliccioni@gmail.com
 #           build_command_prepend: ""
-#           build_command: "conan create . kth-domain/0.2.0@kth/testing"
+#           build_command: "conan create . domain/0.2.0@kth/testing"
 #           branch_pattern: dev
 
 
@@ -134,12 +134,12 @@ jobs:
     - stage: wait for dependencies
       os: linux
       sudo: required
-      language: python
       dist: xenial
+      language: python
       python: "3.7"
       services:
         - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+      env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
            KNUTH_CI_CURRENCY=BCH
       if: branch =~ /^(release|hotfix).+$/    #Just releases
       script:
@@ -157,12 +157,13 @@ jobs:
           echo "secp256k1/0.X@kth/staging found"
 
 
+
 # Static Checks ------------------------------------------------------
     - stage: static checks
       os: linux
       sudo: required
-      language: python
       dist: xenial
+      language: python
       python: "3.7"
       services:
         - docker
@@ -270,12 +271,12 @@ jobs:
 #     - stage: static checks
 #       os: linux
 #       sudo: required
-#       language: python
 #       dist: xenial
+#       language: python
 #       python: "3.7"
 #       services:
 #         - docker
-#       env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+#       env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
 #       # if: branch =~ /^(release|hotfix).+$/    #Just releases
 #       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 #       install: skip
@@ -675,14 +676,14 @@ jobs:
 
         - eval $(python ci_utils/set_envvars_and_files.py)
         #TODO(fernando): configure the remote and user using environment variables
-        - conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
+        # - conan remote add kthbuild_kth_temp_ https://api.bintray.com/conan/k-nuth/kth
         - conan user
-        - conan user ${CONAN_LOGIN_USERNAME} -r kth_temp -p ${CONAN_PASSWORD}
+        - conan user ${CONAN_LOGIN_USERNAME} -r kthbuild_kth_temp_ -p ${CONAN_PASSWORD}
         - conan user
         - echo "conan alias ${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL} ${REPO_NAME}/${KNUTH_CONAN_VERSION}@kth/${KNUTH_CONAN_CHANNEL}"
         - conan alias "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" "${REPO_NAME}/${KNUTH_CONAN_VERSION}@kth/${KNUTH_CONAN_CHANNEL}"
-        - echo "conan upload ${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL} --all -r kth_temp"
-        - conan upload "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" --all -r kth_temp        
+        - echo "conan upload ${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL} --all -r kthbuild_kth_temp_"
+        - conan upload "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" --all -r kthbuild_kth_temp_        
 
 # Push to repos ------------------------------------------------------
     - stage: push to repos

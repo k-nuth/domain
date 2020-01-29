@@ -3,8 +3,8 @@
 
 import os
 
-src_dir = '/home/fernando/dev/new-repos/kth-domain/src'
-include_dir = '/home/fernando/dev/new-repos/kth-domain/include/bitcoin/bitcoin'
+src_dir = '/home/fernando/dev/new-repos/domain/src'
+include_dir = '/home/fernando/dev/new-repos/domain/include/bitcoin/bitcoin'
 
 source_list = [
     # 'chain/header'
