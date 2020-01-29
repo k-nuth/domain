@@ -41,6 +41,7 @@ class KnuthDomainConan(KnuthConanFile):
                "currency": ['BCH', 'BTC', 'LTC'],
                "microarchitecture": "ANY", #["x86_64", "haswell", "ivybridge", "sandybridge", "bulldozer", ...]
                "fix_march": [True, False],
+               "march_id": "ANY",
                "verbose": [True, False],
                "keoken": [True, False],
                "cached_rpc_data": [True, False],
@@ -60,6 +61,7 @@ class KnuthDomainConan(KnuthConanFile):
         "currency=BCH", \
         "microarchitecture=_DUMMY_",  \
         "fix_march=False", \
+        "march_id=_DUMMY_",  \
         "verbose=False", \
         "keoken=False", \
         "cached_rpc_data=False", \
