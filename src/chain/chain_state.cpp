@@ -734,9 +734,9 @@ uint32_t chain_state::work_required_retarget(data const& values) {
         target >>= 1;
     }
 
-    int const64_t high = timestamp_high(values);
-    int const64_t retarget = values.timestamp.retarget;
-    int const64_t actual_timespan = range_constrain(high - retarget, (int64_t)min_timespan, (int64_t)max_timespan);
+    int64_t const high = timestamp_high(values);
+    int64_t const retarget = values.timestamp.retarget;
+    int64_t const actual_timespan = range_constrain(high - retarget, (int64_t)min_timespan, (int64_t)max_timespan);
     // std::cout << "high:            " << high << "\n";
 
     target *= actual_timespan;
@@ -808,8 +808,8 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
 }
 
 uint32_t chain_state::easy_time_limit(chain_state::data const& values) {
-    int const64_t high = timestamp_high(values);
-    int const64_t spacing = easy_spacing_seconds;
+    int64_t const high = timestamp_high(values);
+    int64_t const spacing = easy_spacing_seconds;
 
     //*************************************************************************
     // CONSENSUS: add unsigned 32 bit numbers in signed 64 bit space in
