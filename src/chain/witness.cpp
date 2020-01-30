@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/chain/witness.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/chain/witness.hpp>
 
 #include <algorithm>
 #include <cstddef>
@@ -29,22 +15,22 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/program.hpp>
-// #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/machine/script_pattern.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/collection.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/machine/operation.hpp>
+#include <kth/domain/machine/program.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/machine/script_pattern.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/collection.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace chain {
 
 using namespace bc::machine;
@@ -157,7 +143,7 @@ bool witness::from_data(std::istream& stream, bool prefix) {
 //        return source.read_bytes(size);
 //    };
 //
-//    // TODO(libbitcoin): optimize store serialization to avoid loop, reading data directly.
+//    // TODO(legacy): optimize store serialization to avoid loop, reading data directly.
 //    if (prefix)
 //    {
 //        // Witness prefix is an element count, not byte length (unlike script).
@@ -232,7 +218,7 @@ void witness::to_data(data_sink& stream, bool prefix) const {
 //        sink.write_bytes(element);
 //    };
 //
-//    // TODO(libbitcoin): optimize store serialization to avoid loop, writing data directly.
+//    // TODO(legacy): optimize store serialization to avoid loop, writing data directly.
 //    std::for_each(stack_.begin(), stack_.end(), serialize);
 //}
 
@@ -467,4 +453,4 @@ code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

@@ -2,7 +2,7 @@ export PATH=/usr/local/Cellar/llvm/6.0.0/bin/:$PATH
 export PATH=/Users/fernando/Downloads/clang+llvm-7.0.0-x86_64-apple-darwin/bin:$PATH
 
 
-cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_CONAN=ON  -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Release -DJUST_KNUTH_SOURCES=OFF
+cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_CONAN=ON  -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Release -DJUST_KTH_SOURCES=OFF
 
 
 python ../ci_utils/run-clang-tidy.py -checks='*' -warnings-as-errors='*' -header-filter=/Users/fernando/dev/domain/include

@@ -1,21 +1,7 @@
-#
-# Copyright (c) 2016-2020 Knuth Project.
-#
-# This file is part of Knuth Project.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+# Copyright (c) 2016-2020 Knuth Project developers.
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 import os
 from conans import CMake
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
@@ -96,7 +82,7 @@ class KnuthDomainConan(KnuthConanFile):
             self.requires("OpenSSL/1.0.2l@conan/stable")
 
         if self.options.with_qrencode:
-            self.requires("libqrencode/4.0.0@bitprim/stable")
+            self.requires("libqrencode/4.0.0@kth/stable")
 
         # self.bitprim_requires(["secp256k1/0.X@%s/%s"])
 

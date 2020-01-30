@@ -1,32 +1,18 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/wallet/stealth_sender.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/wallet/stealth_sender.hpp>
 
 #include <cstdint>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/utility/binary.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/math/stealth.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/infrastructure/utility/binary.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace wallet {
 
 stealth_sender::stealth_sender(stealth_address const& address,
@@ -54,7 +40,7 @@ stealth_sender::operator bool() const {
 }
 
 // private
-// TODO(libbitcoin): convert to factory and make script_ and address_ const.
+// TODO(legacy): convert to factory and make script_ and address_ const.
 void stealth_sender::initialize(ec_secret const& ephemeral_private,
                                 stealth_address const& address,
                                 data_chunk const& seed,
@@ -90,4 +76,4 @@ const wallet::payment_address& stealth_sender::payment_address() const {
 }
 
 }  // namespace wallet
-}  // namespace libbitcoin
+}  // namespace kth

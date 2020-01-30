@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNUTH_KEOKEN_ENTITIES_ASSET_HPP_
-#define KNUTH_KEOKEN_ENTITIES_ASSET_HPP_
+#ifndef KTH_KEOKEN_ENTITIES_ASSET_HPP_
+#define KTH_KEOKEN_ENTITIES_ASSET_HPP_
 
 #include <string>
 
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
 
 #include <knuth/keoken/primitives.hpp>
 
@@ -76,4 +76,4 @@ private:
 }  // namespace keoken
 }  // namespace knuth
 
-#endif  //KNUTH_KEOKEN_ENTITIES_ASSET_HPP_
+#endif  //KTH_KEOKEN_ENTITIES_ASSET_HPP_

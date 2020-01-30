@@ -1,34 +1,20 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/chain/output_basis.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/chain/output_basis.hpp>
 
 #include <algorithm>
 #include <cstdint>
 #include <sstream>
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace chain {
 
 // using namespace bc::wallet;
@@ -181,7 +167,7 @@ void output_basis::set_script(chain::script&& value) {
 //-----------------------------------------------------------------------------
 
 size_t output_basis::signature_operations(bool bip141) const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
     // Penalize quadratic signature operations (bip141).
@@ -210,4 +196,4 @@ bool output_basis::extract_committed_hash(hash_digest& out) const {
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

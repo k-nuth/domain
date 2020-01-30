@@ -1,43 +1,29 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/chain/chain_state.hpp>
 
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/chain/block.hpp>
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/compact.hpp>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/unicode/unicode.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/timer.hpp>
+#include <kth/domain/chain/block.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/compact.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/config/checkpoint.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/unicode/unicode.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/timer.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace chain {
 
 using namespace bc::config;
@@ -98,7 +84,7 @@ inline bool bip9_bit0_active(size_t height, bool mainnet, bool testnet) {
 }
 
 inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
@@ -108,7 +94,7 @@ inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet
 }
 
 inline bool bip9_bit1_active(size_t height, bool mainnet, bool testnet) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
@@ -121,7 +107,7 @@ inline bool bip34(size_t height, bool frozen, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return frozen &&
            ((mainnet && height >= mainnet_bip34_freeze) || (testnet && height >= testnet_bip34_freeze) || (regtest
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
                                                                                                            && height >= regtest_bip34_freeze
 #endif
                                                                                                            ));
@@ -151,7 +137,7 @@ inline uint32_t bits_high(chain_state::data const& values) {
     return values.bits.ordered.back();
 }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
     return target + (target >> 2);
 }
@@ -185,18 +171,18 @@ bool chain_state::is_graviton_enabled() const {
     return is_mtp_activated(median_time_past(), graviton_activation_time());
 }
 
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 // Statics.
 // activation
 //-----------------------------------------------------------------------------
 
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
         // , magnetic_anomaly_t magnetic_anomaly_activation_time
         , great_wall_t great_wall_activation_time
         , graviton_t graviton_activation_time
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
     auto const version = values.version.self;
@@ -255,7 +241,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bip30_rule & forks);
     }
 
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
     if (bip34_ice) {
         result.forks |= (rule_fork::bip34_rule & forks);
     }
@@ -285,7 +271,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     if (bip9_bit0_active(values.bip9_bit0_hash, mainnet, testnet)) {
         result.forks |= (rule_fork::bip9_bit0_group & forks);
     }
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Activate the segwit rules only if not bch
     // bip9_bit1 forks are enforced above the bip9_bit1 checkpoint.
     if (bip9_bit1_active(values.bip9_bit1_hash, mainnet, testnet)) {
@@ -304,7 +290,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.minimum_version = first_version;
     }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     // if (is_bch_daa_enabled(median_time_past(values, 0))) {
     //     result.forks |= (rule_fork::cash_low_s_rule & forks);
     // }
@@ -353,7 +339,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     //     extraFlags |= SCRIPT_ENABLE_SCHNORR;
     // }
 
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     return result;
 }
@@ -363,11 +349,11 @@ size_t chain_state::bits_count(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const easy_work = testnet && retarget && !is_retarget_height(height);
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return easy_work ? std::min(height, retargeting_interval) : std::min(height, chain_state_timestamp_count);
 #else
     return easy_work ? std::min(height, retargeting_interval) : 1;
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 }
 
 size_t chain_state::version_count(size_t height, uint32_t forks) {
@@ -382,11 +368,11 @@ size_t chain_state::version_count(size_t height, uint32_t forks) {
 }
 
 size_t chain_state::timestamp_count(size_t height, uint32_t /*unused*/) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return std::min(height, chain_state_timestamp_count);  //TODO(kth): check what happens with Bitcoin Legacy...?
 #else
     return std::min(height, median_time_past_interval);
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 }
 
 size_t chain_state::retarget_height(size_t height, uint32_t forks) {
@@ -422,7 +408,7 @@ size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks) {
 }
 
 size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return map::unrequested;
 #endif
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
@@ -436,7 +422,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 // median_time_past
 //-----------------------------------------------------------------------------
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 
 // inline size_t chain_state::uahf_height(size_t height, uint32_t forks) {
 //     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
@@ -538,11 +524,11 @@ bool chain_state::is_magnetic_anomaly_enabled(size_t height, uint32_t forks) {
 // Complete after the hard fork
 
 
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 
 typename chain_state::timestamps::const_iterator
 timestamps_position(chain_state::timestamps const& times, bool tip) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     if (tip) {
         if (times.size() >= bitcoin_cash_offset_tip) {
             return times.begin() + bitcoin_cash_offset_tip;
@@ -552,7 +538,7 @@ timestamps_position(chain_state::timestamps const& times, bool tip) {
             return times.begin() + bitcoin_cash_offset_tip_minus_6;
         }
     }
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     if (times.size() > 11) {
         return times.begin() + (times.size() - 11);
@@ -611,7 +597,7 @@ inline constexpr auto select_0_2(T&& a, U&& b, R r) FN(
 #undef FN
 // ------------------------------------------------------------------------------------------------------------
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 
 // DAA, New algorithm: 2017-Nov-13 Hard fork
 uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
@@ -658,7 +644,7 @@ uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
 
     return compact(nextTarget).normal();
 }
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 // work_required
 //-----------------------------------------------------------------------------
@@ -676,12 +662,12 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
 
     auto last_time_span = median_time_past(values, 0, true);
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     // bool const daa_active = is_bch_daa_enabled(last_time_span);
     bool const daa_active = is_daa_enabled(values.height, forks);
 #else
     bool const daa_active = false;
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     if (is_retarget_height(values.height) && !(daa_active)) {
         return work_required_retarget(values);
@@ -691,7 +677,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
         return easy_work_required(values, daa_active);
     }
 
-    // #ifdef KNUTH_CURRENCY_BCH
+    // #ifdef KTH_CURRENCY_BCH
     //     if (values.height >= bch_activation_height) {
     //         if ( ! daa_active) {
     //             auto six_time_span = median_time_past(values, 0, false);
@@ -703,9 +689,9 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     //             return cash_difficulty_adjustment(values);
     // 	    }
     //     }
-    // #endif //KNUTH_CURRENCY_BCH
+    // #endif //KTH_CURRENCY_BCH
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     if (is_uahf_enabled(values.height, forks)) {
         if (is_daa_enabled(values.height, forks)) {
             return cash_difficulty_adjustment(values);
@@ -717,12 +703,12 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
             return work_required_adjust_cash(values);
         }
     }
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     return bits_high(values);
 }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 uint32_t chain_state::work_required_adjust_cash(data const& values) {
     const compact bits(bits_high(values));
     uint256_t target(bits);
@@ -730,13 +716,13 @@ uint32_t chain_state::work_required_adjust_cash(data const& values) {
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 }
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 // [CalculateNextWorkRequired]
 uint32_t chain_state::work_required_retarget(data const& values) {
     const compact bits(bits_high(values));
 
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
     uint256_t target(bits);
     static uint256_t const pow_limit("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     // hash_number retarget_new;
@@ -748,9 +734,9 @@ uint32_t chain_state::work_required_retarget(data const& values) {
         target >>= 1;
     }
 
-    const int64_t high = timestamp_high(values);
-    const int64_t retarget = values.timestamp.retarget;
-    const int64_t actual_timespan = range_constrain(high - retarget, (int64_t)min_timespan, (int64_t)max_timespan);
+    int const64_t high = timestamp_high(values);
+    int const64_t retarget = values.timestamp.retarget;
+    int const64_t actual_timespan = range_constrain(high - retarget, (int64_t)min_timespan, (int64_t)max_timespan);
     // std::cout << "high:            " << high << "\n";
 
     target *= actual_timespan;
@@ -764,7 +750,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
 
-#else   //KNUTH_CURRENCY_LTC
+#else   //KTH_CURRENCY_LTC
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
     BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
 
@@ -774,7 +760,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
     // The proof_of_work_limit constant is pre-normalized.
     return target > pow_limit ? retarget_proof_of_work_limit : compact(target).normal();
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 }
 
 // Get the bounded total time spanning the highest 2016 blocks.
@@ -802,11 +788,11 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
     auto& bits = values.bits.ordered;
 
     if (daa_active) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
         return cash_difficulty_adjustment(values);
 #else
 //Note: Could not happend: DAA and not BCH
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
     }
     // Reverse iterate the ordered-by-height list of header bits.
     for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit) {
@@ -822,8 +808,8 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
 }
 
 uint32_t chain_state::easy_time_limit(chain_state::data const& values) {
-    const int64_t high = timestamp_high(values);
-    const int64_t spacing = easy_spacing_seconds;
+    int const64_t high = timestamp_high(values);
+    int const64_t spacing = easy_spacing_seconds;
 
     //*************************************************************************
     // CONSENSUS: add unsigned 32 bit numbers in signed 64 bit space in
@@ -906,13 +892,13 @@ uint32_t chain_state::signal_version(uint32_t forks) {
         return bip34_version;
     }
 
-    // TODO(libbitcoin): these can be retired.
+    // TODO(legacy): these can be retired.
     // Signal bip9 bit0 if any of the group is configured.
     if (script::is_enabled(forks, rule_fork::bip9_bit0_group)) {
         return bip9_version_base | bip9_version_bit0;
     }
 
-    // TODO(libbitcoin): these can be retired.
+    // TODO(legacy): these can be retired.
     // Signal bip9 bit1 if any of the group is configured.
     if (script::is_enabled(forks, rule_fork::bip9_bit1_group)) {
         return bip9_version_base | bip9_version_bit1;
@@ -959,7 +945,7 @@ chain_state::data chain_state::to_pool(chain_state const& top) {
     // If promoting from retarget height, move that timestamp into retarget.
     if (retarget && is_retarget_height(height - 1u)) {
         // The first block after a retarget saves the "retarget block" timestamp for future validations
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
         // LTC retarget function is like BTC/BCH but uses the index -1.
         // data.timestamps.orderder.back() = current block timestamp = data.timestamp.self (this is used for BTC)
         // data.timestamps.orderder.at(size-2) = retarget block timestamp
@@ -986,19 +972,19 @@ chain_state::data chain_state::to_pool(chain_state const& top) {
 // This generates a state for the pool above the presumed top block state.
 chain_state::chain_state(chain_state const& top)
     : data_(to_pool(top)), forks_(top.forks_), checkpoints_(top.checkpoints_), active_(activation(data_, forks_
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
             // , top.magnetic_anomaly_activation_time_
             , top.great_wall_activation_time_
             , top.graviton_activation_time_
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
         )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(top.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(top.great_wall_activation_time_)
       , graviton_activation_time_(top.graviton_activation_time_)
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 {
 }
 
@@ -1033,7 +1019,7 @@ chain_state::data chain_state::to_block(chain_state const& pool,
         data.bip9_bit0_hash = data.hash;
     }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet))
         data.bip9_bit1_hash = data.hash;
@@ -1046,19 +1032,19 @@ chain_state::data chain_state::to_block(chain_state const& pool,
 // This assumes that the pool state is the same height as the block.
 chain_state::chain_state(chain_state const& pool, block const& block)
     : data_(to_block(pool, block)), forks_(pool.forks_), checkpoints_(pool.checkpoints_), active_(activation(data_, forks_
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
         // , pool.magnetic_anomaly_activation_time_
         , pool.great_wall_activation_time_
         , pool.graviton_activation_time_
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
         )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(pool.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(pool.great_wall_activation_time_)
       , graviton_activation_time_(pool.graviton_activation_time_)
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 {}
 
 chain_state::data chain_state::to_header(chain_state const& parent,
@@ -1091,7 +1077,7 @@ chain_state::data chain_state::to_header(chain_state const& parent,
         data.bip9_bit0_hash = data.hash;
     }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet))
         data.bip9_bit1_hash = data.hash;
@@ -1104,44 +1090,44 @@ chain_state::data chain_state::to_header(chain_state const& parent,
 // This assumes that parent is the state of the header's previous block.
 chain_state::chain_state(chain_state const& parent, header const& header)
     : data_(to_header(parent, header)), forks_(parent.forks_), checkpoints_(parent.checkpoints_), active_(activation(data_, forks_
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
         // , parent.magnetic_anomaly_activation_time_
         , parent.great_wall_activation_time_
         , parent.graviton_activation_time_
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
                                                                                                                      )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(parent.magnetic_anomaly_activation_time_)
       , great_wall_activation_time_(parent.great_wall_activation_time_)
       , graviton_activation_time_(parent.graviton_activation_time_)
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 {}
 
 // Constructor (from raw data).
 // The allow_collisions hard fork is always activated (not configurable).
 chain_state::chain_state(data&& values, checkpoints const& checkpoints, uint32_t forks
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
         // , magnetic_anomaly_t magnetic_anomaly_activation_time
         , great_wall_t great_wall_activation_time
         , graviton_t graviton_activation_time
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
                          )
     : data_(std::move(values)), forks_(forks | rule_fork::allow_collisions), checkpoints_(checkpoints), active_(activation(data_, forks_
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
             // , magnetic_anomaly_activation_time
             , great_wall_activation_time
             , graviton_activation_time
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
                                                                                                                            )),
       median_time_past_(median_time_past(data_, forks_)),
       work_required_(work_required(data_, forks_))
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     //   , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
       , great_wall_activation_time_(great_wall_activation_time)
       , graviton_activation_time_(graviton_activation_time)
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 {
 }
 
@@ -1175,7 +1161,7 @@ uint32_t chain_state::work_required() const {
     return work_required_;
 }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 // uint64_t chain_state::monolith_activation_time() const {
 //     return monolith_activation_time_;
 // }
@@ -1191,7 +1177,7 @@ great_wall_t chain_state::great_wall_activation_time() const {
 graviton_t chain_state::graviton_activation_time() const {
     return graviton_activation_time_;
 }
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 // Forks.
 //-----------------------------------------------------------------------------
@@ -1219,4 +1205,4 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

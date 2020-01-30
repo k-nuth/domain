@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/wallet/ek_token.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/wallet/ek_token.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -24,11 +10,11 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/formats/base_58.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace wallet {
 
 ek_token::ek_token()
@@ -58,7 +44,7 @@ ek_token::ek_token(encrypted_token const& value)
 // ----------------------------------------------------------------------------
 
 ek_token ek_token::from_string(std::string const& encoded) {
-    // TODO(libbitcoin): incorporate existing parser here, setting new members.
+    // TODO(legacy): incorporate existing parser here, setting new members.
 
     encrypted_token key;
     return decode_base58(key, encoded) && verify_checksum(key) ? ek_token(key) : ek_token();
@@ -123,4 +109,4 @@ std::ostream& operator<<(std::ostream& out, ek_token const& of) {
 }
 
 }  // namespace wallet
-}  // namespace libbitcoin
+}  // namespace kth

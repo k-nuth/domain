@@ -87,7 +87,7 @@ option(WITH_EXAMPLES "Compile with examples." OFF)
 option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
 if (WITH_CACHED_RPC_DATA)
   message(STATUS "Knuth: Cached RPC data enabled")
-  add_definitions(-DKNUTH_CACHED_RPC_DATA)
+  add_definitions(-DKTH_CACHED_RPC_DATA)
 endif()
 
 # Implement --with-keoken and declare WITH_KEOKEN.
@@ -127,23 +127,23 @@ if (WITH_QRENCODE)
 endif()
 
 
-# Implement --JUST_KNUTH_SOURCES for linting.
+# Implement --JUST_KTH_SOURCES for linting.
 #------------------------------------------------------------------------------
-option(JUST_KNUTH_SOURCES "Just Knuth source code to be linted." OFF)
-if (JUST_KNUTH_SOURCES)
+option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
+if (JUST_KTH_SOURCES)
   message(STATUS "Knuth: Just Knuth source code to be linted: enabled")
 endif()
 
 
 
-set(KNUTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
-# message(${KNUTH_PROJECT_VERSION})
-message( STATUS "Knuth: Compiling version ${KNUTH_PROJECT_VERSION}")
+set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
+# message(${KTH_PROJECT_VERSION})
+message( STATUS "Knuth: Compiling version ${KTH_PROJECT_VERSION}")
 
 set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
 message( STATUS "Knuth: Compiling for ${MICROARCHITECTURE}")
-# add_definitions(-DKNUTH_MICROARCHITECTURE=${MICROARCHITECTURE})
-# add_definitions(-DKNUTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+# add_definitions(-DKTH_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DKTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
 
 set(MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
 message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
@@ -151,11 +151,11 @@ message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
 if (${CURRENCY} STREQUAL "BCH")
-  add_definitions(-DKNUTH_CURRENCY_BCH)
+  add_definitions(-DKTH_CURRENCY_BCH)
 elseif (${CURRENCY} STREQUAL "BTC")
-  add_definitions(-DKNUTH_CURRENCY_BTC)
+  add_definitions(-DKTH_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
-  add_definitions(-DKNUTH_CURRENCY_LTC)
+  add_definitions(-DKTH_CURRENCY_LTC)
 else()
   message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
 endif()
@@ -506,7 +506,7 @@ if (WITH_KEOKEN)
   )
 endif()
 
-if (NOT JUST_KNUTH_SOURCES)
+if (NOT JUST_KTH_SOURCES)
   set(kth_domain_sources 
     ${kth_domain_sources_just_libbitcoin}
   )
@@ -541,7 +541,7 @@ if (NOT ENABLE_SHARED)
     target_compile_definitions(kth-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
-target_compile_definitions(kth-domain PUBLIC -DKNUTH_PROJECT_VERSION="${KNUTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 
 
 target_include_directories(kth-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNUTH_KEOKEN_MESSAGE_BASE_HPP_
-#define KNUTH_KEOKEN_MESSAGE_BASE_HPP_
+#ifndef KTH_KEOKEN_MESSAGE_BASE_HPP_
+#define KTH_KEOKEN_MESSAGE_BASE_HPP_
 
-#include <bitcoin/infrastructure/utility/writer.hpp>
+#include <kth/infrastructure/utility/writer.hpp>
 
 #include <knuth/common.hpp>
 #include <knuth/concepts.hpp>
@@ -48,4 +48,4 @@ void to_data(W& sink, uint16_t version, uint16_t type) {
 }  // namespace keoken
 }  // namespace knuth
 
-#endif  //KNUTH_KEOKEN_MESSAGE_BASE_HPP_
+#endif  //KTH_KEOKEN_MESSAGE_BASE_HPP_

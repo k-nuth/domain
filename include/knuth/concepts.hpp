@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNUTH_CONCEPTS_HPP_
-#define KNUTH_CONCEPTS_HPP_
+#ifndef KTH_CONCEPTS_HPP_
+#define KTH_CONCEPTS_HPP_
 
 #define Reader typename
 #define Writer typename
@@ -56,7 +56,7 @@ constexpr bool is_writer() {
 
 }  // namespace knuth
 
-#define KNUTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0
-#define KNUTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0
+#define KTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0
+#define KTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0
 
-#endif  //KNUTH_CONCEPTS_HPP_
+#endif  //KTH_CONCEPTS_HPP_

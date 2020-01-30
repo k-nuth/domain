@@ -1,36 +1,22 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/chain/header.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/chain/header.hpp>
 
 #include <chrono>
 #include <cstddef>
 #include <utility>
 
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/compact.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/compact.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace chain {
 
 // Use system clock because we require accurate time of day.
@@ -53,7 +39,7 @@ header::header(header const& x)
       // , validation{}
       ,
       validation(x.validation) {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+    // TODO(legacy): implement safe private accessor for conditional cache transfer.
     // validation = x.validation;
 }
 
@@ -71,7 +57,7 @@ header::header(header const& x, hash_digest const& hash)
 //-----------------------------------------------------------------------------
 
 header& header::operator=(header const& x) {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+    // TODO(legacy): implement safe private accessor for conditional cache transfer.
     version_ = x.version_;
     previous_block_hash_ = x.previous_block_hash_;
     merkle_ = x.merkle_;
@@ -336,11 +322,11 @@ hash_digest header::hash() const {
     return hash;
 }
 
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
 hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 
 uint256_t header::proof(uint32_t bits) {
     compact const header_bits(bits);
@@ -399,7 +385,7 @@ bool header::is_valid_proof_of_work(bool retarget) const {
     }
 
     // Ensure actual work is at least claimed amount (smaller is more work).
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
     return to_uint256(litecoin_proof_of_work_hash()) <= target;
 #else
     return to_uint256(hash()) <= target;
@@ -446,4 +432,4 @@ code header::accept(chain_state const& state) const {
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

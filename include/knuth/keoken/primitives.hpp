@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNUTH_KEOKEN_PRIMITIVES_HPP_
-#define KNUTH_KEOKEN_PRIMITIVES_HPP_
+#ifndef KTH_KEOKEN_PRIMITIVES_HPP_
+#define KTH_KEOKEN_PRIMITIVES_HPP_
 
 #include <cstdint>
 
@@ -30,4 +30,4 @@ using amount_t = int64_t;
 }  // namespace keoken
 }  // namespace knuth
 
-#endif  //KNUTH_KEOKEN_PRIMITIVES_HPP_
+#endif  //KTH_KEOKEN_PRIMITIVES_HPP_

@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNUTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
-#define KNUTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
+#ifndef KTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
+#define KTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
 
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
-#include <bitcoin/infrastructure/utility/writer.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/reader.hpp>
+#include <kth/infrastructure/utility/writer.hpp>
 
 #include <knuth/common.hpp>
 #include <knuth/concepts.hpp>
@@ -69,7 +69,7 @@ public:
     static create_asset factory_from_data(bc::data_chunk const& data);
     static create_asset factory_from_data(std::istream& stream);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     static create_asset factory_from_data(R& source) {
         create_asset instance;
         instance.from_data(source);
@@ -80,7 +80,7 @@ public:
     bool from_data(std::istream& stream);
 
     //Note: from_data and to_data are not longer simetrical.
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         auto name_opt = read_null_terminated_string(source, max_name_size);
         if ( ! name_opt) {
@@ -138,4 +138,4 @@ private:
 }  // namespace keoken
 }  // namespace knuth
 
-#endif  //KNUTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
+#endif  //KTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_

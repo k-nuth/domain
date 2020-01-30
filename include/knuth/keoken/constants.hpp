@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNUTH_KEOKEN_CONSTANTS_HPP_
-#define KNUTH_KEOKEN_CONSTANTS_HPP_
+#ifndef KTH_KEOKEN_CONSTANTS_HPP_
+#define KTH_KEOKEN_CONSTANTS_HPP_
 
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/operation.hpp>
 
 #include <knuth/keoken/utility.hpp>
 
@@ -35,4 +35,4 @@ constexpr size_t min_asset_name_size = 1;
 }  // namespace keoken
 }  // namespace knuth
 
-#endif  //KNUTH_KEOKEN_CONSTANTS_HPP_
+#endif  //KTH_KEOKEN_CONSTANTS_HPP_

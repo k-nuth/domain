@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNUTH_COMMON_HPP_
-#define KNUTH_COMMON_HPP_
+#ifndef KTH_COMMON_HPP_
+#define KTH_COMMON_HPP_
 
-namespace libbitcoin {
+namespace kth {
 
 constexpr inline bool witness_default() {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #else
     return true;
@@ -30,27 +30,25 @@ constexpr inline bool witness_default() {
 }
 
 constexpr inline
-#ifdef KNUTH_CURRENCY_BCH
-    bool
-    witness_val(bool /*x*/) {
+#ifdef KTH_CURRENCY_BCH
+bool witness_val(bool /*x*/) {
     return false;
 #else
-    bool
-    witness_val(bool x) {
+bool witness_val(bool x) {
     return x;
 #endif
 }
 
-#ifdef KNUTH_CURRENCY_BCH
-#define KNUTH_DECL_WITN_ARG bool /*witness*/ = false
-#define KNUTH_DEF_WITN_ARG bool /*witness = false*/
+#ifdef KTH_CURRENCY_BCH
+#define KTH_DECL_WITN_ARG bool /*witness*/ = false
+#define KTH_DEF_WITN_ARG bool /*witness = false*/
 #else
-#define KNUTH_DECL_WITN_ARG bool witness = false
-#define KNUTH_DEF_WITN_ARG bool witness /*= false*/
+#define KTH_DECL_WITN_ARG bool witness = false
+#define KTH_DEF_WITN_ARG bool witness /*= false*/
 #endif
 
 
 
-}  // namespace libbitcoin
+}  // namespace kth
 
-#endif  //KNUTH_COMMON_HPP_
+#endif  //KTH_COMMON_HPP_

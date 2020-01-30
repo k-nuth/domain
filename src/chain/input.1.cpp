@@ -1,40 +1,26 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/chain/input.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/chain/input.hpp>
 
 #include <algorithm>
 #include <sstream>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
+#include <kth/domain/chain/script.hpp>
 
-#ifndef KNUTH_CURRENCY_BCH
-#include <bitcoin/bitcoin/chain/witness.hpp>
+#ifndef KTH_CURRENCY_BCH
+#include <kth/domain/chain/witness.hpp>
 #endif
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace chain {
 
 using namespace bc::wallet;
@@ -48,7 +34,7 @@ input::input(input const& x)
     : addresses_(x.addresses_cache())
     , previous_output_(x.previous_output_)
     , script_(x.script_)
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     , witness_(x.witness_)
 #endif
     , sequence_(x.sequence_) {}
@@ -57,7 +43,7 @@ input::input(input&& x) noexcept
     : addresses_(x.addresses_cache()),
       previous_output_(std::move(x.previous_output_)),
       script_(std::move(x.script_)),
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
       witness_(std::move(x.witness_)),
 #endif
       sequence_(x.sequence_) {}
@@ -82,7 +68,7 @@ input::addresses_ptr input::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
     : previous_output_(previous_output)
     , script_(script)
@@ -95,7 +81,7 @@ input::input(output_point const& previous_output, chain::script const& script, c
     , sequence_(sequence) 
 {}
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
     : previous_output_(std::move(previous_output))
     , script_(std::move(script))
@@ -116,7 +102,7 @@ input& input::operator=(input const& x) {
     addresses_ = x.addresses_cache();
     previous_output_ = x.previous_output_;
     script_ = x.script_;
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     witness_ = x.witness_;
 #endif
     sequence_ = x.sequence_;
@@ -127,7 +113,7 @@ input& input::operator=(input&& x) noexcept {
     addresses_ = x.addresses_cache();
     previous_output_ = std::move(x.previous_output_);
     script_ = std::move(x.script_);
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     witness_ = std::move(x.witness_);
 #endif
     sequence_ = x.sequence_;
@@ -138,7 +124,7 @@ bool input::operator==(input const& x) const {
     return (sequence_ == x.sequence_) 
         && (previous_output_ == x.previous_output_) 
         && (script_ == x.script_) 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         && (witness_ == x.witness_)
 #endif
         ;
@@ -178,7 +164,7 @@ bool input::from_data(std::istream& stream, bool wire, bool witness) {
 void input::reset() {
     previous_output_.reset();
     script_.reset();
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     witness_.reset();
 #endif
     sequence_ = 0;
@@ -189,7 +175,7 @@ bool input::is_valid() const {
     return sequence_ != 0 
         || previous_output_.is_valid() 
         || script_.is_valid() 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         || witness_.is_valid()
 #endif
         ;
@@ -216,7 +202,7 @@ void input::to_data(data_sink& stream, bool wire, bool witness) const {
 
 //void input::to_data(writer& sink, bool wire, bool witness) const
 //{
-//#ifdef KNUTH_CURRENCY_BCH
+//#ifdef KTH_CURRENCY_BCH
 //    witness = false;
 //#else
 //    // Always write witness to store so that we know how to read it.
@@ -242,7 +228,7 @@ size_t input::serialized_size_non_witness(bool wire) const {
 }
 
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 size_t input::serialized_size(bool wire, bool /*witness*/) const {
     return serialized_size_non_witness(wire);
 }
@@ -296,7 +282,7 @@ void input::set_script(chain::script&& value) {
     invalidate_cache();
 }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 chain::witness const& input::witness() const {
     return witness_;
 }
@@ -314,7 +300,7 @@ void input::set_witness(chain::witness&& value) {
     witness_ = std::move(value);
     invalidate_cache();
 }
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 
 
 uint32_t input::sequence() const {
@@ -357,7 +343,7 @@ payment_address::list input::addresses() const {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
 
-        // TODO(libbitcoin): expand to include segregated witness address extraction.
+        // TODO(legacy): expand to include segregated witness address extraction.
         addresses_ = std::make_shared<payment_address::list>(
             payment_address::extract_input(script_));
         mutex_.unlock_and_lock_upgrade();
@@ -374,7 +360,7 @@ payment_address::list input::addresses() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 void input::strip_witness() {
     witness_.clear();
 }
@@ -388,7 +374,7 @@ bool input::is_final() const {
 }
 
 bool input::is_segregated() const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #else
     // If no block tx is has witness data the commitment is optional (bip141).
@@ -420,7 +406,7 @@ bool input::is_locked(size_t block_height, uint32_t median_time_past) const {
 // This requires that previous outputs have been populated.
 // This cannot overflow because each total is limited by max ops.
 size_t input::signature_operations(bool bip16, bool bip141) const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
     chain::script witness, embedded;
@@ -433,7 +419,7 @@ size_t input::signature_operations(bool bip16, bool bip141) const {
     // Count heavy sigops in the input script.
     auto sigops = script_.sigops(false) * sigops_factor;
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     if (bip141 && witness_.extract_sigop_script(witness, prevout)) {
         // Add sigops in the witness (bip141).
         return sigops + witness.sigops(true);
@@ -441,7 +427,7 @@ size_t input::signature_operations(bool bip16, bool bip141) const {
 #endif
 
     if (bip16 && extract_embedded_script(embedded)) {
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         if (bip141 && witness_.extract_sigop_script(witness, embedded)) {
             // Add sigops in the embedded witness (bip141).
             return sigops + witness.sigops(true);
@@ -476,7 +462,7 @@ bool input::extract_embedded_script(chain::script& out) const {
     return out.from_data(ops.back().data(), false);
 }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 bool input::extract_reserved_hash(hash_digest& out) const {
     auto const& stack = witness_.stack();
 
@@ -487,7 +473,7 @@ bool input::extract_reserved_hash(hash_digest& out) const {
     std::copy_n(stack.front().begin(), hash_size, out.begin());
     return true;
 }
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth
