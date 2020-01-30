@@ -289,6 +289,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_8_multiplied__expected) 
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_9_multiplied__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
+//TODO(kth): replace the key
     BC_REQUIRE_DECRYPT_SECRET(key, "Libbitcoin BIP38 Test Vector");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "97c745cc980e5a070e12d0bff3f539b70748aadb406045fc1b42d4ded559a564");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
@@ -343,6 +344,8 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_8__expected) {
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_9__expected) {
     uint8_t const version = 0x00;
     auto const key = base58_literal("cfrm38V5ec4E5RKwBu46Jf5zfaE54nuB1NWHpHSpgX4GQqfzx7fvqm43mBHvr89pPgykDHts9VC");
+
+//TODO(kth): replace the key
     BC_REQUIRE_DECRYPT_POINT(key, "Libbitcoin BIP38 Test Vector", version);
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
     BOOST_REQUIRE_EQUAL(derived_address, "1NjjvGqXDrx1DvrhjYJxzrpyopk1ygHTSJ");
