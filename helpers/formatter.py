@@ -59,8 +59,8 @@ def process():
         # print(filename.split('/')[-1])
         class_name = filename.split('/')[-1]
 
-        inc = os.path.join('/home/fernando/dev/kth-domain', 'include/bitcoin/bitcoin/', filename) + '.hpp'
-        src = os.path.join('/home/fernando/dev/kth-domain', 'src/', f)
+        inc = os.path.join('/home/fernando/dev/domain', 'include/bitcoin/bitcoin/', filename) + '.hpp'
+        src = os.path.join('/home/fernando/dev/domain', 'src/', f)
         print(inc)
         print(src)
 		

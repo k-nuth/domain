@@ -15,11 +15,11 @@ echo "Knuth branch: ${KNUTH_PUSH_BRANCH}"
 export KNUTH_PUSH_ACCOUNT=kth
 
 # ------------------------------------------------------
-export KNUTH_PUSH_PROJECT=kth-consensus
+export KNUTH_PUSH_PROJECT=consensus
 
 # body="{
 #     \"accountName\": \"kth\",
-#     \"projectSlug\": \"kth-core\",
+#     \"projectSlug\": \"domain\",
 #     \"branch\": \"${KNUTH_PUSH_BRANCH}\",
 #     \"environmentVariables\": {
 #        \"SKIP_NUGET\": \"true\"
@@ -41,7 +41,7 @@ curl -s -d "$body" -X POST \
 body="{
     \"request\": {
     \"branch\":\"${KNUTH_PUSH_BRANCH}\",
-    \"message\": \"Force by kth-core build: ${TRAVIS_BUILD_NUMBER}\"
+    \"message\": \"Force by domain build: ${TRAVIS_BUILD_NUMBER}\"
 }}"
 
 curl -s -X POST \
@@ -55,7 +55,7 @@ curl -s -X POST \
 
 
 # ------------------------------------------------------
-export KNUTH_PUSH_PROJECT=kth-network
+export KNUTH_PUSH_PROJECT=network
 
 body="{
     \"accountName\": \"${KNUTH_PUSH_ACCOUNT}\",
@@ -71,7 +71,7 @@ curl -s -d "$body" -X POST \
 body="{
     \"request\": {
     \"branch\":\"${KNUTH_PUSH_BRANCH}\",
-    \"message\": \"Force by kth-core build: ${TRAVIS_BUILD_NUMBER}\"
+    \"message\": \"Force by domain build: ${TRAVIS_BUILD_NUMBER}\"
 }}"
 
 curl -s -X POST \
@@ -85,7 +85,7 @@ curl -s -X POST \
 
 
 # ------------------------------------------------------
-export KNUTH_PUSH_PROJECT=kth-database
+export KNUTH_PUSH_PROJECT=database
 
 body="{
     \"accountName\": \"${KNUTH_PUSH_ACCOUNT}\",
@@ -101,7 +101,7 @@ curl -s -d "$body" -X POST \
 body="{
     \"request\": {
     \"branch\":\"${KNUTH_PUSH_BRANCH}\",
-    \"message\": \"Force by kth-core build: ${TRAVIS_BUILD_NUMBER}\"
+    \"message\": \"Force by domain build: ${TRAVIS_BUILD_NUMBER}\"
 }}"
 
 curl -s -X POST \

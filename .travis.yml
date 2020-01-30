@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017-2019 Knuth Project.
+# Copyright (c) 2016-2020 Knuth Project.
 #
 # This file is part of Knuth Project.
 #
@@ -122,11 +122,11 @@ jobs:
 #       addons:
 #         coverity_scan:
 #           project:
-#             name: "kth/kth-domain"
+#             name: "kth/domain"
 #             description: "Knuth Domain"
 #           notification_email: fpelliccioni@gmail.com
 #           build_command_prepend: ""
-#           build_command: "conan create . kth-domain/0.2.0@kth/testing"
+#           build_command: "conan create . domain/0.2.0@kth/testing"
 #           branch_pattern: dev
 
 
@@ -134,12 +134,12 @@ jobs:
     - stage: wait for dependencies
       os: linux
       sudo: required
-      language: python
       dist: xenial
+      language: python
       python: "3.7"
       services:
         - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+      env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
            KNUTH_CI_CURRENCY=BCH
       if: branch =~ /^(release|hotfix).+$/    #Just releases
       script:
@@ -157,12 +157,13 @@ jobs:
           echo "secp256k1/0.X@kth/staging found"
 
 
+
 # Static Checks ------------------------------------------------------
     - stage: static checks
       os: linux
       sudo: required
-      language: python
       dist: xenial
+      language: python
       python: "3.7"
       services:
         - docker
@@ -270,12 +271,12 @@ jobs:
 #     - stage: static checks
 #       os: linux
 #       sudo: required
-#       language: python
 #       dist: xenial
+#       language: python
 #       python: "3.7"
 #       services:
 #         - docker
-#       env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+#       env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
 #       # if: branch =~ /^(release|hotfix).+$/    #Just releases
 #       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 #       install: skip
@@ -289,6 +290,8 @@ jobs:
 
 # Builds ------------------------------------------------------
     # Linux, GCC, libstdc++ ------------------------------------------------------
+
+    # Note: Keoken building disabled for the moment
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
@@ -297,10 +300,11 @@ jobs:
     #   python: "3.7"
     #   services:
     #     - docker
-    #   env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc9
+    #   env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
     #        KNUTH_CI_CURRENCY=BCH
     #        KNUTH_WITH_KEOKEN=true
     #   if: branch =~ /^(release|hotfix).+$/    #Just releases
+
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -309,10 +313,10 @@ jobs:
       python: "3.7"
       services:
         - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc9
+      env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
            KNUTH_CI_CURRENCY=BCH
-           KNUTH_WITH_KEOKEN=Flase
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+           KNUTH_WITH_KEOKEN=false
+      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -321,12 +325,13 @@ jobs:
       python: "3.7"
       services:
         - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc9
+      env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
            KNUTH_CI_CURRENCY=BTC
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+      # if: branch =~ /^(release|hotfix).+$/    #Just releases
+      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master      
 
 
-
+    # Note: Keoken building disabled for the moment
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
@@ -350,9 +355,8 @@ jobs:
         - docker
       env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
            KNUTH_CI_CURRENCY=BCH
-           KNUTH_WITH_KEOKEN=Flase
-      #if: branch =~ /^(release|hotfix).+$/    #Just releases
-      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+           KNUTH_WITH_KEOKEN=false
+      if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: linux
       sudo: required
@@ -363,9 +367,9 @@ jobs:
         - docker
       env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
            KNUTH_CI_CURRENCY=BTC
-      # if: branch =~ /^(release|hotfix).+$/    #Just releases
-      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+      if: branch =~ /^(release|hotfix).+$/    #Just releases
 
+    # Note: Keoken building disabled for the moment
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
@@ -408,6 +412,19 @@ jobs:
       # if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
       if: branch =~ /^(release|hotfix).+$/    #Just releases
 
+    # # Note: Keoken building disabled for the moment
+    # # - stage: build and upload binaries
+    # #   os: linux
+    # #   sudo: required
+    # #   language: python
+    # #   dist: xenial
+    # #   python: "3.7"
+    # #   services:
+    # #     - docker
+    # #   env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
+    # #        KNUTH_CI_CURRENCY=BCH
+    # #        KNUTH_WITH_KEOKEN=true
+    # #   if: branch =~ /^(release|hotfix).+$/    #Just releases
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
@@ -418,33 +435,34 @@ jobs:
     #     - docker
     #   env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
     #        KNUTH_CI_CURRENCY=BCH
-    #        KNUTH_WITH_KEOKEN=true
+    #        KNUTH_WITH_KEOKEN=false
     #   if: branch =~ /^(release|hotfix).+$/    #Just releases
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      dist: xenial
-      python: "3.7"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
-           KNUTH_CI_CURRENCY=BCH
-           KNUTH_WITH_KEOKEN=false
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      dist: xenial
-      python: "3.7"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
-           KNUTH_CI_CURRENCY=BTC
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6
+    #        KNUTH_CI_CURRENCY=BTC
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
 
 
+    # # Note: Keoken building disabled for the moment
+    # # - stage: build and upload binaries
+    # #   os: linux
+    # #   sudo: required
+    # #   language: python
+    # #   dist: xenial
+    # #   python: "3.7"
+    # #   services:
+    # #     - docker
+    # #   env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
+    # #        KNUTH_CI_CURRENCY=BCH
+    # #        KNUTH_WITH_KEOKEN=true
+    # #   if: branch =~ /^(release|hotfix).+$/    #Just releases
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
@@ -455,31 +473,19 @@ jobs:
     #     - docker
     #   env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
     #        KNUTH_CI_CURRENCY=BCH
-    #        KNUTH_WITH_KEOKEN=true
+    #        KNUTH_WITH_KEOKEN=false
     #   if: branch =~ /^(release|hotfix).+$/    #Just releases
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      dist: xenial
-      python: "3.7"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
-           KNUTH_CI_CURRENCY=BCH
-           KNUTH_WITH_KEOKEN=false
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
-    - stage: build and upload binaries
-      os: linux
-      sudo: required
-      language: python
-      dist: xenial
-      python: "3.7"
-      services:
-        - docker
-      env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
-           KNUTH_CI_CURRENCY=BTC
-      if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
+    #        KNUTH_CI_CURRENCY=BTC
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
 
 
     # - stage: build and upload binaries
@@ -495,6 +501,8 @@ jobs:
 
 
     # Linux, Clang, libstdc++ ----------------------------------------------------
+
+    # Note: Keoken building disabled for the moment
     # - stage: build and upload binaries
     #   os: linux
     #   sudo: required
@@ -503,7 +511,7 @@ jobs:
     #   python: "3.7"
     #   services:
     #     - docker
-    #   env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+    #   env: CONAN_CLANG_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/clang9
     #        KNUTH_CI_CURRENCY=BCH
     #        KNUTH_WITH_KEOKEN=true
     #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
@@ -515,7 +523,7 @@ jobs:
       python: "3.7"
       services:
         - docker
-      env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+      env: CONAN_CLANG_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/clang9
            KNUTH_CI_CURRENCY=BCH
            KNUTH_WITH_KEOKEN=false
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
@@ -527,9 +535,83 @@ jobs:
       python: "3.7"
       services:
         - docker
-      env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+      env: CONAN_CLANG_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/clang9
            KNUTH_CI_CURRENCY=BTC
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+
+    # # Note: Keoken building disabled for the moment
+    # # - stage: build and upload binaries
+    # #   os: linux
+    # #   sudo: required
+    # #   language: python
+    # #   dist: xenial
+    # #   python: "3.7"
+    # #   services:
+    # #     - docker
+    # #   env: CONAN_CLANG_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/clang8
+    # #        KNUTH_CI_CURRENCY=BCH
+    # #        KNUTH_WITH_KEOKEN=true
+    # #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_CLANG_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/clang8
+    #        KNUTH_CI_CURRENCY=BCH
+    #        KNUTH_WITH_KEOKEN=false
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_CLANG_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/clang8
+    #        KNUTH_CI_CURRENCY=BTC
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+
+    # # Note: Keoken building disabled for the moment
+    # # - stage: build and upload binaries
+    # #   os: linux
+    # #   sudo: required
+    # #   language: python
+    # #   dist: xenial
+    # #   python: "3.7"
+    # #   services:
+    # #     - docker
+    # #   env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+    # #        KNUTH_CI_CURRENCY=BCH
+    # #        KNUTH_WITH_KEOKEN=true
+    # #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+    #        KNUTH_CI_CURRENCY=BCH
+    #        KNUTH_WITH_KEOKEN=false
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+    # - stage: build and upload binaries
+    #   os: linux
+    #   sudo: required
+    #   language: python
+    #   dist: xenial
+    #   python: "3.7"
+    #   services:
+    #     - docker
+    #   env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+    #        KNUTH_CI_CURRENCY=BTC
+    #   if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 
     # # - stage: build and upload binaries
     # #   os: linux
@@ -600,11 +682,14 @@ jobs:
     #   env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=conanio/clang39
 
     # macOS, apple-Clang, libc++ -------------------------------------------------
+
+    # Note: do not run tests on dev for macOS (they are too expensive)
+    # Note: Keoken building disabled for the moment
     # - stage: build and upload binaries
     #   os: osx
     #   language: generic
-    #   osx_image: xcode10.1
-    #   env: CONAN_APPLE_CLANG_VERSIONS=10.0
+    #   osx_image: xcode11
+    #   env: CONAN_APPLE_CLANG_VERSIONS=11.0
     #        KNUTH_RUN_TESTS=true
     #        KNUTH_CI_CURRENCY=BCH
     #        KNUTH_WITH_KEOKEN=true
@@ -612,8 +697,8 @@ jobs:
     - stage: build and upload binaries
       os: osx
       language: generic
-      osx_image: xcode10.1
-      env: CONAN_APPLE_CLANG_VERSIONS=10.0
+      osx_image: xcode11
+      env: CONAN_APPLE_CLANG_VERSIONS=11.0
            KNUTH_RUN_TESTS=true
            KNUTH_CI_CURRENCY=BCH
            KNUTH_WITH_KEOKEN=false
@@ -621,18 +706,53 @@ jobs:
     - stage: build and upload binaries
       os: osx
       language: generic
-      osx_image: xcode10.1
-      env: CONAN_APPLE_CLANG_VERSIONS=10.0
+      osx_image: xcode11
+      env: CONAN_APPLE_CLANG_VERSIONS=11.0
            KNUTH_RUN_TESTS=true
            KNUTH_CI_CURRENCY=BTC
       if: branch =~ /^(release|hotfix).+$/    #Just releases
-
     - stage: build and upload binaries
       os: osx
       language: generic
-      osx_image: xcode10.1
-      env: CONAN_APPLE_CLANG_VERSIONS=10.0
+      osx_image: xcode11
+      env: CONAN_APPLE_CLANG_VERSIONS=11.0
       if: branch =~ /^(feature|dev).*$/    #Just development
+
+    # # Note: Keoken building disabled for the moment
+    # # - stage: build and upload binaries
+    # #   os: osx
+    # #   language: generic
+    # #   osx_image: xcode10.1
+    # #   env: CONAN_APPLE_CLANG_VERSIONS=10.0
+    # #        KNUTH_RUN_TESTS=true
+    # #        KNUTH_CI_CURRENCY=BCH
+    # #        KNUTH_WITH_KEOKEN=true
+    # #   if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: osx
+    #   language: generic
+    #   osx_image: xcode10.1
+    #   env: CONAN_APPLE_CLANG_VERSIONS=10.0
+    #        KNUTH_RUN_TESTS=true
+    #        KNUTH_CI_CURRENCY=BCH
+    #        KNUTH_WITH_KEOKEN=false
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: osx
+    #   language: generic
+    #   osx_image: xcode10.1
+    #   env: CONAN_APPLE_CLANG_VERSIONS=10.0
+    #        KNUTH_RUN_TESTS=true
+    #        KNUTH_CI_CURRENCY=BTC
+    #   if: branch =~ /^(release|hotfix).+$/    #Just releases
+    # - stage: build and upload binaries
+    #   os: osx
+    #   language: generic
+    #   osx_image: xcode10.1
+    #   env: CONAN_APPLE_CLANG_VERSIONS=10.0
+    #   if: branch =~ /^(feature|dev).*$/    #Just development
+
+
 
     # - stage: build and upload binaries
     #   os: osx
@@ -675,14 +795,14 @@ jobs:
 
         - eval $(python ci_utils/set_envvars_and_files.py)
         #TODO(fernando): configure the remote and user using environment variables
-        - conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
+        # - conan remote add kthbuild_kth_temp_ https://api.bintray.com/conan/k-nuth/kth
         - conan user
-        - conan user ${CONAN_LOGIN_USERNAME} -r kth_temp -p ${CONAN_PASSWORD}
+        - conan user ${CONAN_LOGIN_USERNAME} -r kthbuild_kth_temp_ -p ${CONAN_PASSWORD}
         - conan user
         - echo "conan alias ${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL} ${REPO_NAME}/${KNUTH_CONAN_VERSION}@kth/${KNUTH_CONAN_CHANNEL}"
         - conan alias "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" "${REPO_NAME}/${KNUTH_CONAN_VERSION}@kth/${KNUTH_CONAN_CHANNEL}"
-        - echo "conan upload ${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL} --all -r kth_temp"
-        - conan upload "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" --all -r kth_temp        
+        - echo "conan upload ${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL} --all -r kthbuild_kth_temp_"
+        - conan upload "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" --all -r kthbuild_kth_temp_        
 
 # Push to repos ------------------------------------------------------
     - stage: push to repos

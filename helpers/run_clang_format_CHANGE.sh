@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2016-2019 Knuth Project.
+# Copyright (c) 2016-2020 Knuth Project.
 #
 # This file is part of Knuth Project.
 #

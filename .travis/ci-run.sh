@@ -20,10 +20,13 @@ PATH=/home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
 sudo find / -name "clang-tidy"
 clang-tidy --version
 
+pip install kthbuild --upgrade
+
 conan user
 conan --version
 
-conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
+conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth || true
+conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim || true
 
 cd /home/conan/project
 
@@ -31,8 +34,8 @@ echo $CONAN_CHANNEL
 eval $(python ci_utils/set_envvars_and_files.py)
 echo $CONAN_CHANNEL
 
-# git clone --depth=50 --branch=dev https://github.com/k-nuth/kth-domain.git kth/kth-domain
-# cd kth/kth-domain
+# git clone --depth=50 --branch=dev https://github.com/k-nuth/domain.git kth/domain
+# cd kth/domain
 # git submodule update --init --recursive
 
 mkdir build

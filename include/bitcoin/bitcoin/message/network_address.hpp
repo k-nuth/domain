@@ -103,10 +103,10 @@
 // };
 
 // // version::services::none
-// BC_CONSTEXPR uint32_t no_services = 0;
-// BC_CONSTEXPR uint32_t no_timestamp = 0;
-// BC_CONSTEXPR uint16_t unspecified_ip_port = 0;
-// BC_CONSTEXPR ip_address unspecified_ip_address
+// constexpr uint32_t no_services = 0;
+// constexpr uint32_t no_timestamp = 0;
+// constexpr uint16_t unspecified_ip_port = 0;
+// constexpr ip_address unspecified_ip_address
 // {
 //     {
 //         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -115,7 +115,7 @@
 // };
 
 // // Defaults to full node services.
-// BC_CONSTEXPR network_address unspecified_network_address
+// constexpr network_address unspecified_network_address
 // {
 //     no_timestamp,
 //     no_services,
