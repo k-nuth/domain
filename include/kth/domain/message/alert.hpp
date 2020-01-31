@@ -53,12 +53,12 @@ public:
     bool operator!=(alert const& x) const;
 
     data_chunk& payload();
-    data_chunk const& payload() const;
+    [[nodiscard]] data_chunk const& payload() const;
     void set_payload(data_chunk const& value);
     void set_payload(data_chunk&& value);
 
     data_chunk& signature();
-    data_chunk const& signature() const;
+    [[nodiscard]] data_chunk const& signature() const;
     void set_signature(data_chunk const& value);
     void set_signature(data_chunk&& value);
 
@@ -81,7 +81,7 @@ public:
 
     //bool from_data(uint32_t version, reader& source);
 
-    data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
@@ -94,9 +94,9 @@ public:
 
     //void to_data(uint32_t version, writer& sink) const;
 
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
     void reset();
-    size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

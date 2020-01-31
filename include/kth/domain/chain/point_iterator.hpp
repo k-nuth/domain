@@ -56,11 +56,11 @@ public:
 protected:
     void increment();
     void decrement();
-    point_iterator increase(unsigned value) const;
-    point_iterator decrease(unsigned value) const;
+    [[nodiscard]] point_iterator increase(unsigned value) const;
+    [[nodiscard]] point_iterator decrease(unsigned value) const;
 
 private:
-    uint8_t current() const;
+    [[nodiscard]] uint8_t current() const;
 
     point const* point_;
     unsigned current_;

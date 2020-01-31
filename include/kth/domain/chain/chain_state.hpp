@@ -144,29 +144,29 @@ public:
     );
 
     /// Properties.
-    size_t height() const;
-    uint32_t enabled_forks() const;
-    uint32_t minimum_version() const;
-    uint32_t median_time_past() const;
-    uint32_t work_required() const;
+    [[nodiscard]] size_t height() const;
+    [[nodiscard]] uint32_t enabled_forks() const;
+    [[nodiscard]] uint32_t minimum_version() const;
+    [[nodiscard]] uint32_t median_time_past() const;
+    [[nodiscard]] uint32_t work_required() const;
 
 #ifdef KTH_CURRENCY_BCH
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
-    great_wall_t great_wall_activation_time() const;
-    graviton_t graviton_activation_time() const;
+    [[nodiscard]] great_wall_t great_wall_activation_time() const;
+    [[nodiscard]] graviton_t graviton_activation_time() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
 
     /// Determine if the fork is set for this block.
-    bool is_enabled(machine::rule_fork fork) const;
+    [[nodiscard]] bool is_enabled(machine::rule_fork fork) const;
 
     /// Determine if this block hash fails a checkpoint at this height.
-    bool is_checkpoint_conflict(hash_digest const& hash) const;
+    [[nodiscard]] bool is_checkpoint_conflict(hash_digest const& hash) const;
 
     /// This block height is less than or equal to that of the top checkpoint.
-    bool is_under_checkpoint() const;
+    [[nodiscard]] bool is_under_checkpoint() const;
 
     static bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
@@ -180,10 +180,10 @@ public:
     static 
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
-    bool is_monolith_enabled() const;
-    bool is_magnetic_anomaly_enabled() const;
-    bool is_great_wall_enabled() const;
-    bool is_graviton_enabled() const;
+    [[nodiscard]] bool is_monolith_enabled() const;
+    [[nodiscard]] bool is_magnetic_anomaly_enabled() const;
+    [[nodiscard]] bool is_great_wall_enabled() const;
+    [[nodiscard]] bool is_graviton_enabled() const;
 
 #endif  //KTH_CURRENCY_BCH
 

@@ -69,15 +69,15 @@ public:
     bool operator!=(inventory_vector const& x) const;
 
 
-    type_id type() const;
+    [[nodiscard]] type_id type() const;
     void set_type(type_id value);
 
     hash_digest& hash();
-    hash_digest const& hash() const;
+    [[nodiscard]] hash_digest const& hash() const;
     void set_hash(hash_digest const& value);
 
-    bool is_block_type() const;
-    bool is_transaction_type() const;
+    [[nodiscard]] bool is_block_type() const;
+    [[nodiscard]] bool is_transaction_type() const;
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -98,7 +98,7 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
@@ -109,14 +109,14 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
     void reset();
 
 #ifndef KTH_CURRENCY_BCH    
     void to_witness();
 #endif
     
-    size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t version) const;
 
 
 private:

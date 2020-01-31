@@ -21,7 +21,7 @@ public:
     point_value::list points;
 
     /// Total value of the current set of points.
-    uint64_t value() const;
+    [[nodiscard]] uint64_t value() const;
 };
 
 }  // namespace chain

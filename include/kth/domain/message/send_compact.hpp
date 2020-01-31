@@ -53,10 +53,10 @@ public:
     bool operator!=(send_compact const& x) const;
 
 
-    bool high_bandwidth_mode() const;
+    [[nodiscard]] bool high_bandwidth_mode() const;
     void set_high_bandwidth_mode(bool mode);
 
-    uint64_t version() const;
+    [[nodiscard]] uint64_t version() const;
     void set_version(uint64_t version);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -87,7 +87,7 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
@@ -97,9 +97,9 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
     void reset();
-    size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

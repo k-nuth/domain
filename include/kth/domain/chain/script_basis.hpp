@@ -111,12 +111,12 @@ public:
     bool from_string(std::string const& mnemonic);
 
     /// A script object is valid if the byte count matches the prefix.
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool prefix) const;
+    [[nodiscard]] data_chunk to_data(bool prefix) const;
     void to_data(data_sink& stream, bool prefix) const;
 
     template <Writer W>
@@ -129,14 +129,14 @@ public:
         sink.write_bytes(bytes_);
     }
 
-    std::string to_string(uint32_t active_forks) const;
+    [[nodiscard]] std::string to_string(uint32_t active_forks) const;
 
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    size_t serialized_size(bool prefix) const;
-    data_chunk const& bytes() const;
+    [[nodiscard]] size_t serialized_size(bool prefix) const;
+    [[nodiscard]] data_chunk const& bytes() const;
     // operation::list const& operations() const;
 
 
@@ -207,16 +207,16 @@ public:
     //-------------------------------------------------------------------------
 
     /// Common pattern detection.
-    data_chunk witness_program() const;
-    script_version version() const;
-    script_pattern pattern() const;
-    script_pattern output_pattern() const;
-    script_pattern input_pattern() const;
+    [[nodiscard]] data_chunk witness_program() const;
+    [[nodiscard]] script_version version() const;
+    [[nodiscard]] script_pattern pattern() const;
+    [[nodiscard]] script_pattern output_pattern() const;
+    [[nodiscard]] script_pattern input_pattern() const;
 
     /// Consensus computations.
-    size_t sigops(bool accurate) const;
+    [[nodiscard]] size_t sigops(bool accurate) const;
     void find_and_delete(data_stack const& endorsements);
-    bool is_unspendable() const;
+    [[nodiscard]] bool is_unspendable() const;
 
     // Validation.
     //-------------------------------------------------------------------------
@@ -234,8 +234,8 @@ public:
     void reset();
 
 // protected:
-    bool is_pay_to_witness(uint32_t forks) const;
-    bool is_pay_to_script_hash(uint32_t forks) const;
+    [[nodiscard]] bool is_pay_to_witness(uint32_t forks) const;
+    [[nodiscard]] bool is_pay_to_script_hash(uint32_t forks) const;
 
 // private:
     static size_t serialized_size(operation::list const& ops);

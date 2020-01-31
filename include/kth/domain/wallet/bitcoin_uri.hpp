@@ -45,17 +45,17 @@ public:
     operator bool() const;
 
     /// Get the serialized URI representation.
-    std::string encoded() const;
+    [[nodiscard]] std::string encoded() const;
 
     /// Property getters.
-    uint64_t amount() const;
-    std::string label() const;
-    std::string message() const;
-    std::string r() const;
-    std::string address() const;
-    payment_address payment() const;
-    stealth_address stealth() const;
-    std::string parameter(std::string const& key) const;
+    [[nodiscard]] uint64_t amount() const;
+    [[nodiscard]] std::string label() const;
+    [[nodiscard]] std::string message() const;
+    [[nodiscard]] std::string r() const;
+    [[nodiscard]] std::string address() const;
+    [[nodiscard]] payment_address payment() const;
+    [[nodiscard]] stealth_address stealth() const;
+    [[nodiscard]] std::string parameter(std::string const& key) const;
 
     /// Property setters.
     void set_amount(uint64_t satoshis);

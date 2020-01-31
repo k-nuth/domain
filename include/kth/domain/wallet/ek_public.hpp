@@ -38,10 +38,10 @@ public:
     operator encrypted_public const&() const;
 
     /// Serializer.
-    std::string encoded() const;
+    [[nodiscard]] std::string encoded() const;
 
     /// Accessors.
-    encrypted_public const& public_key() const;
+    [[nodiscard]] encrypted_public const& public_key() const;
 
 private:
     /// Factories.

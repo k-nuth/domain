@@ -84,18 +84,18 @@ public:
     operator ec_secret const&() const;
 
     /// Serializer.
-    std::string encoded() const;
+    [[nodiscard]] std::string encoded() const;
 
     /// Accessors.
-    ec_secret const& secret() const;
-    uint16_t version() const;
-    uint8_t payment_version() const;
-    uint8_t wif_version() const;
-    bool compressed() const;
+    [[nodiscard]] ec_secret const& secret() const;
+    [[nodiscard]] uint16_t version() const;
+    [[nodiscard]] uint8_t payment_version() const;
+    [[nodiscard]] uint8_t wif_version() const;
+    [[nodiscard]] bool compressed() const;
 
     /// Methods.
-    ec_public to_public() const;
-    payment_address to_payment_address() const;
+    [[nodiscard]] ec_public to_public() const;
+    [[nodiscard]] payment_address to_payment_address() const;
 
 private:
     /// Validators.

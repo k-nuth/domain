@@ -133,38 +133,38 @@ public:
     bool operator!=(version const& x) const;
 
 
-    uint32_t value() const;
+    [[nodiscard]] uint32_t value() const;
     void set_value(uint32_t value);
 
-    uint64_t services() const;
+    [[nodiscard]] uint64_t services() const;
     void set_services(uint64_t services);
 
-    uint64_t timestamp() const;
+    [[nodiscard]] uint64_t timestamp() const;
     void set_timestamp(uint64_t timestamp);
 
     network_address& address_receiver();
-    network_address const& address_receiver() const;
+    [[nodiscard]] network_address const& address_receiver() const;
     //    void set_address_receiver(network_address const& address);
     void set_address_receiver(network_address const& address);
 
     network_address& address_sender();
-    network_address const& address_sender() const;
+    [[nodiscard]] network_address const& address_sender() const;
     //    void set_address_sender(network_address const& address);
     void set_address_sender(network_address const& address);
 
-    uint64_t nonce() const;
+    [[nodiscard]] uint64_t nonce() const;
     void set_nonce(uint64_t nonce);
 
     std::string& user_agent();
-    std::string const& user_agent() const;
+    [[nodiscard]] std::string const& user_agent() const;
     void set_user_agent(std::string const& agent);
     void set_user_agent(std::string&& agent);
 
-    uint32_t start_height() const;
+    [[nodiscard]] uint32_t start_height() const;
     void set_start_height(uint32_t height);
 
     // version >= 70001
-    bool relay() const;
+    [[nodiscard]] bool relay() const;
     void set_relay(bool relay);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -208,7 +208,7 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
@@ -229,9 +229,9 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
     void reset();
-    size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

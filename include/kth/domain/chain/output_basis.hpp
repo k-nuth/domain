@@ -83,12 +83,12 @@ public:
         return source;
     }
 
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire = true) const;
+    [[nodiscard]] data_chunk to_data(bool wire = true) const;
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <Writer W>
@@ -100,22 +100,22 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    size_t serialized_size(bool wire = true) const;
+    [[nodiscard]] size_t serialized_size(bool wire = true) const;
 
-    uint64_t value() const;
+    [[nodiscard]] uint64_t value() const;
     void set_value(uint64_t value);
 
     // Deprecated (unsafe).
     chain::script& script();
-    chain::script const& script() const;
+    [[nodiscard]] chain::script const& script() const;
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
     // Validation.
     //-------------------------------------------------------------------------
 
-    size_t signature_operations(bool bip141) const;
-    bool is_dust(uint64_t minimum_output_value) const;
+    [[nodiscard]] size_t signature_operations(bool bip141) const;
+    [[nodiscard]] bool is_dust(uint64_t minimum_output_value) const;
     bool extract_committed_hash(hash_digest& out) const;
 
 // protected:

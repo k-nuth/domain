@@ -53,11 +53,11 @@ public:
 
 
     hash_digest& block_hash();
-    hash_digest const& block_hash() const;
+    [[nodiscard]] hash_digest const& block_hash() const;
     void set_block_hash(hash_digest const& value);
 
     std::vector<uint64_t>& indexes();
-    const std::vector<uint64_t>& indexes() const;
+    [[nodiscard]] const std::vector<uint64_t>& indexes() const;
     void set_indexes(const std::vector<uint64_t>& values);
     void set_indexes(std::vector<uint64_t>&& values);
 
@@ -90,7 +90,7 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
@@ -103,9 +103,9 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
     void reset();
-    size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t version) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

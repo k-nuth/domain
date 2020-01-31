@@ -59,7 +59,7 @@ public:
 
 
     network_address::list& addresses();
-    network_address::list const& addresses() const;
+    [[nodiscard]] network_address::list const& addresses() const;
     void set_addresses(network_address::list const& value);
     void set_addresses(network_address::list&& value);
 
@@ -94,7 +94,7 @@ public:
 
     //bool from_data(uint32_t version, reader& source);
 
-    data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
@@ -108,9 +108,9 @@ public:
 
     //void to_data(uint32_t version, writer& sink) const;
 
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
     void reset();
-    size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

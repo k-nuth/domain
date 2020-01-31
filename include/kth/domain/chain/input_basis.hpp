@@ -103,12 +103,12 @@ public:
         return source;
     }
 
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire = true, bool witness = false) const;
+    [[nodiscard]] data_chunk to_data(bool wire = true, bool witness = false) const;
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     template <Writer W>
@@ -133,20 +133,20 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    size_t serialized_size_non_witness(bool wire) const;
+    [[nodiscard]] size_t serialized_size_non_witness(bool wire) const;
 
     /// This accounts for wire witness, but does not read or write it.
-    size_t serialized_size(bool wire = true, bool witness = false) const;
+    [[nodiscard]] size_t serialized_size(bool wire = true, bool witness = false) const;
 
 
     output_point& previous_output();
-    output_point const& previous_output() const;
+    [[nodiscard]] output_point const& previous_output() const;
     void set_previous_output(output_point const& value);
     void set_previous_output(output_point&& value);
 
     // Deprecated (unsafe).
     chain::script& script();
-    chain::script const& script() const;
+    [[nodiscard]] chain::script const& script() const;
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
@@ -159,7 +159,7 @@ public:
     void set_witness(chain::witness&& value);
 #endif // KTH_CURRENCY_BCH
 
-    uint32_t sequence() const;
+    [[nodiscard]] uint32_t sequence() const;
     void set_sequence(uint32_t value);
 
     // Utilities.
@@ -173,10 +173,10 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
-    bool is_final() const;
-    bool is_segregated() const;
-    bool is_locked(size_t block_height, uint32_t median_time_past) const;
-    size_t signature_operations(bool bip16, bool bip141) const;
+    [[nodiscard]] bool is_final() const;
+    [[nodiscard]] bool is_segregated() const;
+    [[nodiscard]] bool is_locked(size_t block_height, uint32_t median_time_past) const;
+    [[nodiscard]] size_t signature_operations(bool bip16, bool bip141) const;
     bool extract_reserved_hash(hash_digest& out) const;
     bool extract_embedded_script(chain::script& out) const;
 

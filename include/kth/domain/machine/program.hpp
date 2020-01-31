@@ -56,18 +56,18 @@ public:
     program(chain::script const& script, program&& x, bool move);
 
     /// Constant registers.
-    bool is_valid() const;
-    uint32_t forks() const;
-    uint32_t input_index() const;
-    uint64_t value() const;
-    script_version version() const;
-    chain::transaction const& transaction() const;
+    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] uint32_t forks() const;
+    [[nodiscard]] uint32_t input_index() const;
+    [[nodiscard]] uint64_t value() const;
+    [[nodiscard]] script_version version() const;
+    [[nodiscard]] chain::transaction const& transaction() const;
 
     /// Program registers.
-    op_iterator begin() const;
-    op_iterator jump() const;
-    op_iterator end() const;
-    size_t operation_count() const;
+    [[nodiscard]] op_iterator begin() const;
+    [[nodiscard]] op_iterator jump() const;
+    [[nodiscard]] op_iterator end() const;
+    [[nodiscard]] size_t operation_count() const;
 
     /// Instructions.
     code evaluate();
@@ -102,30 +102,30 @@ public:
     void erase(stack_iterator const& first, stack_iterator const& last);
 
     /// Primary push/pop optimizations (passive).
-    bool empty() const;
-    bool stack_true(bool clean) const;
-    bool stack_result(bool clean) const;
-    bool is_stack_overflow() const;
-    bool if_(operation const& op) const;
+    [[nodiscard]] bool empty() const;
+    [[nodiscard]] bool stack_true(bool clean) const;
+    [[nodiscard]] bool stack_result(bool clean) const;
+    [[nodiscard]] bool is_stack_overflow() const;
+    [[nodiscard]] bool if_(operation const& op) const;
     
-    value_type const& item(size_t index) const;
+    [[nodiscard]] value_type const& item(size_t index) const;
     value_type& item(size_t index);
 
     bool top(number& out_number, size_t maxiumum_size = max_number_size) const;
     // bool top(number& out_number, size_t maxiumum_size = max_number_size) /*const*/;
 
-    stack_iterator position(size_t index) const;
+    [[nodiscard]] stack_iterator position(size_t index) const;
     stack_mutable_iterator position(size_t index);
 
 
 
-    operation::list subscript() const;
-    size_t size() const;
+    [[nodiscard]] operation::list subscript() const;
+    [[nodiscard]] size_t size() const;
 
     // Alternate stack.
     //-------------------------------------------------------------------------
 
-    bool empty_alternate() const;
+    [[nodiscard]] bool empty_alternate() const;
     void push_alternate(value_type&& value);
     value_type pop_alternate();
 
@@ -135,15 +135,15 @@ public:
     void open(bool value);
     void negate();
     void close();
-    bool closed() const;
-    bool succeeded() const;
+    [[nodiscard]] bool closed() const;
+    [[nodiscard]] bool succeeded() const;
 
 private:
     // A space-efficient dynamic bitset (specialized).
     using bool_stack = std::vector<bool>;
 
     void reserve_stacks();
-    bool stack_to_bool(bool clean) const;
+    [[nodiscard]] bool stack_to_bool(bool clean) const;
 
     chain::script const& script_;
     chain::transaction const& transaction_;

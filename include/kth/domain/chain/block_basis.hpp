@@ -123,12 +123,12 @@ public:
 
     //bool from_data(reader& source, bool witness=false);
 
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    data_chunk to_data(size_t serialized_size, bool witness = false) const;
+    [[nodiscard]] data_chunk to_data(size_t serialized_size, bool witness = false) const;
     void to_data(data_sink& stream, bool witness = false) const;
 
     template <Writer W>
@@ -142,7 +142,7 @@ public:
         std::for_each(transactions_.begin(), transactions_.end(), to);
     }
 
-    hash_list to_hashes(bool witness = false) const;
+    [[nodiscard]] hash_list to_hashes(bool witness = false) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -151,16 +151,16 @@ public:
 
     // deprecated (unsafe)
     chain::header& header();
-    chain::header const& header() const;
+    [[nodiscard]] chain::header const& header() const;
     void set_header(chain::header const& value);
 
     // deprecated (unsafe)
     transaction::list& transactions();
-    transaction::list const& transactions() const;
+    [[nodiscard]] transaction::list const& transactions() const;
     void set_transactions(transaction::list const& value);
     void set_transactions(transaction::list&& value);
 
-    hash_digest hash() const;
+    [[nodiscard]] hash_digest hash() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
@@ -182,40 +182,40 @@ public:
     static uint64_t subsidy(size_t height, bool retarget = true);
     static uint256_t proof(uint32_t bits);
 
-    uint64_t fees() const;
-    uint64_t claim() const;
-    uint64_t reward(size_t height) const;
-    uint256_t proof() const;
-    hash_digest generate_merkle_root(bool witness = false) const;
+    [[nodiscard]] uint64_t fees() const;
+    [[nodiscard]] uint64_t claim() const;
+    [[nodiscard]] uint64_t reward(size_t height) const;
+    [[nodiscard]] uint256_t proof() const;
+    [[nodiscard]] hash_digest generate_merkle_root(bool witness = false) const;
     // size_t signature_operations() const;
-    size_t signature_operations(bool bip16, bool bip141) const;
+    [[nodiscard]] size_t signature_operations(bool bip16, bool bip141) const;
     // size_t total_inputs(bool with_coinbase = true) const;
     // size_t weight(size_t serialized_size_true, size_t serialized_size_false) const;
 
-    bool is_extra_coinbases() const;
-    bool is_final(size_t height, uint32_t block_time) const;
-    bool is_distinct_transaction_set() const;
-    bool is_valid_coinbase_claim(size_t height) const;
-    bool is_valid_coinbase_script(size_t height) const;
-    bool is_valid_witness_commitment() const;
-    bool is_forward_reference() const;
-    bool is_canonical_ordered() const;
-    bool is_internal_double_spend() const;
-    bool is_valid_merkle_root() const;
+    [[nodiscard]] bool is_extra_coinbases() const;
+    [[nodiscard]] bool is_final(size_t height, uint32_t block_time) const;
+    [[nodiscard]] bool is_distinct_transaction_set() const;
+    [[nodiscard]] bool is_valid_coinbase_claim(size_t height) const;
+    [[nodiscard]] bool is_valid_coinbase_script(size_t height) const;
+    [[nodiscard]] bool is_valid_witness_commitment() const;
+    [[nodiscard]] bool is_forward_reference() const;
+    [[nodiscard]] bool is_canonical_ordered() const;
+    [[nodiscard]] bool is_internal_double_spend() const;
+    [[nodiscard]] bool is_valid_merkle_root() const;
     // bool is_segregated() const;
 
-    code check(size_t serialized_size_false) const;
-    code check_transactions() const;
+    [[nodiscard]] code check(size_t serialized_size_false) const;
+    [[nodiscard]] code check_transactions() const;
     // code accept(bool transactions = true) const;
-    code accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions = true) const;
-    code accept_transactions(chain_state const& state) const;
+    [[nodiscard]] code accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions = true) const;
+    [[nodiscard]] code accept_transactions(chain_state const& state) const;
     // code connect() const;
-    code connect(chain_state const& state) const;
-    code connect_transactions(chain_state const& state) const;
+    [[nodiscard]] code connect(chain_state const& state) const;
+    [[nodiscard]] code connect_transactions(chain_state const& state) const;
 
 // protected:
     void reset();
-    size_t non_coinbase_input_count() const;
+    [[nodiscard]] size_t non_coinbase_input_count() const;
 
 private:
     chain::header header_;

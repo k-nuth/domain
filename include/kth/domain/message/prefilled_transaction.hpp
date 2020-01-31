@@ -52,11 +52,11 @@ public:
     bool operator!=(prefilled_transaction const& x) const;
 
 
-    uint64_t index() const;
+    [[nodiscard]] uint64_t index() const;
     void set_index(uint64_t value);
 
     chain::transaction& transaction();
-    chain::transaction const& transaction() const;
+    [[nodiscard]] chain::transaction const& transaction() const;
     void set_transaction(chain::transaction const& tx);
     void set_transaction(chain::transaction&& tx);
 
@@ -78,7 +78,7 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <Writer W>
@@ -92,9 +92,9 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
     void reset();
-    size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t version) const;
 
 
 private:
