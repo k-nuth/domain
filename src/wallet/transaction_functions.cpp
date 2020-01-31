@@ -156,7 +156,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_bch(kth::ec_secret co
                                                                bool anyone_can_pay /*= false*/) {
     //// NOTE: BCH endorsement uses script_version::zero (segwit sign algorithm)
     //// Add FORK_ID to the sign_type when signing bitcoin cash transactions
-    sign_type |= 0x40u;
+    sign_type |= 0x40U;
     return input_signature_btc(private_key, output_script, tx, amount, index, sign_type, anyone_can_pay);
 }
 

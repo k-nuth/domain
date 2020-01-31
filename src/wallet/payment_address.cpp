@@ -102,8 +102,8 @@ template <unsigned int frombits, unsigned int tobits, bool pad, typename O, type
 bool convert_bits(O& out, I it, I end) {
     size_t acc = 0;
     size_t bits = 0;
-    constexpr size_t maxv = (1u << tobits) - 1;
-    constexpr size_t max_acc = (1u << (frombits + tobits - 1)) - 1;
+    constexpr size_t maxv = (1U << tobits) - 1;
+    constexpr size_t max_acc = (1U << (frombits + tobits - 1)) - 1;
     while (it != end) {
         acc = ((acc << frombits) | *it) & max_acc;
         bits += frombits;
@@ -157,7 +157,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     }
 
     uint8_t last = payload.back();
-    uint8_t mask = (1u << extrabits) - 1;
+    uint8_t mask = (1U << extrabits) - 1;
     if ((last & mask) != 0) {
         // We have non zero bits as padding.
         return {};
@@ -174,7 +174,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return {};
     }
 
-    auto type = cash_addr_type((version >> 3u) & 0x1f);
+    auto type = cash_addr_type((version >> 3U) & 0x1f);
     uint32_t hash_size = 20 + 4 * (version & 0x03);
     if ((version & 0x04) != 0) {
         hash_size *= 2;
@@ -282,7 +282,7 @@ std::string payment_address::encoded() const {
 // Convert the data part to a 5 bit representation.
 template <typename T>
 data_chunk pack_addr_data_(T const& id, uint8_t type) {
-    uint8_t version_byte(type << 3u);
+    uint8_t version_byte(type << 3U);
     size_t size = id.size();
     uint8_t encoded_size = 0;
 

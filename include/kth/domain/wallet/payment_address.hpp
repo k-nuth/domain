@@ -25,7 +25,7 @@
 namespace kth {
 namespace wallet {
 
-static constexpr size_t payment_size = 1u + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
+static constexpr size_t payment_size = 1U + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
 using payment = byte_array<payment_size>;
 
 /// A class for working with non-stealth payment addresses.

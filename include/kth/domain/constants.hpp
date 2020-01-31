@@ -212,8 +212,8 @@ constexpr size_t first_version = 1;
 constexpr size_t bip34_version = 2;
 constexpr size_t bip66_version = 3;
 constexpr size_t bip65_version = 4;
-constexpr uint32_t bip9_version_bit0 = 1u << 0;
-constexpr uint32_t bip9_version_bit1 = 1u << 1;
+constexpr uint32_t bip9_version_bit0 = 1U << 0;
+constexpr uint32_t bip9_version_bit1 = 1U << 1;
 constexpr uint32_t bip9_version_base = 0x20000000;
 
 #ifdef KTH_CURRENCY_BCH

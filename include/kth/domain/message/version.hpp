@@ -89,20 +89,20 @@ public:
         none = 0,
 
         // The node is capable of serving the block chain (full node).
-        node_network = (1u << 0),
+        node_network = (1U << 0),
 
         // Requires version.value >= level::bip64 (BIP64 is draft only).
         // The node is capable of responding to the getutxo protocol request.
-        node_utxo = (1u << 1),
+        node_utxo = (1U << 1),
 
         // Requires version.value >= level::bip111
 
         // The node is capable and willing to handle bloom-filtered connections.
-        node_bloom = (1u << 2),
+        node_bloom = (1U << 2),
 
         // Independent of network protocol level.
         // The node is capable of responding to witness inventory requests.
-        node_witness = (1u << 3),
+        node_witness = (1U << 3),
 
 #ifdef KTH_CURRENCY_BCH
         node_network_cash = (1 << 5)  //TODO(kth): check what happens with node_network (or node_network_cash)

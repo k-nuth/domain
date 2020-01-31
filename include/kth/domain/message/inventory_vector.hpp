@@ -33,7 +33,7 @@ public:
         block = 2,
         filtered_block = 3,
         compact_block = 4,
-        witness = (1u << 30),
+        witness = (1U << 30),
         witness_transaction = witness | transaction,
         witness_block = witness | block,
         reserved = witness | filtered_block

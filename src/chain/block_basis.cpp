@@ -385,7 +385,7 @@ block_basis::indexes block_basis::locator_heights(size_t top) {
     for (auto height = top; height > 0; height = floor_subtract(height, step)) {
         // Push top 10 indexes first, then back off exponentially.
         if (heights.size() >= 10) {
-            step <<= 1u;
+            step <<= 1U;
         }
 
         heights.push_back(height);

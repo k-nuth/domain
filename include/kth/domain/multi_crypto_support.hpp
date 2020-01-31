@@ -12,17 +12,17 @@
 namespace kth {
 
 namespace netmagic {
-constexpr uint32_t btc_mainnet = 0xd9b4bef9u;
-constexpr uint32_t btc_testnet = 0x0709110bu;
-constexpr uint32_t btc_regtest = 0xdab5bffau;
+constexpr uint32_t btc_mainnet = 0xd9b4bef9U;
+constexpr uint32_t btc_testnet = 0x0709110bU;
+constexpr uint32_t btc_regtest = 0xdab5bffaU;
 
-constexpr uint32_t ltc_mainnet = 0xdbb6c0fbu;
-constexpr uint32_t ltc_testnet = 0xf1c8d2fdu;
-constexpr uint32_t ltc_regtest = 0xdab5bffau;
+constexpr uint32_t ltc_mainnet = 0xdbb6c0fbU;
+constexpr uint32_t ltc_testnet = 0xf1c8d2fdU;
+constexpr uint32_t ltc_regtest = 0xdab5bffaU;
 
-constexpr uint32_t bch_mainnet = 0xe8f3e1e3u;
-constexpr uint32_t bch_testnet = 0xf4f3e5f4u;
-constexpr uint32_t bch_regtest = 0xfabfb5dau;
+constexpr uint32_t bch_mainnet = 0xe8f3e1e3U;
+constexpr uint32_t bch_testnet = 0xf4f3e5f4U;
+constexpr uint32_t bch_regtest = 0xfabfb5daU;
 }  // namespace netmagic
 
 namespace config {

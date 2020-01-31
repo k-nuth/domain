@@ -22,10 +22,10 @@ namespace wallet {
 class payment_address;
 
 /// Private keys with public key compression metadata:
-static constexpr size_t wif_uncompressed_size = 37u;
+static constexpr size_t wif_uncompressed_size = 37U;
 using wif_uncompressed = byte_array<wif_uncompressed_size>;
 
-static constexpr size_t wif_compressed_size = wif_uncompressed_size + 1u;
+static constexpr size_t wif_compressed_size = wif_uncompressed_size + 1U;
 using wif_compressed = byte_array<wif_compressed_size>;
 
 /// Use to pass an ec secret with compresson and version information.

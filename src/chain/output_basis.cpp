@@ -170,7 +170,7 @@ size_t output_basis::signature_operations(bool bip141) const {
     bip141 = false;  // No segwit
 #endif
     // Penalize quadratic signature operations (bip141).
-    auto const sigops_factor = bip141 ? fast_sigops_factor : 1u;
+    auto const sigops_factor = bip141 ? fast_sigops_factor : 1U;
 
     // Count heavy sigops in the output script.
     return script_.sigops(false) * sigops_factor;
