@@ -11,11 +11,18 @@ set -x
 # PATH=/usr/lib/llvm-7/bin/:$PATH
 
 
-wget http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-# tar -xJvf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-tar -xJf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-ls /home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin
-PATH=/home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
+# wget http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+# # tar -xJvf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+# tar -xJf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+# ls /home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin
+# PATH=/home/conan/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
+
+wget http://releases.llvm.org/9.0.0/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+# tar -xJvf clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+tar -xJf clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+ls /home/conan/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04/bin
+PATH=/home/conan/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
+
 
 sudo find / -name "clang-tidy"
 clang-tidy --version
@@ -38,9 +45,13 @@ echo $CONAN_CHANNEL
 # cd kth/domain
 # git submodule update --init --recursive
 
+
+TEMP_MARCH_ID="$(python -c 'import kthbuild;print(kthbuild.get_base_march_ids()[0])')"
+echo "${TEMP_MARCH_ID}"
+
 mkdir build
 cd build
-conan install .. 
+conan install .. -o march_id=${TEMP_MARCH_ID}
 # cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_CONAN=ON -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Release -DJUST_KTH_SOURCES=ON -DWITH_KEOKEN=ON
 # python ../ci_utils/run-clang-tidy.py -checks='*,-android-*,-modernize-use-using,-hicpp-deprecated-headers,-modernize-deprecated-headers,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-hicpp-vararg,-hicpp-no-malloc,-fuchsia-default-arguments,-google-runtime-references,-cppcoreguidelines-no-malloc,-hicpp-no-malloc,-llvm-header-guard,-android-cloexec-fopen,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-const-cast,-hicpp-braces-around-statements,-hicpp-special-member-functions,-readability-braces-around-statements,-coreguidelines-special-member-function,-cppcoreguidelines-special-member-functions,-clang-diagnostic-static-inline-explicit-instantiation,-fuchsia-overloaded-operator,-cppcoreguidelines-pro-type-member-init,-hicpp-member-init' -warnings-as-errors='*' -header-filter=/home/conan/project/include/knuth
 
