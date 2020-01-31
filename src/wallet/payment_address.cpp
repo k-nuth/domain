@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/wallet/payment_address.hpp>
 
 #include <algorithm>
 #include <cstdint>
@@ -26,24 +12,23 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/bitcoin/wallet/ec_private.hpp>
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
-#include <bitcoin/infrastructure/formats/base_58.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/domain/wallet/ec_private.hpp>
+#include <kth/domain/wallet/ec_public.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
 
-#ifdef KNUTH_CURRENCY_BCH
-#include <bitcoin/infrastructure/wallet/cashaddr.hpp>
-#endif  //KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
+#include <kth/infrastructure/wallet/cashaddr.hpp>
+#endif  //KTH_CURRENCY_BCH
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 using namespace bc::machine;
 
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
 uint8_t const payment_address::mainnet_p2kh = 0x30;
 #else
 uint8_t const payment_address::mainnet_p2kh = 0x00;
@@ -54,7 +39,7 @@ uint8_t const payment_address::mainnet_p2sh = 0x05;
 uint8_t const payment_address::testnet_p2kh = 0x6f;
 uint8_t const payment_address::testnet_p2sh = 0xc4;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 std::string const payment_address::cashaddr_prefix_mainnet = "bitcoincash";
 std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
 #endif
@@ -111,14 +96,14 @@ bool payment_address::is_address(data_slice decoded) {
 
 // Factories.
 // ----------------------------------------------------------------------------
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 
 template <unsigned int frombits, unsigned int tobits, bool pad, typename O, typename I>
 bool convert_bits(O& out, I it, I end) {
     size_t acc = 0;
     size_t bits = 0;
-    constexpr size_t maxv = (1u << tobits) - 1;
-    constexpr size_t max_acc = (1u << (frombits + tobits - 1)) - 1;
+    constexpr size_t maxv = (1U << tobits) - 1;
+    constexpr size_t max_acc = (1U << (frombits + tobits - 1)) - 1;
     while (it != end) {
         acc = ((acc << frombits) | *it) & max_acc;
         bits += frombits;
@@ -172,7 +157,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     }
 
     uint8_t last = payload.back();
-    uint8_t mask = (1u << extrabits) - 1;
+    uint8_t mask = (1U << extrabits) - 1;
     if ((last & mask) != 0) {
         // We have non zero bits as padding.
         return {};
@@ -189,7 +174,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return {};
     }
 
-    auto type = cash_addr_type((version >> 3u) & 0x1f);
+    auto type = cash_addr_type((version >> 3U) & 0x1f);
     uint32_t hash_size = 20 + 4 * (version & 0x03);
     if ((version & 0x04) != 0) {
         hash_size *= 2;
@@ -223,16 +208,16 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
     // return {type, std::move(data)};
 }
 
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
     if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
         return from_string_cashaddr(address);
 #else
         return {};
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
     }
 
     return {decoded};
@@ -292,12 +277,12 @@ std::string payment_address::encoded() const {
     return encode_base58(wrap(version_, hash_));
 }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 
 // Convert the data part to a 5 bit representation.
 template <typename T>
 data_chunk pack_addr_data_(T const& id, uint8_t type) {
-    uint8_t version_byte(type << 3u);
+    uint8_t version_byte(type << 3U);
     size_t size = id.size();
     uint8_t encoded_size = 0;
 
@@ -360,7 +345,7 @@ std::string payment_address::encoded_cashaddr() const {
     return encode_cashaddr_(*this);
 }
 
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 // Accessors.
 // ----------------------------------------------------------------------------
@@ -492,5 +477,4 @@ payment_address::list payment_address::extract_output(
     }
 }
 
-}  // namespace wallet
-}  // namespace libbitcoin
+}  // namespace kth

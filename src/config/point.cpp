@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/config/point.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/config/point.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -24,13 +10,12 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/chain/output_point.hpp>
-#include <bitcoin/infrastructure/config/hash256.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/string.hpp>
+#include <kth/domain/chain/output_point.hpp>
+#include <kth/infrastructure/config/hash256.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/string.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace kth::config {
 
 using namespace boost::program_options;
 
@@ -93,5 +78,4 @@ std::ostream& operator<<(std::ostream& output, point const& argument) {
     return output;
 }
 
-}  // namespace config
-}  // namespace libbitcoin
+}  // namespace kth

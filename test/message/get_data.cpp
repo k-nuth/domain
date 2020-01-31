@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
 using namespace bc;
@@ -173,7 +159,7 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_3__valid_input__success) {
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
 }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(get_data__to_witness__error__unchanged) {
     static auto const expected = inventory_vector::type_id::error;
     get_data instance{{expected, {}}};
@@ -231,7 +217,7 @@ BOOST_AUTO_TEST_CASE(get_data__to_witness__block_error_transaction__expected) {
     BOOST_REQUIRE(instance.inventories()[1].type() == inventory_vector::type_id::error);
     BOOST_REQUIRE(instance.inventories()[2].type() == inventory_vector::type_id::witness_transaction);
 }
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 
 BOOST_AUTO_TEST_CASE(get_data__operator_assign_equals__always__matches_equivalent) {
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");

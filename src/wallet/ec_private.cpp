@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/wallet/ec_private.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/wallet/ec_private.hpp>
 
 #include <cstdint>
 #include <iostream>
@@ -24,25 +10,24 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/formats/base_58.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/wallet/ec_public.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 uint8_t const ec_private::compressed_sentinel = 0x01;
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
 uint8_t const ec_private::mainnet_wif = 0xb0;
 uint8_t const ec_private::mainnet_p2kh = 0x30;
-#else   //KNUTH_CURRENCY_LTC
+#else   //KTH_CURRENCY_LTC
 uint8_t const ec_private::mainnet_wif = 0x80;
 uint8_t const ec_private::mainnet_p2kh = 0x00;
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 
 uint16_t const ec_private::mainnet = to_version(mainnet_p2kh, mainnet_wif);
 
@@ -235,5 +220,4 @@ std::ostream& operator<<(std::ostream& out, ec_private const& of) {
     return out;
 }
 
-}  // namespace wallet
-}  // namespace libbitcoin
+}  // namespace kth

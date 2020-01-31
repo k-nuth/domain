@@ -1,24 +1,10 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin.hpp>
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
-#include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain.hpp>
+#include <kth/domain/wallet/ec_public.hpp>
+#include <kth/domain/wallet/transaction_functions.hpp>
 #include <boost/test/unit_test.hpp>
 
 using namespace bc;
@@ -36,20 +22,20 @@ BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
 
 // Helpers to replicate the kth-dojo functionality
 
-libbitcoin::ec_secret create_secret_from_seed(std::string const& seed_str) {
-    libbitcoin::data_chunk seed;
-    libbitcoin::decode_base16(seed, seed_str);
-    libbitcoin::wallet::hd_private const key(seed);
+kth::ec_secret create_secret_from_seed(std::string const& seed_str) {
+    kth::data_chunk seed;
+    kth::decode_base16(seed, seed_str);
+    kth::wallet::hd_private const key(seed);
     // Secret key
-    libbitcoin::ec_secret secret_key(key.secret());
+    kth::ec_secret secret_key(key.secret());
     return secret_key;
 }
 
-libbitcoin::wallet::ec_public secret_to_compressed_public(libbitcoin::ec_secret const& secret_key) {
+kth::wallet::ec_public secret_to_compressed_public(kth::ec_secret const& secret_key) {
     //Public key
-    libbitcoin::ec_compressed point;
-    libbitcoin::secret_to_public(point, secret_key);
-    libbitcoin::wallet::ec_public public_key(point, true /*compress*/);
+    kth::ec_compressed point;
+    kth::secret_to_public(point, secret_key);
+    kth::wallet::ec_public public_key(point, true /*compress*/);
 
     return public_key;
 }
@@ -58,8 +44,8 @@ BOOST_AUTO_TEST_CASE(seed_to_wallet_compressed__test) {
     auto secret = create_secret_from_seed(SEED);
     auto pub_key = secret_to_compressed_public(secret);
     // Payment Address
-    uint8_t const version = libbitcoin::wallet::payment_address::testnet_p2kh;  // testnet_p2sh
-    libbitcoin::wallet::payment_address address(pub_key, version);
+    uint8_t const version = kth::wallet::payment_address::testnet_p2kh;  // testnet_p2sh
+    kth::wallet::payment_address address(pub_key, version);
 
     BOOST_REQUIRE_EQUAL(address.encoded(), WALLET);
 }
@@ -67,8 +53,8 @@ BOOST_AUTO_TEST_CASE(seed_to_wallet_compressed__test) {
 BOOST_AUTO_TEST_CASE(create_transaction__test) {
     // List of inputs (outputs_to_spend)
     std::vector<chain::input_point> outputs_to_spend;
-    libbitcoin::hash_digest hash_to_spend;
-    libbitcoin::decode_hash(hash_to_spend, "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393");
+    kth::hash_digest hash_to_spend;
+    kth::decode_hash(hash_to_spend, "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393");
     uint32_t const index_to_spend = 1;
     outputs_to_spend.push_back({hash_to_spend, index_to_spend});
 
@@ -76,28 +62,28 @@ BOOST_AUTO_TEST_CASE(create_transaction__test) {
     std::vector<std::pair<payment_address, uint64_t>> outputs;
     outputs.push_back({payment_address(WALLET), 199999000});
 
-    auto result = libbitcoin::wallet::tx_encode(outputs_to_spend, outputs);
+    auto result = kth::wallet::tx_encode(outputs_to_spend, outputs);
 
     BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(libbitcoin::encode_base16(result.second.to_data()), TX_ENCODE);
+    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), TX_ENCODE);
 }
 
-// TODO(libbitcoin): make test for BTC and LTC signatures
+// TODO(legacy): make test for BTC and LTC signatures
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(sign_transaction__test) {
     // Priv key
     auto const private_key = create_secret_from_seed(SEED);
     // Script
-    libbitcoin::data_chunk raw_script;
-    libbitcoin::decode_base16(raw_script, "76a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac");
+    kth::data_chunk raw_script;
+    kth::decode_base16(raw_script, "76a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac");
     chain::script output_script(raw_script, false);
     // TX
     chain::transaction tx;
     data_chunk raw_data;
-    libbitcoin::decode_base16(raw_data, TX_ENCODE);
+    kth::decode_base16(raw_data, TX_ENCODE);
     tx.from_data(raw_data);
-    BOOST_REQUIRE_EQUAL(libbitcoin::encode_base16(tx.to_data()), TX_ENCODE);
+    BOOST_REQUIRE_EQUAL(kth::encode_base16(tx.to_data()), TX_ENCODE);
     // Amount
     uint64_t const amount = 200000000;
     // Index
@@ -106,7 +92,7 @@ BOOST_AUTO_TEST_CASE(sign_transaction__test) {
     auto const result = input_signature_bch(private_key, output_script, tx, amount, index);
 
     BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(libbitcoin::encode_base16(result.second), SIGNATURE);
+    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second), SIGNATURE);
 }
 #endif
 
@@ -114,7 +100,7 @@ BOOST_AUTO_TEST_CASE(set_signature__test) {
     // TX
     chain::transaction tx;
     data_chunk raw_data;
-    libbitcoin::decode_base16(raw_data, TX_ENCODE);
+    kth::decode_base16(raw_data, TX_ENCODE);
     tx.from_data(raw_data);
 
     // SCRIPT
@@ -127,7 +113,7 @@ BOOST_AUTO_TEST_CASE(set_signature__test) {
     // SET THE INPUT
     auto const result = input_set(input_script, tx);
     BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(libbitcoin::encode_base16(result.second.to_data()), COMPLETE_TX);
+    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), COMPLETE_TX);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

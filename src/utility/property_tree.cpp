@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin/bitcoin/utility/property_tree.hpp>
+
+#include <kth/domain/utility/property_tree.hpp>
 
 #include <cstdint>
 #include <string>
@@ -25,18 +11,18 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include <bitcoin/bitcoin/config/header.hpp>
-#include <bitcoin/bitcoin/config/input.hpp>
-#include <bitcoin/bitcoin/config/output.hpp>
-#include <bitcoin/bitcoin/config/transaction.hpp>
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/infrastructure/config/base16.hpp>
-#include <bitcoin/infrastructure/config/hash160.hpp>
-#include <bitcoin/infrastructure/config/hash256.hpp>
-#include <bitcoin/infrastructure/utility/collection.hpp>
+#include <kth/domain/config/header.hpp>
+#include <kth/domain/config/input.hpp>
+#include <kth/domain/config/output.hpp>
+#include <kth/domain/config/transaction.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/domain/math/stealth.hpp>
+#include <kth/infrastructure/config/base16.hpp>
+#include <kth/infrastructure/config/hash160.hpp>
+#include <kth/infrastructure/config/hash256.hpp>
+#include <kth/infrastructure/utility/collection.hpp>
 
-namespace libbitcoin {
+namespace kth {
 
 using namespace pt;
 using namespace bc::config;
@@ -98,7 +84,7 @@ ptree property_list(chain::input const& tx_input) {
     tree.put("script", tx_input.script().to_string(rule_fork::all_rules));
     tree.put("sequence", tx_input.sequence());
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     if (tx_input.is_segregated()) {
         tree.put("witness", tx_input.witness().to_string());
     }
@@ -153,7 +139,7 @@ ptree property_list(const chain::output& tx_output) {
 
     tree.put("script", tx_output.script().to_string(rule_fork::all_rules));
 
-    // TODO(libbitcoin): this will eventually change due to privacy problems, see:
+    // TODO(legacy): this will eventually change due to privacy problems, see:
     // lists.dyne.org/lurker/message/20140812.214120.317490ae.en.html
 
     if ( ! address) {
@@ -272,4 +258,4 @@ ptree property_tree(const settings_list& settings) {
     return tree;
 }
 
-}  // namespace libbitcoin
+}  // namespace kth

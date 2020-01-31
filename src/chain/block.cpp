@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/chain/block.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/chain/block.hpp>
 
 #include <algorithm>
 #include <cfenv>
@@ -32,37 +18,36 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/compact.hpp>
-#include <bitcoin/bitcoin/chain/input_point.hpp>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-// #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/asio.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/compact.hpp>
+#include <kth/domain/chain/input_point.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/config/checkpoint.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
+#include <kth/infrastructure/machine/number.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/asio.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::config;
 using namespace bc::machine;
 using namespace boost::adaptors;
 
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
 //Litecoin mainnet genesis block
 static std::string const encoded_mainnet_genesis_block =
     "01000000"                                                                                                                                          //version
@@ -104,7 +89,7 @@ static std::string const encoded_testnet_genesis_block =
     "43"                                                                                                                                                //pk_script length
     "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
     "00000000";           //NOLINT                                                                                                                      //locktime
-#else  //KNUTH_CURRENCY_LTC
+#else  //KTH_CURRENCY_LTC
 
 static std::string const encoded_mainnet_genesis_block =
     "01000000"
@@ -145,7 +130,7 @@ static std::string const encoded_testnet_genesis_block =
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000"; //NOLINT
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 
 static std::string const encoded_regtest_genesis_block =
     "01000000"
@@ -170,12 +155,12 @@ static std::string const encoded_regtest_genesis_block =
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(legacy): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list const& transactions)
     : block_basis(header, transactions)
 {}
 
-// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(legacy): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list&& transactions)
     : block_basis(header, std::move(transactions))
 {}
@@ -233,7 +218,7 @@ block block::factory_from_data(std::istream& stream, bool witness) {
 // static
 //block block::factory_from_data(reader& source, bool witness)
 //{
-//#ifdef KNUTH_CURRENCY_BCH
+//#ifdef KTH_CURRENCY_BCH
 //    witness = false;
 //#endif
 //    block instance;
@@ -341,7 +326,7 @@ size_t block::serialized_size(bool witness) const {
 }
 
 
-// TODO(libbitcoin): see set_header comments.
+// TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list const& value) {
     block_basis::set_transactions(value);
     segregated_ = boost::none;
@@ -350,7 +335,7 @@ void block::set_transactions(transaction::list const& value) {
     total_size_ = boost::none;
 }
 
-// TODO(libbitcoin): see set_header comments.
+// TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list&& value) {
     block_basis::set_transactions(std::move(value));
     segregated_ = boost::none;
@@ -424,7 +409,7 @@ block::indexes block::locator_heights(size_t top) {
     for (auto height = top; height > 0; height = floor_subtract(height, step)) {
         // Push top 10 indexes first, then back off exponentially.
         if (heights.size() >= 10) {
-            step <<= 1u;
+            step <<= 1U;
         }
 
         heights.push_back(height);
@@ -441,7 +426,7 @@ block::indexes block::locator_heights(size_t top) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void block::strip_witness() {
     auto const strip = [](transaction& transaction) {
@@ -482,7 +467,7 @@ void block::strip_witness() {
 size_t block::signature_operations() const {
     auto const state = validation.state;
     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
@@ -492,7 +477,7 @@ size_t block::signature_operations() const {
 
 // // Returns max_size_t in case of overflow.
 // size_t block::signature_operations(bool bip16, bool bip141) const {
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     bip141 = false;  // No segwit
 // #endif
 //     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
@@ -699,7 +684,7 @@ size_t block::weight() const {
 // }
 
 // bool block::is_valid_witness_commitment() const {
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     return false;
 // #else
 //     if (transactions_.empty() || transactions_.front().inputs().empty()) {
@@ -720,11 +705,11 @@ size_t block::weight() const {
 
 //     // If no txs in block are segregated the commitment is optional (bip141).
 //     return !is_segregated();
-// #endif // KNUTH_CURRENCY_BCH
+// #endif // KTH_CURRENCY_BCH
 // }
 
 bool block::is_segregated() const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #else
     bool value;
@@ -750,7 +735,7 @@ bool block::is_segregated() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return value;
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 }
 
 // code block::check_transactions() const {
@@ -823,5 +808,4 @@ code block::connect() const {
 //     return connect_transactions(state);
 // }
 
-}  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

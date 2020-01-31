@@ -1,30 +1,15 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/machine/interpreter.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/program.hpp>
-#include <bitcoin/infrastructure/error.hpp>
+#include <kth/domain/machine/interpreter.hpp>
 
-namespace libbitcoin {
-namespace machine {
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/operation.hpp>
+#include <kth/domain/machine/program.hpp>
+#include <kth/infrastructure/error.hpp>
+
+namespace kth::machine {
 
 code interpreter::run(program& program) {
     code ec;
@@ -64,5 +49,4 @@ code interpreter::run(operation const& op, program& program) {
     return run_op(op, program);
 }
 
-}  // namespace machine
-}  // namespace libbitcoin
+}  // namespace kth

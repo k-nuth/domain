@@ -1,21 +1,7 @@
-#
-# Copyright (c) 2017-2018 Knuth Project.
-#
-# This file is part of Knuth Project.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+# Copyright (c) 2016-2020 Knuth Project developers.
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 
 cmake_minimum_required(VERSION 3.4)
 
@@ -87,7 +73,7 @@ option(WITH_EXAMPLES "Compile with examples." OFF)
 option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
 if (WITH_CACHED_RPC_DATA)
   message(STATUS "Knuth: Cached RPC data enabled")
-  add_definitions(-DKNUTH_CACHED_RPC_DATA)
+  add_definitions(-DKTH_CACHED_RPC_DATA)
 endif()
 
 # Implement --with-keoken and declare WITH_KEOKEN.
@@ -127,23 +113,23 @@ if (WITH_QRENCODE)
 endif()
 
 
-# Implement --JUST_KNUTH_SOURCES for linting.
+# Implement --JUST_KTH_SOURCES for linting.
 #------------------------------------------------------------------------------
-option(JUST_KNUTH_SOURCES "Just Knuth source code to be linted." OFF)
-if (JUST_KNUTH_SOURCES)
+option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
+if (JUST_KTH_SOURCES)
   message(STATUS "Knuth: Just Knuth source code to be linted: enabled")
 endif()
 
 
 
-set(KNUTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
-# message(${KNUTH_PROJECT_VERSION})
-message( STATUS "Knuth: Compiling version ${KNUTH_PROJECT_VERSION}")
+set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
+# message(${KTH_PROJECT_VERSION})
+message( STATUS "Knuth: Compiling version ${KTH_PROJECT_VERSION}")
 
 set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
 message( STATUS "Knuth: Compiling for ${MICROARCHITECTURE}")
-# add_definitions(-DKNUTH_MICROARCHITECTURE=${MICROARCHITECTURE})
-# add_definitions(-DKNUTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+# add_definitions(-DKTH_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DKTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
 
 set(MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
 message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
@@ -151,11 +137,11 @@ message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
 if (${CURRENCY} STREQUAL "BCH")
-  add_definitions(-DKNUTH_CURRENCY_BCH)
+  add_definitions(-DKTH_CURRENCY_BCH)
 elseif (${CURRENCY} STREQUAL "BTC")
-  add_definitions(-DKNUTH_CURRENCY_BTC)
+  add_definitions(-DKTH_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
-  add_definitions(-DKNUTH_CURRENCY_LTC)
+  add_definitions(-DKTH_CURRENCY_LTC)
 else()
   message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
 endif()
@@ -506,7 +492,7 @@ if (WITH_KEOKEN)
   )
 endif()
 
-if (NOT JUST_KNUTH_SOURCES)
+if (NOT JUST_KTH_SOURCES)
   set(kth_domain_sources 
     ${kth_domain_sources_just_libbitcoin}
   )
@@ -541,7 +527,7 @@ if (NOT ENABLE_SHARED)
     target_compile_definitions(kth-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
-target_compile_definitions(kth-domain PUBLIC -DKNUTH_PROJECT_VERSION="${KNUTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 
 
 target_include_directories(kth-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
@@ -818,147 +804,147 @@ install(TARGETS kth-domain EXPORT kth-domain
 #)
 
 set(_kth_domain_headers
-    bitcoin/bitcoin/multi_crypto_support.hpp
-    bitcoin/bitcoin/compat.h
-    bitcoin/bitcoin/compat.hpp
-    bitcoin/bitcoin/constants.hpp
-    bitcoin/bitcoin/define.hpp
-    # bitcoin/bitcoin/error.hpp
-    bitcoin/bitcoin/handlers.hpp
-    bitcoin/bitcoin/version.hpp
+    kth/domain/multi_crypto_support.hpp
+    kth/domain/compat.h
+    kth/domain/compat.hpp
+    kth/domain/constants.hpp
+    kth/domain/define.hpp
+    # kth/domain/error.hpp
+    kth/domain/handlers.hpp
+    kth/domain/version.hpp
 
-    bitcoin/bitcoin/chain/block.hpp
-    bitcoin/bitcoin/chain/chain_state.hpp
-    bitcoin/bitcoin/chain/compact.hpp    
-    bitcoin/bitcoin/chain/header.hpp
-    bitcoin/bitcoin/chain/history.hpp
-    bitcoin/bitcoin/chain/input.hpp
-    bitcoin/bitcoin/chain/input_point.hpp
-    bitcoin/bitcoin/chain/output.hpp
-    bitcoin/bitcoin/chain/output_point.hpp
-    bitcoin/bitcoin/chain/point.hpp
-    bitcoin/bitcoin/chain/point_iterator.hpp
-    bitcoin/bitcoin/chain/point_value.hpp
-    bitcoin/bitcoin/chain/points_value.hpp
-    bitcoin/bitcoin/chain/script.hpp
-    bitcoin/bitcoin/chain/stealth.hpp
-    bitcoin/bitcoin/chain/transaction.hpp
-    bitcoin/bitcoin/chain/witness.hpp
+    kth/domain/chain/block.hpp
+    kth/domain/chain/chain_state.hpp
+    kth/domain/chain/compact.hpp    
+    kth/domain/chain/header.hpp
+    kth/domain/chain/history.hpp
+    kth/domain/chain/input.hpp
+    kth/domain/chain/input_point.hpp
+    kth/domain/chain/output.hpp
+    kth/domain/chain/output_point.hpp
+    kth/domain/chain/point.hpp
+    kth/domain/chain/point_iterator.hpp
+    kth/domain/chain/point_value.hpp
+    kth/domain/chain/points_value.hpp
+    kth/domain/chain/script.hpp
+    kth/domain/chain/stealth.hpp
+    kth/domain/chain/transaction.hpp
+    kth/domain/chain/witness.hpp
 
-    bitcoin/bitcoin/machine/interpreter.hpp
-    bitcoin/bitcoin/machine/number.hpp    
-    bitcoin/bitcoin/machine/opcode.hpp
-    bitcoin/bitcoin/machine/operation.hpp
-    bitcoin/bitcoin/machine/program.hpp
-    bitcoin/bitcoin/machine/rule_fork.hpp
-    bitcoin/bitcoin/machine/script_pattern.hpp
-    bitcoin/bitcoin/machine/sighash_algorithm.hpp
-    bitcoin/bitcoin/machine/script_version.hpp
+    kth/domain/machine/interpreter.hpp
+    kth/domain/machine/number.hpp    
+    kth/domain/machine/opcode.hpp
+    kth/domain/machine/operation.hpp
+    kth/domain/machine/program.hpp
+    kth/domain/machine/rule_fork.hpp
+    kth/domain/machine/script_pattern.hpp
+    kth/domain/machine/sighash_algorithm.hpp
+    kth/domain/machine/script_version.hpp
 
-    # bitcoin/bitcoin/config/authority.hpp
-    # bitcoin/bitcoin/config/base16.hpp
-    # bitcoin/bitcoin/config/base2.hpp
-    # bitcoin/bitcoin/config/base58.hpp
-    # bitcoin/bitcoin/config/base64.hpp
-    # bitcoin/bitcoin/config/checkpoint.hpp
-    # bitcoin/bitcoin/config/directory.hpp
-    # bitcoin/bitcoin/config/endpoint.hpp
-    # bitcoin/bitcoin/config/hash160.hpp
-    # bitcoin/bitcoin/config/hash256.hpp
-    # bitcoin/bitcoin/config/parameter.hpp
-    bitcoin/bitcoin/config/parser.hpp
-    # bitcoin/bitcoin/config/printer.hpp
-    # bitcoin/bitcoin/config/settings.hpp
-    # bitcoin/bitcoin/config/sodium.hpp
+    # kth/domain/config/authority.hpp
+    # kth/domain/config/base16.hpp
+    # kth/domain/config/base2.hpp
+    # kth/domain/config/base58.hpp
+    # kth/domain/config/base64.hpp
+    # kth/domain/config/checkpoint.hpp
+    # kth/domain/config/directory.hpp
+    # kth/domain/config/endpoint.hpp
+    # kth/domain/config/hash160.hpp
+    # kth/domain/config/hash256.hpp
+    # kth/domain/config/parameter.hpp
+    kth/domain/config/parser.hpp
+    # kth/domain/config/printer.hpp
+    # kth/domain/config/settings.hpp
+    # kth/domain/config/sodium.hpp
 
-    # bitcoin/bitcoin/config/header.hpp
-    # bitcoin/bitcoin/config/input.hpp
-    # bitcoin/bitcoin/config/output.hpp
-    # bitcoin/bitcoin/config/transaction.hpp
-    # bitcoin/bitcoin/config/script.hpp
-    # bitcoin/bitcoin/config/ec_private.hpp
-    # bitcoin/bitcoin/config/endorsement.hpp
+    # kth/domain/config/header.hpp
+    # kth/domain/config/input.hpp
+    # kth/domain/config/output.hpp
+    # kth/domain/config/transaction.hpp
+    # kth/domain/config/script.hpp
+    # kth/domain/config/ec_private.hpp
+    # kth/domain/config/endorsement.hpp
     
-    bitcoin/bitcoin/utility/property_tree.hpp
-    bitcoin/bitcoin/impl/utility/property_tree.ipp
-    # bitcoin/bitcoin/utility/socket.hpp
+    kth/domain/utility/property_tree.hpp
+    kth/domain/impl/utility/property_tree.ipp
+    # kth/domain/utility/socket.hpp
     
   
-    # bitcoin/bitcoin/impl/math/checksum.ipp
-    # bitcoin/bitcoin/impl/math/hash.ipp
+    # kth/domain/impl/math/checksum.ipp
+    # kth/domain/impl/math/hash.ipp
 
-    bitcoin/bitcoin/impl/machine/interpreter.ipp
-    bitcoin/bitcoin/impl/machine/number.ipp
-    bitcoin/bitcoin/impl/machine/operation.ipp
-    bitcoin/bitcoin/impl/machine/program.ipp
+    kth/domain/impl/machine/interpreter.ipp
+    kth/domain/impl/machine/number.ipp
+    kth/domain/impl/machine/operation.ipp
+    kth/domain/impl/machine/program.ipp
 
-    # bitcoin/bitcoin/math/checksum.hpp
-    # bitcoin/bitcoin/math/crypto.hpp
-    # bitcoin/bitcoin/math/elliptic_curve.hpp
-    # bitcoin/bitcoin/math/hash.hpp
-    bitcoin/bitcoin/math/limits.hpp
-    bitcoin/bitcoin/math/stealth.hpp
-    # bitcoin/bitcoin/math/uint256.hpp
+    # kth/domain/math/checksum.hpp
+    # kth/domain/math/crypto.hpp
+    # kth/domain/math/elliptic_curve.hpp
+    # kth/domain/math/hash.hpp
+    kth/domain/math/limits.hpp
+    kth/domain/math/stealth.hpp
+    # kth/domain/math/uint256.hpp
     
-    bitcoin/bitcoin/message/address.hpp
-    bitcoin/bitcoin/message/alert.hpp
-    bitcoin/bitcoin/message/alert_payload.hpp
-    bitcoin/bitcoin/message/block.hpp
-    bitcoin/bitcoin/message/block_transactions.hpp
-    bitcoin/bitcoin/message/compact_block.hpp
-    bitcoin/bitcoin/message/fee_filter.hpp
-    bitcoin/bitcoin/message/filter_add.hpp
-    bitcoin/bitcoin/message/filter_clear.hpp
-    bitcoin/bitcoin/message/filter_load.hpp
-    bitcoin/bitcoin/message/get_address.hpp
-    bitcoin/bitcoin/message/get_block_transactions.hpp
-    bitcoin/bitcoin/message/get_blocks.hpp
-    bitcoin/bitcoin/message/get_data.hpp
-    bitcoin/bitcoin/message/get_headers.hpp
-    bitcoin/bitcoin/message/header.hpp
-    bitcoin/bitcoin/message/headers.hpp
-    bitcoin/bitcoin/message/heading.hpp
-    bitcoin/bitcoin/message/inventory.hpp
-    bitcoin/bitcoin/message/inventory_vector.hpp
-    bitcoin/bitcoin/message/memory_pool.hpp
-    bitcoin/bitcoin/message/merkle_block.hpp
-    bitcoin/bitcoin/message/messages.hpp
-    # bitcoin/bitcoin/message/network_address.hpp
-    bitcoin/bitcoin/message/not_found.hpp
-    bitcoin/bitcoin/message/ping.hpp
-    bitcoin/bitcoin/message/pong.hpp
-    bitcoin/bitcoin/message/prefilled_transaction.hpp
-    bitcoin/bitcoin/message/reject.hpp
-    bitcoin/bitcoin/message/send_compact.hpp
-    bitcoin/bitcoin/message/send_headers.hpp
-    bitcoin/bitcoin/message/transaction.hpp
-    bitcoin/bitcoin/message/verack.hpp
-    bitcoin/bitcoin/message/version.hpp
+    kth/domain/message/address.hpp
+    kth/domain/message/alert.hpp
+    kth/domain/message/alert_payload.hpp
+    kth/domain/message/block.hpp
+    kth/domain/message/block_transactions.hpp
+    kth/domain/message/compact_block.hpp
+    kth/domain/message/fee_filter.hpp
+    kth/domain/message/filter_add.hpp
+    kth/domain/message/filter_clear.hpp
+    kth/domain/message/filter_load.hpp
+    kth/domain/message/get_address.hpp
+    kth/domain/message/get_block_transactions.hpp
+    kth/domain/message/get_blocks.hpp
+    kth/domain/message/get_data.hpp
+    kth/domain/message/get_headers.hpp
+    kth/domain/message/header.hpp
+    kth/domain/message/headers.hpp
+    kth/domain/message/heading.hpp
+    kth/domain/message/inventory.hpp
+    kth/domain/message/inventory_vector.hpp
+    kth/domain/message/memory_pool.hpp
+    kth/domain/message/merkle_block.hpp
+    kth/domain/message/messages.hpp
+    # kth/domain/message/network_address.hpp
+    kth/domain/message/not_found.hpp
+    kth/domain/message/ping.hpp
+    kth/domain/message/pong.hpp
+    kth/domain/message/prefilled_transaction.hpp
+    kth/domain/message/reject.hpp
+    kth/domain/message/send_compact.hpp
+    kth/domain/message/send_headers.hpp
+    kth/domain/message/transaction.hpp
+    kth/domain/message/verack.hpp
+    kth/domain/message/version.hpp
 
-    bitcoin/bitcoin/wallet/bitcoin_uri.hpp
-    # bitcoin/bitcoin/wallet/cashaddr.hpp
-    # bitcoin/bitcoin/wallet/dictionary.hpp
-    bitcoin/bitcoin/wallet/ec_private.hpp
-    bitcoin/bitcoin/wallet/ec_public.hpp
-    bitcoin/bitcoin/wallet/ek_private.hpp
-    bitcoin/bitcoin/wallet/ek_public.hpp
-    bitcoin/bitcoin/wallet/ek_token.hpp
-    bitcoin/bitcoin/wallet/encrypted_keys.hpp
-    bitcoin/bitcoin/wallet/hd_private.hpp
-    bitcoin/bitcoin/wallet/hd_public.hpp
-    bitcoin/bitcoin/wallet/message.hpp
-    bitcoin/bitcoin/wallet/mini_keys.hpp
-    bitcoin/bitcoin/wallet/mnemonic.hpp
-    bitcoin/bitcoin/wallet/payment_address.hpp
-    bitcoin/bitcoin/wallet/qrcode.hpp
-    bitcoin/bitcoin/wallet/select_outputs.hpp
-    bitcoin/bitcoin/wallet/stealth_address.hpp
-    bitcoin/bitcoin/wallet/stealth_receiver.hpp
-    bitcoin/bitcoin/wallet/stealth_sender.hpp
-    # bitcoin/bitcoin/wallet/uri.hpp
-    bitcoin/bitcoin/wallet/uri_reader.hpp
-    bitcoin/bitcoin/wallet/transaction_functions.hpp
-    bitcoin/bitcoin.hpp
+    kth/domain/wallet/bitcoin_uri.hpp
+    # kth/domain/wallet/cashaddr.hpp
+    # kth/domain/wallet/dictionary.hpp
+    kth/domain/wallet/ec_private.hpp
+    kth/domain/wallet/ec_public.hpp
+    kth/domain/wallet/ek_private.hpp
+    kth/domain/wallet/ek_public.hpp
+    kth/domain/wallet/ek_token.hpp
+    kth/domain/wallet/encrypted_keys.hpp
+    kth/domain/wallet/hd_private.hpp
+    kth/domain/wallet/hd_public.hpp
+    kth/domain/wallet/message.hpp
+    kth/domain/wallet/mini_keys.hpp
+    kth/domain/wallet/mnemonic.hpp
+    kth/domain/wallet/payment_address.hpp
+    kth/domain/wallet/qrcode.hpp
+    kth/domain/wallet/select_outputs.hpp
+    kth/domain/wallet/stealth_address.hpp
+    kth/domain/wallet/stealth_receiver.hpp
+    kth/domain/wallet/stealth_sender.hpp
+    # kth/domain/wallet/uri.hpp
+    kth/domain/wallet/uri_reader.hpp
+    kth/domain/wallet/transaction_functions.hpp
+    kth/domain.hpp
     )
 
 foreach (_header ${_kth_domain_headers})

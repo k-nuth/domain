@@ -1,27 +1,13 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <boost/test/unit_test.hpp>
 
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
 using namespace bc;
 
@@ -31,17 +17,17 @@ BOOST_AUTO_TEST_SUITE(limits_tests)
 //-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(limits__cast_add__uint32_to_int64_0__returns_0) {
-    static const int64_t expected = 0;
+    static int64_t const expected = 0;
     BOOST_REQUIRE_EQUAL(cast_add<int64_t>(0u, 0u), expected);
 }
 
 BOOST_AUTO_TEST_CASE(limits__cast_add__uint32_to_int64_maximum_plus_0__returns_maximum) {
-    static const int64_t expected = max_uint32;
+    static int64_t const expected = max_uint32;
     BOOST_REQUIRE_EQUAL(cast_add<int64_t>(max_uint32, uint32_t{0}), expected);
 }
 
 BOOST_AUTO_TEST_CASE(limits__cast_add__uint32_to_int64_maximum_plus_maximum__returns_twice_maximum) {
-    static const int64_t expected = 2 * static_cast<int64_t>(max_uint32);
+    static int64_t const expected = 2 * static_cast<int64_t>(max_uint32);
     BOOST_REQUIRE_EQUAL(cast_add<int64_t>(max_uint32, max_uint32), expected);
 }
 
@@ -49,17 +35,17 @@ BOOST_AUTO_TEST_CASE(limits__cast_add__uint32_to_int64_maximum_plus_maximum__ret
 //-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(limits__cast_subtract__uint32_to_int64_0__returns_0) {
-    static const int64_t expected = 0;
+    static int64_t const expected = 0;
     BOOST_REQUIRE_EQUAL(cast_subtract<int64_t>(0u, 0u), expected);
 }
 
 BOOST_AUTO_TEST_CASE(limits__cast_subtract__uint32_to_int64_0_minus_maximum__returns_negtive_maximum) {
-    static const int64_t expected = -1 * static_cast<int64_t>(max_uint32);
+    static int64_t const expected = -1 * static_cast<int64_t>(max_uint32);
     BOOST_REQUIRE_EQUAL(cast_subtract<int64_t>(uint32_t{0}, max_uint32), expected);
 }
 
 BOOST_AUTO_TEST_CASE(limits__cast_subtract__uint32_to_int64_maximum_minus_maximum__returns_0) {
-    static const int64_t expected = 0;
+    static int64_t const expected = 0;
     BOOST_REQUIRE_EQUAL(cast_subtract<int64_t>(max_uint32, max_uint32), expected);
 }
 

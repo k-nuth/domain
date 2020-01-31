@@ -1,35 +1,21 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/math/stealth.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/math/stealth.hpp>
 
 #include <algorithm>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/machine/script_pattern.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/binary.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/endian.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/machine/script_pattern.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/binary.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/endian.hpp>
 #include <utility>
 
-namespace libbitcoin {
+namespace kth {
 
 using namespace bc::chain;
 using namespace bc::machine;
@@ -57,7 +43,7 @@ bool to_stealth_prefix(uint32_t& out_prefix, script const& script) {
     return true;
 }
 
-// TODO(libbitcoin): this can be implemented using libsecp256k1 without iteration.
+// TODO(legacy): this can be implemented using libsecp256k1 without iteration.
 // The public key must have a sign value of 0x02 (i.e. must be even y-valued).
 bool create_ephemeral_key(ec_secret& out_secret, data_chunk const& seed) {
     static data_chunk const magic(to_chunk("Stealth seed"));
@@ -213,4 +199,4 @@ bool uncover_stealth(ec_secret& out_stealth,
     return true;
 }
 
-}  // namespace libbitcoin
+}  // namespace kth

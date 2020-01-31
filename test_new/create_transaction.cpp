@@ -1,34 +1,20 @@
-/**
- * Copyright (c) 2016-2018 Knuth Project.
- *
- * This file is part of Knuth Project.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 // #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-// #include <bitcoin/bitcoin.hpp>
-#include <bitcoin/bitcoin/chain/input.hpp>
-#include <bitcoin/bitcoin/chain/input_point.hpp>
-#include <bitcoin/bitcoin/chain/output.hpp>
-#include <bitcoin/bitcoin/chain/output_point.hpp>
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/config/input.hpp>
-#include <bitcoin/bitcoin/config/output.hpp>
-#include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
+// #include <kth/domain.hpp>
+#include <kth/domain/chain/input.hpp>
+#include <kth/domain/chain/input_point.hpp>
+#include <kth/domain/chain/output.hpp>
+#include <kth/domain/chain/output_point.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/config/input.hpp>
+#include <kth/domain/config/output.hpp>
+#include <kth/domain/wallet/transaction_functions.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
 #include <knuth/keoken/message/base.hpp>
 
 #include <knuth/keoken/message/base.hpp>
@@ -56,7 +42,7 @@ TEST_CASE("[keoken__send_token__expected]") {
     knuth::keoken::amount_t amount_tokens = 1;
     auto result_tx = tx_encode_send_token(outputs_to_spend, bc::wallet::payment_address(WALLET), 21647102398, bc::wallet::payment_address(WALLETDESTINY), 20000, asset_id, amount_tokens);
     std::string result = "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff03204e0000000000001976a9147fa36605e302ed00aeca0da8e2743772df11290188acce3b440a050000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac0000000000000000176a0400004b50100000000100000001000000000000000100000000";
-    REQUIRE(result == libbitcoin::encode_base16(result_tx.second.to_data()));
+    REQUIRE(result == kth::encode_base16(result_tx.second.to_data()));
 }
 
 TEST_CASE("[keoken__create_asset__expected]") {
@@ -70,5 +56,5 @@ TEST_CASE("[keoken__create_asset__expected]") {
     auto result_tx = tx_encode_create_asset(outputs_to_spend, bc::wallet::payment_address(WALLET), 21647102398, name, amount_tokens);
     std::string result = "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff02ee89440a050000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac00000000000000001c6a0400004b50150000000074657374636f696e00000000000000000100000000";
 
-    REQUIRE(result == libbitcoin::encode_base16(result_tx.second.to_data()));
+    REQUIRE(result == kth::encode_base16(result_tx.second.to_data()));
 }

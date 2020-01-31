@@ -1,32 +1,17 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/wallet/select_outputs.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/wallet/select_outputs.hpp>
 
 #include <algorithm>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/chain/points_value.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
+#include <kth/domain/chain/points_value.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 using namespace bc::chain;
 
@@ -120,5 +105,4 @@ void select_outputs::select(points_value& out, const points_value& unspent, uint
     }
 }
 
-}  // namespace wallet
-}  // namespace libbitcoin
+}  // namespace kth

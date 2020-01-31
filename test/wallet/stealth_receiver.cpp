@@ -1,25 +1,11 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <boost/test/unit_test.hpp>
 
 #include <algorithm>
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
 using namespace bc;
 using namespace bc::wallet;
@@ -32,7 +18,7 @@ BOOST_AUTO_TEST_SUITE(stealth_receiver_tests)
 #define RECEIVER_PRIVATE "fc696c9f7143916f24977210c806101866c7fa13cc06982978d80518c91af2fb"
 #define DERIVED_ADDRESS "mtKffkQLTw2D6f6mTkrWfi8qxLv4jL1LrK"
 
-// TODO(libbitcoin): test individual methods in isolation.
+// TODO(legacy): test individual methods in isolation.
 BOOST_AUTO_TEST_CASE(stealth_receiver__exchange_between_sender_and_receiver__always__round_trips) {
     static auto const version = payment_address::testnet_p2kh;
     const hd_private main_key(MAIN_KEY, hd_private::testnet);

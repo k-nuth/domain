@@ -1,22 +1,8 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include <bitcoin/bitcoin/chain/script.hpp>
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include <kth/domain/chain/script.hpp>
 
 #include <algorithm>
 #include <cstddef>
@@ -29,34 +15,33 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/chain/witness.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/interpreter.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/program.hpp>
-// #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/infrastructure/machine/script_pattern.hpp>
-#include <bitcoin/infrastructure/machine/script_version.hpp>
-#include <bitcoin/infrastructure/machine/sighash_algorithm.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
-#include <bitcoin/infrastructure/utility/string.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/chain/witness.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/interpreter.hpp>
+#include <kth/domain/machine/operation.hpp>
+#include <kth/domain/machine/program.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
+#include <kth/infrastructure/machine/script_pattern.hpp>
+#include <kth/infrastructure/machine/script_version.hpp>
+#include <kth/infrastructure/machine/sighash_algorithm.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+#include <kth/infrastructure/utility/string.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::machine;
 using namespace boost::adaptors;
@@ -93,7 +78,7 @@ script::script(script const& x)
 
 // Concurrent read/write is not supported, so no critical section.
 script& script::operator=(script&& x) noexcept {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+    // TODO(legacy): implement safe private accessor for conditional cache transfer.
     reset();
     script_basis::operator=(std::move(x));
     return *this;
@@ -101,7 +86,7 @@ script& script::operator=(script&& x) noexcept {
 
 // Concurrent read/write is not supported, so no critical section.
 script& script::operator=(script const& x) {
-    // TODO(libbitcoin): implement safe private accessor for conditional cache transfer.
+    // TODO(legacy): implement safe private accessor for conditional cache transfer.
     reset();
     script_basis::operator=(x);
     return *this;
@@ -586,7 +571,7 @@ hash_digest script::generate_version_0_signature_hash(transaction const& tx,
     auto const sighash = to_sighash_enum(sighash_type);
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
 
     //Note(kth: Not used for the moment:
@@ -767,7 +752,7 @@ bool script::is_null_data_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].code() == opcode::return_ && ops[1].is_minimal_push() && ops[1].data().size() <= max_null_data_size;
 }
 
-// TODO(libbitcoin): expand this to the 20 signature op_check_multisig limit.
+// TODO(legacy): expand this to the 20 signature op_check_multisig limit.
 // The current 16 (or 20) limit does not affect server indexing because bare
 // multisig is not indexable and p2sh multisig is byte-limited to 15 sigs.
 // The satoshi client policy limit is 3 signatures for bare multisig.
@@ -898,7 +883,7 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures,
     return to_pay_multisig_pattern(signatures, chunks);
 }
 
-// TODO(libbitcoin): expand this to a 20 signature limit.
+// TODO(legacy): expand this to a 20 signature limit.
 // This supports up to 16 signatures, however check_multisig is limited to 20.
 // The embedded script is limited to 520 bytes, an effective limit of 15 for
 // p2sh multisig, which can be as low as 7 when using all uncompressed keys.
@@ -1015,7 +1000,7 @@ script_pattern script::input_pattern() const {
 }
 
 bool script::is_pay_to_witness(uint32_t forks) const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     (void)forks;    //Note(kth): to mute the Linter
     return false;
 #else
@@ -1092,7 +1077,7 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 // code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
 // #else
 // code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
@@ -1116,7 +1101,7 @@ bool script::is_unspendable() const {
 //         return error::stack_false;
 //     }
 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 //     bool witnessed;
 //     // Triggered by output script push of version and witness program (bip141).
 //     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
@@ -1151,7 +1136,7 @@ bool script::is_unspendable() const {
 //             return error::stack_false;
 //         }
 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 //         // Triggered by embedded push of version and witness program (bip141).
 //         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
 //             // The input script must be a push of the embedded_script (bip141).
@@ -1167,7 +1152,7 @@ bool script::is_unspendable() const {
 // #endif
 //     }
 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 //     // Witness must be empty if no bip141 or valid witness program (bip141).
 //     if ( ! witnessed && !input_witness.empty()) {
 //         return error::unexpected_witness;
@@ -1185,12 +1170,11 @@ bool script::is_unspendable() const {
 //     auto const& in = tx.inputs()[input];
 //     auto const& prevout = in.previous_output().validation.cache;
 
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 // #else
 //     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
 // #endif
 // }
 
-}  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

@@ -1,28 +1,14 @@
-/**
- * Copyright (c) 2016-2018 Knuth Project.
- *
- * This file is part of Knuth Project.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef KNUTH_KEOKEN_UTILITY_HPP_
-#define KNUTH_KEOKEN_UTILITY_HPP_
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_KEOKEN_UTILITY_HPP_
+#define KTH_KEOKEN_UTILITY_HPP_
 
 #include <boost/optional.hpp>
 
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
 #include <knuth/common.hpp>
 #include <knuth/concepts.hpp>
@@ -44,7 +30,7 @@ constexpr
 //     return static_cast<std::underlying_type_t<E>>(e);
 // }
 
-template <Reader R, KNUTH_IS_READER(R)>
+template <Reader R, KTH_IS_READER(R)>
 inline std::string read_null_terminated_string_unlimited(R& source) {
     // precondition: there is almost 1 `\0` byte in source
     std::string res;
@@ -58,7 +44,7 @@ inline std::string read_null_terminated_string_unlimited(R& source) {
     return res;
 }
 
-template <Reader R, KNUTH_IS_READER(R)>
+template <Reader R, KTH_IS_READER(R)>
 inline boost::optional<std::string> read_null_terminated_string(R& source, size_t max) {
     if (max == 0) {
         return boost::none;
@@ -81,4 +67,4 @@ inline boost::optional<std::string> read_null_terminated_string(R& source, size_
 }  // namespace keoken
 }  // namespace knuth
 
-#endif  //KNUTH_KEOKEN_UTILITY_HPP_
+#endif  //KTH_KEOKEN_UTILITY_HPP_
