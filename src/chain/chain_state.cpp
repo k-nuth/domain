@@ -21,6 +21,7 @@
 #include <kth/infrastructure/unicode/unicode.hpp>
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/timer.hpp>
+
 #include <boost/range/adaptor/reversed.hpp>
 
 namespace kth {
