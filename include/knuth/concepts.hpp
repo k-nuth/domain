@@ -42,7 +42,7 @@ constexpr bool is_writer() {
 
 }  // namespace knuth
 
-#define KTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0
-#define KTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0
+#define KTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0  //NOLINT
+#define KTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0  //NOLINT
 
 #endif  //KTH_CONCEPTS_HPP_
