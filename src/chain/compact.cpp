@@ -52,13 +52,13 @@ bool is_overflow(uint8_t exponent, uint32_t mantissa) {
 inline 
 uint32_t shift_low(uint8_t exponent) {
     BITCOIN_ASSERT(exponent <= 3);
-    return 8 * (3 - exponent);
+    return 8 * (3 - exponent);  //NOLINT
 }
 
 inline 
 uint32_t shift_high(uint8_t exponent) {
     BITCOIN_ASSERT(exponent > 3);
-    return 8 * (exponent - 3);
+    return 8 * (exponent - 3);  //NOLINT
 }
 
 inline 
@@ -66,7 +66,7 @@ size_t logical_size(uint256_t value) {
     auto byte = 0;
 
     for (; value != 0; ++byte) {
-        value >>= 8;
+        value >>= 8;              //NOLINT
     }
 
     return byte;
