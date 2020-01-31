@@ -23,6 +23,8 @@ tar -xJf clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
 ls /home/conan/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04/bin
 PATH=/home/conan/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/:$PATH
 
+locate libtinfo.so || true
+sudo ln -s /path/to/libtinfo.so.5 /path/to/libtinfo.so || true
 
 sudo find / -name "clang-tidy"
 clang-tidy --version
