@@ -27,7 +27,7 @@ namespace chain {
 
 #ifdef KTH_CURRENCY_BCH
 
-struct witness {};
+class witness {};
 
 #else
 class BC_API witness {
