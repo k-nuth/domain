@@ -26,11 +26,11 @@ bool witness_val(bool x) {
 }
 
 #ifdef KTH_CURRENCY_BCH
-#define KTH_DECL_WITN_ARG bool /*witness*/ = false
-#define KTH_DEF_WITN_ARG bool /*witness = false*/
+#define KTH_DECL_WITN_ARG bool /*witness*/ = false      //NOLINT
+#define KTH_DEF_WITN_ARG bool /*witness = false*/       //NOLINT
 #else
-#define KTH_DECL_WITN_ARG bool witness = false
-#define KTH_DEF_WITN_ARG bool witness /*= false*/
+#define KTH_DECL_WITN_ARG bool witness = false          //NOLINT
+#define KTH_DEF_WITN_ARG bool witness /*= false*/       //NOLINT
 #endif
 
 

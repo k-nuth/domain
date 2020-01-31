@@ -5,8 +5,8 @@
 #ifndef KTH_CONCEPTS_HPP_
 #define KTH_CONCEPTS_HPP_
 
-#define Reader typename
-#define Writer typename
+#define Reader typename //NOLINT
+#define Writer typename //NOLINT
 
 namespace knuth {
 
