@@ -11,8 +11,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 static constexpr uint8_t max_recovery_id = 3;
 static constexpr uint8_t magic_compressed = 31;
@@ -132,5 +131,4 @@ bool verify_message(data_slice message, payment_address const& address, const me
            (hash == address.hash());
 }
 
-}  // namespace wallet
 }  // namespace kth

@@ -20,8 +20,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 // Deserialization.
 //-----------------------------------------------------------------------------
@@ -217,5 +216,4 @@ std::string operation::to_string(uint32_t active_forks) const {
     return "[" + opcode_to_prefix(code_, data_) + encode_base16(data_) + "]";
 }
 
-}  // namespace machine
 }  // namespace kth

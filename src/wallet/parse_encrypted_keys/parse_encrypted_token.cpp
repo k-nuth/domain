@@ -13,8 +13,7 @@
 
 #include "parse_encrypted_prefix.hpp"
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 // This prefix results in the prefix "passphrase" in the base58 encoding.
 // The prefix is not modified as the result of variations to address.
@@ -60,5 +59,4 @@ bool parse_encrypted_token::verify_magic() const {
     return slice<0, magic_size>(prefix()) == magic_;
 }
 
-}  // namespace wallet
 }  // namespace kth

@@ -15,8 +15,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 using namespace boost::program_options;
 
@@ -79,5 +78,4 @@ std::ostream& operator<<(std::ostream& output, point const& argument) {
     return output;
 }
 
-}  // namespace config
 }  // namespace kth

@@ -15,8 +15,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -223,5 +222,4 @@ code header::accept(chain_state const& state) const {
     return header_basis::accept(state, hash_pow());
 }
 
-}  // namespace chain
 }  // namespace kth

@@ -9,8 +9,7 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/chain/point_value.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // Constructors.
 //-------------------------------------------------------------------------
@@ -56,5 +55,4 @@ void point_value::set_value(uint64_t value) {
     value_ = value;
 }
 
-}  // namespace chain
 }  // namespace kth

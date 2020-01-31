@@ -13,8 +13,7 @@
 #include <kth/infrastructure/constants.hpp>
 #include <kth/infrastructure/formats/base_16.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 // using namespace bc::chain;
 
@@ -680,5 +679,4 @@ bool opcode_from_hexadecimal(opcode& out_code, std::string const& value) {
     return true;
 }
 
-} // namespace machine
 } // namespace kth

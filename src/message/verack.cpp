@@ -10,8 +10,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const verack::command = "verack";
 uint32_t const verack::version_minimum = version::level::minimum;
@@ -69,5 +68,4 @@ size_t verack::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-}  // namespace message
 }  // namespace kth

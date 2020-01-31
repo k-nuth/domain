@@ -15,8 +15,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::wallet;
 
@@ -219,5 +218,4 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     return addresses;
 }
 
-}  // namespace chain
 }  // namespace kth

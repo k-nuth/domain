@@ -16,8 +16,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const merkle_block::command = "merkleblock";
 uint32_t const merkle_block::version_minimum = version::level::bip37;
@@ -185,5 +184,4 @@ void merkle_block::set_flags(data_chunk&& value) {
     flags_ = std::move(value);
 }
 
-}  // namespace message
 }  // namespace kth

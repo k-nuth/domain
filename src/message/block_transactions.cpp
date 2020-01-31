@@ -14,8 +14,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const block_transactions::command = "blocktxn";
 uint32_t const block_transactions::version_minimum = version::level::bip152;
@@ -152,5 +151,4 @@ void block_transactions::set_transactions(chain::transaction::list&& x) {
 }
 
 
-}  // namespace message
 }  // namespace kth

@@ -11,8 +11,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const not_found::command = "notfound";
 uint32_t const not_found::version_minimum = version::level::bip37;
@@ -86,5 +85,4 @@ bool not_found::from_data(uint32_t version, std::istream& stream) {
     return from_data(version, stream_r);
 }
 
-}  // namespace message
 }  // namespace kth

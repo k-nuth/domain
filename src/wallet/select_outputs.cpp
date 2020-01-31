@@ -11,8 +11,7 @@
 #include <kth/domain/constants.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 using namespace bc::chain;
 
@@ -106,5 +105,4 @@ void select_outputs::select(points_value& out, const points_value& unspent, uint
     }
 }
 
-}  // namespace wallet
 }  // namespace kth

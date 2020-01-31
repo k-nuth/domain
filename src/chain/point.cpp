@@ -18,8 +18,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/serializer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 constexpr auto store_point_size = std::tuple_size<point>::value;
 
@@ -217,5 +216,4 @@ bool point::is_null() const {
     return (index_ == null_index) && (hash_ == null_hash);
 }
 
-}  // namespace chain
 }  // namespace kth

@@ -41,8 +41,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::config;
 using namespace bc::machine;
@@ -985,5 +984,4 @@ size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
 }
 
 
-}  // namespace chain
 }  // namespace kth

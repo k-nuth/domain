@@ -10,8 +10,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const pong::command = "pong";
 uint32_t const pong::version_minimum = version::level::minimum;
@@ -100,5 +99,4 @@ void pong::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-}  // namespace message
 }  // namespace kth

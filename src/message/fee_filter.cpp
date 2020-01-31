@@ -10,8 +10,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const fee_filter::command = "feefilter";
 uint32_t const fee_filter::version_minimum = version::level::bip133;
@@ -117,5 +116,4 @@ void fee_filter::set_minimum_fee(uint64_t value) {
     insufficient_version_ = false;
 }
 
-}  // namespace message
 }  // namespace kth

@@ -41,8 +41,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::config;
 using namespace bc::machine;
@@ -809,5 +808,4 @@ code block::connect() const {
 //     return connect_transactions(state);
 // }
 
-}  // namespace chain
 }  // namespace kth

@@ -11,8 +11,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const version::command = "version";
 //const bounds message::version::version = { level::minimum, level::maximum };
@@ -230,5 +229,4 @@ void version::set_relay(bool relay) {
     relay_ = relay;
 }
 
-}  // namespace message
 }  // namespace kth

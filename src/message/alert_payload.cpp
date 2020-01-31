@@ -12,8 +12,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 // Libbitcon doesn't use this.
 const ec_uncompressed alert_payload::satoshi_public_key{
@@ -363,5 +362,4 @@ void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
 }
 
-}  // namespace message
 }  // namespace kth

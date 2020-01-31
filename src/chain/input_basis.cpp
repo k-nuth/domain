@@ -19,8 +19,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::machine;
 
@@ -344,5 +343,4 @@ bool input_basis::extract_reserved_hash(hash_digest& out) const {
 }
 #endif // KTH_CURRENCY_BCH
 
-}  // namespace chain
 }  // namespace kth

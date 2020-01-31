@@ -24,8 +24,7 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::config;
 using namespace bc::machine;
@@ -1205,5 +1204,4 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     return work_required(values, this->enabled_forks());
 }
 
-}  // namespace chain
 }  // namespace kth

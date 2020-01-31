@@ -20,8 +20,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::wallet;
 using namespace bc::machine;
@@ -201,5 +200,4 @@ payment_address::list input::addresses() const {
     return addresses;
 }
 
-}  // namespace chain
 }  // namespace kth

@@ -19,8 +19,7 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 using namespace bc::chain;
 
@@ -334,5 +333,4 @@ std::ostream& operator<<(std::ostream& out, stealth_address const& of) {
     return out;
 }
 
-}  // namespace wallet
 }  // namespace kth

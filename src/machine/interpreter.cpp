@@ -9,8 +9,7 @@
 #include <kth/domain/machine/program.hpp>
 #include <kth/infrastructure/error.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 code interpreter::run(program& program) {
     code ec;
@@ -50,5 +49,4 @@ code interpreter::run(operation const& op, program& program) {
     return run_op(op, program);
 }
 
-}  // namespace machine
 }  // namespace kth

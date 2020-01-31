@@ -13,8 +13,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const filter_load::command = "filterload";
 uint32_t const filter_load::version_minimum = version::level::bip37;
@@ -146,5 +145,4 @@ void filter_load::set_flags(uint8_t value) {
     flags_ = value;
 }
 
-}  // namespace message
 }  // namespace kth

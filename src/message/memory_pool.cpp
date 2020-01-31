@@ -10,8 +10,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const memory_pool::command = "mempool";
 uint32_t const memory_pool::version_minimum = version::level::bip35;
@@ -85,5 +84,4 @@ size_t memory_pool::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-}  // namespace message
 }  // namespace kth

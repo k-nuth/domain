@@ -12,8 +12,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const get_blocks::command = "getblocks";
 uint32_t const get_blocks::version_minimum = version::level::minimum;
@@ -147,5 +146,4 @@ void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
 }
 
-}  // namespace message
 }  // namespace kth

@@ -24,8 +24,7 @@
 #include <kth/infrastructure/wallet/cashaddr.hpp>
 #endif  //KTH_CURRENCY_BCH
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 using namespace bc::machine;
 
@@ -478,5 +477,4 @@ payment_address::list payment_address::extract_output(
     }
 }
 
-}  // namespace wallet
 }  // namespace kth

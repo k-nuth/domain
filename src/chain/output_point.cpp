@@ -11,8 +11,7 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/constants.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -91,5 +90,4 @@ bool output_point::is_mature(size_t height) const {
     return floor_subtract(height, validation.height) >= coinbase_maturity;
 }
 
-}  // namespace chain
 }  // namespace kth

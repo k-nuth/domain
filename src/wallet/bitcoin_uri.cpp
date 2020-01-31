@@ -17,8 +17,7 @@
 #include <kth/infrastructure/formats/base_10.hpp>
 #include <kth/infrastructure/wallet/uri.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 static auto const bitcoin_scheme = "bitcoin";
 static auto const parameter_amount = "amount";
@@ -233,5 +232,4 @@ std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from) {
     return out;
 }
 
-}  // namespace wallet
 }  // namespace kth

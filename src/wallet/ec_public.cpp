@@ -16,8 +16,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 uint8_t const ec_public::compressed_even = 0x02;
 uint8_t const ec_public::compressed_odd = 0x03;
@@ -219,5 +218,4 @@ std::ostream& operator<<(std::ostream& out, ec_public const& of) {
     return out;
 }
 
-}  // namespace wallet
 }  // namespace kth

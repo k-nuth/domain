@@ -9,8 +9,7 @@
 #include <kth/domain/chain/points_value.hpp>
 #include <kth/infrastructure/utility/limits.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 uint64_t points_value::value() const {
     auto const sum = [](uint64_t total, point_value const& point) {
@@ -20,5 +19,4 @@ uint64_t points_value::value() const {
     return std::accumulate(points.begin(), points.end(), uint64_t(0), sum);
 }
 
-}  // namespace chain
 }  // namespace kth

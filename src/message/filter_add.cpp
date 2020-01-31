@@ -13,8 +13,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const filter_add::command = "filteradd";
 uint32_t const filter_add::version_minimum = version::level::bip37;
@@ -116,5 +115,4 @@ void filter_add::set_data(data_chunk&& value) {
     data_ = std::move(value);
 }
 
-}  // namespace message
 }  // namespace kth

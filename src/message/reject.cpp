@@ -13,8 +13,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const reject::command = "reject";
 uint32_t const reject::version_minimum = version::level::bip61;
@@ -236,5 +235,4 @@ uint8_t reject::reason_to_byte(reason_code value) {
     }
 }
 
-}  // namespace message
 }  // namespace kth

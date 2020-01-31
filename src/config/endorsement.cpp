@@ -15,8 +15,7 @@
 #include <kth/domain.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 // endorsement format is currently private to bx.
 static bool decode_endorsement(bc::endorsement& endorsement,
@@ -71,5 +70,4 @@ std::ostream& operator<<(std::ostream& output, const endorsement& argument) {
     return output;
 }
 
-}  // namespace config
 }  // namespace kth

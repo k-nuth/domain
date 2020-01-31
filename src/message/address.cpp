@@ -13,8 +13,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const address::command = "addr";
 uint32_t const address::version_minimum = version::level::minimum;
@@ -118,5 +117,4 @@ void address::set_addresses(network_address::list&& value) {
     addresses_ = std::move(value);
 }
 
-}  // namespace message
 }  // namespace kth

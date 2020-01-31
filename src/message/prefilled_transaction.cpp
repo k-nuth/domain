@@ -12,8 +12,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 #ifdef KTH_CURRENCY_BCH
 constexpr size_t max_index = max_uint32;
@@ -143,5 +142,4 @@ void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
 }
 
-}  // namespace message
 }  // namespace kth

@@ -18,8 +18,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const inventory::command = "inv";
 uint32_t const inventory::version_minimum = version::level::minimum;
@@ -167,5 +166,4 @@ void inventory::set_inventories(inventory_vector::list&& value) {
     inventories_ = std::move(value);
 }
 
-}  // namespace message
 }  // namespace kth

@@ -18,8 +18,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/pseudo_random.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const compact_block::command = "cmpctblock";
 uint32_t const compact_block::version_minimum = version::level::bip152;
@@ -272,5 +271,4 @@ hash_digest hash(compact_block const& block) {
     return sha256_hash(to_data_header_nonce(block));
 }
 
-}  // namespace message
 }  // namespace kth

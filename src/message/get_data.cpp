@@ -13,8 +13,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const get_data::command = "getdata";
 uint32_t const get_data::version_minimum = version::level::minimum;
@@ -97,5 +96,4 @@ void get_data::to_witness() {
 }
 #endif
 
-}  // namespace message
 }  // namespace kth

@@ -15,8 +15,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const get_block_transactions::command = "getblocktxn";
 uint32_t const get_block_transactions::version_minimum = version::level::bip152;
@@ -149,5 +148,4 @@ void get_block_transactions::set_indexes(std::vector<uint64_t>&& values) {
     indexes_ = values;
 }
 
-}  // namespace message
 }  // namespace kth

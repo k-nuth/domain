@@ -13,8 +13,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 size_t heading::maximum_size() {
     // This assumes that the heading doesn't shrink in size.
@@ -256,5 +255,4 @@ void heading::set_checksum(uint32_t value) {
     checksum_ = value;
 }
 
-}  // namespace message
 }  // namespace kth

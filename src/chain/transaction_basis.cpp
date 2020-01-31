@@ -39,8 +39,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // using namespace bc::machine;
 
@@ -896,5 +895,4 @@ bool is_segregated(transaction_basis const& tx) {
 
 
 
-}  // namespace chain
 }  // namespace kth

@@ -13,8 +13,7 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const transaction::command = "tx";
 uint32_t const transaction::version_minimum = version::level::minimum;
@@ -113,5 +112,4 @@ size_t transaction::serialized_size(uint32_t /*unused*/) const {
     return chain::transaction::serialized_size(true, true);
 }
 
-}  // namespace message
 }  // namespace kth

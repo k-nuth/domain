@@ -10,8 +10,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const filter_clear::command = "filterclear";
 uint32_t const filter_clear::version_minimum = version::level::bip37;
@@ -93,5 +92,4 @@ size_t filter_clear::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-}  // namespace message
 }  // namespace kth

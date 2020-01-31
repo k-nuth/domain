@@ -5,12 +5,10 @@
 
 #include <kth/domain/version.hpp>
 
-namespace kth {
-namespace domain {
+namespace kth::domain {
 
 char const* version() {
     return KTH_DOMAIN_VERSION;
 }
 
-}  // namespace domain
 }  // namespace kth

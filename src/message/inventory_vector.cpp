@@ -13,8 +13,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 uint32_t inventory_vector::to_number(type_id type) {
     return static_cast<uint32_t>(type);
@@ -165,5 +164,4 @@ void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = value;
 }
 
-}  // namespace message
 }  // namespace kth

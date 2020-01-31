@@ -14,8 +14,7 @@
 #include <kth/infrastructure/formats/base_58.hpp>
 #include <kth/infrastructure/math/checksum.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 ek_public::ek_public()
     : public_() 
@@ -107,5 +106,4 @@ std::ostream& operator<<(std::ostream& out, ek_public const& of) {
     return out;
 }
 
-}  // namespace wallet
 }  // namespace kth

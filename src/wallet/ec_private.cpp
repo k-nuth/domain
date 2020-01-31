@@ -18,8 +18,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 uint8_t const ec_private::compressed_sentinel = 0x01;
 #ifdef KTH_CURRENCY_LTC
@@ -221,5 +220,4 @@ std::ostream& operator<<(std::ostream& out, ec_private const& of) {
     return out;
 }
 
-}  // namespace wallet
 }  // namespace kth

@@ -38,8 +38,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // using namespace bc::machine;
 
@@ -1023,5 +1022,4 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks) {
 #endif
 }
 
-}  // namespace chain
 }  // namespace kth

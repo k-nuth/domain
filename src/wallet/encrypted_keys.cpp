@@ -29,8 +29,7 @@
 #include "parse_encrypted_keys/parse_encrypted_public.hpp"
 #include "parse_encrypted_keys/parse_encrypted_token.hpp"
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 // Alias commonly-used constants for brevity.
 static constexpr auto half = half_hash_size;
@@ -460,5 +459,4 @@ bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compresse
 
 #endif  // WITH_ICU
 
-}  // namespace wallet
 }  // namespace kth

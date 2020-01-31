@@ -14,8 +14,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // using namespace bc::wallet;
 
@@ -195,5 +194,4 @@ bool output_basis::extract_committed_hash(hash_digest& out) const {
     return true;
 }
 
-}  // namespace chain
 }  // namespace kth

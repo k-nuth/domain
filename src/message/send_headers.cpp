@@ -10,8 +10,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const send_headers::command = "sendheaders";
 uint32_t const send_headers::version_minimum = version::level::bip130;
@@ -84,5 +83,4 @@ size_t send_headers::serialized_size(uint32_t version) const {
     return send_headers::satoshi_fixed_size(version);
 }
 
-}  // namespace message
 }  // namespace kth

@@ -8,8 +8,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const get_headers::command = "getheaders";
 uint32_t const get_headers::version_minimum = version::level::headers;
@@ -72,5 +71,4 @@ bool get_headers::from_data(uint32_t version, std::istream& stream) {
     return from_data(version, stream_r);
 }
 
-}  // namespace message
 }  // namespace kth

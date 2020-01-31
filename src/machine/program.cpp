@@ -15,8 +15,7 @@
 #include <kth/infrastructure/machine/script_version.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 using namespace bc::chain;
 
@@ -121,5 +120,4 @@ code program::evaluate(operation const& op) {
     return interpreter::run(op, *this);
 }
 
-}  // namespace machine
 }  // namespace kth

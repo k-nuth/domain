@@ -41,8 +41,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::machine;
 using namespace boost::adaptors;
@@ -1161,5 +1160,4 @@ operation::list operations(script_basis const& script) {
     return res;
 }
 
-}  // namespace chain
 }  // namespace kth

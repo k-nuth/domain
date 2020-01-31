@@ -20,8 +20,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const headers::command = "headers";
 uint32_t const headers::version_minimum = version::level::headers;
@@ -169,5 +168,4 @@ void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
 }
 
-}  // namespace message
 }  // namespace kth

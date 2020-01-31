@@ -14,8 +14,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const alert::command = "alert";
 uint32_t const alert::version_minimum = version::level::minimum;
@@ -137,5 +136,4 @@ void alert::set_signature(data_chunk&& value) {
     signature_ = std::move(value);
 }
 
-}  // namespace message
 }  // namespace kth

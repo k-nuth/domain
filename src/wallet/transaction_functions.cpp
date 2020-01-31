@@ -11,8 +11,7 @@
 #include <kth/domain/config/output.hpp>
 #include <kth/domain/config/script.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/tx-encode.cpp
 static bool push_scripts(chain::output::list& outputs,
@@ -186,5 +185,4 @@ std::pair<error::error_code_t, chain::transaction> input_set(data_chunk const& s
     return input_set(script, raw_tx, index);
 }
 
-}  //namespace wallet
 }  //namespace kth

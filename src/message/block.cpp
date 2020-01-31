@@ -17,8 +17,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const block::command = "block";
 uint32_t const block::version_minimum = version::level::minimum;
@@ -143,5 +142,4 @@ hash_digest hash(block const& block, uint64_t nonce) {
     return sha256_hash(to_data_header_nonce(block, nonce));
 }
 
-}  // namespace message
 }  // namespace kth

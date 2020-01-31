@@ -9,8 +9,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // Bitcoin compact for represents a value in base 256 notation as follows:
 // value = (-1^sign) * mantissa * 256^(exponent-3)
@@ -163,5 +162,4 @@ uint32_t compact::from_big(uint256_t const& big) {
     return (static_cast<uint32_t>(exponent) << mantissa_bits) | mantissa;
 }
 
-}  // namespace chain
 }  // namespace kth

@@ -12,8 +12,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 std::string const send_compact::command = "sendcmpct";
 uint32_t const send_compact::version_minimum = version::level::bip152;
@@ -118,5 +117,4 @@ void send_compact::set_version(uint64_t version) {
     version_ = version;
 }
 
-}  // namespace message
 }  // namespace kth

@@ -13,8 +13,7 @@
 #include <kth/domain/chain/header.hpp>
 #include <kth/infrastructure/config/base16.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 using namespace boost::program_options;
 
@@ -52,5 +51,4 @@ std::ostream& operator<<(std::ostream& output, header const& argument) {
     return output;
 }
 
-}  // namespace config
 }  // namespace kth
