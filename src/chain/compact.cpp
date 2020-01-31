@@ -152,7 +152,7 @@ uint32_t compact::from_big(uint256_t const& big) {
     //*************************************************************************
     if (is_negated(mantissa)) {
         exponent++;
-        mantissa >>= 8u;
+        mantissa >>= 8u;    //NOLINT
     }
 
     BITCOIN_ASSERT_MSG((exponent & first_byte_mask) == 0, "size exceess");
