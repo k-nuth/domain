@@ -45,11 +45,6 @@ public:
     witness(data_chunk&& encoded, bool prefix);
     witness(data_chunk const& encoded, bool prefix);
 
-    // witness(witness const& x) = default;
-    // witness(witness&& x) = default;
-    // witness& operator=(witness const& x) = default;
-    // witness& operator=(witness&& x) = default;
-
     // Operators.
     //-------------------------------------------------------------------------
 
