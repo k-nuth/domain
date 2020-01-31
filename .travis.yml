@@ -158,7 +158,7 @@ jobs:
       script:
         - cd ${TRAVIS_BUILD_DIR}
         - chmod a+x .travis/ci-run.sh
-        - /usr/bin/docker run --rm -ti -e TRAVIS_BRANCH=$TRAVIS_BRANCH -v ${TRAVIS_BUILD_DIR}:/home/conan/project -v ${TRAVIS_BUILD_DIR}/.travis/ci-run.sh:/tmp/ci-run.sh conanio/gcc7 /bin/bash -c /tmp/ci-run.sh
+        - /usr/bin/docker run --rm -ti -e TRAVIS_BRANCH=$TRAVIS_BRANCH -v ${TRAVIS_BUILD_DIR}:/home/conan/project -v ${TRAVIS_BUILD_DIR}/.travis/ci-run.sh:/tmp/ci-run.sh conanio/gcc9 /bin/bash -c /tmp/ci-run.sh
         # - /usr/bin/docker run --rm -ti -e TRAVIS_BRANCH=$TRAVIS_BRANCH -v ${TRAVIS_BUILD_DIR}:/home/conan/project -v ${TRAVIS_BUILD_DIR}/.travis/ci-run.sh:/tmp/ci-run.sh arceri/buildimage-ubuntu:18.10 /bin/bash -c /tmp/ci-run.sh
         
 
