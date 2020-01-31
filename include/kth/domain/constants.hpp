@@ -45,7 +45,7 @@ static_assert(std::is_same<uint8_t, unsigned char>::value);
 // Generic constants.
 //-----------------------------------------------------------------------------
 
-// Defined <bitcoin/infrastructure/constants.hpp>
+// Defined <kth/infrastructure/constants.hpp>
 // constexpr int64_t min_int64 = MIN_INT64;
 // constexpr int64_t max_int64 = MAX_INT64;
 // constexpr int32_t min_int32 = MIN_INT32;
@@ -512,7 +512,7 @@ constexpr size_t minimum_seed_size = minimum_seed_bits / byte_bits;
 // Effective limit given a 32 bit chain height boundary: 10 + log2(2^32) + 1.
 constexpr size_t max_locator = 43;
 
-// Defined <bitcoin/infrastructure/constants.hpp>
+// Defined <kth/infrastructure/constants.hpp>
 // // Variable integer prefix sentinels.
 // constexpr uint8_t varint_two_bytes = 0xfd;
 // constexpr uint8_t varint_four_bytes = 0xfe;

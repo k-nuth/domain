@@ -7,8 +7,8 @@
 //        GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef KTH_BITCOIN_HPP
-#define KTH_BITCOIN_HPP
+#ifndef KTH_DOMAIN_HPP
+#define KTH_DOMAIN_HPP
 
 /**
  * API Users: Include only this header. Direct use of other headers is fragile
@@ -222,4 +222,4 @@
 
 #include <kth/infrastructure.hpp>
 
-#endif
+#endif //KTH_DOMAIN_HPP

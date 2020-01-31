@@ -15,7 +15,7 @@ class KnuthDomainConan(KnuthConanFile):
     # version = get_version()
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/k-nuth/domain"
-    description = "Bitcoin Cross-Platform C++ Development Toolkit"
+    description = "Crypto Cross-Platform C++ Development Toolkit"
     settings = "os", "compiler", "build_type", "arch"
 
     options = {"shared": [True, False],
