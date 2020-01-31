@@ -40,13 +40,13 @@ bool is_nonzero(uint32_t compact) {
 inline 
 uint8_t log_256(uint32_t mantissa) {
     BITCOIN_ASSERT_MSG(mantissa <= 0x00ffffff, "mantissa log256 is 4");
-    return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));
+    return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));     //NOLINT
 }
 
 inline 
 bool is_overflow(uint8_t exponent, uint32_t mantissa) {
     // Overflow if exponent would shift the mantissa more than 32 bytes.
-    return (mantissa > 0) && (exponent > 32 + 3 - log_256(mantissa));
+    return (mantissa > 0) && (exponent > 32 + 3 - log_256(mantissa));       //NOLINT
 }
 
 inline 
