@@ -15,8 +15,8 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/transaction_functions.hpp>
 
-#include <knuth/keoken/message/base.hpp>
-#include <knuth/keoken/primitives.hpp>
+#include <kth/domain/keoken/message/base.hpp>
+#include <kth/domain/keoken/primitives.hpp>
 
 namespace knuth {
 namespace keoken {

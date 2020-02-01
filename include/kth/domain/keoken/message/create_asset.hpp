@@ -12,11 +12,11 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
-#include <knuth/keoken/constants.hpp>
-#include <knuth/keoken/message/base.hpp>
-#include <knuth/keoken/primitives.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
+#include <kth/domain/keoken/constants.hpp>
+#include <kth/domain/keoken/message/base.hpp>
+#include <kth/domain/keoken/primitives.hpp>
 
 namespace knuth {
 namespace keoken {

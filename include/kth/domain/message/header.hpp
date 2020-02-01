@@ -18,8 +18,8 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
 
 namespace kth {
 namespace message {

@@ -23,8 +23,8 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
 
 namespace kth {
 namespace chain {
@@ -164,6 +164,6 @@ hash_digest litecoin_proof_of_work_hash(header_basis const& header);
 }  // namespace chain
 }  // namespace kth
 
-// #include <knuth/concepts_undef.hpp>
+// #include <kth/domain/concepts_undef.hpp>
 
 #endif // KTH_CHAIN_HEADER_BASIS_HPP_

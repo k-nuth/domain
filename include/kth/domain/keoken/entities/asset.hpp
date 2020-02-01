@@ -10,7 +10,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/payment_address.hpp>
 
-#include <knuth/keoken/primitives.hpp>
+#include <kth/domain/keoken/primitives.hpp>
 
 namespace knuth {
 namespace keoken {

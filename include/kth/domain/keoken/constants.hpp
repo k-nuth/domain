@@ -8,7 +8,7 @@
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>
 
-#include <knuth/keoken/utility.hpp>
+#include <kth/domain/keoken/utility.hpp>
 
 namespace knuth {
 namespace keoken {
