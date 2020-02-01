@@ -135,6 +135,31 @@ jobs:
 #           branch_pattern: dev
 
 
+# # Wait for dependencies ----------------------------------------------
+#     - stage: wait for dependencies
+#       os: linux
+#       sudo: required
+#       dist: xenial
+#       language: python
+#       python: "3.7"
+#       services:
+#         - docker
+#       env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
+#       if: branch =~ /^(release|hotfix).+$/    #Just releases
+#       script:
+#         - |
+#           conan user
+#           conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
+#           echo "waiting for secp256k1/0.X@kth/staging ..."
+#           conan search secp256k1/0.X@kth/staging -r kth_temp > /dev/null
+#           while [ $? == 1 ]
+#           do
+#             printf "."
+#             sleep 10
+#             conan search secp256k1/0.X@kth/staging -r kth_temp > /dev/null
+#           done
+#           echo "secp256k1/0.X@kth/staging found"
+
 # Wait for dependencies ----------------------------------------------
     - stage: wait for dependencies
       os: linux
@@ -150,39 +175,29 @@ jobs:
         - |
           conan user
           conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
-          echo "waiting for secp256k1/0.X@kth/staging ..."
-          conan search secp256k1/0.X@kth/staging -r kth_temp > /dev/null
-          while [ $? == 1 ]
-          do
-            printf "."
-            sleep 10
-            conan search secp256k1/0.X@kth/staging -r kth_temp > /dev/null
-          done
-          echo "secp256k1/0.X@kth/staging found"
+          python ci_utils/wait_for_deps.py domain
 
-#TODO(fernando): disabled static checks for the moment
-# # Static Checks ------------------------------------------------------
-#     - stage: static checks
-#       os: linux
-#       sudo: required
-#       dist: xenial
-#       language: python
-#       python: "3.7"
-#       services:
-#         - docker
-#       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
-#       # install: skip
-#       install:
 
-#       script:
-#         - cd ${TRAVIS_BUILD_DIR}
-#         - chmod a+x .travis/ci-run.sh
-#         - /usr/bin/docker run --rm -ti -e TRAVIS_BRANCH=$TRAVIS_BRANCH -v ${TRAVIS_BUILD_DIR}:/home/conan/project -v ${TRAVIS_BUILD_DIR}/.travis/ci-run.sh:/tmp/ci-run.sh conanio/gcc9 /bin/bash -c /tmp/ci-run.sh
-#         # - /usr/bin/docker run --rm -ti -e TRAVIS_BRANCH=$TRAVIS_BRANCH -v ${TRAVIS_BUILD_DIR}:/home/conan/project -v ${TRAVIS_BUILD_DIR}/.travis/ci-run.sh:/tmp/ci-run.sh arceri/buildimage-ubuntu:18.10 /bin/bash -c /tmp/ci-run.sh
-        
+# Static Checks ------------------------------------------------------
+    - stage: static checks
+      os: linux
+      sudo: required
+      dist: xenial
+      language: python
+      python: "3.7"
+      services:
+        - docker
+      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+      # install: skip
+      install:
 
-        
-#         # -e TRAVIS_PYTHON_VERSION=$TRAVIS_PYTHON_VERSION
+      script:
+        - cd ${TRAVIS_BUILD_DIR}
+        #TODO(fernando): disabled static checks for the moment
+        # - chmod a+x .travis/ci-run.sh
+        # - /usr/bin/docker run --rm -ti -e TRAVIS_BRANCH=$TRAVIS_BRANCH -v ${TRAVIS_BUILD_DIR}:/home/conan/project -v ${TRAVIS_BUILD_DIR}/.travis/ci-run.sh:/tmp/ci-run.sh conanio/gcc9 /bin/bash -c /tmp/ci-run.sh
+        # - /usr/bin/docker run --rm -ti -e TRAVIS_BRANCH=$TRAVIS_BRANCH -v ${TRAVIS_BUILD_DIR}:/home/conan/project -v ${TRAVIS_BUILD_DIR}/.travis/ci-run.sh:/tmp/ci-run.sh arceri/buildimage-ubuntu:18.10 /bin/bash -c /tmp/ci-run.sh
+        # -e TRAVIS_PYTHON_VERSION=$TRAVIS_PYTHON_VERSION
         
 
 # # Static Checks ------------------------------------------------------
