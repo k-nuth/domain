@@ -2,9 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <knuth/keoken/entities/asset.hpp>
+#include <kth/domain/keoken/entities/asset.hpp>
 
-#include <knuth/keoken/primitives.hpp>
+#include <kth/domain/keoken/primitives.hpp>
 
 namespace knuth {
 namespace keoken {

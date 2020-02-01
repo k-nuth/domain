@@ -15,12 +15,12 @@
 #include <kth/domain/config/output.hpp>
 #include <kth/domain/wallet/transaction_functions.hpp>
 #include <kth/infrastructure/formats/base_16.hpp>
-#include <knuth/keoken/message/base.hpp>
+#include <kth/domain/keoken/message/base.hpp>
 
-#include <knuth/keoken/message/base.hpp>
-#include <knuth/keoken/message/create_asset.hpp>
-#include <knuth/keoken/message/send_tokens.hpp>
-#include <knuth/keoken/wallet/create_transaction.hpp>
+#include <kth/domain/keoken/message/base.hpp>
+#include <kth/domain/keoken/message/create_asset.hpp>
+#include <kth/domain/keoken/message/send_tokens.hpp>
+#include <kth/domain/keoken/wallet/create_transaction.hpp>
 
 using namespace bc;
 using namespace knuth::keoken::wallet;

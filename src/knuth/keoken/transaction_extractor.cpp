@@ -3,14 +3,14 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 
-#include <knuth/keoken/transaction_extractor.hpp>
+#include <kth/domain/keoken/transaction_extractor.hpp>
 
 #include <type_traits>
 
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>
 
-#include <knuth/keoken/constants.hpp>
+#include <kth/domain/keoken/constants.hpp>
 
 namespace knuth {
 namespace keoken {

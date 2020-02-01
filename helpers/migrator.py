@@ -106,8 +106,8 @@ source_list = [
     'wallet/ec_public'
 ]
 
-# ./src/knuth/keoken/message/create_asset.cpp
-# ./src/knuth/keoken/message/send_tokens.cpp
+# ./src/kth/domain/keoken/message/create_asset.cpp
+# ./src/kth/domain/keoken/message/send_tokens.cpp
 
 
 def extract_function(content, frm):

@@ -2,15 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <knuth/keoken/wallet/create_transaction.hpp>
+#include <kth/domain/keoken/wallet/create_transaction.hpp>
 
 #include <kth/domain/wallet/transaction_functions.hpp>
 #include <kth/infrastructure/formats/base_16.hpp>
 
-#include <knuth/keoken/constants.hpp>
-#include <knuth/keoken/message/base.hpp>
-#include <knuth/keoken/message/create_asset.hpp>
-#include <knuth/keoken/message/send_tokens.hpp>
+#include <kth/domain/keoken/constants.hpp>
+#include <kth/domain/keoken/message/base.hpp>
+#include <kth/domain/keoken/message/create_asset.hpp>
+#include <kth/domain/keoken/message/send_tokens.hpp>
 
 namespace knuth {
 namespace keoken {

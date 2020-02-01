@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <knuth/keoken/message/base.hpp>
+#include <kth/domain/keoken/message/base.hpp>
 
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 

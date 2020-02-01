@@ -483,12 +483,12 @@ endif()
 if (WITH_KEOKEN)
   set(kth_domain_sources_just_kth 
     ${kth_domain_sources_just_kth}
-    src/knuth/keoken/transaction_extractor.cpp
-    src/knuth/keoken/entities/asset.cpp
-    src/knuth/keoken/message/base.cpp
-    src/knuth/keoken/message/create_asset.cpp
-    src/knuth/keoken/message/send_tokens.cpp
-    src/knuth/keoken/wallet/create_transanction.cpp
+    src/kth/domain/keoken/transaction_extractor.cpp
+    src/kth/domain/keoken/entities/asset.cpp
+    src/kth/domain/keoken/message/base.cpp
+    src/kth/domain/keoken/message/create_asset.cpp
+    src/kth/domain/keoken/message/send_tokens.cpp
+    src/kth/domain/keoken/wallet/create_transanction.cpp
   )
 endif()
 
