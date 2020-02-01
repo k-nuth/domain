@@ -49,6 +49,18 @@ test_script:
   # - git describe origin
   # - python ci_utils/print_version.py 
 
+  # - git config core.autocrlf
+  # - python crlf.py
+  # - findstr /r "\r\n" *.py & exit 0
+  # - findstr /r "\r" *.py & exit 0
+
+  # # - dir C:\MinGW
+  # - set PATH=C:\MinGW\bin;%PATH%
+
+  # - IF "%MINGW_CONFIGURATIONS%" NEQ "" (
+  #     gcc --version
+  #   )
+
 
   - ps: |
       If ($env:WAIT_FOR_DEPS -ne 1) {
@@ -101,7 +113,8 @@ test_script:
         python ci_utils/wait_for_deps.py domain
       }
 
-  - PowerShell .\.appveyor\build.ps1
+  #- PowerShell .\.appveyor\build.ps1
+  - python build.py
 
 for:
   -
@@ -144,9 +157,6 @@ for:
 
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
         #   CONAN_VISUAL_VERSIONS: 14
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-        #   CONAN_VISUAL_VERSIONS: 14
-
 
         # - MINGW_CONFIGURATIONS: "9@x86_64@seh@posix"
         - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
