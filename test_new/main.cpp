@@ -19,7 +19,7 @@
 #include <kth/domain/keoken/transaction_extractor.hpp>
 #include <kth/domain/keoken/utility.hpp>
 
-using namespace knuth::keoken;
+using namespace kth::keoken;
 
 using kth::base16_literal;
 using kth::data_chunk;

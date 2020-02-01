@@ -12,7 +12,7 @@
 
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace entities {
 
@@ -60,6 +60,6 @@ private:
 
 }  // namespace entities
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth
 
 #endif  //KTH_KEOKEN_ENTITIES_ASSET_HPP_

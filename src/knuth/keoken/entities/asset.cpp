@@ -6,7 +6,7 @@
 
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace entities {
 
@@ -69,4 +69,4 @@ payment_address const& asset::owner() const {
 
 }  // namespace entities
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

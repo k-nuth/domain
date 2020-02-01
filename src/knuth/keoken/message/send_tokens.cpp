@@ -9,7 +9,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 
@@ -137,4 +137,4 @@ void send_tokens::set_amount(amount_t x) {
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

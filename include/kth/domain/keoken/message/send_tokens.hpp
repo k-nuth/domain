@@ -17,7 +17,7 @@
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 
@@ -104,6 +104,6 @@ private:
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth
 
 #endif  //KTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_

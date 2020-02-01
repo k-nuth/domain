@@ -12,7 +12,7 @@
 #include <kth/domain/keoken/message/create_asset.hpp>
 #include <kth/domain/keoken/message/send_tokens.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace wallet {
 
@@ -142,4 +142,4 @@ result_t send_token_tx_complete(input_point const& output_to_spend,
 
 }  // namespace wallet
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

@@ -6,7 +6,7 @@
 
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 namespace base {
@@ -23,4 +23,4 @@ size_t serialized_size() {
 }  // namespace base
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

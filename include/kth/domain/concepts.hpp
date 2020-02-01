@@ -8,7 +8,7 @@
 #define Reader typename //NOLINT
 #define Writer typename //NOLINT
 
-namespace knuth {
+namespace kth {
 
 template <typename R, bool result = std::is_same<decltype(((R*)nullptr)->read_size_little_endian()), size_t>::value>  //NOLINT
 constexpr bool is_reader_helper(int /*unused*/) {
@@ -40,7 +40,7 @@ constexpr bool is_writer() {
     return is_writer_helper<W>(0);
 }
 
-}  // namespace knuth
+}  // namespace kth
 
 #define KTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0  //NOLINT
 #define KTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0  //NOLINT

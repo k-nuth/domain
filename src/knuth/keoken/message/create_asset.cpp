@@ -10,7 +10,7 @@
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/utility.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 
@@ -119,4 +119,4 @@ void create_asset::set_amount(amount_t x) {
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

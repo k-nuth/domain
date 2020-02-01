@@ -12,7 +12,7 @@
 
 #include <kth/domain/keoken/constants.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 
 using bc::data_chunk;
@@ -77,4 +77,4 @@ data_chunk first_keoken_output(bc::chain::transaction const& tx) {
 }
 
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

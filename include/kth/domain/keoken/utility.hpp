@@ -13,7 +13,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 
 //C++11
@@ -65,6 +65,6 @@ inline boost::optional<std::string> read_null_terminated_string(R& source, size_
 }
 
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth
 
 #endif  //KTH_KEOKEN_UTILITY_HPP_
