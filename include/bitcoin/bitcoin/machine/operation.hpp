@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_MACHINE_OPERATION_HPP
-#define LIBBITCOIN_MACHINE_OPERATION_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_MACHINE_OPERATION_HPP
+#define KTH_MACHINE_OPERATION_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -73,7 +59,7 @@ public:
     static operation factory_from_data(data_chunk const& encoded);
     static operation factory_from_data(std::istream& stream);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     static operation factory_from_data(R& source) {
         operation instance;
         instance.from_data(source);
@@ -83,7 +69,7 @@ public:
     bool from_data(data_chunk const& encoded);
     bool from_data(std::istream& stream);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         ////reset();
         valid_ = true;
@@ -215,7 +201,7 @@ private:
 };
 
 }  // namespace machine
-}  // namespace libbitcoin
+}  // namespace kth
 
 #include <bitcoin/bitcoin/impl/machine/operation.ipp>
 

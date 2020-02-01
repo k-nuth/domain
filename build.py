@@ -5,7 +5,7 @@ import platform
 from kthbuild import get_base_march_ids, get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
 
 if __name__ == "__main__":
-    full_build = os.getenv('KNUTH_FULL_BUILD', '0') == '1'
+    full_build = os.getenv('KTH_FULL_BUILD', '0') == '1'
     builder, name = get_builder(os.path.dirname(os.path.abspath(__file__)))
     builder.add_common_builds(shared_option_name="%s:shared" % name)
 
@@ -17,20 +17,15 @@ if __name__ == "__main__":
 
             copy_env_vars(env_vars)
 
-            if os.getenv('KNUTH_RUN_TESTS', 'false') == 'true':
+            if os.getenv('KTH_RUN_TESTS', 'false') == 'true':
                 options["%s:with_tests" % name] = "True"
                 options["%s:with_examples" % name] = "False"
 
-            # if full_build:
-            #     marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
-            #     # marchs = ["x86-64"]
-            # else:
-            #     marchs = ["x86-64"]
 
             march_ids = get_base_march_ids()
 
-            ci_currency = os.getenv('KNUTH_CI_CURRENCY', None)
-            with_keoken = os.getenv('KNUTH_WITH_KEOKEN', 'false') == 'true'
+            ci_currency = os.getenv('KTH_CI_CURRENCY', None)
+            with_keoken = os.getenv('KTH_WITH_KEOKEN', 'false') == 'true'
 
             if ci_currency is None:
                 opts_bch = copy.deepcopy(options)

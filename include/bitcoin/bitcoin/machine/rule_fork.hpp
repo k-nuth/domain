@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_MACHINE_RULE_FORK_HPP_
-#define LIBBITCOIN_MACHINE_RULE_FORK_HPP_
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_MACHINE_RULE_FORK_HPP_
+#define KTH_MACHINE_RULE_FORK_HPP_
 
 #include <cstdint>
 
@@ -61,7 +47,7 @@ enum rule_fork : uint32_t {
     bip113_rule = 1u << 10,
 
     //TODO(fernando): check if we have to cancel the following values for coins not equal to BCH
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
     cash_low_s_rule = 1u << 15,
     // cash_monolith_opcodes = 1u << 16,
     cash_verify_flags_script_enable_sighash_forkid = 1u << 16,
@@ -69,7 +55,7 @@ enum rule_fork : uint32_t {
     cash_checkdatasig = 1u << 18,
     cash_schnorr = 1u << 19,
     cash_segwit_recovery = 1u << 20,
-// #endif //KNUTH_CURRENCY_BCH
+// #endif //KTH_CURRENCY_BCH
 
     /// Segregated witness consensus layer (soft fork, feature).
     bip141_rule = 1u << 11,
@@ -109,6 +95,6 @@ enum rule_fork : uint32_t {
 };
 
 } // namespace machine
-} // namespace libbitcoin
+} // namespace kth
 
-#endif // LIBBITCOIN_MACHINE_RULE_FORK_HPP_
+#endif // KTH_MACHINE_RULE_FORK_HPP_

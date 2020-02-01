@@ -1,7 +1,7 @@
 // /**
-//  * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
+//  * Copyright (c) 2016-2020 Knuth Project developers.
 //  *
-//  * This file is part of libbitcoin.
+//  * This file is part of the Knuth Project.
 //  *
 //  * This program is free software: you can redistribute it and/or modify
 //  * it under the terms of the GNU Affero General Public License as published by
@@ -16,8 +16,8 @@
 //  * You should have received a copy of the GNU Affero General Public License
 //  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //  */
-// #ifndef LIBBITCOIN_MESSAGE_NETWORK_ADDRESS_HPP
-// #define LIBBITCOIN_MESSAGE_NETWORK_ADDRESS_HPP
+// #ifndef KTH_MESSAGE_NETWORK_ADDRESS_HPP
+// #define KTH_MESSAGE_NETWORK_ADDRESS_HPP
 
 // #include <cstdint>
 // #include <istream>
@@ -27,7 +27,7 @@
 // #include <bitcoin/infrastructure/utility/reader.hpp>
 // #include <bitcoin/infrastructure/utility/writer.hpp>
 
-// namespace libbitcoin {
+// namespace kth {
 // namespace message {
 
 // typedef byte_array<16> ip_address;
@@ -48,8 +48,8 @@
 
 //     network_address();
 
-//     // BC_CONSTCTOR required for declaration of constexpr address types.
-//     BC_CONSTCTOR network_address(uint32_t timestamp, uint64_t services,
+//     // constexpr required for declaration of constexpr address types.
+//     constexpr network_address(uint32_t timestamp, uint64_t services,
 //         const ip_address& ip, uint16_t port)
 //       : timestamp_(timestamp), services_(services), ip_(ip), port_(port)
 //     {
@@ -124,6 +124,6 @@
 // };
 
 // } // namespace message
-// } // namespace libbitcoin
+// } // namespace kth
 
 // #endif

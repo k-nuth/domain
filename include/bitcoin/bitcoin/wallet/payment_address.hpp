@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_WALLET_PAYMENT_ADDRESS_HPP
-#define LIBBITCOIN_WALLET_PAYMENT_ADDRESS_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_WALLET_PAYMENT_ADDRESS_HPP
+#define KTH_WALLET_PAYMENT_ADDRESS_HPP
 
 #include <algorithm>
 #include <cstdint>
@@ -51,7 +37,7 @@ public:
     static uint8_t const testnet_p2kh;
     static uint8_t const testnet_p2sh;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     static std::string const cashaddr_prefix_mainnet;
     static std::string const cashaddr_prefix_testnet;
 #endif
@@ -93,9 +79,9 @@ public:
     /// Serializer.
     std::string encoded() const;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     std::string encoded_cashaddr() const;
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     /// Accessors.
     uint8_t version() const;
@@ -111,9 +97,9 @@ private:
     /// Factories.
     static payment_address from_string(std::string const& address);
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     static payment_address from_string_cashaddr(std::string const& address);
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     static payment_address from_payment(payment const& decoded);
     static payment_address from_private(ec_private const& secret);
@@ -136,7 +122,7 @@ struct BC_API wrapped_data {
 };
 
 }  // namespace wallet
-}  // namespace libbitcoin
+}  // namespace kth
 
 // Allow payment_address to be in indexed in std::*map classes.
 namespace std {

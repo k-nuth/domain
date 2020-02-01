@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_MESSAGE_ANNOUNCE_VERSION_HPP
-#define LIBBITCOIN_MESSAGE_ANNOUNCE_VERSION_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_MESSAGE_ANNOUNCE_VERSION_HPP
+#define KTH_MESSAGE_ANNOUNCE_VERSION_HPP
 
 #include <cstdint>
 #include <istream>
@@ -82,7 +68,7 @@ public:
         no_blocks_start = 32000,
 
     // This preceded the BIP system.
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
         headers = 70002,
 #else
         headers = 31800,
@@ -118,15 +104,15 @@ public:
         // The node is capable of responding to witness inventory requests.
         node_witness = (1u << 3),
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
         node_network_cash = (1 << 5)  //TODO(kth): check what happens with node_network (or node_network_cash)
-#endif                                //KNUTH_CURRENCY_BCH
+#endif                                //KTH_CURRENCY_BCH
     };
 
     static version factory_from_data(uint32_t version, data_chunk const& data);
     static version factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     static version factory_from_data(uint32_t version, R& source) {
         message::version instance;
         instance.from_data(version, source);
@@ -184,7 +170,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         reset();
 
@@ -268,6 +254,6 @@ private:
 };
 
 }  // namespace message
-}  // namespace libbitcoin
+}  // namespace kth
 
 #endif

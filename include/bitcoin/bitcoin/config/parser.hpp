@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_INFRASTUCTURE_CONFIG_PARSER_HPP
-#define LIBBITCOIN_INFRASTUCTURE_CONFIG_PARSER_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_INFRASTUCTURE_CONFIG_PARSER_HPP
+#define KTH_INFRASTUCTURE_CONFIG_PARSER_HPP
 
 #include <iostream>
 #include <sstream>
@@ -111,7 +97,7 @@ public:
         config::checkpoint::list checkpoints;
 
     //TODO(fernando): Set Litecoin checkpoints
-#if defined(KNUTH_CURRENCY_BCH)
+#if defined(KTH_CURRENCY_BCH)
         if (get_network(easy_blocks, retarget) == config::settings::testnet) {
             // BCH Testnet
             checkpoints.reserve(17);
@@ -211,7 +197,7 @@ public:
             checkpoints.reserve(1);
             checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);
         }
-#elif defined(KNUTH_CURRENCY_BTC)
+#elif defined(KTH_CURRENCY_BTC)
         if (get_network(easy_blocks, retarget) == config::settings::testnet) {
             // BTC Testnet
             checkpoints.reserve(15);
@@ -277,7 +263,7 @@ public:
             checkpoints.reserve(1);
             checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);    //TODO(fernando): check if BTC-Regtest-genesis == BCH-Regtest-genesis
         }
-#endif //defined(KNUTH_CURRENCY_BCH)
+#endif //defined(KTH_CURRENCY_BCH)
 
         return checkpoints;
     }
@@ -383,6 +369,6 @@ protected:
 };
 
 } // namespace config
-} // namespace libbitcoin
+} // namespace kth
 
 #endif

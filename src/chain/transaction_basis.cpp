@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <bitcoin/bitcoin/chain/transaction_basis.hpp>
 
 #include <algorithm>
@@ -265,7 +251,7 @@ void transaction_basis::set_outputs(output::list&& value) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void transaction_basis::strip_witness() {
     auto const strip = [](input& input) {
@@ -419,7 +405,7 @@ bool transaction_basis::is_locktime_conflict() const {
 // size_t transaction_basis::signature_operations() const {
 //     auto const state = validation.state;
 //     auto const bip16_enabled = state->is_enabled(bc::machine::rule_fork::bip16_rule);
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     auto const bip141_enabled = false;
 // #else
 //     auto const bip141_enabled = state->is_enabled(bc::machine::rule_fork::bip141_rule);
@@ -429,7 +415,7 @@ bool transaction_basis::is_locktime_conflict() const {
 
 // Returns max_size_t in case of overflow.
 size_t transaction_basis::signature_operations(bool bip16, bool bip141) const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
     auto const in = [bip16, bip141](size_t total, input const& input) {
@@ -538,7 +524,7 @@ bool transaction_basis::is_mature(size_t height) const {
 }
 
 // bool transaction_basis::is_segregated() const {
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     return false;
 // #endif
 //     bool value;
@@ -644,7 +630,7 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
     auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);
     auto const bip68 = state.is_enabled(bc::machine::rule_fork::bip68_rule);
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state.is_enabled(bc::machine::rule_fork::bip141_rule);
@@ -659,7 +645,7 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
         // A segregated tx should appear empty if bip141 is not enabled.
     }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     if (state.is_magnetic_anomaly_enabled() && serialized_size(true, false) < min_transaction_size) {
         return error::transaction_size_limit;
     }
@@ -668,7 +654,7 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     // if ( ! bip141 && is_segregated()) {
     //     return error::empty_transaction;
     // }
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     if ( ! bip141 && is_segregated) {
         return error::empty_transaction;
     }
@@ -760,7 +746,7 @@ hash_digest hash_non_witness(transaction_basis const& tx) {
     return bitcoin_hash(tx.to_data(true));
 }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 hash_digest hash_witness(transaction_basis const& tx) {
     // precondition: tx.is_segregated()
     return tx.is_coinbase() ? null_hash : bitcoin_hash(tx.to_data(true, true));
@@ -769,7 +755,7 @@ hash_digest hash_witness(transaction_basis const& tx) {
 
 hash_digest hash(transaction_basis const& tx, bool witness) {
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // // Witness hashing must be disabled for non-segregated txs.
     // if (witness) witness = is_segregated(tx);
 
@@ -896,7 +882,7 @@ bool is_overspent(transaction_basis const& tx) {
 }
 
 bool is_segregated(transaction_basis const& tx) {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #endif
     auto const segregated = [](input const& input) {
@@ -911,4 +897,4 @@ bool is_segregated(transaction_basis const& tx) {
 
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 
 // #include <iostream>
 
@@ -30,21 +16,21 @@ namespace {
 // static config::currency currency_ = config::currency::none;
 // static config::settings network_ = config::settings::none;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 // static   //Note(kth): static is redundant in a anonymous namespace
 std::string cashaddr_prefix_ = "bitcoincash";
-#endif  // KNUTH_CURRENCY_BCH
+#endif  // KTH_CURRENCY_BCH
 
 }  // namespace
 
 config::currency get_currency() {
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
     return config::currency::litecoin;
-#elif defined(KNUTH_CURRENCY_BCH)
+#elif defined(KTH_CURRENCY_BCH)
     return config::currency::bitcoin_cash;
 #else
     return config::currency::bitcoin;
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 }
 
 // void set_network(config::settings x) {
@@ -52,14 +38,14 @@ config::currency get_currency() {
 // }
 
 // void set_network(uint32_t identifier) {
-// #ifdef KNUTH_CURRENCY_LTC
+// #ifdef KTH_CURRENCY_LTC
 //     switch(identifier) {
 //         case netmagic::ltc_mainnet: set_network(config::settings::mainnet); break;
 //         case netmagic::ltc_testnet: set_network(config::settings::testnet); break;
 //         case netmagic::ltc_regtest: set_network(config::settings::regtest); break;
 //         default: set_network(config::settings::none);
 //     }
-// #elif defined(KNUTH_CURRENCY_BCH)
+// #elif defined(KTH_CURRENCY_BCH)
 //     switch(identifier) {
 //         case netmagic::bch_mainnet: set_network(config::settings::mainnet); break;
 //         case netmagic::bch_testnet: set_network(config::settings::testnet); break;
@@ -73,7 +59,7 @@ config::currency get_currency() {
 //         case netmagic::btc_regtest: set_network(config::settings::regtest); break;
 //         default: set_network(config::settings::none);
 //     }
-// #endif //KNUTH_CURRENCY_LTC
+// #endif //KTH_CURRENCY_LTC
 // }
 
 // config::settings get_network() {
@@ -81,7 +67,7 @@ config::currency get_currency() {
 // }
 
 config::settings get_network(uint32_t identifier) {
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
     switch (identifier) {
         case netmagic::ltc_mainnet:
             return config::settings::mainnet;
@@ -92,7 +78,7 @@ config::settings get_network(uint32_t identifier) {
         default:
             return config::settings::none;
     }
-#elif defined(KNUTH_CURRENCY_BCH)
+#elif defined(KTH_CURRENCY_BCH)
     switch (identifier) {
         case netmagic::bch_mainnet:
             return config::settings::mainnet;
@@ -114,7 +100,7 @@ config::settings get_network(uint32_t identifier) {
         default:
             return config::settings::none;
     }
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 }
 
 config::settings get_network(bool easy_blocks, bool retarget) {
@@ -124,7 +110,7 @@ config::settings get_network(bool easy_blocks, bool retarget) {
     return easy_blocks ? config::settings::testnet : config::settings::mainnet;
 }
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 std::string cashaddr_prefix() {
     return cashaddr_prefix_;
 }
@@ -132,10 +118,10 @@ std::string cashaddr_prefix() {
 void set_cashaddr_prefix(std::string const& x) {
     cashaddr_prefix_ = x;
 }
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 // bool is_testnet(uint32_t identifier, bool bitcoin_cash) {
-// #ifdef KNUTH_CURRENCY_LTC
+// #ifdef KTH_CURRENCY_LTC
 //     return identifier == 0xf1c8d2fdu //4056470269u; //Litecoin Testnet Netmagic
 // #else
 //     if (bitcoin_cash) {
@@ -143,7 +129,7 @@ void set_cashaddr_prefix(std::string const& x) {
 //     } else {
 //         return identifier == 0x0709110bu;  //Bitcoin Testnet Netmagic
 //     }
-// #endif //KNUTH_CURRENCY_LTC
+// #endif //KTH_CURRENCY_LTC
 // }
 
 } /*namespace libbitcoin*/

@@ -1,21 +1,7 @@
-#
-# Copyright (c) 2016-2020 Knuth Project.
-#
-# This file is part of Knuth Project.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+# Copyright (c) 2016-2020 Knuth Project developers.
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 
 branches:
   only:
@@ -94,7 +80,7 @@ test_script:
         $ErrorActionPreference = 'SilentlyContinue'
         conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
         $ErrorActionPreference = 'Continue'
-        
+
         echo "waiting for infrastructure/0.X@kth/staging ..."
         conan search infrastructure/0.X@kth/staging -r kth_temp > $null
         while($env:lastExitCode -eq 1) {
@@ -104,10 +90,6 @@ test_script:
         }
         Write-Host "infrastructure/0.X@kth/staging found"
       }
-      # Else {
-      #   # python build.py
-      #   PowerShell .\.appveyor\build.ps1
-      # }
 
 
   - PowerShell .\.appveyor\build.ps1
@@ -124,7 +106,7 @@ for:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       CONAN_VISUAL_VERSIONS: 16
       CONAN_VISUAL_RUNTIMES: MT
-      KNUTH_RUN_TESTS: true
+      KTH_RUN_TESTS: true
   -
     branches:
       only:
@@ -135,125 +117,32 @@ for:
           APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
           CONAN_VISUAL_VERSIONS: 16
           CONAN_VISUAL_RUNTIMES: MT
-          # KNUTH_RUN_TESTS: true
-          KNUTH_CI_CURRENCY: BCH
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS: 16
-          CONAN_VISUAL_RUNTIMES: MT
-          KNUTH_CI_CURRENCY: BCH
-          KNUTH_WITH_KEOKEN: false
-          KNUTH_RUN_TESTS: true
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS: 16
-          CONAN_VISUAL_RUNTIMES: MT
-          KNUTH_CI_CURRENCY: BTC
-          KNUTH_RUN_TESTS: true
-
+          KTH_RUN_TESTS: true
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
           CONAN_VISUAL_VERSIONS: 16
           CONAN_VISUAL_RUNTIMES: MD
-          KNUTH_CI_CURRENCY: BCH
-          KNUTH_WITH_KEOKEN: false
-          KNUTH_RUN_TESTS: true
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS: 16
+          KTH_RUN_TESTS: true
+
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_VISUAL_RUNTIMES: MT
+          KTH_RUN_TESTS: true
+          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
           CONAN_VISUAL_RUNTIMES: MD
-          KNUTH_CI_CURRENCY: BTC
-          KNUTH_RUN_TESTS: true
-
-
-
-
-
-
-
-        # - WAIT_FOR_DEPS: 1
-        #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MT
-        #   # KNUTH_RUN_TESTS: true
-        #   KNUTH_CI_CURRENCY: BCH
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-        # # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        # #   CONAN_VISUAL_VERSIONS: 15
-        # #   CONAN_VISUAL_RUNTIMES: MT
-        # #   KNUTH_CI_CURRENCY: BCH
-        # #   KNUTH_WITH_KEOKEN: true
-        # #   KNUTH_RUN_TESTS: true
-        # #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MT
-        #   KNUTH_CI_CURRENCY: BCH
-        #   KNUTH_WITH_KEOKEN: false
-        #   KNUTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MT
-        #   KNUTH_CI_CURRENCY: BTC
-        #   KNUTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-        # # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        # #   CONAN_VISUAL_VERSIONS: 15
-        # #   CONAN_VISUAL_RUNTIMES: MD
-        # #   KNUTH_CI_CURRENCY: BCH
-        # #   KNUTH_WITH_KEOKEN: true
-        # #   KNUTH_RUN_TESTS: true
-        # #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MD
-        #   KNUTH_CI_CURRENCY: BCH
-        #   KNUTH_WITH_KEOKEN: false
-        #   KNUTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MD
-        #   KNUTH_CI_CURRENCY: BTC
-        #   KNUTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-
+          KTH_RUN_TESTS: true
+          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
 
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
         #   CONAN_VISUAL_VERSIONS: 14
-        #   KNUTH_CI_CURRENCY: BCH
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
         #   CONAN_VISUAL_VERSIONS: 14
-        #   KNUTH_CI_CURRENCY: BTC
-        # - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
 
-        # - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-        #   KNUTH_CI_CURRENCY: BCH
-        #   KNUTH_WITH_KEOKEN: true
 
-        - MINGW_CONFIGURATIONS: "9@x86_64@seh@posix"
-          KNUTH_CI_CURRENCY: BCH
-          KNUTH_WITH_KEOKEN: false
-        - MINGW_CONFIGURATIONS: "9@x86_64@seh@posix"
-          KNUTH_CI_CURRENCY: BTC
-
+        # - MINGW_CONFIGURATIONS: "9@x86_64@seh@posix"
         - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-          KNUTH_CI_CURRENCY: BCH
-          KNUTH_WITH_KEOKEN: false
-        - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-          KNUTH_CI_CURRENCY: BTC
-
-
         # - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-        #   KNUTH_CI_CURRENCY: BCH
-        #   KNUTH_WITH_KEOKEN: true
-        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-          KNUTH_CI_CURRENCY: BCH
-          KNUTH_WITH_KEOKEN: false
-        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-          KNUTH_CI_CURRENCY: BTC
-
-
         # - MINGW_CONFIGURATIONS: "6@x86_64@seh@posix"
         # - MINGW_CONFIGURATIONS: "5@x86_64@seh@posix"
   -

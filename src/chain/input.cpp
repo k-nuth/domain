@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <bitcoin/bitcoin/chain/input.hpp>
 
 #include <algorithm>
@@ -23,7 +9,7 @@
 
 #include <bitcoin/bitcoin/chain/script.hpp>
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 #include <bitcoin/bitcoin/chain/witness.hpp>
 #endif
 
@@ -63,7 +49,7 @@ input::addresses_ptr input::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 // input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
 //     : previous_output_(previous_output)
 //     , script_(script)
@@ -76,7 +62,7 @@ input::addresses_ptr input::addresses_cache() const {
 //     , sequence_(sequence) 
 // {}
 
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 // input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
 //     : previous_output_(std::move(previous_output))
 //     , script_(std::move(script))
@@ -119,7 +105,7 @@ input& input::operator=(input&& x) noexcept {
 //     return (sequence_ == x.sequence_) 
 //         && (previous_output_ == x.previous_output_) 
 //         && (script_ == x.script_) 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 //         && (witness_ == x.witness_)
 // #endif
 //         ;
@@ -158,7 +144,7 @@ void input::set_script(chain::script&& value) {
     invalidate_cache();
 }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 void input::set_witness(chain::witness const& value) {
     input_basis::set_witness(value);
     invalidate_cache();
@@ -168,7 +154,7 @@ void input::set_witness(chain::witness&& value) {
     input_basis::set_witness(std::move(value));
     invalidate_cache();
 }
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 
 // protected
 void input::invalidate_cache() const {
@@ -216,4 +202,4 @@ payment_address::list input::addresses() const {
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

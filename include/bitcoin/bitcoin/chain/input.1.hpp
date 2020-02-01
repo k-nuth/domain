@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_CHAIN_INPUT_HPP
-#define LIBBITCOIN_CHAIN_INPUT_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_CHAIN_INPUT_HPP
+#define KTH_CHAIN_INPUT_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -77,7 +63,7 @@ public:
     // static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
     static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     static input factory_from_data(R& source, bool wire = true, bool witness = false) {
         input instance;
         instance.from_data(source, wire, witness_val(witness));
@@ -90,9 +76,9 @@ public:
     // bool from_data(std::istream& stream, bool wire = true, bool witness = false);
     bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool /*witness*/ = false) {
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -105,7 +91,7 @@ public:
 
         script_.from_data(source, true);
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         // Transaction from_data handles the discontiguous wire witness decoding.
         if (witness_val(witness) && !wire) {
             witness_.from_data(source, true);
@@ -132,7 +118,7 @@ public:
 
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool /*witness*/ = false) const {
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -140,7 +126,7 @@ public:
         previous_output_.to_data(sink, wire);
         script_.to_data(sink, true);
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         // Transaction to_data handles the discontiguous wire witness encoding.
         if (witness_val(witness) && !wire) {
             witness_.to_data(sink, true);
@@ -173,14 +159,14 @@ public:
     void set_script(chain::script&& value);
 
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Deprecated (unsafe).
     chain::witness& witness();
 
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 
     uint32_t sequence() const;
     void set_sequence(uint32_t value);
@@ -194,7 +180,7 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     /// Clear witness.
     void strip_witness();
 #endif
@@ -224,14 +210,14 @@ private:
 
     output_point previous_output_;
     chain::script script_;
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     chain::witness witness_;
 #endif
     uint32_t sequence_{0};
 };
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth
 
 //#include <knuth/concepts_undef.hpp>
 

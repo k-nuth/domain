@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <bitcoin/bitcoin/chain/transaction.hpp>
 
 #include <algorithm>
@@ -65,12 +51,12 @@ transaction::transaction()
 {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list const& inputs, output::list const& outputs
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                         , uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard
 #endif
                         )
     : transaction_basis(version, locktime, inputs, outputs)
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , cached_fees_(cached_fees)
     , cached_sigops_(cached_sigops)
     , cached_is_standard_(cached_is_standard)
@@ -79,12 +65,12 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list const&
 {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                        , uint32_t cached_sigops, uint64_t cached_fees, bool cached_is_standard
 #endif
                         )
     : transaction_basis(version, locktime, std::move(inputs), std::move(outputs))
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , cached_fees_(cached_fees)
     , cached_sigops_(cached_sigops)
     , cached_is_standard_(cached_is_standard)
@@ -94,7 +80,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inpu
 
 transaction::transaction(transaction const& x, hash_digest const& hash)
     : transaction_basis(x)
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , cached_fees_(x.cached_fees_)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
@@ -107,7 +93,7 @@ transaction::transaction(transaction const& x, hash_digest const& hash)
 
 transaction::transaction(transaction&& x, hash_digest const& hash)
     : transaction_basis(std::move(x))
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , cached_fees_(x.cached_fees_)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
@@ -121,7 +107,7 @@ transaction::transaction(transaction&& x, hash_digest const& hash)
 
 transaction::transaction(transaction const& x)
     : transaction_basis(x)
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , cached_fees_(0)
     , cached_sigops_(0)
     , cached_is_standard_(false)
@@ -131,7 +117,7 @@ transaction::transaction(transaction const& x)
 
 transaction::transaction(transaction&& x) noexcept
     : transaction_basis(std::move(x))
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , cached_fees_(0)
     , cached_sigops_(0)
     , cached_is_standard_(false)
@@ -143,7 +129,7 @@ transaction& transaction::operator=(transaction const& x) {
     transaction_basis::operator=(x);
     validation = x.validation;
 
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     cached_fees_ = x.cached_fees_;
     cached_sigops_ = x.cached_sigops_;
     cached_is_standard_ = x.cached_is_standard_;
@@ -156,7 +142,7 @@ transaction& transaction::operator=(transaction&& x) noexcept {
     transaction_basis::operator=(std::move(static_cast<transaction_basis&&>(x)));
 
     validation = std::move(x.validation);
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     cached_fees_ = x.cached_fees_;
     cached_sigops_ = x.cached_sigops_;
     cached_is_standard_ = x.cached_is_standard_;
@@ -194,26 +180,26 @@ transaction transaction::factory_from_data(std::istream& stream, bool wire, bool
 }
 
 bool transaction::from_data(data_chunk const& data, bool wire, bool witness
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) {
     data_source istream(data);
     return from_data(istream, wire, witness_val(witness)
-#ifdef KNUTH_CACHED_RPC_DATA    
+#ifdef KTH_CACHED_RPC_DATA    
                     , unconfirmed
 #endif
                     );
 }
 
 bool transaction::from_data(std::istream& stream, bool wire, bool witness
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) {
     istream_reader stream_r(stream);
     return from_data(stream_r, wire, witness_val(witness)
-#ifdef KNUTH_CACHED_RPC_DATA    
+#ifdef KTH_CACHED_RPC_DATA    
                     , unconfirmed
 #endif
 
@@ -242,18 +228,18 @@ void transaction::reset() {
 // Transactions with empty witnesses always use old serialization (bip144).
 // If no inputs are witness programs then witness hash is tx hash (bip141).
 data_chunk transaction::to_data(bool wire, bool witness
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) const {
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Witness handling must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
 
     data_chunk data;
     auto const size = serialized_size(wire, witness_val(witness)
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                                      , unconfirmed
 #endif
                                      );
@@ -264,7 +250,7 @@ data_chunk transaction::to_data(bool wire, bool witness
 
     data_sink ostream(data);
     to_data(ostream, wire, witness_val(witness)
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
            , unconfirmed
 #endif
            );
@@ -275,18 +261,18 @@ data_chunk transaction::to_data(bool wire, bool witness
 }
 
 void transaction::to_data(data_sink& stream, bool wire, bool witness
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) const {
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Witness handling must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
 
     ostream_writer sink_w(stream);
     to_data(sink_w, wire, witness_val(witness)
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
            , unconfirmed
 #endif
            );
@@ -296,12 +282,12 @@ void transaction::to_data(data_sink& stream, bool wire, bool witness
 //-----------------------------------------------------------------------------
 
 size_t transaction::serialized_size(bool wire, bool witness
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     , bool unconfirmed
 #endif
     ) const {
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Witness hashing must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
@@ -309,7 +295,7 @@ size_t transaction::serialized_size(bool wire, bool witness
 
     // Must be both witness and wire encoding for bip144 serialization.
     return transaction_basis::serialized_size(wire, witness)
-#ifdef KNUTH_CACHED_RPC_DATA         
+#ifdef KTH_CACHED_RPC_DATA         
          + ((!wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t) : 0)
 #endif
          ;
@@ -357,7 +343,7 @@ void transaction::set_outputs(output::list&& value) {
     total_output_value_ = boost::none;
 }
 
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
 uint64_t transaction::cached_fees() const {
     return cached_fees_;
 }
@@ -369,7 +355,7 @@ uint32_t transaction::cached_sigops() const {
 bool transaction::cached_is_standard() const {
     return cached_is_standard_;
 }
-#endif // KNUTH_CACHED_RPC_DATA
+#endif // KTH_CACHED_RPC_DATA
 
 // Cache.
 //-----------------------------------------------------------------------------
@@ -394,7 +380,7 @@ void transaction::invalidate_cache() const {
 }
 
 hash_digest transaction::hash(bool witness) const {
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Witness hashing must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
@@ -403,7 +389,7 @@ hash_digest transaction::hash(bool witness) const {
     hash_mutex_.lock_upgrade(); //TODO(fernando): use RAII
 
     if (witness_val(witness)) {
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         if ( ! witness_hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock(); //TODO(fernando): use RAII
@@ -492,7 +478,7 @@ hash_digest transaction::sequences_hash() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void transaction::strip_witness() {
     ///////////////////////////////////////////////////////////////////////////
@@ -641,7 +627,7 @@ bool transaction::is_overspent() const {
 size_t transaction::signature_operations() const {
     auto const state = validation.state;
     auto const bip16_enabled = state->is_enabled(bc::machine::rule_fork::bip16_rule);
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     auto const bip141_enabled = false;
 #else
     auto const bip141_enabled = state->is_enabled(bc::machine::rule_fork::bip141_rule);
@@ -651,7 +637,7 @@ size_t transaction::signature_operations() const {
 
 // // Returns max_size_t in case of overflow.
 // size_t transaction::signature_operations(bool bip16, bool bip141) const {
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     bip141 = false;  // No segwit
 // #endif
 //     auto const in = [bip16, bip141](size_t total, input const& input) {
@@ -760,7 +746,7 @@ size_t transaction::weight() const {
 // }
 
 bool transaction::is_segregated() const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #endif
     bool value;
@@ -832,7 +818,7 @@ code transaction::accept(chain_state const& state, bool transaction_pool) const 
 //     auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
 //     auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);
 //     auto const bip68 = state.is_enabled(bc::machine::rule_fork::bip68_rule);
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     auto const bip141 = false;  // No segwit
 // #else
 //     auto const bip141 = state.is_enabled(bc::machine::rule_fork::bip141_rule);
@@ -936,7 +922,7 @@ code transaction::connect(chain_state const& state) const {
 // }
 
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
 #else
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
@@ -961,7 +947,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
         return error::stack_false;
     }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     bool witnessed;
     // Triggered by output script push of version and witness program (bip141).
     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
@@ -996,7 +982,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
             return error::stack_false;
         }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         // Triggered by embedded push of version and witness program (bip141).
         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
             // The input script must be a push of the embedded_script (bip141).
@@ -1012,7 +998,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
 #endif
     }
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     // Witness must be empty if no bip141 or valid witness program (bip141).
     if ( ! witnessed && !input_witness.empty()) {
         return error::unexpected_witness;
@@ -1030,7 +1016,7 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks) {
     auto const& in = tx.inputs()[input];
     auto const& prevout = in.previous_output().validation.cache;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 #else
     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
@@ -1038,4 +1024,4 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks) {
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

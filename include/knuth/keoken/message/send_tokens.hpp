@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2016-2018 Knuth Project.
- *
- * This file is part of Knuth Project.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef KNUTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_
-#define KNUTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_
+#define KTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_
 
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
@@ -64,7 +50,7 @@ public:
     static send_tokens factory_from_data(bc::data_chunk const& data);
     static send_tokens factory_from_data(std::istream& stream);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     static send_tokens factory_from_data(R& source) {
         send_tokens instance;  //NOLINT
         instance.from_data(source);
@@ -75,7 +61,7 @@ public:
     bool from_data(std::istream& stream);
 
     //Note: from_data and to_data are not longer simetrical.
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         asset_id_ = source.read_4_bytes_big_endian();
         amount_ = source.read_8_bytes_big_endian();
@@ -120,4 +106,4 @@ private:
 }  // namespace keoken
 }  // namespace knuth
 
-#endif  //KNUTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_
+#endif  //KTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_

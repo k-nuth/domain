@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_CHAIN_CHAIN_STATE_HPP
-#define LIBBITCOIN_CHAIN_CHAIN_STATE_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_CHAIN_CHAIN_STATE_HPP
+#define KTH_CHAIN_CHAIN_STATE_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -150,11 +136,11 @@ public:
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, const checkpoints& checkpoints, uint32_t forks
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
                 // , magnetic_anomaly_t magnetic_anomaly_activation_time
                 , great_wall_t great_wall_activation_time
                 , graviton_t graviton_activation_time
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
     );
 
     /// Properties.
@@ -164,11 +150,11 @@ public:
     uint32_t median_time_past() const;
     uint32_t work_required() const;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
     great_wall_t great_wall_activation_time() const;
     graviton_t graviton_activation_time() const;
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
     bool is_valid() const;
@@ -184,13 +170,13 @@ public:
 
     static bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     static uint256_t difficulty_adjustment_cash(uint256_t const& target);
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     uint32_t get_next_work_required(uint32_t time_now);
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     static 
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
@@ -199,7 +185,7 @@ public:
     bool is_great_wall_enabled() const;
     bool is_graviton_enabled() const;
 
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
 protected:
     struct activations {
@@ -211,11 +197,11 @@ protected:
     };
 
     static activations activation(data const& values, uint32_t forks
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
             , great_wall_t great_wall_activation_time
             , graviton_t graviton_activation_time
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
     );
 
     static uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
@@ -260,10 +246,10 @@ private:
 
     //TODO(kth):
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     static uint32_t cash_difficulty_adjustment(data const& values);
     static uint32_t work_required_adjust_cash(data const& values);
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 
     static uint32_t work_required_easy(data const& values);
     static uint32_t elapsed_time_limit(chain_state::data const& values);
@@ -288,14 +274,14 @@ private:
     uint32_t const median_time_past_;
     uint32_t const work_required_;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
     great_wall_t const great_wall_activation_time_;
     graviton_t const graviton_activation_time_;
-#endif  //KNUTH_CURRENCY_BCH
+#endif  //KTH_CURRENCY_BCH
 };
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth
 
 #endif

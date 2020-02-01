@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_CHAIN_TRANSACTION_HPP
-#define LIBBITCOIN_CHAIN_TRANSACTION_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_CHAIN_TRANSACTION_HPP
+#define KTH_CHAIN_TRANSACTION_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -89,9 +75,9 @@ namespace chain {
 //     std::for_each(puts.begin(), puts.end(), serialize);
 // }
 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 // // Input list must be pre-populated as it determines witness count.
-// template <Reader R, KNUTH_IS_READER(R)>
+// template <Reader R, KTH_IS_READER(R)>
 // inline void read_witnesses(R& source, input::list& inputs) {
 //     auto const deserialize = [&](input& input) {
 //         input.witness().from_data(source, true);
@@ -109,7 +95,7 @@ namespace chain {
 
 //     std::for_each(inputs.begin(), inputs.end(), serialize);
 // }
-// #endif // not defined KNUTH_CURRENCY_BCH
+// #endif // not defined KTH_CURRENCY_BCH
 
 // }  // namespace detail
 
@@ -148,12 +134,12 @@ public:
     transaction();
 
     transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                 , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
 #endif
                );
     transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
 #endif
                );
@@ -180,7 +166,7 @@ public:
     static transaction factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
     static transaction factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     static transaction factory_from_data(R& source, bool wire = true, bool witness = false) {
         transaction instance;
         instance.from_data(source, wire, witness_val(witness));
@@ -190,28 +176,28 @@ public:
     //static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
 
     bool from_data(data_chunk const& data, bool wire = true, bool witness = false
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                     , bool unconfirmed = false
 #endif
                     );
 
     bool from_data(std::istream& stream, bool wire = true, bool witness = false
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                     , bool unconfirmed = false
 #endif
                     );
 
     // Witness is not used by outputs, just for template normalization.
-    template <Reader R, KNUTH_IS_READER(R)>
+    template <Reader R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool witness = false
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                     , bool unconfirmed = false
 #endif
                 ) {
 
         transaction_basis::from_data(source, wire, witness);
 
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
         if (! wire && unconfirmed) {
             auto const sigops = source.read_4_bytes_little_endian();
             cached_sigops_ = static_cast<uint32_t>(sigops);
@@ -231,13 +217,13 @@ public:
     //-----------------------------------------------------------------------------
 
     data_chunk to_data(bool wire = true, bool witness = false
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                         , bool unconfirmed = false
 #endif
                     ) const;
 
     void to_data(data_sink& stream, bool wire = true, bool witness = false
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                     , bool unconfirmed = false
 #endif
                 ) const;
@@ -245,18 +231,18 @@ public:
     // Witness is not used by outputs, just for template normalization.
     template <Writer W>
     void to_data(W& sink, bool wire = true, bool witness = false
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                 , bool unconfirmed = false
 #endif
                 ) const {
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
         // Witness handling must be disabled for non-segregated txs.
         witness = witness && is_segregated();
 #endif
         transaction_basis::to_data(sink, wire, witness);
 
-#ifdef KNUTH_CACHED_RPC_DATA            
+#ifdef KTH_CACHED_RPC_DATA            
         if ( ! wire && unconfirmed) {
             sink.write_4_bytes_little_endian(signature_operations());
             sink.write_8_bytes_little_endian(fees());
@@ -269,7 +255,7 @@ public:
     //-----------------------------------------------------------------------------
 
     size_t serialized_size(bool wire = true, bool witness = false
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
                             , bool unconfirmed = false
 #endif
                         ) const;
@@ -281,7 +267,7 @@ public:
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     uint64_t cached_fees() const;
     uint32_t cached_sigops() const;
     bool cached_is_standard() const;
@@ -295,7 +281,7 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
@@ -350,7 +336,7 @@ private:
     // creating the transaction object
 
     //Note(kth): Only accesible for unconfirmed txs
-#ifdef KNUTH_CACHED_RPC_DATA
+#ifdef KTH_CACHED_RPC_DATA
     uint64_t cached_fees_;
     uint32_t cached_sigops_;
     bool cached_is_standard_;
@@ -371,7 +357,7 @@ private:
     mutable upgrade_mutex mutex_;
 };
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
 #else
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
@@ -382,7 +368,7 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth
 
 //#include <knuth/concepts_undef.hpp>
 

@@ -4,23 +4,23 @@ echo "Travis branch: ${TRAVIS_BRANCH}"
 echo "Travis tag: ${TRAVIS_TAG}"
 
 if [[ ${TRAVIS_BRANCH} == ${TRAVIS_TAG} ]]; then
-    export KNUTH_PUSH_BRANCH=master
+    export KTH_PUSH_BRANCH=master
 else
-    export KNUTH_PUSH_BRANCH=${TRAVIS_BRANCH}
+    export KTH_PUSH_BRANCH=${TRAVIS_BRANCH}
 fi
-echo "Knuth branch: ${KNUTH_PUSH_BRANCH}"
+echo "Knuth branch: ${KTH_PUSH_BRANCH}"
 
 
 # TODO(fernando): put in another place
-export KNUTH_PUSH_ACCOUNT=kth
+export KTH_PUSH_ACCOUNT=kth
 
 # ------------------------------------------------------
-export KNUTH_PUSH_PROJECT=consensus
+export KTH_PUSH_PROJECT=consensus
 
 # body="{
 #     \"accountName\": \"kth\",
 #     \"projectSlug\": \"domain\",
-#     \"branch\": \"${KNUTH_PUSH_BRANCH}\",
+#     \"branch\": \"${KTH_PUSH_BRANCH}\",
 #     \"environmentVariables\": {
 #        \"SKIP_NUGET\": \"true\"
 #     }
@@ -28,9 +28,9 @@ export KNUTH_PUSH_PROJECT=consensus
 
 
 body="{
-    \"accountName\": \"${KNUTH_PUSH_ACCOUNT}\",
-    \"projectSlug\": \"${KNUTH_PUSH_PROJECT}\",
-    \"branch\": \"${KNUTH_PUSH_BRANCH}\"
+    \"accountName\": \"${KTH_PUSH_ACCOUNT}\",
+    \"projectSlug\": \"${KTH_PUSH_PROJECT}\",
+    \"branch\": \"${KTH_PUSH_BRANCH}\"
 }"
 
 curl -s -d "$body" -X POST \
@@ -40,7 +40,7 @@ curl -s -d "$body" -X POST \
 
 body="{
     \"request\": {
-    \"branch\":\"${KNUTH_PUSH_BRANCH}\",
+    \"branch\":\"${KTH_PUSH_BRANCH}\",
     \"message\": \"Force by domain build: ${TRAVIS_BUILD_NUMBER}\"
 }}"
 
@@ -50,17 +50,17 @@ curl -s -X POST \
    -H "Travis-API-Version: 3" \
    -H "Authorization: token ${TRAVIS_TOKEN}" \
    -d "$body" \
-   https://api.travis-ci.org/repo/${KNUTH_PUSH_ACCOUNT}%2F${KNUTH_PUSH_PROJECT}/requests
+   https://api.travis-ci.org/repo/${KTH_PUSH_ACCOUNT}%2F${KTH_PUSH_PROJECT}/requests
 
 
 
 # ------------------------------------------------------
-export KNUTH_PUSH_PROJECT=network
+export KTH_PUSH_PROJECT=network
 
 body="{
-    \"accountName\": \"${KNUTH_PUSH_ACCOUNT}\",
-    \"projectSlug\": \"${KNUTH_PUSH_PROJECT}\",
-    \"branch\": \"${KNUTH_PUSH_BRANCH}\"
+    \"accountName\": \"${KTH_PUSH_ACCOUNT}\",
+    \"projectSlug\": \"${KTH_PUSH_PROJECT}\",
+    \"branch\": \"${KTH_PUSH_BRANCH}\"
 }"
 
 curl -s -d "$body" -X POST \
@@ -70,7 +70,7 @@ curl -s -d "$body" -X POST \
 
 body="{
     \"request\": {
-    \"branch\":\"${KNUTH_PUSH_BRANCH}\",
+    \"branch\":\"${KTH_PUSH_BRANCH}\",
     \"message\": \"Force by domain build: ${TRAVIS_BUILD_NUMBER}\"
 }}"
 
@@ -80,17 +80,17 @@ curl -s -X POST \
    -H "Travis-API-Version: 3" \
    -H "Authorization: token ${TRAVIS_TOKEN}" \
    -d "$body" \
-   https://api.travis-ci.org/repo/${KNUTH_PUSH_ACCOUNT}%2F${KNUTH_PUSH_PROJECT}/requests
+   https://api.travis-ci.org/repo/${KTH_PUSH_ACCOUNT}%2F${KTH_PUSH_PROJECT}/requests
 
 
 
 # ------------------------------------------------------
-export KNUTH_PUSH_PROJECT=database
+export KTH_PUSH_PROJECT=database
 
 body="{
-    \"accountName\": \"${KNUTH_PUSH_ACCOUNT}\",
-    \"projectSlug\": \"${KNUTH_PUSH_PROJECT}\",
-    \"branch\": \"${KNUTH_PUSH_BRANCH}\"
+    \"accountName\": \"${KTH_PUSH_ACCOUNT}\",
+    \"projectSlug\": \"${KTH_PUSH_PROJECT}\",
+    \"branch\": \"${KTH_PUSH_BRANCH}\"
 }"
 
 curl -s -d "$body" -X POST \
@@ -100,7 +100,7 @@ curl -s -d "$body" -X POST \
 
 body="{
     \"request\": {
-    \"branch\":\"${KNUTH_PUSH_BRANCH}\",
+    \"branch\":\"${KTH_PUSH_BRANCH}\",
     \"message\": \"Force by domain build: ${TRAVIS_BUILD_NUMBER}\"
 }}"
 
@@ -110,5 +110,5 @@ curl -s -X POST \
    -H "Travis-API-Version: 3" \
    -H "Authorization: token ${TRAVIS_TOKEN}" \
    -d "$body" \
-   https://api.travis-ci.org/repo/${KNUTH_PUSH_ACCOUNT}%2F${KNUTH_PUSH_PROJECT}/requests
+   https://api.travis-ci.org/repo/${KTH_PUSH_ACCOUNT}%2F${KTH_PUSH_PROJECT}/requests
 

@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <bitcoin/bitcoin/chain/block.hpp>
 
 #include <algorithm>
@@ -62,7 +48,7 @@ using namespace bc::config;
 using namespace bc::machine;
 using namespace boost::adaptors;
 
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
 //Litecoin mainnet genesis block
 static std::string const encoded_mainnet_genesis_block =
     "01000000"                                                                                                                                          //version
@@ -104,7 +90,7 @@ static std::string const encoded_testnet_genesis_block =
     "43"                                                                                                                                                //pk_script length
     "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
     "00000000";           //NOLINT                                                                                                                      //locktime
-#else  //KNUTH_CURRENCY_LTC
+#else  //KTH_CURRENCY_LTC
 
 static std::string const encoded_mainnet_genesis_block =
     "01000000"
@@ -145,7 +131,7 @@ static std::string const encoded_testnet_genesis_block =
     "43"
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000"; //NOLINT
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 
 static std::string const encoded_regtest_genesis_block =
     "01000000"
@@ -247,7 +233,7 @@ block block::factory_from_data(std::istream& stream, bool witness) {
 // static
 //block block::factory_from_data(reader& source, bool witness)
 //{
-//#ifdef KNUTH_CURRENCY_BCH
+//#ifdef KTH_CURRENCY_BCH
 //    witness = false;
 //#endif
 //    block instance;
@@ -298,7 +284,7 @@ void block::to_data(data_sink& stream, bool witness) const {
 // Full block serialization is always canonical encoding.
 //void block::to_data(writer& sink, bool witness) const
 //{
-//#ifdef KNUTH_CURRENCY_BCH
+//#ifdef KTH_CURRENCY_BCH
 //    witness = false;
 //#endif
 //    header_.to_data(sink, true);
@@ -495,7 +481,7 @@ block::indexes block::locator_heights(size_t top) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KNUTH_CURRENCY_BCH
+#ifndef KTH_CURRENCY_BCH
 // Clear witness from all inputs (does not change default transaction hash).
 void block::strip_witness() {
     auto const strip = [](transaction& transaction) {
@@ -533,7 +519,7 @@ uint64_t block::subsidy(size_t height, bool retarget) {
 size_t block::signature_operations() const {
     auto const state = validation.state;
     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
@@ -543,7 +529,7 @@ size_t block::signature_operations() const {
 
 // Returns max_size_t in case of overflow.
 size_t block::signature_operations(bool bip16, bool bip141) const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     bip141 = false;  // No segwit
 #endif
     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
@@ -755,7 +741,7 @@ bool block::is_valid_coinbase_script(size_t height) const {
 }
 
 bool block::is_valid_witness_commitment() const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #else
     if (transactions_.empty() || transactions_.front().inputs().empty()) {
@@ -776,11 +762,11 @@ bool block::is_valid_witness_commitment() const {
 
     // If no txs in block are segregated the commitment is optional (bip141).
     return !is_segregated();
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 }
 
 bool block::is_segregated() const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     return false;
 #else
     bool value;
@@ -810,7 +796,7 @@ bool block::is_segregated() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return value;
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 }
 
 code block::check_transactions() const {
@@ -918,7 +904,7 @@ code block::accept(chain_state const& state, bool transactions) const {
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state.is_enabled(rule_fork::bip141_rule);
@@ -933,7 +919,7 @@ code block::accept(chain_state const& state, bool transactions) const {
         return ec;
 
         //In Bitcoin Cash, block size check is now dependent on the Blockchain state.
-#if defined(KNUTH_CURRENCY_BCH)
+#if defined(KTH_CURRENCY_BCH)
     }
     if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old) {
         return error::block_size_limit;
@@ -996,4 +982,4 @@ code block::connect(chain_state const& state) const {
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <bitcoin/bitcoin/chain/header.hpp>
 
 #include <chrono>
@@ -336,11 +322,11 @@ hash_digest header::hash() const {
     return hash;
 }
 
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
 hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
-#endif  //KNUTH_CURRENCY_LTC
+#endif  //KTH_CURRENCY_LTC
 
 uint256_t header::proof(uint32_t bits) {
     compact const header_bits(bits);
@@ -399,7 +385,7 @@ bool header::is_valid_proof_of_work(bool retarget) const {
     }
 
     // Ensure actual work is at least claimed amount (smaller is more work).
-#ifdef KNUTH_CURRENCY_LTC
+#ifdef KTH_CURRENCY_LTC
     return to_uint256(litecoin_proof_of_work_hash()) <= target;
 #else
     return to_uint256(hash()) <= target;
@@ -446,4 +432,4 @@ code header::accept(chain_state const& state) const {
 }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth

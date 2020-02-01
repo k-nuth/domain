@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <bitcoin/bitcoin/chain/script.hpp>
 
 #include <algorithm>
@@ -586,7 +572,7 @@ hash_digest script::generate_version_0_signature_hash(transaction const& tx,
     auto const sighash = to_sighash_enum(sighash_type);
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
 
     //Note(kth: Not used for the moment:
@@ -1015,7 +1001,7 @@ script_pattern script::input_pattern() const {
 }
 
 bool script::is_pay_to_witness(uint32_t forks) const {
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     (void)forks;    //Note(kth): to mute the Linter
     return false;
 #else
@@ -1092,7 +1078,7 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 // code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
 // #else
 // code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
@@ -1116,7 +1102,7 @@ bool script::is_unspendable() const {
 //         return error::stack_false;
 //     }
 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 //     bool witnessed;
 //     // Triggered by output script push of version and witness program (bip141).
 //     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
@@ -1151,7 +1137,7 @@ bool script::is_unspendable() const {
 //             return error::stack_false;
 //         }
 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 //         // Triggered by embedded push of version and witness program (bip141).
 //         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
 //             // The input script must be a push of the embedded_script (bip141).
@@ -1167,7 +1153,7 @@ bool script::is_unspendable() const {
 // #endif
 //     }
 
-// #ifndef KNUTH_CURRENCY_BCH
+// #ifndef KTH_CURRENCY_BCH
 //     // Witness must be empty if no bip141 or valid witness program (bip141).
 //     if ( ! witnessed && !input_witness.empty()) {
 //         return error::unexpected_witness;
@@ -1185,7 +1171,7 @@ bool script::is_unspendable() const {
 //     auto const& in = tx.inputs()[input];
 //     auto const& prevout = in.previous_output().validation.cache;
 
-// #ifdef KNUTH_CURRENCY_BCH
+// #ifdef KTH_CURRENCY_BCH
 //     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 // #else
 //     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
@@ -1193,4 +1179,4 @@ bool script::is_unspendable() const {
 // }
 
 }  // namespace chain
-}  // namespace libbitcoin
+}  // namespace kth
