@@ -5,8 +5,13 @@
 #ifndef KTH_CONCEPTS_HPP_
 #define KTH_CONCEPTS_HPP_
 
+<<<<<<< HEAD
 #define Reader typename
 #define Writer typename
+=======
+#define Reader typename //NOLINT
+#define Writer typename //NOLINT
+>>>>>>> dev
 
 namespace knuth {
 
@@ -42,7 +47,12 @@ constexpr bool is_writer() {
 
 }  // namespace knuth
 
+<<<<<<< HEAD
 #define KTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0
 #define KTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0
+=======
+#define KTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0  //NOLINT
+#define KTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0  //NOLINT
+>>>>>>> dev
 
 #endif  //KTH_CONCEPTS_HPP_

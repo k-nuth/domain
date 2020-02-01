@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin.hpp>
+=======
+#include <kth/domain.hpp>
+>>>>>>> dev
 #include <boost/test/unit_test.hpp>
 #include <chrono>
 

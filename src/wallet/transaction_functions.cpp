@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
 
 #include <bitcoin/bitcoin.hpp>
@@ -13,10 +14,21 @@
 
 namespace libbitcoin {
 namespace wallet {
+=======
+#include <kth/domain/wallet/transaction_functions.hpp>
+
+#include <kth/domain.hpp>
+#include <kth/domain/config/ec_private.hpp>
+#include <kth/domain/config/input.hpp>
+#include <kth/domain/config/output.hpp>
+#include <kth/domain/config/script.hpp>
+
+namespace kth::wallet {
+>>>>>>> dev
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/tx-encode.cpp
 static bool push_scripts(chain::output::list& outputs,
-                         libbitcoin::config::output const& output,
+                         kth::config::output const& output,
                          uint8_t script_version) {
     static constexpr uint64_t no_amount = 0;
 
@@ -27,18 +39,18 @@ static bool push_scripts(chain::output::list& outputs,
     }
 
     // If it's not explicit the script must be a form of pay to short hash.
-    if (output.pay_to_hash() == libbitcoin::null_short_hash) {
+    if (output.pay_to_hash() == kth::null_short_hash) {
         return false;
     }
 
-    libbitcoin::machine::operation::list payment_ops;
+    kth::machine::operation::list payment_ops;
     auto const hash = output.pay_to_hash();
 
     // This presumes stealth versions are the same as non-stealth.
     if (output.version() != script_version) {
-        payment_ops = libbitcoin::chain::script::to_pay_key_hash_pattern(hash);
+        payment_ops = kth::chain::script::to_pay_key_hash_pattern(hash);
     } else if (output.version() == script_version) {
-        payment_ops = libbitcoin::chain::script::to_pay_script_hash_pattern(hash);
+        payment_ops = kth::chain::script::to_pay_script_hash_pattern(hash);
     } else {
         return false;
     }
@@ -59,18 +71,18 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
                                                              uint32_t locktime /*= 0*/,
                                                              uint32_t tx_version /*= 1*/,
                                                              uint8_t script_version /*= 5*/) {
-    libbitcoin::chain::transaction tx;
+    kth::chain::transaction tx;
     tx.set_version(tx_version);
     tx.set_locktime(locktime);
 
     for (auto const& input : outputs_to_spend) {
         //TODO(kth): move the elements instead of pushing back
-        tx.inputs().push_back(libbitcoin::config::input(input));
+        tx.inputs().push_back(kth::config::input(input));
     }
 
     for (auto const& output : destiny_and_amount) {
         std::string destiny_string = output.first.encoded() + ":" + std::to_string(output.second);
-        if ( ! push_scripts(tx.outputs(), libbitcoin::config::output(destiny_string), script_version)) {
+        if ( ! push_scripts(tx.outputs(), kth::config::output(destiny_string), script_version)) {
             return {error::error_code_t::invalid_output, {}};
         }
     }
@@ -95,7 +107,7 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
 }
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/input-sign.cpp
-std::pair<error::error_code_t, data_chunk> input_signature_old(libbitcoin::ec_secret const& private_key,
+std::pair<error::error_code_t, data_chunk> input_signature_old(kth::ec_secret const& private_key,
                                                                chain::script const& output_script,
                                                                chain::transaction const& tx,
                                                                uint32_t index,
@@ -106,18 +118,18 @@ std::pair<error::error_code_t, data_chunk> input_signature_old(libbitcoin::ec_se
     }
 
     if (anyone_can_pay) {
-        sign_type |= libbitcoin::machine::sighash_algorithm::anyone_can_pay;
+        sign_type |= kth::machine::sighash_algorithm::anyone_can_pay;
     }
 
-    libbitcoin::endorsement endorse;
-    if ( ! libbitcoin::chain::script::create_endorsement(endorse, private_key, output_script, tx, index, sign_type)) {
+    kth::endorsement endorse;
+    if ( ! kth::chain::script::create_endorsement(endorse, private_key, output_script, tx, index, sign_type)) {
         return {error::error_code_t::input_sign_failed, {}};
     }
     return {error::error_code_t::success, endorse};
 }
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/input-sign.cpp
-std::pair<error::error_code_t, data_chunk> input_signature_btc(libbitcoin::ec_secret const& private_key,
+std::pair<error::error_code_t, data_chunk> input_signature_btc(kth::ec_secret const& private_key,
                                                                chain::script const& output_script,
                                                                chain::transaction const& tx,
                                                                uint64_t amount,
@@ -129,18 +141,18 @@ std::pair<error::error_code_t, data_chunk> input_signature_btc(libbitcoin::ec_se
     }
 
     if (anyone_can_pay) {
-        sign_type |= libbitcoin::machine::sighash_algorithm::anyone_can_pay;
+        sign_type |= kth::machine::sighash_algorithm::anyone_can_pay;
     }
 
-    libbitcoin::endorsement endorse;
+    kth::endorsement endorse;
 
-    if ( ! libbitcoin::chain::script::create_endorsement(endorse,
+    if ( ! kth::chain::script::create_endorsement(endorse,
                                                        private_key,
                                                        output_script,
                                                        tx,
                                                        index,
                                                        sign_type,
-                                                       libbitcoin::chain::script::script_version::zero,
+                                                       kth::chain::script::script_version::zero,
                                                        amount)) {
         return {error::error_code_t::input_sign_failed, {}};
     }
@@ -148,7 +160,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_btc(libbitcoin::ec_se
     return {error::error_code_t::success, endorse};
 }
 
-std::pair<error::error_code_t, data_chunk> input_signature_bch(libbitcoin::ec_secret const& private_key,
+std::pair<error::error_code_t, data_chunk> input_signature_bch(kth::ec_secret const& private_key,
                                                                chain::script const& output_script,
                                                                chain::transaction const& tx,
                                                                uint64_t amount,
@@ -157,7 +169,7 @@ std::pair<error::error_code_t, data_chunk> input_signature_bch(libbitcoin::ec_se
                                                                bool anyone_can_pay /*= false*/) {
     //// NOTE: BCH endorsement uses script_version::zero (segwit sign algorithm)
     //// Add FORK_ID to the sign_type when signing bitcoin cash transactions
-    sign_type |= 0x40u;
+    sign_type |= 0x40U;
     return input_signature_btc(private_key, output_script, tx, amount, index, sign_type, anyone_can_pay);
 }
 
@@ -182,9 +194,8 @@ std::pair<error::error_code_t, chain::transaction> input_set(data_chunk const& s
                                                              wallet::ec_public const& public_key,
                                                              chain::transaction const& raw_tx,
                                                              uint32_t index /*= 0*/) {
-    libbitcoin::config::script script("[" + libbitcoin::encode_base16(signature) + "] [" + public_key.encoded() + "]");
+    kth::config::script script("[" + kth::encode_base16(signature) + "] [" + public_key.encoded() + "]");
     return input_set(script, raw_tx, index);
 }
 
-}  //end namespace wallet
-}  //end namespace libbitcoin
+}  //namespace kth

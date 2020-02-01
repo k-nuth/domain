@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/send_headers.hpp>
 
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -12,6 +13,17 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/send_headers.hpp>
+
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const send_headers::command = "sendheaders";
 uint32_t const send_headers::version_minimum = version::level::bip130;
@@ -84,5 +96,8 @@ size_t send_headers::serialized_size(uint32_t version) const {
     return send_headers::satoshi_fixed_size(version);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

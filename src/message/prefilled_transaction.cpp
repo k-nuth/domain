@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/prefilled_transaction.hpp>
 
 #include <bitcoin/bitcoin/chain/transaction.hpp>
@@ -14,6 +15,19 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/prefilled_transaction.hpp>
+
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 #ifdef KTH_CURRENCY_BCH
 constexpr size_t max_index = max_uint32;
@@ -143,5 +157,8 @@ void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

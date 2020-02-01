@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/message.hpp>
 
 #include <bitcoin/bitcoin/constants.hpp>
@@ -13,6 +14,18 @@
 
 namespace libbitcoin {
 namespace wallet {
+=======
+#include <kth/domain/wallet/message.hpp>
+
+#include <kth/domain/constants.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/domain/wallet/ec_private.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::wallet {
+>>>>>>> dev
 
 static constexpr uint8_t max_recovery_id = 3;
 static constexpr uint8_t magic_compressed = 31;
@@ -132,5 +145,8 @@ bool verify_message(data_slice message, payment_address const& address, const me
            (hash == address.hash());
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

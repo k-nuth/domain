@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/headers.hpp>
+=======
+#include <kth/domain/message/headers.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstdint>
@@ -10,18 +14,17 @@
 #include <istream>
 #include <utility>
 
-#include <bitcoin/bitcoin/message/inventory.hpp>
-#include <bitcoin/bitcoin/message/inventory_vector.hpp>
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/message/inventory.hpp>
+#include <kth/domain/message/inventory_vector.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 std::string const headers::command = "headers";
 uint32_t const headers::version_minimum = version::level::headers;
@@ -169,5 +172,8 @@ void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -835,7 +835,7 @@ const script_test_list invalid_context_free_scripts{
     {"nop", "hash256 1", ""},
     {"0x00", "'00' equal", "basic op_0 execution"}};
 
-////// TODO(libbitcoin): move these to operation tests.
+////// TODO(legacy): move these to operation tests.
 ////// These are always invalid due to parsing.
 ////const script_test_list invalid_parse_scripts
 ////{

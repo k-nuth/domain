@@ -6,11 +6,10 @@
 #include <utility>
 #include <vector>
 
-#include <bitcoin/bitcoin/chain/point.hpp>
-#include <bitcoin/bitcoin/chain/point_value.hpp>
+#include <kth/domain/chain/point.hpp>
+#include <kth/domain/chain/point_value.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 // Constructors.
 //-------------------------------------------------------------------------
@@ -56,5 +55,8 @@ void point_value::set_value(uint64_t value) {
     value_ = value;
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

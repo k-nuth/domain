@@ -2,17 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/select_outputs.hpp>
+=======
+#include <kth/domain/wallet/select_outputs.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/chain/points_value.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
+#include <kth/domain/chain/points_value.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 using namespace bc::chain;
 
@@ -106,5 +109,8 @@ void select_outputs::select(points_value& out, const points_value& unspent, uint
     }
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

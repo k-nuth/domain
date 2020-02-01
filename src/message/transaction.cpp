@@ -2,19 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/transaction.hpp>
+=======
+#include <kth/domain/message/transaction.hpp>
+>>>>>>> dev
 
 #include <istream>
 #include <utility>
 
-#include <bitcoin/bitcoin/chain/input.hpp>
-#include <bitcoin/bitcoin/chain/output.hpp>
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
+#include <kth/domain/chain/input.hpp>
+#include <kth/domain/chain/output.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/reader.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 std::string const transaction::command = "tx";
 uint32_t const transaction::version_minimum = version::level::minimum;
@@ -113,5 +116,8 @@ size_t transaction::serialized_size(uint32_t /*unused*/) const {
     return chain::transaction::serialized_size(true, true);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

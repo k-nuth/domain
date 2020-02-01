@@ -8,13 +8,13 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/wallet/encrypted_keys.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
 #include "parse_encrypted_key.hpp"
 
-namespace libbitcoin {
+namespace kth {
 namespace wallet {
 
 // Swap not defined.

@@ -7,8 +7,8 @@
 
 #include <type_traits>
 
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/operation.hpp>
 
 #include <knuth/keoken/constants.hpp>
 

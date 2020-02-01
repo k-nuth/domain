@@ -2,24 +2,27 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/point.hpp>
+=======
+#include <kth/domain/chain/point.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 #include <sstream>
 #include <utility>
 
-// #include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
-#include <bitcoin/infrastructure/utility/serializer.hpp>
+// #include <kth/domain/constants.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+#include <kth/infrastructure/utility/serializer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 constexpr auto store_point_size = std::tuple_size<point>::value;
 
@@ -217,5 +220,8 @@ bool point::is_null() const {
     return (index_ == null_index) && (hash_ == null_hash);
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

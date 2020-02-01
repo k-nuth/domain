@@ -4,7 +4,7 @@
 import os
 
 src_dir = '/home/fernando/dev/new-repos/domain/src'
-include_dir = '/home/fernando/dev/new-repos/domain/include/bitcoin/bitcoin'
+include_dir = '/home/fernando/dev/new-repos/domain/include/kth/domain'
 
 source_list = [
     # 'chain/header'

@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <algorithm>
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
 using namespace bc;
 using namespace bc::wallet;
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE(stealth_receiver_tests)
 #define RECEIVER_PRIVATE "fc696c9f7143916f24977210c806101866c7fa13cc06982978d80518c91af2fb"
 #define DERIVED_ADDRESS "mtKffkQLTw2D6f6mTkrWfi8qxLv4jL1LrK"
 
-// TODO(libbitcoin): test individual methods in isolation.
+// TODO(legacy): test individual methods in isolation.
 BOOST_AUTO_TEST_CASE(stealth_receiver__exchange_between_sender_and_receiver__always__round_trips) {
     static auto const version = payment_address::testnet_p2kh;
     const hd_private main_key(MAIN_KEY, hd_private::testnet);

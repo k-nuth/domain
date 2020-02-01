@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/get_blocks.hpp>
 
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -14,6 +15,19 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/get_blocks.hpp>
+
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const get_blocks::command = "getblocks";
 uint32_t const get_blocks::version_minimum = version::level::minimum;
@@ -147,5 +161,8 @@ void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

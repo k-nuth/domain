@@ -7,9 +7,9 @@
 
 #include <string>
 
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
 
-namespace libbitcoin {
+namespace kth {
 
 namespace {
 
@@ -132,4 +132,4 @@ void set_cashaddr_prefix(std::string const& x) {
 // #endif //KTH_CURRENCY_LTC
 // }
 
-} /*namespace libbitcoin*/
+} // namespace kth

@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/config/ec_private.hpp>
+=======
+#include <kth/domain/config/ec_private.hpp>
+>>>>>>> dev
 
 #include <iostream>
 #include <sstream>
@@ -10,11 +14,10 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin.hpp>
-#include <bitcoin/bitcoin/define.hpp>
+#include <kth/domain.hpp>
+#include <kth/domain/define.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace kth::config {
 
 // ec_secret base16 format is private to bx.
 static bool decode_secret(ec_secret& secret, std::string const& encoded) {
@@ -50,5 +53,8 @@ std::ostream& operator<<(std::ostream& output, ec_private const& argument) {
     return output;
 }
 
+<<<<<<< HEAD
 }  // namespace config
+=======
+>>>>>>> dev
 }  // namespace kth

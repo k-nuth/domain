@@ -2,22 +2,25 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/header_basis.hpp>
+=======
+#include <kth/domain/chain/header_basis.hpp>
+>>>>>>> dev
 
 #include <chrono>
 #include <cstddef>
 #include <utility>
 
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/compact.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/compact.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 // Use system clock because we require accurate time of day.
 using wall_clock = std::chrono::system_clock;
@@ -305,5 +308,8 @@ code header_basis::accept(chain_state const& state, hash_digest const& hash) con
 // code header_basis::accept(chain_state const& state) const {
 // }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

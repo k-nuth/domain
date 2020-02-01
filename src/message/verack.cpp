@@ -1,17 +1,21 @@
 // Copyright (c) 2016-2020 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+<<<<<<< HEAD
 
 #include <bitcoin/bitcoin/message/verack.hpp>
+=======
+>>>>>>> dev
 
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/message/verack.hpp>
 
-namespace libbitcoin {
-namespace message {
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
 
 std::string const verack::command = "verack";
 uint32_t const verack::version_minimum = version::level::minimum;
@@ -69,5 +73,8 @@ size_t verack::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

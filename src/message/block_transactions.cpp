@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/block_transactions.hpp>
 
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
@@ -16,6 +17,21 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/block_transactions.hpp>
+
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const block_transactions::command = "blocktxn";
 uint32_t const block_transactions::version_minimum = version::level::bip152;
@@ -152,5 +168,8 @@ void block_transactions::set_transactions(chain::transaction::list&& x) {
 }
 
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

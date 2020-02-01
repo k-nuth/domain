@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/reject.hpp>
 
 // #include <bitcoin/bitcoin/message/block.hpp>
@@ -15,6 +16,20 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/reject.hpp>
+
+// #include <kth/domain/message/block.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+// #include <kth/domain/message/transaction.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const reject::command = "reject";
 uint32_t const reject::version_minimum = version::level::bip61;
@@ -236,5 +251,8 @@ uint8_t reject::reason_to_byte(reason_code value) {
     }
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

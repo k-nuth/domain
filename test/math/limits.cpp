@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
 using namespace bc;
 

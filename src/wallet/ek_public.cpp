@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/ek_public.hpp>
+=======
+#include <kth/domain/wallet/ek_public.hpp>
+>>>>>>> dev
 
 #include <iostream>
 #include <sstream>
@@ -10,12 +14,11 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/formats/base_58.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 ek_public::ek_public()
     : public_() 
@@ -43,7 +46,7 @@ ek_public::ek_public(encrypted_public const& value)
 // ----------------------------------------------------------------------------
 
 ek_public ek_public::from_string(std::string const& encoded) {
-    // TODO(libbitcoin): incorporate existing parser here, setting new members.
+    // TODO(legacy): incorporate existing parser here, setting new members.
 
     encrypted_public key;
     return decode_base58(key, encoded) && verify_checksum(key) ? ek_public(key) : ek_public();
@@ -107,5 +110,8 @@ std::ostream& operator<<(std::ostream& out, ek_public const& of) {
     return out;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

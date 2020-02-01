@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin.hpp>
+=======
+#include <kth/domain.hpp>
+>>>>>>> dev
 #include <boost/test/unit_test.hpp>
 
 using namespace bc;
@@ -427,7 +431,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure)
     BOOST_REQUIRE(!instance.is_valid());
 }
 
-// TODO(libbitcoin): update test for v4 store serialization (input with witness).
+// TODO(legacy): update test for v4 store serialization (input with witness).
 ////BOOST_AUTO_TEST_CASE(transaction__from_data__compare_wire_to_store__success)
 ////{
 ////    static auto const wire = true;
@@ -744,7 +748,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_overspent__output_exceeds_input__returns_tr
     BOOST_REQUIRE(instance.is_overspent());
 }
 
-// TODO(libbitcoin): tests with initialized data
+// TODO(legacy): tests with initialized data
 BOOST_AUTO_TEST_CASE(transaction__signature_operations_single_input_output_uninitialized__returns_zero) {
     chain::transaction instance;
     instance.inputs().emplace_back();

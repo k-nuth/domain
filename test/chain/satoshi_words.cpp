@@ -2,12 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin.hpp>
+=======
+#include <kth/domain.hpp>
+>>>>>>> dev
 #include <boost/test/unit_test.hpp>
 
 using namespace bc;
 
-// TODO(libbitcoin): move this into the tests by source file organization.
+// TODO(legacy): move this into the tests by source file organization.
 BOOST_AUTO_TEST_SUITE(satoshi_words)
 
 BOOST_AUTO_TEST_CASE(satoshi_words_mainnet) {

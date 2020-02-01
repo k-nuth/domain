@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <string>
 
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
 KTH_USE_MAIN
 

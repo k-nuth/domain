@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/config/script.hpp>
+=======
+#include <kth/domain/config/script.hpp>
+>>>>>>> dev
 
 #include <iostream>
 #include <sstream>
@@ -12,12 +16,11 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/string.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/string.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace kth::config {
 
 using namespace boost;
 using namespace boost::program_options;
@@ -75,5 +78,8 @@ std::ostream& operator<<(std::ostream& output, script const& argument) {
     return output;
 }
 
+<<<<<<< HEAD
 }  // namespace config
+=======
+>>>>>>> dev
 }  // namespace kth

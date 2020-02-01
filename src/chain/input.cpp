@@ -2,26 +2,33 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/input.hpp>
+=======
+#include <kth/domain/chain/input.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <sstream>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
+#include <kth/domain/chain/script.hpp>
 
 #ifndef KTH_CURRENCY_BCH
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/witness.hpp>
+=======
+#include <kth/domain/chain/witness.hpp>
+>>>>>>> dev
 #endif
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::wallet;
 using namespace bc::machine;
@@ -188,7 +195,7 @@ payment_address::list input::addresses() const {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         mutex_.unlock_upgrade_and_lock();
 
-        // TODO(libbitcoin): expand to include segregated witness address extraction.
+        // TODO(legacy): expand to include segregated witness address extraction.
         addresses_ = std::make_shared<payment_address::list>(payment_address::extract_input(script()));
         mutex_.unlock_and_lock_upgrade();
         //---------------------------------------------------------------------
@@ -201,5 +208,8 @@ payment_address::list input::addresses() const {
     return addresses;
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

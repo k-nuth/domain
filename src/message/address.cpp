@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/address.hpp>
 
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
@@ -15,6 +16,20 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/address.hpp>
+
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const address::command = "addr";
 uint32_t const address::version_minimum = version::level::minimum;
@@ -118,5 +133,8 @@ void address::set_addresses(network_address::list&& value) {
     addresses_ = std::move(value);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -8,10 +8,10 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/wallet/encrypted_keys.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace wallet {
 
 template <size_t Size>

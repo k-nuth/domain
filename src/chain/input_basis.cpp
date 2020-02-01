@@ -2,25 +2,32 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/input_basis.hpp>
+=======
+#include <kth/domain/chain/input_basis.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <sstream>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
+#include <kth/domain/chain/script.hpp>
 
 #ifndef KTH_CURRENCY_BCH
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/witness.hpp>
+=======
+#include <kth/domain/chain/witness.hpp>
+>>>>>>> dev
 #endif
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::machine;
 
@@ -281,7 +288,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
     ////BITCOIN_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");
 
     // Penalize quadratic signature operations (bip141).
-    auto const sigops_factor = bip141 ? fast_sigops_factor : 1u;
+    auto const sigops_factor = bip141 ? fast_sigops_factor : 1U;
 
     // Count heavy sigops in the input script.
     auto sigops = script_.sigops(false) * sigops_factor;
@@ -344,5 +351,8 @@ bool input_basis::extract_reserved_hash(hash_digest& out) const {
 }
 #endif // KTH_CURRENCY_BCH
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

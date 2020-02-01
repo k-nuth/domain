@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
+=======
+#include <kth/domain/wallet/encrypted_keys.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstddef>
@@ -11,17 +15,17 @@
 
 #include <boost/locale.hpp>
 
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/wallet/ec_private.hpp>
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
-#include <bitcoin/infrastructure/math/crypto.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/unicode/unicode.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/endian.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/domain/wallet/ec_private.hpp>
+#include <kth/domain/wallet/ec_public.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
+#include <kth/infrastructure/math/crypto.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/unicode/unicode.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/endian.hpp>
 
 #include "parse_encrypted_keys/parse_encrypted_key.hpp"
 #include "parse_encrypted_keys/parse_encrypted_prefix.hpp"
@@ -29,8 +33,7 @@
 #include "parse_encrypted_keys/parse_encrypted_public.hpp"
 #include "parse_encrypted_keys/parse_encrypted_token.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 // Alias commonly-used constants for brevity.
 static constexpr auto half = half_hash_size;
@@ -460,5 +463,8 @@ bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compresse
 
 #endif  // WITH_ICU
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

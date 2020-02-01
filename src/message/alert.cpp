@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/alert.hpp>
 
 // #include <bitcoin/infrastructure/message/message_tools.hpp>
@@ -16,6 +17,21 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/alert.hpp>
+
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const alert::command = "alert";
 uint32_t const alert::version_minimum = version::level::minimum;
@@ -137,5 +153,8 @@ void alert::set_signature(data_chunk&& value) {
     signature_ = std::move(value);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

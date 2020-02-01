@@ -5,12 +5,11 @@
 #include <cstdint>
 #include <numeric>
 
-#include <bitcoin/bitcoin/chain/point_value.hpp>
-#include <bitcoin/bitcoin/chain/points_value.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
+#include <kth/domain/chain/point_value.hpp>
+#include <kth/domain/chain/points_value.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 uint64_t points_value::value() const {
     auto const sum = [](uint64_t total, point_value const& point) {
@@ -20,5 +19,8 @@ uint64_t points_value::value() const {
     return std::accumulate(points.begin(), points.end(), uint64_t(0), sum);
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

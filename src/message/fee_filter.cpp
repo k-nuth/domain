@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/fee_filter.hpp>
 
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -12,6 +13,17 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/fee_filter.hpp>
+
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const fee_filter::command = "feefilter";
 uint32_t const fee_filter::version_minimum = version::level::bip133;
@@ -117,5 +129,8 @@ void fee_filter::set_minimum_fee(uint64_t value) {
     insufficient_version_ = false;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

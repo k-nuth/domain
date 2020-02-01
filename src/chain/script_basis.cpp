@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/script_basis.hpp>
+=======
+#include <kth/domain/chain/script_basis.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstddef>
@@ -15,34 +19,33 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/chain/witness.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/interpreter.hpp>
-// #include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/program.hpp>
-// #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/infrastructure/machine/script_pattern.hpp>
-#include <bitcoin/infrastructure/machine/script_version.hpp>
-#include <bitcoin/infrastructure/machine/sighash_algorithm.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
-#include <bitcoin/infrastructure/utility/string.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/chain/witness.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/interpreter.hpp>
+// #include <kth/domain/machine/operation.hpp>
+#include <kth/domain/machine/program.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
+#include <kth/infrastructure/machine/script_pattern.hpp>
+#include <kth/infrastructure/machine/script_version.hpp>
+#include <kth/infrastructure/machine/sighash_algorithm.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+#include <kth/infrastructure/utility/string.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::machine;
 using namespace boost::adaptors;
@@ -715,7 +718,7 @@ bool script_basis::is_null_data_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].code() == opcode::return_ && ops[1].is_minimal_push() && ops[1].data().size() <= max_null_data_size;
 }
 
-// TODO(libbitcoin): expand this to the 20 signature op_check_multisig limit.
+// TODO(legacy): expand this to the 20 signature op_check_multisig limit.
 // The current 16 (or 20) limit does not affect server indexing because bare
 // multisig is not indexable and p2sh multisig is byte-limited to 15 sigs.
 // The satoshi client policy limit is 3 signatures for bare multisig.
@@ -846,7 +849,7 @@ operation::list script_basis::to_pay_multisig_pattern(uint8_t signatures,
     return to_pay_multisig_pattern(signatures, chunks);
 }
 
-// TODO(libbitcoin): expand this to a 20 signature limit.
+// TODO(legacy): expand this to a 20 signature limit.
 // This supports up to 16 signatures, however check_multisig is limited to 20.
 // The embedded script is limited to 520 bytes, an effective limit of 15 for
 // p2sh multisig, which can be as low as 7 when using all uncompressed keys.
@@ -1161,5 +1164,8 @@ operation::list operations(script_basis const& script) {
     return res;
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

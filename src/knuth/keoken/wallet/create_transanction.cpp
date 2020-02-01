@@ -4,8 +4,8 @@
 
 #include <knuth/keoken/wallet/create_transaction.hpp>
 
-#include <bitcoin/bitcoin/wallet/transaction_functions.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
+#include <kth/domain/wallet/transaction_functions.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
 
 #include <knuth/keoken/constants.hpp>
 #include <knuth/keoken/message/base.hpp>
@@ -17,17 +17,17 @@ namespace keoken {
 namespace wallet {
 
 // using namespace bc;
-using libbitcoin::data_chunk;
-using libbitcoin::ec_secret;
-using libbitcoin::chain::input_point;
-using libbitcoin::chain::output;
-using libbitcoin::chain::script;
-using libbitcoin::chain::transaction;
-using libbitcoin::error::success;
-using libbitcoin::wallet::ec_public;
-using libbitcoin::wallet::payment_address;
-using libbitcoin::wallet::raw_output_list;
-using libbitcoin::wallet::tx_encode;
+using kth::data_chunk;
+using kth::ec_secret;
+using kth::chain::input_point;
+using kth::chain::output;
+using kth::chain::script;
+using kth::chain::transaction;
+using kth::error::success;
+using kth::wallet::ec_public;
+using kth::wallet::payment_address;
+using kth::wallet::raw_output_list;
+using kth::wallet::tx_encode;
 
 namespace detail {
 // For internal use only
@@ -36,23 +36,23 @@ result_t sign_and_set(script const& output_script,
                       ec_public const& public_key,
                       uint64_t amount,
                       transaction& tx) {
-    auto sig = libbitcoin::wallet::input_signature_bch(private_key, output_script, tx, amount, 0);
+    auto sig = kth::wallet::input_signature_bch(private_key, output_script, tx, amount, 0);
     if (sig.first != success) {
         return {sig.first, {}};
     }
 
-    return libbitcoin::wallet::input_set(sig.second, public_key, tx);
+    return kth::wallet::input_set(sig.second, public_key, tx);
 }
 
 }  // namespace detail
 
 output create_keoken_output(data_chunk const& keoken_message) {
     // data_chunk header;
-    // libbitcoin::decode_base16(header,"00004b50");
+    // kth::decode_base16(header,"00004b50");
 
     // Note: Adding an op_code using {data_chunk} automatically adds the size on front of the message
-    libbitcoin::machine::operation::list op_codes = {
-        {libbitcoin::machine::opcode::return_},
+    kth::machine::operation::list op_codes = {
+        {kth::machine::opcode::return_},
         bc::to_chunk(protocol_name),
         {keoken_message}};
 

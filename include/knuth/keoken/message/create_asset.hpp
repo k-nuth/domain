@@ -5,12 +5,21 @@
 #ifndef KTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
 #define KTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/define.hpp>
 #include <bitcoin/infrastructure/utility/container_sink.hpp>
 #include <bitcoin/infrastructure/utility/container_source.hpp>
 #include <bitcoin/infrastructure/utility/data.hpp>
 #include <bitcoin/infrastructure/utility/reader.hpp>
 #include <bitcoin/infrastructure/utility/writer.hpp>
+=======
+#include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/reader.hpp>
+#include <kth/infrastructure/utility/writer.hpp>
+>>>>>>> dev
 
 #include <knuth/common.hpp>
 #include <knuth/concepts.hpp>

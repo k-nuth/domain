@@ -4,7 +4,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 #include <sstream>
 #include "script.hpp"
 

@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
 BOOST_AUTO_TEST_SUITE(compact_tests)
 

@@ -4,7 +4,7 @@
 
 #include <knuth/keoken/message/base.hpp>
 
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
 namespace knuth {
 namespace keoken {

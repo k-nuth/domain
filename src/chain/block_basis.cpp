@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/block_basis.hpp>
+=======
+#include <kth/domain/chain/block_basis.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cfenv>
@@ -18,31 +22,30 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/compact.hpp>
-#include <bitcoin/bitcoin/chain/input_point.hpp>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-// #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/asio.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/compact.hpp>
+#include <kth/domain/chain/input_point.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/config/checkpoint.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
+#include <kth/infrastructure/machine/number.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/asio.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::config;
 using namespace bc::machine;
@@ -156,13 +159,13 @@ static std::string const encoded_regtest_genesis_block =
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(legacy): deal with possibility of inconsistent merkle root in relation to txs.
 block_basis::block_basis(chain::header const& header, transaction::list const& transactions)
     : header_(header)
     , transactions_(transactions)
 {}
 
-// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(legacy): deal with possibility of inconsistent merkle root in relation to txs.
 block_basis::block_basis(chain::header const& header, transaction::list&& transactions)
     : header_(header)
     , transactions_(std::move(transactions))
@@ -296,7 +299,7 @@ chain::header const& block_basis::header() const {
     return header_;
 }
 
-// TODO(libbitcoin): must call header.set_merkle(generate_merkle_root()) though this may
+// TODO(legacy): must call header.set_merkle(generate_merkle_root()) though this may
 // be very suboptimal if the block is being constructed. First verify that all
 // current uses will not be impacted and if so change them to use constructor.
 void block_basis::set_header(chain::header const& value) {
@@ -311,12 +314,12 @@ transaction::list const& block_basis::transactions() const {
     return transactions_;
 }
 
-// TODO(libbitcoin): see set_header comments.
+// TODO(legacy): see set_header comments.
 void block_basis::set_transactions(transaction::list const& value) {
     transactions_ = value;
 }
 
-// TODO(libbitcoin): see set_header comments.
+// TODO(legacy): see set_header comments.
 void block_basis::set_transactions(transaction::list&& value) {
     transactions_ = std::move(value);
 }
@@ -386,7 +389,7 @@ block_basis::indexes block_basis::locator_heights(size_t top) {
     for (auto height = top; height > 0; height = floor_subtract(height, step)) {
         // Push top 10 indexes first, then back off exponentially.
         if (heights.size() >= 10) {
-            step <<= 1u;
+            step <<= 1U;
         }
 
         heights.push_back(height);
@@ -774,7 +777,7 @@ code block_basis::check(size_t serialized_size_false) const {
     if ((ec = header_.check())) {
         return ec;
 
-        // TODO(libbitcoin): relates to total of tx.size(false) (pool cache). -> no witness size
+        // TODO(legacy): relates to total of tx.size(false) (pool cache). -> no witness size
     }
 
     // if (serialized_size(false) > get_max_block_size()) {
@@ -793,7 +796,7 @@ code block_basis::check(size_t serialized_size_false) const {
     if (is_extra_coinbases()) {
         return error::extra_coinbases;
 
-        // TODO(libbitcoin): determinable from tx pool graph.
+        // TODO(legacy): determinable from tx pool graph.
     }
 
 #if ! defined(KTH_CURRENCY_BCH) // BTC and LTC
@@ -809,13 +812,13 @@ code block_basis::check(size_t serialized_size_false) const {
     ////else if ( ! is_distinct_transaction_set())
     ////    return error::internal_duplicate;
 
-    // TODO(libbitcoin): determinable from tx pool graph.
+    // TODO(legacy): determinable from tx pool graph.
 
 
     if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
 
-        // TODO(libbitcoin): relates height to tx.hash(false) (pool cache).
+        // TODO(legacy): relates height to tx.hash(false) (pool cache).
     }
 
     if ( ! is_valid_merkle_root()) {
@@ -873,7 +876,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     if (state.is_under_checkpoint()) {
         return error::success;
 
-        // TODO(libbitcoin): relates height to total of tx.size(true) (pool cache).
+        // TODO(legacy): relates height to total of tx.size(true) (pool cache).
         // NOTE: for BCH bit141 is set as false
     }
 
@@ -901,24 +904,24 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
         return error::coinbase_height_mismatch;
 
     }
-    // TODO(libbitcoin): relates height to total of tx.fee (pool cach).
+    // TODO(legacy): relates height to total of tx.fee (pool cach).
     if ( ! is_valid_coinbase_claim(state.height())) {
         return error::coinbase_value_limit;
 
     }
 
-    // TODO(libbitcoin): relates median time past to tx.locktime (pool cache min tx.time).
+    // TODO(legacy): relates median time past to tx.locktime (pool cache min tx.time).
     if ( ! is_final(state.height(), block_time)) {
         return error::block_non_final;
     }
 
-    // TODO(libbitcoin): relates height to tx.hash(true) (pool cache).
+    // TODO(legacy): relates height to tx.hash(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
     if (bip141 && !is_valid_witness_commitment()) {
         return error::invalid_witness_commitment;
 
-        // TODO(libbitcoin): determine if performance benefit is worth excluding sigops here.
-        // TODO(libbitcoin): relates block limit to total of tx.sigops (pool cache tx.sigops).
+        // TODO(legacy): determine if performance benefit is worth excluding sigops here.
+        // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).
         // This recomputes sigops to include p2sh from prevouts.
         // NOTE: for BCH bit141 is set as false
     }
@@ -985,5 +988,8 @@ size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
 }
 
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

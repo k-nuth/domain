@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/block.hpp>
+=======
+#include <kth/domain/chain/block.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cfenv>
@@ -18,31 +22,30 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/compact.hpp>
-#include <bitcoin/bitcoin/chain/input_point.hpp>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-// #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
-#include <bitcoin/infrastructure/machine/number.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/asio.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/compact.hpp>
+#include <kth/domain/chain/input_point.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/config/checkpoint.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
+#include <kth/infrastructure/machine/number.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/asio.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::config;
 using namespace bc::machine;
@@ -156,12 +159,12 @@ static std::string const encoded_regtest_genesis_block =
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(legacy): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list const& transactions)
     : block_basis(header, transactions)
 {}
 
-// TODO(libbitcoin): deal with possibility of inconsistent merkle root in relation to txs.
+// TODO(legacy): deal with possibility of inconsistent merkle root in relation to txs.
 block::block(chain::header const& header, transaction::list&& transactions)
     : block_basis(header, std::move(transactions))
 {}
@@ -327,7 +330,7 @@ size_t block::serialized_size(bool witness) const {
 }
 
 
-// TODO(libbitcoin): see set_header comments.
+// TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list const& value) {
     block_basis::set_transactions(value);
     segregated_ = boost::none;
@@ -336,7 +339,7 @@ void block::set_transactions(transaction::list const& value) {
     total_size_ = boost::none;
 }
 
-// TODO(libbitcoin): see set_header comments.
+// TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list&& value) {
     block_basis::set_transactions(std::move(value));
     segregated_ = boost::none;
@@ -410,7 +413,7 @@ block::indexes block::locator_heights(size_t top) {
     for (auto height = top; height > 0; height = floor_subtract(height, step)) {
         // Push top 10 indexes first, then back off exponentially.
         if (heights.size() >= 10) {
-            step <<= 1u;
+            step <<= 1U;
         }
 
         heights.push_back(height);
@@ -809,5 +812,8 @@ code block::connect() const {
 //     return connect_transactions(state);
 // }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

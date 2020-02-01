@@ -7,8 +7,8 @@
 
 #include <boost/optional.hpp>
 
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
 #include <knuth/common.hpp>
 #include <knuth/concepts.hpp>

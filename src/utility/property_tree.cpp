@@ -3,7 +3,11 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/utility/property_tree.hpp>
+=======
+#include <kth/domain/utility/property_tree.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 #include <string>
@@ -11,18 +15,18 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include <bitcoin/bitcoin/config/header.hpp>
-#include <bitcoin/bitcoin/config/input.hpp>
-#include <bitcoin/bitcoin/config/output.hpp>
-#include <bitcoin/bitcoin/config/transaction.hpp>
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/infrastructure/config/base16.hpp>
-#include <bitcoin/infrastructure/config/hash160.hpp>
-#include <bitcoin/infrastructure/config/hash256.hpp>
-#include <bitcoin/infrastructure/utility/collection.hpp>
+#include <kth/domain/config/header.hpp>
+#include <kth/domain/config/input.hpp>
+#include <kth/domain/config/output.hpp>
+#include <kth/domain/config/transaction.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/domain/math/stealth.hpp>
+#include <kth/infrastructure/config/base16.hpp>
+#include <kth/infrastructure/config/hash160.hpp>
+#include <kth/infrastructure/config/hash256.hpp>
+#include <kth/infrastructure/utility/collection.hpp>
 
-namespace libbitcoin {
+namespace kth {
 
 using namespace pt;
 using namespace bc::config;
@@ -139,7 +143,7 @@ ptree property_list(const chain::output& tx_output) {
 
     tree.put("script", tx_output.script().to_string(rule_fork::all_rules));
 
-    // TODO(libbitcoin): this will eventually change due to privacy problems, see:
+    // TODO(legacy): this will eventually change due to privacy problems, see:
     // lists.dyne.org/lurker/message/20140812.214120.317490ae.en.html
 
     if ( ! address) {

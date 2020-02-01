@@ -2,19 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/get_data.hpp>
+=======
+#include <kth/domain/message/get_data.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <initializer_list>
 
-#include <bitcoin/bitcoin/message/inventory.hpp>
-#include <bitcoin/bitcoin/message/inventory_vector.hpp>
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <kth/domain/message/inventory.hpp>
+#include <kth/domain/message/inventory_vector.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 std::string const get_data::command = "getdata";
 uint32_t const get_data::version_minimum = version::level::minimum;
@@ -97,5 +100,8 @@ void get_data::to_witness() {
 }
 #endif
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -2,23 +2,26 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/block.hpp>
+=======
+#include <kth/domain/message/block.hpp>
+>>>>>>> dev
 
 #include <cstddef>
 #include <cstdint>
 #include <istream>
 #include <utility>
 
-#include <bitcoin/bitcoin/chain/header.hpp>
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
-#include <bitcoin/infrastructure/utility/reader.hpp>
+#include <kth/domain/chain/header.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+#include <kth/infrastructure/utility/reader.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 std::string const block::command = "block";
 uint32_t const block::version_minimum = version::level::minimum;
@@ -143,5 +146,8 @@ hash_digest hash(block const& block, uint64_t nonce) {
     return sha256_hash(to_data_header_nonce(block, nonce));
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

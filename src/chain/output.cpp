@@ -2,21 +2,24 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/output.hpp>
+=======
+#include <kth/domain/chain/output.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstdint>
 #include <sstream>
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::wallet;
 
@@ -219,5 +222,8 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     return addresses;
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

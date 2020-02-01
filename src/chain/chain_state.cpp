@@ -2,29 +2,33 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/chain_state.hpp>
+=======
+#include <kth/domain/chain/chain_state.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/chain/block.hpp>
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/compact.hpp>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/config/checkpoint.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/unicode/unicode.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/timer.hpp>
+#include <kth/domain/chain/block.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/compact.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/config/checkpoint.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/unicode/unicode.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/timer.hpp>
+
 #include <boost/range/adaptor/reversed.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::config;
 using namespace bc::machine;
@@ -892,13 +896,13 @@ uint32_t chain_state::signal_version(uint32_t forks) {
         return bip34_version;
     }
 
-    // TODO(libbitcoin): these can be retired.
+    // TODO(legacy): these can be retired.
     // Signal bip9 bit0 if any of the group is configured.
     if (script::is_enabled(forks, rule_fork::bip9_bit0_group)) {
         return bip9_version_base | bip9_version_bit0;
     }
 
-    // TODO(libbitcoin): these can be retired.
+    // TODO(legacy): these can be retired.
     // Signal bip9 bit1 if any of the group is configured.
     if (script::is_enabled(forks, rule_fork::bip9_bit1_group)) {
         return bip9_version_base | bip9_version_bit1;
@@ -1204,5 +1208,8 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     return work_required(values, this->enabled_forks());
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

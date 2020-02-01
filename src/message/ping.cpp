@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/ping.hpp>
 
 // #include <bitcoin/bitcoin/message/version.hpp>
@@ -12,6 +13,17 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/ping.hpp>
+
+// #include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const ping::command = "ping";
 uint32_t const ping::version_minimum = version::level::minimum;
@@ -105,5 +117,8 @@ void ping::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/config/point.hpp>
+=======
+#include <kth/domain/config/point.hpp>
+>>>>>>> dev
 
 #include <iostream>
 #include <sstream>
@@ -10,13 +14,12 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/chain/output_point.hpp>
-#include <bitcoin/infrastructure/config/hash256.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/string.hpp>
+#include <kth/domain/chain/output_point.hpp>
+#include <kth/infrastructure/config/hash256.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/string.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace kth::config {
 
 using namespace boost::program_options;
 
@@ -79,5 +82,8 @@ std::ostream& operator<<(std::ostream& output, point const& argument) {
     return output;
 }
 
+<<<<<<< HEAD
 }  // namespace config
+=======
+>>>>>>> dev
 }  // namespace kth

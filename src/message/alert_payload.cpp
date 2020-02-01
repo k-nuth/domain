@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/alert_payload.hpp>
 
 #include <bitcoin/bitcoin/constants.hpp>
@@ -14,6 +15,19 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/alert_payload.hpp>
+
+#include <kth/domain/constants.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 // Libbitcon doesn't use this.
 const ec_uncompressed alert_payload::satoshi_public_key{
@@ -363,5 +377,8 @@ void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -4,8 +4,8 @@
 
 #include <knuth/keoken/message/create_asset.hpp>
 
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
 #include <knuth/keoken/message/base.hpp>
 #include <knuth/keoken/utility.hpp>

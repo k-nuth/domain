@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/get_headers.hpp>
 
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -10,6 +11,15 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/get_headers.hpp>
+
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const get_headers::command = "getheaders";
 uint32_t const get_headers::version_minimum = version::level::headers;
@@ -72,5 +82,8 @@ bool get_headers::from_data(uint32_t version, std::istream& stream) {
     return from_data(version, stream_r);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

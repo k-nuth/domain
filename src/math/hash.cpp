@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/infrastructure/math/hash.hpp>
+=======
+#include <kth/infrastructure/math/hash.hpp>
+>>>>>>> dev
 
 // #include <algorithm>
 // #include <cstddef>
@@ -23,7 +27,7 @@
 #include "../math/external/scrypt.h"
 #endif  //KTH_CURRENCY_LTC
 
-namespace libbitcoin {
+namespace kth {
 
 #ifdef KTH_CURRENCY_LTC
 hash_digest litecoin_hash(data_slice data) {

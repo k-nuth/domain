@@ -7,16 +7,15 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/wallet/encrypted_keys.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
 #include "parse_encrypted_key.hpp"
 #include "parse_encrypted_prefix.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 // This prefix results in the prefix "cfrm" in the base58 encoding but is
 // modified when the payment address is Bitcoin mainnet (0).
@@ -57,5 +56,8 @@ bool parse_encrypted_public::verify_magic() const {
     return slice<0, magic_size>(prefix()) == magic_;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

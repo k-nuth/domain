@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/filter_clear.hpp>
 
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -12,6 +13,17 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/filter_clear.hpp>
+
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const filter_clear::command = "filterclear";
 uint32_t const filter_clear::version_minimum = version::level::bip37;
@@ -93,5 +105,8 @@ size_t filter_clear::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

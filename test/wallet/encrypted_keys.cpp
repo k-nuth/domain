@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
 using namespace bc;
 using namespace bc::wallet;
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__decrypt1)
 
-// TODO(libbitcoin): create compressed+multiplied and altchain/testnet vector(s).
+// TODO(legacy): create compressed+multiplied and altchain/testnet vector(s).
 
 #define BC_REQUIRE_DECRYPT_SECRET(key, passphrase) \
     ec_secret out_secret;                          \
@@ -279,7 +279,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_7_multiplied_lot__expect
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_8_multiplied__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfPAw5HErFdzMyBvGMwSfSWjKmzgm3jDg7RxQyVCSSBJFZLAZ6hVupmpn");
-    BC_REQUIRE_DECRYPT_SECRET(key, "libbitcoin test");
+    BC_REQUIRE_DECRYPT_SECRET(key, "kth test");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "fb4bfb0bfe151d524b0b11983b9f826d6a0bc7f7bdc480864a1b557ff0c59eb4");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(!out_is_compressed);
@@ -289,6 +289,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_8_multiplied__expected) 
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_9_multiplied__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
+//TODO(kth): replace the key
     BC_REQUIRE_DECRYPT_SECRET(key, "Libbitcoin BIP38 Test Vector");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "97c745cc980e5a070e12d0bff3f539b70748aadb406045fc1b42d4ded559a564");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
@@ -301,7 +302,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__decrypt_public)
 
-// TODO(libbitcoin): create compressed and altchain/testnet vector(s).
+// TODO(legacy): create compressed and altchain/testnet vector(s).
 
 #define BC_REQUIRE_DECRYPT_POINT(key, passphrase, version)                              \
     ec_compressed out_point;                                                            \
@@ -334,7 +335,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_7_lot__expected) {
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_8__expected) {
     uint8_t const version = 0x00;
     auto const key = base58_literal("cfrm38V5Nm1mn7GxPBAGTXawqXRwE1EbR19GqsvJ9JmF5VKLqi8nETmULpELkQvExCGkTNCH2An");
-    BC_REQUIRE_DECRYPT_POINT(key, "libbitcoin test", version);
+    BC_REQUIRE_DECRYPT_POINT(key, "kth test", version);
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c13b65302bbbed4f7ad67bc68e928b58e7748d84091a2d42680dc52e7916079e");
     BOOST_REQUIRE_EQUAL(derived_address, "1NQgLnFz1ZzF6KkCJ4SM3xz3Jy1q2hEEax");
 }
@@ -343,6 +344,8 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_8__expected) {
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_9__expected) {
     uint8_t const version = 0x00;
     auto const key = base58_literal("cfrm38V5ec4E5RKwBu46Jf5zfaE54nuB1NWHpHSpgX4GQqfzx7fvqm43mBHvr89pPgykDHts9VC");
+
+//TODO(kth): replace the key
     BC_REQUIRE_DECRYPT_POINT(key, "Libbitcoin BIP38 Test Vector", version);
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
     BOOST_REQUIRE_EQUAL(derived_address, "1NjjvGqXDrx1DvrhjYJxzrpyopk1ygHTSJ");
@@ -356,7 +359,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair)
 
-// TODO(libbitcoin): create compressed vector(s).
+// TODO(legacy): create compressed vector(s).
 
 #define BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compressed) \
     ec_compressed out_point;                                         \
@@ -429,7 +432,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair_with_confirmation)
 
-// TODO(libbitcoin): create compressed vector(s).
+// TODO(legacy): create compressed vector(s).
 
 #define BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compressed) \
     ec_compressed out_point;                                                      \

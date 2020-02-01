@@ -1,12 +1,18 @@
 // Copyright (c) 2016-2020 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+<<<<<<< HEAD
+
+#ifndef KTH_KEOKEN_CONSTANTS_HPP_
+#define KTH_KEOKEN_CONSTANTS_HPP_
+=======
+>>>>>>> dev
 
 #ifndef KTH_KEOKEN_CONSTANTS_HPP_
 #define KTH_KEOKEN_CONSTANTS_HPP_
 
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/operation.hpp>
 
 #include <knuth/keoken/utility.hpp>
 

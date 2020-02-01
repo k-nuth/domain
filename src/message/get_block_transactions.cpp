@@ -2,21 +2,24 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/get_block_transactions.hpp>
+=======
+#include <kth/domain/message/get_block_transactions.hpp>
+>>>>>>> dev
 
 #include <initializer_list>
 
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 std::string const get_block_transactions::command = "getblocktxn";
 uint32_t const get_block_transactions::version_minimum = version::level::bip152;
@@ -149,5 +152,8 @@ void get_block_transactions::set_indexes(std::vector<uint64_t>&& values) {
     indexes_ = values;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

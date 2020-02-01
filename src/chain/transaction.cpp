@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/transaction.hpp>
+=======
+#include <kth/domain/chain/transaction.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstddef>
@@ -16,30 +20,29 @@
 
 #include <boost/optional.hpp>
 
-#include <bitcoin/bitcoin/chain/chain_state.hpp>
-#include <bitcoin/bitcoin/chain/input.hpp>
-#include <bitcoin/bitcoin/chain/output.hpp>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/program.hpp>
-// #include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/bitcoin/machine/opcode.hpp>
-#include <bitcoin/bitcoin/machine/rule_fork.hpp>
-#include <bitcoin/bitcoin/multi_crypto_support.hpp>
-#include <bitcoin/infrastructure/error.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/message/message_tools.hpp>
-#include <bitcoin/infrastructure/utility/collection.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/endian.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/input.hpp>
+#include <kth/domain/chain/output.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/operation.hpp>
+#include <kth/domain/machine/program.hpp>
+// #include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/error.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/collection.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/endian.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 // using namespace bc::machine;
 
@@ -878,7 +881,7 @@ code transaction::accept(chain_state const& state, bool transaction_pool) const 
 //     if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
 //         return error::transaction_embedded_sigop_limit;
 //         // This causes second serialized_size(true, false) computation (uncached).
-//         // TODO(libbitcoin): reduce by header, txcount and smallest coinbase size for height.
+//         // TODO(legacy): reduce by header, txcount and smallest coinbase size for height.
 //     }
 
 //     if (transaction_pool && bip141 && weight() > max_block_weight) {
@@ -907,13 +910,13 @@ code transaction::connect(chain_state const& state) const {
 
 // bool transaction::is_standard() const {
 //     for (auto const& in : inputs()) {
-//         if (in.script().pattern() == libbitcoin::machine::script_pattern::non_standard) {
+//         if (in.script().pattern() == kth::machine::script_pattern::non_standard) {
 //             return false;
 //         }
 //     }
 
 //     for (auto const& out : outputs()) {
-//         if (out.script().pattern() == libbitcoin::machine::script_pattern::non_standard) {
+//         if (out.script().pattern() == kth::machine::script_pattern::non_standard) {
 //             return false;
 //         }
 //     }
@@ -1023,5 +1026,8 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks) {
 #endif
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

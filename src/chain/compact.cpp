@@ -2,15 +2,18 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/compact.hpp>
+=======
+#include <kth/domain/chain/compact.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 // Bitcoin compact for represents a value in base 256 notation as follows:
 // value = (-1^sign) * mantissa * 256^(exponent-3)
@@ -41,25 +44,25 @@ bool is_nonzero(uint32_t compact) {
 inline 
 uint8_t log_256(uint32_t mantissa) {
     BITCOIN_ASSERT_MSG(mantissa <= 0x00ffffff, "mantissa log256 is 4");
-    return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));
+    return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));     //NOLINT
 }
 
 inline 
 bool is_overflow(uint8_t exponent, uint32_t mantissa) {
     // Overflow if exponent would shift the mantissa more than 32 bytes.
-    return (mantissa > 0) && (exponent > 32 + 3 - log_256(mantissa));
+    return (mantissa > 0) && (exponent > 32 + 3 - log_256(mantissa));       //NOLINT
 }
 
 inline 
 uint32_t shift_low(uint8_t exponent) {
     BITCOIN_ASSERT(exponent <= 3);
-    return 8 * (3 - exponent);
+    return 8 * (3 - exponent);  //NOLINT
 }
 
 inline 
 uint32_t shift_high(uint8_t exponent) {
     BITCOIN_ASSERT(exponent > 3);
-    return 8 * (exponent - 3);
+    return 8 * (exponent - 3);  //NOLINT
 }
 
 inline 
@@ -67,7 +70,7 @@ size_t logical_size(uint256_t value) {
     auto byte = 0;
 
     for (; value != 0; ++byte) {
-        value >>= 8;
+        value >>= 8;              //NOLINT
     }
 
     return byte;
@@ -153,7 +156,7 @@ uint32_t compact::from_big(uint256_t const& big) {
     //*************************************************************************
     if (is_negated(mantissa)) {
         exponent++;
-        mantissa >>= 8u;
+        mantissa >>= 8u;    //NOLINT
     }
 
     BITCOIN_ASSERT_MSG((exponent & first_byte_mask) == 0, "size exceess");
@@ -163,5 +166,8 @@ uint32_t compact::from_big(uint256_t const& big) {
     return (static_cast<uint32_t>(exponent) << mantissa_bits) | mantissa;
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -5,7 +5,11 @@
 #ifndef KTH_KEOKEN_MESSAGE_BASE_HPP_
 #define KTH_KEOKEN_MESSAGE_BASE_HPP_
 
+<<<<<<< HEAD
 #include <bitcoin/infrastructure/utility/writer.hpp>
+=======
+#include <kth/infrastructure/utility/writer.hpp>
+>>>>>>> dev
 
 #include <knuth/common.hpp>
 #include <knuth/concepts.hpp>

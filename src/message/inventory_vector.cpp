@@ -2,19 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/inventory_vector.hpp>
+=======
+#include <kth/domain/message/inventory_vector.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 #include <string>
 
-#include <bitcoin/bitcoin/message/inventory.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/message/inventory.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 uint32_t inventory_vector::to_number(type_id type) {
     return static_cast<uint32_t>(type);
@@ -165,5 +168,8 @@ void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = value;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

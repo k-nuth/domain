@@ -3,8 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <boost/test/unit_test.hpp>
-#include <bitcoin/infrastructure.hpp>
-#include <bitcoin/bitcoin.hpp>
+#include <kth/infrastructure.hpp>
+#include <kth/domain.hpp>
 
 using namespace bc;
 using namespace bc::machine;

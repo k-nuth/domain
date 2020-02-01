@@ -7,8 +7,8 @@
 
 #include <string>
 
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
 
 #include <knuth/keoken/primitives.hpp>
 

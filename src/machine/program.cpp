@@ -2,21 +2,24 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/machine/program.hpp>
+=======
+#include <kth/domain/machine/program.hpp>
+>>>>>>> dev
 
 #include <cstddef>
 #include <cstdint>
 #include <utility>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/interpreter.hpp>
-#include <bitcoin/infrastructure/machine/script_version.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/interpreter.hpp>
+#include <kth/infrastructure/machine/script_version.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
-namespace libbitcoin {
-namespace machine {
+namespace kth::machine {
 
 using namespace bc::chain;
 
@@ -121,5 +124,8 @@ code program::evaluate(operation const& op) {
     return interpreter::run(op, *this);
 }
 
+<<<<<<< HEAD
 }  // namespace machine
+=======
+>>>>>>> dev
 }  // namespace kth

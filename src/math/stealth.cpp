@@ -2,20 +2,24 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/math/stealth.hpp>
+=======
+#include <kth/domain/math/stealth.hpp>
+>>>>>>> dev
 
 #include <algorithm>
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/machine/script_pattern.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/binary.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
-#include <bitcoin/infrastructure/utility/endian.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/machine/script_pattern.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/binary.hpp>
+#include <kth/infrastructure/utility/data.hpp>
+#include <kth/infrastructure/utility/endian.hpp>
 #include <utility>
 
-namespace libbitcoin {
+namespace kth {
 
 using namespace bc::chain;
 using namespace bc::machine;
@@ -43,7 +47,7 @@ bool to_stealth_prefix(uint32_t& out_prefix, script const& script) {
     return true;
 }
 
-// TODO(libbitcoin): this can be implemented using libsecp256k1 without iteration.
+// TODO(legacy): this can be implemented using libsecp256k1 without iteration.
 // The public key must have a sign value of 0x02 (i.e. must be even y-valued).
 bool create_ephemeral_key(ec_secret& out_secret, data_chunk const& seed) {
     static data_chunk const magic(to_chunk("Stealth seed"));

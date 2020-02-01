@@ -2,17 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/output_point.hpp>
+=======
+#include <kth/domain/chain/output_point.hpp>
+>>>>>>> dev
 
 #include <cstddef>
 #include <cstdint>
 #include <utility>
 
-#include <bitcoin/bitcoin/chain/point.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
+#include <kth/domain/chain/point.hpp>
+#include <kth/domain/constants.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -91,5 +94,8 @@ bool output_point::is_mature(size_t height) const {
     return floor_subtract(height, validation.height) >= coinbase_maturity;
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

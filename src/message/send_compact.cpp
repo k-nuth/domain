@@ -2,18 +2,21 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/send_compact.hpp>
+=======
+#include <kth/domain/message/send_compact.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/utility/container_sink.hpp>
-#include <bitcoin/infrastructure/utility/container_source.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
-#include <bitcoin/infrastructure/utility/ostream_writer.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 std::string const send_compact::command = "sendcmpct";
 uint32_t const send_compact::version_minimum = version::level::bip152;
@@ -118,5 +121,8 @@ void send_compact::set_version(uint64_t version) {
     version_ = version;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

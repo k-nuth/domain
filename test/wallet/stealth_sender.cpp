@@ -4,9 +4,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <bitcoin/bitcoin.hpp>
+#include <kth/domain.hpp>
 
-// TODO(libbitcoin): test sender in isolation.
+// TODO(legacy): test sender in isolation.
 BOOST_AUTO_TEST_SUITE(stealth_sender_tests)
 
 BOOST_AUTO_TEST_SUITE_END()

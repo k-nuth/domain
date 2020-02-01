@@ -7,14 +7,13 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/bitcoin/wallet/encrypted_keys.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/wallet/encrypted_keys.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
 #include "parse_encrypted_prefix.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 // This prefix results in the prefix "passphrase" in the base58 encoding.
 // The prefix is not modified as the result of variations to address.
@@ -60,5 +59,8 @@ bool parse_encrypted_token::verify_magic() const {
     return slice<0, magic_size>(prefix()) == magic_;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

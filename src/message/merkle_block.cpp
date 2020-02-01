@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/merkle_block.hpp>
 
 #include <bitcoin/bitcoin/chain/block.hpp>
@@ -18,6 +19,23 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/merkle_block.hpp>
+
+#include <kth/domain/chain/block.hpp>
+#include <kth/domain/chain/header.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const merkle_block::command = "merkleblock";
 uint32_t const merkle_block::version_minimum = version::level::bip37;
@@ -185,5 +203,8 @@ void merkle_block::set_flags(data_chunk&& value) {
     flags_ = std::move(value);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

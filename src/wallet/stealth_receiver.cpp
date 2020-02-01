@@ -2,20 +2,23 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/stealth_receiver.hpp>
+=======
+#include <kth/domain/wallet/stealth_receiver.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/bitcoin/wallet/stealth_address.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/utility/binary.hpp>
+#include <kth/domain/math/stealth.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/domain/wallet/stealth_address.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/utility/binary.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
-// TODO(libbitcoin): use to factory and make address_ and spend_public_ const.
+// TODO(legacy): use to factory and make address_ and spend_public_ const.
 stealth_receiver::stealth_receiver(ec_secret const& scan_private,
                                    ec_secret const& spend_private,
                                    binary const& filter,
@@ -55,5 +58,8 @@ bool stealth_receiver::derive_private(ec_secret& out_private,
                            spend_private_);
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/chain/point_iterator.hpp>
+=======
+#include <kth/domain/chain/point_iterator.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstddef>
@@ -11,14 +15,13 @@
 #include <stdexcept>
 #include <utility>
 
-#include <bitcoin/bitcoin/chain/point.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-////#include <bitcoin/infrastructure/utility/endian.hpp>
-#include <bitcoin/infrastructure/utility/limits.hpp>
+#include <kth/domain/chain/point.hpp>
+#include <kth/domain/constants.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+////#include <kth/infrastructure/utility/endian.hpp>
+#include <kth/infrastructure/utility/limits.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace kth::chain {
 
 // static auto const point_size = static_cast<unsigned>(std::tuple_size<point>::value);
 constexpr auto point_size = static_cast<unsigned>(std::tuple_size<point>::value);
@@ -43,7 +46,7 @@ uint8_t point_iterator::current() const {
         return point_->hash()[current_];
     }
 
-    // TODO(libbitcoin): move the little-endian iterator into endian.hpp.
+    // TODO(legacy): move the little-endian iterator into endian.hpp.
     auto const position = current_ - hash_size;
     return static_cast<uint8_t>(point_->index() >> (position * byte_bits));
 }
@@ -120,5 +123,8 @@ point_iterator point_iterator::decrease(unsigned value) const {
     return {*point_, index};
 }
 
+<<<<<<< HEAD
 }  // namespace chain
+=======
+>>>>>>> dev
 }  // namespace kth

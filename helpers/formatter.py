@@ -51,7 +51,7 @@ files = [
 
 def process():
     for f in files:
-        # include/bitcoin/bitcoin/
+        # include/kth/domain/
         # src
         filename, file_extension = os.path.splitext(f)
         # print(filename)
@@ -59,7 +59,7 @@ def process():
         # print(filename.split('/')[-1])
         class_name = filename.split('/')[-1]
 
-        inc = os.path.join('/home/fernando/dev/domain', 'include/bitcoin/bitcoin/', filename) + '.hpp'
+        inc = os.path.join('/home/fernando/dev/domain', 'include/kth/domain/', filename) + '.hpp'
         src = os.path.join('/home/fernando/dev/domain', 'src/', f)
         print(inc)
         print(src)

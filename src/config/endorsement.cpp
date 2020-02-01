@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/config/endorsement.hpp>
+=======
+#include <kth/domain/config/endorsement.hpp>
+>>>>>>> dev
 
 #include <array>
 #include <cstdint>
@@ -12,11 +16,10 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin.hpp>
-#include <bitcoin/bitcoin/define.hpp>
+#include <kth/domain.hpp>
+#include <kth/domain/define.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace kth::config {
 
 // endorsement format is currently private to bx.
 static bool decode_endorsement(bc::endorsement& endorsement,
@@ -71,5 +74,8 @@ std::ostream& operator<<(std::ostream& output, const endorsement& argument) {
     return output;
 }
 
+<<<<<<< HEAD
 }  // namespace config
+=======
+>>>>>>> dev
 }  // namespace kth

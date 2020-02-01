@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/ec_private.hpp>
+=======
+#include <kth/domain/wallet/ec_private.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 #include <iostream>
@@ -10,16 +14,15 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/wallet/ec_public.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/formats/base_58.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/wallet/ec_public.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 uint8_t const ec_private::compressed_sentinel = 0x01;
 #ifdef KTH_CURRENCY_LTC
@@ -221,5 +224,8 @@ std::ostream& operator<<(std::ostream& out, ec_private const& of) {
     return out;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

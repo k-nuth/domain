@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/config/output.hpp>
+=======
+#include <kth/domain/config/output.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 #include <iostream>
@@ -11,15 +15,14 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/config/point.hpp>
-#include <bitcoin/bitcoin/config/script.hpp>
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/bitcoin/wallet/stealth_address.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/string.hpp>
+#include <kth/domain/config/point.hpp>
+#include <kth/domain/config/script.hpp>
+#include <kth/domain/math/stealth.hpp>
+#include <kth/domain/wallet/stealth_address.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/string.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace kth::config {
 
 using namespace boost::program_options;
 
@@ -82,7 +85,7 @@ std::istream& operator>>(std::istream& input, output& argument) {
     // Is the target a stealth address?
     const wallet::stealth_address stealth(target);
     if (stealth) {
-        // TODO(libbitcoin): finish stealth multisig implemetation (p2sh and !p2sh).
+        // TODO(legacy): finish stealth multisig implemetation (p2sh and !p2sh).
 
         if (stealth.spend_keys().size() != 1 || tokens.size() != 3) {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
@@ -123,5 +126,8 @@ std::istream& operator>>(std::istream& input, output& argument) {
     return input;
 }
 
+<<<<<<< HEAD
 }  // namespace config
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -2,19 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/machine/opcode.hpp>
+=======
+#include <kth/domain/machine/opcode.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 #include <string>
 
 #include <boost/algorithm/string.hpp>
 
-// #include <bitcoin/infrastructure/chain/script.hpp>
-#include <bitcoin/infrastructure/constants.hpp>
-#include <bitcoin/infrastructure/formats/base_16.hpp>
+// #include <kth/infrastructure/chain/script.hpp>
+#include <kth/infrastructure/constants.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
 
-namespace libbitcoin {
-namespace machine {
+namespace kth::machine {
 
 // using namespace bc::chain;
 
@@ -680,5 +683,8 @@ bool opcode_from_hexadecimal(opcode& out_code, std::string const& value) {
     return true;
 }
 
+<<<<<<< HEAD
 } // namespace machine
+=======
+>>>>>>> dev
 } // namespace kth

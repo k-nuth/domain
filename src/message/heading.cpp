@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/heading.hpp>
 
 #include <bitcoin/bitcoin/constants.hpp>
@@ -15,6 +16,20 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/heading.hpp>
+
+#include <kth/domain/constants.hpp>
+#include <kth/domain/message/messages.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/message/message_tools.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 size_t heading::maximum_size() {
     // This assumes that the heading doesn't shrink in size.
@@ -130,7 +145,7 @@ void heading::to_data(data_sink& stream) const {
 }
 
 message_type heading::type() const {
-    // TODO(libbitcoin): convert to static map.
+    // TODO(legacy): convert to static map.
     if (command_ == address::command) {
         return message_type::address;
     }
@@ -256,5 +271,8 @@ void heading::set_checksum(uint32_t value) {
     checksum_ = value;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

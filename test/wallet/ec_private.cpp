@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin.hpp>
+=======
+#include <kth/domain.hpp>
+>>>>>>> dev
 #include <boost/test/unit_test.hpp>
 
 using namespace bc;
@@ -10,13 +14,13 @@ using namespace bc::wallet;
 
 BOOST_AUTO_TEST_SUITE(ec_private_tests)
 
-// TODO(libbitcoin): add version tests
+// TODO(legacy): add version tests
 
 #define SECRET "8010b1bb119ad37d4b65a1022a314897b1b3614b345974332cb1b9582cf03536"
 #define WIF_COMPRESSED "L1WepftUBemj6H4XQovkiW1ARVjxMqaw4oj2kmkYqdG1xTnBcHfC"
 #define WIF_UNCOMPRESSED "5JngqQmHagNTknnCshzVUysLMWAjT23FWs1TgNU5wyFH5SB3hrP"
 
-// TODO(libbitcoin): implement testnet version tests
+// TODO(legacy): implement testnet version tests
 //#define WIF_COMPRESSED_TESTNET "cRseHatKciTzFiXnoDjt5pWE3j3N2Hgd8qsVsCD4Ljv2DCwuD1V6"
 //#define WIF_UNCOMPRESSED_TESTNET "92ZKR9aqAuSbirHVW3tQMaRJ1AXScBaSrosQkzpbHhzKrVBsZBL"
 

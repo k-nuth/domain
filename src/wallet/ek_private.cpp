@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/ek_private.hpp>
+=======
+#include <kth/domain/wallet/ek_private.hpp>
+>>>>>>> dev
 
 #include <iostream>
 #include <sstream>
@@ -10,12 +14,11 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/define.hpp>
-#include <bitcoin/infrastructure/formats/base_58.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
+#include <kth/domain/define.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 ek_private::ek_private()
     : private_() 
@@ -43,7 +46,7 @@ ek_private::ek_private(encrypted_private const& value)
 // ----------------------------------------------------------------------------
 
 ek_private ek_private::from_string(std::string const& encoded) {
-    // TODO(libbitcoin): incorporate existing parser here, setting new members.
+    // TODO(legacy): incorporate existing parser here, setting new members.
 
     encrypted_private key;
     return decode_base58(key, encoded) && verify_checksum(key) ? ek_private(key) : ek_private();
@@ -107,5 +110,8 @@ std::ostream& operator<<(std::ostream& out, ek_private const& of) {
     return out;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

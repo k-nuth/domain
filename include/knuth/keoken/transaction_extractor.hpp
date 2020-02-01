@@ -1,12 +1,18 @@
 // Copyright (c) 2016-2020 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+<<<<<<< HEAD
+
+#ifndef KTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
+#define KTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
+=======
+>>>>>>> dev
 
 #ifndef KTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
 #define KTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_
 
-#include <bitcoin/bitcoin/chain/transaction.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/chain/transaction.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
 namespace knuth {
 namespace keoken {

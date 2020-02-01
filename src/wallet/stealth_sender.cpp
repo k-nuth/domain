@@ -2,18 +2,21 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/stealth_sender.hpp>
+=======
+#include <kth/domain/wallet/stealth_sender.hpp>
+>>>>>>> dev
 
 #include <cstdint>
 
-#include <bitcoin/bitcoin/chain/script.hpp>
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/infrastructure/utility/binary.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/chain/script.hpp>
+#include <kth/domain/math/stealth.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/infrastructure/utility/binary.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 stealth_sender::stealth_sender(stealth_address const& address,
                                data_chunk const& seed,
@@ -40,7 +43,7 @@ stealth_sender::operator bool() const {
 }
 
 // private
-// TODO(libbitcoin): convert to factory and make script_ and address_ const.
+// TODO(legacy): convert to factory and make script_ and address_ const.
 void stealth_sender::initialize(ec_secret const& ephemeral_private,
                                 stealth_address const& address,
                                 data_chunk const& seed,
@@ -75,5 +78,8 @@ const wallet::payment_address& stealth_sender::payment_address() const {
     return address_;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

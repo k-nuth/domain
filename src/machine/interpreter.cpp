@@ -1,16 +1,20 @@
 // Copyright (c) 2016-2020 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+<<<<<<< HEAD
 
 #include <bitcoin/bitcoin/machine/interpreter.hpp>
+=======
+>>>>>>> dev
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/machine/operation.hpp>
-#include <bitcoin/bitcoin/machine/program.hpp>
-#include <bitcoin/infrastructure/error.hpp>
+#include <kth/domain/machine/interpreter.hpp>
 
-namespace libbitcoin {
-namespace machine {
+#include <kth/domain/constants.hpp>
+#include <kth/domain/machine/operation.hpp>
+#include <kth/domain/machine/program.hpp>
+#include <kth/infrastructure/error.hpp>
+
+namespace kth::machine {
 
 code interpreter::run(program& program) {
     code ec;
@@ -50,5 +54,8 @@ code interpreter::run(operation const& op, program& program) {
     return run_op(op, program);
 }
 
+<<<<<<< HEAD
 }  // namespace machine
+=======
+>>>>>>> dev
 }  // namespace kth

@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/memory_pool.hpp>
 
 #include <bitcoin/bitcoin/message/version.hpp>
@@ -12,6 +13,17 @@
 
 namespace libbitcoin {
 namespace message {
+=======
+#include <kth/domain/message/memory_pool.hpp>
+
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/container_sink.hpp>
+#include <kth/infrastructure/utility/container_source.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
+#include <kth/infrastructure/utility/ostream_writer.hpp>
+
+namespace kth::message {
+>>>>>>> dev
 
 std::string const memory_pool::command = "mempool";
 uint32_t const memory_pool::version_minimum = version::level::bip35;
@@ -85,5 +97,8 @@ size_t memory_pool::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

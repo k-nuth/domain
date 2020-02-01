@@ -2,17 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/message/not_found.hpp>
+=======
+#include <kth/domain/message/not_found.hpp>
+>>>>>>> dev
 
 #include <initializer_list>
 
-#include <bitcoin/bitcoin/message/inventory.hpp>
-#include <bitcoin/bitcoin/message/version.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/istream_reader.hpp>
+#include <kth/domain/message/inventory.hpp>
+#include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace kth::message {
 
 std::string const not_found::command = "notfound";
 uint32_t const not_found::version_minimum = version::level::bip37;
@@ -86,5 +89,8 @@ bool not_found::from_data(uint32_t version, std::istream& stream) {
     return from_data(version, stream_r);
 }
 
+<<<<<<< HEAD
 }  // namespace message
+=======
+>>>>>>> dev
 }  // namespace kth

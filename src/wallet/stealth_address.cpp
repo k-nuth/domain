@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/stealth_address.hpp>
+=======
+#include <kth/domain/wallet/stealth_address.hpp>
+>>>>>>> dev
 
 #include <algorithm>
 #include <cstdint>
@@ -10,17 +14,16 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/math/stealth.hpp>
-#include <bitcoin/infrastructure/formats/base_58.hpp>
-#include <bitcoin/infrastructure/math/checksum.hpp>
-#include <bitcoin/infrastructure/math/elliptic_curve.hpp>
-#include <bitcoin/infrastructure/math/hash.hpp>
-#include <bitcoin/infrastructure/utility/assert.hpp>
-#include <bitcoin/infrastructure/utility/binary.hpp>
-#include <bitcoin/infrastructure/utility/data.hpp>
+#include <kth/domain/math/stealth.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
+#include <kth/infrastructure/math/checksum.hpp>
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/assert.hpp>
+#include <kth/infrastructure/utility/binary.hpp>
+#include <kth/infrastructure/utility/data.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 using namespace bc::chain;
 
@@ -45,7 +48,7 @@ static_assert(binary::bits_per_block == byte_bits,
               "The stealth prefix must use an 8 bit block size.");
 
 uint8_t const stealth_address::mainnet_p2kh = 0x2a;
-uint8_t const stealth_address::reuse_key_flag = 1u << 0u;
+uint8_t const stealth_address::reuse_key_flag = 1U << 0U;
 const size_t stealth_address::min_filter_bits = 1 * byte_bits;
 const size_t stealth_address::max_filter_bits = sizeof(uint32_t) * byte_bits;
 
@@ -334,5 +337,8 @@ std::ostream& operator<<(std::ostream& out, stealth_address const& of) {
     return out;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth

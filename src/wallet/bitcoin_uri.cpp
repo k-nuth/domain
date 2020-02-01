@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include <bitcoin/bitcoin/wallet/bitcoin_uri.hpp>
+=======
+#include <kth/domain/wallet/bitcoin_uri.hpp>
+>>>>>>> dev
 
 #include <cstddef>
 #include <cstdint>
@@ -11,14 +15,13 @@
 
 #include <boost/program_options.hpp>
 
-#include <bitcoin/bitcoin/wallet/payment_address.hpp>
-#include <bitcoin/bitcoin/wallet/stealth_address.hpp>
-#include <bitcoin/bitcoin/wallet/uri_reader.hpp>
-#include <bitcoin/infrastructure/formats/base_10.hpp>
-#include <bitcoin/infrastructure/wallet/uri.hpp>
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/domain/wallet/stealth_address.hpp>
+#include <kth/domain/wallet/uri_reader.hpp>
+#include <kth/infrastructure/formats/base_10.hpp>
+#include <kth/infrastructure/wallet/uri.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace kth::wallet {
 
 static auto const bitcoin_scheme = "bitcoin";
 static auto const parameter_amount = "amount";
@@ -233,5 +236,8 @@ std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from) {
     return out;
 }
 
+<<<<<<< HEAD
 }  // namespace wallet
+=======
+>>>>>>> dev
 }  // namespace kth
