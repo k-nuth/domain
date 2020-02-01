@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CONCEPTS_HPP_
-#define KTH_CONCEPTS_HPP_
+#ifndef KTH_DOMAIN_CONCEPTS_HPP_
+#define KTH_DOMAIN_CONCEPTS_HPP_
 
 #define Reader typename //NOLINT
 #define Writer typename //NOLINT
@@ -42,7 +42,7 @@ constexpr bool is_writer() {
 
 }  // namespace kth
 
-#define KTH_IS_READER(R) typename std::enable_if<knuth::is_reader<R>(), int>::type = 0  //NOLINT
-#define KTH_IS_WRITER(W) typename std::enable_if<knuth::is_writer<W>(), int>::type = 0  //NOLINT
+#define KTH_IS_READER(R) typename std::enable_if<kth::is_reader<R>(), int>::type = 0  //NOLINT
+#define KTH_IS_WRITER(W) typename std::enable_if<kth::is_writer<W>(), int>::type = 0  //NOLINT
 
-#endif  //KTH_CONCEPTS_HPP_
+#endif  //KTH_DOMAIN_CONCEPTS_HPP_
