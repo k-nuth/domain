@@ -10,7 +10,7 @@ from kthbuild import KnuthConanFile
 class KnuthDomainConan(KnuthConanFile):
     def recipe_dir(self):
         return os.path.dirname(os.path.abspath(__file__))
-    
+
     name = "domain"
     # version = get_version()
     license = "http://www.boost.org/users/license.html"
@@ -25,7 +25,7 @@ class KnuthDomainConan(KnuthConanFile):
                "with_tests": [True, False],
                "with_examples": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
-               "microarchitecture": "ANY", #["x86_64", "haswell", "ivybridge", "sandybridge", "bulldozer", ...]
+               "microarchitecture": "ANY",
                "fix_march": [True, False],
                "march_id": "ANY",
                "verbose": [True, False],

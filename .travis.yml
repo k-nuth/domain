@@ -175,7 +175,9 @@ jobs:
         - |
           conan user
           conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
-          python ci_utils/wait_for_deps.py domain
+          REPO_NAME=$(echo $TRAVIS_REPO_SLUG| cut -d'/' -f 2)
+          echo $REPO_NAME
+          python ci_utils/wait_for_deps.py $REPO_NAME
 
 
 # Static Checks ------------------------------------------------------
