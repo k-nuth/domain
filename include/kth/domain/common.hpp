@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_COMMON_HPP_
-#define KTH_COMMON_HPP_
+#ifndef KTH_DOMAIN_COMMON_HPP_
+#define KTH_DOMAIN_COMMON_HPP_
 
 namespace kth {
 
@@ -33,8 +33,6 @@ bool witness_val(bool x) {
 #define KTH_DEF_WITN_ARG bool witness /*= false*/       //NOLINT
 #endif
 
-
-
 }  // namespace kth
 
-#endif  //KTH_COMMON_HPP_
+#endif  //KTH_DOMAIN_COMMON_HPP_

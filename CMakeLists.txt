@@ -2,7 +2,6 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-
 cmake_minimum_required(VERSION 3.4)
 
 # kth-domain
@@ -347,7 +346,7 @@ if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-set(kth_domain_sources_just_libbitcoin
+set(kth_domain_sources_just_legacy
         src/chain/block_basis.cpp
         src/chain/block.cpp
         src/chain/chain_state.cpp
@@ -466,8 +465,8 @@ set(kth_domain_sources_just_kth
 )
 
 if (NOT ${CURRENCY} STREQUAL "BCH")
-    set(kth_domain_sources_just_libbitcoin 
-      ${kth_domain_sources_just_libbitcoin}
+    set(kth_domain_sources_just_legacy 
+      ${kth_domain_sources_just_legacy}
       src/chain/witness.cpp
     )
 endif()
@@ -483,18 +482,18 @@ endif()
 if (WITH_KEOKEN)
   set(kth_domain_sources_just_kth 
     ${kth_domain_sources_just_kth}
-    src/knuth/keoken/transaction_extractor.cpp
-    src/knuth/keoken/entities/asset.cpp
-    src/knuth/keoken/message/base.cpp
-    src/knuth/keoken/message/create_asset.cpp
-    src/knuth/keoken/message/send_tokens.cpp
-    src/knuth/keoken/wallet/create_transanction.cpp
+    src/kth/domain/keoken/transaction_extractor.cpp
+    src/kth/domain/keoken/entities/asset.cpp
+    src/kth/domain/keoken/message/base.cpp
+    src/kth/domain/keoken/message/create_asset.cpp
+    src/kth/domain/keoken/message/send_tokens.cpp
+    src/kth/domain/keoken/wallet/create_transanction.cpp
   )
 endif()
 
 if (NOT JUST_KTH_SOURCES)
   set(kth_domain_sources 
-    ${kth_domain_sources_just_libbitcoin}
+    ${kth_domain_sources_just_legacy}
   )
 endif()
 

@@ -15,10 +15,10 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/transaction_functions.hpp>
 
-#include <knuth/keoken/message/base.hpp>
-#include <knuth/keoken/primitives.hpp>
+#include <kth/domain/keoken/message/base.hpp>
+#include <kth/domain/keoken/primitives.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace wallet {
 
@@ -73,6 +73,6 @@ result_t send_token_tx_complete(kth::chain::input_point const& output_to_spend,
 
 }  // namespace wallet
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth
 
 #endif  //KTH_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_

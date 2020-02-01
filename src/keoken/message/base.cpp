@@ -2,11 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <knuth/keoken/message/base.hpp>
+#include <kth/domain/keoken/message/base.hpp>
 
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 namespace base {
@@ -23,4 +23,4 @@ size_t serialized_size() {
 }  // namespace base
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

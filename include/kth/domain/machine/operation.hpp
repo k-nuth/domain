@@ -20,8 +20,8 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
 
 namespace kth {
 namespace machine {

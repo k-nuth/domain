@@ -7,13 +7,13 @@
 
 #include <cstdint>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 
 using asset_id_t = uint32_t;
 using amount_t = int64_t;
 
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth
 
 #endif  //KTH_KEOKEN_PRIMITIVES_HPP_

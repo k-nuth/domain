@@ -2,14 +2,14 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <knuth/keoken/message/send_tokens.hpp>
+#include <kth/domain/keoken/message/send_tokens.hpp>
 
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 
@@ -137,4 +137,4 @@ void send_tokens::set_amount(amount_t x) {
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

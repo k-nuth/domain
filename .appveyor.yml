@@ -40,7 +40,6 @@ install:
 
 test_script:
   - git submodule init
-  # - git submodule update --remote
   - git submodule update
   # - git fetch --unshallow
   - git fetch origin master:master
@@ -49,6 +48,18 @@ test_script:
   # - git describe master
   # - git describe origin
   # - python ci_utils/print_version.py 
+
+  # - git config core.autocrlf
+  # - python crlf.py
+  # - findstr /r "\r\n" *.py & exit 0
+  # - findstr /r "\r" *.py & exit 0
+
+  # # - dir C:\MinGW
+  # - set PATH=C:\MinGW\bin;%PATH%
+
+  # - IF "%MINGW_CONFIGURATIONS%" NEQ "" (
+  #     gcc --version
+  #   )
 
 
   - ps: |
@@ -73,6 +84,24 @@ test_script:
         $ErrorActionPreference = 'Continue'
       }
 
+  # - ps: |
+  #     If ($env:WAIT_FOR_DEPS -eq 1) {
+  #       conan user
+
+  #       $ErrorActionPreference = 'SilentlyContinue'
+  #       conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
+  #       $ErrorActionPreference = 'Continue'
+
+  #       echo "waiting for infrastructure/0.X@kth/staging ..."
+  #       conan search infrastructure/0.X@kth/staging -r kth_temp > $null
+  #       while($env:lastExitCode -eq 1) {
+  #         Write-Host "."
+  #         Start-Sleep -s 10
+  #         conan search infrastructure/0.X@kth/staging -r kth_temp > $null
+  #       }
+  #       Write-Host "infrastructure/0.X@kth/staging found"
+  #     }
+
   - ps: |
       If ($env:WAIT_FOR_DEPS -eq 1) {
         conan user
@@ -80,24 +109,12 @@ test_script:
         $ErrorActionPreference = 'SilentlyContinue'
         conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
         $ErrorActionPreference = 'Continue'
-        
-        echo "waiting for infrastructure/0.X@kth/staging ..."
-        conan search infrastructure/0.X@kth/staging -r kth_temp > $null
-        while($env:lastExitCode -eq 1) {
-          Write-Host "."
-          Start-Sleep -s 10
-          conan search infrastructure/0.X@kth/staging -r kth_temp > $null
-        }
-        Write-Host "infrastructure/0.X@kth/staging found"
+
+        python ci_utils/wait_for_deps.py domain
       }
-      # Else {
-      #   # python build.py
-      #   PowerShell .\.appveyor\build.ps1
-      # }
 
-
-  - PowerShell .\.appveyor\build.ps1
-
+  #- PowerShell .\.appveyor\build.ps1
+  - python build.py
 
 for:
   -
@@ -121,127 +138,32 @@ for:
           APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
           CONAN_VISUAL_VERSIONS: 16
           CONAN_VISUAL_RUNTIMES: MT
-          # KTH_RUN_TESTS: true
-          KTH_CI_CURRENCY: BCH
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS: 16
-          CONAN_VISUAL_RUNTIMES: MT
-          KTH_CI_CURRENCY: BCH
-          KTH_WITH_KEOKEN: false
-          KTH_RUN_TESTS: true
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS: 16
-          CONAN_VISUAL_RUNTIMES: MT
-          KTH_CI_CURRENCY: BTC
-          KTH_RUN_TESTS: true
-
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS: 16
-          CONAN_VISUAL_RUNTIMES: MD
-          KTH_CI_CURRENCY: BCH
-          KTH_WITH_KEOKEN: false
           KTH_RUN_TESTS: true
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
           CONAN_VISUAL_VERSIONS: 16
           CONAN_VISUAL_RUNTIMES: MD
-          KTH_CI_CURRENCY: BTC
           KTH_RUN_TESTS: true
 
-
-
-
-
-
-
-        # - WAIT_FOR_DEPS: 1
-        #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MT
-        #   # KTH_RUN_TESTS: true
-        #   KTH_CI_CURRENCY: BCH
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-        # # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        # #   CONAN_VISUAL_VERSIONS: 15
-        # #   CONAN_VISUAL_RUNTIMES: MT
-        # #   KTH_CI_CURRENCY: BCH
-        # #   KTH_WITH_KEOKEN: true
-        # #   KTH_RUN_TESTS: true
-        # #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MT
-        #   KTH_CI_CURRENCY: BCH
-        #   KTH_WITH_KEOKEN: false
-        #   KTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MT
-        #   KTH_CI_CURRENCY: BTC
-        #   KTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-        # # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        # #   CONAN_VISUAL_VERSIONS: 15
-        # #   CONAN_VISUAL_RUNTIMES: MD
-        # #   KTH_CI_CURRENCY: BCH
-        # #   KTH_WITH_KEOKEN: true
-        # #   KTH_RUN_TESTS: true
-        # #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MD
-        #   KTH_CI_CURRENCY: BCH
-        #   KTH_WITH_KEOKEN: false
-        #   KTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MD
-        #   KTH_CI_CURRENCY: BTC
-        #   KTH_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-
-
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_VISUAL_RUNTIMES: MT
+          KTH_RUN_TESTS: true
+          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_VISUAL_RUNTIMES: MD
+          KTH_RUN_TESTS: true
+          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
 
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
         #   CONAN_VISUAL_VERSIONS: 14
-        #   KTH_CI_CURRENCY: BCH
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-        #   CONAN_VISUAL_VERSIONS: 14
-        #   KTH_CI_CURRENCY: BTC
-        # - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
 
-        # - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-        #   KTH_CI_CURRENCY: BCH
-        #   KTH_WITH_KEOKEN: true
-
-        - MINGW_CONFIGURATIONS: "9@x86_64@seh@posix"
-          KTH_CI_CURRENCY: BCH
-          KTH_WITH_KEOKEN: false
-        - MINGW_CONFIGURATIONS: "9@x86_64@seh@posix"
-          KTH_CI_CURRENCY: BTC
-
+        # - MINGW_CONFIGURATIONS: "9@x86_64@seh@posix"
         - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-          KTH_CI_CURRENCY: BCH
-          KTH_WITH_KEOKEN: false
-        - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-          KTH_CI_CURRENCY: BTC
-
-
         # - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-        #   KTH_CI_CURRENCY: BCH
-        #   KTH_WITH_KEOKEN: true
-        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-          KTH_CI_CURRENCY: BCH
-          KTH_WITH_KEOKEN: false
-        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-          KTH_CI_CURRENCY: BTC
-
-
         # - MINGW_CONFIGURATIONS: "6@x86_64@seh@posix"
         # - MINGW_CONFIGURATIONS: "5@x86_64@seh@posix"
+        # - MINGW_CONFIGURATIONS: "4.9@x86_64@seh@posix" 
   -
     branches:
       only:
@@ -250,9 +172,6 @@ for:
       - echo "Stable packages are published in Release branches"
     install: 
       - echo "Stable packages are published in Release branches"
-
-
-# MINGW_CONFIGURATIONS: "4.9@x86_64@seh@posix" 
 
 # matrix:
 #   fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.

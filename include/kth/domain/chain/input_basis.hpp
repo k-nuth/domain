@@ -23,8 +23,8 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
 
 namespace kth {
 namespace chain {
@@ -199,6 +199,6 @@ private:
 }  // namespace chain
 }  // namespace kth
 
-//#include <knuth/concepts_undef.hpp>
+//#include <kth/domain/concepts_undef.hpp>
 
 #endif // KTH_CHAIN_INPUT_BASIS_HPP_

@@ -29,8 +29,8 @@
 #include <kth/infrastructure/utility/writer.hpp>
 
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
 
 namespace kth {
 namespace chain {
@@ -260,6 +260,6 @@ machine::operation::list operations(script_basis const& script);
 }  // namespace chain
 }  // namespace kth
 
-//#include <knuth/concepts_undef.hpp>
+//#include <kth/domain/concepts_undef.hpp>
 
 #endif // KTH_CHAIN_SCRIPT_BASIS_HPP_

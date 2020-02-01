@@ -2,13 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_BUILT_IN_TYPE_HPP_
-#define KTH_BUILT_IN_TYPE_HPP_
+#ifndef KTH_DOMAIN_BUILT_IN_TYPE_HPP_
+#define KTH_DOMAIN_BUILT_IN_TYPE_HPP_
 
 // #include <cstddef>
 // #include <cstdint>
 
 namespace kth {
+
+//TODO(fernando): use the same trick as std::byte, an enum class
 
 template <typename T>
 struct built_in_t {
@@ -32,4 +34,4 @@ private:
 
 }  // namespace kth
 
-#endif // KTH_BUILT_IN_TYPE_HPP_
+#endif // KTH_DOMAIN_BUILT_IN_TYPE_HPP_

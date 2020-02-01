@@ -2,15 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <knuth/keoken/message/create_asset.hpp>
+#include <kth/domain/keoken/message/create_asset.hpp>
 
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-#include <knuth/keoken/message/base.hpp>
-#include <knuth/keoken/utility.hpp>
+#include <kth/domain/keoken/message/base.hpp>
+#include <kth/domain/keoken/utility.hpp>
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 
@@ -119,4 +119,4 @@ void create_asset::set_amount(amount_t x) {
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth

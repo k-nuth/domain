@@ -18,6 +18,8 @@
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/header.hpp>
 #include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/error.hpp>
@@ -30,8 +32,6 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
 
 namespace kth {
 namespace chain {
@@ -216,6 +216,6 @@ private:
 }  // namespace chain
 }  // namespace kth
 
-//#include <knuth/concepts_undef.hpp>
+//#include <kth/domain/concepts_undef.hpp>
 
 #endif

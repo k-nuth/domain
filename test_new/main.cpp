@@ -13,13 +13,13 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-#include <knuth/keoken/message/base.hpp>
-#include <knuth/keoken/message/create_asset.hpp>
-#include <knuth/keoken/message/send_tokens.hpp>
-#include <knuth/keoken/transaction_extractor.hpp>
-#include <knuth/keoken/utility.hpp>
+#include <kth/domain/keoken/message/base.hpp>
+#include <kth/domain/keoken/message/create_asset.hpp>
+#include <kth/domain/keoken/message/send_tokens.hpp>
+#include <kth/domain/keoken/transaction_extractor.hpp>
+#include <kth/domain/keoken/utility.hpp>
 
-using namespace knuth::keoken;
+using namespace kth::keoken;
 
 using kth::base16_literal;
 using kth::data_chunk;

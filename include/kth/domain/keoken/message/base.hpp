@@ -7,14 +7,14 @@
 
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <knuth/common.hpp>
-#include <knuth/concepts.hpp>
+#include <kth/domain/common.hpp>
+#include <kth/domain/concepts.hpp>
 
 // Platform check.
 static_assert(std::is_same<std::uint8_t, char>::value || std::is_same<std::uint8_t, unsigned char>::value,
               "Knuth requires std::uint8_t to be implemented as char or unsigned char.");
 
-namespace knuth {
+namespace kth {
 namespace keoken {
 namespace message {
 
@@ -32,6 +32,6 @@ void to_data(W& sink, uint16_t version, uint16_t type) {
 
 }  // namespace message
 }  // namespace keoken
-}  // namespace knuth
+}  // namespace kth
 
 #endif  //KTH_KEOKEN_MESSAGE_BASE_HPP_
