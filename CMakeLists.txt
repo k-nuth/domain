@@ -346,7 +346,7 @@ if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-set(kth_domain_sources_just_libbitcoin
+set(kth_domain_sources_just_legacy
         src/chain/block_basis.cpp
         src/chain/block.cpp
         src/chain/chain_state.cpp
@@ -465,8 +465,8 @@ set(kth_domain_sources_just_kth
 )
 
 if (NOT ${CURRENCY} STREQUAL "BCH")
-    set(kth_domain_sources_just_libbitcoin 
-      ${kth_domain_sources_just_libbitcoin}
+    set(kth_domain_sources_just_legacy 
+      ${kth_domain_sources_just_legacy}
       src/chain/witness.cpp
     )
 endif()
@@ -493,7 +493,7 @@ endif()
 
 if (NOT JUST_KTH_SOURCES)
   set(kth_domain_sources 
-    ${kth_domain_sources_just_libbitcoin}
+    ${kth_domain_sources_just_legacy}
   )
 endif()
 
