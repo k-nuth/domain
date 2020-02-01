@@ -103,7 +103,7 @@ test_script:
 
   - PowerShell .\.appveyor\build.ps1
 
-  for:
+for:
   -
     branches:
       only:
