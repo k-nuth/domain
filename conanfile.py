@@ -22,8 +22,8 @@ class KnuthDomainConan(KnuthConanFile):
                "fPIC": [True, False],
                "with_icu": [True, False],
                "with_qrencode": [True, False],
-               "with_tests": [True, False],
-               "with_examples": [True, False],
+               "tests": [True, False],
+               "examples": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
                "microarchitecture": "ANY",
                "fix_march": [True, False],
@@ -34,6 +34,7 @@ class KnuthDomainConan(KnuthConanFile):
                "cxxflags": "ANY",
                "cflags": "ANY",
                "glibcxx_supports_cxx11_abi": "ANY",
+               "cmake_export_compile_commands": [True, False],
     }
 
     #    "with_png": [True, False],
@@ -42,8 +43,8 @@ class KnuthDomainConan(KnuthConanFile):
         "fPIC=True", \
         "with_icu=False", \
         "with_qrencode=False", \
-        "with_tests=False", \
-        "with_examples=False", \
+        "tests=False", \
+        "examples=False", \
         "currency=BCH", \
         "microarchitecture=_DUMMY_",  \
         "fix_march=False", \
@@ -53,7 +54,8 @@ class KnuthDomainConan(KnuthConanFile):
         "cached_rpc_data=False", \
         "cxxflags=_DUMMY_", \
         "cflags=_DUMMY_", \
-        "glibcxx_supports_cxx11_abi=_DUMMY_"
+        "glibcxx_supports_cxx11_abi=_DUMMY_", \
+        "cmake_export_compile_commands=False"
 
         # "with_png=False", \
 
@@ -90,7 +92,6 @@ class KnuthDomainConan(KnuthConanFile):
         KnuthConanFile.config_options(self)
 
     def configure(self):
-        # super(Foo, self).baz(arg)
         KnuthConanFile.configure(self)
 
         if self.options.keoken and self.options.currency != "BCH":
@@ -99,36 +100,25 @@ class KnuthDomainConan(KnuthConanFile):
         else:
             self.options["*"].keoken = self.options.keoken
 
-        self.options["*"].currency = self.options.currency
-        self.output.info("Compiling for currency: %s" % (self.options.currency,))
+        self.options["*"].cached_rpc_data = self.options.cached_rpc_data
 
     def package_id(self):
         KnuthConanFile.package_id(self)
-
-        self.info.options.with_tests = "ANY"
-        self.info.options.with_examples = "ANY"
         
     def build(self):
         cmake = self.cmake_basis()
-
-        #TODO(fernando): see what to put un cmake_basis()
         cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
         cmake.definitions["WITH_KEOKEN"] = option_on_off(self.is_keoken)
-        cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        cmake.definitions["WITH_TESTS_NEW"] = option_on_off(self.options.with_tests)
-        cmake.definitions["WITH_EXAMPLES"] = option_on_off(self.options.with_examples)
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
         # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
         cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
 
-        cmake.definitions["CURRENCY"] = self.options.currency
-
         cmake.configure(source_dir=self.source_folder)
         cmake.build()
 
         #Note: Cmake Tests and Visual Studio doesn't work
-        if self.options.with_tests:
+        if self.options.tests:
             cmake.test()
             # cmake.test(target="tests")
 
