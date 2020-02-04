@@ -151,7 +151,7 @@ data_chunk compact_block::to_data(uint32_t version) const {
     data_sink ostream(data);
     to_data(version, ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 
@@ -263,7 +263,7 @@ data_chunk to_data_header_nonce(compact_block const& block) {
     data_sink ostream(data);
     to_data_header_nonce(block, ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 

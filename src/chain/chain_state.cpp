@@ -752,7 +752,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
 #else   //KTH_CURRENCY_LTC
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
-    BITCOIN_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
+    KTH_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
 
     uint256_t target(bits);
     target *= retarget_timespan(values);
@@ -777,7 +777,7 @@ uint32_t chain_state::retarget_timespan(data const& values) {
 }
 
 uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
-    BITCOIN_ASSERT(values.height != 0);
+    KTH_ASSERT(values.height != 0);
 
     // If the time limit has passed allow a minimum difficulty block.
     if (values.timestamp.self > easy_time_limit(values)) {
@@ -803,7 +803,7 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
 
     // Since the set of heights is either a full retarget range or ends at
     // zero this is not reachable unless the data set is invalid.
-    BITCOIN_ASSERT(false);
+    KTH_ASSERT(false);
     return retarget_proof_of_work_limit;
 }
 
@@ -822,7 +822,7 @@ uint32_t chain_state::easy_time_limit(chain_state::data const& values) {
 bool chain_state::is_retarget_or_non_limit(size_t height, uint32_t bits) {
     // Zero is a retarget height, ensuring termination before height underflow.
     // This is guaranteed, just asserting here to document the safeguard.
-    BITCOIN_ASSERT_MSG(is_retarget_height(0), "loop overflow potential");
+    KTH_ASSERT_MSG(is_retarget_height(0), "loop overflow potential");
 
     return bits != retarget_proof_of_work_limit || is_retarget_height(height);
 }

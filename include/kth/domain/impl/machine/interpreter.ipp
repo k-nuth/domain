@@ -960,7 +960,7 @@ inline
 interpreter::result interpreter::run_op(operation const& op,
                                                program& program) {
     auto const code = op.code();
-    BITCOIN_ASSERT(op.data().empty() || op.is_push());
+    KTH_ASSERT(op.data().empty() || op.is_push());
 
     switch (op.code()) {
         case opcode::push_size_0:

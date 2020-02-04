@@ -78,7 +78,7 @@ data_chunk create_asset::to_data() const {
     data_sink ostream(data);
     to_data(ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 

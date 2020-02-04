@@ -130,7 +130,7 @@ bool program::set_jump_register(operation const& op, int32_t offset) {
 
     // This does not require guard because op_codeseparator can only increment.
     // Even if the opcode is last in the sequnce the increment is valid (end).
-    BITCOIN_ASSERT_MSG(offset == 1, "unguarded jump offset");
+    KTH_ASSERT_MSG(offset == 1, "unguarded jump offset");
 
     jump_ += offset;
     return true;
@@ -162,7 +162,7 @@ void program::push_copy(value_type const& item) {
 
 // This must be guarded.
 inline data_chunk program::pop() {
-    BITCOIN_ASSERT(!empty());
+    KTH_ASSERT(!empty());
     auto const value = primary_.back();
     primary_.pop_back();
     return value;
@@ -298,7 +298,7 @@ bool program::empty() const {
 // This must be guarded (intended for interpreter internal use).
 inline 
 bool program::stack_true(bool clean) const {
-    BITCOIN_ASSERT(!empty());
+    KTH_ASSERT(!empty());
     return stack_to_bool(clean);
 }
 
@@ -339,14 +339,14 @@ bool program::top(number& out_number, size_t maxiumum_size) const {
 inline 
 program::stack_iterator program::position(size_t index) const {
     // Subtracting 1 makes the stack indexes zero-based (unlike satoshi).
-    BITCOIN_ASSERT(index < size());
+    KTH_ASSERT(index < size());
     return (primary_.end() - 1) - index;
 }
 
 inline 
 program::stack_mutable_iterator program::position(size_t index) {
     // Subtracting 1 makes the stack indexes zero-based (unlike satoshi).
-    BITCOIN_ASSERT(index < size());
+    KTH_ASSERT(index < size());
     return (primary_.end() - 1) - index;
 }
 
@@ -383,7 +383,7 @@ void program::push_alternate(value_type&& value) {
 // This must be guarded.
 inline 
 program::value_type program::pop_alternate() {
-    BITCOIN_ASSERT(!alternate_.empty());
+    KTH_ASSERT(!alternate_.empty());
     auto const value = alternate_.back();
     alternate_.pop_back();
     return value;
@@ -401,7 +401,7 @@ void program::open(bool value) {
 // This must be guarded.
 inline 
 void program::negate() {
-    BITCOIN_ASSERT(!closed());
+    KTH_ASSERT(!closed());
 
     auto const value = condition_.back();
     negative_count_ += (value ? 1 : -1);
@@ -414,7 +414,7 @@ void program::negate() {
 // This must be guarded.
 inline 
 void program::close() {
-    BITCOIN_ASSERT(!closed());
+    KTH_ASSERT(!closed());
 
     auto const value = condition_.back();
     negative_count_ += (value ? 0 : -1);

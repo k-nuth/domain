@@ -26,7 +26,7 @@ namespace machine {
 //     : code_(invalid_code)
 // {
 //     // The failed-state code must be disabled so it will never pass evaluation.
-//     BITCOIN_ASSERT(is_disabled());
+//     KTH_ASSERT(is_disabled());
 // }
 
 inline 
@@ -169,7 +169,7 @@ uint32_t operation::read_data_size(opcode code, R& source) {
 //*****************************************************************************
 inline 
 opcode operation::opcode_from_size(size_t size) {
-    BITCOIN_ASSERT(size <= max_uint32);
+    KTH_ASSERT(size <= max_uint32);
     constexpr auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
 
     if (size <= op_75) {
@@ -224,15 +224,15 @@ opcode operation::opcode_from_data(data_chunk const& data, bool minimal) {
 
 inline 
 opcode operation::opcode_from_positive(uint8_t value) {
-    BITCOIN_ASSERT(value >= number::positive_1);
-    BITCOIN_ASSERT(value <= number::positive_16);
+    KTH_ASSERT(value >= number::positive_1);
+    KTH_ASSERT(value <= number::positive_16);
     constexpr auto op_81 = static_cast<uint8_t>(opcode::push_positive_1);
     return static_cast<opcode>(value + op_81 - 1);
 }
 
 inline 
 uint8_t operation::opcode_to_positive(opcode code) {
-    BITCOIN_ASSERT(is_positive(code));
+    KTH_ASSERT(is_positive(code));
     constexpr auto op_81 = static_cast<uint8_t>(opcode::push_positive_1);
     return static_cast<uint8_t>(code) - op_81 + 1;
 }

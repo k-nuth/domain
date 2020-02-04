@@ -67,7 +67,7 @@ inline bool is_valid_data_size(opcode code, size_t size) {
 }
 
 inline std::string trim_token(std::string const& token) {
-    BITCOIN_ASSERT(token.size() > 1);
+    KTH_ASSERT(token.size() > 1);
     return std::string(token.begin() + 1, token.end() - 1);
 }
 
@@ -175,7 +175,7 @@ data_chunk operation::to_data() const {
     data_sink ostream(data);
     to_data(ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 

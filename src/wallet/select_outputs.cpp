@@ -68,7 +68,7 @@ void select_outputs::greedy(points_value& out, const points_value& unspent, uint
         }
     }
 
-    BITCOIN_ASSERT_MSG(false, "unreachable code reached");
+    KTH_ASSERT_MSG(false, "unreachable code reached");
 }
 
 void select_outputs::individual(points_value& out, const points_value& unspent, uint64_t minimum_value) {

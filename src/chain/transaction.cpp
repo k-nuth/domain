@@ -255,7 +255,7 @@ data_chunk transaction::to_data(bool wire, bool witness
            );
 
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 

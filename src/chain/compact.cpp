@@ -39,7 +39,7 @@ bool is_nonzero(uint32_t compact) {
 
 inline 
 uint8_t log_256(uint32_t mantissa) {
-    BITCOIN_ASSERT_MSG(mantissa <= 0x00ffffff, "mantissa log256 is 4");
+    KTH_ASSERT_MSG(mantissa <= 0x00ffffff, "mantissa log256 is 4");
     return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));     //NOLINT
 }
 
@@ -51,13 +51,13 @@ bool is_overflow(uint8_t exponent, uint32_t mantissa) {
 
 inline 
 uint32_t shift_low(uint8_t exponent) {
-    BITCOIN_ASSERT(exponent <= 3);
+    KTH_ASSERT(exponent <= 3);
     return 8 * (3 - exponent);  //NOLINT
 }
 
 inline 
 uint32_t shift_high(uint8_t exponent) {
-    BITCOIN_ASSERT(exponent > 3);
+    KTH_ASSERT(exponent > 3);
     return 8 * (exponent - 3);  //NOLINT
 }
 
@@ -155,8 +155,8 @@ uint32_t compact::from_big(uint256_t const& big) {
         mantissa >>= 8u;    //NOLINT
     }
 
-    BITCOIN_ASSERT_MSG((exponent & first_byte_mask) == 0, "size exceess");
-    BITCOIN_ASSERT_MSG((mantissa & mantissa_mask) == 0, "value exceess");
+    KTH_ASSERT_MSG((exponent & first_byte_mask) == 0, "size exceess");
+    KTH_ASSERT_MSG((mantissa & mantissa_mask) == 0, "value exceess");
 
     // Assemble the compact notation.
     return (static_cast<uint32_t>(exponent) << mantissa_bits) | mantissa;
