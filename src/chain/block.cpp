@@ -260,7 +260,7 @@ data_chunk block::to_data(bool witness) const {
     // data_sink ostream(data);
     // to_data(ostream);
     // ostream.flush();
-    // BITCOIN_ASSERT(data.size() == size);
+    // KTH_ASSERT(data.size() == size);
     // return data;
 }
 
@@ -357,9 +357,9 @@ chain::block block::genesis_mainnet() {
     decode_base16(data, encoded_mainnet_genesis_block);
     auto const genesis = chain::block::factory_from_data(data);
 
-    BITCOIN_ASSERT(genesis.is_valid());
-    BITCOIN_ASSERT(genesis.transactions().size() == 1);
-    BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+    KTH_ASSERT(genesis.is_valid());
+    KTH_ASSERT(genesis.transactions().size() == 1);
+    KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
     return genesis;
 }
 
@@ -368,9 +368,9 @@ chain::block block::genesis_testnet() {
     decode_base16(data, encoded_testnet_genesis_block);
     auto const genesis = chain::block::factory_from_data(data);
 
-    BITCOIN_ASSERT(genesis.is_valid());
-    BITCOIN_ASSERT(genesis.transactions().size() == 1);
-    BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+    KTH_ASSERT(genesis.is_valid());
+    KTH_ASSERT(genesis.transactions().size() == 1);
+    KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
     return genesis;
 }
 
@@ -379,9 +379,9 @@ chain::block block::genesis_regtest() {
     decode_base16(data, encoded_regtest_genesis_block);
     auto const genesis = chain::block::factory_from_data(data);
 
-    BITCOIN_ASSERT(genesis.is_valid());
-    BITCOIN_ASSERT(genesis.transactions().size() == 1);
-    BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+    KTH_ASSERT(genesis.is_valid());
+    KTH_ASSERT(genesis.transactions().size() == 1);
+    KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
     return genesis;
 }
 
@@ -419,7 +419,7 @@ block::indexes block::locator_heights(size_t top) {
     heights.push_back(0);
 
     // Validate the reservation computation.
-    BITCOIN_ASSERT(heights.size() <= reservation);
+    KTH_ASSERT(heights.size() <= reservation);
     return heights;
 }
 

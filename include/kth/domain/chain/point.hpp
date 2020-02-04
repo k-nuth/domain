@@ -130,7 +130,7 @@ public:
         if (wire) {
             sink.write_4_bytes_little_endian(index_);
         } else {
-            BITCOIN_ASSERT(index_ == null_index || index_ < max_uint16);
+            KTH_ASSERT(index_ == null_index || index_ < max_uint16);
             sink.write_2_bytes_little_endian(static_cast<uint16_t>(index_));
         }
     }

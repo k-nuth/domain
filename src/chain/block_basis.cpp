@@ -251,7 +251,7 @@ data_chunk block_basis::to_data(size_t serialized_size, bool /*witness*/) const 
     data_sink ostream(data);
     to_data(ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 
@@ -333,9 +333,9 @@ hash_digest block_basis::hash() const {
 //     decode_base16(data, encoded_mainnet_genesis_block);
 //     auto const genesis = chain::block_basis::factory_from_data(data);
 
-//     BITCOIN_ASSERT(genesis.is_valid());
-//     BITCOIN_ASSERT(genesis.transactions().size() == 1);
-//     BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+//     KTH_ASSERT(genesis.is_valid());
+//     KTH_ASSERT(genesis.transactions().size() == 1);
+//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
 //     return genesis;
 // }
 
@@ -344,9 +344,9 @@ hash_digest block_basis::hash() const {
 //     decode_base16(data, encoded_testnet_genesis_block);
 //     auto const genesis = chain::block_basis::factory_from_data(data);
 
-//     BITCOIN_ASSERT(genesis.is_valid());
-//     BITCOIN_ASSERT(genesis.transactions().size() == 1);
-//     BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+//     KTH_ASSERT(genesis.is_valid());
+//     KTH_ASSERT(genesis.transactions().size() == 1);
+//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
 //     return genesis;
 // }
 
@@ -355,9 +355,9 @@ hash_digest block_basis::hash() const {
 //     decode_base16(data, encoded_regtest_genesis_block);
 //     auto const genesis = chain::block_basis::factory_from_data(data);
 
-//     BITCOIN_ASSERT(genesis.is_valid());
-//     BITCOIN_ASSERT(genesis.transactions().size() == 1);
-//     BITCOIN_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
+//     KTH_ASSERT(genesis.is_valid());
+//     KTH_ASSERT(genesis.transactions().size() == 1);
+//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
 //     return genesis;
 // }
 
@@ -395,7 +395,7 @@ block_basis::indexes block_basis::locator_heights(size_t top) {
     heights.push_back(0);
 
     // Validate the reservation computation.
-    BITCOIN_ASSERT(heights.size() <= reservation);
+    KTH_ASSERT(heights.size() <= reservation);
     return heights;
 }
 

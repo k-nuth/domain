@@ -144,7 +144,7 @@ data_chunk script_basis::operations_to_data(operation::list const& ops) {
     };
 
     std::for_each(ops.begin(), ops.end(), concatenate);
-    BITCOIN_ASSERT(out.size() == size);
+    KTH_ASSERT(out.size() == size);
     return out;
 }
 
@@ -181,7 +181,7 @@ data_chunk script_basis::to_data(bool prefix) const {
     data_sink ostream(data);
     to_data(ostream, prefix);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 
@@ -283,7 +283,7 @@ data_chunk const& script_basis::bytes() const {
 inline 
 hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
-    BITCOIN_ASSERT(!tx.is_coinbase());
+    KTH_ASSERT(!tx.is_coinbase());
 
     auto serialized = tx.to_data(true, false);
     extend_data(serialized, to_little_endian(sighash_type));
@@ -321,7 +321,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 //     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 //     ins.reserve(any ? 1 : inputs.size());
 
-//     BITCOIN_ASSERT(input_index < inputs.size());
+//     KTH_ASSERT(input_index < inputs.size());
 //     auto const& self = inputs[input_index];
 
 //     if (any) {
@@ -349,7 +349,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 //     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 //     ins.reserve(any ? 1 : inputs.size());
 
-//     BITCOIN_ASSERT(input_index < inputs.size());
+//     KTH_ASSERT(input_index < inputs.size());
 //     auto const& self = inputs[input_index];
 
 //     if (any) {
@@ -370,7 +370,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 //     auto const& outputs = tx.outputs();
 //     output::list outs(input_index + 1);
 
-//     BITCOIN_ASSERT(input_index < outputs.size());
+//     KTH_ASSERT(input_index < outputs.size());
 //     outs.back() = outputs[input_index];
 
 //     // Move new inputs and new outputs to new transaction.
@@ -386,7 +386,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 //     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 //     ins.reserve(any ? 1 : inputs.size());
 
-//     BITCOIN_ASSERT(input_index < inputs.size());
+//     KTH_ASSERT(input_index < inputs.size());
 //     auto const& self = inputs[input_index];
 
 //     if (any) {
@@ -462,7 +462,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 
 //     std::for_each(outs.begin(), outs.end(), write);
 //     ostream.flush();
-//     BITCOIN_ASSERT(data.size() == size);
+//     KTH_ASSERT(data.size() == size);
 //     return bitcoin_hash(data);
 // }
 
@@ -484,7 +484,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 
 //     std::for_each(ins.begin(), ins.end(), write);
 //     ostream.flush();
-//     BITCOIN_ASSERT(data.size() == size);
+//     KTH_ASSERT(data.size() == size);
 //     return bitcoin_hash(data);
 // }
 
@@ -506,7 +506,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 
 //     std::for_each(ins.begin(), ins.end(), write);
 //     ostream.flush();
-//     BITCOIN_ASSERT(data.size() == size);
+//     KTH_ASSERT(data.size() == size);
 //     return bitcoin_hash(data);
 // }
 
@@ -521,7 +521,7 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
                                                       uint64_t value,
                                                       uint8_t sighash_type) {
     // Unlike unversioned algorithm this does not allow an invalid input index.
-    BITCOIN_ASSERT(input_index < tx.inputs().size());
+    KTH_ASSERT(input_index < tx.inputs().size());
     auto const& input = tx.inputs()[input_index];
     auto const size = preimage_size(script_code.serialized_size(true));
 
@@ -581,7 +581,7 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
     sink_w.write_4_bytes_little_endian(sighash_type);
 
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return bitcoin_hash(data);
 }
 
@@ -603,7 +603,7 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
 //             return generate_version_0_signature_hash(tx, input_index, script_code, value, sighash_type);
 //         case script_version::reserved:
 //         default:
-//             BITCOIN_ASSERT_MSG(false, "invalid script version");
+//             KTH_ASSERT_MSG(false, "invalid script version");
 //             return {};
 //     }
 // }

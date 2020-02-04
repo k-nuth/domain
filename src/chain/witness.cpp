@@ -196,7 +196,7 @@ data_chunk witness::to_data(bool prefix) const {
     data_sink ostream(data);
     to_data(ostream, prefix);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 
@@ -253,17 +253,17 @@ size_t witness::size() const {
 }
 
 data_chunk const& witness::front() const {
-    BITCOIN_ASSERT(!stack_.empty());
+    KTH_ASSERT(!stack_.empty());
     return stack_.front();
 }
 
 data_chunk const& witness::back() const {
-    BITCOIN_ASSERT(!stack_.empty());
+    KTH_ASSERT(!stack_.empty());
     return stack_.back();
 }
 
 data_chunk const& witness::operator[](size_t index) const {
-    BITCOIN_ASSERT(index < stack_.size());
+    KTH_ASSERT(index < stack_.size());
     return stack_[index];
 }
 
@@ -310,7 +310,7 @@ bool witness::is_reserved_pattern(data_stack const& stack) {
 // private
 // This is an internal optimization over using script::to_pay_key_hash_pattern.
 operation::list witness::to_pay_key_hash(data_chunk&& program) {
-    BITCOIN_ASSERT(program.size() == short_hash_size);
+    KTH_ASSERT(program.size() == short_hash_size);
 
     return operation::list{
         {opcode::dup},

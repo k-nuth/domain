@@ -161,7 +161,7 @@ data_chunk transaction_basis::to_data(bool wire, bool witness) const {
     to_data(ostream, wire, witness_val(witness));
 
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 
@@ -799,7 +799,7 @@ hash_digest to_outputs(transaction_basis const& tx) {
 
     std::for_each(outs.begin(), outs.end(), write);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return bitcoin_hash(data);
 }
 
@@ -821,7 +821,7 @@ hash_digest to_inpoints(transaction_basis const& tx) {
 
     std::for_each(ins.begin(), ins.end(), write);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return bitcoin_hash(data);
 }
 
@@ -843,7 +843,7 @@ hash_digest to_sequences(transaction_basis const& tx) {
 
     std::for_each(ins.begin(), ins.end(), write);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return bitcoin_hash(data);
 }
 

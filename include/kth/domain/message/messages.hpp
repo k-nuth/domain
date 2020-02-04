@@ -157,7 +157,7 @@ data_chunk serialize(uint32_t version, const Message& packet, uint32_t magic) {
     data_sink ostream(data);
     packet.to_data(version, ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == message_size);
+    KTH_ASSERT(data.size() == message_size);
 
     // Create the payload checksum without copying the buffer.
     data_slice slice(data.data() + heading_size, data.data() + message_size);

@@ -125,7 +125,7 @@ data_chunk input_basis::to_data(bool wire, bool witness) const {
     data_sink ostream(data);
     to_data(ostream, wire, witness_val(witness));
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 
@@ -259,12 +259,12 @@ bool input_basis::is_locked(size_t block_height, uint32_t median_time_past) cons
 
     if ((sequence_ & relative_locktime_time_locked) != 0) {
         // Median time past must be monotonically-increasing by block.
-        BITCOIN_ASSERT(median_time_past >= prevout.median_time_past);
+        KTH_ASSERT(median_time_past >= prevout.median_time_past);
         auto const age_seconds = median_time_past - prevout.median_time_past;
         return age_seconds < (minimum << relative_locktime_seconds_shift);
     }
 
-    BITCOIN_ASSERT(block_height >= prevout.height);
+    KTH_ASSERT(block_height >= prevout.height);
     auto const age_blocks = block_height - prevout.height;
     return age_blocks < minimum;
 }
@@ -277,7 +277,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
 #endif
     
     auto const& prevout = previous_output_.validation.cache.script();
-    ////BITCOIN_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");
+    ////KTH_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");
 
     // Penalize quadratic signature operations (bip141).
     auto const sigops_factor = bip141 ? fast_sigops_factor : 1U;
@@ -310,7 +310,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
 
 // This requires that previous outputs have been populated.
 bool input_basis::extract_embedded_script(chain::script& out) const {
-    ////BITCOIN_ASSERT(previous_output_.is_valid());
+    ////KTH_ASSERT(previous_output_.is_valid());
     auto const& ops = script_.operations();
     auto const& prevout_script = previous_output_.validation.cache.script();
 

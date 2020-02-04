@@ -18,10 +18,10 @@ static auto const primes = hash_literal(PRIMES);
 
 static uint32_t factory(int32_t logical_exponent, bool negative, uint32_t mantissa) {
     // The exponent of a non-zero mantissa is valid from -3 to +29.
-    BITCOIN_ASSERT(logical_exponent >= -3 && logical_exponent <= 252);
+    KTH_ASSERT(logical_exponent >= -3 && logical_exponent <= 252);
 
     // The mantissa may not intrude on the sign bit or the exponent.
-    BITCOIN_ASSERT((mantissa & 0xff800000) == 0);
+    KTH_ASSERT((mantissa & 0xff800000) == 0);
 
     // The logical 0 exponent is represented as 3, so consider that the decimal point.
     uint32_t const exponent = logical_exponent + 3;

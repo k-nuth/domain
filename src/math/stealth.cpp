@@ -25,7 +25,7 @@ bool is_stealth_script(script const& script) {
         return false;
     }
 
-    BITCOIN_ASSERT(script.size() == 2);
+    KTH_ASSERT(script.size() == 2);
     return (script[1].data().size() >= hash_size);
 }
 

@@ -134,7 +134,7 @@ data_chunk to_data_header_nonce(block const& block, uint64_t nonce) {
     data_sink ostream(data);
     to_data_header_nonce(block, nonce, ostream);
     ostream.flush();
-    BITCOIN_ASSERT(data.size() == size);
+    KTH_ASSERT(data.size() == size);
     return data;
 }
 

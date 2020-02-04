@@ -268,7 +268,7 @@ static bool create_token(encrypted_token& out_token,
                          data_slice owner_salt,
                          const ek_entropy& owner_entropy,
                          const byte_array<parse_encrypted_token::prefix_size>& prefix) {
-    BITCOIN_ASSERT(owner_salt.size() == ek_salt_size ||
+    KTH_ASSERT(owner_salt.size() == ek_salt_size ||
                    owner_salt.size() == ek_entropy_size);
 
     auto const lot_sequence = owner_salt.size() == ek_salt_size;
