@@ -115,12 +115,12 @@ class KnuthDomainConan(KnuthConanFile):
         cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
 
         cmake.configure(source_dir=self.source_folder)
-        cmake.build()
-
-        #Note: Cmake Tests and Visual Studio doesn't work
-        if self.options.tests:
-            cmake.test()
-            # cmake.test(target="tests")
+        if not self.options.cmake_export_compile_commands:
+            cmake.build()
+            #Note: Cmake Tests and Visual Studio doesn't work
+            if self.options.tests:
+                cmake.test()
+                # cmake.test(target="tests")
 
     def imports(self):
         self.copy("*.h", "", "include")
