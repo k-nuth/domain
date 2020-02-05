@@ -8,7 +8,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <kth/domain/built_in_type.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/version.hpp>
 #include <kth/infrastructure/compat.hpp>
@@ -218,49 +217,22 @@ constexpr uint32_t bip9_version_base = 0x20000000;
 
 #ifdef KTH_CURRENCY_BCH
 
-struct monolith_t : built_in_t<uint64_t> {
-    using base = built_in_t<uint64_t>;
-    using base::base;
-};
+// enum class monolith_t : uint64_t {};
+// enum class magnetic_anomaly_t : uint64_t {};
+// enum class great_wall_t : uint64_t {};
+// enum class graviton_t : uint64_t {};
+enum class phonon_t : uint64_t {};
+enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
-struct magnetic_anomaly_t : built_in_t<uint64_t> {
-    using base = built_in_t<uint64_t>;
-    using base::base;
-};
-
-struct great_wall_t : built_in_t<uint64_t> {
-    using base = built_in_t<uint64_t>;
-    using base::base;
-};
-
-struct graviton_t : built_in_t<uint64_t> {
-    using base = built_in_t<uint64_t>;
-    using base::base;
-};
-
-
-// // August 1, 2017 hard fork
-// consensus.uahfHeight = 478558;
-
-// // November 13, 2017 hard fork
-// consensus.daaHeight = 504031;
-
-// // November 15, 2018 hard fork
-// consensus.magneticAnomalyHeight = 556766;
-
-// // Wed, 15 May 2019 12:00:00 UTC hard fork
-// consensus.greatWallActivationTime = 1557921600;
-
-// // Nov 15, 2019 12:00:00 UTC protocol upgrade
-// consensus.gravitonActivationTime = 1573819200;
-
-
-// constexpr size_t          bch_activation_height = 478559 //478558;            //2017-August-01   hard fork
-// constexpr uint32_t        bch_daa_activation_time = 1510600000;               //2017-November-13 hard fork
-// constexpr uint32_t        bch_monolith_activation_time = 1526400000;          //2018-May-15      hard fork
+// constexpr size_t             bch_activation_height = 478559 //478558;            //2017-August-01   hard fork
+// constexpr uint32_t           bch_daa_activation_time = 1510600000;               //2017-November-13 hard fork
+// constexpr uint32_t           bch_monolith_activation_time = 1526400000;          //2018-May-15      hard fork
 // constexpr magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November-15 hard fork
-constexpr great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15      hard fork
-constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
+// constexpr great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15      hard fork
+// constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
+constexpr phonon_t           bch_phonon_activation_time{1589544000};             //2020-May-15      hard fork
+constexpr unnamed_t          bch_unnamed_activation_time{9999999999};            //2020-Nov-15      hard fork
+
 
 // inline constexpr
 // bool is_uahf_enabled(const Config &config, int nHeight) {
@@ -456,28 +428,73 @@ static const config::checkpoint mainnet_magnetic_anomaly_active_checkpoint{
 static const config::checkpoint testnet_magnetic_anomaly_active_checkpoint{
     "00000000000001fae0095cd4bea16f1ce8ab63f3f660a03c6d8171485f484b24", 1267996};
 
-
-        // // August 1, 2017 hard fork
-        // consensus.uahfHeight = 1155875;
-
-        // // November 13, 2017 hard fork
-        // consensus.daaHeight = 1188697;
-
-        // // November 15, 2018 hard fork
-        // consensus.magneticAnomalyHeight = 1267996;
-
-        // // Wed, 15 May 2019 12:00:00 UTC hard fork
-        // consensus.greatWallActivationTime = 1557921600;
-
-        // // Nov 15, 2019 12:00:00 UTC protocol upgrade
-        // consensus.gravitonActivationTime = 1573819200;
-
-
-
 //2019-May hard fork
+static const config::checkpoint mainnet_great_wall_active_checkpoint{
+    "000000000000000001b4b8e36aec7d4f9671a47872cb9a74dc16ca398c7dcc18", 582680};
+
+static const config::checkpoint testnet_great_wall_active_checkpoint{
+    "00000000000000479138892ef0e4fa478ccc938fb94df862ef5bde7e8dee23d3", 1303885};
+
+//2019-Nov hard fork
+static const config::checkpoint mainnet_graviton_active_checkpoint{
+    "000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136};
+
+static const config::checkpoint testnet_graviton_active_checkpoint{
+    "00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712};
+
+
+// // UAHF fork block.
+// {478558, BlockHash::fromHex("0000000000000000011865af4122fe3b144e2cbeea86142e8ff2fb4107352d43")},
+// // Nov, 13 DAA activation block.
+// {504031, BlockHash::fromHex("0000000000000000011ebf65b60d0a3de80b8175be709d653b4c1a1beeb6ab9c")},
+// // Monolith activation.
+// {530359, BlockHash::fromHex("0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103")},
+// // Magnetic anomaly activation.
+// {556767, BlockHash::fromHex("0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c")},
+// // Great wall activation.
+// {582680, BlockHash::fromHex("000000000000000001b4b8e36aec7d4f9671a47872cb9a74dc16ca398c7dcc18")},
+// // Graviton activation.
+// {609136, BlockHash::fromHex("000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1")},
+
+// ABC Mainnet
+// // August 1, 2017 hard fork
+// consensus.uahfHeight = 478558;
+
+// // November 13, 2017 hard fork
+// consensus.daaHeight = 504031;
+
+// // November 15, 2018 hard fork
+// consensus.magneticAnomalyHeight = 556766;
+
+// // November 15, 2019 protocol upgrade
+// consensus.gravitonHeight = 609135;
+
+// // May 15, 2020 12:00:00 UTC protocol upgrade
+// consensus.phononActivationTime = 1589544000;
+
+// ABC Testnet
+// // August 1, 2017 hard fork
+// consensus.uahfHeight = 1155875;
+
+// // November 13, 2017 hard fork
+// consensus.daaHeight = 1188697;
+
+// // November 15, 2018 hard fork
+// consensus.magneticAnomalyHeight = 1267996;
+
+// // November 15, 2019 protocol upgrade
+// consensus.gravitonHeight = 1341711;
+
+// // May 15, 2020 12:00:00 UTC protocol upgrade
+// consensus.phononActivationTime = 1589544000;
+
+
+
+
+//2020-May hard fork
 // Complete after the hard fork
 
-//2019-November hard fork
+//2020-Nov hard fork
 // Complete after the hard fork
 
 #endif

@@ -33,6 +33,14 @@ bool witness_val(bool x) {
 #define KTH_DEF_WITN_ARG bool witness /*= false*/       //NOLINT
 #endif
 
+
+//TODO(fernando): move to infrastructure
+//C++14
+template <typename E>
+constexpr auto to_underlying(E e) noexcept {
+    return static_cast<std::underlying_type_t<E>>(e);
+}
+
 }  // namespace kth
 
 #endif  //KTH_DOMAIN_COMMON_HPP_

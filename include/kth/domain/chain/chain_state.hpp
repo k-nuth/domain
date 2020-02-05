@@ -28,17 +28,7 @@ public:
     using bitss = std::deque<uint32_t>;
     using versions = std::deque<uint32_t>;
     using timestamps = std::deque<uint32_t>;
-
-    // typedef struct {
-    //     size_t count;
-    //     size_t high;
-    // } range;
-
-    using range = struct {
-        size_t count;
-        size_t high;
-    };
-
+    using range = struct {size_t count; size_t high;};
     using ptr = std::shared_ptr<chain_state>;
     using checkpoints = config::checkpoint::list;
 
@@ -49,7 +39,8 @@ public:
     /// minimizing overall querying.
     struct map {
         // This sentinel indicates that the value was not requested.
-        static const size_t unrequested = max_size_t;
+        static 
+        const size_t unrequested = max_size_t;
 
         /// [block - 1, floor(block - 2016, 0)] mainnet: 1, testnet: 2016|0
         range bits;
@@ -120,9 +111,11 @@ public:
     };
 
     /// Checkpoints must be ordered by height with greatest at back.
-    static map get_map(size_t height, const checkpoints& checkpoints, uint32_t forks);
+    static 
+    map get_map(size_t height, const checkpoints& checkpoints, uint32_t forks);
 
-    static uint32_t signal_version(uint32_t forks);
+    static 
+    uint32_t signal_version(uint32_t forks);
 
     /// Create pool state from top chain top block state.
     chain_state(chain_state const& top);
@@ -138,37 +131,64 @@ public:
     chain_state(data&& values, const checkpoints& checkpoints, uint32_t forks
 #ifdef KTH_CURRENCY_BCH
                 // , magnetic_anomaly_t magnetic_anomaly_activation_time
-                , great_wall_t great_wall_activation_time
-                , graviton_t graviton_activation_time
+                // , great_wall_t great_wall_activation_time
+                // , graviton_t graviton_activation_time
+                , phonon_t phonon_activation_time
+                , unnamed_t unnamed_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
     /// Properties.
-    [[nodiscard]] size_t height() const;
-    [[nodiscard]] uint32_t enabled_forks() const;
-    [[nodiscard]] uint32_t minimum_version() const;
-    [[nodiscard]] uint32_t median_time_past() const;
-    [[nodiscard]] uint32_t work_required() const;
+    [[nodiscard]] 
+    size_t height() const;
+
+    [[nodiscard]] 
+    uint32_t enabled_forks() const;
+
+    [[nodiscard]] 
+    uint32_t minimum_version() const;
+
+    [[nodiscard]] 
+    uint32_t median_time_past() const;
+
+    [[nodiscard]] 
+    uint32_t work_required() const;
 
 #ifdef KTH_CURRENCY_BCH
+    // [[nodiscard]] 
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
-    [[nodiscard]] great_wall_t great_wall_activation_time() const;
-    [[nodiscard]] graviton_t graviton_activation_time() const;
+    // [[nodiscard]] 
+    // great_wall_t great_wall_activation_time() const;
+
+    // [[nodiscard]] 
+    // graviton_t graviton_activation_time() const;
+    
+    [[nodiscard]] 
+    phonon_t phonon_activation_time() const;
+
+    [[nodiscard]] 
+    unnamed_t unnamed_activation_time() const;
+
 #endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
 
     /// Determine if the fork is set for this block.
-    [[nodiscard]] bool is_enabled(machine::rule_fork fork) const;
+    [[nodiscard]] 
+    bool is_enabled(machine::rule_fork fork) const;
 
     /// Determine if this block hash fails a checkpoint at this height.
-    [[nodiscard]] bool is_checkpoint_conflict(hash_digest const& hash) const;
+    [[nodiscard]] 
+    bool is_checkpoint_conflict(hash_digest const& hash) const;
 
     /// This block height is less than or equal to that of the top checkpoint.
-    [[nodiscard]] bool is_under_checkpoint() const;
+    [[nodiscard]] 
+    bool is_under_checkpoint() const;
 
-    static bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
+    static 
+    bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
 #ifdef KTH_CURRENCY_BCH
     static uint256_t difficulty_adjustment_cash(uint256_t const& target);
@@ -180,11 +200,23 @@ public:
     static 
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
-    [[nodiscard]] bool is_monolith_enabled() const;
-    [[nodiscard]] bool is_magnetic_anomaly_enabled() const;
-    [[nodiscard]] bool is_great_wall_enabled() const;
-    [[nodiscard]] bool is_graviton_enabled() const;
+    [[nodiscard]] 
+    bool is_monolith_enabled() const;
 
+    [[nodiscard]] 
+    bool is_magnetic_anomaly_enabled() const;
+
+    [[nodiscard]] 
+    bool is_great_wall_enabled() const;
+
+    [[nodiscard]] 
+    bool is_graviton_enabled() const;
+
+    [[nodiscard]] 
+    bool is_phonon_enabled() const;
+
+    [[nodiscard]] 
+    bool is_unnamed_enabled() const;
 #endif  //KTH_CURRENCY_BCH
 
 protected:
@@ -196,68 +228,133 @@ protected:
         uint32_t minimum_version;
     };
 
-    static activations activation(data const& values, uint32_t forks
+    static 
+    activations activation(data const& values, uint32_t forks
 #ifdef KTH_CURRENCY_BCH
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
-            , great_wall_t great_wall_activation_time
-            , graviton_t graviton_activation_time
+            // , great_wall_t great_wall_activation_time
+            // , graviton_t graviton_activation_time
+            , phonon_t phonon_activation_time
+            , unnamed_t unnamed_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
-    static uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
+    static 
+    uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
 
-    //    static uint32_t work_required(data const& values, uint32_t forks, bool bitcoin_cash = false);
-    static uint32_t work_required(data const& values, uint32_t forks);
+    // static 
+    // uint32_t work_required(data const& values, uint32_t forks, bool bitcoin_cash = false);
+
+    static 
+    uint32_t work_required(data const& values, uint32_t forks);
 
 private:
-    static size_t bits_count(size_t height, uint32_t forks);
-    static size_t version_count(size_t height, uint32_t forks);
-    static size_t timestamp_count(size_t height, uint32_t forks);
+    static
+    size_t bits_count(size_t height, uint32_t forks);
+    
+    static
+    size_t version_count(size_t height, uint32_t forks);
+
+    static
+    size_t timestamp_count(size_t height, uint32_t forks);
 
     // TODO(kth): make function private again. Moved to public in the litecoin merge
-    static size_t retarget_height(size_t height, uint32_t forks);
+    static
+    size_t retarget_height(size_t height, uint32_t forks);
 
-    static size_t collision_height(size_t height, uint32_t forks);
+    static
+    size_t collision_height(size_t height, uint32_t forks);
 
-    static size_t bip9_bit0_height(size_t height, uint32_t forks);
+    static
+    size_t bip9_bit0_height(size_t height, uint32_t forks);
 
-    static size_t bip9_bit1_height(size_t height, uint32_t forks);
+    static
+    size_t bip9_bit1_height(size_t height, uint32_t forks);
 
-    // static size_t uahf_height(size_t height, uint32_t forks);
-    // static size_t daa_height(size_t height, uint32_t forks);
+    // static 
+    // size_t uahf_height(size_t height, uint32_t forks);
 
-    static bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
-    static bool is_uahf_enabled(size_t height, uint32_t forks);
-    static bool is_daa_enabled(size_t height, uint32_t forks);
-    static bool is_monolith_enabled(size_t height, uint32_t forks);
-    static bool is_magnetic_anomaly_enabled(size_t height, uint32_t forks);
+    // static 
+    // size_t daa_height(size_t height, uint32_t forks);
 
-    static data to_pool(chain_state const& top);
-    static data to_block(chain_state const& pool, block const& block);
-    static data to_header(chain_state const& parent, header const& header);
+    static 
+    bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
+    
+    // ------------------------------------------------------------------------
+#ifdef KTH_CURRENCY_BCH
+    static 
+    bool is_uahf_enabled(size_t height, uint32_t forks);
+    
+    static 
+    bool is_daa_enabled(size_t height, uint32_t forks);
+    
+    static 
+    bool is_monolith_enabled(size_t height, uint32_t forks);
+    
+    static 
+    bool is_magnetic_anomaly_enabled(size_t height, uint32_t forks);
+    
+    static 
+    bool is_great_wall_enabled(size_t height, uint32_t forks);
 
-    static uint32_t work_required_retarget(data const& values);
-    static uint32_t retarget_timespan(chain_state::data const& values);
+    static
+    bool is_graviton_enabled(size_t height, uint32_t forks);
+    
+    // static
+    // bool is_phonon_enabled(size_t height, uint32_t forks);
+
+    // static
+    // bool is_unnamed_enabled(size_t height, uint32_t forks);
+#endif // KTH_CURRENCY_BCH
+    // ------------------------------------------------------------------------
+
+    static 
+    data to_pool(chain_state const& top);
+    
+    static 
+    data to_block(chain_state const& pool, block const& block);
+    
+    static 
+    data to_header(chain_state const& parent, header const& header);
+
+    static 
+    uint32_t work_required_retarget(data const& values);
+
+    static 
+    uint32_t retarget_timespan(chain_state::data const& values);
 
     // TODO(kth): make function private again. Moved to public in the litecoin merge
-    // static bool is_retarget_height(size_t height);
+    // static 
+    // bool is_retarget_height(size_t height);
 
     // easy blocks
-
     //TODO(kth):
 
 #ifdef KTH_CURRENCY_BCH
-    static uint32_t cash_difficulty_adjustment(data const& values);
-    static uint32_t work_required_adjust_cash(data const& values);
+    static 
+    uint32_t cash_difficulty_adjustment(data const& values);
+    
+    static 
+    uint32_t work_required_adjust_cash(data const& values);
 #endif  //KTH_CURRENCY_BCH
 
-    static uint32_t work_required_easy(data const& values);
-    static uint32_t elapsed_time_limit(chain_state::data const& values);
-    static bool is_retarget_or_non_limit(size_t height, uint32_t bits);
+    static 
+    uint32_t work_required_easy(data const& values);
+    
+    static 
+    uint32_t elapsed_time_limit(chain_state::data const& values);
+    
+    static 
+    bool is_retarget_or_non_limit(size_t height, uint32_t bits);
 
-    static uint32_t easy_work_required(data const& values, bool daa_active);
-    static uint32_t easy_time_limit(chain_state::data const& values);
-    static size_t retarget_distance(size_t height);
+    static 
+    uint32_t easy_work_required(data const& values, bool daa_active);
+    
+    static 
+    uint32_t easy_time_limit(chain_state::data const& values);
+    
+    static 
+    size_t retarget_distance(size_t height);
 
     // This is retained as an optimization for other constructions.
     // A similar height clone can be partially computed, reducing query cost.
@@ -276,8 +373,10 @@ private:
 
 #ifdef KTH_CURRENCY_BCH
     // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
-    great_wall_t const great_wall_activation_time_;
-    graviton_t const graviton_activation_time_;
+    // great_wall_t const great_wall_activation_time_;
+    // graviton_t const graviton_activation_time_;
+    phonon_t const phonon_activation_time_;
+    unnamed_t const unnamed_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };
 
