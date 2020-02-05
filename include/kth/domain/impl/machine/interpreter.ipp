@@ -698,7 +698,12 @@ interpreter::result interpreter::op_check_sig_verify(program& program) {
     ec_signature signature;
     der_signature distinguished;
     auto bip66 = chain::script::is_enabled(program.forks(), bip66_rule);
+
+#if ! defined(KTH_CURRENCY_BCH)
     auto bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
+#else
+    auto bip143 = false;
+#endif
 
     auto const public_key = program.pop();
     auto endorsement = program.pop();
@@ -745,55 +750,61 @@ interpreter::result interpreter::op_check_sig(program& program) {
 }
 
 inline 
-interpreter::result interpreter::op_check_multisig_verify(
-    program& program) {
+interpreter::result interpreter::op_check_multisig_verify(program& program) {
     int32_t key_count;
     if ( ! program.pop(key_count)) {
         return error::op_check_multisig_verify1;
-}
+    }
 
     // Multisig script public keys are counted as op codes.
     if ( ! program.increment_operation_count(key_count)) {
         return error::op_check_multisig_verify2;
-}
+    }
 
     data_stack public_keys;
     if ( ! program.pop(public_keys, key_count)) {
         return error::op_check_multisig_verify3;
-}
+    }
 
     int32_t signature_count;
     if ( ! program.pop(signature_count)) {
         return error::op_check_multisig_verify4;
-}
+    }
 
     if (signature_count < 0 || signature_count > key_count) {
         return error::op_check_multisig_verify5;
-}
+    }
 
     data_stack endorsements;
     if ( ! program.pop(endorsements, signature_count)) {
         return error::op_check_multisig_verify6;
-}
+    }
 
     if (program.empty()) {
         return error::op_check_multisig_verify7;
-}
+    }
 
+#if ! defined(KTH_CURRENCY_BCH)
     //*************************************************************************
     // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147.
     //*************************************************************************
     if ( ! program.pop().empty() && chain::script::is_enabled(program.forks(),
                                                             rule_fork::bip147_rule)) {
         return error::op_check_multisig_verify8;
-}
+    }
+#endif
 
     uint8_t sighash;
     ec_signature signature;
     der_signature distinguished;
     auto public_key = public_keys.begin();
     auto bip66 = chain::script::is_enabled(program.forks(), bip66_rule);
+
+#if ! defined(KTH_CURRENCY_BCH)
     auto bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
+#else
+    auto bip143 = false;
+#endif
 
     // Before looping create subscript with endorsements stripped (sort of).
     chain::script script_code(program.subscript());
@@ -801,7 +812,7 @@ interpreter::result interpreter::op_check_multisig_verify(
     // BIP143: find and delete of the signature is not applied for v0.
     if ( ! (bip143 && program.version() == script_version::zero)) {
         script_code.find_and_delete(endorsements);
-}
+    }
 
     // The exact number of signatures are required and must be in order.
     // One key can validate more than one script. So we always advance
@@ -810,12 +821,12 @@ interpreter::result interpreter::op_check_multisig_verify(
         // BIP62: An empty endorsement is not considered lax encoding.
         if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement))) {
             return error::invalid_signature_encoding;
-}
+    }
 
         // Parse DER signature into an EC signature.
         if ( ! parse_signature(signature, distinguished, bip66)) {
             return bip66 ? error::invalid_signature_lax_encoding : error::invalid_signature_encoding;
-}
+    }
 
         // Version condition preserves independence of bip141 and bip143.
         auto version = bip143 ? program.version() : script_version::unversioned;
@@ -826,11 +837,11 @@ interpreter::result interpreter::op_check_multisig_verify(
                                                script_code, program.transaction(), program.input_index(),
                                                version, program.value())) {
                 break;
-}
+            }
 
             if (++public_key == public_keys.end()) {
                 return error::incorrect_signature;
-}
+            }
         }
     }
 
@@ -844,7 +855,7 @@ interpreter::result interpreter::op_check_multisig(program& program) {
     // BIP62: only lax encoding fails the operation.
     if (verified == error::invalid_signature_lax_encoding) {
         return error::op_check_multisig;
-}
+    }
 
     program.push(verified == error::success);
     return error::success;
@@ -856,31 +867,31 @@ interpreter::result interpreter::op_check_locktime_verify(
     // BIP65: nop2 subsumed by checklocktimeverify when bip65 fork is active.
     if ( ! chain::script::is_enabled(program.forks(), rule_fork::bip65_rule)) {
         return op_nop(opcode::nop2);
-}
+    }
 
     auto const& tx = program.transaction();
     auto const input_index = program.input_index();
 
     if (input_index >= tx.inputs().size()) {
         return error::op_check_locktime_verify1;
-}
+    }
 
     // BIP65: the tx sequence is 0xffffffff.
     if (tx.inputs()[input_index].is_final()) {
         return error::op_check_locktime_verify2;
-}
+    }
 
     // BIP65: the stack is empty.
     // BIP65: extend the (signed) script number range to 5 bytes.
     number stack;
     if ( ! program.top(stack, max_check_locktime_verify_number_size)) {
         return error::op_check_locktime_verify3;
-}
+    }
 
     // BIP65: the top stack item is negative.
     if (stack < 0) {
         return error::op_check_locktime_verify4;
-}
+    }
 
     // The top stack item is positive, so cast is safe.
     auto const locktime = static_cast<uint64_t>(stack.int64());
@@ -889,7 +900,7 @@ interpreter::result interpreter::op_check_locktime_verify(
     if ((locktime < locktime_threshold) !=
         (tx.locktime() < locktime_threshold)) {
         return error::op_check_locktime_verify5;
-}
+    }
 
     // BIP65: the stack locktime is greater than the tx locktime.
     return (locktime > tx.locktime()) ? error::op_check_locktime_verify6 : error::success;
@@ -901,26 +912,26 @@ interpreter::result interpreter::op_check_sequence_verify(
     // BIP112: nop3 subsumed by checksequenceverify when bip112 fork is active.
     if ( ! chain::script::is_enabled(program.forks(), rule_fork::bip112_rule)) {
         return op_nop(opcode::nop3);
-}
+    }
 
     auto const& tx = program.transaction();
     auto const input_index = program.input_index();
 
     if (input_index >= tx.inputs().size()) {
         return error::op_check_sequence_verify1;
-}
+    }
 
     // BIP112: the stack is empty.
     // BIP112: extend the (signed) script number range to 5 bytes.
     number stack;
     if ( ! program.top(stack, max_check_sequence_verify_number_size)) {
         return error::op_check_sequence_verify2;
-}
+    }
 
     // BIP112: the top stack item is negative.
     if (stack < 0) {
         return error::op_check_sequence_verify3;
-}
+    }
 
     // The top stack item is positive, so cast is safe.
     auto const sequence = static_cast<uint64_t>(stack.int64());
@@ -928,25 +939,25 @@ interpreter::result interpreter::op_check_sequence_verify(
     // BIP112: the stack sequence is disabled, treat as nop3.
     if ((sequence & relative_locktime_disabled) != 0) {
         return op_nop(opcode::nop3);
-}
+    }
 
     // BIP112: the stack sequence is enabled and tx version less than 2.
     if (tx.version() < relative_locktime_min_version) {
         return error::op_check_sequence_verify4;
-}
+    }
 
     auto const tx_sequence = tx.inputs()[input_index].sequence();
 
     // BIP112: the transaction sequence is disabled.
     if ((tx_sequence & relative_locktime_disabled) != 0) {
         return error::op_check_sequence_verify5;
-}
+    }
 
     // BIP112: the stack sequence type differs from that of tx input.
     if ((sequence & relative_locktime_time_locked) !=
         (tx_sequence & relative_locktime_time_locked)) {
         return error::op_check_sequence_verify6;
-}
+    }
 
     // BIP112: the masked stack sequence is greater than the tx sequence.
     return (sequence & relative_locktime_mask) >

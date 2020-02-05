@@ -46,17 +46,28 @@ enum rule_fork : uint32_t {
     /// Use median time past for locktime (soft fork, feature).
     bip113_rule = 1U << 10,
 
-    //TODO(fernando): check if we have to cancel the following values for coins not equal to BCH
-// #ifdef KTH_CURRENCY_BCH
-    cash_low_s_rule = 1U << 15,
-    // cash_monolith_opcodes = 1u << 16,
-    cash_verify_flags_script_enable_sighash_forkid = 1U << 16,
-    cash_replay_protection = 1U << 17,
-    cash_checkdatasig = 1U << 18,
-    cash_schnorr = 1U << 19,
-    cash_segwit_recovery = 1U << 20,
-// #endif //KTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
+    //TODO(fernando): remove this commented code
+    // cash_low_s_rule = 1U << 15,
+    // // cash_monolith_opcodes = 1u << 16,
+    // cash_verify_flags_script_enable_sighash_forkid = 1U << 16,
+    // cash_replay_protection = 1U << 17,
+    // cash_checkdatasig = 1U << 18,
+    // cash_schnorr = 1U << 19,
+    // cash_segwit_recovery = 1U << 20,
 
+    bch_uahf = 1U << 11,                //2017-Aug Hardfork - Bitcoin Cash UAHF (1501590000)
+    bch_daa  = 1U << 12,                //2017-Nov Hardfork - DAA - (1510600000)
+    bch_monolith = 1U << 13,            //2018-May Hardfork - monolith - (1526400000)
+    bch_magnetic_anomaly = 1U << 14,    //2018-Nov Hardfork - magnetic_anomaly - (1542300000)
+    bch_great_wall = 1U << 15,          //2019-May Hardfork - great_wall - (1557921600)
+    bch_graviton = 1U << 16,            //2019-Nov Hardfork - graviton - (1573819200)
+    // bch_phonon = 1U << 17,              //2020-May Hardfork - phonon - (1589544000)
+    // bch_unnamed = 1U << 18,              //2020-Nov Hardfork - unnamed - (9999999999)
+
+    bch_replay_protection = 1U << 17,
+#else 
+    // Just for segwit coins
     /// Segregated witness consensus layer (soft fork, feature).
     bip141_rule = 1U << 11,
 
@@ -65,6 +76,8 @@ enum rule_fork : uint32_t {
 
     /// Prevent dummy value malleability (soft fork, feature).
     bip147_rule = 1U << 13,
+#endif //KTH_CURRENCY_BCH
+
 
     /// Perform difficulty retargeting (hard fork, regtest).
     retarget = 1U << 30,
@@ -84,11 +97,14 @@ enum rule_fork : uint32_t {
         rule_fork::bip112_rule |
         rule_fork::bip113_rule,
 
+
+#if ! defined(KTH_CURRENCY_BCH)
     /// Rules that use BIP9 bit one first time activation.
     bip9_bit1_group =
         rule_fork::bip141_rule |
         rule_fork::bip143_rule |
         rule_fork::bip147_rule,
+#endif
 
     /// Simple mask to set all bits.
     all_rules = 0xffffffff

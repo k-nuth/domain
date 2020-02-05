@@ -16,19 +16,19 @@
 namespace kth {
 namespace keoken {
 
-//C++11
-template <typename E>
-constexpr
-    typename std::underlying_type<E>::type
-    to_underlying(E e) noexcept {
-    return static_cast<typename std::underlying_type<E>::type>(e);
-}
-
-// //C++14
+// //C++11
 // template <typename E>
-// constexpr auto to_underlying(E e) noexcept {
-//     return static_cast<std::underlying_type_t<E>>(e);
+// constexpr
+//     typename std::underlying_type<E>::type
+//     to_underlying(E e) noexcept {
+//     return static_cast<typename std::underlying_type<E>::type>(e);
 // }
+
+//C++14
+template <typename E>
+constexpr auto to_underlying(E e) noexcept {
+    return static_cast<std::underlying_type_t<E>>(e);
+}
 
 template <Reader R, KTH_IS_READER(R)>
 inline std::string read_null_terminated_string_unlimited(R& source) {
