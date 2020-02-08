@@ -42,4 +42,3 @@ In you want to tune the installation for better performance, please refer to the
 [badge.slack]: https://img.shields.io/badge/slack-badge-orange.svg?logo=slack
 
 <!-- [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg -->
-
