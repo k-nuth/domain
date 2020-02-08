@@ -86,8 +86,6 @@ class KnuthDomainConan(KnuthConanFile):
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@kth/stable")
 
-        # self.bitprim_requires(["secp256k1/0.X@%s/%s"])
-
     def config_options(self):
         KnuthConanFile.config_options(self)
 

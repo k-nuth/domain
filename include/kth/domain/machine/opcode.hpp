@@ -225,7 +225,7 @@ enum class opcode : uint8_t
     nop10 = 185,
 
     //Note(kth): This is implemented through Bitcoin-ABC...
-    //TODO(kth): Implement in the libbitcoin way.
+    //TODO(kth): Implement in the Legacy way.
     // OP_CHECKDATASIG = CScriptOp(0xba)
     // OP_CHECKDATASIGVERIFY = CScriptOp(0xbb)
     // checkdatasig = 186,
