@@ -247,9 +247,14 @@ endif()
 
 if (NOT USE_CONAN)
 # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+# Require kth-infrastructure of at least version 0 and output ${kth_infrastructure_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
     find_package(secp256k1 0 REQUIRED) 
+  endif()
+
+  if (NOT TARGET kth-infrastructure)
+    find_package(kth-infrastructure 0 REQUIRED) 
   endif()
 endif()
 
@@ -588,7 +593,7 @@ if (${CURRENCY} STREQUAL "LTC")
 endif()
 
 if (NOT USE_CONAN)
-  target_link_libraries(kth-domain PUBLIC secp256k1)
+  target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
 endif()
 
 _group_sources(kth-domain "${CMAKE_CURRENT_LIST_DIR}")
