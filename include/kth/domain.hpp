@@ -206,7 +206,7 @@
 #include <kth/domain/wallet/ek_public.hpp>
 #include <kth/domain/wallet/ek_token.hpp>
 #include <kth/domain/wallet/encrypted_keys.hpp>
-// #include <kth/domain/wallet/hd_private.hpp>
+// #include <kth/infrastructure/wallet/hd_private.hpp>
 // #include <kth/domain/wallet/hd_public.hpp>
 #include <kth/domain/wallet/message.hpp>
 // #include <kth/domain/wallet/mini_keys.hpp>
