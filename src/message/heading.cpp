@@ -66,22 +66,6 @@ heading::heading(uint32_t magic, std::string&& command, uint32_t payload_size, u
     : magic_(magic), command_(std::move(command)), payload_size_(payload_size), checksum_(checksum) {
 }
 
-// heading::heading(heading const& x)
-//     : heading(x.magic_, x.command_, x.payload_size_, x.checksum_) {
-// }
-
-// heading::heading(heading&& x) noexcept
-//     : heading(x.magic_, std::move(x.command_), x.payload_size_, x.checksum_) 
-// {}
-
-// heading& heading::operator=(heading&& x) noexcept {
-//     magic_ = x.magic_;
-//     command_ = std::move(x.command_);
-//     payload_size_ = x.payload_size_;
-//     checksum_ = x.checksum_;
-//     return *this;
-// }
-
 bool heading::operator==(heading const& x) const {
     return (magic_ == x.magic_) && (command_ == x.command_) && (payload_size_ == x.payload_size_) && (checksum_ == x.checksum_);
 }
@@ -210,6 +194,12 @@ message_type heading::type() const {
     }
     if (command_ == version::command) {
         return message_type::version;
+    }
+    if (command_ == xverack::command) {
+        return message_type::xverack;
+    }
+    if (command_ == xversion::command) {
+        return message_type::xversion;
     }
 
     return message_type::unknown;

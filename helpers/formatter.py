@@ -46,6 +46,8 @@ files = [
 	, 'message/transaction.cpp'
 	, 'message/verack.cpp'
 	, 'message/version.cpp'
+	, 'message/xverack.cpp'
+	, 'message/xversion.cpp'
 	, 'wallet/message.cpp'
 ]
 

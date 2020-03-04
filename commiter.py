@@ -37,6 +37,9 @@ files = [
 	, 'message/transaction.cpp'
 	, 'message/verack.cpp'
 	, 'message/version.cpp'
+	, 'message/xverack.cpp'
+	, 'message/xversion.cpp'
+
 	, 'wallet/bitcoin_uri.cpp'
 	, 'wallet/ec_private.cpp'
 	, 'wallet/ec_public.cpp'

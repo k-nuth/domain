@@ -21,8 +21,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 // The checksum is ignored by the version command.
 class BC_API version {
@@ -202,7 +201,7 @@ public:
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
@@ -225,14 +224,13 @@ public:
 
         if (effective_version >= level::bip37) {
             sink.write_byte(relay_ ? 1 : 0);
-}
+        }
     }
 
     //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]] bool is_valid() const;
     void reset();
     [[nodiscard]] size_t serialized_size(uint32_t version) const;
-
 
     static std::string const command;
     //    static const bounds version;
@@ -253,7 +251,6 @@ private:
     bool relay_{false};
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

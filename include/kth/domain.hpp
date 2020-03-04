@@ -142,6 +142,9 @@
 #include <kth/domain/message/transaction.hpp>
 #include <kth/domain/message/verack.hpp>
 #include <kth/domain/message/version.hpp>
+#include <kth/domain/message/xverack.hpp>
+#include <kth/domain/message/xversion.hpp>
+
 // #include <kth/infrastructure/unicode/console_streambuf.hpp>
 // #include <kth/infrastructure/unicode/file_lock.hpp>
 // #include <kth/infrastructure/unicode/ifstream.hpp>

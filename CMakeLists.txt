@@ -436,6 +436,8 @@ set(kth_domain_sources_just_legacy
         src/message/transaction.cpp
         src/message/verack.cpp
         src/message/version.cpp
+        src/message/xverack.cpp
+        src/message/xversion.cpp
         
         src/wallet/bitcoin_uri.cpp
         # src/wallet/dictionary.cpp
@@ -929,6 +931,8 @@ set(_kth_domain_headers
     kth/domain/message/transaction.hpp
     kth/domain/message/verack.hpp
     kth/domain/message/version.hpp
+    kth/domain/message/xverack.hpp
+    kth/domain/message/xversion.hpp
 
     kth/domain/wallet/bitcoin_uri.hpp
     # kth/domain/wallet/cashaddr.hpp

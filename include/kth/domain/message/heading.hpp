@@ -55,7 +55,9 @@ enum class message_type {
     send_headers,
     transaction,
     verack,
-    version
+    version,
+    xverack,
+    xversion
 };
 
 class BC_API heading {
