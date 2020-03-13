@@ -540,7 +540,6 @@ endif()
 
 target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 
-
 target_include_directories(kth-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
 # if (WITH_LITECOIN)
