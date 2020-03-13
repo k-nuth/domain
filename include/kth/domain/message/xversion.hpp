@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_ANNOUNCE_VERSION_HPP
-#define KTH_MESSAGE_ANNOUNCE_VERSION_HPP
+#ifndef KTH_MESSAGE_ANNOUNCE_XVERSION_HPP_
+#define KTH_MESSAGE_ANNOUNCE_XVERSION_HPP_
 
 #include <cstdint>
 #include <istream>
@@ -23,11 +23,14 @@
 
 namespace kth::message {
 
-// The checksum is ignored by the version command.
-class BC_API version {
+// Implementation of BU xversion and xverack messages
+// https://github.com/BitcoinUnlimited/BitcoinUnlimited/blob/dev/doc/xversionmessage.md
+
+// The checksum is ignored by the xversion command.
+class BC_API xversion {
 public:
-    using ptr = std::shared_ptr<version>;
-    using const_ptr = std::shared_ptr<const version>;
+    using ptr = std::shared_ptr<xversion>;
+    using const_ptr = std::shared_ptr<const xversion>;
 
     enum level : uint32_t {
         // compact blocks protocol FIX
@@ -48,10 +51,10 @@ public:
         // node_utxo service bit (draft)
         bip64 = 70004,
 
-        // reject (satoshi node writes version.relay starting here)
+        // reject (satoshi node writes xversion.relay starting here)
         bip61 = 70002,
 
-        // filters, merkle_block, not_found, version.relay
+        // filters, merkle_block, not_found, xversion.relay
         bip37 = 70001,
 
         // memory_pool
@@ -60,10 +63,10 @@ public:
         // ping.nonce, pong
         bip31 = 60001,
 
-        // Don't request blocks from nodes of versions 32000-32400.
+        // Don't request blocks from nodes of xversions 32000-32400.
         no_blocks_end = 32400,
 
-        // Don't request blocks from nodes of versions 32000-32400.
+        // Don't request blocks from nodes of xversions 32000-32400.
         no_blocks_start = 32000,
 
     // This preceded the BIP system.
@@ -90,11 +93,11 @@ public:
         // The node is capable of serving the block chain (full node).
         node_network = (1U << 0),
 
-        // Requires version.value >= level::bip64 (BIP64 is draft only).
+        // Requires xversion.value >= level::bip64 (BIP64 is draft only).
         // The node is capable of responding to the getutxo protocol request.
         node_utxo = (1U << 1),
 
-        // Requires version.value >= level::bip111
+        // Requires xversion.value >= level::bip111
 
         // The node is capable and willing to handle bloom-filtered connections.
         node_bloom = (1U << 2),
@@ -108,29 +111,22 @@ public:
 #endif                                //KTH_CURRENCY_BCH
     };
 
-    static version factory_from_data(uint32_t version, data_chunk const& data);
-    static version factory_from_data(uint32_t version, std::istream& stream);
+    static xversion factory_from_data(uint32_t xversion, data_chunk const& data);
+    static xversion factory_from_data(uint32_t xversion, std::istream& stream);
 
     template <Reader R, KTH_IS_READER(R)>
-    static version factory_from_data(uint32_t version, R& source) {
-        message::version instance;
-        instance.from_data(version, source);
+    static xversion factory_from_data(uint32_t xversion, R& source) {
+        message::xversion instance;
+        instance.from_data(xversion, source);
         return instance;
     }
 
-    version() = default;
-    version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
-    version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
+    xversion() = default;
+    xversion(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
+    xversion(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
 
-    // version(version const& x) = default;
-    // version(version&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // version& operator=(version&& x) = default;
-    // version& operator=(version const&) = default;
-
-    bool operator==(version const& x) const;
-    bool operator!=(version const& x) const;
-
+    bool operator==(xversion const& x) const;
+    bool operator!=(xversion const& x) const;
 
     [[nodiscard]] uint32_t value() const;
     void set_value(uint32_t value);
@@ -162,22 +158,22 @@ public:
     [[nodiscard]] uint32_t start_height() const;
     void set_start_height(uint32_t height);
 
-    // version >= 70001
+    // xversion >= 70001
     [[nodiscard]] bool relay() const;
     void set_relay(bool relay);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    bool from_data(uint32_t xversion, data_chunk const& data);
+    bool from_data(uint32_t xversion, std::istream& stream);
 
     template <Reader R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(uint32_t xversion, R& source) {
         reset();
 
         value_ = source.read_4_bytes_little_endian();
         services_ = source.read_8_bytes_little_endian();
         timestamp_ = source.read_8_bytes_little_endian();
-        address_receiver_.from_data(version, source, false);
-        address_sender_.from_data(version, source, false);
+        address_receiver_.from_data(xversion, source, false);
+        address_sender_.from_data(xversion, source, false);
         nonce_ = source.read_8_bytes_little_endian();
         user_agent_ = source.read_string();
         start_height_ = source.read_4_bytes_little_endian();
@@ -188,12 +184,12 @@ public:
         ////    source.invalidate();
 
         auto const peer_bip37 = (value_ >= level::bip37);
-        auto const self_bip37 = (version >= level::bip37);
+        auto const self_bip37 = (xversion >= level::bip37);
 
-        // The relay field is optional at or above version 70001.
-        // But the peer doesn't know our version when it sends its version.
+        // The relay field is optional at or above xversion 70001.
+        // But the peer doesn't know our xversion when it sends its xversion.
         // This is a bug in the BIP37 design as it forces older peers to adapt to
-        // the expansion of the version message, which is a clear compat break.
+        // the expansion of the xversion message, which is a clear compat break.
         // So relay is eabled if either peer is below 70001, it is not set, or
         // peers are at/above 70001 and the field is set.
         relay_ = (peer_bip37 != self_bip37) || source.is_exhausted() ||
@@ -206,36 +202,37 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, data_sink& stream) const;
+    //bool from_data(uint32_t xversion, reader& source);
+    [[nodiscard]] data_chunk to_data(uint32_t xversion) const;
+    void to_data(uint32_t xversion, data_sink& stream) const;
 
     template <Writer W>
-    void to_data(uint32_t version, W& sink) const {
+    void to_data(uint32_t xversion, W& sink) const {
         sink.write_4_bytes_little_endian(value_);
-        auto const effective_version = std::min(version, value_);
+        auto const effective_xversion = std::min(xversion, value_);
         sink.write_8_bytes_little_endian(services_);
         sink.write_8_bytes_little_endian(timestamp_);
-        address_receiver_.to_data(version, sink, false);
-        address_sender_.to_data(version, sink, false);
+        address_receiver_.to_data(xversion, sink, false);
+        address_sender_.to_data(xversion, sink, false);
         sink.write_8_bytes_little_endian(nonce_);
         sink.write_string(user_agent_);
         sink.write_4_bytes_little_endian(start_height_);
 
-        if (effective_version >= level::bip37) {
+        if (effective_xversion >= level::bip37) {
             sink.write_byte(relay_ ? 1 : 0);
         }
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
+    //void to_data(uint32_t xversion, writer& sink) const;
     [[nodiscard]] bool is_valid() const;
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    [[nodiscard]] size_t serialized_size(uint32_t xversion) const;
+
 
     static std::string const command;
-    //    static const bounds version;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    //    static const bounds xversion;
+    static uint32_t const xversion_minimum;
+    static uint32_t const xversion_maximum;
 
 private:
     uint32_t value_{0};
@@ -247,7 +244,7 @@ private:
     std::string user_agent_;
     uint32_t start_height_{0};
 
-    // version >= 70001
+    // xversion >= 70001
     bool relay_{false};
 };
 

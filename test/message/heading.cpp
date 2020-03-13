@@ -288,6 +288,10 @@ BOOST_AUTO_TEST_CASE(heading__type__all_cases__match_expected) {
     BOOST_REQUIRE(message::message_type::verack == instance.type());
     instance.set_command(message::version::command);
     BOOST_REQUIRE(message::message_type::version == instance.type());
+    instance.set_command(message::xverack::command);
+    BOOST_REQUIRE(message::message_type::xverack == instance.type());
+    instance.set_command(message::xversion::command);
+    BOOST_REQUIRE(message::message_type::xversion == instance.type());
 }
 
 BOOST_AUTO_TEST_CASE(heading__maximum_size__always__matches_satoshi_fixed_size) {

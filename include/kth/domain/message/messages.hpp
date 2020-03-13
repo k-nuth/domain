@@ -39,6 +39,9 @@
 #include <kth/domain/message/transaction.hpp>
 #include <kth/domain/message/verack.hpp>
 #include <kth/domain/message/version.hpp>
+#include <kth/domain/message/xverack.hpp>
+#include <kth/domain/message/xversion.hpp>
+
 #include <kth/infrastructure/message/network_address.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/data.hpp>
