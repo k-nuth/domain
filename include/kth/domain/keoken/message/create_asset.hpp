@@ -55,7 +55,7 @@ public:
     static create_asset factory_from_data(bc::data_chunk const& data);
     static create_asset factory_from_data(std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static create_asset factory_from_data(R& source) {
         create_asset instance;
         instance.from_data(source);
@@ -66,7 +66,7 @@ public:
     bool from_data(std::istream& stream);
 
     //Note: from_data and to_data are not longer simetrical.
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         auto name_opt = read_null_terminated_string(source, max_name_size);
         if ( ! name_opt) {
@@ -95,7 +95,7 @@ public:
     void to_data(bc::data_sink& stream) const;
 
     //Note: from_data and to_data are not simetrical.
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink) const {
         base::to_data(sink, version, type);
         sink.write_bytes(reinterpret_cast<uint8_t const*>(name_.data()), name_.size() + 1);  //NOLINT

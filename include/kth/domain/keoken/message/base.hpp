@@ -22,7 +22,7 @@ namespace base {
 
 size_t serialized_size();
 
-template <Writer W>
+template <typename W>
 void to_data(W& sink, uint16_t version, uint16_t type) {
     sink.write_2_bytes_big_endian(version);
     sink.write_2_bytes_big_endian(type);

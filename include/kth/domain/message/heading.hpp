@@ -68,7 +68,7 @@ public:
     static heading factory_from_data(data_chunk const& data);
     static heading factory_from_data(std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static heading factory_from_data(R& source) {
         heading instance;
         instance.from_data(source);
@@ -110,7 +110,7 @@ public:
     bool from_data(data_chunk const& data);
     bool from_data(std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         reset();
         magic_ = source.read_4_bytes_little_endian();
@@ -129,7 +129,7 @@ public:
     [[nodiscard]] data_chunk to_data() const;
     void to_data(data_sink& stream) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink) const {
         sink.write_4_bytes_little_endian(magic_);
         sink.write_string(command_, command_size);

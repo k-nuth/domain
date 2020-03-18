@@ -74,7 +74,7 @@ public:
     static script factory_from_data(data_chunk const& encoded, bool prefix);
     static script factory_from_data(std::istream& stream, bool prefix);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static script factory_from_data(R& source, bool prefix) {
         script instance;
         instance.from_data(source, prefix);

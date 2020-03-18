@@ -35,27 +35,31 @@ class KnuthDomainConan(KnuthConanFile):
                "cflags": "ANY",
                "glibcxx_supports_cxx11_abi": "ANY",
                "cmake_export_compile_commands": [True, False],
+               "binlog": [True, False],
     }
 
     #    "with_png": [True, False],
 
-    default_options = "shared=False", \
-        "fPIC=True", \
-        "with_icu=False", \
-        "with_qrencode=False", \
-        "tests=False", \
-        "examples=False", \
-        "currency=BCH", \
-        "microarchitecture=_DUMMY_",  \
-        "fix_march=False", \
-        "march_id=_DUMMY_",  \
-        "verbose=False", \
-        "keoken=False", \
-        "cached_rpc_data=False", \
-        "cxxflags=_DUMMY_", \
-        "cflags=_DUMMY_", \
-        "glibcxx_supports_cxx11_abi=_DUMMY_", \
-        "cmake_export_compile_commands=False"
+    default_options = { 
+        "shared": False,
+        "fPIC": True,
+        "with_icu": False,
+        "with_qrencode": False,
+        "tests": False,
+        "examples": False,
+        "currency": "BCH",
+        "microarchitecture": "_DUMMY_", 
+        "fix_march": False,
+        "march_id": "_DUMMY_",
+        "verbose": False,
+        "keoken": False,
+        "cached_rpc_data": False,
+        "cxxflags": "_DUMMY_",
+        "cflags": "_DUMMY_",
+        "glibcxx_supports_cxx11_abi": "_DUMMY_",
+        "cmake_export_compile_commands": False,
+        "binlog": False,
+    }
 
         # "with_png=False", \
 
@@ -111,6 +115,7 @@ class KnuthDomainConan(KnuthConanFile):
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
         # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
         cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
+        cmake.definitions["BINLOG"] = option_on_off(self.options.binlog)
 
         cmake.configure(source_dir=self.source_folder)
         if not self.options.cmake_export_compile_commands:

@@ -31,7 +31,7 @@ public:
     static filter_load factory_from_data(uint32_t version, data_chunk const& data);
     static filter_load factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static filter_load factory_from_data(uint32_t version, R& source) {
         filter_load instance;
         instance.from_data(version, source);
@@ -71,7 +71,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         reset();
 
@@ -107,7 +107,7 @@ public:
     [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(uint32_t  /*version*/, W& sink) const {
         sink.write_variable_little_endian(filter_.size());
         sink.write_bytes(filter_);

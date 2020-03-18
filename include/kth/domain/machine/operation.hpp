@@ -59,7 +59,7 @@ public:
     static operation factory_from_data(data_chunk const& encoded);
     static operation factory_from_data(std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static operation factory_from_data(R& source) {
         operation instance;
         instance.from_data(source);
@@ -69,7 +69,7 @@ public:
     bool from_data(data_chunk const& encoded);
     bool from_data(std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         ////reset();
         valid_ = true;
@@ -102,7 +102,7 @@ public:
     [[nodiscard]] data_chunk to_data() const;
     void to_data(data_sink& stream) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink) const {
         auto const size = data_.size();
 

@@ -33,7 +33,7 @@ public:
     static not_found factory_from_data(uint32_t version, data_chunk const& data);
     static not_found factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static not_found factory_from_data(uint32_t version, R& source) {
         not_found instance;
         instance.from_data(version, source);
@@ -59,7 +59,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     {
         if ( ! inventory::from_data(version, source)) {

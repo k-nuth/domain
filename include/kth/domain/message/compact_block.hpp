@@ -37,7 +37,7 @@ public:
     static compact_block factory_from_data(uint32_t version, data_chunk const& data);
     static compact_block factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static compact_block factory_from_data(uint32_t version, R& source) {
         //std::cout << "compact_block::factory_from_data 3\n";
 
@@ -84,7 +84,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         //std::cout << "compact_block::from_data 3\n";
 
@@ -148,7 +148,7 @@ public:
     [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(uint32_t version, W& sink) const {
         //std::cout << "compact_block::to_data 3\n";
 

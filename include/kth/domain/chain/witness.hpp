@@ -58,7 +58,7 @@ public:
     static witness factory_from_data(data_chunk const& encoded, bool prefix);
     static witness factory_from_data(std::istream& stream, bool prefix);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static witness factory_from_data(R& source, bool prefix) {
         witness instance;
         instance.from_data(source, prefix);
@@ -69,7 +69,7 @@ public:
     bool from_data(data_chunk const& encoded, bool prefix);
     bool from_data(std::istream& stream, bool prefix);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
         reset();
         valid_ = true;
@@ -120,7 +120,7 @@ public:
     data_chunk to_data(bool prefix) const;
     void to_data(data_sink& stream, bool prefix) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink, bool prefix) const {
         // Witness prefix is an element count, not byte length (unlike script).
         if (prefix) {

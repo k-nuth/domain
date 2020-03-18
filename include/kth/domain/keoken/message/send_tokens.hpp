@@ -50,7 +50,7 @@ public:
     static send_tokens factory_from_data(bc::data_chunk const& data);
     static send_tokens factory_from_data(std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static send_tokens factory_from_data(R& source) {
         send_tokens instance;  //NOLINT
         instance.from_data(source);
@@ -61,7 +61,7 @@ public:
     bool from_data(std::istream& stream);
 
     //Note: from_data and to_data are not longer simetrical.
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         asset_id_ = source.read_4_bytes_big_endian();
         amount_ = source.read_8_bytes_big_endian();
@@ -79,7 +79,7 @@ public:
     void to_data(bc::data_sink& stream) const;
 
     //Note: from_data and to_data are not longer simetrical.
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink) const {
         base::to_data(sink, version, type);
         sink.write_4_bytes_big_endian(asset_id_);

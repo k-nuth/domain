@@ -80,7 +80,7 @@ public:
 
     static point factory_from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static point factory_from_data(R& source, bool wire = true) {
         point instance;
         instance.from_data(source, wire);
@@ -90,7 +90,7 @@ public:
     bool from_data(data_chunk const& data, bool wire = true);
     bool from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
         reset();
 
@@ -123,7 +123,7 @@ public:
     [[nodiscard]] data_chunk to_data(bool wire = true) const;
     void to_data(data_sink& stream, bool wire = true) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink, bool wire = true) const {
         sink.write_hash(hash_);
 

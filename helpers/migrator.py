@@ -183,7 +183,7 @@ def move_writer_function_to_header(header_content, src_content, header_look, src
     func = indent_function(func)
     func = func.replace('writer&', 'W&')
     func = func.replace('to_data(', 'to_data(')
-    func = '    template <Writer W>\n' + func
+    func = '    template <typename W>\n' + func
     header_content = header_content.replace(header_look, '\n' + func + '\n\n    //' + header_look)
 
     return header_content, src_content

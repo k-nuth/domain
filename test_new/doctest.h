@@ -4097,7 +4097,7 @@ namespace {
     }
 
 #if defined(DOCTEST_CONFIG_POSIX_SIGNALS) || defined(DOCTEST_CONFIG_WINDOWS_SEH)
-    void reportFatal(const std::string& message) {
+    void reportFatal(std::string const& message) {
         g_cs->seconds_so_far += g_timer.getElapsedSeconds();
         g_cs->failure_flags |= TestCaseFailureReason::Crash;
         g_cs->error_string   = message.c_str();

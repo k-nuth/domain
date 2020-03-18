@@ -69,7 +69,7 @@ public:
     // static header factory_from_data(std::istream& stream, bool wire=true);
     static header factory_from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static header factory_from_data(R& source, bool wire = true) {
         header instance;
         instance.from_data(source, wire);
@@ -81,7 +81,7 @@ public:
     //TODO(fernando): check what happend when replacing std::istream to data_source
     bool from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
         header_basis::from_data(source, wire);
 
@@ -103,7 +103,7 @@ public:
     // void to_data(data_sink& stream, bool wire=true) const;
     void to_data(data_sink& stream, bool wire = true) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink, bool wire = true) const {
         header_basis::to_data(sink, wire);
 

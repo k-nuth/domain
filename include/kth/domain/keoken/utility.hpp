@@ -22,7 +22,7 @@ constexpr auto to_underlying(E e) noexcept {
     return static_cast<std::underlying_type_t<E>>(e);
 }
 
-template <Reader R, KTH_IS_READER(R)>
+template <typename R, KTH_IS_READER(R)>
 inline std::string read_null_terminated_string_unlimited(R& source) {
     // precondition: there is almost 1 `\0` byte in source
     std::string res;
@@ -36,7 +36,7 @@ inline std::string read_null_terminated_string_unlimited(R& source) {
     return res;
 }
 
-template <Reader R, KTH_IS_READER(R)>
+template <typename R, KTH_IS_READER(R)>
 inline boost::optional<std::string> read_null_terminated_string(R& source, size_t max) {
     if (max == 0) {
         return boost::none;

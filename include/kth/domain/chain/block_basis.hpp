@@ -71,7 +71,7 @@ public:
     static block_basis factory_from_data(data_chunk const& data, bool witness = false);
     static block_basis factory_from_data(std::istream& stream, bool witness = false);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static block_basis factory_from_data(R& source, bool witness = false) {
         block_basis instance;
         instance.from_data(source, witness_val(witness));
@@ -81,7 +81,7 @@ public:
     bool from_data(data_chunk const& data, bool witness = false);
     bool from_data(std::istream& stream, bool witness = false);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
         // validation.start_deserialize = asio::steady_clock::now();
         reset();
@@ -131,7 +131,7 @@ public:
     [[nodiscard]] data_chunk to_data(size_t serialized_size, bool witness = false) const;
     void to_data(data_sink& stream, bool witness = false) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink, bool witness = false) const {
         header_.to_data(sink, true);
         sink.write_size_little_endian(transactions_.size());

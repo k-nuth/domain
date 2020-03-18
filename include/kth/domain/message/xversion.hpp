@@ -114,7 +114,7 @@ public:
     static xversion factory_from_data(uint32_t xversion, data_chunk const& data);
     static xversion factory_from_data(uint32_t xversion, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static xversion factory_from_data(uint32_t xversion, R& source) {
         message::xversion instance;
         instance.from_data(xversion, source);
@@ -165,7 +165,7 @@ public:
     bool from_data(uint32_t xversion, data_chunk const& data);
     bool from_data(uint32_t xversion, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t xversion, R& source) {
         reset();
 
@@ -206,7 +206,7 @@ public:
     [[nodiscard]] data_chunk to_data(uint32_t xversion) const;
     void to_data(uint32_t xversion, data_sink& stream) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(uint32_t xversion, W& sink) const {
         sink.write_4_bytes_little_endian(value_);
         auto const effective_xversion = std::min(xversion, value_);

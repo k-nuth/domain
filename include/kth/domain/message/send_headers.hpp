@@ -30,7 +30,7 @@ public:
     static send_headers factory_from_data(uint32_t version, data_chunk const& data);
     static send_headers factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static send_headers factory_from_data(uint32_t version, R& source) {
         send_headers instance;
         instance.from_data(version, source);
@@ -46,7 +46,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         reset();
 

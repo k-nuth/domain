@@ -56,7 +56,7 @@ public:
     static header_basis factory_from_data(data_chunk const& data, bool wire = true);
     static header_basis factory_from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static header_basis factory_from_data(R& source, bool wire = true) {
         header_basis instance;
         instance.from_data(source, wire);
@@ -67,7 +67,7 @@ public:
 
     bool from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool /*wire = true*/) {
         version_ = source.read_4_bytes_little_endian();
         previous_block_hash_ = source.read_hash();
@@ -91,7 +91,7 @@ public:
     [[nodiscard]] data_chunk to_data(bool wire = true) const;
     void to_data(data_sink& stream, bool wire = true) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink, bool /*wire = true*/) const {
         sink.write_4_bytes_little_endian(version_);
         sink.write_hash(previous_block_hash_);

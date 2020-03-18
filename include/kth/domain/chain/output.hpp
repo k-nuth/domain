@@ -70,7 +70,7 @@ public:
     static output factory_from_data(data_chunk const& data, bool wire = true);
     static output factory_from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static output factory_from_data(R& source, bool wire = true) {
         output instance;
         instance.from_data(source, wire);
@@ -80,7 +80,7 @@ public:
     bool from_data(data_chunk const& data, bool wire = true);
     bool from_data(std::istream& stream, bool wire = true);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool witness = false) {
         if ( ! wire) {
             validation.spender_height = source.read_4_bytes_little_endian();
@@ -96,7 +96,7 @@ public:
     data_chunk to_data(bool wire = true) const;
     void to_data(data_sink& stream, bool wire = true) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink, bool wire = true, bool witness = false) const {
         if ( ! wire) {
             auto height32 = safe_unsigned<uint32_t>(validation.spender_height);

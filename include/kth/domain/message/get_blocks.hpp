@@ -33,7 +33,7 @@ public:
     static get_blocks factory_from_data(uint32_t version, data_chunk const& data);
     static get_blocks factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static get_blocks factory_from_data(uint32_t version, R& source) {
         get_blocks instance;
         instance.from_data(version, source);
@@ -68,7 +68,7 @@ public:
     // virtual  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t  /*version*/, R& source) {
         reset();
@@ -100,7 +100,7 @@ public:
     [[nodiscard]] data_chunk to_data(uint32_t version) const;
     void to_data(uint32_t version, data_sink& stream) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(uint32_t version, W& sink) const {
         sink.write_4_bytes_little_endian(version);
         sink.write_variable_little_endian(start_hashes_.size());

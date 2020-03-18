@@ -74,23 +74,6 @@
 // #include <kth/domain/formats/base_64.hpp>
 // #include <kth/domain/formats/base_85.hpp>
 
-// #include <kth/domain/log/attributes.hpp>
-// #include <kth/domain/log/file_char_traits.hpp>
-// #include <kth/domain/log/file_collector.hpp>
-// #include <kth/domain/log/file_collector_repository.hpp>
-// #include <kth/domain/log/file_counter_formatter.hpp>
-// #include <kth/domain/log/rotable_file.hpp>
-// #include <kth/domain/log/severity.hpp>
-// #include <kth/domain/log/sink.hpp>
-// #include <kth/domain/log/source.hpp>
-// #include <kth/domain/log/statsd_sink.hpp>
-// #include <kth/domain/log/statsd_source.hpp>
-// #include <kth/domain/log/udp_client_sink.hpp>
-// #include <kth/domain/log/features/counter.hpp>
-// #include <kth/domain/log/features/gauge.hpp>
-// #include <kth/domain/log/features/metric.hpp>
-// #include <kth/domain/log/features/rate.hpp>
-// #include <kth/domain/log/features/timer.hpp>
 #include <kth/domain/machine/interpreter.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>

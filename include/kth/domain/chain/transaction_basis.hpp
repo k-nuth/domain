@@ -76,7 +76,7 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
 
 #ifndef KTH_CURRENCY_BCH
 // Input list must be pre-populated as it determines witness count.
-template <Reader R, KTH_IS_READER(R)>
+template <typename R, KTH_IS_READER(R)>
 inline void read_witnesses(R& source, input::list& inputs) {
     auto const deserialize = [&](input& input) {
         input.witness().from_data(source, true);
@@ -155,7 +155,7 @@ public:
     static transaction_basis factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
     static transaction_basis factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static transaction_basis factory_from_data(R& source, bool wire = true, bool witness = false) {
         transaction_basis instance;
         instance.from_data(source, wire, witness_val(witness));
@@ -166,7 +166,7 @@ public:
     bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     // Witness is not used by outputs, just for template normalization.
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool witness = false) {
         reset();
 
@@ -234,7 +234,7 @@ public:
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     // Witness is not used by outputs, just for template normalization.
-    template <Writer W>
+    template <typename W>
     void to_data(W& sink, bool wire = true, bool witness = false) const {
         if (wire) {
             // Wire (satoshi protocol) serialization.

@@ -61,7 +61,7 @@ public:
     static transaction factory_from_data(uint32_t version, data_chunk const& data);
     static transaction factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static transaction factory_from_data(uint32_t version, R& source) {
         transaction instance;
         instance.from_data(version, source);
@@ -71,7 +71,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t  /*version*/, R& source) {
         return chain::transaction::from_data(source, true, true);
     }
@@ -79,7 +79,7 @@ public:
     data_chunk to_data(uint32_t version, bool witness = true) const;
     void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
 
-    template <Writer W>
+    template <typename W>
     void to_data(uint32_t  /*version*/, W& sink, bool witness = true) const {
         chain::transaction::to_data(sink, true, witness);
     }

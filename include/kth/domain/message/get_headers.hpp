@@ -41,7 +41,7 @@ public:
     static get_headers factory_from_data(uint32_t version, data_chunk const& data);
     static get_headers factory_from_data(uint32_t version, std::istream& stream);
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     static get_headers factory_from_data(uint32_t version, R& source) {
         get_headers instance;
         instance.from_data(version, source);
@@ -51,7 +51,7 @@ public:
     bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
-    template <Reader R, KTH_IS_READER(R)>
+    template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
         if ( ! get_blocks::from_data(version, source)) {
             return false;
