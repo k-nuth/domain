@@ -11,7 +11,10 @@
 
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+
 #include <kth/domain/machine/operation.hpp>
+
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
