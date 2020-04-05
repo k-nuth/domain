@@ -151,7 +151,7 @@ public:
 
 
 #if defined(KTH_SEGWIT_ENABLED)
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     chain::witness& witness();
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);
