@@ -95,7 +95,7 @@ public:
 #if defined(KTH_SEGWIT_ENABLED)
         // TODO(legacy): optimize by having reader skip witness data.
         if ( ! witness_val(witness)) {
-            strip_witness();
+            strip_witness(*this);
         }
 #endif
 
