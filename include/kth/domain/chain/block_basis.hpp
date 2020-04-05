@@ -243,11 +243,6 @@ private:
     transaction::list transactions_;
 };
 
-#if defined(KTH_SEGWIT_ENABLED)
-void strip_witness(block_basis& blk);
-bool is_segregated(block_basis const& blk);
-#endif
-
 // Non-member functions.
 //-------------------------------------------------------------------------
 
