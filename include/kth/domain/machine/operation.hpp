@@ -58,7 +58,8 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
-
+    
+    // TODO(legacy): optimize for larger data by using a shared byte array.
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         ////reset();
