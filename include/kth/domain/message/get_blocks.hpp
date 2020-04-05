@@ -51,9 +51,6 @@ public:
     
     void set_stop_hash(hash_digest const& value);
 
-    // bool from_data(uint32_t version, data_chunk const& data);
-    // bool from_data(uint32_t version, std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t /*version*/, R& source) {
