@@ -54,9 +54,6 @@ public:
     void to_hashes(hash_list& out) const;
     void to_inventory(inventory_vector::list& out, inventory::type_id type) const;
 
-    // bool from_data(uint32_t version, data_chunk const& data);
-    // bool from_data(uint32_t version, std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         reset();
