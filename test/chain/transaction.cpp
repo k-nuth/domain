@@ -2,17 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(chain_transaction_tests)
+// Start Boost Suite: chain transaction tests
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_1__always__returns_default_initialized) {
+TEST_CASE("chain transaction  constructor 1  always  returns default initialized", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
 #define TX0_INPUTS                                                     \
