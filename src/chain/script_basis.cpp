@@ -1138,9 +1138,6 @@ operation::list operations(script_basis const& script) {
     // To validate the ops the caller must test the last op.is_valid(), or may
     // text script.is_valid_operations(), which is done in script validation.
     while ( ! stream_r.is_exhausted()) {
-        // op.from_data(stream_r);
-        // res.push_back(std::move(op));
-        // res.push_back(create<operation>(stream_r));
         res.push_back(create<operation>(stream_r));
     }
 
