@@ -54,9 +54,6 @@ public:
     bool operator==(transaction const& x) const;
     bool operator!=(transaction const& x) const;
 
-    // bool from_data(uint32_t version, data_chunk const& data);
-    // bool from_data(uint32_t version, std::istream& stream);
-
     // Witness is always deserialized if present.
     // NOTE: Witness on BCH is dissabled on the chain::block class
     template <typename R, KTH_IS_READER(R)>
