@@ -2,20 +2,19 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(alert_payload_tests)
+// Start Boost Suite: alert payload tests
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_1__always__invalid) {
+TEST_CASE("alert payload  constructor 1  always invalid", "[alert payload]") {
     message::alert_payload instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_2__always__equals_params) {
+TEST_CASE("alert payload  constructor 2  always  equals params", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
