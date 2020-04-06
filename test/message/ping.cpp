@@ -2,83 +2,80 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(ping_tests)
+// Start Boost Suite: ping tests
 
-BOOST_AUTO_TEST_CASE(ping__constructor_1__always__invalid) {
+TEST_CASE("ping  constructor 1  always invalid", "[ping]") {
     message::ping instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__constructor_2__always__equals_params) {
+TEST_CASE("ping  constructor 2  always  equals params", "[ping]") {
     uint64_t nonce = 462434u;
     message::ping instance(nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
+    REQUIRE(instance.is_valid());
+    REQUIRE(nonce == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(ping__constructor_3__always__equals_params) {
+TEST_CASE("ping  constructor 3  always  equals params", "[ping]") {
     message::ping expected(24235u);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     message::ping instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(ping__satoshi_fixed_size__minimum_version__zero) {
-    BOOST_REQUIRE_EQUAL(0u,
-                        message::ping::satoshi_fixed_size(message::version::level::minimum));
+TEST_CASE("ping  satoshi fixed size  minimum version  zero", "[ping]") {
+    REQUIRE(0u == message::ping::satoshi_fixed_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(ping__satoshi_fixed_size__bip31_version__8) {
-    BOOST_REQUIRE_EQUAL(8u,
-                        message::ping::satoshi_fixed_size(message::version::level::bip31));
+TEST_CASE("ping  satoshi fixed size  bip31 version  8", "[ping]") {
+    REQUIRE(8u == message::ping::satoshi_fixed_size(message::version::level::bip31));
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__maximum_version_empty_data__invalid) {
+TEST_CASE("ping  factory from data 1  maximum version empty data invalid", "[ping]") {
     static auto const version = message::version::level::maximum;
     auto const result = create<message::ping>(version, data_chunk{});
-    BOOST_REQUIRE(!result.is_valid());
+    REQUIRE(!result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_empty_data__valid) {
+TEST_CASE("ping  factory from data 1  minimum version empty data valid", "[ping]") {
     static auto const version = message::version::level::minimum;
     auto const result = create<message::ping>(version, data_chunk{});
-    BOOST_REQUIRE(result.is_valid());
+    REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__from_data_1__minimum_version__success_zero_nonce) {
+TEST_CASE("ping  from data 1  minimum version  success zero nonce", "[ping]") {
     static const message::ping value{
         213153u};
 
     // This serializes the nonce.
     auto const data = value.to_data(message::version::level::bip31);
-    BOOST_REQUIRE_EQUAL(data.size(), 8u);
+    REQUIRE(data.size() == 8u);
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
     message::ping instance;
-    BOOST_REQUIRE(entity_from_data(instance, message::ping::version_minimum, data));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.nonce(), 0u);
+    REQUIRE(entity_from_data(instance, message::ping::version_minimum, data));
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.nonce() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_round_trip__zero_nonce) {
+TEST_CASE("ping  factory from data 1  minimum version round trip  zero nonce", "[ping]") {
     static const message::ping value{
         16545612u};
 
     static auto const version = message::version::level::minimum;
     auto const data = value.to_data(version);
     auto const result = create<message::ping>(version, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
+    REQUIRE(result.is_valid());
+    REQUIRE(result.nonce() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__minimum_version_round_trip__zero_nonce) {
+TEST_CASE("ping  factory from data 2  minimum version round trip  zero nonce", "[ping]") {
     const message::ping value{
         5087222u};
 
