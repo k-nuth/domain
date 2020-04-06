@@ -2,104 +2,103 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(inventory_vector_tests)
+// Start Boost Suite: inventory vector tests
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__error__returns_0) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::error), 0u);
+TEST_CASE("inventory vector  to number  error  returns 0", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::error) == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__transaction__returns_1) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::transaction), 1u);
+TEST_CASE("inventory vector  to number  transaction  returns 1", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::transaction) == 1u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__block__returns_2) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::block), 2u);
+TEST_CASE("inventory vector  to number  block  returns 2", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::block) == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__filtered_block__returns_3) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::filtered_block), 3u);
+TEST_CASE("inventory vector  to number  filtered block  returns 3", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::filtered_block) == 3u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__compact_block__returns_4) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::compact_block), 4u);
+TEST_CASE("inventory vector  to number  compact block  returns 4", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::compact_block) == 4u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__0__returns_error) {
-    BOOST_REQUIRE(inventory_vector::type_id::error == inventory_vector::to_type(0));
+TEST_CASE("inventory vector  to type  0  returns error", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::error == inventory_vector::to_type(0));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__1__returns_transaction) {
-    BOOST_REQUIRE(inventory_vector::type_id::transaction == inventory_vector::to_type(1));
+TEST_CASE("inventory vector  to type  1  returns transaction", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::transaction == inventory_vector::to_type(1));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__2__returns_block) {
-    BOOST_REQUIRE(inventory_vector::type_id::block == inventory_vector::to_type(2));
+TEST_CASE("inventory vector  to type  2  returns block", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::block == inventory_vector::to_type(2));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__3__returns_filtered_block) {
-    BOOST_REQUIRE(inventory_vector::type_id::filtered_block == inventory_vector::to_type(3));
+TEST_CASE("inventory vector  to type  3  returns filtered block", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::filtered_block == inventory_vector::to_type(3));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__4__returns_compact_block) {
-    BOOST_REQUIRE(inventory_vector::type_id::compact_block == inventory_vector::to_type(4));
+TEST_CASE("inventory vector  to type  4  returns compact block", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::compact_block == inventory_vector::to_type(4));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_1__always__invalid) {
+TEST_CASE("inventory vector  constructor 1  always invalid", "[inventory vector]") {
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_2__always__equals_params) {
+TEST_CASE("inventory vector  constructor 2  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance(type, hash);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(type == instance.type());
-    BOOST_REQUIRE(hash == instance.hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(type == instance.type());
+    REQUIRE(hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_3__always__equals_params) {
+TEST_CASE("inventory vector  constructor 3  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance(type, std::move(hash));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_4__always__equals_params) {
+TEST_CASE("inventory vector  constructor 4  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector const expected(type, hash);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     inventory_vector instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_5__always__equals_params) {
+TEST_CASE("inventory vector  constructor 5  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector expected(type, hash);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     inventory_vector instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(type == instance.type());
-    BOOST_REQUIRE(hash == instance.hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(type == instance.type());
+    REQUIRE(hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__from_data__insufficient_bytes__failure) {
+TEST_CASE("inventory vector  from data  insufficient bytes  failure", "[inventory vector]") {
     static data_chunk const raw{1};
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, raw));
+    REQUIRE( ! entity_from_data(instance, version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success) {
+TEST_CASE("inventory vector  factory from data 1  valid input  success", "[inventory vector]") {
     static inventory_vector const expected{
         inventory_vector::type_id::error,
         {{0x44, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
