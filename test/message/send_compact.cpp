@@ -2,168 +2,156 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(send_compact_tests)
+// Start Boost Suite: send compact tests
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_1__always__invalid) {
+TEST_CASE("send compact  constructor 1  always invalid", "[send compact]") {
     message::send_compact instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_2__always__equals_params) {
+TEST_CASE("send compact  constructor 2  always  equals params", "[send compact]") {
     bool mode = true;
     uint64_t version = 1245436u;
     message::send_compact instance(mode, version);
-    BOOST_REQUIRE_EQUAL(mode, instance.high_bandwidth_mode());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
+    REQUIRE(mode == instance.high_bandwidth_mode());
+    REQUIRE(version == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_3__always__equals_params) {
+TEST_CASE("send compact  constructor 3  always  equals params", "[send compact]") {
     const message::send_compact expected(true, 1245436u);
     message::send_compact instance(expected);
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__constructor_4__always__equals_params) {
+TEST_CASE("send compact  constructor 4  always  equals params", "[send compact]") {
     bool mode = true;
     uint64_t version = 1245436u;
     message::send_compact expected(mode, version);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
 
     message::send_compact instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(mode, instance.high_bandwidth_mode());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
+    REQUIRE(instance.is_valid());
+    REQUIRE(mode == instance.high_bandwidth_mode());
+    REQUIRE(version == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_1__valid_input__success) {
+TEST_CASE("send compact  factory from data 1  valid input  success", "[send compact]") {
     const message::send_compact expected{true, 164};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     auto const result = create<message::send_compact>(
         message::send_compact::version_minimum, data);
 
-    BOOST_REQUIRE_EQUAL(
-        message::send_compact::satoshi_fixed_size(
-            message::send_compact::version_minimum),
-        data.size());
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(message::send_compact::satoshi_fixed_size(message::send_compact::version_minimum) == data.size());
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_2__valid_input__success) {
+TEST_CASE("send compact  factory from data 2  valid input  success", "[send compact]") {
     const message::send_compact expected{false, 5};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     data_source istream(data);
-    auto const result = create<message::send_compact>(
-        message::send_compact::version_minimum, istream);
+    auto const result = create<message::send_compact>(message::send_compact::version_minimum, istream);
 
-    BOOST_REQUIRE_EQUAL(
-        message::send_compact::satoshi_fixed_size(
-            message::send_compact::version_minimum),
-        data.size());
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(message::send_compact::satoshi_fixed_size(message::send_compact::version_minimum) == data.size());
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_3__valid_input__success) {
+TEST_CASE("send compact  factory from data 3  valid input  success", "[send compact]") {
     const message::send_compact expected{true, 257};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = create<message::send_compact>(
-        message::send_compact::version_minimum, source);
+    auto const result = create<message::send_compact>(message::send_compact::version_minimum, source);
 
-    BOOST_REQUIRE_EQUAL(
-        message::send_compact::satoshi_fixed_size(
-            message::send_compact::version_minimum),
-        data.size());
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(message::send_compact::satoshi_fixed_size(message::send_compact::version_minimum) == data.size());
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__from_data_1__invalid_mode_byte__failure) {
+TEST_CASE("send compact  from data 1  invalid mode byte  failure", "[send compact]") {
     data_chunk raw_data{0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
     message::send_compact msg;
     bool result = entity_from_data(msg, message::send_compact::version_minimum, raw_data);
-    BOOST_REQUIRE(!result);
+    REQUIRE(!result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__from_data_1__insufficient_version__failure) {
+TEST_CASE("send compact  from data 1  insufficient version  failure", "[send compact]") {
     const message::send_compact expected{true, 257};
     data_chunk raw_data = expected.to_data(message::send_compact::version_minimum);
     message::send_compact msg;
     bool result = entity_from_data(msg, message::send_compact::version_minimum - 1, raw_data);
-    BOOST_REQUIRE(!result);
+    REQUIRE(!result);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_accessor__always__returns_initialized_value) {
+TEST_CASE("send compact  high bandwidth mode accessor  always  returns initialized value", "[send compact]") {
     bool const expected = true;
     const message::send_compact instance(expected, 210u);
-    BOOST_REQUIRE_EQUAL(expected, instance.high_bandwidth_mode());
+    REQUIRE(expected == instance.high_bandwidth_mode());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__high_bandwidth_mode_setter__roundtrip__success) {
+TEST_CASE("send compact  high bandwidth mode setter  roundtrip  success", "[send compact]") {
     bool const expected = true;
     message::send_compact instance;
-    BOOST_REQUIRE(expected != instance.high_bandwidth_mode());
+    REQUIRE(expected != instance.high_bandwidth_mode());
     instance.set_high_bandwidth_mode(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.high_bandwidth_mode());
+    REQUIRE(expected == instance.high_bandwidth_mode());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__version_accessor__always__returns_initialized_value) {
+TEST_CASE("send compact  version accessor  always  returns initialized value", "[send compact]") {
     uint64_t const expected = 6548u;
     const message::send_compact instance(false, expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.version());
+    REQUIRE(expected == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__version_setter__roundtrip__success) {
+TEST_CASE("send compact  version setter  roundtrip  success", "[send compact]") {
     uint64_t const expected = 6548u;
     message::send_compact instance;
-    BOOST_REQUIRE(expected != instance.version());
+    REQUIRE(expected != instance.version());
     instance.set_version(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.version());
+    REQUIRE(expected == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("send compact  operator assign equals  always  matches equivalent", "[send compact]") {
     bool mode = false;
     uint64_t version = 210u;
     message::send_compact value(mode, version);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::send_compact instance;
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(mode, instance.high_bandwidth_mode());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
+    REQUIRE(instance.is_valid());
+    REQUIRE(mode == instance.high_bandwidth_mode());
+    REQUIRE(version == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("send compact  operator boolean equals  duplicates  returns true", "[send compact]") {
     const message::send_compact expected(false, 15234u);
     message::send_compact instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("send compact  operator boolean equals  differs  returns false", "[send compact]") {
     const message::send_compact expected(true, 979797u);
     message::send_compact instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("send compact  operator boolean not equals  duplicates  returns false", "[send compact]") {
     const message::send_compact expected(true, 734678u);
     message::send_compact instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(send_compact__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("send compact  operator boolean not equals  differs  returns true", "[send compact]") {
     const message::send_compact expected(false, 5357534u);
     message::send_compact instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
