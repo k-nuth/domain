@@ -2,52 +2,50 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 #include <cstddef>
 #include <cstdint>
 
-#include <kth/domain.hpp>
-
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(limits_tests)
+// Start Boost Suite: limits tests
 
 // cast_add
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(limits__cast_add__uint32_to_int64_0__returns_0) {
+TEST_CASE("limits  cast add  uint32 to int64 0  returns 0", "[limits]") {
     static int64_t const expected = 0;
-    BOOST_REQUIRE_EQUAL(cast_add<int64_t>(0u, 0u), expected);
+    REQUIRE(cast_add<int64_t>(0u, 0u) == expected);
 }
 
-BOOST_AUTO_TEST_CASE(limits__cast_add__uint32_to_int64_maximum_plus_0__returns_maximum) {
+TEST_CASE("limits  cast add  uint32 to int64 maximum plus 0  returns maximum", "[limits]") {
     static int64_t const expected = max_uint32;
-    BOOST_REQUIRE_EQUAL(cast_add<int64_t>(max_uint32, uint32_t{0}), expected);
+    REQUIRE(cast_add<int64_t>(max_uint32, uint32_t{0}) == expected);
 }
 
-BOOST_AUTO_TEST_CASE(limits__cast_add__uint32_to_int64_maximum_plus_maximum__returns_twice_maximum) {
+TEST_CASE("limits  cast add  uint32 to int64 maximum plus maximum  returns twice maximum", "[limits]") {
     static int64_t const expected = 2 * static_cast<int64_t>(max_uint32);
-    BOOST_REQUIRE_EQUAL(cast_add<int64_t>(max_uint32, max_uint32), expected);
+    REQUIRE(cast_add<int64_t>(max_uint32, max_uint32) == expected);
 }
 
 // cast_subtract
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(limits__cast_subtract__uint32_to_int64_0__returns_0) {
+TEST_CASE("limits  cast subtract  uint32 to int64 0  returns 0", "[limits]") {
     static int64_t const expected = 0;
-    BOOST_REQUIRE_EQUAL(cast_subtract<int64_t>(0u, 0u), expected);
+    REQUIRE(cast_subtract<int64_t>(0u, 0u) == expected);
 }
 
-BOOST_AUTO_TEST_CASE(limits__cast_subtract__uint32_to_int64_0_minus_maximum__returns_negtive_maximum) {
+TEST_CASE("limits  cast subtract  uint32 to int64 0 minus maximum  returns negtive maximum", "[limits]") {
     static int64_t const expected = -1 * static_cast<int64_t>(max_uint32);
-    BOOST_REQUIRE_EQUAL(cast_subtract<int64_t>(uint32_t{0}, max_uint32), expected);
+    REQUIRE(cast_subtract<int64_t>(uint32_t{0}, max_uint32) == expected);
 }
 
-BOOST_AUTO_TEST_CASE(limits__cast_subtract__uint32_to_int64_maximum_minus_maximum__returns_0) {
+TEST_CASE("limits  cast subtract  uint32 to int64 maximum minus maximum  returns 0", "[limits]") {
     static int64_t const expected = 0;
-    BOOST_REQUIRE_EQUAL(cast_subtract<int64_t>(max_uint32, max_uint32), expected);
+    REQUIRE(cast_subtract<int64_t>(max_uint32, max_uint32) == expected);
 }
 
 static const size_t minimum = 0;
