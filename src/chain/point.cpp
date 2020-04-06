@@ -75,19 +75,6 @@ bool operator>=(point const& x, point const& y) {
     return !(x < y);
 }
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// bool point::from_data(data_chunk const& data, bool wire) {
-//     data_source istream(data);
-//     return from_data(istream, wire);
-// }
-
-// bool point::from_data(std::istream& stream, bool wire) {
-//     istream_reader stream_r(stream);
-//     return from_data(stream_r, wire);
-// }
-
 // protected
 void point::reset() {
     valid_ = false;
