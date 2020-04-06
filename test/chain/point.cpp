@@ -2,32 +2,31 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
 auto const valid_raw_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));
 
-BOOST_AUTO_TEST_SUITE(point_tests)
+// Start Boost Suite: point tests
 
-BOOST_AUTO_TEST_CASE(point__constructor_1__always__returns_default_initialized) {
+TEST_CASE("point  constructor 1  always  returns default initialized", "[point]") {
     chain::point instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(point__constructor_2__valid_input__returns_input_initialized) {
+TEST_CASE("point  constructor 2  valid input  returns input initialized", "[point]") {
     auto const hash = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     uint32_t index = 1234u;
 
     chain::point instance(hash, index);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.hash());
-    BOOST_REQUIRE_EQUAL(index, instance.index());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.hash());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(point__constructor_3__valid_input__returns_input_initialized) {
+TEST_CASE("point  constructor 3  valid input  returns input initialized", "[point]") {
     auto const hash = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     uint32_t index = 1234u;
 
