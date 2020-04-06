@@ -2,21 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(get_data_tests)
+// Start Boost Suite: get data tests
 
-BOOST_AUTO_TEST_CASE(get_data__constructor_1__always__invalid) {
+TEST_CASE("get data  constructor 1  always invalid", "[get data]") {
     const get_data instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(get_data__constructor_2__always__equals_params) {
+TEST_CASE("get data  constructor 2  always  equals params", "[get data]") {
     static inventory_vector::list const values =
         {
             inventory_vector{
