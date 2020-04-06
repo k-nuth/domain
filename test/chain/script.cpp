@@ -2,10 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
+#include <kth/infrastructure/machine/sighash_algorithm.hpp>
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
 #include <sstream>
 #include "script.hpp"
 
