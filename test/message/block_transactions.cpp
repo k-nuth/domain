@@ -2,20 +2,19 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(block_transactions_tests)
+// Start Boost Suite: block transactions tests
 
-BOOST_AUTO_TEST_CASE(block_transactions__constructor_1__always__invalid) {
+TEST_CASE("block transactions  constructor 1  always invalid", "[block transactions]") {
     message::block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__constructor_2__always__equals_params) {
+TEST_CASE("block transactions  constructor 2  always  equals params", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
