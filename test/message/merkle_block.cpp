@@ -2,20 +2,19 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(merkle_block_tests)
+// Start Boost Suite: merkle block tests
 
-BOOST_AUTO_TEST_CASE(merkle_block__constructor_1__always__invalid) {
+TEST_CASE("merkle block  constructor 1  always invalid", "[merkle block]") {
     const message::merkle_block instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__constructor_2__always__equals_params) {
+TEST_CASE("merkle block  constructor 2  always  equals params", "[merkle block]") {
     chain::header const header(
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
