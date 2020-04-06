@@ -20,8 +20,11 @@
 #include <kth/domain/chain/transaction_basis.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
+
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
