@@ -11,6 +11,7 @@
 #include <boost/program_options.hpp>
 
 #include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/common.hpp>
 #include <kth/infrastructure/config/base16.hpp>
 
 namespace kth::domain::config {
