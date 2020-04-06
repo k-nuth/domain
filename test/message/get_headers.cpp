@@ -2,20 +2,19 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(get_headers_tests)
+// Start Boost Suite: get headers tests
 
-BOOST_AUTO_TEST_CASE(get_headers__constructor_1__always__invalid) {
+TEST_CASE("get headers  constructor 1  always invalid", "[get headers]") {
     message::get_headers instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__constructor_2__always__equals_params) {
+TEST_CASE("get headers  constructor 2  always  equals params", "[get headers]") {
     hash_list starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
