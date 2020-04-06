@@ -380,11 +380,9 @@ void block::strip_witness() {
     // Critical Section
     unique_lock lock(mutex_);
 
-    // segregated_ = false;
-    // total_size_ = std::nullopt;
-    // std::for_each(transactions_.begin(), transactions_.end(), strip);
-
-    block_basis::strip_witness();
+    segregated_ = false;
+    total_size_ = std::nullopt;
+    chain::strip_witness(*this);
 
     ///////////////////////////////////////////////////////////////////////////
 }
