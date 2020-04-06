@@ -2,10 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
-#include <kth/domain.hpp>
 #include <string>
+
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
