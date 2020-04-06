@@ -76,16 +76,6 @@ void heading::reset() {
     checksum_ = 0;
 }
 
-bool heading::from_data(data_chunk const& data) {
-    data_source istream(data);
-    return from_data(istream);
-}
-
-bool heading::from_data(std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r);
-}
-
 data_chunk heading::to_data() const {
     data_chunk data;
     auto const size = satoshi_fixed_size();
