@@ -2,21 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(headers_tests)
+// Start Boost Suite: headers tests
 
-BOOST_AUTO_TEST_CASE(headers__constructor_1__always__initialized_invalid) {
+TEST_CASE("headers  constructor 1  always  initialized invalid", "[headers]") {
     headers instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_2__always__equals_params) {
+TEST_CASE("headers  constructor 2  always  equals params", "[headers]") {
     header::list const expected{
         header(
             10u,
