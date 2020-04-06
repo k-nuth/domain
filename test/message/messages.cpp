@@ -2,32 +2,33 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
+
+#include <kth/infrastructure/message/message_tools.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(messages_tests)
+// Start Boost Suite: messages tests
 
-BOOST_AUTO_TEST_CASE(messages__variable_uint_size__one_byte__expected) {
+TEST_CASE("messages  variable uint size  one byte  expected", "[messages]") {
     static uint64_t const value = 1;
-    BOOST_REQUIRE_EQUAL(infrastructure::message::variable_uint_size(value), 1u);
+    REQUIRE(infrastructure::message::variable_uint_size(value) == 1u);
 }
 
-BOOST_AUTO_TEST_CASE(messages__variable_uint_size__two_byte__expected) {
+TEST_CASE("messages  variable uint size  two byte  expected", "[messages]") {
     static uint64_t const value = 0xfe;
-    BOOST_REQUIRE_EQUAL(infrastructure::message::variable_uint_size(value), 3u);
+    REQUIRE(infrastructure::message::variable_uint_size(value) == 3u);
 }
 
-BOOST_AUTO_TEST_CASE(messages__variable_uint_size__four_byte__expected) {
+TEST_CASE("messages  variable uint size  four byte  expected", "[messages]") {
     static uint64_t const value = 0x10000;
-    BOOST_REQUIRE_EQUAL(infrastructure::message::variable_uint_size(value), 5u);
+    REQUIRE(infrastructure::message::variable_uint_size(value) == 5u);
 }
 
-BOOST_AUTO_TEST_CASE(messages__variable_uint_size__eight_byte__expected) {
+TEST_CASE("messages  variable uint size  eight byte  expected", "[messages]") {
     static uint64_t const value = 0x100000000;
-    BOOST_REQUIRE_EQUAL(infrastructure::message::variable_uint_size(value), 9u);
+    REQUIRE(infrastructure::message::variable_uint_size(value) == 9u);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
