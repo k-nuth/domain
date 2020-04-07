@@ -78,15 +78,14 @@ TEST_CASE("filter add  factory from data 1  valid input  success", "[filter add]
     auto const result = create<message::filter_add>(
         message::version::level::maximum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::version::level::maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::maximum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::maximum));
+    REQUIRE(expected.serialized_size(message::version::level::maximum) ==
                         result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_2__valid_input__success) {
+TEST_CASE("filter add  factory from data 2  valid input  success", "[filter add]") {
     const message::filter_add expected{
         {0x1F, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
          0xbb, 0x85, 0x0a, 0x3d, 0x79, 0x24, 0xed, 0x0f,
