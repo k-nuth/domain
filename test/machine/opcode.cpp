@@ -199,474 +199,474 @@ TEST_CASE("opcode  opcode to string  reserved 255 any forks  0xff", "[None]")
 
 // zero
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__zero__push_size_0)
+TEST_CASE("opcode  opcode from string  zero  push size 0", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "zero"));
-    BOOST_REQUIRE(out_code == opcode::push_size_0);
+    REQUIRE(opcode_from_string(out_code, "zero"));
+    REQUIRE(out_code == opcode::push_size_0);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__push_0__push_size_0)
+TEST_CASE("opcode  opcode from string  push 0  push size 0", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "push_0"));
-    BOOST_REQUIRE(out_code == opcode::push_size_0);
+    REQUIRE(opcode_from_string(out_code, "push_0"));
+    REQUIRE(out_code == opcode::push_size_0);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__0__push_size_0)
+TEST_CASE("opcode  opcode from string  0  push size 0", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "0"));
-    BOOST_REQUIRE(out_code == opcode::push_size_0);
+    REQUIRE(opcode_from_string(out_code, "0"));
+    REQUIRE(out_code == opcode::push_size_0);
 }
 
 // push n (special)
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__push_1__push_size_1)
+TEST_CASE("opcode  opcode from string  push 1  push size 1", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "push_1"));
-    BOOST_REQUIRE(out_code == opcode::push_size_1);
+    REQUIRE(opcode_from_string(out_code, "push_1"));
+    REQUIRE(out_code == opcode::push_size_1);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__push_75__push_size_75)
+TEST_CASE("opcode  opcode from string  push 75  push size 75", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "push_75"));
-    BOOST_REQUIRE(out_code == opcode::push_size_75);
+    REQUIRE(opcode_from_string(out_code, "push_75"));
+    REQUIRE(out_code == opcode::push_size_75);
 }
 
 // push n byte size (pushdata)
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__push_one__push_one_size)
+TEST_CASE("opcode  opcode from string  push one  push one size", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "push_one"));
-    BOOST_REQUIRE(out_code == opcode::push_one_size);
+    REQUIRE(opcode_from_string(out_code, "push_one"));
+    REQUIRE(out_code == opcode::push_one_size);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__push_two__push_two_size)
+TEST_CASE("opcode  opcode from string  push two  push two size", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "push_two"));
-    BOOST_REQUIRE(out_code == opcode::push_two_size);
+    REQUIRE(opcode_from_string(out_code, "push_two"));
+    REQUIRE(out_code == opcode::push_two_size);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__push_four__push_four_size)
+TEST_CASE("opcode  opcode from string  push four  push four size", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "push_four"));
-    BOOST_REQUIRE(out_code == opcode::push_four_size);
+    REQUIRE(opcode_from_string(out_code, "push_four"));
+    REQUIRE(out_code == opcode::push_four_size);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__pushdata1__push_one_size)
+TEST_CASE("opcode  opcode from string  pushdata1  push one size", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "pushdata1"));
-    BOOST_REQUIRE(out_code == opcode::push_one_size);
+    REQUIRE(opcode_from_string(out_code, "pushdata1"));
+    REQUIRE(out_code == opcode::push_one_size);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__pushdata2_push_two_size)
+TEST_CASE("opcode  opcode from string  pushdata2 push two size", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "pushdata2"));
-    BOOST_REQUIRE(out_code == opcode::push_two_size);
+    REQUIRE(opcode_from_string(out_code, "pushdata2"));
+    REQUIRE(out_code == opcode::push_two_size);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__pushdata4__push_four_size)
+TEST_CASE("opcode  opcode from string  pushdata4  push four size", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "pushdata4"));
-    BOOST_REQUIRE(out_code == opcode::push_four_size);
+    REQUIRE(opcode_from_string(out_code, "pushdata4"));
+    REQUIRE(out_code == opcode::push_four_size);
 }
 
 // negative one
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__minus1__push_negative_1)
+TEST_CASE("opcode  opcode from string  minus1  push negative 1", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "-1"));
-    BOOST_REQUIRE(out_code == opcode::push_negative_1);
+    REQUIRE(opcode_from_string(out_code, "-1"));
+    REQUIRE(out_code == opcode::push_negative_1);
 }
 
 // reserved
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__reserved__reserved_80)
+TEST_CASE("opcode  opcode from string  reserved  reserved 80", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "reserved"));
-    BOOST_REQUIRE(out_code == opcode::reserved_80);
+    REQUIRE(opcode_from_string(out_code, "reserved"));
+    REQUIRE(out_code == opcode::reserved_80);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__reserved_80__reserved_80)
+TEST_CASE("opcode  opcode from string  reserved 80  reserved 80", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "reserved_80"));
-    BOOST_REQUIRE(out_code == opcode::reserved_80);
+    REQUIRE(opcode_from_string(out_code, "reserved_80"));
+    REQUIRE(out_code == opcode::reserved_80);
 }
 
 // positive numbers
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__1__push_positive_1)
+TEST_CASE("opcode  opcode from string  1  push positive 1", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "1"));
-    BOOST_REQUIRE(out_code == opcode::push_positive_1);
+    REQUIRE(opcode_from_string(out_code, "1"));
+    REQUIRE(out_code == opcode::push_positive_1);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__16__push_positive_16)
+TEST_CASE("opcode  opcode from string  16  push positive 16", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "16"));
-    BOOST_REQUIRE(out_code == opcode::push_positive_16);
+    REQUIRE(opcode_from_string(out_code, "16"));
+    REQUIRE(out_code == opcode::push_positive_16);
 }
 
 // ver/verif/vernotif
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__ver__reserved_98)
+TEST_CASE("opcode  opcode from string  ver  reserved 98", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "ver"));
-    BOOST_REQUIRE(out_code == opcode::reserved_98);
+    REQUIRE(opcode_from_string(out_code, "ver"));
+    REQUIRE(out_code == opcode::reserved_98);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__verif__disabled_verif)
+TEST_CASE("opcode  opcode from string  verif  disabled verif", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "verif"));
-    BOOST_REQUIRE(out_code == opcode::disabled_verif);
+    REQUIRE(opcode_from_string(out_code, "verif"));
+    REQUIRE(out_code == opcode::disabled_verif);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__vernotif__disabled_vernotif)
+TEST_CASE("opcode  opcode from string  vernotif  disabled vernotif", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "vernotif"));
-    BOOST_REQUIRE(out_code == opcode::disabled_vernotif);
+    REQUIRE(opcode_from_string(out_code, "vernotif"));
+    REQUIRE(out_code == opcode::disabled_vernotif);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__reserved_98__reserved_98)
+TEST_CASE("opcode  opcode from string  reserved 98  reserved 98", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "reserved_98"));
-    BOOST_REQUIRE(out_code == opcode::reserved_98);
+    REQUIRE(opcode_from_string(out_code, "reserved_98"));
+    REQUIRE(out_code == opcode::reserved_98);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__disabled_verif__disabled_verif)
+TEST_CASE("opcode  opcode from string  disabled verif  disabled verif", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "disabled_verif"));
-    BOOST_REQUIRE(out_code == opcode::disabled_verif);
+    REQUIRE(opcode_from_string(out_code, "disabled_verif"));
+    REQUIRE(out_code == opcode::disabled_verif);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__disabled_vernotif__disabled_vernotif)
+TEST_CASE("opcode  opcode from string  disabled vernotif  disabled vernotif", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "disabled_vernotif"));
-    BOOST_REQUIRE(out_code == opcode::disabled_vernotif);
+    REQUIRE(opcode_from_string(out_code, "disabled_vernotif"));
+    REQUIRE(out_code == opcode::disabled_vernotif);
 }
 
 // math
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__drop2__drop2)
+TEST_CASE("opcode  opcode from string  drop2  drop2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "drop2"));
-    BOOST_REQUIRE(out_code == opcode::drop2);
+    REQUIRE(opcode_from_string(out_code, "drop2"));
+    REQUIRE(out_code == opcode::drop2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__dup2__dup2)
+TEST_CASE("opcode  opcode from string  dup2  dup2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "dup2"));
-    BOOST_REQUIRE(out_code == opcode::dup2);
+    REQUIRE(opcode_from_string(out_code, "dup2"));
+    REQUIRE(out_code == opcode::dup2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__dup3__dup3)
+TEST_CASE("opcode  opcode from string  dup3  dup3", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "dup3"));
-    BOOST_REQUIRE(out_code == opcode::dup3);
+    REQUIRE(opcode_from_string(out_code, "dup3"));
+    REQUIRE(out_code == opcode::dup3);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__over2__over2)
+TEST_CASE("opcode  opcode from string  over2  over2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "over2"));
-    BOOST_REQUIRE(out_code == opcode::over2);
+    REQUIRE(opcode_from_string(out_code, "over2"));
+    REQUIRE(out_code == opcode::over2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__rot2__rot2)
+TEST_CASE("opcode  opcode from string  rot2  rot2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "rot2"));
-    BOOST_REQUIRE(out_code == opcode::rot2);
+    REQUIRE(opcode_from_string(out_code, "rot2"));
+    REQUIRE(out_code == opcode::rot2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__swap2__swap2)
+TEST_CASE("opcode  opcode from string  swap2  swap2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "swap2"));
-    BOOST_REQUIRE(out_code == opcode::swap2);
+    REQUIRE(opcode_from_string(out_code, "swap2"));
+    REQUIRE(out_code == opcode::swap2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__add1__add1)
+TEST_CASE("opcode  opcode from string  add1  add1", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "add1"));
-    BOOST_REQUIRE(out_code == opcode::add1);
+    REQUIRE(opcode_from_string(out_code, "add1"));
+    REQUIRE(out_code == opcode::add1);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__sub1__sub1)
+TEST_CASE("opcode  opcode from string  sub1  sub1", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "sub1"));
-    BOOST_REQUIRE(out_code == opcode::sub1);
+    REQUIRE(opcode_from_string(out_code, "sub1"));
+    REQUIRE(out_code == opcode::sub1);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__mul2__mul2)
+TEST_CASE("opcode  opcode from string  mul2  mul2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "mul2"));
-    BOOST_REQUIRE(out_code == opcode::disabled_mul2);
+    REQUIRE(opcode_from_string(out_code, "mul2"));
+    REQUIRE(out_code == opcode::disabled_mul2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__div2__div2)
+TEST_CASE("opcode  opcode from string  div2  div2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "div2"));
-    BOOST_REQUIRE(out_code == opcode::disabled_div2);
+    REQUIRE(opcode_from_string(out_code, "div2"));
+    REQUIRE(out_code == opcode::disabled_div2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__2drop__drop2)
+TEST_CASE("opcode  opcode from string  2drop  drop2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "2drop"));
-    BOOST_REQUIRE(out_code == opcode::drop2);
+    REQUIRE(opcode_from_string(out_code, "2drop"));
+    REQUIRE(out_code == opcode::drop2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__2dup__dup2)
+TEST_CASE("opcode  opcode from string  2dup  dup2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "2dup"));
-    BOOST_REQUIRE(out_code == opcode::dup2);
+    REQUIRE(opcode_from_string(out_code, "2dup"));
+    REQUIRE(out_code == opcode::dup2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__3dup__dup3)
+TEST_CASE("opcode  opcode from string  3dup  dup3", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "3dup"));
-    BOOST_REQUIRE(out_code == opcode::dup3);
+    REQUIRE(opcode_from_string(out_code, "3dup"));
+    REQUIRE(out_code == opcode::dup3);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__2over__over2)
+TEST_CASE("opcode  opcode from string  2over  over2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "2over"));
-    BOOST_REQUIRE(out_code == opcode::over2);
+    REQUIRE(opcode_from_string(out_code, "2over"));
+    REQUIRE(out_code == opcode::over2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__2rot__rot2)
+TEST_CASE("opcode  opcode from string  2rot  rot2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "2rot"));
-    BOOST_REQUIRE(out_code == opcode::rot2);
+    REQUIRE(opcode_from_string(out_code, "2rot"));
+    REQUIRE(out_code == opcode::rot2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__2swap__swap2)
+TEST_CASE("opcode  opcode from string  2swap  swap2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "2swap"));
-    BOOST_REQUIRE(out_code == opcode::swap2);
+    REQUIRE(opcode_from_string(out_code, "2swap"));
+    REQUIRE(out_code == opcode::swap2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__1add__add1)
+TEST_CASE("opcode  opcode from string  1add  add1", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "1add"));
-    BOOST_REQUIRE(out_code == opcode::add1);
+    REQUIRE(opcode_from_string(out_code, "1add"));
+    REQUIRE(out_code == opcode::add1);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__1sub__sub1)
+TEST_CASE("opcode  opcode from string  1sub  sub1", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "1sub"));
-    BOOST_REQUIRE(out_code == opcode::sub1);
+    REQUIRE(opcode_from_string(out_code, "1sub"));
+    REQUIRE(out_code == opcode::sub1);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__2mul__mul2)
+TEST_CASE("opcode  opcode from string  2mul  mul2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "2mul"));
-    BOOST_REQUIRE(out_code == opcode::disabled_mul2);
+    REQUIRE(opcode_from_string(out_code, "2mul"));
+    REQUIRE(out_code == opcode::disabled_mul2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__2div__div2)
+TEST_CASE("opcode  opcode from string  2div  div2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "2div"));
-    BOOST_REQUIRE(out_code == opcode::disabled_div2);
+    REQUIRE(opcode_from_string(out_code, "2div"));
+    REQUIRE(out_code == opcode::disabled_div2);
 }
 
 // reserved1/reserved2
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__reserved1__reserved_137)
+TEST_CASE("opcode  opcode from string  reserved1  reserved 137", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "reserved1"));
-    BOOST_REQUIRE(out_code == opcode::reserved_137);
+    REQUIRE(opcode_from_string(out_code, "reserved1"));
+    REQUIRE(out_code == opcode::reserved_137);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__reserved2__reserved_138)
+TEST_CASE("opcode  opcode from string  reserved2  reserved 138", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "reserved2"));
-    BOOST_REQUIRE(out_code == opcode::reserved_138);
+    REQUIRE(opcode_from_string(out_code, "reserved2"));
+    REQUIRE(out_code == opcode::reserved_138);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__disabled_vernotif__reserved_137)
+TEST_CASE("opcode  opcode from string  disabled vernotif  reserved 137", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "reserved_137"));
-    BOOST_REQUIRE(out_code == opcode::reserved_137);
+    REQUIRE(opcode_from_string(out_code, "reserved_137"));
+    REQUIRE(out_code == opcode::reserved_137);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__disabled_vernotif__reserved_138)
+TEST_CASE("opcode  opcode from string  disabled vernotif  reserved 138", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "reserved_138"));
-    BOOST_REQUIRE(out_code == opcode::reserved_138);
+    REQUIRE(opcode_from_string(out_code, "reserved_138"));
+    REQUIRE(out_code == opcode::reserved_138);
 }
 
 // nop2/checklocktimeverify
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__nop2__nop2)
+TEST_CASE("opcode  opcode from string  nop2  nop2", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "nop2"));
-    BOOST_REQUIRE(out_code == opcode::nop2);
+    REQUIRE(opcode_from_string(out_code, "nop2"));
+    REQUIRE(out_code == opcode::nop2);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__checklocktimeverify__nop2_or_checklocktimeverify)
+TEST_CASE("opcode  opcode from string  checklocktimeverify  nop2 or checklocktimeverify", "[None]")
 {
     static_assert(opcode::checklocktimeverify == opcode::nop2, "nop2 drift");
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "checklocktimeverify"));
-    BOOST_REQUIRE(out_code == opcode::nop2);
+    REQUIRE(opcode_from_string(out_code, "checklocktimeverify"));
+    REQUIRE(out_code == opcode::nop2);
 }
 
 // nop3/checksequenceverify
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__nop3__nop3)
+TEST_CASE("opcode  opcode from string  nop3  nop3", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "nop3"));
-    BOOST_REQUIRE(out_code == opcode::nop3);
+    REQUIRE(opcode_from_string(out_code, "nop3"));
+    REQUIRE(out_code == opcode::nop3);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_string__checksequenceverify__nop3_or_checksequenceverify)
+TEST_CASE("opcode  opcode from string  checksequenceverify  nop3 or checksequenceverify", "[None]")
 {
     static_assert(opcode::checksequenceverify == opcode::nop3, "nop3 drift");
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_string(out_code, "checksequenceverify"));
-    BOOST_REQUIRE(out_code == opcode::nop3);
+    REQUIRE(opcode_from_string(out_code, "checksequenceverify"));
+    REQUIRE(out_code == opcode::nop3);
 }
 
 // opcode_to_hexadecimal
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_to_hexadecimal__zero__0x00)
+TEST_CASE("opcode  opcode to hexadecimal  zero  0x00", "[None]")
 {
-    BOOST_REQUIRE(opcode_to_hexadecimal(opcode::push_size_0) == "0x00");
+    REQUIRE(opcode_to_hexadecimal(opcode::push_size_0) == "0x00");
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_to_hexadecimal__push_size_42__0x2a)
+TEST_CASE("opcode  opcode to hexadecimal  push size 42  0x2a", "[None]")
 {
-    BOOST_REQUIRE(opcode_to_hexadecimal(opcode::push_size_42) == "0x2a");
+    REQUIRE(opcode_to_hexadecimal(opcode::push_size_42) == "0x2a");
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_to_hexadecimal__reserved_255__0xff)
+TEST_CASE("opcode  opcode to hexadecimal  reserved 255  0xff", "[None]")
 {
-    BOOST_REQUIRE(opcode_to_hexadecimal(opcode::reserved_255) == "0xff");
+    REQUIRE(opcode_to_hexadecimal(opcode::reserved_255) == "0xff");
 }
 
 // opcode_from_hexadecimal
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__empty__false)
+TEST_CASE("opcode  opcode from hexadecimal  empty  false", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(!opcode_from_hexadecimal(out_code, ""));
+    REQUIRE(!opcode_from_hexadecimal(out_code, ""));
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__bogus__false)
+TEST_CASE("opcode  opcode from hexadecimal  bogus  false", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(!opcode_from_hexadecimal(out_code, "bogus"));
+    REQUIRE(!opcode_from_hexadecimal(out_code, "bogus"));
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__9_bits__false)
+TEST_CASE("opcode  opcode from hexadecimal  9 bits  false", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(!opcode_from_hexadecimal(out_code, "0x"));
+    REQUIRE(!opcode_from_hexadecimal(out_code, "0x"));
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__8_bits__false)
+TEST_CASE("opcode  opcode from hexadecimal  8 bits  false", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(!opcode_from_hexadecimal(out_code, "0xf"));
+    REQUIRE(!opcode_from_hexadecimal(out_code, "0xf"));
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__16_bits__expected)
+TEST_CASE("opcode  opcode from hexadecimal  16 bits  expected", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_hexadecimal(out_code, "0xff"));
-    BOOST_REQUIRE(out_code == opcode::reserved_255);
+    REQUIRE(opcode_from_hexadecimal(out_code, "0xff"));
+    REQUIRE(out_code == opcode::reserved_255);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__24_bits__false)
+TEST_CASE("opcode  opcode from hexadecimal  24 bits  false", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(!opcode_from_hexadecimal(out_code, "0xffe"));
+    REQUIRE(!opcode_from_hexadecimal(out_code, "0xffe"));
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__48_bits__false)
+TEST_CASE("opcode  opcode from hexadecimal  48 bits  false", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(!opcode_from_hexadecimal(out_code, "0xffee"));
+    REQUIRE(!opcode_from_hexadecimal(out_code, "0xffee"));
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__upper_case__expected)
+TEST_CASE("opcode  opcode from hexadecimal  upper case  expected", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_hexadecimal(out_code, "0xFE"));
-    BOOST_REQUIRE(out_code == opcode::reserved_254);
+    REQUIRE(opcode_from_hexadecimal(out_code, "0xFE"));
+    REQUIRE(out_code == opcode::reserved_254);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__mixed_case__expected)
+TEST_CASE("opcode  opcode from hexadecimal  mixed case  expected", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_hexadecimal(out_code, "0xFe"));
-    BOOST_REQUIRE(out_code == opcode::reserved_254);
+    REQUIRE(opcode_from_hexadecimal(out_code, "0xFe"));
+    REQUIRE(out_code == opcode::reserved_254);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__numeric__expected)
+TEST_CASE("opcode  opcode from hexadecimal  numeric  expected", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_hexadecimal(out_code, "0x42"));
-    BOOST_REQUIRE(out_code == opcode::push_size_66);
+    REQUIRE(opcode_from_hexadecimal(out_code, "0x42"));
+    REQUIRE(out_code == opcode::push_size_66);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__alphanumeric__expected)
+TEST_CASE("opcode  opcode from hexadecimal  alphanumeric  expected", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(opcode_from_hexadecimal(out_code, "0x4f"));
-    BOOST_REQUIRE(out_code == opcode::push_negative_1);
+    REQUIRE(opcode_from_hexadecimal(out_code, "0x4f"));
+    REQUIRE(out_code == opcode::push_negative_1);
 }
 
-BOOST_AUTO_TEST_CASE(opcode__opcode_from_hexadecimal__upper_case_prefix__false)
+TEST_CASE("opcode  opcode from hexadecimal  upper case prefix  false", "[None]")
 {
     opcode out_code;
-    BOOST_REQUIRE(!opcode_from_hexadecimal(out_code, "0X4f"));
+    REQUIRE(!opcode_from_hexadecimal(out_code, "0X4f"));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
