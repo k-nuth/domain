@@ -47,12 +47,12 @@ witness::witness(data_stack&& stack) {
 }
 
 witness::witness(data_chunk&& encoded, bool prefix) {
-    from_data(static_cast<data_chunk const&>(encoded), prefix);
+    entity_from_data(*this, static_cast<data_chunk const&>(encoded), prefix);
     // from_data(encoded, prefix);
 }
 
 witness::witness(data_chunk const& encoded, bool prefix) {
-    from_data(encoded, prefix);
+    entity_from_data(*this, encoded, prefix);
 }
 
 
