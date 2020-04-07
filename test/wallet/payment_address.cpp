@@ -2,16 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <kth/domain/multi_crypto_support.hpp>
-#include <boost/test/unit_test.hpp>
+// #include <kth/domain/multi_crypto_support.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::chain;
 using namespace kth::domain::wallet;
 
-BOOST_AUTO_TEST_SUITE(payment_address_tests)
+// Start Boost Suite: payment address tests
 
 // $ bx base16-encode "Satoshi" | bx sha256
 #define SECRET "002688cc350a5333a87fa622eacec626c3d1c0ebf9f3793de3885fa254d7e393"
