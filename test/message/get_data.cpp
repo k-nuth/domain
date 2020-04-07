@@ -26,95 +26,95 @@ TEST_CASE("get data  constructor 2  always  equals params", "[get data]") {
                   0x37, 0xc0, 0xb0, 0x32, 0xf0, 0xd6, 0x6e, 0xdf}}}};
 
     const get_data instance(values);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(values == instance.inventories());
+    REQUIRE(instance.is_valid());
+    REQUIRE(values == instance.inventories());
 }
 
-BOOST_AUTO_TEST_CASE(get_data__constructor_3__always__equals_params) {
+TEST_CASE("get data  constructor 3  always  equals params", "[get data]") {
     static auto const type = inventory_vector::type_id::error;
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector::list const values{
         inventory_vector(type, hash)};
 
     const get_data instance(std::move(values));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
     auto const inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_data__constructor_4__always__equals_params) {
+TEST_CASE("get data  constructor 4  always  equals params", "[get data]") {
     static auto const type = inventory_vector::type_id::error;
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    static const hash_list hashes{hash};
+    static hash_list const hashes{hash};
 
     const get_data instance(hashes, type);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
     auto inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_data__constructor_5__always__equals_params) {
+TEST_CASE("get data  constructor 5  always  equals params", "[get data]") {
     static auto const type = inventory_vector::type_id::error;
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     const get_data instance{{type, hash}};
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
     auto inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_data__constructor_6__always__equals_params) {
+TEST_CASE("get data  constructor 6  always  equals params", "[get data]") {
     static auto const type = inventory_vector::type_id::error;
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     const get_data value{{type, hash}};
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     const get_data instance(value);
     auto const inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(get_data__constructor_7__always__equals_params) {
+TEST_CASE("get data  constructor 7  always  equals params", "[get data]") {
     static auto const type = inventory_vector::type_id::error;
     static auto const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     const get_data value{{type, hash}};
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     const get_data instance(std::move(value));
     auto const inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_bytes__failure) {
+TEST_CASE("get data  from data  insufficient bytes  failure", "[get data]") {
     static data_chunk const raw{0xab, 0xcd};
     get_data instance;
     static auto const version = version::level::maximum;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version, raw));
+    REQUIRE( ! entity_from_data(instance, version, raw));
 }
 
-BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_version__failure) {
+TEST_CASE("get data  from data  insufficient version  failure", "[get data]") {
     static const get_data expected{
         {inventory_vector::type_id::error,
          hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")}};
 
     auto const raw = expected.to_data(version::level::maximum);
     get_data instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, get_data::version_minimum - 1, raw));
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, get_data::version_minimum - 1, raw));
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(get_data__factory_from_data_1__valid_input__success) {
+TEST_CASE("get data  factory from data 1  valid input  success", "[get data]") {
     static const get_data expected{
         {inventory_vector::type_id::error,
          hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")}};
