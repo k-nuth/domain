@@ -726,258 +726,258 @@ TEST_CASE("chain transaction  fees  nonempty  returns outputs minus inputs", "[c
     inputs.back().previous_output().validation.cache.set_value(321u);
     instance.outputs().emplace_back();
     instance.outputs().back().set_value(44u);
-    BOOST_REQUIRE_EQUAL(instance.fees(), 400u);
+    REQUIRE(instance.fees() == 400u);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_overspent__output_does_not_exceed_input__returns_false) {
+TEST_CASE("chain transaction  is overspent  output does not exceed input  returns false", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_overspent());
+    REQUIRE(!instance.is_overspent());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_overspent__output_exceeds_input__returns_true) {
+TEST_CASE("chain transaction  is overspent  output exceeds input  returns true", "[chain transaction]") {
     chain::transaction instance;
     auto& outputs = instance.outputs();
     outputs.emplace_back();
     outputs.back().set_value(1200);
     outputs.emplace_back();
     outputs.back().set_value(34);
-    BOOST_REQUIRE(instance.is_overspent());
+    REQUIRE(instance.is_overspent());
 }
 
 // TODO(legacy): tests with initialized data
-BOOST_AUTO_TEST_CASE(transaction__signature_operations_single_input_output_uninitialized__returns_zero) {
+TEST_CASE("chain transaction  signature operations single input output uninitialized  returns zero", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.outputs().emplace_back();
-    BOOST_REQUIRE_EQUAL(instance.signature_operations(false, false), 0u);
+    REQUIRE(instance.signature_operations(false, false) == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_missing_previous_outputs__empty_inputs__returns_false) {
+TEST_CASE("chain transaction  is missing previous outputs  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_missing_previous_outputs());
+    REQUIRE(!instance.is_missing_previous_outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_missing_previous_outputs__inputs_without_cache_value__returns_true) {
+TEST_CASE("chain transaction  is missing previous outputs  inputs without cache value  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
-    BOOST_REQUIRE(instance.is_missing_previous_outputs());
+    REQUIRE(instance.is_missing_previous_outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_missing_previous_outputs__inputs_with_cache_value__returns_false) {
+TEST_CASE("chain transaction  is missing previous outputs  inputs with cache value  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().validation.cache.set_value(123u);
-    BOOST_REQUIRE(!instance.is_missing_previous_outputs());
+    REQUIRE(!instance.is_missing_previous_outputs());
 }
 
-////BOOST_AUTO_TEST_CASE(transaction__missing_previous_outputs__empty_inputs__returns_empty)
+////TEST_CASE("chain transaction  missing previous outputs  empty inputs  returns empty", "[None]")
 ////{
 ////    chain::transaction instance;
-////    BOOST_REQUIRE_EQUAL(instance.missing_previous_outputs().size(), 0u);
+////    REQUIRE(instance.missing_previous_outputs().size() == 0u);
 ////}
 ////
-////BOOST_AUTO_TEST_CASE(transaction__missing_previous_outputs__inputs_without_cache_value__returns_single_index)
+////TEST_CASE("chain transaction  missing previous outputs  inputs without cache value  returns single index", "[None]")
 ////{
 ////    chain::transaction instance;
 ////    instance.inputs().emplace_back();
 ////    auto result = instance.missing_previous_outputs();
-////    BOOST_REQUIRE_EQUAL(result.size(), 1u);
-////    BOOST_REQUIRE_EQUAL(result.back(), 0u);
+////    REQUIRE(result.size() == 1u);
+////    REQUIRE(result.back() == 0u);
 ////}
 ////
-////BOOST_AUTO_TEST_CASE(transaction__missing_previous_outputs__inputs_with_cache_value__returns_empty)
+////TEST_CASE("chain transaction  missing previous outputs  inputs with cache value  returns empty", "[None]")
 ////{
 ////    chain::transaction instance;
 ////    instance.inputs().emplace_back();
 ////    instance.inputs().back().previous_output().validation.cache.set_value(123u);
-////    BOOST_REQUIRE_EQUAL(instance.missing_previous_outputs().size(), 0u);
+////    REQUIRE(instance.missing_previous_outputs().size() == 0u);
 ////}
 
-BOOST_AUTO_TEST_CASE(transaction__is_double_spend__empty_inputs__returns_false) {
+TEST_CASE("chain transaction  is double spend  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_double_spend(false));
-    BOOST_REQUIRE(!instance.is_double_spend(true));
+    REQUIRE(!instance.is_double_spend(false));
+    REQUIRE(!instance.is_double_spend(true));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_double_spend__unspent_inputs__returns_false) {
+TEST_CASE("chain transaction  is double spend  unspent inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
-    BOOST_REQUIRE(!instance.is_double_spend(false));
-    BOOST_REQUIRE(!instance.is_double_spend(true));
+    REQUIRE(!instance.is_double_spend(false));
+    REQUIRE(!instance.is_double_spend(true));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_double_spend__include_unconfirmed_false_with_unconfirmed__returns_false) {
+TEST_CASE("chain transaction  is double spend  include unconfirmed false with unconfirmed  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().validation.spent = true;
-    BOOST_REQUIRE(!instance.is_double_spend(false));
+    REQUIRE(!instance.is_double_spend(false));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_double_spend__include_unconfirmed_false_with_confirmed__returns_true) {
+TEST_CASE("chain transaction  is double spend  include unconfirmed false with confirmed  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().validation.spent = true;
     instance.inputs().back().previous_output().validation.confirmed = true;
-    BOOST_REQUIRE(instance.is_double_spend(false));
+    REQUIRE(instance.is_double_spend(false));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_double_spend__include_unconfirmed_true_with_unconfirmed__returns_true) {
+TEST_CASE("chain transaction  is double spend  include unconfirmed true with unconfirmed  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().validation.spent = true;
-    BOOST_REQUIRE(instance.is_double_spend(true));
+    REQUIRE(instance.is_double_spend(true));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_dusty__no_outputs_zero__returns_false) {
+TEST_CASE("chain transaction  is dusty  no outputs zero  returns false", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_dusty(0));
+    REQUIRE(!instance.is_dusty(0));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_above_both__returns_true) {
+TEST_CASE("chain transaction  is dusty  two outputs limit above both  returns true", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
-    BOOST_REQUIRE(instance.is_dusty(1740950001));
+    REQUIRE(entity_from_data(instance, raw_tx));
+    REQUIRE(instance.is_dusty(1740950001));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_below_both__returns_false) {
+TEST_CASE("chain transaction  is dusty  two outputs limit below both  returns false", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
-    BOOST_REQUIRE(!instance.is_dusty(257999999));
+    REQUIRE(entity_from_data(instance, raw_tx));
+    REQUIRE(!instance.is_dusty(257999999));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_at_upper__returns_true) {
+TEST_CASE("chain transaction  is dusty  two outputs limit at upper  returns true", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
-    BOOST_REQUIRE(instance.is_dusty(1740950000));
+    REQUIRE(entity_from_data(instance, raw_tx));
+    REQUIRE(instance.is_dusty(1740950000));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_at_lower__returns_false) {
+TEST_CASE("chain transaction  is dusty  two outputs limit at lower  returns false", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
-    BOOST_REQUIRE(!instance.is_dusty(258000000));
+    REQUIRE(entity_from_data(instance, raw_tx));
+    REQUIRE(!instance.is_dusty(258000000));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_between_both__returns_true) {
+TEST_CASE("chain transaction  is dusty  two outputs limit between both  returns true", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
-    BOOST_REQUIRE(instance.is_dusty(258000001));
+    REQUIRE(entity_from_data(instance, raw_tx));
+    REQUIRE(instance.is_dusty(258000001));
 }
 
 auto const hash1 = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
-BOOST_AUTO_TEST_CASE(transaction__is_mature__no_inputs__returns_true) {
+TEST_CASE("chain transaction  is mature  no inputs  returns true", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(instance.is_mature(453));
+    REQUIRE(instance.is_mature(453));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_mature__mature_coinbase_prevout__returns_true) {
+TEST_CASE("chain transaction  is mature  mature coinbase prevout  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.coinbase = true;
-    BOOST_REQUIRE(!instance.inputs().back().previous_output().is_null());
-    BOOST_REQUIRE(instance.is_mature(453));
+    REQUIRE(!instance.inputs().back().previous_output().is_null());
+    REQUIRE(instance.is_mature(453));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_mature__premature_coinbase_prevout__returns_false) {
+TEST_CASE("chain transaction  is mature  premature coinbase prevout  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.height = 20;
     instance.inputs().back().previous_output().validation.coinbase = true;
-    BOOST_REQUIRE(!instance.inputs().back().previous_output().is_null());
-    BOOST_REQUIRE(!instance.is_mature(50));
+    REQUIRE(!instance.inputs().back().previous_output().is_null());
+    REQUIRE(!instance.is_mature(50));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_mature__premature_coinbase_prevout_null_input__returns_true) {
+TEST_CASE("chain transaction  is mature  premature coinbase prevout null input  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back(chain::output_point{null_hash, chain::point::null_index}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.height = 20;
     instance.inputs().back().previous_output().validation.coinbase = true;
-    BOOST_REQUIRE(instance.inputs().back().previous_output().is_null());
-    BOOST_REQUIRE(instance.is_mature(50));
+    REQUIRE(instance.inputs().back().previous_output().is_null());
+    REQUIRE(instance.is_mature(50));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_mature__mature_non_coinbase_prevout__returns_true) {
+TEST_CASE("chain transaction  is mature  mature non coinbase prevout  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.coinbase = false;
-    BOOST_REQUIRE(!instance.inputs().back().previous_output().is_null());
-    BOOST_REQUIRE(instance.is_mature(453));
+    REQUIRE(!instance.inputs().back().previous_output().is_null());
+    REQUIRE(instance.is_mature(453));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_mature__premature_non_coinbase_prevout__returns_true) {
+TEST_CASE("chain transaction  is mature  premature non coinbase prevout  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.height = 20;
     instance.inputs().back().previous_output().validation.coinbase = false;
-    BOOST_REQUIRE(!instance.inputs().back().previous_output().is_null());
-    BOOST_REQUIRE(instance.is_mature(50));
+    REQUIRE(!instance.inputs().back().previous_output().is_null());
+    REQUIRE(instance.is_mature(50));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("chain transaction  operator assign equals 1  always  matches equivalent", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
+    REQUIRE(entity_from_data(expected, raw_tx));
     chain::transaction instance;
     instance = create<chain::transaction>(raw_tx);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("chain transaction  operator assign equals 2  always  matches equivalent", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
+    REQUIRE(entity_from_data(expected, raw_tx));
     chain::transaction instance;
     instance = expected;
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("chain transaction  operator boolean equals  duplicates  returns true", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
-    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
-    BOOST_REQUIRE(alpha == beta);
+    REQUIRE(entity_from_data(alpha, raw_tx));
+    REQUIRE(entity_from_data(beta, raw_tx));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("chain transaction  operator boolean equals  differs  returns false", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
-    BOOST_REQUIRE(!(alpha == beta));
+    REQUIRE(entity_from_data(alpha, raw_tx));
+    REQUIRE(!(alpha == beta));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("chain transaction  operator boolean not equals  duplicates  returns false", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
-    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
-    BOOST_REQUIRE(!(alpha != beta));
+    REQUIRE(entity_from_data(alpha, raw_tx));
+    REQUIRE(entity_from_data(beta, raw_tx));
+    REQUIRE(!(alpha != beta));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("chain transaction  operator boolean not equals  differs  returns true", "[chain transaction]") {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, raw_tx));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__hash__block320670__success) {
+TEST_CASE("chain transaction  hash  block320670  success", "[chain transaction]") {
     // This is a garbage script that collides with the former opcode::raw_data sentinel.
     static auto const expected = hash_literal(TX7_HASH);
     static auto const data = to_chunk(base16_literal(TX7));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, data));
-    BOOST_REQUIRE(expected == instance.hash());
-    BOOST_REQUIRE(data == instance.to_data());
+    REQUIRE(entity_from_data(instance, data));
+    REQUIRE(expected == instance.hash());
+    REQUIRE(data == instance.to_data());
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
