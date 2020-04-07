@@ -72,22 +72,22 @@ TEST_CASE("heading  to data  checksum variations  success", "[heading]") {
         0u};
 
     auto const zero_checksum = instance.to_data();
-    BOOST_REQUIRE_EQUAL(zero_checksum.size(), heading::satoshi_fixed_size());
+    REQUIRE(zero_checksum.size() == heading::satoshi_fixed_size());
 
     instance.set_checksum(123u);
     auto const nonzero_checksum = instance.to_data();
-    BOOST_REQUIRE_EQUAL(nonzero_checksum.size(), heading::satoshi_fixed_size());
+    REQUIRE(nonzero_checksum.size() == heading::satoshi_fixed_size());
 }
 
-BOOST_AUTO_TEST_CASE(heading__from_data__insufficient_bytes__failure) {
+TEST_CASE("heading  from data  insufficient bytes  failure", "[heading]") {
     static data_chunk const raw{
         0xab, 0xcd};
 
     heading instance;
-    BOOST_REQUIRE(!entity_from_data(instance, raw));
+    REQUIRE(!entity_from_data(instance, raw));
 }
 
-BOOST_AUTO_TEST_CASE(heading__factory_from_data_1__valid_input__success) {
+TEST_CASE("heading  factory from data 1  valid input  success", "[heading]") {
     static const heading expected{
         32414u,
         "foo",
