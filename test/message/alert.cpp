@@ -33,45 +33,45 @@ TEST_CASE("alert  constructor 3  always  equals params", "[alert]") {
 
     message::alert instance(std::move(dup_payload), std::move(dup_signature));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(payload == instance.payload());
-    BOOST_REQUIRE(signature == instance.signature());
+    REQUIRE(instance.is_valid());
+    REQUIRE(payload == instance.payload());
+    REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_4__always__equals_params) {
+TEST_CASE("alert  constructor 4  always  equals params", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
     message::alert instance(value);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(payload == instance.payload());
-    BOOST_REQUIRE(signature == instance.signature());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(payload == instance.payload());
+    REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_5__always__equals_params) {
+TEST_CASE("alert  constructor 5  always  equals params", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
     message::alert instance(std::move(value));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(payload == instance.payload());
-    BOOST_REQUIRE(signature == instance.signature());
+    REQUIRE(instance.is_valid());
+    REQUIRE(payload == instance.payload());
+    REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__from_data__insufficient_bytes__failure) {
+TEST_CASE("alert  from data  insufficient bytes  failure", "[alert]") {
     data_chunk const raw{0xab, 0x11};
     message::alert instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success) {
+TEST_CASE("alert  factory from data 1  wiki sample  success", "[alert]") {
     data_chunk const raw_payload{
         0x01, 0x00, 0x00, 0x00, 0x37, 0x66, 0x40, 0x4f, 0x00,
         0x00, 0x00, 0x00, 0xb3, 0x05, 0x43, 0x4f, 0x00, 0x00, 0x00,
