@@ -51,15 +51,15 @@ TEST_CASE("filter load  constructor 4  always  equals params", "[filter load]") 
 
     const message::filter_load value(filter, hash_functions, tweak, flags);
     message::filter_load instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(filter == instance.filter());
-    BOOST_REQUIRE_EQUAL(hash_functions, instance.hash_functions());
-    BOOST_REQUIRE_EQUAL(tweak, instance.tweak());
-    BOOST_REQUIRE_EQUAL(flags, instance.flags());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(filter == instance.filter());
+    REQUIRE(hash_functions == instance.hash_functions());
+    REQUIRE(tweak == instance.tweak());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__constructor_5__always__equals_params) {
+TEST_CASE("filter load  constructor 5  always  equals params", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
