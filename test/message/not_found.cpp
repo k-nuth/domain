@@ -38,72 +38,72 @@ TEST_CASE("not found  constructor 3  always  equals params", "[not found]") {
             message::inventory_vector(type, hash)};
 
     message::not_found instance(std::move(values));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
     auto inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(not_found__constructor_4__always__equals_params) {
+TEST_CASE("not found  constructor 4  always  equals params", "[not found]") {
     message::inventory_vector::type_id type = message::inventory_vector::type_id::error;
     auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    const hash_list hashes = {hash};
+    hash_list const hashes = {hash};
 
     message::not_found instance(hashes, type);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
     auto inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(not_found__constructor_5__always__equals_params) {
+TEST_CASE("not found  constructor 5  always  equals params", "[not found]") {
     message::inventory_vector::type_id type = message::inventory_vector::type_id::error;
     auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     message::not_found instance{{type, hash}};
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
     auto inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(not_found__constructor_6__always__equals_params) {
+TEST_CASE("not found  constructor 6  always  equals params", "[not found]") {
     message::inventory_vector::type_id type = message::inventory_vector::type_id::error;
     auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     const message::not_found value{{type, hash}};
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::not_found instance(value);
     auto inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(not_found__constructor_7__always__equals_params) {
+TEST_CASE("not found  constructor 7  always  equals params", "[not found]") {
     message::inventory_vector::type_id type = message::inventory_vector::type_id::error;
     auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     message::not_found value{{type, hash}};
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::not_found instance(std::move(value));
     auto inventories = instance.inventories();
-    BOOST_REQUIRE_EQUAL(1u, inventories.size());
-    BOOST_REQUIRE(type == inventories[0].type());
-    BOOST_REQUIRE(hash == inventories[0].hash());
+    REQUIRE(1u == inventories.size());
+    REQUIRE(type == inventories[0].type());
+    REQUIRE(hash == inventories[0].hash());
 }
 
-BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_bytes__failure) {
+TEST_CASE("not found  from data  insufficient bytes  failure", "[not found]") {
     static data_chunk const raw{0xab, 0xcd};
     not_found instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, raw));
+    REQUIRE( ! entity_from_data(instance, version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure) {
+TEST_CASE("not found  from data  insufficient version  failure", "[not found]") {
     static not_found const expected{
         {{inventory_vector::type_id::error,
           {{0x44, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
