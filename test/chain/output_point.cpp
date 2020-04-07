@@ -88,38 +88,38 @@ TEST_CASE("output point  from data  roundtrip  success", "[output point]") {
 
     chain::output_point initial{hash, index};
 
-    BOOST_REQUIRE(initial.is_valid());
-    BOOST_REQUIRE(hash == initial.hash());
-    BOOST_REQUIRE(index == initial.index());
+    REQUIRE(initial.is_valid());
+    REQUIRE(hash == initial.hash());
+    REQUIRE(index == initial.index());
 
     chain::output_point point;
 
-    BOOST_REQUIRE(point != initial);
-    BOOST_REQUIRE(entity_from_data(point, initial.to_data()));
-    BOOST_REQUIRE(point.is_valid());
-    BOOST_REQUIRE(point == initial);
+    REQUIRE(point != initial);
+    REQUIRE(entity_from_data(point, initial.to_data()));
+    REQUIRE(point.is_valid());
+    REQUIRE(point == initial);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__factory_from_data_1__roundtrip__success) {
+TEST_CASE("output point  factory from data 1  roundtrip  success", "[output point]") {
     static auto const data = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    BOOST_REQUIRE(data == (data_chunk{
+    REQUIRE(data == (data_chunk{
                               0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
                               0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
                               0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
 
     auto point = create<chain::output_point>(data);
 
-    BOOST_REQUIRE(point.is_valid());
-    BOOST_REQUIRE_EQUAL(encode_hash(point.hash()), "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
-    BOOST_REQUIRE(point.index() == 0);
+    REQUIRE(point.is_valid());
+    REQUIRE(encode_hash(point.hash()) == "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
+    REQUIRE(point.index() == 0);
 
     data_chunk output = point.to_data();
-    BOOST_REQUIRE(output == data);
+    REQUIRE(output == data);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__factory_from_data_2__roundtrip__success) {
+TEST_CASE("output point  factory from data 2  roundtrip  success", "[output point]") {
     static auto const data = to_chunk(base16_literal("46682488f0a721124a3905a1bb72445bf13493e2cd46c5c0c8db1c15afa0d58e00000000"));
-    BOOST_REQUIRE(data == (data_chunk{
+    REQUIRE(data == (data_chunk{
                               0x46, 0x68, 0x24, 0x88, 0xf0, 0xa7, 0x21, 0x12, 0x4a, 0x39, 0x05, 0xa1,
                               0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
                               0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
