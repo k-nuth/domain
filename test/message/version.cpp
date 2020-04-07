@@ -26,58 +26,58 @@ auto const version_maximum = message::version::level::maximum;
 // "/therealbitcoin.org:0.9.99.99/" (99999) no relay
 #define NO_RELAY_THEREALBITCOIN_1 "9f86010001000000000000002336a15800000000010000000000000000000000000000000000ffff1813e52ebb81010000000000000000000000000000000000ffff6f6f6f6f208db1f33b262e6acb331e2f7468657265616c626974636f696e2e6f72673a302e392e39392e39392fb9e80600"
 
-BOOST_AUTO_TEST_SUITE(version_tests)
+// Start Boost Suite: version tests
 
-BOOST_AUTO_TEST_CASE(version__factory__therealbitcoin_dot_org__valid) {
+TEST_CASE("version  factory  therealbitcoin dot org valid", "[version]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, NO_RELAY_THEREALBITCOIN_1));
+    REQUIRE(decode_base16(payload, NO_RELAY_THEREALBITCOIN_1));
     auto const version = create<message::version>(version_maximum, payload);
-    BOOST_REQUIRE(version.is_valid());
+    REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__anarchistprime1__valid) {
+TEST_CASE("version  factory  anarchistprime1 valid", "[version]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_1));
+    REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_1));
     auto const version = create<message::version>(version_maximum, payload);
-    BOOST_REQUIRE(version.is_valid());
+    REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__anarchistprime2__valid) {
+TEST_CASE("version  factory  anarchistprime2 valid", "[version]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_2));
+    REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_2));
     auto const version = create<message::version>(version_maximum, payload);
-    BOOST_REQUIRE(version.is_valid());
+    REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__falcon1__valid) {
+TEST_CASE("version  factory  falcon1 valid", "[version]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, NO_RELAY_FALCON_1));
+    REQUIRE(decode_base16(payload, NO_RELAY_FALCON_1));
     auto const version = create<message::version>(version_maximum, payload);
-    BOOST_REQUIRE(version.is_valid());
+    REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__falcon2__valid) {
+TEST_CASE("version  factory  falcon2 valid", "[version]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, NO_RELAY_FALCON_2));
+    REQUIRE(decode_base16(payload, NO_RELAY_FALCON_2));
     auto const version = create<message::version>(version_maximum, payload);
-    BOOST_REQUIRE(version.is_valid());
+    REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory__satoshi1__valid) {
+TEST_CASE("version  factory  satoshi1 valid", "[version]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, NO_RELAY_SATOSHI_1));
+    REQUIRE(decode_base16(payload, NO_RELAY_SATOSHI_1));
     auto const version = create<message::version>(version_maximum, payload);
-    BOOST_REQUIRE(version.is_valid());
+    REQUIRE(version.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_1__always__invalid) {
+TEST_CASE("version  constructor 1  always invalid", "[version]") {
     message::version instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
-    BOOST_REQUIRE_EQUAL(false, instance.address_receiver().is_valid());
-    BOOST_REQUIRE_EQUAL(false, instance.address_sender().is_valid());
+    REQUIRE( ! instance.is_valid());
+    REQUIRE( ! instance.address_receiver().is_valid());
+    REQUIRE( ! instance.address_sender().is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_2__always__equals_params) {
+TEST_CASE("version  constructor 2  always  equals params", "[version]") {
     uint32_t value = 45624u;
     uint64_t services = 263546u;
     uint64_t timestamp = 7668534u;
