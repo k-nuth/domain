@@ -2,22 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
+
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(message_transaction_tests)
+// Start Boost Suite: message transaction tests
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_1__always__initialized_invalid) {
+TEST_CASE("message transaction  constructor 1  always  initialized invalid", "[message transaction]") {
     transaction instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_2__always__equals_transaction) {
+TEST_CASE("message transaction  constructor 2  always  equals transaction", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
