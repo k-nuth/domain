@@ -48,13 +48,13 @@ TEST_CASE("pong  factory from data 1  round trip  expected", "[pong]") {
     auto const data = expected.to_data(version);
     auto const result = create<message::pong>(version, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(pong__factory_from_data_2__round_trip__expected) {
+TEST_CASE("pong  factory from data 2  round trip  expected", "[pong]") {
     static const message::pong expected{
         3100693u};
 
