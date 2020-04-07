@@ -21,14 +21,14 @@ bool equal(address const& x, address const& y) {
     return same;
 }
 
-BOOST_AUTO_TEST_SUITE(address_tests)
+// Start Boost Suite: address tests
 
-BOOST_AUTO_TEST_CASE(address__constructor_1__always__invalid) {
+TEST_CASE("address  constructor 1  always invalid", "[address]") {
     address instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
+TEST_CASE("address  constructor 2  always  equals params", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
