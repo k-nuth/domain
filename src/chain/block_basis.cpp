@@ -747,10 +747,6 @@ code block_basis::connect(chain_state const& state) const {
     return connect_transactions(state);
 }
 
-
-
-
-
 // Non-member functions.
 //-----------------------------------------------------------------------------
 
