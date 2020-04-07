@@ -24,78 +24,78 @@ static hash_digest const data{
      0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
      0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F}};
 
-BOOST_AUTO_TEST_SUITE(reject_tests)
+// Start Boost Suite: reject tests
 
-BOOST_AUTO_TEST_CASE(reject__factory_from_data__tx_nonstandard_empty_data__valid) {
+TEST_CASE("reject  factory from data  tx nonstandard empty data valid", "[reject]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, MALFORMED_REJECT));
+    REQUIRE(decode_base16(payload, MALFORMED_REJECT));
     auto const reject = create<message::reject>(version_maximum, payload);
-    BOOST_REQUIRE(reject.is_valid());
+    REQUIRE(reject.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_1__always__invalid) {
+TEST_CASE("reject  constructor 1  always invalid", "[reject]") {
     message::reject instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_2__always__equals_params) {
+TEST_CASE("reject  constructor 2  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(code == instance.code());
-    BOOST_REQUIRE_EQUAL(message, instance.message());
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(code == instance.code());
+    REQUIRE(message == instance.message());
+    REQUIRE(reason == instance.reason());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_3__always__equals_params) {
+TEST_CASE("reject  constructor 3  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "sadfasdgd";
     std::string reason = "jgfghkggfsr";
     hash_digest data = hash_literal("ce8f4b713ffdd2658900845251890f30371856be201cd1f5b3d970f793634333");
     message::reject instance(code, std::move(message), std::move(reason), std::move(data));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_4__always__equals_params) {
+TEST_CASE("reject  constructor 4  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject expected(code, message, reason, data);
     message::reject instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
-    BOOST_REQUIRE(code == instance.code());
-    BOOST_REQUIRE_EQUAL(message, instance.message());
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
+    REQUIRE(code == instance.code());
+    REQUIRE(message == instance.message());
+    REQUIRE(reason == instance.reason());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_5__always__equals_params) {
+TEST_CASE("reject  constructor 5  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject expected(code, message, reason, data);
     message::reject instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(code == instance.code());
-    BOOST_REQUIRE_EQUAL(message, instance.message());
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(code == instance.code());
+    REQUIRE(message == instance.message());
+    REQUIRE(reason == instance.reason());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_bytes__failure) {
+TEST_CASE("reject  from data  insufficient bytes  failure", "[reject]") {
     static data_chunk const raw{0xab};
     message::reject instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version_maximum, raw));
+    REQUIRE( ! entity_from_data(instance, version_maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure) {
+TEST_CASE("reject  from data  insufficient version  failure", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         message::block::command,
