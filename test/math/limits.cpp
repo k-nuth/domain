@@ -55,47 +55,47 @@ static const size_t half = maximum / 2;
 // ceiling_add
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__size_t_minimum_plus_minimum__minimum) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(minimum, minimum), minimum);
+TEST_CASE("limits  ceiling add  size t minimum plus minimum  minimum", "[limits]") {
+    REQUIRE(ceiling_add(minimum, minimum) == minimum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__size_t_maximum_plus_maximum__maximum) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(maximum, maximum), maximum);
+TEST_CASE("limits  ceiling add  size t maximum plus maximum  maximum", "[limits]") {
+    REQUIRE(ceiling_add(maximum, maximum) == maximum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__size_t_minimum_plus_maximum__maximum) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(minimum, maximum), maximum);
+TEST_CASE("limits  ceiling add  size t minimum plus maximum  maximum", "[limits]") {
+    REQUIRE(ceiling_add(minimum, maximum) == maximum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__size_t_maximum_plus_minimum__maximum) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(maximum, minimum), maximum);
+TEST_CASE("limits  ceiling add  size t maximum plus minimum  maximum", "[limits]") {
+    REQUIRE(ceiling_add(maximum, minimum) == maximum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__size_t_half_plus_maximum__maximum) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(half, maximum), maximum);
+TEST_CASE("limits  ceiling add  size t half plus maximum  maximum", "[limits]") {
+    REQUIRE(ceiling_add(half, maximum) == maximum);
 }
 
 // floor_subtract
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__size_t_minimum_minus_minimum__minimum) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(minimum, minimum), minimum);
+TEST_CASE("limits  floor subtract  size t minimum minus minimum  minimum", "[limits]") {
+    REQUIRE(floor_subtract(minimum, minimum) == minimum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__size_t_maximum_minus_maximum__minimum) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(maximum, maximum), minimum);
+TEST_CASE("limits  floor subtract  size t maximum minus maximum  minimum", "[limits]") {
+    REQUIRE(floor_subtract(maximum, maximum) == minimum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__size_t_maximum_minus_minimum__maximum) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(maximum, minimum), maximum);
+TEST_CASE("limits  floor subtract  size t maximum minus minimum  maximum", "[limits]") {
+    REQUIRE(floor_subtract(maximum, minimum) == maximum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__size_t_minimum_minus_maximum__minimum) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(minimum, maximum), minimum);
+TEST_CASE("limits  floor subtract  size t minimum minus maximum  minimum", "[limits]") {
+    REQUIRE(floor_subtract(minimum, maximum) == minimum);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__size_t_half_minus_maximum__minimum) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(half, maximum), minimum);
+TEST_CASE("limits  floor subtract  size t half minus maximum  minimum", "[limits]") {
+    REQUIRE(floor_subtract(half, maximum) == minimum);
 }
 
 static uint32_t const min_uint32 = 0;
