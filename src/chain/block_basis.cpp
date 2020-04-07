@@ -300,9 +300,9 @@ hash_digest block_basis::hash() const {
 #if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
 void strip_witness(block_basis& blk) {
-    std::for_each(blk.transactions().begin(), blk.transactions().end(), [](transaction& tx) {
+    for (auto&& tx : blk.transactions()) {
         tx.strip_witness();
-    });
+    };
 }
 #endif
 
