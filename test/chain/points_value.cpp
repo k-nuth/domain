@@ -52,7 +52,7 @@ TEST_CASE("points value  value  multiple point values clear  zero", "[points val
             {{null_hash, 0u}, 42u},
         }};
     instance.points.clear();
-    BOOST_REQUIRE_EQUAL(instance.value(), 0u);
+    REQUIRE(instance.value() == 0u);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
