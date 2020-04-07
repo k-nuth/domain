@@ -791,15 +791,17 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
         return error::op_check_multisig_verify7;
     }
 
+    //*************************************************************************
+    // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147 
+    //            in BTC. bip147 is disabled in BCH.
+    //*************************************************************************
+    if ( ! program.pop().empty() 
 #if ! defined(KTH_CURRENCY_BCH)
-    //*************************************************************************
-    // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147.
-    //*************************************************************************
-    if ( ! program.pop().empty() && chain::script::is_enabled(program.forks(),
-                                                            rule_fork::bip147_rule)) {
+        && chain::script::is_enabled(program.forks(), rule_fork::bip147_rule)
+#endif
+    ) {
         return error::op_check_multisig_verify8;
     }
-#endif
 
     uint8_t sighash;
     ec_signature signature;
