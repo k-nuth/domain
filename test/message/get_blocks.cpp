@@ -38,12 +38,12 @@ TEST_CASE("get blocks  constructor 3  always  equals params", "[get blocks]") {
     hash_digest stop = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     message::get_blocks instance(std::move(starts_duplicate), std::move(stop));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__constructor_4__always__equals_params) {
+TEST_CASE("get blocks  constructor 4  always  equals params", "[get blocks]") {
     hash_list starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
