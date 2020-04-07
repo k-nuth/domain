@@ -96,4 +96,4 @@ TEST_CASE("point iterator  copy assigment", "[point iterator]") {
     instance = expected;
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
