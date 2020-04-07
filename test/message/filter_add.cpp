@@ -63,11 +63,11 @@ TEST_CASE("filter add  from data  insufficient version  failure", "[filter add]"
     auto const data = expected.to_data(message::version::level::maximum);
     message::filter_add instance;
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::filter_add::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_1__valid_input__success) {
+TEST_CASE("filter add  factory from data 1  valid input  success", "[filter add]") {
     const message::filter_add expected{
         {0x1F, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
          0xbb, 0x85, 0x0a, 0x3d, 0x79, 0x24, 0xed, 0x0f,
