@@ -65,14 +65,14 @@ TEST_CASE("create transaction  test", "[transaction functions]") {
 
     auto result = tx_encode(outputs_to_spend, outputs);
 
-    BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), TX_ENCODE);
+    REQUIRE(result.first == error::error_code_t::success);
+    REQUIRE(kth::encode_base16(result.second.to_data()) == TX_ENCODE);
 }
 
 // TODO(legacy): make test for BTC and LTC signatures
 
 #ifdef KTH_CURRENCY_BCH
-BOOST_AUTO_TEST_CASE(sign_transaction__test) {
+TEST_CASE("sign transaction  test", "[transaction functions]") {
     // Priv key
     auto const private_key = create_secret_from_seed(SEED);
     // Script
