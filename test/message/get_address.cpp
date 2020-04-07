@@ -40,9 +40,9 @@ TEST_CASE("get address - roundtrip to data factory from data reader", "[get addr
     auto const result = create<message::get_address>(
         message::version::level::minimum, source);
 
-    BOOST_REQUIRE_EQUAL(0u, data.size());
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(0u, result.serialized_size(message::version::level::minimum));
+    REQUIRE(0u == data.size());
+    REQUIRE(result.is_valid());
+    REQUIRE(0u == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
