@@ -42,17 +42,17 @@ script_test_list const invalidated_bip16_scripts{
 //------------------------------------------------------------------------------
 
 // These are valid prior to and after BIP65 activation.
-const script_test_list valid_bip65_scripts{
+script_test_list const valid_bip65_scripts{
     {"42", "checklocktimeverify", "valid cltv, true return", 42, 99},
     {"42", "nop1 nop2 nop4 nop5 nop6 nop7 nop8 nop9 nop10 42 equal", "bip112 would fail nop3", 42, 99}};
 
 // These are invalid prior to and after BIP65 activation.
-const script_test_list invalid_bip65_scripts{
+script_test_list const invalid_bip65_scripts{
     {"", "nop2", "empty nop2", 42, 99},
     {"", "checklocktimeverify", "empty cltv", 42, 99}};
 
 // These are valid prior to BIP65 activation and invalid after.
-const script_test_list invalidated_bip65_scripts{
+script_test_list const invalidated_bip65_scripts{
     {"1 -1", "checklocktimeverify", "negative cltv", 42, 99},
     {"1 100", "checklocktimeverify", "exceeded cltv", 42, 99},
     {"1 500000000", "checklocktimeverify", "mismatched cltv", 42, 99},
