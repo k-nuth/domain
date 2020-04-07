@@ -55,9 +55,6 @@ public:
     void set_transactions(chain::transaction::list const& x);
     void set_transactions(chain::transaction::list&& x);
 
-    // bool from_data(uint32_t version, data_chunk const& data);
-    // bool from_data(uint32_t version, std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         //std::cout << "bool block_transactions::from_data(uint32_t version, R& source) \n";
