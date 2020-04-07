@@ -104,17 +104,17 @@ TEST_CASE("bitcoin uri  set path  reset path  false", "[bitcoin uri]") {
     uri.set_address(stealth_address("hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i"));
 
     // The set_path will not reset a path. This is necessary to catch failures in non-strict parsing.
-    BOOST_REQUIRE(!uri.set_path(expected_payment));
+    REQUIRE(!uri.set_path(expected_payment));
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__set_amount__reset_amount__latter_amount) {
+TEST_CASE("bitcoin uri  set amount  reset amount  latter amount", "[bitcoin uri]") {
     bitcoin_uri uri;
     uri.set_amount(10000000000);
     uri.set_amount(120000);
-    BOOST_REQUIRE_EQUAL(uri.encoded(), "bitcoin:?amount=0.0012");
+    REQUIRE(uri.encoded() == "bitcoin:?amount=0.0012");
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__all_setters__complex_uri__expected_encoding) {
+TEST_CASE("bitcoin uri  all setters  complex uri  expected encoding", "[bitcoin uri]") {
     bitcoin_uri uri;
     uri.set_path("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     uri.set_amount(120000);
