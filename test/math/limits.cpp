@@ -104,47 +104,47 @@ static uint32_t const half_uint32 = max_uint32 / 2;
 // ceiling_add32
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__min_uint32_plus_minimum__min_uint32) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(min_uint32, min_uint32), min_uint32);
+TEST_CASE("limits  ceiling add  min uint32 plus minimum  min uint32", "[limits]") {
+    REQUIRE(ceiling_add(min_uint32, min_uint32) == min_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__max_uint32_plus_max_uint32__max_uint32) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(max_uint32, max_uint32), max_uint32);
+TEST_CASE("limits  ceiling add  max uint32 plus max uint32  max uint32", "[limits]") {
+    REQUIRE(ceiling_add(max_uint32, max_uint32) == max_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__min_uint32_plus_max_uint32__max_uint32) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(min_uint32, max_uint32), max_uint32);
+TEST_CASE("limits  ceiling add  min uint32 plus max uint32  max uint32", "[limits]") {
+    REQUIRE(ceiling_add(min_uint32, max_uint32) == max_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__max_uint32_plus_min_uint32__max_uint32) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(max_uint32, min_uint32), max_uint32);
+TEST_CASE("limits  ceiling add  max uint32 plus min uint32  max uint32", "[limits]") {
+    REQUIRE(ceiling_add(max_uint32, min_uint32) == max_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__ceiling_add__half_uint32_plus_max_uint32__max_uint32) {
-    BOOST_REQUIRE_EQUAL(ceiling_add(half_uint32, max_uint32), max_uint32);
+TEST_CASE("limits  ceiling add  half uint32 plus max uint32  max uint32", "[limits]") {
+    REQUIRE(ceiling_add(half_uint32, max_uint32) == max_uint32);
 }
 
 // floor_subtract32
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__min_uint32_minus_min_uint32__min_uint32) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(min_uint32, min_uint32), min_uint32);
+TEST_CASE("limits  floor subtract  min uint32 minus min uint32  min uint32", "[limits]") {
+    REQUIRE(floor_subtract(min_uint32, min_uint32) == min_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__max_uint32_minus_max_uint32__min_uint32) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(max_uint32, max_uint32), min_uint32);
+TEST_CASE("limits  floor subtract  max uint32 minus max uint32  min uint32", "[limits]") {
+    REQUIRE(floor_subtract(max_uint32, max_uint32) == min_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__max_uint32_minus_min_uint32__max_uint32) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(max_uint32, min_uint32), max_uint32);
+TEST_CASE("limits  floor subtract  max uint32 minus min uint32  max uint32", "[limits]") {
+    REQUIRE(floor_subtract(max_uint32, min_uint32) == max_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__min_uint32_minus_max_uint32__min_uint32) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(min_uint32, max_uint32), min_uint32);
+TEST_CASE("limits  floor subtract  min uint32 minus max uint32  min uint32", "[limits]") {
+    REQUIRE(floor_subtract(min_uint32, max_uint32) == min_uint32);
 }
 
-BOOST_AUTO_TEST_CASE(limits__floor_subtract__half_uint32_minus_max_uint32__min_uint32) {
-    BOOST_REQUIRE_EQUAL(floor_subtract(half_uint32, max_uint32), min_uint32);
+TEST_CASE("limits  floor subtract  half uint32 minus max uint32  min uint32", "[limits]") {
+    REQUIRE(floor_subtract(half_uint32, max_uint32) == min_uint32);
 }
 
 static uint64_t const min_uint64 = 0;
