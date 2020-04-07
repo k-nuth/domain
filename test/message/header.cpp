@@ -41,16 +41,16 @@ TEST_CASE("message header  constructor 3  always  equals params", "[message head
     uint32_t nonce = 68644u;
 
     message::header instance(version, std::move(previous), std::move(merkle), timestamp, bits, nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(timestamp, instance.timestamp());
-    BOOST_REQUIRE_EQUAL(bits, instance.bits());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
-    BOOST_REQUIRE(previous == instance.previous_block_hash());
-    BOOST_REQUIRE(merkle == instance.merkle());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(timestamp == instance.timestamp());
+    REQUIRE(bits == instance.bits());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(previous == instance.previous_block_hash());
+    REQUIRE(merkle == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_4__always__equals_params) {
+TEST_CASE("message header  constructor 4  always  equals params", "[message header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
