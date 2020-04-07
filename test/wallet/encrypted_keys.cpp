@@ -6,20 +6,19 @@
 #include <cstddef>
 #include <string>
 
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
+#include <kth/infrastructure/formats/base_58.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-BOOST_AUTO_TEST_SUITE(encrypted_tests)
+// Start Boost Suite: encrypted tests
 
 #ifdef WITH_ICU
 
-BOOST_AUTO_TEST_CASE(encrypted__fixture__unicode_passphrase__matches_encrypted_test_vector) {
+TEST_CASE("encrypted  fixture  unicode passphrase  matches encrypted test vector", "[encrypted]") {
     auto const encoded_password = base16_literal("cf92cc8100f0909080f09f92a9");
     std::string passphrase(encoded_password.begin(), encoded_password.end());
 
