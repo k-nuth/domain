@@ -2,11 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
-#include <kth/domain.hpp>
+#include <test_helpers.hpp>
 
 // TODO(legacy): test sender in isolation.
-BOOST_AUTO_TEST_SUITE(stealth_sender_tests)
+// Start Boost Suite: stealth sender tests
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
