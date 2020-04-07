@@ -2,19 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
 #include <optional>
 
-#include <kth/domain.hpp>
-
-// #include <boost/utility/in_place_factory.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-BOOST_AUTO_TEST_SUITE(uri_reader_tests)
+// Start Boost Suite: uri reader tests
 
 // Test helper that relies on bitcoin_uri.
 static
