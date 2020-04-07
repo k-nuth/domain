@@ -33,14 +33,14 @@ TEST_CASE("merkle block  constructor 2  always  equals params", "[merkle block]"
     data_chunk const flags{0xae, 0x56, 0x0f};
 
     message::merkle_block instance(header, count, hashes, flags);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE_EQUAL(instance.total_transactions(), count);
-    BOOST_REQUIRE(hashes == instance.hashes());
-    BOOST_REQUIRE(flags == instance.flags());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(instance.total_transactions() == count);
+    REQUIRE(hashes == instance.hashes());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__constructor_3__always__equals_params) {
+TEST_CASE("merkle block  constructor 3  always  equals params", "[merkle block]") {
     const message::merkle_block instance(
         chain::header{
             10,
