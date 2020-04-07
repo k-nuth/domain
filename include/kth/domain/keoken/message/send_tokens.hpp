@@ -48,9 +48,6 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    // bool from_data(kth::data_chunk const& data);
-    // bool from_data(std::istream& stream);
-
     //Note: from_data and to_data are not longer simetrical.
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
