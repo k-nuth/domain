@@ -67,21 +67,21 @@ TEST_CASE("filter load  constructor 5  always  equals params", "[filter load]") 
 
     message::filter_load value(filter, hash_functions, tweak, flags);
     message::filter_load instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(filter == instance.filter());
-    BOOST_REQUIRE_EQUAL(hash_functions, instance.hash_functions());
-    BOOST_REQUIRE_EQUAL(tweak, instance.tweak());
-    BOOST_REQUIRE_EQUAL(flags, instance.flags());
+    REQUIRE(instance.is_valid());
+    REQUIRE(filter == instance.filter());
+    REQUIRE(hash_functions == instance.hash_functions());
+    REQUIRE(tweak == instance.tweak());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_bytes__failure) {
+TEST_CASE("filter load  from data  insufficient bytes  failure", "[filter load]") {
     data_chunk const raw{0xab, 0x11};
     message::filter_load instance;
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::maximum, raw));
+    REQUIRE( ! entity_from_data(instance, message::version::level::maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_version__failure) {
+TEST_CASE("filter load  from data  insufficient version  failure", "[filter load]") {
     const message::filter_load expected{
         {0x05, 0xaa, 0xbb, 0xcc, 0xdd, 0xee},
         25,
