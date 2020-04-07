@@ -98,7 +98,7 @@ transaction new_tx(script_test const& test) {
         output::list{}};
 }
 
-std::string test_name(const script_test& test) {
+std::string test_name(script_test const& test) {
     std::stringstream out;
     out << "input: \"" << test.input << "\" "
         << "prevout: \"" << test.output << "\" "
