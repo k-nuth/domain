@@ -53,13 +53,13 @@ TEST_CASE("get blocks  constructor 4  always  equals params", "[get blocks]") {
 
     const message::get_blocks expected(starts, stop);
     message::get_blocks instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__constructor_5__always__equals_params) {
+TEST_CASE("get blocks  constructor 5  always  equals params", "[get blocks]") {
     hash_list starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
