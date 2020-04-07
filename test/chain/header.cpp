@@ -25,16 +25,16 @@ TEST_CASE("chain header  constructor 2  always  equals params", "[chain header]"
     uint32_t const nonce = 68644u;
 
     chain::header instance(version, previous, merkle, timestamp, bits, nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(timestamp, instance.timestamp());
-    BOOST_REQUIRE_EQUAL(bits, instance.bits());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
-    BOOST_REQUIRE(previous == instance.previous_block_hash());
-    BOOST_REQUIRE(merkle == instance.merkle());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(timestamp == instance.timestamp());
+    REQUIRE(bits == instance.bits());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(previous == instance.previous_block_hash());
+    REQUIRE(merkle == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_3__always__equals_params) {
+TEST_CASE("chain header  constructor 3  always  equals params", "[chain header]") {
     uint32_t const version = 10u;
     uint32_t const timestamp = 531234u;
     uint32_t const bits = 6523454u;
