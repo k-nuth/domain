@@ -2,18 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
-// #include <kth/domain/wallet/ec_public.hpp>
-#include <kth/domain/wallet/transaction_functions.hpp>
-#include <boost/test/unit_test.hpp>
+// #include <kth/domain/wallet/transaction_functions.hpp>
+#include <test_helpers.hpp>
+#include <kth/infrastructure/wallet/hd_private.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 using namespace kth::infrastructure::wallet;
 
-BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
+// Start Boost Suite: transaction functions tests
 
 #define SEED "fffb587496cc54912bbcef874fa9a61a"
 #define WALLET "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG"
