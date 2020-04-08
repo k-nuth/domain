@@ -147,13 +147,13 @@ TEST_CASE("not found  factory from data 2  valid input  success", "[not found]")
     auto const data = expected.to_data(version);
     data_source istream(data);
     auto const result = create<not_found>(version, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(not_found__factory_from_data_3__valid_input__success) {
+TEST_CASE("not found  factory from data 3  valid input  success", "[not found]") {
     static not_found const expected{
         {{inventory_vector::type_id::block,
           {{0x66, 0x9a, 0x0d, 0x24, 0x66, 0xd5, 0x39, 0x89,
