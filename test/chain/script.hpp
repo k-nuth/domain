@@ -531,7 +531,7 @@ script_test_list const valid_context_free_scripts{
     {"0x00", "size 0 equal", "basic op_0 execution"}};
 
 // These are always invalid.
-const script_test_list invalid_context_free_scripts{
+script_test_list const invalid_context_free_scripts{
     {"", "depth", "test the test: we should have an empty stack after scriptsig evaluation"},
     {"  ", "depth", "and multiple spaces should not change that."},
     {"   ", "depth", ""},
