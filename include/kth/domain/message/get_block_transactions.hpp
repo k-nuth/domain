@@ -49,9 +49,6 @@ public:
     void set_indexes(const std::vector<uint64_t>& values);
     void set_indexes(std::vector<uint64_t>&& values);
 
-    // bool from_data(uint32_t version, data_chunk const& data);
-    // bool from_data(uint32_t version, std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t /*version*/, R& source) {
         reset();
