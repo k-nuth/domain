@@ -91,12 +91,12 @@ TEST_CASE("filter load  from data  insufficient version  failure", "[filter load
     data_chunk const data = expected.to_data(message::version::level::maximum);
     message::filter_load instance;
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::filter_load::version_minimum - 1, data));
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_1__valid_input__success) {
+TEST_CASE("filter load  factory from data 1  valid input  success", "[filter load]") {
     const message::filter_load expected{
         {0x05, 0xaa, 0xbb, 0xcc, 0xdd, 0xee},
         25,
