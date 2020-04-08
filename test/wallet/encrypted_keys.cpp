@@ -154,7 +154,7 @@ TEST_CASE("encrypted  encrypt private  vector 1  expected", "[encrypted  encrypt
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_2_compressed__expected) {
+TEST_CASE("encrypted  encrypt private  vector 2 compressed  expected", "[encrypted  encrypt private]") {
     auto compression = true;
     uint8_t const version = 0x00;
     auto const expected = "6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo";
