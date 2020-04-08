@@ -191,19 +191,19 @@ TEST_CASE("message transaction  factory from data 1  case 2 valid data  success"
         "ffff02c0e1e400000000001976a914884c09d7e1f6420976c40e040c30b2b622"
         "10c3d488ac20300500000000001976a914905f933de850988603aafeeb2fd7fc"
         "e61e66fe5d88ac00000000"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     auto const tx = create<transaction>(version::level::minimum, raw_tx);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave = tx.to_data(version::level::minimum);
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_1_valid_data__success) {
+TEST_CASE("message transaction  factory from data 2  case 1 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
