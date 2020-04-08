@@ -113,8 +113,8 @@ TEST_CASE("set signature  test", "[transaction functions]") {
 
     // SET THE INPUT
     auto const result = input_set(input_script, tx);
-    BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), COMPLETE_TX);
+    REQUIRE(result.first == error::error_code_t::success);
+    REQUIRE(kth::encode_base16(result.second.to_data()) == COMPLETE_TX);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
