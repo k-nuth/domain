@@ -187,19 +187,17 @@ TEST_CASE("compact block  factory from data 1  valid input  success", "[compact 
     message::compact_block expected;
     entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
 
     auto const result = create<message::compact_block>(message::compact_block::version_minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::compact_block::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::compact_block::version_minimum),
-        result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(expected.serialized_size(message::compact_block::version_minimum) == result.serialized_size(message::compact_block::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_2__valid_input__success) {
+TEST_CASE("compact block  factory from data 2  valid input  success", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
