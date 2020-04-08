@@ -106,119 +106,119 @@ TEST_CASE("prefilled transaction  factory from data 3  valid input  success", "[
     auto const result = create<message::prefilled_transaction>(
         message::version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__index_accessor__always__returns_initialized_value) {
+TEST_CASE("prefilled transaction  index accessor  always  returns initialized value", "[prefilled transaction]") {
     uint64_t index = 634u;
     chain::transaction tx(5, 23, {}, {});
     message::prefilled_transaction instance(index, tx);
-    BOOST_REQUIRE(index == instance.index());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__index_setter__roundtrip__success) {
+TEST_CASE("prefilled transaction  index setter  roundtrip  success", "[prefilled transaction]") {
     uint64_t index = 634u;
     message::prefilled_transaction instance;
-    BOOST_REQUIRE(index != instance.index());
+    REQUIRE(index != instance.index());
     instance.set_index(index);
-    BOOST_REQUIRE(index == instance.index());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__message_accessor_1__always__returns_initialized_value) {
+TEST_CASE("prefilled transaction  message accessor 1  always  returns initialized value", "[prefilled transaction]") {
     uint64_t index = 634u;
     chain::transaction const tx(5, 23, {}, {});
     message::prefilled_transaction instance(index, tx);
-    BOOST_REQUIRE(tx == instance.transaction());
+    REQUIRE(tx == instance.transaction());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__message_accessor_2__always__returns_initialized_value) {
+TEST_CASE("prefilled transaction  message accessor 2  always  returns initialized value", "[prefilled transaction]") {
     uint64_t index = 634u;
     chain::transaction const tx(5, 23, {}, {});
     const message::prefilled_transaction instance(index, tx);
-    BOOST_REQUIRE(tx == instance.transaction());
+    REQUIRE(tx == instance.transaction());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__message_setter_1__roundtrip__success) {
+TEST_CASE("prefilled transaction  message setter 1  roundtrip  success", "[prefilled transaction]") {
     chain::transaction const tx(5, 23, {}, {});
     message::prefilled_transaction instance;
-    BOOST_REQUIRE(tx != instance.transaction());
+    REQUIRE(tx != instance.transaction());
     instance.set_transaction(tx);
-    BOOST_REQUIRE(tx == instance.transaction());
+    REQUIRE(tx == instance.transaction());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__message_setter_2__roundtrip__success) {
+TEST_CASE("prefilled transaction  message setter 2  roundtrip  success", "[prefilled transaction]") {
     chain::transaction const duplicate(16, 57, {}, {});
     chain::transaction tx(16, 57, {}, {});
     message::prefilled_transaction instance;
-    BOOST_REQUIRE(duplicate != instance.transaction());
+    REQUIRE(duplicate != instance.transaction());
     instance.set_transaction(std::move(tx));
-    BOOST_REQUIRE(duplicate == instance.transaction());
+    REQUIRE(duplicate == instance.transaction());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("prefilled transaction  operator assign equals 1  always  matches equivalent", "[prefilled transaction]") {
     message::prefilled_transaction value(
         1234u,
         chain::transaction{6u, 10u, {}, {}});
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::prefilled_transaction instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("prefilled transaction  operator assign equals 2  always  matches equivalent", "[prefilled transaction]") {
     const message::prefilled_transaction value(
         1234u,
         chain::transaction{6u, 10u, {}, {}});
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::prefilled_transaction instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = value;
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("prefilled transaction  operator boolean equals  duplicates  returns true", "[prefilled transaction]") {
     const message::prefilled_transaction expected(
         1234u,
         chain::transaction{6u, 10u, {}, {}});
 
     message::prefilled_transaction instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("prefilled transaction  operator boolean equals  differs  returns false", "[prefilled transaction]") {
     const message::prefilled_transaction expected(
         1234u,
         chain::transaction{6u, 10u, {}, {}});
 
     message::prefilled_transaction instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("prefilled transaction  operator boolean not equals  duplicates  returns false", "[prefilled transaction]") {
     const message::prefilled_transaction expected(
         1234u,
         chain::transaction{6u, 10u, {}, {}});
 
     message::prefilled_transaction instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("prefilled transaction  operator boolean not equals  differs  returns true", "[prefilled transaction]") {
     const message::prefilled_transaction expected(
         1234u,
         chain::transaction{6u, 10u, {}, {}});
 
     message::prefilled_transaction instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
