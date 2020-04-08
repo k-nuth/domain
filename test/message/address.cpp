@@ -209,12 +209,12 @@ TEST_CASE("address  addresses setter 1  roundtrip  success", "[address]") {
             159u)};
 
     address instance;
-    BOOST_REQUIRE(instance.addresses() != value);
+    REQUIRE(instance.addresses() != value);
     instance.set_addresses(value);
-    BOOST_REQUIRE(value == instance.addresses());
+    REQUIRE(value == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
+TEST_CASE("address  addresses setter 2  roundtrip  success", "[address]") {
     infrastructure::message::network_address::list const value{
         network_address(
             734678u,
