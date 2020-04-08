@@ -125,18 +125,18 @@ TEST_CASE("address  constructor 5  always  equals params", "[address]") {
     address value(addresses);
     address instance(std::move(value));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__from_data__insufficient_bytes__failure) {
+TEST_CASE("address  from data  insufficient bytes  failure", "[address]") {
     data_chunk const raw{0xab};
     address instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, version::level::minimum, raw));
+    REQUIRE(!entity_from_data(instance, version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success) {
+TEST_CASE("address  factory from data 1  roundtrip  success", "[address]") {
     address const expected(
         {{734678u,
           5357534u,
