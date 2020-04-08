@@ -145,155 +145,155 @@ TEST_CASE("filter load  factory from data 3  valid input  success", "[filter loa
     auto const result = create<message::filter_load>(
         message::version::level::maximum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::maximum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::maximum));
+    REQUIRE(expected.serialized_size(message::version::level::maximum) ==
                         result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__filter_accessor_1__always__returns_initialized_value) {
+TEST_CASE("filter load  filter accessor 1  always  returns initialized value", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
 
     message::filter_load instance(filter, hash_functions, tweak, flags);
-    BOOST_REQUIRE(filter == instance.filter());
+    REQUIRE(filter == instance.filter());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__filter_accessor_2__always__returns_initialized_value) {
+TEST_CASE("filter load  filter accessor 2  always  returns initialized value", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
 
     const message::filter_load instance(filter, hash_functions, tweak, flags);
-    BOOST_REQUIRE(filter == instance.filter());
+    REQUIRE(filter == instance.filter());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__filter_setter_1__roundtrip__success) {
+TEST_CASE("filter load  filter setter 1  roundtrip  success", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     message::filter_load instance;
-    BOOST_REQUIRE(filter != instance.filter());
+    REQUIRE(filter != instance.filter());
     instance.set_filter(filter);
-    BOOST_REQUIRE(filter == instance.filter());
+    REQUIRE(filter == instance.filter());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__filter_setter_2__roundtrip__success) {
+TEST_CASE("filter load  filter setter 2  roundtrip  success", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     data_chunk dup = filter;
 
     message::filter_load instance;
-    BOOST_REQUIRE(filter != instance.filter());
+    REQUIRE(filter != instance.filter());
     instance.set_filter(std::move(dup));
-    BOOST_REQUIRE(filter == instance.filter());
+    REQUIRE(filter == instance.filter());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__hash_functions_accessor__always__returns_initialized_value) {
+TEST_CASE("filter load  hash functions accessor  always  returns initialized value", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
 
     message::filter_load instance(filter, hash_functions, tweak, flags);
-    BOOST_REQUIRE_EQUAL(hash_functions, instance.hash_functions());
+    REQUIRE(hash_functions == instance.hash_functions());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__hash_functions_setter__roundtrip__success) {
+TEST_CASE("filter load  hash functions setter  roundtrip  success", "[filter load]") {
     uint32_t hash_functions = 48u;
     message::filter_load instance;
-    BOOST_REQUIRE(hash_functions != instance.hash_functions());
+    REQUIRE(hash_functions != instance.hash_functions());
     instance.set_hash_functions(hash_functions);
-    BOOST_REQUIRE(hash_functions == instance.hash_functions());
+    REQUIRE(hash_functions == instance.hash_functions());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__tweak_accessor__always__returns_initialized_value) {
+TEST_CASE("filter load  tweak accessor  always  returns initialized value", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
 
     message::filter_load instance(filter, hash_functions, tweak, flags);
-    BOOST_REQUIRE_EQUAL(tweak, instance.tweak());
+    REQUIRE(tweak == instance.tweak());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__tweak_setter__roundtrip__success) {
+TEST_CASE("filter load  tweak setter  roundtrip  success", "[filter load]") {
     uint32_t tweak = 36u;
     message::filter_load instance;
-    BOOST_REQUIRE(tweak != instance.tweak());
+    REQUIRE(tweak != instance.tweak());
     instance.set_tweak(tweak);
-    BOOST_REQUIRE(tweak == instance.tweak());
+    REQUIRE(tweak == instance.tweak());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__flags_accessor__always__returns_initialized_value) {
+TEST_CASE("filter load  flags accessor  always  returns initialized value", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
 
     message::filter_load instance(filter, hash_functions, tweak, flags);
-    BOOST_REQUIRE_EQUAL(flags, instance.flags());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__flags_setter__roundtrip__success) {
+TEST_CASE("filter load  flags setter  roundtrip  success", "[filter load]") {
     uint8_t flags = 0xae;
     message::filter_load instance;
-    BOOST_REQUIRE(flags != instance.flags());
+    REQUIRE(flags != instance.flags());
     instance.set_flags(flags);
-    BOOST_REQUIRE(flags == instance.flags());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("filter load  operator assign equals  always  matches equivalent", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
     message::filter_load value(filter, hash_functions, tweak, flags);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::filter_load instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(filter == instance.filter());
-    BOOST_REQUIRE_EQUAL(hash_functions, instance.hash_functions());
-    BOOST_REQUIRE_EQUAL(tweak, instance.tweak());
-    BOOST_REQUIRE_EQUAL(flags, instance.flags());
+    REQUIRE(instance.is_valid());
+    REQUIRE(filter == instance.filter());
+    REQUIRE(hash_functions == instance.hash_functions());
+    REQUIRE(tweak == instance.tweak());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("filter load  operator boolean equals  duplicates  returns true", "[filter load]") {
     const message::filter_load expected(
         {0x0f, 0xf0, 0x55, 0xaa}, 643u, 575u, 0xaa);
 
     message::filter_load instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("filter load  operator boolean equals  differs  returns false", "[filter load]") {
     const message::filter_load expected(
         {0x0f, 0xf0, 0x55, 0xaa}, 643u, 575u, 0xaa);
 
     message::filter_load instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("filter load  operator boolean not equals  duplicates  returns false", "[filter load]") {
     const message::filter_load expected(
         {0x0f, 0xf0, 0x55, 0xaa}, 643u, 575u, 0xaa);
 
     message::filter_load instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("filter load  operator boolean not equals  differs  returns true", "[filter load]") {
     const message::filter_load expected(
         {0x0f, 0xf0, 0x55, 0xaa}, 643u, 575u, 0xaa);
 
     message::filter_load instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
