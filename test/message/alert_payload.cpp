@@ -236,13 +236,13 @@ TEST_CASE("alert payload  factory from data 1  roundtrip  success", "[alert payl
     auto const result = create<message::alert_payload>(
         message::version::level::minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_2__roundtrip__success) {
+TEST_CASE("alert payload  factory from data 2  roundtrip  success", "[alert payload]") {
     message::alert_payload expected{
         5,
         105169,
