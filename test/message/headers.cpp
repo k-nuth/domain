@@ -98,10 +98,10 @@ TEST_CASE("headers  constructor 5  always  equals params", "[headers]") {
              34564u)});
 
     headers instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_6__always__equals_params) {
+TEST_CASE("headers  constructor 6  always  equals params", "[headers]") {
     headers expected(
         {header(
              10u,
