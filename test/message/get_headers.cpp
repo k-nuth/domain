@@ -94,11 +94,11 @@ TEST_CASE("get headers  from data  insufficient version  failure", "[get headers
     auto const data = expected.to_data(message::get_headers::version_minimum);
     message::get_headers instance{};
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::get_headers::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_1__valid_input__success) {
+TEST_CASE("get headers  factory from data 1  valid input  success", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
