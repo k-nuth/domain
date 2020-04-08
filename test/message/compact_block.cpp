@@ -137,20 +137,20 @@ TEST_CASE("compact block  constructor 5  always  equals params", "[compact block
     message::compact_block value(header, nonce, short_ids, transactions);
 
     message::compact_block instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes__failure) {
+TEST_CASE("compact block  from data  insufficient bytes  failure", "[compact block]") {
     data_chunk const raw{0xab, 0xcd};
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::compact_block::version_minimum, raw));
+    REQUIRE( ! entity_from_data(instance, message::compact_block::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transaction__failure) {
+TEST_CASE("compact block  from data  insufficient bytes mid transaction  failure", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
