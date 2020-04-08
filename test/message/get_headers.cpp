@@ -111,16 +111,15 @@ TEST_CASE("get headers  factory from data 1  valid input  success", "[get header
     auto const result = create<message::get_headers>(
         message::get_headers::version_minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::get_headers::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::get_headers::version_minimum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(
+        expected.serialized_size(message::get_headers::version_minimum) ==
         result.serialized_size(message::get_headers::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_2__valid_input__success) {
+TEST_CASE("get headers  factory from data 2  valid input  success", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
