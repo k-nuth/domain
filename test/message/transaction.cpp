@@ -69,15 +69,15 @@ TEST_CASE("message transaction  constructor 4  always  equals equivalent tx", "[
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     auto const inputs = tx.inputs();
     auto const outputs = tx.outputs();
     transaction instance(tx.version(), tx.locktime(), inputs, outputs);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == tx);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_5__always__equals_equivalent_tx) {
+TEST_CASE("message transaction  constructor 5  always  equals equivalent tx", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
