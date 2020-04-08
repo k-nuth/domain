@@ -155,10 +155,10 @@ TEST_CASE("get blocks  start hashes accessor 1  always  returns initialized valu
         expected,
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
-    BOOST_REQUIRE(expected == instance.start_hashes());
+    REQUIRE(expected == instance.start_hashes());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__start_hashes_accessor_2__always__returns_initialized_value) {
+TEST_CASE("get blocks  start hashes accessor 2  always  returns initialized value", "[get blocks]") {
     hash_list expected = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
