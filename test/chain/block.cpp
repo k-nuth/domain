@@ -150,28 +150,28 @@ TEST_CASE("block constructor 5 always equals params", "[chain block]") {
     chain::block value(header, transactions);
 
     chain::block instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__hash__always__returns_header_hash) {
+TEST_CASE("block  hash  always  returns header hash", "[chain block]") {
     chain::block instance;
-    BOOST_REQUIRE(instance.header().hash() == instance.hash());
+    REQUIRE(instance.header().hash() == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_valid_merkle_root__uninitialized__returns_true) {
+TEST_CASE("block  is valid merkle root  uninitialized  returns true", "[chain block]") {
     chain::block instance;
-    BOOST_REQUIRE(instance.is_valid_merkle_root());
+    REQUIRE(instance.is_valid_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_valid_merkle_root__non_empty_tx_invalid_block__returns_false) {
+TEST_CASE("block  is valid merkle root  non empty tx invalid block  returns false", "[chain block]") {
     chain::block instance;
     instance.set_transactions(chain::transaction::list{chain::transaction{}});
-    BOOST_REQUIRE(!instance.is_valid_merkle_root());
+    REQUIRE(!instance.is_valid_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_valid_merkle_root__valid__returns_true) {
+TEST_CASE("block  is valid merkle root  valid  returns true", "[chain block]") {
     auto const raw_block = to_chunk(base16_literal(
         "010000007f110631052deeee06f0754a3629ad7663e56359fd5f3aa7b3e30a0000000"
         "0005f55996827d9712147a8eb6d7bae44175fe0bcfa967e424a25bfe9f4dc118244d6"
