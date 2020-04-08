@@ -102,22 +102,22 @@ TEST_CASE("merkle block  constructor 5  always  equals params", "[merkle block]"
 
     message::merkle_block expected(header, count, hashes, flags);
     message::merkle_block instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE_EQUAL(instance.total_transactions(), count);
-    BOOST_REQUIRE(hashes == instance.hashes());
-    BOOST_REQUIRE(flags == instance.flags());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(instance.total_transactions() == count);
+    REQUIRE(hashes == instance.hashes());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(from_data_insufficient_data_fails) {
+TEST_CASE("from data insufficient data fails", "[merkle block]") {
     data_chunk const data{10};
     message::merkle_block instance{};
 
-    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::maximum, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, message::version::level::maximum, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(from_data_insufficient_version_fails) {
+TEST_CASE("from data insufficient version fails", "[merkle block]") {
     const message::merkle_block expected{
         {10,
          hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
