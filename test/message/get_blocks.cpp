@@ -136,15 +136,14 @@ TEST_CASE("get blocks  factory from data 3  valid input  success", "[get blocks]
     auto const result = create<message::get_blocks>(
         message::version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) ==
                         result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__start_hashes_accessor_1__always__returns_initialized_value) {
+TEST_CASE("get blocks  start hashes accessor 1  always  returns initialized value", "[get blocks]") {
     hash_list expected = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
