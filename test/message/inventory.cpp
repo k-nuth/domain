@@ -328,10 +328,10 @@ TEST_CASE("inventory  reduce  matching type  returns empty list", "[inventory]")
 
     message::inventory_vector::list result;
     instance.reduce(result, message::inventory_vector::type_id::transaction);
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(inventory__reduce__matching_type__returns_matches) {
+TEST_CASE("inventory  reduce  matching type  returns matches", "[inventory]") {
     const message::inventory_vector::list expected = {
         message::inventory_vector(message::inventory_vector::type_id::error,
                                   hash_literal("1111111111111111111111111111111111111111111111111111111111111111")),
