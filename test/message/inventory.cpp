@@ -289,11 +289,11 @@ TEST_CASE("inventory  to hashes  matching type  returns empty list", "[inventory
 
     hash_list result;
     instance.to_hashes(result, message::inventory_vector::type_id::transaction);
-    BOOST_REQUIRE(hashes == result);
+    REQUIRE(hashes == result);
 }
 
-BOOST_AUTO_TEST_CASE(inventory__to_hashes__matching_type__returns_hashes) {
-    const hash_list hashes = {
+TEST_CASE("inventory  to hashes  matching type  returns hashes", "[inventory]") {
+    hash_list const hashes = {
         hash_literal("1111111111111111111111111111111111111111111111111111111111111111"),
         hash_literal("2222222222222222222222222222222222222222222222222222222222222222"),
         hash_literal("4444444444444444444444444444444444444444444444444444444444444444")};
