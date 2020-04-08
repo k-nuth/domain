@@ -134,11 +134,11 @@ TEST_CASE("ping  factory from data 2  bip31 version round trip  expected nonce",
     auto const data = expected.to_data(version);
     data_source istream(data);
     auto const result = create<message::ping>(version, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__bip31_version_round_trip__expected_nonce) {
+TEST_CASE("ping  factory from data 3  bip31 version round trip  expected nonce", "[ping]") {
     static const message::ping expected{
         6456147u};
 
