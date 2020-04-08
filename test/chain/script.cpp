@@ -587,67 +587,67 @@ TEST_CASE("script checksig  normal  success", "[script]") {
     decode_base16(script_data, "76a914fcc9b36d38cf55d7d5b4ee4dddb6b2c17612f48c88ac");
 
     script script_code;
-    BOOST_REQUIRE(entity_from_data(script_code, script_data, false));
+    REQUIRE(entity_from_data(script_code, script_data, false));
 
     ec_signature signature;
     static auto const index = 0u;
-    BOOST_REQUIRE(parse_signature(signature, distinguished, true));
-    BOOST_REQUIRE(script::check_signature(signature, sighash_algorithm::single, pubkey, script_code, parent_tx, index));
+    REQUIRE(parse_signature(signature, distinguished, true));
+    REQUIRE(script::check_signature(signature, sighash_algorithm::single, pubkey, script_code, parent_tx, index));
 }
 
-BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_single_output__expected) {
+TEST_CASE("script create endorsement  single input single output  expected", "[script]") {
     data_chunk tx_data;
     decode_base16(tx_data, "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970100000000ffffffff01905f0100000000001976a91418c0bd8d1818f1bf99cb1df2269c645318ef7b7388ac00000000");
     transaction new_tx;
-    BOOST_REQUIRE(entity_from_data(new_tx, tx_data));
+    REQUIRE(entity_from_data(new_tx, tx_data));
 
     script prevout_script;
-    BOOST_REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
+    REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
 
     ec_secret const secret = hash_literal("ce8f4b713ffdd2658900845251890f30371856be201cd1f5b3d970f793634333");
 
     endorsement out;
     auto const index = 0u;
     auto const sighash_type = sighash_algorithm::all;
-    BOOST_REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
+    REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
 
     auto const result = encode_base16(out);
     // auto const expected = "3045022100e428d3cc67a724cb6cfe8634aa299e58f189d9c46c02641e936c40cc16c7e8ed0220083949910fe999c21734a1f33e42fca15fb463ea2e08f0a1bccd952aacaadbb801";
     auto const expected = "304402200245ea46be39d72fed03c899aabc446b3c9baf93f57c2b382757856c3209854b0220795946074804a08c0053116eafe851c1a37b24414199afecf286f1eb4d82167801";
     
-    BOOST_REQUIRE_EQUAL(result, expected);
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(script__create_endorsement__single_input_no_output__expected) {
+TEST_CASE("script create endorsement  single input no output  expected", "[script]") {
     data_chunk tx_data;
     decode_base16(tx_data, "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970000000000ffffffff0000000000");
     transaction new_tx;
-    BOOST_REQUIRE(entity_from_data(new_tx, tx_data));
+    REQUIRE(entity_from_data(new_tx, tx_data));
 
     script prevout_script;
-    BOOST_REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
+    REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
 
     ec_secret const secret = hash_literal("ce8f4b713ffdd2658900845251890f30371856be201cd1f5b3d970f793634333");
 
     endorsement out;
     auto const index = 0u;
     auto const sighash_type = sighash_algorithm::all;
-    BOOST_REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
+    REQUIRE(script::create_endorsement(out, secret, prevout_script, new_tx, index, sighash_type));
 
     auto const result = encode_base16(out);
     // auto const expected = "3045022100ba57820be5f0b93a0d5b880fbf2a86f819d959ecc24dc31b6b2d4f6ed286f253022071ccd021d540868ee10ca7634f4d270dfac7aea0d5912cf2b104111ac9bc756b01";
     auto const expected = "304402202d32085880e02b7f58a23db8a01eebfe105b6efda19e426960148d152ae67c76022028868ba8d97a4983252b247ae7f3203106c691a6ff83cc0f9b11289115ce4f3801";
-    BOOST_REQUIRE_EQUAL(result, expected);
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(script__generate_signature_hash__all__expected) {
+TEST_CASE("script generate signature hash  all  expected", "[script]") {
     data_chunk tx_data;
     decode_base16(tx_data, "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970000000000ffffffff0000000000");
     transaction new_tx;
-    BOOST_REQUIRE(entity_from_data(new_tx, tx_data));
+    REQUIRE(entity_from_data(new_tx, tx_data));
 
     script prevout_script;
-    BOOST_REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
+    REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
 
     endorsement out;
     auto const index = 0u;
