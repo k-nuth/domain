@@ -154,16 +154,13 @@ TEST_CASE("get headers  factory from data 3  valid input  success", "[get header
     auto const result = create<message::get_headers>(
         message::get_headers::version_minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::get_headers::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::get_headers::version_minimum),
-        result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(expected.serialized_size(message::get_headers::version_minimum) == result.serialized_size(message::get_headers::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("get headers  operator assign equals  always  matches equivalent", "[get headers]") {
     hash_list start = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
