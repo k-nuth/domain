@@ -142,10 +142,10 @@ TEST_CASE("message transaction  from data  valid junk  success", "[message trans
     boost::iostreams::stream<byte_source<std::array<uint8_t, 64>>> stream(source);
 
     transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, version::level::minimum, stream));
+    REQUIRE(entity_from_data(tx, version::level::minimum, stream));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__success) {
+TEST_CASE("message transaction  factory from data 1  case 1 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
