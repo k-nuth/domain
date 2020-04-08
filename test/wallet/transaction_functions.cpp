@@ -92,12 +92,12 @@ TEST_CASE("sign transaction  test", "[transaction functions]") {
     // Create signature
     auto const result = input_signature_bch(private_key, output_script, tx, amount, index);
 
-    BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second), SIGNATURE);
+    REQUIRE(result.first == error::error_code_t::success);
+    REQUIRE(kth::encode_base16(result.second) == SIGNATURE);
 }
 #endif
 
-BOOST_AUTO_TEST_CASE(set_signature__test) {
+TEST_CASE("set signature  test", "[transaction functions]") {
     // TX
     chain::transaction tx;
     data_chunk raw_data;
