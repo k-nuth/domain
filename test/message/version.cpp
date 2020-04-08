@@ -139,15 +139,15 @@ TEST_CASE("version  constructor 3  always  equals params", "[version]") {
     uint32_t height = 1246323u;
     auto const relay = true;
 
-    BOOST_REQUIRE(receiver.is_valid());
-    BOOST_REQUIRE(sender.is_valid());
+    REQUIRE(receiver.is_valid());
+    REQUIRE(sender.is_valid());
 
     message::version instance(value, services, timestamp, std::move(receiver), std::move(sender), nonce, agent, height, relay);
 
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_4__always__equals_params) {
+TEST_CASE("version  constructor 4  always  equals params", "[version]") {
     uint32_t value = 45624u;
     uint64_t services = 263546u;
     uint64_t timestamp = 7668534u;
