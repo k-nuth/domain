@@ -232,18 +232,18 @@ TEST_CASE("block  operator assign equals 1  always  matches equivalent", "[messa
         chain::transaction(4, 16, {}, {})};
 
     chain::block value(header, transactions);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.header() == header);
-    BOOST_REQUIRE(instance.transactions() == transactions);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.header() == header);
+    REQUIRE(instance.transactions() == transactions);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("block  operator assign equals 2  always  matches equivalent", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
