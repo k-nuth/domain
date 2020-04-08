@@ -114,11 +114,11 @@ TEST_CASE("not found  from data  insufficient version  failure", "[not found]") 
     auto const version = version::level::maximum;
     data_chunk const raw = expected.to_data(version);
     not_found instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, not_found::version_minimum - 1, raw));
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, not_found::version_minimum - 1, raw));
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(not_found__factory_from_data_1__valid_input__success) {
+TEST_CASE("not found  factory from data 1  valid input  success", "[not found]") {
     static not_found const expected{
         {{inventory_vector::type_id::error,
           {{0x44, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
