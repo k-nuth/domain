@@ -171,14 +171,13 @@ TEST_CASE("compact block  from data  insufficient version  failure", "[compact b
     message::compact_block expected;
     entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
 
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
-                                   message::compact_block::version_minimum - 1, data));
+    REQUIRE( ! entity_from_data(instance, message::compact_block::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_1__valid_input__success) {
+TEST_CASE("compact block  factory from data 1  valid input  success", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
