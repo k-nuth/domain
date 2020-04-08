@@ -149,31 +149,31 @@ TEST_CASE("alert payload  constructor 5  always  equals params", "[alert payload
 
     message::alert_payload instance(std::move(value));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__from_data__insufficient_bytes__failure) {
+TEST_CASE("alert payload  from data  insufficient bytes  failure", "[alert payload]") {
     data_chunk raw{0xab, 0x11};
     message::alert_payload instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__wiki_sample_test__success) {
+TEST_CASE("alert payload  factory from data 1  wiki sample test  success", "[alert payload]") {
     data_chunk const raw{
         0x01, 0x00, 0x00, 0x00, 0x37, 0x66, 0x40, 0x4f, 0x00, 0x00,
         0x00, 0x00, 0xb3, 0x05, 0x43, 0x4f, 0x00, 0x00, 0x00, 0x00,
