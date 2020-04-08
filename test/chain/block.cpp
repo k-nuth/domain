@@ -197,20 +197,20 @@ TEST_CASE("block  is valid merkle root  valid  returns true", "[chain block]") {
         "ab48788ac00000000"));
 
     chain::block instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw_block));
-    BOOST_REQUIRE(instance.is_valid_merkle_root());
+    REQUIRE(entity_from_data(instance, raw_block));
+    REQUIRE(instance.is_valid_merkle_root());
 }
 
-BOOST_AUTO_TEST_SUITE(block_serialization_tests)
+// Start Boost Suite: block serialization tests
 
-BOOST_AUTO_TEST_CASE(block__from_data__insufficient_bytes__failure) {
+TEST_CASE("block  from data  insufficient bytes  failure", "[block serialization]") {
     data_chunk data(10);
     chain::block instance;
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(block__from_data__insufficient_transaction_bytes__failure) {
+TEST_CASE("block  from data  insufficient transaction bytes  failure", "[block serialization]") {
     data_chunk const data = to_chunk(base16_literal(
         "010000007f110631052deeee06f0754a3629ad7663e56359fd5f3aa7b3e30a00"
         "000000005f55996827d9712147a8eb6d7bae44175fe0bcfa967e424a25bfe9f4"
