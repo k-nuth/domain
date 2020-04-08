@@ -35,9 +35,6 @@ public:
     filter_clear(filter_clear const& x) = default;
     filter_clear(filter_clear&& x) = default;
 
-    // bool from_data(uint32_t version, data_chunk const& data);
-    // bool from_data(uint32_t version, std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         reset();
