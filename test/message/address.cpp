@@ -183,14 +183,14 @@ TEST_CASE("address  factory from data 3  roundtrip  success", "[address]") {
     istream_reader source(istream);
     auto const result = create<address>(version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(equal(expected, result));
+    REQUIRE(result.is_valid());
+    REQUIRE(equal(expected, result));
     auto const serialized_size = result.serialized_size(version::level::minimum);
-    BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
+    REQUIRE(data.size() == serialized_size);
+    REQUIRE(expected.serialized_size(version::level::minimum) == serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
+TEST_CASE("address  addresses setter 1  roundtrip  success", "[address]") {
     infrastructure::message::network_address::list const value{
         network_address(
             734678u,
