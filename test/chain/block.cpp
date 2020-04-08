@@ -341,19 +341,19 @@ TEST_CASE("block  generate merkle root  block with multiple transactions  matche
         "76a914eb675c349c474bec8dea2d79d12cff6f330ab48788ac00000000"));
 
     chain::block block100k;
-    BOOST_REQUIRE(entity_from_data(block100k, raw));
-    BOOST_REQUIRE(block100k.is_valid());
+    REQUIRE(entity_from_data(block100k, raw));
+    REQUIRE(block100k.is_valid());
 
     auto const serial = block100k.to_data();
-    BOOST_REQUIRE(raw == serial);
+    REQUIRE(raw == serial);
 
     auto const header = block100k.header();
     auto const transactions = block100k.transactions();
-    BOOST_REQUIRE(all_valid(transactions));
-    BOOST_REQUIRE(header.merkle() == block100k.generate_merkle_root());
+    REQUIRE(all_valid(transactions));
+    REQUIRE(header.merkle() == block100k.generate_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__header_accessor__always__returns_initialized_value) {
+TEST_CASE("block  header accessor  always  returns initialized value", "[block generate merkle root]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
