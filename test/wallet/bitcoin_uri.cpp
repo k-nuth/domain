@@ -191,11 +191,11 @@ TEST_CASE("bitcoin uri  parameters all  complex uri  expected", "[bitcoin uri]")
         "message=hello%20bitcoin&"
         "r=http://example.com?purchase%3Dshoes%26user%3Dbob");
 
-    BOOST_REQUIRE_EQUAL(uri.address(), "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
-    BOOST_REQUIRE_EQUAL(uri.parameter("amount"), "0.0012");
-    BOOST_REQUIRE_EQUAL(uri.parameter("label"), "&=\n");
-    BOOST_REQUIRE_EQUAL(uri.parameter("message"), "hello bitcoin");
-    BOOST_REQUIRE_EQUAL(uri.parameter("r"), "http://example.com?purchase=shoes&user=bob");
+    REQUIRE(uri.address() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    REQUIRE(uri.parameter("amount") == "0.0012");
+    REQUIRE(uri.parameter("label") == "&=\n");
+    REQUIRE(uri.parameter("message") == "hello bitcoin");
+    REQUIRE(uri.parameter("r") == "http://example.com?purchase=shoes&user=bob");
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
