@@ -156,18 +156,18 @@ TEST_CASE("chain header  version accessor  always  returns initialized value", "
         4356344u,
         34564u);
 
-    BOOST_REQUIRE_EQUAL(value, instance.version());
+    REQUIRE(value == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(header__version_setter__roundtrip__success) {
+TEST_CASE("chain header  version setter  roundtrip  success", "[chain header]") {
     uint32_t expected = 4521u;
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.version());
+    REQUIRE(expected != instance.version());
     instance.set_version(expected);
-    BOOST_REQUIRE(expected == instance.version());
+    REQUIRE(expected == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(header__previous_block_hash_accessor_1__always__returns_initialized_value) {
+TEST_CASE("chain header  previous block hash accessor 1  always  returns initialized value", "[chain header]") {
     auto const value = hash_literal("abababababababababababababababababababababababababababababababab");
     chain::header instance(
         11234u,
