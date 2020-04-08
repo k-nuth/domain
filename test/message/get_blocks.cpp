@@ -69,19 +69,19 @@ TEST_CASE("get blocks  constructor 5  always  equals params", "[get blocks]") {
 
     message::get_blocks expected(starts, stop);
     message::get_blocks instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__from_data__insufficient_bytes__failure) {
+TEST_CASE("get blocks  from data  insufficient bytes  failure", "[get blocks]") {
     data_chunk const raw{0xab, 0xcd};
     message::get_blocks instance;
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::minimum, raw));
+    REQUIRE( ! entity_from_data(instance, message::version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__factory_from_data_1__valid_input__success) {
+TEST_CASE("get blocks  factory from data 1  valid input  success", "[get blocks]") {
     const message::get_blocks expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
