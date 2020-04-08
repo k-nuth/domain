@@ -271,12 +271,11 @@ TEST_CASE("inventory  count  matching type  returns count", "[inventory]") {
          message::inventory_vector(message::inventory_vector::type_id::error,
                                    hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))});
 
-    BOOST_REQUIRE_EQUAL(3u,
-                        instance.count(message::inventory_vector::type_id::error));
+    REQUIRE(3u == instance.count(message::inventory_vector::type_id::error));
 }
 
-BOOST_AUTO_TEST_CASE(inventory__to_hashes__matching_type__returns_empty_list) {
-    const hash_list hashes = {};
+TEST_CASE("inventory  to hashes  matching type  returns empty list", "[inventory]") {
+    hash_list const hashes = {};
 
     message::inventory instance(
         {message::inventory_vector(message::inventory_vector::type_id::error,
