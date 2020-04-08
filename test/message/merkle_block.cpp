@@ -171,11 +171,11 @@ TEST_CASE("merkle block - roundtrip to data factory from data stream", "[merkle 
     data_source istream(data);
     auto const result = create<message::merkle_block>(message::version::level::maximum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader) {
+TEST_CASE("merkle block - roundtrip to data factory from data reader", "[merkle block]") {
     const message::merkle_block expected{
         {10,
          hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
