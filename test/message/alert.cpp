@@ -172,129 +172,129 @@ TEST_CASE("alert  factory from data 3  roundtrip  success", "[alert]") {
     auto const result = create<message::alert>(
         message::version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_accessor_1__always__returns_initialized) {
+TEST_CASE("alert  payload accessor 1  always  returns initialized", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
-    BOOST_REQUIRE(payload == instance.payload());
+    REQUIRE(payload == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_accessor_2__always__returns_initialized) {
+TEST_CASE("alert  payload accessor 2  always  returns initialized", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     const message::alert instance(payload, signature);
-    BOOST_REQUIRE(payload == instance.payload());
+    REQUIRE(payload == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_setter_1__roundtrip__success) {
+TEST_CASE("alert  payload setter 1  roundtrip  success", "[alert]") {
     auto const value = to_chunk(base16_literal("aabbccddeeff"));
     message::alert instance;
-    BOOST_REQUIRE(instance.payload() != value);
+    REQUIRE(instance.payload() != value);
     instance.set_payload(value);
-    BOOST_REQUIRE(value == instance.payload());
+    REQUIRE(value == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__payload_setter_2__roundtrip__success) {
+TEST_CASE("alert  payload setter 2  roundtrip  success", "[alert]") {
     auto const value = to_chunk(base16_literal("aabbccddeeff"));
     auto dup_value = value;
     message::alert instance;
-    BOOST_REQUIRE(instance.payload() != value);
+    REQUIRE(instance.payload() != value);
     instance.set_payload(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.payload());
+    REQUIRE(value == instance.payload());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_accessor_1__always__returns_initialized) {
+TEST_CASE("alert  signature accessor 1  always  returns initialized", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
-    BOOST_REQUIRE(signature == instance.signature());
+    REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_accessor_2__always__returns_initialized) {
+TEST_CASE("alert  signature accessor 2  always  returns initialized", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     const message::alert instance(payload, signature);
-    BOOST_REQUIRE(signature == instance.signature());
+    REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_setter_1__roundtrip__success) {
+TEST_CASE("alert  signature setter 1  roundtrip  success", "[alert]") {
     auto const value = to_chunk(base16_literal("aabbccddeeff"));
     message::alert instance;
-    BOOST_REQUIRE(instance.signature() != value);
+    REQUIRE(instance.signature() != value);
     instance.set_signature(value);
-    BOOST_REQUIRE(value == instance.signature());
+    REQUIRE(value == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__signature_setter_2__roundtrip__success) {
+TEST_CASE("alert  signature setter 2  roundtrip  success", "[alert]") {
     auto const value = to_chunk(base16_literal("aabbccddeeff"));
     auto dup_value = value;
     message::alert instance;
-    BOOST_REQUIRE(instance.signature() != value);
+    REQUIRE(instance.signature() != value);
     instance.set_signature(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.signature());
+    REQUIRE(value == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("alert  operator assign equals  always  matches equivalent", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert value(payload, signature);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::alert instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(payload == instance.payload());
-    BOOST_REQUIRE(signature == instance.signature());
+    REQUIRE(instance.is_valid());
+    REQUIRE(payload == instance.payload());
+    REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("alert  operator boolean equals  duplicates  returns true", "[alert]") {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));
 
     message::alert instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("alert  operator boolean equals  differs  returns false", "[alert]") {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));
 
     message::alert instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("alert  operator boolean not equals  duplicates  returns false", "[alert]") {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));
 
     message::alert instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("alert  operator boolean not equals  differs  returns true", "[alert]") {
     const message::alert expected(
         to_chunk(base16_literal("0123456789abcdef")),
         to_chunk(base16_literal("fedcba9876543210")));
 
     message::alert instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
