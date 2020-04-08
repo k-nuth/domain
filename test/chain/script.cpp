@@ -260,105 +260,105 @@ TEST_CASE("script clear  non empty  empty", "[script]") {
 
 // null_data
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_return_only__non_standard) {
+TEST_CASE("script pattern  null data return only  non standard", "[script]") {
     script instance;
     instance.from_string(SCRIPT_RETURN);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_empty__null_data) {
+TEST_CASE("script pattern  null data empty  null data", "[script]") {
     script instance;
     instance.from_string(SCRIPT_RETURN_EMPTY);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::null_data);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::null_data);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::null_data);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::null_data);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_80_bytes__null_data) {
+TEST_CASE("script pattern  null data 80 bytes  null data", "[script]") {
     script instance;
     instance.from_string(SCRIPT_RETURN_80);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::null_data);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::null_data);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::null_data);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::null_data);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__null_data_81_bytes__non_standard) {
+TEST_CASE("script pattern  null data 81 bytes  non standard", "[script]") {
     script instance;
     instance.from_string(SCRIPT_RETURN_81);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
 }
 
 // pay_multisig
 
-BOOST_AUTO_TEST_CASE(script__pattern__0_of_3_multisig__non_standard) {
+TEST_CASE("script pattern  0 of 3 multisig  non standard", "[script]") {
     script instance;
     instance.from_string(SCRIPT_0_OF_3_MULTISIG);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__1_of_3_multisig__pay_multisig) {
+TEST_CASE("script pattern  1 of 3 multisig  pay multisig", "[script]") {
     script instance;
     instance.from_string(SCRIPT_1_OF_3_MULTISIG);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__2_of_3_multisig__pay_multisig) {
+TEST_CASE("script pattern  2 of 3 multisig  pay multisig", "[script]") {
     script instance;
     instance.from_string(SCRIPT_2_OF_3_MULTISIG);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__3_of_3_multisig__pay_multisig) {
+TEST_CASE("script pattern  3 of 3 multisig  pay multisig", "[script]") {
     script instance;
     instance.from_string(SCRIPT_3_OF_3_MULTISIG);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__4_of_3_multisig__non_standard) {
+TEST_CASE("script pattern  4 of 3 multisig  non standard", "[script]") {
     script instance;
     instance.from_string(SCRIPT_4_OF_3_MULTISIG);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__16_of_16_multisig__pay_multisig) {
+TEST_CASE("script pattern  16 of 16 multisig  pay multisig", "[script]") {
     script instance;
     instance.from_string(SCRIPT_16_OF_16_MULTISIG);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::pay_multisig);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::pay_multisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__pattern__17_of_17_multisig__non_standard) {
+TEST_CASE("script pattern  17 of 17 multisig  non standard", "[script]") {
     script instance;
     instance.from_string(SCRIPT_17_OF_17_MULTISIG);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
 }
 
 // Data-driven tests.
