@@ -354,10 +354,10 @@ TEST_CASE("block transactions  transactions accessor 1  always  returns initiali
         chain::transaction(4, 16, {}, {})};
 
     message::block_transactions instance(hash, transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__transactions_accessor_2__always__returns_initialized_value) {
+TEST_CASE("block transactions  transactions accessor 2  always  returns initialized value", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
