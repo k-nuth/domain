@@ -521,26 +521,26 @@ TEST_CASE("encrypted  encrypt  compressed testnet  matches secret version and co
     uint8_t const version = 111;
     auto const is_compressed = true;
     auto const seed = base16_literal("baadf00dbaadf00dbaadf00dbaadf00dbaadf00dbaadf00d");
-    BOOST_REQUIRE(encrypt(out_private_key, secret, passphrase, version, is_compressed));
+    REQUIRE(encrypt(out_private_key, secret, passphrase, version, is_compressed));
 
     // Decrypt the secret from the private key.
     auto const& private_key = out_private_key;
     ec_secret out_secret;
     uint8_t out_version = 42;
     bool out_is_compressed = false;
-    BOOST_REQUIRE(decrypt(out_secret, out_version, out_is_compressed, private_key, passphrase));
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), encode_base16(secret));
-    BOOST_REQUIRE_EQUAL(out_is_compressed, is_compressed);
-    BOOST_REQUIRE_EQUAL(out_version, version);
+    REQUIRE(decrypt(out_secret, out_version, out_is_compressed, private_key, passphrase));
+    REQUIRE(encode_base16(out_secret) == encode_base16(secret));
+    REQUIRE(out_is_compressed == is_compressed);
+    REQUIRE(out_version == version);
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__private_uncompressed_testnet__decrypts_with_matching_version_and_compression) {
+TEST_CASE("encrypted  create token entropy  private uncompressed testnet  decrypts with matching version and compression", "[encrypted  round trips]") {
     // Create the token.
     encrypted_token out_token;
     auto const passphrase = "passphrase";
     auto const entropy = base16_literal("baadf00dbaadf00d");
-    BOOST_REQUIRE(create_token(out_token, passphrase, entropy));
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphraseqVHzjNrYRo5G6sfRB4YdSaQ2m8URnkBYS1UT6JBju5G5o45YRZKLDpK6J3PEGq");
+    REQUIRE(create_token(out_token, passphrase, entropy));
+    REQUIRE(encode_base58(out_token) == "passphraseqVHzjNrYRo5G6sfRB4YdSaQ2m8URnkBYS1UT6JBju5G5o45YRZKLDpK6J3PEGq");
 
     // Create the private key.
     auto const& token = out_token;
