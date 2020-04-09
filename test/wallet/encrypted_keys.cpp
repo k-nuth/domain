@@ -549,31 +549,31 @@ TEST_CASE("encrypted  create token entropy  private uncompressed testnet  decryp
     uint8_t const version = 111;
     auto const is_compressed = false;
     auto const seed = base16_literal("baadf00dbaadf00dbaadf00dbaadf00dbaadf00dbaadf00d");
-    BOOST_REQUIRE(create_key_pair(out_private_key, out_point, token, seed, version, is_compressed));
+    REQUIRE(create_key_pair(out_private_key, out_point, token, seed, version, is_compressed));
 
     // Extract the secret from the private key.
     auto const& private_key = out_private_key;
     ec_secret out_secret;
     uint8_t out_version = 42;
     bool out_is_compressed = true;
-    BOOST_REQUIRE(decrypt(out_secret, out_version, out_is_compressed, private_key, passphrase));
-    BOOST_REQUIRE_EQUAL(out_is_compressed, is_compressed);
-    BOOST_REQUIRE_EQUAL(out_version, version);
+    REQUIRE(decrypt(out_secret, out_version, out_is_compressed, private_key, passphrase));
+    REQUIRE(out_is_compressed == is_compressed);
+    REQUIRE(out_version == version);
 
     // Validate the point derived from key creation against the secret-derived point.
     // The out point is always compressed, since the user can always decompress it.
     ec_compressed compressed;
-    BOOST_REQUIRE(secret_to_public(compressed, out_secret));
-    BOOST_REQUIRE_EQUAL(encode_base16(out_point), encode_base16(compressed));
+    REQUIRE(secret_to_public(compressed, out_secret));
+    REQUIRE(encode_base16(out_point) == encode_base16(compressed));
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__private_and_public_compressed_testnet__decrypts_with_matching_version_and_compression) {
+TEST_CASE("encrypted  create token lot  private and public compressed testnet  decrypts with matching version and compression", "[encrypted  round trips]") {
     // Create the token.
     encrypted_token out_token;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
-    BOOST_REQUIRE(create_token(out_token, passphrase, salt, 42, 24));
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
+    REQUIRE(create_token(out_token, passphrase, salt, 42, 24));
+    REQUIRE(encode_base58(out_token) == "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 
     // Create the public/private key pair.
     auto const& token = out_token;
