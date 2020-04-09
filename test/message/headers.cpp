@@ -282,12 +282,12 @@ TEST_CASE("headers  command setter 2  roundtrip  success", "[headers]") {
             34564u)};
 
     message::headers instance;
-    BOOST_REQUIRE(instance.elements().empty());
+    REQUIRE(instance.elements().empty());
     instance.set_elements(std::move(values));
-    BOOST_REQUIRE_EQUAL(instance.elements().size(), 2u);
+    REQUIRE(instance.elements().size() == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("headers  operator assign equals  always  matches equivalent", "[headers]") {
     message::headers value(
         {header{
              1u,
