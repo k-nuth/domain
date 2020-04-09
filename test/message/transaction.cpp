@@ -387,13 +387,13 @@ TEST_CASE("message transaction  operator assign equals 2  always  matches equiva
         "e61e66fe5d88ac00000000"));
 
     transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, transaction::version_minimum, raw_tx));
+    REQUIRE(entity_from_data(expected, transaction::version_minimum, raw_tx));
     transaction instance;
     instance = create<transaction>(transaction::version_minimum, raw_tx);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__duplicates__returns_true) {
+TEST_CASE("message transaction  operator boolean equals 1  duplicates  returns true", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
