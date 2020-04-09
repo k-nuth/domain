@@ -182,12 +182,12 @@ TEST_CASE("get blocks  start hashes setter 1  roundtrip  success", "[get blocks]
         hash_literal("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")};
 
     message::get_blocks instance;
-    BOOST_REQUIRE(values != instance.start_hashes());
+    REQUIRE(values != instance.start_hashes());
     instance.set_start_hashes(values);
-    BOOST_REQUIRE(values == instance.start_hashes());
+    REQUIRE(values == instance.start_hashes());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__start_hashes_setter_2__roundtrip__success) {
+TEST_CASE("get blocks  start hashes setter 2  roundtrip  success", "[get blocks]") {
     hash_list values = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
