@@ -655,28 +655,28 @@ TEST_CASE("alert payload  reserved accessor 2  always  returns initialized", "[a
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  reserved setter 1  roundtrip  success", "[alert payload]") {
     std::string const value = "asdfa";
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.reserved() != value);
+    REQUIRE(instance.reserved() != value);
     instance.set_reserved(value);
-    BOOST_REQUIRE(value == instance.reserved());
+    REQUIRE(value == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  reserved setter 2  roundtrip  success", "[alert payload]") {
     std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.reserved() != value);
+    REQUIRE(instance.reserved() != value);
     instance.set_reserved(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.reserved());
+    REQUIRE(value == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("alert payload  operator assign equals  always  matches equivalent", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
