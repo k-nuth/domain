@@ -583,7 +583,7 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
     uint8_t const version = 111;
     auto const is_compressed = true;
     auto const seed = base16_literal("baadf00dbaadf00dbaadf00dbaadf00dbaadf00dbaadf00d");
-    BOOST_REQUIRE(create_key_pair(out_private_key, out_public_key, out_point, token, seed, version, is_compressed));
+    REQUIRE(create_key_pair(out_private_key, out_public_key, out_point, token, seed, version, is_compressed));
 
     // Extract the secret from the private key.
     auto const& private_key = out_private_key;
