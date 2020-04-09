@@ -259,17 +259,17 @@ TEST_CASE("address  operator assign equals  always  matches equivalent", "[addre
 
     address value(addresses);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     address instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("address  operator boolean equals  duplicates  returns true", "[address]") {
     address const expected(
         {network_address(
              734678u,
