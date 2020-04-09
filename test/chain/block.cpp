@@ -461,16 +461,16 @@ TEST_CASE("block  operator assign equals  always  matches equivalent", "[block g
     // This must be non-const.
     chain::block value(header, transactions);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     chain::block instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("block  operator boolean equals  duplicates  returns true", "[block generate merkle root]") {
     const chain::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
