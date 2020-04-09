@@ -367,22 +367,22 @@ TEST_CASE("block transactions  transactions accessor 2  always  returns initiali
         chain::transaction(4, 16, {}, {})};
 
     const message::block_transactions instance(hash, transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__transactions_setter_1__roundtrip__success) {
+TEST_CASE("block transactions  transactions setter 1  roundtrip  success", "[block transactions]") {
     chain::transaction::list const transactions = {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
         chain::transaction(4, 16, {}, {})};
 
     message::block_transactions instance;
-    BOOST_REQUIRE(transactions != instance.transactions());
+    REQUIRE(transactions != instance.transactions());
     instance.set_transactions(transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__transactions_setter_2__roundtrip__success) {
+TEST_CASE("block transactions  transactions setter 2  roundtrip  success", "[block transactions]") {
     chain::transaction::list const transactions = {
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
