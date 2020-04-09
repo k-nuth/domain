@@ -376,10 +376,10 @@ TEST_CASE("chain header  is valid proof of work  hash less than bits  returns tr
         402972254u,
         2842832236u);
 
-    BOOST_REQUIRE(instance.is_valid_proof_of_work());
+    REQUIRE(instance.is_valid_proof_of_work());
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("chain header  operator assign equals  always  matches equivalent", "[chain header]") {
     // This must be non-const.
     chain::header value(
         10u,
