@@ -190,13 +190,13 @@ TEST_CASE("message header  factory from data 3  valid input  success", "[message
 
     auto const result = create<message::header>(version, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("message header  operator assign equals 1  always  matches equivalent", "[message header]") {
     chain::header value(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
