@@ -5,6 +5,8 @@
 #ifndef KTH_DOMAIN_UTIL_HPP
 #define KTH_DOMAIN_UTIL_HPP
 
+#include <kth/domain/multi_crypto_settings.hpp>
+
 namespace kth {
 
 constexpr inline 
