@@ -236,13 +236,13 @@ TEST_CASE("reject  factory from data 1  valid input  success", "[reject]") {
 
     auto const data = expected.to_data(version_maximum);
     auto const result = create<message::reject>(version_maximum, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version_maximum));
+    REQUIRE(expected.serialized_size(version_maximum) == result.serialized_size(version_maximum));
 }
 
-BOOST_AUTO_TEST_CASE(reject__factory_from_data_2__valid_input__success) {
+TEST_CASE("reject  factory from data 2  valid input  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::insufficient_fee,
         message::block::command,
