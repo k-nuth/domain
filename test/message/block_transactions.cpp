@@ -455,7 +455,7 @@ TEST_CASE("block transactions  operator boolean not equals  differs  returns tru
          chain::transaction(4, 16, {}, {})});
 
     message::block_transactions instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
