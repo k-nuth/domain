@@ -408,12 +408,12 @@ TEST_CASE("compact block  short ids setter 1  roundtrip  success", "[compact blo
         convert_to_uint64t("f0f0f0f0f0f0")};
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.short_ids());
+    REQUIRE(value != instance.short_ids());
     instance.set_short_ids(value);
-    BOOST_REQUIRE(value == instance.short_ids());
+    REQUIRE(value == instance.short_ids());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_2__roundtrip__success) {
+TEST_CASE("compact block  short ids setter 2  roundtrip  success", "[compact block]") {
     const message::compact_block::short_id_list value = {
         convert_to_uint64t("aaaaaaaaaaaa"),
         convert_to_uint64t("bbbbbbbbbbbb"),
