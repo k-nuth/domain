@@ -25,6 +25,7 @@
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
 #include <kth/infrastructure/config/checkpoint.hpp>
 #include <kth/infrastructure/error.hpp>
