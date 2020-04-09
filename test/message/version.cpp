@@ -522,16 +522,16 @@ TEST_CASE("version  address receiver accessor  always  returns initialized value
 //    };
 //
 //    message::version instance;
-//    BOOST_REQUIRE(!instance.address_receiver().is_valid());
+//    REQUIRE(!instance.address_receiver().is_valid());
 //    instance.address_receiver(expected);
 //    const message::network_address result = instance.address_receiver();
-//    BOOST_REQUIRE(result == expected);
-//    BOOST_REQUIRE(result.is_valid());
+//    REQUIRE(result == expected);
+//    REQUIRE(result.is_valid());
 //}
 
-BOOST_AUTO_TEST_CASE(version__address_receiver_setter_2__roundtrip__success) {
+TEST_CASE("version  address receiver setter 2  roundtrip  success", "[version]") {
     message::version instance;
-    BOOST_REQUIRE(!instance.address_receiver().is_valid());
+    REQUIRE(!instance.address_receiver().is_valid());
     instance.set_address_receiver(message::network_address{
         734678u,
         5357534u,
