@@ -259,12 +259,12 @@ TEST_CASE("headers  command setter 1  roundtrip  success", "[headers]") {
             34564u)};
 
     message::headers instance;
-    BOOST_REQUIRE(instance.elements() != expected);
+    REQUIRE(instance.elements() != expected);
     instance.set_elements(expected);
-    BOOST_REQUIRE(instance.elements() == expected);
+    REQUIRE(instance.elements() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__command_setter_2__roundtrip__success) {
+TEST_CASE("headers  command setter 2  roundtrip  success", "[headers]") {
     header::list values{
         header(
             10u,
