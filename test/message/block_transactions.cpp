@@ -320,31 +320,31 @@ TEST_CASE("block transactions  block hash accessor 2  always  returns initialize
         chain::transaction(4, 16, {}, {})};
 
     const message::block_transactions instance(hash, transactions);
-    BOOST_REQUIRE(hash == instance.block_hash());
+    REQUIRE(hash == instance.block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__block_hash_setter_1__roundtrip__success) {
+TEST_CASE("block transactions  block hash setter 1  roundtrip  success", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
     message::block_transactions instance;
-    BOOST_REQUIRE(hash != instance.block_hash());
+    REQUIRE(hash != instance.block_hash());
     instance.set_block_hash(hash);
-    BOOST_REQUIRE(hash == instance.block_hash());
+    REQUIRE(hash == instance.block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__block_hash_setter_2__roundtrip__success) {
+TEST_CASE("block transactions  block hash setter 2  roundtrip  success", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
     hash_digest dup_hash = hash;
     message::block_transactions instance;
-    BOOST_REQUIRE(hash != instance.block_hash());
+    REQUIRE(hash != instance.block_hash());
     instance.set_block_hash(std::move(dup_hash));
-    BOOST_REQUIRE(hash == instance.block_hash());
+    REQUIRE(hash == instance.block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__transactions_accessor_1__always__returns_initialized_value) {
+TEST_CASE("block transactions  transactions accessor 1  always  returns initialized value", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
