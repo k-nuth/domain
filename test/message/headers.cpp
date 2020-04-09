@@ -311,14 +311,14 @@ TEST_CASE("headers  operator assign equals  always  matches equivalent", "[heade
              300u,
              3000u}});
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::headers instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("headers  operator boolean equals  duplicates  returns true", "[headers]") {
     const message::headers expected(
         {header{
              1u,
