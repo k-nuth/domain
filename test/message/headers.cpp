@@ -468,18 +468,18 @@ TEST_CASE("headers  to hashes  non empty  returns header hash list", "[headers]"
 
     hash_list result;
     instance.to_hashes(result);
-    BOOST_REQUIRE_EQUAL(result.size(), expected.size());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.size() == expected.size());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_inventory__empty__returns_empty_list) {
+TEST_CASE("headers  to inventory  empty  returns empty list", "[headers]") {
     message::headers instance;
     inventory_vector::list result;
     instance.to_inventory(result, inventory_vector::type_id::block);
-    BOOST_REQUIRE_EQUAL(0, result.size());
+    REQUIRE(0 == result.size());
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_inventory__non_empty__returns_header_hash_inventory_list) {
+TEST_CASE("headers  to inventory  non empty  returns header hash inventory list", "[headers]") {
     inventory_vector::list const expected{
         inventory_vector(inventory_vector::type_id::block, hash_literal("108127a4f5955a546b78807166d8cb9cd3eee1ed530c14d51095bc798685f4d6")),
         inventory_vector(inventory_vector::type_id::block, hash_literal("37ec64a548b6419769b152d70efc4c356f74c7fda567711d98cac3c55c34a890")),
