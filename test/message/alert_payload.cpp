@@ -529,28 +529,28 @@ TEST_CASE("alert payload  comment accessor 2  always  returns initialized", "[al
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
+    REQUIRE(instance.is_valid());
+    REQUIRE(comment == instance.comment());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  comment setter 1  roundtrip  success", "[alert payload]") {
     std::string const value = "asdfa";
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.comment() != value);
+    REQUIRE(instance.comment() != value);
     instance.set_comment(value);
-    BOOST_REQUIRE(value == instance.comment());
+    REQUIRE(value == instance.comment());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  comment setter 2  roundtrip  success", "[alert payload]") {
     std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.comment() != value);
+    REQUIRE(instance.comment() != value);
     instance.set_comment(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.comment());
+    REQUIRE(value == instance.comment());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  status bar accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
