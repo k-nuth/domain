@@ -261,18 +261,18 @@ TEST_CASE("get blocks  operator assign equals  always  matches equivalent", "[ge
 
     message::get_blocks value{start, stop};
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::get_blocks instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(start == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(start == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("get blocks  operator boolean equals  duplicates  returns true", "[get blocks]") {
     const message::get_blocks expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
