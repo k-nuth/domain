@@ -289,11 +289,11 @@ TEST_CASE("merkle block  hashes accessor 1  always  returns initialized value", 
         expected,
         {0xae, 0x56, 0x0f});
 
-    BOOST_REQUIRE(expected == instance.hashes());
+    REQUIRE(expected == instance.hashes());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__hashes_accessor_2__always__returns_initialized_value) {
-    const hash_list expected{
+TEST_CASE("merkle block  hashes accessor 2  always  returns initialized value", "[merkle block]") {
+    hash_list const expected{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
         hash_literal("ccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd"),
