@@ -380,25 +380,25 @@ TEST_CASE("merkle block  flags accessor 2  always  returns initialized value", "
         },
         expected);
 
-    BOOST_REQUIRE(expected == instance.flags());
+    REQUIRE(expected == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__flags_setter_1__roundtrip__success) {
+TEST_CASE("merkle block  flags setter 1  roundtrip  success", "[merkle block]") {
     data_chunk const expected{0xae, 0x56, 0x0f};
     message::merkle_block instance;
-    BOOST_REQUIRE(expected != instance.flags());
+    REQUIRE(expected != instance.flags());
     instance.set_flags(expected);
-    BOOST_REQUIRE(expected == instance.flags());
+    REQUIRE(expected == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__flags_setter_2__roundtrip__success) {
+TEST_CASE("merkle block  flags setter 2  roundtrip  success", "[merkle block]") {
     message::merkle_block instance;
-    BOOST_REQUIRE(instance.flags().empty());
+    REQUIRE(instance.flags().empty());
     instance.set_flags(data_chunk{0xae, 0x56, 0x0f});
-    BOOST_REQUIRE(!instance.flags().empty());
+    REQUIRE(!instance.flags().empty());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("merkle block  operator assign equals  always  matches equivalent", "[merkle block]") {
     message::merkle_block value(
         chain::header{
             10,
