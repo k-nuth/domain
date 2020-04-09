@@ -215,10 +215,10 @@ TEST_CASE("get blocks  stop hash accessor 1  always  returns initialized value",
          hash_literal("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")},
         expected};
 
-    BOOST_REQUIRE(expected == instance.stop_hash());
+    REQUIRE(expected == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__stop_hash_accessor_2__always__returns_initialized_value) {
+TEST_CASE("get blocks  stop hash accessor 2  always  returns initialized value", "[get blocks]") {
     hash_digest expected = hash_literal(
         "7777777777777777777777777777777777777777777777777777777777777777");
 
