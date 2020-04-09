@@ -408,10 +408,10 @@ TEST_CASE("chain header  operator boolean equals  duplicates  returns true", "[c
         68644u);
 
     chain::header instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("chain header  operator boolean equals  differs  returns false", "[chain header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
