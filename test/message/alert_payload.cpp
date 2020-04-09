@@ -695,62 +695,62 @@ TEST_CASE("alert payload  operator assign equals  always  matches equivalent", "
                                  cancel, set_cancel, min_version, max_version, set_sub_version,
                                  priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::alert_payload instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("alert payload  operator boolean equals  duplicates  returns true", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("alert payload  operator boolean equals  differs  returns false", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("alert payload  operator boolean not equals  duplicates  returns false", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("alert payload  operator boolean not equals  differs  returns true", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
