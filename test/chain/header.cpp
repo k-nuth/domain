@@ -311,51 +311,51 @@ TEST_CASE("chain header  nonce accessor  always  returns initialized value", "[c
         4356344u,
         value);
 
-    BOOST_REQUIRE_EQUAL(value, instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(header__nonce_setter__roundtrip__success) {
+TEST_CASE("chain header  nonce setter  roundtrip  success", "[chain header]") {
     uint32_t expected = 4521u;
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.nonce());
+    REQUIRE(expected != instance.nonce());
     instance.set_nonce(expected);
-    BOOST_REQUIRE(expected == instance.nonce());
+    REQUIRE(expected == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(header__is_valid_timestamp__timestamp_less_than_2_hours_from_now__returns_true) {
+TEST_CASE("chain header  is valid timestamp  timestamp less than 2 hours from now  returns true", "[chain header]") {
     chain::header instance;
     auto const now = std::chrono::system_clock::now();
     auto const now_time = std::chrono::system_clock::to_time_t(now);
     instance.set_timestamp(static_cast<uint32_t>(now_time));
-    BOOST_REQUIRE(instance.is_valid_timestamp());
+    REQUIRE(instance.is_valid_timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(header__is_valid_timestamp__timestamp_greater_than_2_hours_from_now__returns_false) {
+TEST_CASE("chain header  is valid timestamp  timestamp greater than 2 hours from now  returns false", "[chain header]") {
     chain::header instance;
     auto const now = std::chrono::system_clock::now();
     auto const duration = std::chrono::hours(3);
     auto const future = std::chrono::system_clock::to_time_t(now + duration);
     instance.set_timestamp(static_cast<uint32_t>(future));
-    BOOST_REQUIRE(!instance.is_valid_timestamp());
+    REQUIRE(!instance.is_valid_timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(header__proof1__genesis_mainnet__expected) {
-    BOOST_REQUIRE_EQUAL(chain::header::proof(0x1d00ffff), 0x0000000100010001);
+TEST_CASE("chain header  proof1  genesis mainnet  expected", "[chain header]") {
+    REQUIRE(chain::header::proof(0x1d00ffff) == 0x0000000100010001);
 }
 
-BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__bits_exceeds_maximum__returns_false) {
+TEST_CASE("chain header  is valid proof of work  bits exceeds maximum  returns false", "[chain header]") {
     chain::header instance;
     instance.set_bits(retarget_proof_of_work_limit + 1);
-    BOOST_REQUIRE(!instance.is_valid_proof_of_work());
+    REQUIRE(!instance.is_valid_proof_of_work());
 }
 
-BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__retarget_bits_exceeds_maximum__returns_false) {
+TEST_CASE("chain header  is valid proof of work  retarget bits exceeds maximum  returns false", "[chain header]") {
     chain::header instance;
     instance.set_bits(no_retarget_proof_of_work_limit + 1);
-    BOOST_REQUIRE(!instance.is_valid_proof_of_work(false));
+    REQUIRE(!instance.is_valid_proof_of_work(false));
 }
 
-BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__hash_greater_bits__returns_false) {
+TEST_CASE("chain header  is valid proof of work  hash greater bits  returns false", "[chain header]") {
     chain::header const instance(
         11234u,
         hash_literal("abababababababababababababababababababababababababababababababab"),
