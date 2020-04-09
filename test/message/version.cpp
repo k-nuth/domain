@@ -372,22 +372,22 @@ TEST_CASE("version  factory from data 3  valid input  success", "[version]") {
     istream_reader source(istream);
     auto const result = create<message::version>(version_maximum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.relay(), result.relay());
-    BOOST_REQUIRE_EQUAL(expected.value(), result.value());
-    BOOST_REQUIRE_EQUAL(expected.services(), result.services());
-    BOOST_REQUIRE_EQUAL(expected.timestamp(), result.timestamp());
-    BOOST_REQUIRE_EQUAL(expected.nonce(), result.nonce());
-    BOOST_REQUIRE_EQUAL(expected.user_agent(), result.user_agent());
-    BOOST_REQUIRE_EQUAL(expected.start_height(), result.start_height());
-    BOOST_REQUIRE(expected.address_receiver() == result.address_receiver());
-    BOOST_REQUIRE(expected.address_sender() == result.address_sender());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(data.size() == result.serialized_size(version_maximum));
+    REQUIRE(expected.serialized_size(version_maximum) == result.serialized_size(version_maximum));
+    REQUIRE(expected.relay() == result.relay());
+    REQUIRE(expected.value() == result.value());
+    REQUIRE(expected.services() == result.services());
+    REQUIRE(expected.timestamp() == result.timestamp());
+    REQUIRE(expected.nonce() == result.nonce());
+    REQUIRE(expected.user_agent() == result.user_agent());
+    REQUIRE(expected.start_height() == result.start_height());
+    REQUIRE(expected.address_receiver() == result.address_receiver());
+    REQUIRE(expected.address_sender() == result.address_sender());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(version__value_accessor__returns_initialized_value) {
+TEST_CASE("version  value accessor  returns initialized value", "[version]") {
     uint32_t const expected = 210u;
     const message::version instance(
         expected,
