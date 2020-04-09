@@ -422,10 +422,10 @@ TEST_CASE("block transactions  operator boolean equals  duplicates  returns true
          chain::transaction(4, 16, {}, {})});
 
     message::block_transactions instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("block transactions  operator boolean equals  differs  returns false", "[block transactions]") {
     const message::block_transactions expected(
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         {chain::transaction(1, 48, {}, {}),
