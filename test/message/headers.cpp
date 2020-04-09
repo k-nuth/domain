@@ -217,10 +217,10 @@ TEST_CASE("headers  elements accessor 1  always  returns initialized value", "[h
             34564u)};
 
     message::headers instance(expected);
-    BOOST_REQUIRE(instance.elements() == expected);
+    REQUIRE(instance.elements() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__elements_accessor_2__always__returns_initialized_value) {
+TEST_CASE("headers  elements accessor 2  always  returns initialized value", "[headers]") {
     header::list const expected{
         header(
             10u,
