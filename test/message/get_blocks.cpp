@@ -230,26 +230,26 @@ TEST_CASE("get blocks  stop hash accessor 2  always  returns initialized value",
          hash_literal("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")},
         expected};
 
-    BOOST_REQUIRE(expected == instance.stop_hash());
+    REQUIRE(expected == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__stop_hash_setter_1__roundtrip__success) {
+TEST_CASE("get blocks  stop hash setter 1  roundtrip  success", "[get blocks]") {
     hash_digest value = hash_literal("7777777777777777777777777777777777777777777777777777777777777777");
     message::get_blocks instance;
-    BOOST_REQUIRE(value != instance.stop_hash());
+    REQUIRE(value != instance.stop_hash());
     instance.set_stop_hash(value);
-    BOOST_REQUIRE(value == instance.stop_hash());
+    REQUIRE(value == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__stop_hash_setter_2__roundtrip__success) {
+TEST_CASE("get blocks  stop hash setter 2  roundtrip  success", "[get blocks]") {
     hash_digest value = hash_literal("7777777777777777777777777777777777777777777777777777777777777777");
     message::get_blocks instance;
-    BOOST_REQUIRE(value != instance.stop_hash());
+    REQUIRE(value != instance.stop_hash());
     instance.set_stop_hash(std::move(value));
-    BOOST_REQUIRE(value == instance.stop_hash());
+    REQUIRE(value == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("get blocks  operator assign equals  always  matches equivalent", "[get blocks]") {
     hash_list start = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
