@@ -394,7 +394,7 @@ TEST_CASE("block  operator boolean not equals 2  differs  returns true", "[messa
          chain::transaction(4, 16, {}, {})});
 
     message::block instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
