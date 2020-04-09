@@ -405,16 +405,16 @@ TEST_CASE("block transactions  operator assign equals  always  matches equivalen
         chain::transaction(4, 16, {}, {})};
 
     message::block_transactions value(hash, transactions);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.block_hash());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.block_hash());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("block transactions  operator boolean equals  duplicates  returns true", "[block transactions]") {
     const message::block_transactions expected(
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         {chain::transaction(1, 48, {}, {}),
