@@ -415,16 +415,16 @@ TEST_CASE("merkle block  operator assign equals  always  matches equivalent", "[
         },
         {0xae, 0x56, 0x0f});
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::merkle_block instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("merkle block  operator boolean equals  duplicates  returns true", "[merkle block]") {
     const message::merkle_block expected(
         chain::header{
             10,
