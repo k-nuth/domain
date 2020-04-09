@@ -616,14 +616,14 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
 
 // These are not actual tests, just for emitting the version maps.
 
-//BOOST_AUTO_TEST_SUITE(encrypted__altchain_versions)
+// Start Boost Suite: encrypted  altchain versions
 //
 //static std::string hex(uint8_t number)
 //{
 //    return encode_base16(data_chunk{ number });
 //}
 //
-//BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__all_versions__print_private_and_public_encrypted_keys)
+// TEST_CASE("encrypted  create key pair  all versions  print private and public encrypted keys", "[None]")
 //{
 //    encrypted_private out_private_key;
 //    auto const secret = base16_literal("09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
