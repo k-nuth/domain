@@ -311,35 +311,35 @@ TEST_CASE("merkle block  hashes accessor 2  always  returns initialized value", 
         expected,
         {0xae, 0x56, 0x0f});
 
-    BOOST_REQUIRE(expected == instance.hashes());
+    REQUIRE(expected == instance.hashes());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__hashes_setter_1__roundtrip__success) {
-    const hash_list expected{
+TEST_CASE("merkle block  hashes setter 1  roundtrip  success", "[merkle block]") {
+    hash_list const expected{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
         hash_literal("ccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd"),
     };
 
     message::merkle_block instance;
-    BOOST_REQUIRE(expected != instance.hashes());
+    REQUIRE(expected != instance.hashes());
     instance.set_hashes(expected);
-    BOOST_REQUIRE(expected == instance.hashes());
+    REQUIRE(expected == instance.hashes());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__hashes_setter_2__roundtrip__success) {
+TEST_CASE("merkle block  hashes setter 2  roundtrip  success", "[merkle block]") {
     message::merkle_block instance;
-    BOOST_REQUIRE(instance.hashes().empty());
+    REQUIRE(instance.hashes().empty());
     instance.set_hashes(hash_list{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
         hash_literal("ccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd"),
     });
 
-    BOOST_REQUIRE(!instance.hashes().empty());
+    REQUIRE(!instance.hashes().empty());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__flags_accessor_1__always__returns_initialized_value) {
+TEST_CASE("merkle block  flags accessor 1  always  returns initialized value", "[merkle block]") {
     data_chunk const expected{0xae, 0x56, 0x0f};
 
     const message::merkle_block instance(
