@@ -290,18 +290,18 @@ TEST_CASE("chain header  bits accessor  always  returns initialized value", "[ch
         value,
         34564u);
 
-    BOOST_REQUIRE_EQUAL(value, instance.bits());
+    REQUIRE(value == instance.bits());
 }
 
-BOOST_AUTO_TEST_CASE(header__bits_setter__roundtrip__success) {
+TEST_CASE("chain header  bits setter  roundtrip  success", "[chain header]") {
     uint32_t expected = 4521u;
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.bits());
+    REQUIRE(expected != instance.bits());
     instance.set_bits(expected);
-    BOOST_REQUIRE(expected == instance.bits());
+    REQUIRE(expected == instance.bits());
 }
 
-BOOST_AUTO_TEST_CASE(header__nonce_accessor__always__returns_initialized_value) {
+TEST_CASE("chain header  nonce accessor  always  returns initialized value", "[chain header]") {
     uint32_t value = 34564u;
     chain::header instance(
         11234u,
