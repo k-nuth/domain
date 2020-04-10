@@ -521,18 +521,18 @@ TEST_CASE("compact block  operator assign equals  always  matches equivalent", "
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block value(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::compact_block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("compact block  operator boolean equals  duplicates  returns true", "[compact block]") {
     const message::compact_block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
