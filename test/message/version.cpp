@@ -760,14 +760,14 @@ TEST_CASE("version  operator assign equals  always  matches equivalent", "[versi
         100u,
         false);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::version instance;
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("version  operator boolean equals  duplicates  returns true", "[version]") {
     const message::version expected(
         210u,
         15234u,
