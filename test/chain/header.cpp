@@ -447,7 +447,7 @@ TEST_CASE("chain header  operator boolean not equals  differs  returns true", "[
         68644u);
 
     chain::header instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
