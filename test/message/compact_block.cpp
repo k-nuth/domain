@@ -472,22 +472,22 @@ TEST_CASE("compact block  transactions accessor 2  always  returns initialized v
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     const message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__transactions_setter_1__roundtrip__success) {
+TEST_CASE("compact block  transactions setter 1  roundtrip  success", "[compact block]") {
     const message::prefilled_transaction::list value = {
         message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
         message::prefilled_transaction(20, chain::transaction(2, 32, {}, {})),
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.transactions());
+    REQUIRE(value != instance.transactions());
     instance.set_transactions(value);
-    BOOST_REQUIRE(value == instance.transactions());
+    REQUIRE(value == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__transactions_setter_2__roundtrip__success) {
+TEST_CASE("compact block  transactions setter 2  roundtrip  success", "[compact block]") {
     const message::prefilled_transaction::list value = {
         message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
         message::prefilled_transaction(20, chain::transaction(2, 32, {}, {})),
