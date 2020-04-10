@@ -588,7 +588,7 @@ TEST_CASE("headers  is sequential  disordered  false", "[headers]") {
         3000u};
 
     headers const instance({first, second, third});
-    BOOST_REQUIRE(!instance.is_sequential());
+    REQUIRE(!instance.is_sequential());
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
