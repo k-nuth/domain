@@ -2,13 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
 #include <cstdint>
 
-#include <kth/domain.hpp>
+#include <test_helpers.hpp>
 
-BOOST_AUTO_TEST_SUITE(compact_tests)
+// Start Boost Suite: compact tests
 
 using namespace kth;
 using namespace kd;
