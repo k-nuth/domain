@@ -484,10 +484,10 @@ TEST_CASE("merkle block  operator boolean not equals  duplicates  returns false"
         {0xae, 0x56, 0x0f});
 
     message::merkle_block instance(expected);
-    BOOST_REQUIRE(!(instance != expected));
+    REQUIRE(!(instance != expected));
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("merkle block  operator boolean not equals  differs  returns true", "[merkle block]") {
     const message::merkle_block expected(
         chain::header{
             10,
