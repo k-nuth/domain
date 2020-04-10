@@ -592,10 +592,10 @@ TEST_CASE("compact block  operator boolean not equals  duplicates  returns false
          message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))});
 
     message::compact_block instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("compact block  operator boolean not equals  differs  returns true", "[compact block]") {
     const message::compact_block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
