@@ -728,17 +728,17 @@ TEST_CASE("version  relay accessor  always  returns initialized value", "[versio
         100u,
         expected);
 
-    BOOST_REQUIRE_EQUAL(expected, instance.relay());
+    REQUIRE(expected == instance.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__relay_setter__roundtrip__success) {
+TEST_CASE("version  relay setter  roundtrip  success", "[version]") {
     bool const expected = true;
     message::version instance;
     instance.set_relay(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.relay());
+    REQUIRE(expected == instance.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("version  operator assign equals  always  matches equivalent", "[version]") {
     message::version value(
         210u,
         15234u,
