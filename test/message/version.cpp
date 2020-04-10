@@ -627,17 +627,17 @@ TEST_CASE("version  nonce accessor  always  returns initialized value", "[versio
         100u,
         false);
 
-    BOOST_REQUIRE_EQUAL(expected, instance.nonce());
+    REQUIRE(expected == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(version__nonce_setter__roundtrip__success) {
+TEST_CASE("version  nonce setter  roundtrip  success", "[version]") {
     uint64_t const expected = 13626u;
     message::version instance;
     instance.set_nonce(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.nonce());
+    REQUIRE(expected == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(version__user_agent_accessor__always__returns_initialized_value) {
+TEST_CASE("version  user agent accessor  always  returns initialized value", "[version]") {
     std::string const expected = "MyUseRAgenT";
     const message::version instance(
         210u,
