@@ -697,17 +697,17 @@ TEST_CASE("version  start height accessor  always  returns initialized value", "
         expected,
         false);
 
-    BOOST_REQUIRE_EQUAL(expected, instance.start_height());
+    REQUIRE(expected == instance.start_height());
 }
 
-BOOST_AUTO_TEST_CASE(version__start_height_setter__roundtrip__success) {
+TEST_CASE("version  start height setter  roundtrip  success", "[version]") {
     uint32_t const expected = 514u;
     message::version instance;
     instance.set_start_height(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.start_height());
+    REQUIRE(expected == instance.start_height());
 }
 
-BOOST_AUTO_TEST_CASE(version__relay_accessor__always__returns_initialized_value) {
+TEST_CASE("version  relay accessor  always  returns initialized value", "[version]") {
     bool const expected = true;
     const message::version instance(
         210u,
