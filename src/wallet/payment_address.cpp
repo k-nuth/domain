@@ -25,7 +25,10 @@
 #endif  //KTH_CURRENCY_BCH
 
 using namespace kth::infrastructure::machine;
+
+#ifdef KTH_CURRENCY_BCH
 using namespace kth::infrastructure::wallet;
+#endif  //KTH_CURRENCY_BCH
 
 namespace kth::domain::wallet {
 
