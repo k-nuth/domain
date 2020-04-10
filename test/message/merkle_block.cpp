@@ -505,7 +505,7 @@ TEST_CASE("merkle block  operator boolean not equals  differs  returns true", "[
         {0xae, 0x56, 0x0f});
 
     message::merkle_block instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
