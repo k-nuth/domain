@@ -601,8 +601,8 @@ TEST_CASE("message transaction  operator boolean not equals 2  differs  returns 
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
