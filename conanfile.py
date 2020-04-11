@@ -104,6 +104,9 @@ class KnuthDomainConan(KnuthConanFile):
 
         self.options["*"].cached_rpc_data = self.options.cached_rpc_data
 
+        self.options["*"].binlog = self.options.binlog
+        self.output.info("Compiling with binlog: %s" % (self.options.binlog,))
+
     def package_id(self):
         KnuthConanFile.package_id(self)
         
