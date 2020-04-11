@@ -18,21 +18,21 @@ struct script_test {
     uint32_t version;
 };
 
-typedef std::vector<script_test> script_test_list;
+using script_test_list = std::vector<script_test>;
 
 // bip16
 //------------------------------------------------------------------------------
 
 // These are valid prior to and after BIP16 activation.
-const script_test_list valid_bip16_scripts{
+script_test_list const valid_bip16_scripts{
     {"0 [51]", "hash160 [da1745e9b549bd0bfa1a569971c77eba30cd5a4b] equal", "trivial p2sh"},
     {"[1.] [0.51]", "hash160 [da1745e9b549bd0bfa1a569971c77eba30cd5a4b] equal", "basic p2sh"}};
 
 // These are invalid prior to and after BIP16 activation.
-const script_test_list invalid_bip16_scripts{};
+script_test_list const invalid_bip16_scripts{};
 
 // These are valid prior to BIP16 activation and invalid after.
-const script_test_list invalidated_bip16_scripts{
+script_test_list const invalidated_bip16_scripts{
     {"nop [51]", "hash160 [da1745e9b549bd0bfa1a569971c77eba30cd5a4b] equal", "is_push_only fails under bip16"},
     {"nop1 [51]", "hash160 [da1745e9b549bd0bfa1a569971c77eba30cd5a4b] equal", "is_push_only fails under bip16"},
     {"0 [50]", "hash160 [ece424a6bb6ddf4db592c0faed60685047a361b1] equal", "op_reserved as p2sh serialized script fails"},
