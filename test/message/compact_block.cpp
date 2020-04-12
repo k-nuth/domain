@@ -2,17 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(compact_block_tests)
+// Start Boost Suite: compact block tests
 
-BOOST_AUTO_TEST_CASE(compact_block__constructor_1__always__invalid) {
+TEST_CASE("compact block  constructor 1  always invalid", "[compact block]") {
     message::compact_block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 uint64_t convert_to_uint64t(std::string const& rawdata) {
