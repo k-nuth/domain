@@ -2,22 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
+
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(message_block_tests)
+// Start Boost Suite: message block tests
 
-BOOST_AUTO_TEST_CASE(block__constructor_1__always__invalid) {
+TEST_CASE("block  constructor 1  always invalid", "[message block]") {
     block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params) {
+TEST_CASE("block  constructor 2  always  equals params", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
