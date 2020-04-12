@@ -2,31 +2,30 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(alert_tests)
+// Start Boost Suite: alert tests
 
-BOOST_AUTO_TEST_CASE(alert__constructor_1__always__invalid) {
+TEST_CASE("alert  constructor 1  always invalid", "[alert]") {
     message::alert instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_2__always__equals_params) {
+TEST_CASE("alert  constructor 2  always  equals params", "[alert]") {
     data_chunk const payload = to_chunk(base16_literal("0123456789abcdef"));
     data_chunk const signature = to_chunk(base16_literal("fedcba9876543210"));
 
     message::alert instance(payload, signature);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(payload == instance.payload());
-    BOOST_REQUIRE(signature == instance.signature());
+    REQUIRE(instance.is_valid());
+    REQUIRE(payload == instance.payload());
+    REQUIRE(signature == instance.signature());
 }
 
-BOOST_AUTO_TEST_CASE(alert__constructor_3__always__equals_params) {
+TEST_CASE("alert  constructor 3  always  equals params", "[alert]") {
     auto const payload = to_chunk(base16_literal("0123456789abcdef"));
     auto const signature = to_chunk(base16_literal("fedcba9876543210"));
     auto dup_payload = payload;
