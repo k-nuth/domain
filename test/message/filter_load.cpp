@@ -2,34 +2,33 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(filter_load_tests)
+// Start Boost Suite: filter load tests
 
-BOOST_AUTO_TEST_CASE(filter_load__constructor_1__always__invalid) {
+TEST_CASE("filter load  constructor 1  always invalid", "[filter load]") {
     message::filter_load instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__constructor_2__always__equals_params) {
+TEST_CASE("filter load  constructor 2  always  equals params", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     uint32_t hash_functions = 48u;
     uint32_t tweak = 36u;
     uint8_t flags = 0xae;
 
     message::filter_load instance(filter, hash_functions, tweak, flags);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(filter == instance.filter());
-    BOOST_REQUIRE_EQUAL(hash_functions, instance.hash_functions());
-    BOOST_REQUIRE_EQUAL(tweak, instance.tweak());
-    BOOST_REQUIRE_EQUAL(flags, instance.flags());
+    REQUIRE(instance.is_valid());
+    REQUIRE(filter == instance.filter());
+    REQUIRE(hash_functions == instance.hash_functions());
+    REQUIRE(tweak == instance.tweak());
+    REQUIRE(flags == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__constructor_3__always__equals_params) {
+TEST_CASE("filter load  constructor 3  always  equals params", "[filter load]") {
     data_chunk const filter = {0x0f, 0xf0, 0x55, 0xaa};
     auto dup_filter = filter;
     uint32_t hash_functions = 48u;
