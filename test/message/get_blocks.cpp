@@ -2,21 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(get_blocks_tests)
+// Start Boost Suite: get blocks tests
 
-BOOST_AUTO_TEST_CASE(get_blocks__constructor_1__always__invalid) {
+TEST_CASE("get blocks  constructor 1  always invalid", "[get blocks]") {
     message::get_blocks instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__constructor_2__always__equals_params) {
-    hash_list starts = {
+TEST_CASE("get blocks  constructor 2  always  equals params", "[get blocks]") {
+    hash_list const starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
         hash_literal("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")};
