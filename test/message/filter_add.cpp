@@ -2,59 +2,58 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(filter_add_tests)
+// Start Boost Suite: filter add tests
 
-BOOST_AUTO_TEST_CASE(filter_add__constructor_1__always__invalid) {
+TEST_CASE("filter add  constructor 1  always invalid", "[filter add]") {
     message::filter_add instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__constructor_2__always__equals_params) {
+TEST_CASE("filter add  constructor 2  always  equals params", "[filter add]") {
     data_chunk const data = {0x0f, 0xf0, 0x55, 0xaa};
     message::filter_add instance(data);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__constructor_3__always__equals_params) {
+TEST_CASE("filter add  constructor 3  always  equals params", "[filter add]") {
     data_chunk const data = {0x0f, 0xf0, 0x55, 0xaa};
     auto dup = data;
     message::filter_add instance(std::move(dup));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__constructor_4__always__equals_params) {
+TEST_CASE("filter add  constructor 4  always  equals params", "[filter add]") {
     data_chunk const data = {0x0f, 0xf0, 0x55, 0xaa};
     const message::filter_add value(data);
     message::filter_add instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__constructor_5__always__equals_params) {
+TEST_CASE("filter add  constructor 5  always  equals params", "[filter add]") {
     data_chunk const data = {0x0f, 0xf0, 0x55, 0xaa};
     message::filter_add value(data);
     message::filter_add instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__from_data__insufficient_bytes__failure) {
+TEST_CASE("filter add  from data  insufficient bytes  failure", "[filter add]") {
     data_chunk raw = {0xab, 0x11};
     message::filter_add instance;
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::maximum, raw));
+    REQUIRE( ! entity_from_data(instance, message::version::level::maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(filter_add__from_data__insufficient_version__failure) {
+TEST_CASE("filter add  from data  insufficient version  failure", "[filter add]") {
     const message::filter_add expected{
         {0x1F, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
          0xbb, 0x85, 0x0a, 0x3d, 0x79, 0x24, 0xed, 0x0f,
