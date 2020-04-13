@@ -2,70 +2,69 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(get_block_transactions_tests)
+// Start Boost Suite: get block transactions tests
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__constructor_1__always__invalid) {
+TEST_CASE("get block transactions  constructor 1  always invalid", "[get block transactions]") {
     message::get_block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__constructor_2__always__equals_params) {
+TEST_CASE("get block transactions  constructor 2  always  equals params", "[get block transactions]") {
     hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
 
     message::get_block_transactions instance(hash, indexes);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.block_hash());
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.block_hash());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__constructor_3__always__equals_params) {
+TEST_CASE("get block transactions  constructor 3  always  equals params", "[get block transactions]") {
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     auto hash_dup = hash;
     std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     auto indexes_dup = indexes;
 
     message::get_block_transactions instance(std::move(hash_dup), std::move(indexes_dup));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.block_hash());
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.block_hash());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__constructor_4__always__equals_params) {
+TEST_CASE("get block transactions  constructor 4  always  equals params", "[get block transactions]") {
     message::get_block_transactions value(
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         {1u, 3454u, 4234u, 75123u, 455323u});
 
     message::get_block_transactions instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__constructor_5__always__equals_params) {
+TEST_CASE("get block transactions  constructor 5  always  equals params", "[get block transactions]") {
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
 
     message::get_block_transactions value(hash, indexes);
     message::get_block_transactions instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.block_hash());
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.block_hash());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__from_data__insufficient_bytes__failure) {
+TEST_CASE("get block transactions  from data  insufficient bytes  failure", "[get block transactions]") {
     data_chunk const raw{0xab, 0xcd};
     message::get_block_transactions instance{};
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::minimum, raw));
+    REQUIRE( ! entity_from_data(instance, message::version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_1__valid_input__success) {
+TEST_CASE("get block transactions  factory from data 1  valid input  success", "[get block transactions]") {
     const message::get_block_transactions expected{
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         {16,
