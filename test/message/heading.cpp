@@ -2,68 +2,69 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <string>
+
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(heading_tests)
+// Start Boost Suite: heading tests
 
-BOOST_AUTO_TEST_CASE(heading__constructor_1__always__initialized_invalid) {
+TEST_CASE("heading  constructor 1  always  initialized invalid", "[heading]") {
     heading instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(heading__constructor_2__always__equals_params) {
+TEST_CASE("heading  constructor 2  always  equals params", "[heading]") {
     uint32_t magic = 123u;
     std::string const command = "foo";
     uint32_t payload_size = 3454u;
     uint32_t checksum = 35746u;
     heading instance(magic, command, payload_size, checksum);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(magic, instance.magic());
-    BOOST_REQUIRE_EQUAL(command, instance.command());
-    BOOST_REQUIRE_EQUAL(payload_size, instance.payload_size());
-    BOOST_REQUIRE_EQUAL(checksum, instance.checksum());
+    REQUIRE(instance.is_valid());
+    REQUIRE(magic == instance.magic());
+    REQUIRE(command == instance.command());
+    REQUIRE(payload_size == instance.payload_size());
+    REQUIRE(checksum == instance.checksum());
 }
 
-BOOST_AUTO_TEST_CASE(heading__constructor_3__always__equals_params) {
+TEST_CASE("heading  constructor 3  always  equals params", "[heading]") {
     uint32_t magic = 123u;
     std::string const command = "foo";
     uint32_t payload_size = 3454u;
     uint32_t checksum = 35746u;
     heading instance(magic, "foo", payload_size, checksum);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(magic, instance.magic());
-    BOOST_REQUIRE_EQUAL(command, instance.command());
-    BOOST_REQUIRE_EQUAL(payload_size, instance.payload_size());
-    BOOST_REQUIRE_EQUAL(checksum, instance.checksum());
+    REQUIRE(instance.is_valid());
+    REQUIRE(magic == instance.magic());
+    REQUIRE(command == instance.command());
+    REQUIRE(payload_size == instance.payload_size());
+    REQUIRE(checksum == instance.checksum());
 }
 
-BOOST_AUTO_TEST_CASE(heading__constructor_4__always__equals_params) {
+TEST_CASE("heading  constructor 4  always  equals params", "[heading]") {
     heading expected(453u, "bar", 436u, 5743u);
     heading instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(heading__constructor_5__always__equals_params) {
+TEST_CASE("heading  constructor 5  always  equals params", "[heading]") {
     uint32_t magic = 123u;
     std::string const command = "foo";
     uint32_t payload_size = 3454u;
     uint32_t checksum = 35746u;
     heading value(magic, command, payload_size, checksum);
     heading instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(magic, instance.magic());
-    BOOST_REQUIRE_EQUAL(command, instance.command());
-    BOOST_REQUIRE_EQUAL(payload_size, instance.payload_size());
-    BOOST_REQUIRE_EQUAL(checksum, instance.checksum());
+    REQUIRE(instance.is_valid());
+    REQUIRE(magic == instance.magic());
+    REQUIRE(command == instance.command());
+    REQUIRE(payload_size == instance.payload_size());
+    REQUIRE(checksum == instance.checksum());
 }
 
-BOOST_AUTO_TEST_CASE(heading__to_data__checksum_variations__success) {
+TEST_CASE("heading  to data  checksum variations  success", "[heading]") {
     heading instance{
         32414u,
         "foo",
