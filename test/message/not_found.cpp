@@ -2,21 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(not_found_tests)
+// Start Boost Suite: not found tests
 
-BOOST_AUTO_TEST_CASE(not_found__constructor_1__always__invalid) {
+TEST_CASE("not found  constructor 1  always invalid", "[not found]") {
     message::not_found instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(not_found__constructor_2__always__equals_params) {
+TEST_CASE("not found  constructor 2  always  equals params", "[not found]") {
     const message::inventory_vector::list values =
         {
             message::inventory_vector(
