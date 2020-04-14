@@ -2,62 +2,61 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(prefilled_transaction_tests)
+// Start Boost Suite: prefilled transaction tests
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__constructor_1__always__invalid) {
+TEST_CASE("prefilled transaction  constructor 1  always invalid", "[prefilled transaction]") {
     message::prefilled_transaction instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__constructor_2__always__equals_params) {
+TEST_CASE("prefilled transaction  constructor 2  always  equals params", "[prefilled transaction]") {
     uint64_t index = 125u;
     chain::transaction tx(1, 0, {}, {});
     message::prefilled_transaction instance(index, tx);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(index == instance.index());
-    BOOST_REQUIRE(tx == instance.transaction());
+    REQUIRE(instance.is_valid());
+    REQUIRE(index == instance.index());
+    REQUIRE(tx == instance.transaction());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__constructor_3__always__equals_params) {
+TEST_CASE("prefilled transaction  constructor 3  always  equals params", "[prefilled transaction]") {
     uint64_t index = 125u;
     chain::transaction tx(1, 0, {}, {});
-    BOOST_REQUIRE(tx.is_valid());
+    REQUIRE(tx.is_valid());
     message::prefilled_transaction instance(index, std::move(tx));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(index == instance.index());
-    BOOST_REQUIRE(instance.transaction().is_valid());
+    REQUIRE(instance.is_valid());
+    REQUIRE(index == instance.index());
+    REQUIRE(instance.transaction().is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__constructor_4__always__equals_params) {
+TEST_CASE("prefilled transaction  constructor 4  always  equals params", "[prefilled transaction]") {
     const message::prefilled_transaction expected(125u,
                                                   chain::transaction{1, 0, {}, {}});
 
     message::prefilled_transaction instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__constructor_5__always__equals_params) {
+TEST_CASE("prefilled transaction  constructor 5  always  equals params", "[prefilled transaction]") {
     message::prefilled_transaction expected(125u,
                                             chain::transaction{1, 0, {}, {}});
 
     message::prefilled_transaction instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__from_data__insufficient_bytes__failure) {
+TEST_CASE("prefilled transaction  from data  insufficient bytes  failure", "[prefilled transaction]") {
     data_chunk const raw{1};
     message::prefilled_transaction instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::minimum, raw));
+    REQUIRE( ! entity_from_data(instance, message::version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_1__valid_input__success) {
+TEST_CASE("prefilled transaction  factory from data 1  valid input  success", "[prefilled transaction]") {
     const message::prefilled_transaction expected(
         16,
         chain::transaction{
