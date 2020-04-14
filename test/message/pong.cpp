@@ -2,46 +2,45 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(pong_tests)
+// Start Boost Suite: pong tests
 
-BOOST_AUTO_TEST_CASE(pong__constructor_1__always__invalid) {
+TEST_CASE("pong  constructor 1  always invalid", "[pong]") {
     message::pong instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(pong__constructor_2__always__equals_params) {
+TEST_CASE("pong  constructor 2  always  equals params", "[pong]") {
     uint64_t nonce = 462434u;
     message::pong instance(nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
+    REQUIRE(instance.is_valid());
+    REQUIRE(nonce == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(pong__constructor_3__always__equals_params) {
+TEST_CASE("pong  constructor 3  always  equals params", "[pong]") {
     message::pong expected(24235u);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     message::pong instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(pong__satoshi_fixed_size__minimum_version__returns_8) {
+TEST_CASE("pong  satoshi fixed size  minimum version  returns 8", "[pong]") {
     auto const size = message::pong::satoshi_fixed_size(message::version::level::minimum);
-    BOOST_REQUIRE_EQUAL(size, 8u);
+    REQUIRE(size == 8u);
 }
 
-BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__minimum_version_empty_data__invalid) {
+TEST_CASE("pong  factory from data 1  minimum version empty data invalid", "[pong]") {
     static auto const version = message::version::level::minimum;
     auto const result = create<message::pong>(version, data_chunk{});
-    BOOST_REQUIRE(!result.is_valid());
+    REQUIRE(!result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__round_trip__expected) {
+TEST_CASE("pong  factory from data 1  round trip  expected", "[pong]") {
     static const message::pong expected{
         4306550u};
 
