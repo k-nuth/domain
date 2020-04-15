@@ -2,103 +2,101 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
 #include <optional>
 
-#include <kth/domain.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-BOOST_AUTO_TEST_SUITE(bitcoin_uri_tests)
+// Start Boost Suite: bitcoin uri tests
 
 // Constructors
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__uninitialized__false) {
-    BOOST_REQUIRE(!bitcoin_uri());
+TEST_CASE("bitcoin uri  construct  uninitialized  false", "[bitcoin uri]") {
+    REQUIRE(!bitcoin_uri());
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__initialized__true) {
-    BOOST_REQUIRE(bitcoin_uri("bitcoin:"));
+TEST_CASE("bitcoin uri  construct  initialized  true", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcoin:"));
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__scheme_mixed_case__normalized) {
-    BOOST_REQUIRE_EQUAL(bitcoin_uri("bitcOin:").encoded(), "bitcoin:");
+TEST_CASE("bitcoin uri  construct  scheme mixed case  normalized", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcOin:").encoded() == "bitcoin:");
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__invalid_scheme__false) {
-    BOOST_REQUIRE(!bitcoin_uri("fedcoin:"));
+TEST_CASE("bitcoin uri  construct  invalid scheme  false", "[bitcoin uri]") {
+    REQUIRE(!bitcoin_uri("fedcoin:"));
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__payment_address_only__false) {
-    BOOST_REQUIRE(!bitcoin_uri("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD"));
+TEST_CASE("bitcoin uri  construct  payment address only  false", "[bitcoin uri]") {
+    REQUIRE(!bitcoin_uri("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD"));
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__stealth_address_only__false) {
-    BOOST_REQUIRE(!bitcoin_uri("hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i"));
+TEST_CASE("bitcoin uri  construct  stealth address only  false", "[bitcoin uri]") {
+    REQUIRE(!bitcoin_uri("hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i"));
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__fragment__false) {
-    BOOST_REQUIRE(!bitcoin_uri("bitcoin:#satoshi"));
+TEST_CASE("bitcoin uri  construct  fragment  false", "[bitcoin uri]") {
+    REQUIRE(!bitcoin_uri("bitcoin:#satoshi"));
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__strict__test) {
-    BOOST_REQUIRE(!bitcoin_uri("bitcoin:?label=Some テスト"));
+TEST_CASE("bitcoin uri  construct  strict  test", "[bitcoin uri]") {
+    REQUIRE(!bitcoin_uri("bitcoin:?label=Some テスト"));
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__construct__not_strict__test) {
-    BOOST_REQUIRE(bitcoin_uri("bitcoin:?label=Some テスト", false));
+TEST_CASE("bitcoin uri  construct  not strict  test", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcoin:?label=Some テスト", false));
 }
 
 // Setters
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__set_path__payment_address__expected_encoding) {
+TEST_CASE("bitcoin uri  set path  payment address  expected encoding", "[bitcoin uri]") {
     auto const expected_payment = "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD";
     auto const expected_uri = std::string("bitcoin:") + expected_payment;
 
     bitcoin_uri uri;
-    BOOST_REQUIRE(uri.set_path(expected_payment));
-    BOOST_REQUIRE_EQUAL(uri.encoded(), expected_uri);
+    REQUIRE(uri.set_path(expected_payment));
+    REQUIRE(uri.encoded() == expected_uri);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__set_path__stealth_address__expected_encoding) {
+TEST_CASE("bitcoin uri  set path  stealth address  expected encoding", "[bitcoin uri]") {
     auto const expected_payment = "hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i";
     auto const expected_uri = std::string("bitcoin:") + expected_payment;
 
     bitcoin_uri uri;
-    BOOST_REQUIRE(uri.set_path(expected_payment));
-    BOOST_REQUIRE_EQUAL(uri.encoded(), expected_uri);
+    REQUIRE(uri.set_path(expected_payment));
+    REQUIRE(uri.encoded() == expected_uri);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__set_path__reset_stealth_after_payment__expected_encoding) {
+TEST_CASE("bitcoin uri  set path  reset stealth after payment  expected encoding", "[bitcoin uri]") {
     auto const expected_stealth = "hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i";
     auto const expected_uri = std::string("bitcoin:") + expected_stealth;
 
     bitcoin_uri uri;
     auto const payment = payment_address("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
-    BOOST_REQUIRE(payment);
+    REQUIRE(payment);
     uri.set_address(payment);
     uri.set_address(stealth_address(expected_stealth));
-    BOOST_REQUIRE_EQUAL(uri.encoded(), expected_uri);
+    REQUIRE(uri.encoded() == expected_uri);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__set_path__reset_payment_after_stealth__expected_encoding) {
+TEST_CASE("bitcoin uri  set path  reset payment after stealth  expected encoding", "[bitcoin uri]") {
     auto const expected_payment = "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD";
     auto const expected_uri = std::string("bitcoin:") + expected_payment;
 
     bitcoin_uri uri;
     auto const stealth = stealth_address("hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i");
-    BOOST_REQUIRE(stealth);
+    REQUIRE(stealth);
     uri.set_address(stealth);
     uri.set_address(payment_address(expected_payment));
-    BOOST_REQUIRE_EQUAL(uri.encoded(), expected_uri);
+    REQUIRE(uri.encoded() == expected_uri);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__set_path__reset_path__false) {
+TEST_CASE("bitcoin uri  set path  reset path  false", "[bitcoin uri]") {
     auto const expected_payment = "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD";
     auto const expected_uri = std::string("bitcoin:") + expected_payment;
 
