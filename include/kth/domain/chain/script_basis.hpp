@@ -70,11 +70,7 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-
-    // /// Deserialization invalidates the iterator.
-    // bool from_data(data_chunk const& encoded, bool prefix);
-    // bool from_data(std::istream& stream, bool prefix);
-
+    /// Deserialization invalidates the iterator.
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
         reset();
