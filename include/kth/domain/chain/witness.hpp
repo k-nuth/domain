@@ -36,7 +36,7 @@ class witness {};
 class KD_API witness {
 public:
     using operation = machine::operation;
-    using iterator = machine::const_iterator;
+    using iterator = data_stack::const_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------
