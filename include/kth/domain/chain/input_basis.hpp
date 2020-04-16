@@ -61,9 +61,6 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    // bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    // bool from_data(std::istream& stream, bool wire = true, bool witness = false);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, KTH_DECL_WITN_ARG) {
 #if defined(KTH_SEGWIT_ENABLED)
