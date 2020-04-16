@@ -69,8 +69,6 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
     
