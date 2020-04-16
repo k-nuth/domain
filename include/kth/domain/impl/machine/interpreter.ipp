@@ -830,12 +830,12 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
         // BIP62: An empty endorsement is not considered lax encoding.
         if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement))) {
             return error::invalid_signature_encoding;
-    }
+        }
 
         // Parse DER signature into an EC signature.
         if ( ! parse_signature(signature, distinguished, bip66)) {
             return bip66 ? error::invalid_signature_lax_encoding : error::invalid_signature_encoding;
-    }
+        }
 
         // Version condition preserves independence of bip141 and bip143.
         auto version = bip143 ? program.version() : script_version::unversioned;
