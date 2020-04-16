@@ -114,7 +114,7 @@ public:
 
     void set_version(uint32_t value);
 
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     hash_digest& previous_block_hash();
     
     [[nodiscard]]
