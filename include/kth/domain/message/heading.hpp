@@ -125,7 +125,6 @@ public:
         return source;
     }
 
-    //bool from_data(reader& source);
     [[nodiscard]]
     data_chunk to_data() const;
     
