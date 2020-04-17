@@ -303,7 +303,6 @@ bool input_basis::extract_embedded_script(chain::script& out) const {
 
     // Parse the embedded script from the last input script item (data).
     // This cannot fail because there is no prefix to invalidate the length.
-    // return out.from_data(ops.back().data(), false);
     return entity_from_data(out, ops.back().data(), false);
 }
 
