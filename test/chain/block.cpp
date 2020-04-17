@@ -29,48 +29,48 @@ bool all_valid(chain::transaction::list const& transactions) {
     return valid;
 }
 
-BOOST_AUTO_TEST_SUITE(chain_block_tests)
+// Start Boost Suite: chain block tests
 
-BOOST_AUTO_TEST_CASE(block__proof2__genesis_mainnet__expected) {
+TEST_CASE("block proof2 genesis mainnet expected", "[chain block]") {
     auto const block = chain::block::genesis_mainnet();
-    BOOST_REQUIRE_EQUAL(block.proof(), 0x0000000100010001);
+    REQUIRE(block.proof() == 0x0000000100010001);
 }
 
-BOOST_AUTO_TEST_CASE(block__locator_size__zero_backoff__returns_top_plus_one) {
+TEST_CASE("block locator size zero backoff returns top plus one", "[chain block]") {
     size_t top = 7u;
-    BOOST_REQUIRE_EQUAL(top + 1, chain::block::locator_size(top));
+    REQUIRE(top + 1 == chain::block::locator_size(top));
 }
 
-BOOST_AUTO_TEST_CASE(block__locator_size__positive_backoff__returns_log_plus_eleven) {
+TEST_CASE("block locator size positive backoff returns log plus eleven", "[chain block]") {
     size_t top = 138u;
-    BOOST_REQUIRE_EQUAL(18u, chain::block::locator_size(top));
+    REQUIRE(18u == chain::block::locator_size(top));
 }
 
-BOOST_AUTO_TEST_CASE(block__locator_heights__zero_backoff__returns_top_to_zero) {
+TEST_CASE("block locator heights zero backoff returns top to zero", "[chain block]") {
     const chain::block::indexes expected{7u, 6u, 5u, 4u, 3u, 2u, 1u, 0u};
     size_t top = 7u;
     auto result = chain::block::locator_heights(top);
-    BOOST_REQUIRE_EQUAL(expected.size(), result.size());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(expected.size() == result.size());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(block__locator_heights__positive_backoff__returns_top_plus_log_offset_to_zero) {
+TEST_CASE("block locator heights positive backoff returns top plus log offset to zero", "[chain block]") {
     const chain::block::indexes expected{
         138u, 137u, 136u, 135u, 134u, 133u, 132u, 131u, 130u,
         129u, 128u, 126u, 122u, 114u, 98u, 66u, 2u, 0u};
 
     size_t top = 138u;
     auto result = chain::block::locator_heights(top);
-    BOOST_REQUIRE_EQUAL(expected.size(), result.size());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(expected.size() == result.size());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_1__always__invalid) {
+TEST_CASE("block constructor 1 always invalid", "[chain block]") {
     chain::block instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params) {
+TEST_CASE("block constructor 2 always equals params", "[chain block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
