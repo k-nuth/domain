@@ -34,46 +34,46 @@ TEST_CASE("point  constructor 3  valid input  returns input initialized", "[poin
     auto dup_hash = hash;
 
     chain::point instance(std::move(dup_hash), index);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.hash());
-    BOOST_REQUIRE_EQUAL(index, instance.index());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.hash());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(point__constructor_4__valid_input__returns_input_initialized) {
+TEST_CASE("point  constructor 4  valid input  returns input initialized", "[point]") {
     const chain::point expected{
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         524342u};
 
     chain::point instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(point__constructor_5__valid_input__returns_input_initialized) {
+TEST_CASE("point  constructor 5  valid input  returns input initialized", "[point]") {
     // This must be non-const.
     chain::point expected{
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
         524342u};
 
     chain::point instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(point__begin_end__initialized__begin_not_equal_end) {
+TEST_CASE("point  begin end  initialized  begin not equal end", "[point]") {
     chain::point instance{null_hash, 0};
 
-    BOOST_REQUIRE(instance.begin() != instance.end());
+    REQUIRE(instance.begin() != instance.end());
 }
 
-BOOST_AUTO_TEST_CASE(point__from_data__insufficient_bytes__failure) {
+TEST_CASE("point  from data  insufficient bytes  failure", "[point]") {
     data_chunk data(10);
     chain::point instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(point__from_data__roundtrip__success) {
+TEST_CASE("point  from data  roundtrip  success", "[point]") {
     uint32_t index = 53213;
     hash_digest const hash{
         {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
