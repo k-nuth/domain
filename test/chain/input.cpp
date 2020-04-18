@@ -15,31 +15,31 @@ data_chunk valid_raw_input = to_chunk(base16_literal(
     "da450151d36012103893d5a06201d5cf61400e96fa4a7514fc12ab45166ace618d68b"
     "8066c9c585f9ffffffff"));
 
-BOOST_AUTO_TEST_SUITE(input_tests)
+// Start Boost Suite: input tests
 
-BOOST_AUTO_TEST_CASE(input__constructor_1__always__returns_default_initialized) {
+TEST_CASE("input  constructor 1  always  returns default initialized", "[input]") {
     input instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(input__constructor_2__valid_input__returns_input_initialized) {
+TEST_CASE("input  constructor 2  valid input  returns input initialized", "[input]") {
     output_point const previous_output{null_hash, 5434u};
     script script;
-    BOOST_REQUIRE(entity_from_data(script, to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
+    REQUIRE(entity_from_data(script, to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
 
     uint32_t sequence = 4568656u;
 
     input instance(previous_output, script, sequence);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(previous_output == instance.previous_output());
-    BOOST_REQUIRE(script == instance.script());
-    BOOST_REQUIRE_EQUAL(sequence, instance.sequence());
+    REQUIRE(instance.is_valid());
+    REQUIRE(previous_output == instance.previous_output());
+    REQUIRE(script == instance.script());
+    REQUIRE(sequence == instance.sequence());
 }
 
-BOOST_AUTO_TEST_CASE(input__constructor_3__valid_input__returns_input_initialized) {
+TEST_CASE("input  constructor 3  valid input  returns input initialized", "[input]") {
     output_point const previous_output{null_hash, 5434u};
     script script;
-    BOOST_REQUIRE(entity_from_data(script, to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
+    REQUIRE(entity_from_data(script, to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
 
     uint32_t sequence = 4568656u;
 
