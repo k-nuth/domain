@@ -10,93 +10,93 @@ using namespace kth::domain::machine;
 
 data_chunk valid_raw_operation = to_chunk(base16_literal("0900ff11ee22bb33aa44"));
 
-BOOST_AUTO_TEST_SUITE(operation_tests)
+// Start Boost Suite: operation tests
 
-BOOST_AUTO_TEST_CASE(operation__constructor_1__always__returns_default_initialized) {
+TEST_CASE("operation  constructor 1  always  returns default initialized", "[operation]") {
     operation instance;
 
-    BOOST_REQUIRE(!instance.is_valid());
-    BOOST_REQUIRE(instance.data().empty());
-    BOOST_REQUIRE(instance.code() == opcode::disabled_xor);
+    REQUIRE(!instance.is_valid());
+    REQUIRE(instance.data().empty());
+    REQUIRE(instance.code() == opcode::disabled_xor);
 }
 
-BOOST_AUTO_TEST_CASE(operation__constructor_2__valid_input__returns_input_initialized) {
+TEST_CASE("operation  constructor 2  valid input  returns input initialized", "[operation]") {
     auto const data = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
     auto dup_data = data;
     operation instance(std::move(dup_data));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.code() == opcode::push_size_32);
-    BOOST_REQUIRE(instance.data() == data);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.code() == opcode::push_size_32);
+    REQUIRE(instance.data() == data);
 }
 
-BOOST_AUTO_TEST_CASE(operation__constructor_3__valid_input__returns_input_initialized) {
+TEST_CASE("operation  constructor 3  valid input  returns input initialized", "[operation]") {
     auto const data = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
     operation instance(data);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.code() == opcode::push_size_32);
-    BOOST_REQUIRE(instance.data() == data);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.code() == opcode::push_size_32);
+    REQUIRE(instance.data() == data);
 }
 
-BOOST_AUTO_TEST_CASE(operation__constructor_4__valid_input__returns_input_initialized) {
+TEST_CASE("operation  constructor 4  valid input  returns input initialized", "[operation]") {
     operation const expected(to_chunk(base16_literal("23156214")));
     operation instance(expected);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(operation__constructor_5__valid_input__returns_input_initialized) {
+TEST_CASE("operation  constructor 5  valid input  returns input initialized", "[operation]") {
     operation expected(to_chunk(base16_literal("23156214")));
     operation instance(std::move(expected));
 
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(operation__from_data__insufficient_bytes__failure) {
+TEST_CASE("operation  from data  insufficient bytes  failure", "[operation]") {
     data_chunk const data;
     operation instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_size_0__success) {
+TEST_CASE("operation  from data  roundtrip push size 0  success", "[operation]") {
     auto const data0 = to_chunk(base16_literal(""));
     auto const raw_operation = to_chunk(base16_literal("00"));
     operation instance;
 
-    BOOST_REQUIRE(entity_from_data(instance, raw_operation));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(raw_operation == instance.to_data());
+    REQUIRE(entity_from_data(instance, raw_operation));
+    REQUIRE(instance.is_valid());
+    REQUIRE(raw_operation == instance.to_data());
 
     operation duplicate;
-    BOOST_REQUIRE(entity_from_data(duplicate,instance.to_data()));
-    BOOST_REQUIRE(instance == duplicate);
+    REQUIRE(entity_from_data(duplicate,instance.to_data()));
+    REQUIRE(instance == duplicate);
 
-    BOOST_REQUIRE(instance.code() == opcode::push_size_0);
-    BOOST_REQUIRE(instance.data() == data0);
+    REQUIRE(instance.code() == opcode::push_size_0);
+    REQUIRE(instance.data() == data0);
 }
 
-BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_size_75__success) {
+TEST_CASE("operation  from data  roundtrip push size 75  success", "[operation]") {
     auto const data75 = data_chunk(75, '.');
     auto const raw_operation = build_chunk({base16_literal("4b"), data75});
     operation instance;
 
-    BOOST_REQUIRE(entity_from_data(instance, raw_operation));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(raw_operation == instance.to_data());
+    REQUIRE(entity_from_data(instance, raw_operation));
+    REQUIRE(instance.is_valid());
+    REQUIRE(raw_operation == instance.to_data());
 
     operation duplicate;
-    BOOST_REQUIRE(entity_from_data(duplicate,instance.to_data()));
-    BOOST_REQUIRE(instance == duplicate);
+    REQUIRE(entity_from_data(duplicate,instance.to_data()));
+    REQUIRE(instance == duplicate);
 
-    BOOST_REQUIRE(instance.code() == opcode::push_size_75);
-    BOOST_REQUIRE(instance.data() == data75);
+    REQUIRE(instance.code() == opcode::push_size_75);
+    REQUIRE(instance.data() == data75);
 }
 
-BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_negative_1__success) {
+TEST_CASE("operation  from data  roundtrip push negative 1  success", "[operation]") {
     static auto const op_79 = static_cast<uint8_t>(opcode::push_negative_1);
     auto const data1 = data_chunk{op_79};
     auto const raw_operation = data1;
