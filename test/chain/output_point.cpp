@@ -10,75 +10,75 @@ using namespace kd;
 auto const hash1 = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 auto const valid_raw_output_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));
 
-BOOST_AUTO_TEST_SUITE(output_point_tests)
+// Start Boost Suite: output point tests
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_1__always__returns_default_initialized) {
+TEST_CASE("output point  constructor 1  always  returns default initialized", "[output point]") {
     const chain::point instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_2__valid_input__returns_input_initialized) {
+TEST_CASE("output point  constructor 2  valid input  returns input initialized", "[output point]") {
     static uint32_t const index = 1234u;
     const chain::point value(hash1, index);
     chain::output_point instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(hash1 == instance.hash());
-    BOOST_REQUIRE_EQUAL(index, instance.index());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(hash1 == instance.hash());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_3__valid_input__returns_input_initialized) {
+TEST_CASE("output point  constructor 3  valid input  returns input initialized", "[output point]") {
     static uint32_t const index = 1234u;
     chain::point value(hash1, index);
     chain::output_point instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash1 == instance.hash());
-    BOOST_REQUIRE_EQUAL(index, instance.index());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash1 == instance.hash());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_4__valid_input__returns_input_initialized) {
+TEST_CASE("output point  constructor 4  valid input  returns input initialized", "[output point]") {
     static uint32_t const index = 1234u;
     chain::output_point instance(hash1, index);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash1 == instance.hash());
-    BOOST_REQUIRE_EQUAL(index, instance.index());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash1 == instance.hash());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_5__valid_input__returns_input_initialized) {
+TEST_CASE("output point  constructor 5  valid input  returns input initialized", "[output point]") {
     static uint32_t const index = 1234u;
     auto dup_hash = hash1;
     chain::output_point instance(std::move(dup_hash), index);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash1 == instance.hash());
-    BOOST_REQUIRE_EQUAL(index, instance.index());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash1 == instance.hash());
+    REQUIRE(index == instance.index());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_6__valid_input__returns_input_initialized) {
+TEST_CASE("output point  constructor 6  valid input  returns input initialized", "[output point]") {
     const chain::output_point expected(hash1, 524342u);
     chain::output_point instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__constructor_7__valid_input__returns_input_initialized) {
+TEST_CASE("output point  constructor 7  valid input  returns input initialized", "[output point]") {
     chain::output_point expected(hash1, 524342u);
     chain::output_point instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__begin_end__initialized__begin_not_equal_end) {
+TEST_CASE("output point  begin end  initialized  begin not equal end", "[output point]") {
     static const chain::output_point instance{null_hash, 0};
-    BOOST_REQUIRE(instance.begin() != instance.end());
+    REQUIRE(instance.begin() != instance.end());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__from_data__insufficient_bytes__failure) {
+TEST_CASE("output point  from data  insufficient bytes  failure", "[output point]") {
     static data_chunk const data(10);
     chain::output_point instance;
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output_point__from_data__roundtrip__success) {
+TEST_CASE("output point  from data  roundtrip  success", "[output point]") {
     static uint32_t const index = 53213u;
     static hash_digest const hash{
         {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
