@@ -154,556 +154,556 @@ TEST_CASE("chain transaction  constructor 1  always  returns default initialized
 #define TX7_HASH \
     "cb1e303db604f066225eb14d59d3f8d2231200817bc9d4610d2802586bd93f8a"
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_2__valid_input__returns_input_initialized) {
+TEST_CASE("chain transaction  constructor 2  valid input  returns input initialized", "[chain transaction]") {
     uint32_t version = 2345u;
     uint32_t locktime = 4568656u;
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
+    REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     chain::transaction instance(version, locktime, inputs, outputs);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(locktime, instance.locktime());
-    BOOST_REQUIRE(inputs == instance.inputs());
-    BOOST_REQUIRE(outputs == instance.outputs());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(locktime == instance.locktime());
+    REQUIRE(inputs == instance.inputs());
+    REQUIRE(outputs == instance.outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_3__valid_input__returns_input_initialized) {
+TEST_CASE("chain transaction  constructor 3  valid input  returns input initialized", "[chain transaction]") {
     uint32_t version = 2345u;
     uint32_t locktime = 4568656u;
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
+    REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     // These must be non-const.
     auto dup_inputs = inputs;
     auto dup_outputs = outputs;
 
     chain::transaction instance(version, locktime, std::move(dup_inputs), std::move(dup_outputs));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(locktime, instance.locktime());
-    BOOST_REQUIRE(inputs == instance.inputs());
-    BOOST_REQUIRE(outputs == instance.outputs());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(locktime == instance.locktime());
+    REQUIRE(inputs == instance.inputs());
+    REQUIRE(outputs == instance.outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_4__valid_input__returns_input_initialized) {
+TEST_CASE("chain transaction  constructor 4  valid input  returns input initialized", "[chain transaction]") {
     auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
+    REQUIRE(entity_from_data(expected, raw_tx));
 
     chain::transaction instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_5__valid_input__returns_input_initialized) {
+TEST_CASE("chain transaction  constructor 5  valid input  returns input initialized", "[chain transaction]") {
     auto const raw_tx = to_chunk(base16_literal(TX1));
 
     // This must be non-const.
     chain::transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
+    REQUIRE(entity_from_data(expected, raw_tx));
 
     chain::transaction instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_6__valid_input__returns_input_initialized) {
+TEST_CASE("chain transaction  constructor 6  valid input  returns input initialized", "[chain transaction]") {
     auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
+    REQUIRE(entity_from_data(expected, raw_tx));
     hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(expected, expected_hash);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
-    BOOST_REQUIRE(expected_hash == instance.hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
+    REQUIRE(expected_hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_7__valid_input__returns_input_initialized) {
+TEST_CASE("chain transaction  constructor 7  valid input  returns input initialized", "[chain transaction]") {
     auto const raw_tx = to_chunk(base16_literal(TX1));
 
     // This must be non-const.
     chain::transaction expected;
 
-    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
+    REQUIRE(entity_from_data(expected, raw_tx));
     hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(std::move(expected), expected_hash);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected_hash == instance.hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected_hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_coinbase__empty_inputs__returns_false) {
+TEST_CASE("chain transaction  is coinbase  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_coinbase());
+    REQUIRE(!instance.is_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_coinbase__one_null_input__returns_true) {
+TEST_CASE("chain transaction  is coinbase  one null input  returns true", "[chain transaction]") {
     static const chain::input::list inputs{
         {chain::point{null_hash, chain::point::null_index}, {}, 0}};
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    BOOST_REQUIRE(instance.is_coinbase());
+    REQUIRE(instance.is_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_coinbase__one_non_null_input__returns_false) {
+TEST_CASE("chain transaction  is coinbase  one non null input  returns false", "[chain transaction]") {
     static const chain::input::list inputs{
         {chain::point{null_hash, 42}, {}, 0}};
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    BOOST_REQUIRE(!instance.is_coinbase());
+    REQUIRE(!instance.is_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_coinbase__two_inputs_first_null__returns_false) {
+TEST_CASE("chain transaction  is coinbase  two inputs first null  returns false", "[chain transaction]") {
     static const chain::input::list inputs{
         {chain::point{null_hash, chain::point::null_index}, {}, 0},
         {chain::point{null_hash, 42}, {}, 0}};
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    BOOST_REQUIRE(!instance.is_coinbase());
+    REQUIRE(!instance.is_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__empty_inputs__returns_false) {
+TEST_CASE("chain transaction  is null non coinbase  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE(!instance.is_null_non_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__one_null_input__returns_false) {
+TEST_CASE("chain transaction  is null non coinbase  one null input  returns false", "[chain transaction]") {
     static const chain::input::list inputs{
         {chain::point{null_hash, chain::point::null_index}, {}, 0}};
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    BOOST_REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE(!instance.is_null_non_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__one_non_null_input__returns_false) {
+TEST_CASE("chain transaction  is null non coinbase  one non null input  returns false", "[chain transaction]") {
     static const chain::input::list inputs{
         {chain::point{null_hash, 42}, {}, 0}};
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    BOOST_REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE(!instance.is_null_non_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__two_inputs_first_null__returns_true) {
+TEST_CASE("chain transaction  is null non coinbase  two inputs first null  returns true", "[chain transaction]") {
     static const chain::input::list inputs{
         {chain::point{null_hash, chain::point::null_index}, {}, 0},
         {chain::point{null_hash, 42}, {}, 0}};
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    BOOST_REQUIRE(instance.is_null_non_coinbase());
+    REQUIRE(instance.is_null_non_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_zero__returns_true) {
+TEST_CASE("chain transaction  is final  locktime zero  returns true", "[chain transaction]") {
     static const size_t height = 100;
     static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(0);
-    BOOST_REQUIRE(instance.is_final(height, time));
+    REQUIRE(instance.is_final(height, time));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_less_block_time_greater_threshold__returns_true) {
+TEST_CASE("chain transaction  is final  locktime less block time greater threshold  returns true", "[chain transaction]") {
     static const size_t height = locktime_threshold + 100;
     static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(locktime_threshold + 50);
-    BOOST_REQUIRE(instance.is_final(height, time));
+    REQUIRE(instance.is_final(height, time));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_less_block_height_less_threshold_returns_true) {
+TEST_CASE("chain transaction  is final  locktime less block height less threshold returns true", "[chain transaction]") {
     static const size_t height = 100;
     static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(50);
-    BOOST_REQUIRE(instance.is_final(height, time));
+    REQUIRE(instance.is_final(height, time));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_input_not_final__returns_false) {
+TEST_CASE("chain transaction  is final  locktime input not final  returns false", "[chain transaction]") {
     static const size_t height = 100;
     static uint32_t const time = 100;
     chain::input input;
     input.set_sequence(1);
     chain::transaction instance(0, 101, {input}, {});
-    BOOST_REQUIRE(!instance.is_final(height, time));
+    REQUIRE(!instance.is_final(height, time));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_final__locktime_inputs_final__returns_true) {
+TEST_CASE("chain transaction  is final  locktime inputs final  returns true", "[chain transaction]") {
     static const size_t height = 100;
     static uint32_t const time = 100;
     chain::input input;
     input.set_sequence(max_input_sequence);
     chain::transaction instance(0u, 101u, {input}, {});
-    BOOST_REQUIRE(instance.is_final(height, time));
+    REQUIRE(instance.is_final(height, time));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locked__version_1_empty__returns_false) {
+TEST_CASE("chain transaction  is locked  version 1 empty  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_version(1);
-    BOOST_REQUIRE(!instance.is_locked(0, 0));
+    REQUIRE(!instance.is_locked(0, 0));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locked__version_2_empty__returns_false) {
+TEST_CASE("chain transaction  is locked  version 2 empty  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_version(2);
-    BOOST_REQUIRE(!instance.is_locked(0, 0));
+    REQUIRE(!instance.is_locked(0, 0));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locked__version_1_one_of_two_locked_locked__returns_false) {
+TEST_CASE("chain transaction  is locked  version 1 one of two locked locked  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_inputs({{{}, {}, 1}, {{}, {}, 0}});
     instance.set_version(1);
-    BOOST_REQUIRE(!instance.is_locked(0, 0));
+    REQUIRE(!instance.is_locked(0, 0));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locked__version_4_one_of_two_locked__returns_true) {
+TEST_CASE("chain transaction  is locked  version 4 one of two locked  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.set_inputs({{{}, {}, 1}, {{}, {}, 0}});
     instance.set_version(4);
-    BOOST_REQUIRE(instance.is_locked(0, 0));
+    REQUIRE(instance.is_locked(0, 0));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locktime_conflict__locktime_zero__returns_false) {
+TEST_CASE("chain transaction  is locktime conflict  locktime zero  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_locktime(0);
-    BOOST_REQUIRE(!instance.is_locktime_conflict());
+    REQUIRE(!instance.is_locktime_conflict());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locktime_conflict__input_sequence_not_maximum__returns_false) {
+TEST_CASE("chain transaction  is locktime conflict  input sequence not maximum  returns false", "[chain transaction]") {
     chain::input input;
     input.set_sequence(1);
     chain::transaction instance(0, 2143u, {input}, {});
-    BOOST_REQUIRE(!instance.is_locktime_conflict());
+    REQUIRE(!instance.is_locktime_conflict());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locktime_conflict__no_inputs__returns_true) {
+TEST_CASE("chain transaction  is locktime conflict  no inputs  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.set_locktime(2143);
-    BOOST_REQUIRE(instance.is_locktime_conflict());
+    REQUIRE(instance.is_locktime_conflict());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_locktime_conflict__input_max_sequence__returns_true) {
+TEST_CASE("chain transaction  is locktime conflict  input max sequence  returns true", "[chain transaction]") {
     // This must be non-const.
     chain::input::list inputs;
 
     inputs.emplace_back();
     inputs.back().set_sequence(max_input_sequence);
     chain::transaction instance(0, 2143u, std::move(inputs), {});
-    BOOST_REQUIRE(instance.is_locktime_conflict());
+    REQUIRE(instance.is_locktime_conflict());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_version_bytes__failure) {
+TEST_CASE("chain transaction  from data  insufficient version bytes  failure", "[chain transaction]") {
     data_chunk data(2);
 
     chain::transaction instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_input_bytes__failure) {
+TEST_CASE("chain transaction  from data  insufficient input bytes  failure", "[chain transaction]") {
     data_chunk data = to_chunk(base16_literal("0000000103"));
     chain::transaction instance;
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure) {
+TEST_CASE("chain transaction  from data  insufficient output bytes  failure", "[chain transaction]") {
     data_chunk data = to_chunk(base16_literal("000000010003"));
     chain::transaction instance;
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
 // TODO(legacy): update test for v4 store serialization (input with witness).
-////BOOST_AUTO_TEST_CASE(transaction__from_data__compare_wire_to_store__success)
+////TEST_CASE("chain transaction  from data  compare wire to store  success", "[None]")
 ////{
 ////    static auto const wire = true;
 ////    auto const data_wire = to_chunk(base16_literal(TX3_WIRE_SERIALIZED));
 ////
 ////    data_source wire_stream(data_wire);
 ////    chain::transaction wire_tx;
-////    BOOST_REQUIRE(entity_from_data(wire_tx, wire_stream, wire));
-////    BOOST_REQUIRE(data_wire == wire_tx.to_data(wire));
+////    REQUIRE(entity_from_data(wire_tx, wire_stream, wire));
+////    REQUIRE(data_wire == wire_tx.to_data(wire));
 ////
 ////    auto const get_store_text = encode_base16(wire_tx.to_data(!wire));
 ////
 ////    auto const data_store = to_chunk(base16_literal(TX3_STORE_SERIALIZED_V3));
 ////    data_source store_stream(data_store);
 ////    chain::transaction store_tx;
-////    BOOST_REQUIRE(entity_from_data(store_tx, store_stream, !wire));
-////    BOOST_REQUIRE(data_store == store_tx.to_data(!wire));
-////    BOOST_REQUIRE(wire_tx == store_tx);
+////    REQUIRE(entity_from_data(store_tx, store_stream, !wire));
+////    REQUIRE(data_store == store_tx.to_data(!wire));
+////    REQUIRE(wire_tx == store_tx);
 ////}
 
-BOOST_AUTO_TEST_CASE(transaction__factory_data_1__case_1__success) {
+TEST_CASE("chain transaction  factory data 1  case 1  success", "[chain transaction]") {
     static auto const tx_hash = hash_literal(TX1_HASH);
     static auto const raw_tx = to_chunk(base16_literal(TX1));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
+    REQUIRE(raw_tx.size() == 225u);
 
     chain::transaction tx = create<chain::transaction>(raw_tx);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.serialized_size() == 225u);
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(), raw_tx.size());
+    REQUIRE(tx.serialized_size() == raw_tx.size());
     data_chunk resave = tx.to_data();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_data_1__case_2__success) {
+TEST_CASE("chain transaction  factory data 1  case 2  success", "[chain transaction]") {
     static auto const tx_hash = hash_literal(TX4_HASH);
     static auto const raw_tx = to_chunk(base16_literal(TX4));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     chain::transaction tx = create<chain::transaction>(raw_tx);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size() == raw_tx.size());
+    REQUIRE(tx.serialized_size() == raw_tx.size());
     data_chunk resave = tx.to_data();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_data_2__case_1__success) {
+TEST_CASE("chain transaction  factory data 2  case 1  success", "[chain transaction]") {
     static auto const tx_hash = hash_literal(TX1_HASH);
     static auto const raw_tx = to_chunk(base16_literal(TX1));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
+    REQUIRE(raw_tx.size() == 225u);
 
     data_source stream(raw_tx);
     chain::transaction tx = create<chain::transaction>(stream);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.serialized_size() == 225u);
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(), raw_tx.size());
+    REQUIRE(tx.serialized_size() == raw_tx.size());
     data_chunk resave = tx.to_data();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_data_2__case_2__success) {
+TEST_CASE("chain transaction  factory data 2  case 2  success", "[chain transaction]") {
     static auto const tx_hash = hash_literal(TX4_HASH);
     static auto const raw_tx = to_chunk(base16_literal(TX4));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     data_source stream(raw_tx);
     chain::transaction tx = create<chain::transaction>(stream);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size() == raw_tx.size());
+    REQUIRE(tx.serialized_size() == raw_tx.size());
     data_chunk resave = tx.to_data();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_1__success) {
+TEST_CASE("chain transaction  factory data 3  case 1  success", "[chain transaction]") {
     static auto const tx_hash = hash_literal(TX1_HASH);
     static auto const raw_tx = to_chunk(base16_literal(TX1));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
+    REQUIRE(raw_tx.size() == 225u);
 
     data_source stream(raw_tx);
     istream_reader source(stream);
     chain::transaction tx = create<chain::transaction>(source);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.serialized_size() == 225u);
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(), raw_tx.size());
+    REQUIRE(tx.serialized_size() == raw_tx.size());
     data_chunk resave = tx.to_data();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_2__success) {
+TEST_CASE("chain transaction  factory data 3  case 2  success", "[chain transaction]") {
     static hash_digest const tx_hash = hash_literal(TX4_HASH);
     static data_chunk const raw_tx = to_chunk(base16_literal(TX4));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     data_source stream(raw_tx);
     istream_reader source(stream);
     chain::transaction tx = create<chain::transaction>(source);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size() == raw_tx.size());
+    REQUIRE(tx.serialized_size() == raw_tx.size());
     data_chunk resave = tx.to_data();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__version__roundtrip__success) {
+TEST_CASE("chain transaction  version  roundtrip  success", "[chain transaction]") {
     uint32_t version = 1254u;
     chain::transaction instance;
-    BOOST_REQUIRE(version != instance.version());
+    REQUIRE(version != instance.version());
     instance.set_version(version);
-    BOOST_REQUIRE_EQUAL(version, instance.version());
+    REQUIRE(version == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__locktime__roundtrip__success) {
+TEST_CASE("chain transaction  locktime  roundtrip  success", "[chain transaction]") {
     uint32_t locktime = 1254u;
     chain::transaction instance;
-    BOOST_REQUIRE(locktime != instance.locktime());
+    REQUIRE(locktime != instance.locktime());
     instance.set_locktime(locktime);
-    BOOST_REQUIRE_EQUAL(locktime, instance.locktime());
+    REQUIRE(locktime == instance.locktime());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__inputs_setter_1__roundtrip__success) {
+TEST_CASE("chain transaction  inputs setter 1  roundtrip  success", "[chain transaction]") {
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
+    REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
 
     chain::transaction instance;
-    BOOST_REQUIRE(inputs != instance.inputs());
+    REQUIRE(inputs != instance.inputs());
     instance.set_inputs(inputs);
-    BOOST_REQUIRE(inputs == instance.inputs());
+    REQUIRE(inputs == instance.inputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__inputs_setter_2__roundtrip__success) {
+TEST_CASE("chain transaction  inputs setter 2  roundtrip  success", "[chain transaction]") {
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
+    REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
 
     // This must be non-const.
     auto dup_inputs = inputs;
 
     chain::transaction instance;
-    BOOST_REQUIRE(inputs != instance.inputs());
+    REQUIRE(inputs != instance.inputs());
     instance.set_inputs(std::move(dup_inputs));
-    BOOST_REQUIRE(inputs == instance.inputs());
+    REQUIRE(inputs == instance.inputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__outputs_setter_1__roundtrip__success) {
+TEST_CASE("chain transaction  outputs setter 1  roundtrip  success", "[chain transaction]") {
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     chain::transaction instance;
-    BOOST_REQUIRE(outputs != instance.outputs());
+    REQUIRE(outputs != instance.outputs());
     instance.set_outputs(outputs);
-    BOOST_REQUIRE(outputs == instance.outputs());
+    REQUIRE(outputs == instance.outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__outputs_setter_2__roundtrip__success) {
+TEST_CASE("chain transaction  outputs setter 2  roundtrip  success", "[chain transaction]") {
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     // This must be non-const.
     auto dup_outputs = outputs;
 
     chain::transaction instance;
-    BOOST_REQUIRE(outputs != instance.outputs());
+    REQUIRE(outputs != instance.outputs());
     instance.set_outputs(std::move(dup_outputs));
-    BOOST_REQUIRE(outputs == instance.outputs());
+    REQUIRE(outputs == instance.outputs());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__non_coinbase_tx__returns_false) {
+TEST_CASE("chain transaction  is oversized coinbase  non coinbase tx  returns false", "[chain transaction]") {
     static auto const data = to_chunk(base16_literal(TX5));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_coinbase());
-    BOOST_REQUIRE(!instance.is_oversized_coinbase());
+    REQUIRE(entity_from_data(instance, data));
+    REQUIRE(!instance.is_coinbase());
+    REQUIRE(!instance.is_oversized_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_below_min__returns_true) {
+TEST_CASE("chain transaction  is oversized coinbase  script size below min  returns true", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().set_index(chain::point::null_index);
     instance.inputs().back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(instance.is_coinbase());
-    BOOST_REQUIRE(instance.inputs().back().script().serialized_size(false) < min_coinbase_size);
-    BOOST_REQUIRE(instance.is_oversized_coinbase());
+    REQUIRE(instance.is_coinbase());
+    REQUIRE(instance.inputs().back().script().serialized_size(false) < min_coinbase_size);
+    REQUIRE(instance.is_oversized_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_above_max__returns_true) {
+TEST_CASE("chain transaction  is oversized coinbase  script size above max  returns true", "[chain transaction]") {
     chain::transaction instance;
     auto& inputs = instance.inputs();
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(entity_from_data(inputs.back().script(), data_chunk(max_coinbase_size + 10), false));
-    BOOST_REQUIRE(instance.is_coinbase());
-    BOOST_REQUIRE(inputs.back().script().serialized_size(false) > max_coinbase_size);
-    BOOST_REQUIRE(instance.is_oversized_coinbase());
+    REQUIRE(entity_from_data(inputs.back().script(), data_chunk(max_coinbase_size + 10), false));
+    REQUIRE(instance.is_coinbase());
+    REQUIRE(inputs.back().script().serialized_size(false) > max_coinbase_size);
+    REQUIRE(instance.is_oversized_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_within_bounds__returns_false) {
+TEST_CASE("chain transaction  is oversized coinbase  script size within bounds  returns false", "[chain transaction]") {
     chain::transaction instance;
     auto& inputs = instance.inputs();
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(entity_from_data(inputs.back().script(), data_chunk(50), false));
-    BOOST_REQUIRE(instance.is_coinbase());
-    BOOST_REQUIRE(inputs.back().script().serialized_size(false) >= min_coinbase_size);
-    BOOST_REQUIRE(inputs.back().script().serialized_size(false) <= max_coinbase_size);
-    BOOST_REQUIRE(!instance.is_oversized_coinbase());
+    REQUIRE(entity_from_data(inputs.back().script(), data_chunk(50), false));
+    REQUIRE(instance.is_coinbase());
+    REQUIRE(inputs.back().script().serialized_size(false) >= min_coinbase_size);
+    REQUIRE(inputs.back().script().serialized_size(false) <= max_coinbase_size);
+    REQUIRE(!instance.is_oversized_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__coinbase_tx__returns_false) {
+TEST_CASE("chain transaction  is null non coinbase  coinbase tx  returns false", "[chain transaction]") {
     static auto const data = to_chunk(base16_literal(TX6));
     chain::transaction instance;
-    BOOST_REQUIRE(entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE(entity_from_data(instance, data));
+    REQUIRE(!instance.is_null_non_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__no_null_input_prevout__returns_false) {
+TEST_CASE("chain transaction  is null non coinbase  no null input prevout  returns false", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.is_coinbase());
-    BOOST_REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE(!instance.is_coinbase());
+    REQUIRE(!instance.is_null_non_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__null_input_prevout__returns_true) {
+TEST_CASE("chain transaction  is null non coinbase  null input prevout  returns true", "[chain transaction]") {
     chain::transaction instance;
     auto& inputs = instance.inputs();
     inputs.emplace_back();
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(!instance.is_coinbase());
-    BOOST_REQUIRE(instance.inputs().back().previous_output().is_null());
-    BOOST_REQUIRE(instance.is_null_non_coinbase());
+    REQUIRE(!instance.is_coinbase());
+    REQUIRE(instance.inputs().back().previous_output().is_null());
+    REQUIRE(instance.is_null_non_coinbase());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__total_input_value__no_cache__returns_zero) {
+TEST_CASE("chain transaction  total input value  no cache  returns zero", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().emplace_back();
-    BOOST_REQUIRE_EQUAL(instance.total_input_value(), 0u);
+    REQUIRE(instance.total_input_value() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__total_input_value__cache__returns_cache_value_sum) {
+TEST_CASE("chain transaction  total input value  cache  returns cache value sum", "[chain transaction]") {
     chain::transaction instance;
     auto& inputs = instance.inputs();
     inputs.emplace_back();
     inputs.back().previous_output().validation.cache.set_value(123u);
     inputs.emplace_back();
     inputs.back().previous_output().validation.cache.set_value(321u);
-    BOOST_REQUIRE_EQUAL(instance.total_input_value(), 444u);
+    REQUIRE(instance.total_input_value() == 444u);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__total_output_value__empty_outputs__returns_zero) {
+TEST_CASE("chain transaction  total output value  empty outputs  returns zero", "[chain transaction]") {
     chain::transaction instance;
-    BOOST_REQUIRE_EQUAL(instance.total_output_value(), 0u);
+    REQUIRE(instance.total_output_value() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__total_output_value__non_empty_outputs__returns_sum) {
+TEST_CASE("chain transaction  total output value  non empty outputs  returns sum", "[chain transaction]") {
     chain::transaction instance;
 
     // This must be non-const.
