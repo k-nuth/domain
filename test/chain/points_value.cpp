@@ -29,10 +29,10 @@ TEST_CASE("points value  value  multiple point values  expected", "[points value
             {{null_hash, 1u}, 30u},
             {{null_hash, 0u}, 42u},
         }};
-    BOOST_REQUIRE_EQUAL(instance.value(), expected);
+    REQUIRE(instance.value() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(points_value__value__multiple_point_values_remove_last__expected) {
+TEST_CASE("points value  value  multiple point values remove last  expected", "[points value]") {
     static auto const expected = 10u + 30u;
     points_value instance{
         {
