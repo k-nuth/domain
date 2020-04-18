@@ -11,84 +11,84 @@ using namespace kth::domain::chain;
 #define SOURCE "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f0100"
 static auto const valid_raw_point_iterator_source = to_chunk(base16_literal(SOURCE));
 
-BOOST_AUTO_TEST_SUITE(point_iterator_tests)
+// Start Boost Suite: point iterator tests
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_bool__not_at_end__returns_true) {
+TEST_CASE("point iterator  operator bool  not at end  returns true", "[point iterator]") {
     point_iterator instance(point{});
-    BOOST_REQUIRE((bool)instance);
+    REQUIRE((bool)instance);
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_bool_at_end__returns_false) {
+TEST_CASE("point iterator  operator bool at end  returns false", "[point iterator]") {
     point value;
     point_iterator instance(value, static_cast<unsigned>(value.serialized_size(false)));
-    BOOST_REQUIRE(!instance);
+    REQUIRE(!instance);
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_asterisk__initialized_point__matches_source) {
+TEST_CASE("point iterator  operator asterisk  initialized point  matches source", "[point iterator]") {
     point point;
-    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
+    REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
     point_iterator instance(point);
 
     for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++) {
-        BOOST_REQUIRE(instance);
-        BOOST_REQUIRE_EQUAL(valid_raw_point_iterator_source[i], (*instance));
+       REQUIRE(instance);
+       REQUIRE(valid_raw_point_iterator_source[i] == (*instance));
     }
 
-    BOOST_REQUIRE(!instance);
-    BOOST_REQUIRE_EQUAL(0u, (*instance));
+    REQUIRE(!instance);
+    REQUIRE(0u == (*instance));
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_arrow__initialized_point__matches_source) {
+TEST_CASE("point iterator  operator arrow  initialized point  matches source", "[point iterator]") {
     point point;
-    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
+    REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
     point_iterator instance(point);
-    BOOST_REQUIRE(valid_raw_point_iterator_source.size() > 0);
+    REQUIRE(valid_raw_point_iterator_source.size() > 0);
 
     for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++) {
-        BOOST_REQUIRE(instance);
-        BOOST_REQUIRE_EQUAL(valid_raw_point_iterator_source[i], instance.operator->());
+       REQUIRE(instance);
+       REQUIRE(valid_raw_point_iterator_source[i] == instance.operator->());
     }
 
-    BOOST_REQUIRE(!instance);
-    BOOST_REQUIRE_EQUAL(0u, instance.operator->());
+    REQUIRE(!instance);
+    REQUIRE(0u == instance.operator->());
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus_int__roundtrip__success) {
+TEST_CASE("point iterator  operator plus minus int  roundtrip  success", "[point iterator]") {
     point point;
     uint8_t offset = 5u;
-    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
+    REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
 
     point_iterator instance(point, offset);
     point_iterator expected(instance);
 
     auto initial = instance++;
-    BOOST_REQUIRE(instance != expected);
-    BOOST_REQUIRE(initial == expected);
+    REQUIRE(instance != expected);
+    REQUIRE(initial == expected);
 
     auto modified = instance--;
-    BOOST_REQUIRE(instance == expected);
-    BOOST_REQUIRE(modified != expected);
+    REQUIRE(instance == expected);
+    REQUIRE(modified != expected);
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus__roundtrip__success) {
+TEST_CASE("point iterator  operator plus minus  roundtrip  success", "[point iterator]") {
     point point;
     uint8_t offset = 5u;
-    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
+    REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
 
     point_iterator instance(point, offset);
     point_iterator expected(instance);
 
     ++instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 
     --instance;
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(point_iterator__copy_assigment) {
+TEST_CASE("point iterator  copy assigment", "[point iterator]") {
     point point;
     uint8_t offset = 5u;
-    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
+    REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
 
     point_iterator instance(point, offset);
     point_iterator expected(instance);
