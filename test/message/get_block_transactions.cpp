@@ -76,15 +76,13 @@ TEST_CASE("get block transactions  factory from data 1  valid input  success", "
     auto const result = create<message::get_block_transactions>(
         message::version::level::minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum),
-                        result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_2__valid_input__success) {
+TEST_CASE("get block transactions  factory from data 2  valid input  success", "[get block transactions]") {
     const message::get_block_transactions expected{
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         {16,
