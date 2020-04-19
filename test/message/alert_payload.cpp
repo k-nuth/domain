@@ -33,23 +33,23 @@ TEST_CASE("alert payload  constructor 2  always  equals params", "[alert payload
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_3__always__equals_params) {
+TEST_CASE("alert payload  constructor 3  always  equals params", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
