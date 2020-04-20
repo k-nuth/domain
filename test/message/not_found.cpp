@@ -26,11 +26,11 @@ TEST_CASE("not found  constructor 2  always  equals params", "[not found]") {
                   0x37, 0xc0, 0xb0, 0x32, 0xf0, 0xd6, 0x6e, 0xdf}})};
 
     message::not_found instance(values);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(values == instance.inventories());
+    REQUIRE(instance.is_valid());
+    REQUIRE(values == instance.inventories());
 }
 
-BOOST_AUTO_TEST_CASE(not_found__constructor_3__always__equals_params) {
+TEST_CASE("not found  constructor 3  always  equals params", "[not found]") {
     message::inventory_vector::type_id type = message::inventory_vector::type_id::error;
     auto hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::inventory_vector::list values =
