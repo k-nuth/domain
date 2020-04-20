@@ -48,9 +48,9 @@ TEST_CASE("memory pool - roundtrip to data factory from data reader", "[memory p
     auto const result = create<message::memory_pool>(
         message::version::level::maximum, source);
 
-    BOOST_REQUIRE_EQUAL(0u, data.size());
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(0u, result.serialized_size(message::version::level::maximum));
+    REQUIRE(0u == data.size());
+    REQUIRE(result.is_valid());
+    REQUIRE(0u == result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
