@@ -41,17 +41,17 @@ ec_public secret_to_compressed_public(kth::ec_secret const& secret_key) {
     return public_key;
 }
 
-BOOST_AUTO_TEST_CASE(seed_to_wallet_compressed__test) {
+TEST_CASE("seed to wallet compressed  test", "[transaction functions]") {
     auto secret = create_secret_from_seed(SEED);
     auto pub_key = secret_to_compressed_public(secret);
     // Payment Address
     uint8_t const version = payment_address::testnet_p2kh;  // testnet_p2sh
     payment_address address(pub_key, version);
 
-    BOOST_REQUIRE_EQUAL(address.encoded(), WALLET);
+    REQUIRE(address.encoded() == WALLET);
 }
 
-BOOST_AUTO_TEST_CASE(create_transaction__test) {
+TEST_CASE("create transaction  test", "[transaction functions]") {
     // List of inputs (outputs_to_spend)
     std::vector<chain::input_point> outputs_to_spend;
     kth::hash_digest hash_to_spend;
