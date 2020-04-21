@@ -26,117 +26,117 @@ TEST_CASE("encrypted  fixture  unicode passphrase  matches encrypted test vector
     auto const normal = to_normal_nfc_form(passphrase);
     data_chunk normalized(normal.size());
     std::copy_n(normal.begin(), normal.size(), normalized.begin());
-    BOOST_REQUIRE_EQUAL(encode_base16(normalized), "cf9300f0909080f09f92a9");
+    REQUIRE(encode_base16(normalized) == "cf9300f0909080f09f92a9");
 }
 
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_SUITE(encrypted__create_token_lot)
+// Start Boost Suite: encrypted  create token lot
 
 #define KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, bytes, lot, sequence) \
     encrypted_token out_token;                                        \
-    BOOST_REQUIRE(create_token(out_token, passphrase, bytes, lot, sequence))
+    REQUIRE(create_token(out_token, passphrase, bytes, lot, sequence))
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__lot_overlow__false) {
+TEST_CASE("encrypted  create token lot  lot overlow  false", "[encrypted  create token lot]") {
     const size_t lot = 1048575 + 1;
     const size_t sequence = 0;
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     encrypted_token out_token;
-    BOOST_REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
+    REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__sequence_overlow__false) {
+TEST_CASE("encrypted  create token lot  sequence overlow  false", "[encrypted  create token lot]") {
     const size_t lot = 0;
     const size_t sequence = 4095 + 1;
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     encrypted_token out_token;
-    BOOST_REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
+    REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__defaults__expected) {
+TEST_CASE("encrypted  create token lot  defaults  expected", "[encrypted  create token lot]") {
     const size_t lot = 0;
     const size_t sequence = 0;
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8F7yQVcg1eQKPuX7rzGwBtEH1YSZnKbyk75x3rugZu1ci4RyF4rEn");
+    REQUIRE(encode_base58(out_token) == "passphrasecpXbDpHuo8F7yQVcg1eQKPuX7rzGwBtEH1YSZnKbyk75x3rugZu1ci4RyF4rEn");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase__expected) {
+TEST_CASE("encrypted  create token lot  passphrase  expected", "[encrypted  create token lot]") {
     const size_t lot = 0;
     const size_t sequence = 0;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8F7x4pQXMhsJs2j7L8LTV8ujk9jGqgzUrafBeto9VrabP5SmvANvz");
+    REQUIRE(encode_base58(out_token) == "passphrasecpXbDpHuo8F7x4pQXMhsJs2j7L8LTV8ujk9jGqgzUrafBeto9VrabP5SmvANvz");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_max__expected) {
+TEST_CASE("encrypted  create token lot  passphrase lot max  expected", "[encrypted  create token lot]") {
     const size_t lot = 1048575;
     const size_t sequence = 0;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
+    REQUIRE(encode_base58(out_token) == "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_sequence_max__expected) {
+TEST_CASE("encrypted  create token lot  passphrase sequence max  expected", "[encrypted  create token lot]") {
     const size_t lot = 0;
     const size_t sequence = 4095;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
+    REQUIRE(encode_base58(out_token) == "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_sequence__expected) {
+TEST_CASE("encrypted  create token lot  passphrase lot sequence  expected", "[encrypted  create token lot]") {
     const size_t lot = 42;
     const size_t sequence = 42;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
+    REQUIRE(encode_base58(out_token) == "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_SUITE(encrypted__create_token_entropy)
+// Start Boost Suite: encrypted  create token entropy
 
 #define KD_CREATE_TOKEN_ENTROPY(passphrase, bytes) \
     encrypted_token out_token;                     \
     create_token(out_token, passphrase, bytes)
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__defaults__expected) {
+TEST_CASE("encrypted  create token entropy  defaults  expected", "[encrypted  create token entropy]") {
     auto const passphrase = "";
     auto const entropy = base16_literal("baadf00dbaadf00d");
     KD_CREATE_TOKEN_ENTROPY(passphrase, entropy);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphraseqVHzjNrYRo5G6yLmJ7TQ49fKnQtsgjybNgNHAKBCQKoFZcTNjNJtg4oCUgtPt3");
+    REQUIRE(encode_base58(out_token) == "passphraseqVHzjNrYRo5G6yLmJ7TQ49fKnQtsgjybNgNHAKBCQKoFZcTNjNJtg4oCUgtPt3");
 }
 
-BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__passphrase__expected) {
+TEST_CASE("encrypted  create token entropy  passphrase  expected", "[encrypted  create token entropy]") {
     auto const passphrase = "passphrase";
     auto const entropy = base16_literal("baadf00dbaadf00d");
     KD_CREATE_TOKEN_ENTROPY(passphrase, entropy);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphraseqVHzjNrYRo5G6sfRB4YdSaQ2m8URnkBYS1UT6JBju5G5o45YRZKLDpK6J3PEGq");
+    REQUIRE(encode_base58(out_token) == "passphraseqVHzjNrYRo5G6sfRB4YdSaQ2m8URnkBYS1UT6JBju5G5o45YRZKLDpK6J3PEGq");
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_SUITE(encrypted__encrypt_private)
+// Start Boost Suite: encrypted  encrypt private
 
 #define KD_REQUIRE_ENCRYPT(secret, passphrase, version, compressed, expected)     \
     encrypted_private out_private;                                                \
-    BOOST_REQUIRE(encrypt(out_private, secret, passphrase, version, compressed)); \
-    BOOST_REQUIRE_EQUAL(encode_base58(out_private), expected)
+    REQUIRE(encrypt(out_private, secret, passphrase, version, compressed));
+    REQUIRE(encode_base58(out_private) == expected)
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_0__expected) {
+TEST_CASE("encrypted  encrypt private  vector 0  expected", "[encrypted  encrypt private]") {
     auto compression = false;
     uint8_t const version = 0x00;
     auto const expected = "6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg";
