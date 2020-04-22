@@ -140,7 +140,7 @@ public:
     void set_previous_output(output_point const& value);
     void set_previous_output(output_point&& value);
 
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     chain::script& script();
     
     [[nodiscard]]
