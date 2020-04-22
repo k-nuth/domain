@@ -59,9 +59,6 @@ public:
     // Prefixed data assumed valid here though caller may confirm with is_valid.
 
     /// Deserialization invalidates the iterator.
-    bool from_data(data_chunk const& encoded, bool prefix);
-    bool from_data(std::istream& stream, bool prefix);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
         reset();
