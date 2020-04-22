@@ -135,7 +135,7 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     chain::header& header();
 
     [[nodiscard]]
