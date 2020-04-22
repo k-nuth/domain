@@ -85,62 +85,6 @@ bool witness::operator!=(witness const& x) const {
     return !(*this == x);
 }
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// bool witness::from_data(data_chunk const& encoded, bool prefix) {
-//     data_source istream(encoded);
-//     return from_data(istream, prefix);
-// }
-
-// bool witness::from_data(std::istream& stream, bool prefix) {
-//     istream_reader stream_r(stream);
-//     return from_data(stream_r, prefix);
-// }
-
-// Prefixed data assumed valid here though caller may confirm with is_valid.
-//bool witness::from_data(reader& source, bool prefix)
-//{
-//    reset();
-//    valid_ = true;
-//
-//    auto const read_element = [](reader& source)
-//    {
-//        // Tokens encoded as variable integer prefixed byte array (bip144).
-//        auto const size = source.read_size_little_endian();
-//
-//        // The max_script_size and max_push_data_size constants limit
-//        // evaluation, but not all stacks evaluate, so use max_block_weight
-//        // to guard memory allocation here.
-//        if (size > max_block_weight)
-//        {
-//            source.invalidate();
-//            return data_chunk{};
-//        }
-//
-//        return source.read_bytes(size);
-//    };
-//
-//    // TODO(legacy): optimize store serialization to avoid loop, reading data directly.
-//    if (prefix)
-//    {
-//        // Witness prefix is an element count, not byte length (unlike script).
-//        // On wire each witness is prefixed with number of elements (bip144).
-//        for (auto count = source.read_size_little_endian(); count > 0; --count)
-//             stack_.push_back(read_element(source));
-//    }
-//    else
-//    {
-//        while (!source.is_exhausted())
-//            stack_.push_back(read_element(source));
-//    }
-//
-//    if ( ! source)
-//        reset();
-//
-//    return source;
-//}
-
 // private/static
 size_t witness::serialized_size(data_stack const& stack) {
     auto const sum = [](size_t total, data_chunk const& element) {
