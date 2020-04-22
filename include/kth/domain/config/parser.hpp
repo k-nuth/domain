@@ -151,10 +151,15 @@ public:
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
 
-            // //2020-Nov Hardfork - unnamed - (9999999999)
+            // //2020-Nov Hardfork - axion - (1605441600)
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
+
+            // //2021-May Hardfork - unnamed - (9999999999)
+            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
 
 
         } else if (get_network(easy_blocks, retarget) == config::settings::mainnet) {
@@ -229,15 +234,24 @@ public:
             checkpoints.emplace_back("000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136);  //time: 1573825449 - Nov 15, 2019 01:44:09 PM
             checkpoints.emplace_back("00000000000000000074d2ba7b47eb241ee6aca95daf71cea539b32c660e2350", 609137);  //time: 1573826122 - Nov 15, 2019 01:55:22 PM
 
+            checkpoints.emplace_back("00000000000000000177593a9861113e263bd9fb7679d6783ab88829b147662a", 620000);
+
             // //2020-May Hardfork - phonon - (1589544000)
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
 
-            // //2020-Nov Hardfork - unnamed - (9999999999)
+            // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
+
+            // //2020-Nov Hardfork - axion - (1605441600)
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
+
+            // //2021-May Hardfork - unnamed - (9999999999)
+            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
 
         } else {
             // BCH Regtest

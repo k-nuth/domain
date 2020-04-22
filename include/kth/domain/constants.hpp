@@ -215,13 +215,14 @@ constexpr uint32_t bip9_version_bit0 = 1U << 0;
 constexpr uint32_t bip9_version_bit1 = 1U << 1;
 constexpr uint32_t bip9_version_base = 0x20000000;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 
 // enum class monolith_t : uint64_t {};
 // enum class magnetic_anomaly_t : uint64_t {};
 // enum class great_wall_t : uint64_t {};
 // enum class graviton_t : uint64_t {};
 enum class phonon_t : uint64_t {};
+enum class axion_t : uint64_t {};
 enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
 // constexpr size_t             bch_activation_height = 478559 //478558;            //2017-August-01   hard fork
@@ -230,9 +231,8 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 // constexpr magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November-15 hard fork
 // constexpr great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15      hard fork
 // constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
-constexpr phonon_t           bch_phonon_activation_time{1589544000};             //2020-May-15      hard fork
-constexpr unnamed_t          bch_unnamed_activation_time{9999999999};            //2020-Nov-15      hard fork
-
+constexpr phonon_t           bch_phonon_activation_time{1589544000};                //2020-May-15      hard fork
+constexpr axion_t            bch_axion_activation_time{1605441600};                 //2020-Nov-15      hard fork
 
 // inline constexpr
 // bool is_uahf_enabled(const Config &config, int nHeight) {

@@ -177,12 +177,27 @@ bool chain_state::is_graviton_enabled() const {
     return is_graviton_enabled(height(), enabled_forks());
 }
 
+//static
+bool chain_state::is_phonon_enabled() const {
+    //TODO(fernando): this was activated, change to the other method
+    return is_mtp_activated(median_time_past(), to_underlying(phonon_activation_time()));
+    // return is_phonon_enabled(height(), enabled_forks());
+}
+
+// 2020-Nov
 // //static
-// bool chain_state::is_phonon_enabled(size_t height, uint32_t forks) {
-// //TODO(fernando): this was activated, change to the other method
-//     return is_mtp_activated(median_time_past(), phonon_activation_time());
+// bool chain_state::is_axion_enabled() const {
+//    //TODO(fernando): this was activated, change to the other method
+//     return is_mtp_activated(median_time_past(), axion_activation_time());
 // }
 
+
+// 2021-May
+// //static
+// bool chain_state::is_unnamed_enabled() const {
+//    //TODO(fernando): this was activated, change to the other method
+//     return is_mtp_activated(median_time_past(), unnamed_activation_time());
+// }
 
 #endif  //KTH_CURRENCY_BCH
 
@@ -196,7 +211,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , great_wall_t great_wall_activation_time
         // , graviton_t graviton_activation_time
         , phonon_t phonon_activation_time
-        , unnamed_t unnamed_activation_time
+        , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
@@ -684,12 +699,31 @@ bool chain_state::is_graviton_enabled(size_t height, uint32_t forks) {
 
 //2020-May hard fork
 // Complete after the hard fork
+// inline 
+// bool chain_state::is_phonon_enabled(size_t height, uint32_t forks) {
+//     return is_rule_enabled(height, forks, 
+//         mainnet_phonon_active_checkpoint.height(), 
+//         testnet_phonon_active_checkpoint.height());
+// }
+
 
 //2020-Nov hard fork
 // Complete after the hard fork
+// inline 
+// bool chain_state::is_axion_enabled(size_t height, uint32_t forks) {
+//     return is_rule_enabled(height, forks, 
+//         mainnet_axion_active_checkpoint.height(), 
+//         testnet_axion_active_checkpoint.height());
+// }
 
 //2021-May hard fork
 // Complete after the hard fork
+// inline 
+// bool chain_state::is_unnamed_enabled(size_t height, uint32_t forks) {
+//     return is_rule_enabled(height, forks, 
+//         mainnet_unnamed_active_checkpoint.height(), 
+//         testnet_unnamed_active_checkpoint.height());
+// }
 
 #endif // KTH_CURRENCY_BCH
 
@@ -1159,7 +1193,7 @@ chain_state::chain_state(chain_state const& top)
             // , top.great_wall_activation_time_
             // , top.graviton_activation_time_
             , top.phonon_activation_time_
-            , top.unnamed_activation_time_
+            , top.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
       ))
     , median_time_past_(median_time_past(data_, forks_))
@@ -1169,7 +1203,7 @@ chain_state::chain_state(chain_state const& top)
     // , great_wall_activation_time_(top.great_wall_activation_time_)
     // , graviton_activation_time_(top.graviton_activation_time_)
     , phonon_activation_time_(top.phonon_activation_time_)
-    , unnamed_activation_time_(top.unnamed_activation_time_)
+    , axion_activation_time_(top.axion_activation_time_)
 #endif  //KTH_CURRENCY_BCH
 {}
 
@@ -1224,7 +1258,7 @@ chain_state::chain_state(chain_state const& pool, block const& block)
         // , pool.great_wall_activation_time_
         // , pool.graviton_activation_time_
         , pool.phonon_activation_time_
-        , pool.unnamed_activation_time_
+        , pool.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_, forks_))
@@ -1234,7 +1268,7 @@ chain_state::chain_state(chain_state const& pool, block const& block)
     // , great_wall_activation_time_(pool.great_wall_activation_time_)
     // , graviton_activation_time_(pool.graviton_activation_time_)
     , phonon_activation_time_(pool.phonon_activation_time_)
-    , unnamed_activation_time_(pool.unnamed_activation_time_)
+    , axion_activation_time_(pool.axion_activation_time_)
 #endif  //KTH_CURRENCY_BCH
 {}
 
@@ -1289,7 +1323,7 @@ chain_state::chain_state(chain_state const& parent, header const& header)
         // , parent.great_wall_activation_time_
         // , parent.graviton_activation_time_
         , parent.phonon_activation_time_
-        , parent.unnamed_activation_time_
+        , parent.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_, forks_))
@@ -1299,7 +1333,7 @@ chain_state::chain_state(chain_state const& parent, header const& header)
     // , great_wall_activation_time_(parent.great_wall_activation_time_)
     // , graviton_activation_time_(parent.graviton_activation_time_)
     , phonon_activation_time_(parent.phonon_activation_time_)
-    , unnamed_activation_time_(parent.unnamed_activation_time_)
+    , axion_activation_time_(parent.axion_activation_time_)
 #endif  //KTH_CURRENCY_BCH
 {}
 
@@ -1314,7 +1348,7 @@ chain_state::chain_state(
     // , great_wall_t great_wall_activation_time
     // , graviton_t graviton_activation_time
     , phonon_t phonon_activation_time
-    , unnamed_t unnamed_activation_time
+    , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
     : data_(std::move(values))
@@ -1326,7 +1360,7 @@ chain_state::chain_state(
         // , great_wall_activation_time
         // , graviton_activation_time
         , phonon_activation_time
-        , unnamed_activation_time
+        , axion_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_, forks_))
@@ -1336,7 +1370,7 @@ chain_state::chain_state(
     // , great_wall_activation_time_(great_wall_activation_time)
     // , graviton_activation_time_(graviton_activation_time)
     , phonon_activation_time_(phonon_activation_time)
-    , unnamed_activation_time_(unnamed_activation_time)
+    , axion_activation_time_(axion_activation_time)
 #endif  //KTH_CURRENCY_BCH
 {}
 
@@ -1391,8 +1425,8 @@ phonon_t chain_state::phonon_activation_time() const {
     return phonon_activation_time_;
 }
 
-unnamed_t chain_state::unnamed_activation_time() const {
-    return unnamed_activation_time_;
+axion_t chain_state::axion_activation_time() const {
+    return axion_activation_time_;
 }
 
 #endif  //KTH_CURRENCY_BCH

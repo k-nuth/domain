@@ -17,8 +17,7 @@
 #include <kth/infrastructure/config/checkpoint.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class block;
 class header;
@@ -134,7 +133,7 @@ public:
                 // , great_wall_t great_wall_activation_time
                 // , graviton_t graviton_activation_time
                 , phonon_t phonon_activation_time
-                , unnamed_t unnamed_activation_time
+                , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -167,7 +166,7 @@ public:
     phonon_t phonon_activation_time() const;
 
     [[nodiscard]] 
-    unnamed_t unnamed_activation_time() const;
+    axion_t axion_activation_time() const;
 
 #endif  //KTH_CURRENCY_BCH
 
@@ -216,7 +215,7 @@ public:
     bool is_phonon_enabled() const;
 
     [[nodiscard]] 
-    bool is_unnamed_enabled() const;
+    bool is_axion_enabled() const;
 #endif  //KTH_CURRENCY_BCH
 
 protected:
@@ -235,7 +234,7 @@ protected:
             // , great_wall_t great_wall_activation_time
             // , graviton_t graviton_activation_time
             , phonon_t phonon_activation_time
-            , unnamed_t unnamed_activation_time
+            , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -304,7 +303,7 @@ private:
     // bool is_phonon_enabled(size_t height, uint32_t forks);
 
     // static
-    // bool is_unnamed_enabled(size_t height, uint32_t forks);
+    // bool is_axion_enabled(size_t height, uint32_t forks);
 #endif // KTH_CURRENCY_BCH
     // ------------------------------------------------------------------------
 
@@ -376,11 +375,10 @@ private:
     // great_wall_t const great_wall_activation_time_;
     // graviton_t const graviton_activation_time_;
     phonon_t const phonon_activation_time_;
-    unnamed_t const unnamed_activation_time_;
+    axion_t const axion_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif
