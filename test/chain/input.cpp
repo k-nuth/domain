@@ -47,39 +47,39 @@ TEST_CASE("input  constructor 3  valid input  returns input initialized", "[inpu
     auto dup_script = script;
     input instance(std::move(dup_previous_output), std::move(dup_script), sequence);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(previous_output == instance.previous_output());
-    BOOST_REQUIRE(script == instance.script());
-    BOOST_REQUIRE_EQUAL(sequence, instance.sequence());
+    REQUIRE(instance.is_valid());
+    REQUIRE(previous_output == instance.previous_output());
+    REQUIRE(script == instance.script());
+    REQUIRE(sequence == instance.sequence());
 }
 
-BOOST_AUTO_TEST_CASE(input__constructor_4__valid_input__returns_input_initialized) {
+TEST_CASE("input  constructor 4  valid input  returns input initialized", "[input]") {
     input expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
+    REQUIRE(entity_from_data(expected, valid_raw_input));
 
     input instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(input__constructor_5__valid_input__returns_input_initialized) {
+TEST_CASE("input  constructor 5  valid input  returns input initialized", "[input]") {
     input expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
+    REQUIRE(entity_from_data(expected, valid_raw_input));
 
     input instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(input__from_data__insufficient_data__failure) {
+TEST_CASE("input  from data  insufficient data  failure", "[input]") {
     data_chunk data(2);
 
     input instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(input__from_data__valid_data__success) {
+TEST_CASE("input  from data  valid data  success", "[input]") {
     auto const junk = base16_literal("000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0");
 
     // data_chunk_stream_host host(junk);
