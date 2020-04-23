@@ -63,17 +63,17 @@ script_test_list const invalidated_bip65_scripts{
 //------------------------------------------------------------------------------
 
 // These are valid prior to and after BIP112 activation.
-const script_test_list valid_bip112_scripts{
+script_test_list const valid_bip112_scripts{
     {"[0100408000]", "checksequenceverify", "csv stack disabled, true"},
     {"[0100400000]", "checksequenceverify", "csv stack enabled, satisfied locktime", 0x00400001, 0, 2}};
 
 // These are invalid prior to and after BIP112 activation.
-const script_test_list invalid_bip112_scripts{
+script_test_list const invalid_bip112_scripts{
     {"", "nop3", "nop3 empty stack"},
     {"", "checksequenceverify", "csv empty stack"}};
 
 // These are valid prior to BIP112 activation and invalid after.
-const script_test_list invalidated_bip112_scripts{
+script_test_list const invalidated_bip112_scripts{
     {"", "checksequenceverify 42", "csv stack empty"},
     {"-42", "checksequenceverify", "csv stack top negative"},
     {"[0100000000]", "checksequenceverify", "csv stack enabled, tx version < 2", 0x00000001, 0, 1},
