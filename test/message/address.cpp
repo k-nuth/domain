@@ -48,11 +48,11 @@ TEST_CASE("address  constructor 2  always  equals params", "[address]") {
 
     address instance(addresses);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
+TEST_CASE("address  constructor 3  always  equals params", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
