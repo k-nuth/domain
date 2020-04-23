@@ -41,10 +41,10 @@ TEST_CASE("points value  value  multiple point values remove last  expected", "[
             {{null_hash, 0u}, 42u},
         }};
     instance.points.pop_back();
-    BOOST_REQUIRE_EQUAL(instance.value(), expected);
+    REQUIRE(instance.value() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(points_value__value__multiple_point_values_clear__zero) {
+TEST_CASE("points value  value  multiple point values clear  zero", "[points value]") {
     points_value instance{
         {
             {{null_hash, 0u}, 10u},
