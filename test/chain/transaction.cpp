@@ -714,10 +714,10 @@ TEST_CASE("chain transaction  total output value  non empty outputs  returns sum
     outputs.emplace_back();
     outputs.back().set_value(34);
     instance.set_outputs(std::move(outputs));
-    BOOST_REQUIRE_EQUAL(instance.total_output_value(), 1234u);
+    REQUIRE(instance.total_output_value() == 1234u);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__fees__nonempty__returns_outputs_minus_inputs) {
+TEST_CASE("chain transaction  fees  nonempty  returns outputs minus inputs", "[chain transaction]") {
     chain::transaction instance;
     auto& inputs = instance.inputs();
     inputs.emplace_back();
