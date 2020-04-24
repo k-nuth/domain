@@ -96,37 +96,37 @@ TEST_CASE("ping  factory from data 3  minimum version round trip  zero nonce", "
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::ping>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
+    REQUIRE(result.is_valid());
+    REQUIRE(result.nonce() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(ping__from_data_1__maximum_version__success_expected_nonce) {
+TEST_CASE("ping  from data 1  maximum version  success expected nonce", "[ping]") {
     static const message::ping expected{
         213153u};
 
     // This serializes the nonce.
     auto const data = expected.to_data(message::version::level::bip31);
-    BOOST_REQUIRE_EQUAL(data.size(), 8u);
+    REQUIRE(data.size() == 8u);
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
     message::ping instance;
-    BOOST_REQUIRE(entity_from_data(instance, message::ping::version_maximum, data));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(entity_from_data(instance, message::ping::version_maximum, data));
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__bip31_version_round_trip__expected_nonce) {
+TEST_CASE("ping  factory from data 1  bip31 version round trip  expected nonce", "[ping]") {
     static const message::ping expected{
         16545612u};
 
     static auto const version = message::version::level::bip31;
     auto const data = expected.to_data(version);
     auto const result = create<message::ping>(version, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__bip31_version_round_trip__expected_nonce) {
+TEST_CASE("ping  factory from data 2  bip31 version round trip  expected nonce", "[ping]") {
     const message::ping expected{
         5087222u};
 
