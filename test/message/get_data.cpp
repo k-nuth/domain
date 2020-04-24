@@ -122,13 +122,13 @@ TEST_CASE("get data  factory from data 1  valid input  success", "[get data]") {
     static auto const version = version::level::maximum;
     auto const data = expected.to_data(version);
     auto const result = create<get_data>(version, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(get_data__factory_from_data_2__valid_input__success) {
+TEST_CASE("get data  factory from data 2  valid input  success", "[get data]") {
     static const get_data expected{
         {{inventory_vector::type_id::transaction,
           hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")}}};
