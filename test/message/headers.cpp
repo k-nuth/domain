@@ -55,11 +55,11 @@ TEST_CASE("headers  constructor 3  always  equals params", "[headers]") {
             34564u)};
 
     headers instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.elements().size(), 2u);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.elements().size() == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_4__always__equals_params) {
+TEST_CASE("headers  constructor 4  always  equals params", "[headers]") {
     headers instance(
         {header(
              10u,
