@@ -104,10 +104,10 @@ TEST_CASE("reject  from data  insufficient version  failure", "[reject]") {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::reject::version_minimum - 1, raw));
+    REQUIRE( ! entity_from_data(instance, message::reject::version_minimum - 1, raw));
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_malformed__success) {
+TEST_CASE("reject  from data  code malformed  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::malformed,
         message::block::command,
