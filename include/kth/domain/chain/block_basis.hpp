@@ -143,7 +143,7 @@ public:
 
     void set_header(chain::header const& value);
 
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     transaction::list& transactions();
 
     [[nodiscard]]
