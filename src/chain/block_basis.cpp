@@ -799,19 +799,16 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
     return std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool is_segregated(block_basis const& blk) {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    (void)blk;
-    return false;
-#else
     auto const segregated = [](transaction const& tx) {
         return tx.is_segregated();
     };
 
     // If no block tx has witness data the commitment is optional (bip141).
     return std::any_of(blk.transactions().begin(), blk.transactions().end(), segregated);
-#endif // KTH_CURRENCY_BCH
 }
+#endif // defined(KTH_SEGWIT_ENABLED)
 
 // Full block serialization is always canonical encoding.
 size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
