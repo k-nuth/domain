@@ -47,17 +47,17 @@ TEST_CASE("message transaction  constructor 3  always  equals param", "[message 
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     transaction alpha(tx);
-    BOOST_REQUIRE(alpha.is_valid());
-    BOOST_REQUIRE(alpha == tx);
+    REQUIRE(alpha.is_valid());
+    REQUIRE(alpha == tx);
 
     transaction beta(alpha);
-    BOOST_REQUIRE(beta.is_valid());
-    BOOST_REQUIRE(beta == alpha);
+    REQUIRE(beta.is_valid());
+    REQUIRE(beta == alpha);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_4__always__equals_equivalent_tx) {
+TEST_CASE("message transaction  constructor 4  always  equals equivalent tx", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
