@@ -103,19 +103,19 @@ TEST_CASE("version  constructor 2  always  equals params", "[version]") {
 
     message::version instance(value, services, timestamp, receiver, sender, nonce, agent, height, relay);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(value, instance.value());
-    BOOST_REQUIRE_EQUAL(services, instance.services());
-    BOOST_REQUIRE_EQUAL(timestamp, instance.timestamp());
-    BOOST_REQUIRE(receiver == instance.address_receiver());
-    BOOST_REQUIRE(sender == instance.address_sender());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
-    BOOST_REQUIRE_EQUAL(agent, instance.user_agent());
-    BOOST_REQUIRE_EQUAL(height, instance.start_height());
-    BOOST_REQUIRE_EQUAL(relay, instance.relay());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance.value());
+    REQUIRE(services == instance.services());
+    REQUIRE(timestamp == instance.timestamp());
+    REQUIRE(receiver == instance.address_receiver());
+    REQUIRE(sender == instance.address_sender());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(agent == instance.user_agent());
+    REQUIRE(height == instance.start_height());
+    REQUIRE(relay == instance.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__constructor_3__always__equals_params) {
+TEST_CASE("version  constructor 3  always  equals params", "[version]") {
     uint32_t value = 45624u;
     uint64_t services = 263546u;
     uint64_t timestamp = 7668534u;
