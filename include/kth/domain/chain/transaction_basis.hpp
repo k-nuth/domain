@@ -241,7 +241,7 @@ public:
             detail::write(sink, outputs_, wire, witness_val(witness));
 
 #if defined(KTH_SEGWIT_ENABLED)
-            if (witness_val(witness)) {
+            if (witness) {
                 detail::write_witnesses(sink, inputs_);
             }
 #endif //defined(KTH_SEGWIT_ENABLED)
