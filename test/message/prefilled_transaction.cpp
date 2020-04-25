@@ -87,11 +87,11 @@ TEST_CASE("prefilled transaction  factory from data 2  valid input  success", "[
     auto const result = create<message::prefilled_transaction>(
         message::version::level::minimum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_3__valid_input__success) {
+TEST_CASE("prefilled transaction  factory from data 3  valid input  success", "[prefilled transaction]") {
     const message::prefilled_transaction expected(
         16,
         chain::transaction{
