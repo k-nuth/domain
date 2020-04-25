@@ -122,68 +122,68 @@ TEST_CASE("bitcoin uri  all setters  complex uri  expected encoding", "[bitcoin 
     uri.set_message("hello bitcoin");
     uri.set_r("http://example.com?purchase=shoes&user=bob");
 
-    BOOST_REQUIRE_EQUAL(uri.encoded(),
-                        "bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD?"
-                        "amount=0.0012&"
-                        "label=%26%3D%0A&"
-                        "message=hello%20bitcoin&"
-                        "r=http://example.com?purchase%3Dshoes%26user%3Dbob");
+    REQUIRE(uri.encoded() ==
+                "bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD?"
+                "amount=0.0012&"
+                "label=%26%3D%0A&"
+                "message=hello%20bitcoin&"
+                "r=http://example.com?purchase%3Dshoes%26user%3Dbob");
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__set_parameter__amount_denormalized__normalized) {
+TEST_CASE("bitcoin uri  set parameter  amount denormalized  normalized", "[bitcoin uri]") {
     bitcoin_uri uri;
-    BOOST_REQUIRE(uri.set_parameter("amount", ".0012"));
-    BOOST_REQUIRE_EQUAL(uri.encoded(), "bitcoin:?amount=0.0012");
+    REQUIRE(uri.set_parameter("amount", ".0012"));
+    REQUIRE(uri.encoded() == "bitcoin:?amount=0.0012");
 }
 
 // Getters
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__amount__set__expected) {
-    BOOST_REQUIRE_EQUAL(bitcoin_uri("bitcoin:?amount=0.0012").amount(), 120000u);
+TEST_CASE("bitcoin uri  amount  set  expected", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcoin:?amount=0.0012").amount() == 120000u);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__label__escaped__expected) {
-    BOOST_REQUIRE_EQUAL(bitcoin_uri("bitcoin:?label=%26%3D%0A").label(), "&=\n");
+TEST_CASE("bitcoin uri  label  escaped  expected", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcoin:?label=%26%3D%0A").label() == "&=\n");
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__message__escaped__expected) {
-    BOOST_REQUIRE_EQUAL(bitcoin_uri("bitcoin:?message=hello%20bitcoin").message(), "hello bitcoin");
+TEST_CASE("bitcoin uri  message  escaped  expected", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcoin:?message=hello%20bitcoin").message() == "hello bitcoin");
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__r__escaped__expected) {
-    BOOST_REQUIRE_EQUAL(bitcoin_uri("bitcoin:?r=http://example.com?purchase%3Dshoes%26user%3Dbob").r(), "http://example.com?purchase=shoes&user=bob");
+TEST_CASE("bitcoin uri  r  escaped  expected", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcoin:?r=http://example.com?purchase%3Dshoes%26user%3Dbob").r() == "http://example.com?purchase=shoes&user=bob");
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__payment__valid__expected) {
+TEST_CASE("bitcoin uri  payment  valid  expected", "[bitcoin uri]") {
     auto const expected_payment = "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD";
     auto const expected_uri = std::string("bitcoin:") + expected_payment;
-    BOOST_REQUIRE_EQUAL(bitcoin_uri(expected_uri).payment().encoded(), expected_payment);
+    REQUIRE(bitcoin_uri(expected_uri).payment().encoded() == expected_payment);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__stealth__valid__expected) {
+TEST_CASE("bitcoin uri  stealth  valid  expected", "[bitcoin uri]") {
     auto const expected_stealth = "hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i";
     auto const expected_uri = std::string("bitcoin:") + expected_stealth;
-    BOOST_REQUIRE_EQUAL(bitcoin_uri(expected_uri).stealth().encoded(), expected_stealth);
+    REQUIRE(bitcoin_uri(expected_uri).stealth().encoded() == expected_stealth);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__address__payment__expected) {
+TEST_CASE("bitcoin uri  address  payment  expected", "[bitcoin uri]") {
     auto const expected_payment = "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD";
     auto const expected_uri = std::string("bitcoin:") + expected_payment;
-    BOOST_REQUIRE_EQUAL(bitcoin_uri(expected_uri).address(), expected_payment);
+    REQUIRE(bitcoin_uri(expected_uri).address() == expected_payment);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__address__stealth__expected) {
+TEST_CASE("bitcoin uri  address  stealth  expected", "[bitcoin uri]") {
     auto const expected_stealth = "hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i";
     auto const expected_uri = std::string("bitcoin:") + expected_stealth;
-    BOOST_REQUIRE_EQUAL(bitcoin_uri(expected_uri).address(), expected_stealth);
+    REQUIRE(bitcoin_uri(expected_uri).address() == expected_stealth);
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__parameter_amount__denormalized__normalized) {
-    BOOST_REQUIRE_EQUAL(bitcoin_uri("bitcoin:?amount=.0012").parameter("amount"), "0.0012");
+TEST_CASE("bitcoin uri  parameter amount  denormalized  normalized", "[bitcoin uri]") {
+    REQUIRE(bitcoin_uri("bitcoin:?amount=.0012").parameter("amount") == "0.0012");
 }
 
-BOOST_AUTO_TEST_CASE(bitcoin_uri__parameters_all__complex_uri__expected) {
+TEST_CASE("bitcoin uri  parameters all  complex uri  expected", "[bitcoin uri]") {
     bitcoin_uri uri(
         "bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD?"
         "amount=0.0012&"
