@@ -64,11 +64,11 @@ TEST_CASE("chain header  constructor 4  always  equals params", "[chain header]"
         68644u);
 
     chain::header instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_5__always__equals_params) {
+TEST_CASE("chain header  constructor 5  always  equals params", "[chain header]") {
     // This must be non-const.
     chain::header expected(
         10u,
