@@ -125,20 +125,20 @@ TEST_CASE("operation  from data  roundtrip push positive 1  success", "[operatio
 
     // This is read as an encoded operation, not as data.
     // Constructors read (unencoded) data and can select minimal encoding.
-    BOOST_REQUIRE(entity_from_data(instance, raw_operation));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(raw_operation == instance.to_data());
+    REQUIRE(entity_from_data(instance, raw_operation));
+    REQUIRE(instance.is_valid());
+    REQUIRE(raw_operation == instance.to_data());
 
     operation duplicate;
-    BOOST_REQUIRE(entity_from_data(duplicate,instance.to_data()));
-    BOOST_REQUIRE(instance == duplicate);
+    REQUIRE(entity_from_data(duplicate,instance.to_data()));
+    REQUIRE(instance == duplicate);
 
     // The code is the data for numeric push codes.
-    BOOST_REQUIRE(instance.code() == opcode::push_positive_1);
-    BOOST_REQUIRE(instance.data() == data_chunk{});
+    REQUIRE(instance.code() == opcode::push_positive_1);
+    REQUIRE(instance.data() == data_chunk{});
 }
 
-BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_positive_16__success) {
+TEST_CASE("operation  from data  roundtrip push positive 16  success", "[operation]") {
     static auto const op_96 = static_cast<uint8_t>(opcode::push_positive_16);
     auto const data1 = data_chunk{op_96};
     auto const raw_operation = data1;
