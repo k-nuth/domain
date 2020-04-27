@@ -116,126 +116,125 @@ TEST_CASE("get block transactions  factory from data 3  valid input  success", "
     auto const result = create<message::get_block_transactions>(
         message::version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) ==
                         result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_accessor_1__always__returns_initialized_value) {
+TEST_CASE("get block transactions  block hash accessor 1  always  returns initialized value", "[get block transactions]") {
     hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     message::get_block_transactions instance(hash, indexes);
-    BOOST_REQUIRE(hash == instance.block_hash());
+    REQUIRE(hash == instance.block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_accessor_2__always__returns_initialized_value) {
+TEST_CASE("get block transactions  block hash accessor 2  always  returns initialized value", "[get block transactions]") {
     hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     const message::get_block_transactions instance(hash, indexes);
-    BOOST_REQUIRE(hash == instance.block_hash());
+    REQUIRE(hash == instance.block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_setter_1__roundtrip__success) {
+TEST_CASE("get block transactions  block hash setter 1  roundtrip  success", "[get block transactions]") {
     hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::get_block_transactions instance;
-    BOOST_REQUIRE(hash != instance.block_hash());
+    REQUIRE(hash != instance.block_hash());
     instance.set_block_hash(hash);
-    BOOST_REQUIRE(hash == instance.block_hash());
+    REQUIRE(hash == instance.block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__block_hash_setter_2__roundtrip__success) {
+TEST_CASE("get block transactions  block hash setter 2  roundtrip  success", "[get block transactions]") {
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     auto dup = hash;
     message::get_block_transactions instance;
-    BOOST_REQUIRE(hash != instance.block_hash());
+    REQUIRE(hash != instance.block_hash());
     instance.set_block_hash(std::move(dup));
-    BOOST_REQUIRE(hash == instance.block_hash());
+    REQUIRE(hash == instance.block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_accessor_1__always__returns_initialized_value) {
+TEST_CASE("get block transactions  indexes accessor 1  always  returns initialized value", "[get block transactions]") {
     hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     message::get_block_transactions instance(hash, indexes);
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_accessor_2__always__returns_initialized_value) {
+TEST_CASE("get block transactions  indexes accessor 2  always  returns initialized value", "[get block transactions]") {
     hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     const message::get_block_transactions instance(hash, indexes);
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_setter_1__roundtrip__success) {
+TEST_CASE("get block transactions  indexes setter 1  roundtrip  success", "[get block transactions]") {
     const std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     message::get_block_transactions instance;
-    BOOST_REQUIRE(indexes != instance.indexes());
+    REQUIRE(indexes != instance.indexes());
     instance.set_indexes(indexes);
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__indexes_setter_2__roundtrip__success) {
+TEST_CASE("get block transactions  indexes setter 2  roundtrip  success", "[get block transactions]") {
     std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     auto dup = indexes;
     message::get_block_transactions instance;
-    BOOST_REQUIRE(indexes != instance.indexes());
+    REQUIRE(indexes != instance.indexes());
     instance.set_indexes(std::move(dup));
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("get block transactions  operator assign equals  always  matches equivalent", "[get block transactions]") {
     hash_digest const hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const std::vector<uint64_t> indexes = {1u, 3454u, 4234u, 75123u, 455323u};
     message::get_block_transactions value(hash, indexes);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::get_block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.block_hash());
-    BOOST_REQUIRE(indexes == instance.indexes());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.block_hash());
+    REQUIRE(indexes == instance.indexes());
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("get block transactions  operator boolean equals  duplicates  returns true", "[get block transactions]") {
     const message::get_block_transactions expected(
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         {1u, 3454u, 4234u, 75123u, 455323u});
 
     message::get_block_transactions instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("get block transactions  operator boolean equals  differs  returns false", "[get block transactions]") {
     const message::get_block_transactions expected(
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         {1u, 3454u, 4234u, 75123u, 455323u});
 
     message::get_block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("get block transactions  operator boolean not equals  duplicates  returns false", "[get block transactions]") {
     const message::get_block_transactions expected(
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         {1u, 3454u, 4234u, 75123u, 455323u});
 
     message::get_block_transactions instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_block_transactions__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("get block transactions  operator boolean not equals  differs  returns true", "[get block transactions]") {
     const message::get_block_transactions expected(
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
         {1u, 3454u, 4234u, 75123u, 455323u});
 
     message::get_block_transactions instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
