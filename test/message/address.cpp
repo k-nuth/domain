@@ -74,11 +74,11 @@ TEST_CASE("address  constructor 3  always  equals params", "[address]") {
 
     address instance(std::move(dup_addresses));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
+TEST_CASE("address  constructor 4  always  equals params", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
