@@ -60,13 +60,13 @@ TEST_CASE("block transactions  constructor 4  always  equals params", "[block tr
     message::block_transactions value(hash, transactions);
     message::block_transactions instance(value);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(hash == instance.block_hash());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(hash == instance.block_hash());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__constructor_5__always__equals_params) {
+TEST_CASE("block transactions  constructor 5  always  equals params", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
