@@ -111,12 +111,12 @@ TEST_CASE("heading  factory from data 2  valid input  success", "[heading]") {
     auto const data = expected.to_data();
     data_source istream(data);
     auto const result = create<heading>(istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == heading::satoshi_fixed_size());
 }
 
-BOOST_AUTO_TEST_CASE(heading__factory_from_data_3__valid_input__success) {
+TEST_CASE("heading  factory from data 3  valid input  success", "[heading]") {
     static const heading expected{
         1u,
         "bazbazbazbaz",
