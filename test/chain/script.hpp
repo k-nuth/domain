@@ -147,7 +147,7 @@ script_test_list const invalid_multisig_scripts{
 //------------------------------------------------------------------------------
 
 // These are always valid.
-const script_test_list valid_context_free_scripts{
+script_test_list const valid_context_free_scripts{
     {"", "depth 0 equal", "test the test: we should have an empty stack after scriptsig evaluation"},
     {"  ", "depth 0 equal", "and multiple spaces should not change that."},
     {"   ", "depth 0 equal", ""},
