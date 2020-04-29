@@ -78,20 +78,20 @@ TEST_CASE("block transactions  constructor 5  always  equals params", "[block tr
     message::block_transactions value(hash, transactions);
     message::block_transactions instance(std::move(value));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(hash == instance.block_hash());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(hash == instance.block_hash());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_bytes__failure) {
+TEST_CASE("block transactions  from data  insufficient bytes  failure", "[block transactions]") {
     data_chunk const raw{0xab, 0xcd};
     message::block_transactions instance{};
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::block_transactions::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_transaction_bytes__failure) {
+TEST_CASE("block transactions  from data  insufficient transaction bytes  failure", "[block transactions]") {
     data_chunk raw = to_chunk(base16_literal(
         "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a0"
         "20100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
