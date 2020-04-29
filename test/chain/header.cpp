@@ -79,20 +79,20 @@ TEST_CASE("chain header  constructor 5  always  equals params", "[chain header]"
         68644u);
 
     chain::header instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__from_data__insufficient_bytes__failure) {
+TEST_CASE("chain header  from data  insufficient bytes  failure", "[chain header]") {
     data_chunk data(10);
 
     chain::header header;
 
-    BOOST_REQUIRE(!entity_from_data(header, data));
-    BOOST_REQUIRE(!header.is_valid());
+    REQUIRE(!entity_from_data(header, data));
+    REQUIRE(!header.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input__success) {
+TEST_CASE("chain header  factory from data 1  valid input  success", "[chain header]") {
     chain::header expected{
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
