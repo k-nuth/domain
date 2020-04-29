@@ -403,7 +403,17 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     }
 
     auto mtp = median_time_past(values, 0);
+
     if (is_mtp_activated(mtp, to_underlying(phonon_activation_time))) {
+        //Note(Fernando): Move this to the next fork rules
+    //     flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
+    //     flags |= SCRIPT_REPORT_SIGCHECKS;
+    //     flags |= SCRIPT_ZERO_SIGOPS;
+        result.forks |= (rule_fork::bch_phonon & forks);
+    }
+
+
+    if (is_mtp_activated(mtp, to_underlying(axion_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
     //     flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
         result.forks |= (rule_fork::bch_replay_protection & forks);
