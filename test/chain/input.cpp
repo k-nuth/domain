@@ -251,92 +251,92 @@ TEST_CASE("input  previous output setter 2  roundtrip  success", "[input]") {
     auto dup_value = value;
 
     input instance;
-    BOOST_REQUIRE(value != instance.previous_output());
+    REQUIRE(value != instance.previous_output());
     instance.set_previous_output(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.previous_output());
+    REQUIRE(value == instance.previous_output());
     auto const& restricted = instance;
-    BOOST_REQUIRE(value == restricted.previous_output());
+    REQUIRE(value == restricted.previous_output());
 }
 
-BOOST_AUTO_TEST_CASE(input__script_setter_1__roundtrip__success) {
+TEST_CASE("input  script setter 1  roundtrip  success", "[input]") {
     script value;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(entity_from_data(value, data, false));
+    REQUIRE(entity_from_data(value, data, false));
 
     input instance;
-    BOOST_REQUIRE(value != instance.script());
+    REQUIRE(value != instance.script());
     instance.set_script(value);
-    BOOST_REQUIRE(value == instance.script());
+    REQUIRE(value == instance.script());
     auto const& restricted = instance;
-    BOOST_REQUIRE(value == restricted.script());
+    REQUIRE(value == restricted.script());
 }
 
-BOOST_AUTO_TEST_CASE(input__script_setter_2__roundtrip__success) {
+TEST_CASE("input  script setter 2  roundtrip  success", "[input]") {
     script value;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(entity_from_data(value, data, false));
+    REQUIRE(entity_from_data(value, data, false));
 
     auto dup_value = value;
     input instance;
-    BOOST_REQUIRE(value != instance.script());
+    REQUIRE(value != instance.script());
     instance.set_script(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.script());
+    REQUIRE(value == instance.script());
     auto const& restricted = instance;
-    BOOST_REQUIRE(value == restricted.script());
+    REQUIRE(value == restricted.script());
 }
 
-BOOST_AUTO_TEST_CASE(input__sequence__roundtrip__success) {
+TEST_CASE("input  sequence  roundtrip  success", "[input]") {
     uint32_t value = 1254u;
     input instance;
-    BOOST_REQUIRE(value != instance.sequence());
+    REQUIRE(value != instance.sequence());
     instance.set_sequence(value);
-    BOOST_REQUIRE_EQUAL(value, instance.sequence());
+    REQUIRE(value == instance.sequence());
 }
 
-BOOST_AUTO_TEST_CASE(input__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("input  operator assign equals 1  always  matches equivalent", "[input]") {
     input expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
+    REQUIRE(entity_from_data(expected, valid_raw_input));
     input instance;
     instance = create<input>(valid_raw_input);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(input__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("input  operator assign equals 2  always  matches equivalent", "[input]") {
     input expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
+    REQUIRE(entity_from_data(expected, valid_raw_input));
     input instance;
     instance = expected;
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(input__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("input  operator boolean equals  duplicates  returns true", "[input]") {
     input alpha;
     input beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_input));
-    BOOST_REQUIRE(alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_input));
+    REQUIRE(entity_from_data(beta, valid_raw_input));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(input__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("input  operator boolean equals  differs  returns false", "[input]") {
     input alpha;
     input beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
-    BOOST_REQUIRE_EQUAL(false, alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_input));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(input__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("input  operator boolean not equals  duplicates  returns false", "[input]") {
     input alpha;
     input beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_input));
-    BOOST_REQUIRE_EQUAL(false, alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_input));
+    REQUIRE(entity_from_data(beta, valid_raw_input));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(input__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("input  operator boolean not equals  differs  returns true", "[input]") {
     input alpha;
     input beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_input));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
