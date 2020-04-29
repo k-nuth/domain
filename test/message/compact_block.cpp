@@ -106,15 +106,15 @@ TEST_CASE("compact block  constructor 4  always  equals params", "[compact block
     const message::compact_block value(header, nonce, short_ids, transactions);
 
     message::compact_block instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__constructor_5__always__equals_params) {
+TEST_CASE("compact block  constructor 5  always  equals params", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
