@@ -155,13 +155,13 @@ TEST_CASE("alert  factory from data 2  roundtrip  success", "[alert]") {
     data_source istream(data);
     auto const result = create<message::alert>(message::version::level::minimum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success) {
+TEST_CASE("alert  factory from data 3  roundtrip  success", "[alert]") {
     const message::alert expected{
         {0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
         {0x04, 0xff, 0xab, 0xcd, 0xee}};
