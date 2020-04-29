@@ -273,7 +273,7 @@ public:
     
     void set_locktime(uint32_t value);
 
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     ins& inputs();
 
     [[nodiscard]]
