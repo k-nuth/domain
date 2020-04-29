@@ -84,7 +84,7 @@ TEST_CASE("sign transaction  test", "[transaction functions]") {
     data_chunk raw_data;
     kth::decode_base16(raw_data, TX_ENCODE);
     entity_from_data(tx, raw_data);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(tx.to_data()), TX_ENCODE);
+    REQUIRE(kth::encode_base16(tx.to_data()) == TX_ENCODE);
     // Amount
     uint64_t const amount = 200000000;
     // Index
