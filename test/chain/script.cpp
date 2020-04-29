@@ -166,93 +166,93 @@ TEST_CASE("script from data  to data weird  roundtrips", "[script]") {
         "74b1d185dbf5b4db4ddb0642848868685174519c6351670068"));
 
     script weird;
-    BOOST_REQUIRE(entity_from_data(weird, weird_raw_script, false));
+    REQUIRE(entity_from_data(weird, weird_raw_script, false));
 
     auto const roundtrip_result = weird.to_data(false);
-    BOOST_REQUIRE(roundtrip_result == weird_raw_script);
+    REQUIRE(roundtrip_result == weird_raw_script);
 }
 
-BOOST_AUTO_TEST_CASE(script__factory_from_data_chunk_test) {
+TEST_CASE("script factory from data chunk test", "[script]") {
     auto const raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     auto const instance = create<script>(raw, false);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(script__factory_from_data_stream_test) {
+TEST_CASE("script factory from data stream test", "[script]") {
     auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     data_source istream(raw);
     auto instance = create<script>(istream, false);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(script__factory_from_data_reader_test) {
+TEST_CASE("script factory from data reader test", "[script]") {
     auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     data_source istream(raw);
     istream_reader source(istream);
     auto const instance = create<script>(source, false);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__first_byte_invalid_wire_code__success) {
+TEST_CASE("script from data  first byte invalid wire code  success", "[script]") {
     auto const raw = to_chunk(base16_literal(
         "bb566a54e38193e381aee4b896e7958ce381afe496e4babae381abe38288e381"
         "a3e381a6e7ac91e9a194e38292e5a5aae3828fe3828ce3828be7bea9e58b99e3"
         "8292e8a8ade38191e381a6e381afe38184e381aae38184"));
 
     script instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw, false));
+    REQUIRE(entity_from_data(instance, raw, false));
 }
 
-BOOST_AUTO_TEST_CASE(script__from_data__internal_invalid_wire_code__success) {
+TEST_CASE("script from data  internal invalid wire code  success", "[script]") {
     auto const raw = to_chunk(base16_literal(
         "566a54e38193e381aee4b896e7958ce381afe4bb96e4babae381abe38288e381"
         "a3e381a6e7ac91e9a194e38292e5a5aae3828fe3828ce3828be7bea9e58b99e3"
         "8292e8a8ade38191e381a6e381afe38184e381aae38184"));
 
     script instance;
-    BOOST_REQUIRE(entity_from_data(instance, raw, false));
+    REQUIRE(entity_from_data(instance, raw, false));
 }
 
-BOOST_AUTO_TEST_CASE(script__from_string__empty__success) {
+TEST_CASE("script from string  empty  success", "[script]") {
     script instance;
-    BOOST_REQUIRE(instance.from_string(""));
-    BOOST_REQUIRE(instance.operations().empty());
+    REQUIRE(instance.from_string(""));
+    REQUIRE(instance.operations().empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__from_string__two_of_three_multisig__success) {
+TEST_CASE("script from string  two of three multisig  success", "[script]") {
     script instance;
-    BOOST_REQUIRE(instance.from_string(SCRIPT_2_OF_3_MULTISIG));
+    REQUIRE(instance.from_string(SCRIPT_2_OF_3_MULTISIG));
     auto const& ops = instance.operations();
-    BOOST_REQUIRE_EQUAL(ops.size(), 6u);
-    BOOST_REQUIRE(ops[0] == opcode::push_positive_2);
-    BOOST_REQUIRE(ops[1].to_string(rule_fork::no_rules) == "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864]");
-    BOOST_REQUIRE(ops[2].to_string(rule_fork::no_rules) == "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c]");
-    BOOST_REQUIRE(ops[3].to_string(rule_fork::no_rules) == "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934]");
-    BOOST_REQUIRE(ops[4] == opcode::push_positive_3);
-    BOOST_REQUIRE(ops[5] == opcode::checkmultisig);
+    REQUIRE(ops.size() == 6u);
+    REQUIRE(ops[0] == opcode::push_positive_2);
+    REQUIRE(ops[1].to_string(rule_fork::no_rules) == "[03dcfd9e580de35d8c2060d76dbf9e5561fe20febd2e64380e860a4d59f15ac864]");
+    REQUIRE(ops[2].to_string(rule_fork::no_rules) == "[02440e0304bf8d32b2012994393c6a477acf238dd6adb4c3cef5bfa72f30c9861c]");
+    REQUIRE(ops[3].to_string(rule_fork::no_rules) == "[03624505c6cc3967352cce480d8550490dd68519cd019066a4c302fdfb7d1c9934]");
+    REQUIRE(ops[4] == opcode::push_positive_3);
+    REQUIRE(ops[5] == opcode::checkmultisig);
 }
 
-BOOST_AUTO_TEST_CASE(script__empty__default__true) {
+TEST_CASE("script empty  default  true", "[script]") {
     script instance;
-    BOOST_REQUIRE(instance.empty());
+    REQUIRE(instance.empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__empty__empty_operations__true) {
+TEST_CASE("script empty  empty operations  true", "[script]") {
     script instance(operation::list{});
-    BOOST_REQUIRE(instance.empty());
+    REQUIRE(instance.empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__empty__non_empty__false) {
+TEST_CASE("script empty  non empty  false", "[script]") {
     script instance(script::to_null_data_pattern(data_chunk{42u}));
-    BOOST_REQUIRE(!instance.empty());
+    REQUIRE(!instance.empty());
 }
 
-BOOST_AUTO_TEST_CASE(script__clear__non_empty__empty) {
+TEST_CASE("script clear  non empty  empty", "[script]") {
     script instance(script::to_null_data_pattern(data_chunk{42u}));
-    BOOST_REQUIRE(!instance.empty());
+    REQUIRE(!instance.empty());
 
     instance.clear();
-    BOOST_REQUIRE(instance.empty());
+    REQUIRE(instance.empty());
 }
 
 // Pattern matching tests.
