@@ -146,153 +146,153 @@ TEST_CASE("output point  factory from data 3  roundtrip  success", "[output poin
     istream_reader source(istream);
     auto point = create<chain::output_point>(source);
 
-    BOOST_REQUIRE(point.is_valid());
-    BOOST_REQUIRE_EQUAL(encode_hash(point.hash()), "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
-    BOOST_REQUIRE(point.index() == 0);
+    REQUIRE(point.is_valid());
+    REQUIRE(encode_hash(point.hash()) == "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
+    REQUIRE(point.index() == 0);
 
     data_chunk output = point.to_data();
-    BOOST_REQUIRE(output == data);
+    REQUIRE(output == data);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_coinbase_prevout__returns_true) {
+TEST_CASE("output point  is mature  mature coinbase prevout  returns true", "[output point]") {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 50u;
     instance.validation.coinbase = true;
-    BOOST_REQUIRE(!instance.is_null());
-    BOOST_REQUIRE(instance.is_mature(target_height));
+    REQUIRE(!instance.is_null());
+    REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout__returns_false) {
+TEST_CASE("output point  is mature  immature coinbase prevout  returns false", "[output point]") {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 100u;
     instance.validation.coinbase = true;
-    BOOST_REQUIRE(!instance.is_null());
-    BOOST_REQUIRE(!instance.is_mature(target_height));
+    REQUIRE(!instance.is_null());
+    REQUIRE(!instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_coinbase_prevout_null_input__returns_true) {
+TEST_CASE("output point  is mature  immature coinbase prevout null input  returns true", "[output point]") {
     size_t target_height = 162u;
     chain::output_point instance(null_hash, chain::point::null_index);
     instance.validation.height = 100u;
     instance.validation.coinbase = true;
-    BOOST_REQUIRE(instance.is_null());
-    BOOST_REQUIRE(instance.is_mature(target_height));
+    REQUIRE(instance.is_null());
+    REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__mature_non_coinbase_prevout__returns_true) {
+TEST_CASE("output point  is mature  mature non coinbase prevout  returns true", "[output point]") {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 50u;
     instance.validation.coinbase = false;
-    BOOST_REQUIRE(!instance.is_null());
-    BOOST_REQUIRE(instance.is_mature(target_height));
+    REQUIRE(!instance.is_null());
+    REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_non_coinbase_prevout__returns_true) {
+TEST_CASE("output point  is mature  immature non coinbase prevout  returns true", "[output point]") {
     size_t target_height = 162u;
     chain::output_point instance(hash1, 42);
     instance.validation.height = 100u;
     instance.validation.coinbase = false;
-    BOOST_REQUIRE(!instance.is_null());
-    BOOST_REQUIRE(instance.is_mature(target_height));
+    REQUIRE(!instance.is_null());
+    REQUIRE(instance.is_mature(target_height));
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("output point  operator assign equals 1  always  matches equivalent", "[output point]") {
     chain::output_point expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
+    REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     chain::output_point value;
-    BOOST_REQUIRE(entity_from_data(value, valid_raw_output_point));
+    REQUIRE(entity_from_data(value, valid_raw_output_point));
     instance = std::move(value);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("output point  operator assign equals 2  always  matches equivalent", "[output point]") {
     chain::output_point expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
+    REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     instance = expected;
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_3__always__matches_equivalent) {
+TEST_CASE("output point  operator assign equals 3  always  matches equivalent", "[output point]") {
     chain::point expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
+    REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     chain::point value;
-    BOOST_REQUIRE(entity_from_data(value, valid_raw_output_point));
+    REQUIRE(entity_from_data(value, valid_raw_output_point));
     instance = std::move(value);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equivalent) {
+TEST_CASE("output point  operator assign equals 4  always  matches equivalent", "[output point]") {
     chain::point expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
+    REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     instance = expected;
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__duplicates__returns_true) {
+TEST_CASE("output point  operator boolean equals 1  duplicates  returns true", "[output point]") {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
-    BOOST_REQUIRE(alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(entity_from_data(beta, valid_raw_output_point));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__differs__returns_false) {
+TEST_CASE("output point  operator boolean equals 1  differs  returns false", "[output point]") {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE_EQUAL(false, alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__duplicates__returns_true) {
+TEST_CASE("output point  operator boolean equals 2  duplicates  returns true", "[output point]") {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
-    BOOST_REQUIRE(alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(entity_from_data(beta, valid_raw_output_point));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__differs__returns_false) {
+TEST_CASE("output point  operator boolean equals 2  differs  returns false", "[output point]") {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE_EQUAL(false, alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__duplicates__returns_false) {
+TEST_CASE("output point  operator boolean not equals 1  duplicates  returns false", "[output point]") {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
-    BOOST_REQUIRE_EQUAL(false, alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(entity_from_data(beta, valid_raw_output_point));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__differs__returns_true) {
+TEST_CASE("output point  operator boolean not equals 1  differs  returns true", "[output point]") {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__duplicates__returns_false) {
+TEST_CASE("output point  operator boolean not equals 2  duplicates  returns false", "[output point]") {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
-    BOOST_REQUIRE_EQUAL(false, alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(entity_from_data(beta, valid_raw_output_point));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__differs__returns_true) {
+TEST_CASE("output point  operator boolean not equals 2  differs  returns true", "[output point]") {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
