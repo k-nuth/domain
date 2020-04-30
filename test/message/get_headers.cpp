@@ -69,20 +69,20 @@ TEST_CASE("get headers  constructor 5  always  equals params", "[get headers]") 
 
     message::get_headers expected(starts, stop);
     message::get_headers instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__from_data__insufficient_bytes__failure) {
+TEST_CASE("get headers  from data  insufficient bytes  failure", "[get headers]") {
     data_chunk const raw{0xab, 0xcd};
     message::get_headers instance;
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::get_headers::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__from_data__insufficient_version__failure) {
+TEST_CASE("get headers  from data  insufficient version  failure", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
