@@ -147,55 +147,55 @@ TEST_CASE("ping  factory from data 3  bip31 version round trip  expected nonce",
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::ping>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__nonce_accessor__always__returns_initialized_value) {
+TEST_CASE("ping  nonce accessor  always  returns initialized value", "[ping]") {
     uint64_t value = 43564u;
     message::ping instance(value);
-    BOOST_REQUIRE_EQUAL(value, instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(ping__nonce_setter__roundtrip__success) {
+TEST_CASE("ping  nonce setter  roundtrip  success", "[ping]") {
     uint64_t value = 43564u;
     message::ping instance;
-    BOOST_REQUIRE(value != instance.nonce());
+    REQUIRE(value != instance.nonce());
     instance.set_nonce(value);
-    BOOST_REQUIRE_EQUAL(value, instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("ping  operator assign equals  always  matches equivalent", "[ping]") {
     message::ping value(356234u);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::ping instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("ping  operator boolean equals  duplicates  returns true", "[ping]") {
     const message::ping expected(4543234u);
     message::ping instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("ping  operator boolean equals  differs  returns false", "[ping]") {
     const message::ping expected(547553u);
     message::ping instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("ping  operator boolean not equals  duplicates  returns false", "[ping]") {
     const message::ping expected(653786u);
     message::ping instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("ping  operator boolean not equals  differs  returns true", "[ping]") {
     const message::ping expected(89764u);
     message::ping instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
