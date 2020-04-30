@@ -78,11 +78,11 @@ TEST_CASE("merkle block  constructor 4  always  equals params", "[merkle block]"
         {0xae, 0x56, 0x0f});
 
     message::merkle_block instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__constructor_5__always__equals_params) {
+TEST_CASE("merkle block  constructor 5  always  equals params", "[merkle block]") {
     chain::header const header(
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
