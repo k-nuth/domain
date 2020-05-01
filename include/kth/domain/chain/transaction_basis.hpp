@@ -281,8 +281,8 @@ public:
 
     void set_inputs(const ins& value);
     void set_inputs(ins&& value);
-
-    [[deprecated]] // unsafe
+    
+    // [[deprecated]] // unsafe
     outs& outputs();
     
     [[nodiscard]]
