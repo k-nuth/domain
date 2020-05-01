@@ -206,17 +206,17 @@ TEST_CASE("alert payload  factory from data 1  wiki sample test  success", "[ale
     auto const result = create<message::alert_payload>(
         message::version::level::minimum, raw);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(raw.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(raw.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(result == expected);
 
     auto const data = expected.to_data(message::version::level::minimum);
 
-    BOOST_REQUIRE_EQUAL(raw.size(), data.size());
-    BOOST_REQUIRE_EQUAL(data.size(), expected.serialized_size(message::version::level::minimum));
+    REQUIRE(raw.size() == data.size());
+    REQUIRE(data.size() == expected.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__roundtrip__success) {
+TEST_CASE("alert payload  factory from data 1  roundtrip  success", "[alert payload]") {
     message::alert_payload expected{
         5,
         105169,
