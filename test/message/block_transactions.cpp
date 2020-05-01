@@ -120,11 +120,10 @@ TEST_CASE("block transactions  from data  insufficient transaction bytes  failur
 
     message::block_transactions instance{};
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
-                                   message::block_transactions::version_minimum, raw));
+    REQUIRE( ! entity_from_data(instance, message::block_transactions::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_version__failure) {
+TEST_CASE("block transactions  from data  insufficient version  failure", "[block transactions]") {
     data_chunk raw = to_chunk(base16_literal(
         "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a0"
         "20100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
