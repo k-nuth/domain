@@ -5,7 +5,7 @@
 #ifndef KTH_KEOKEN_UTILITY_HPP_
 #define KTH_KEOKEN_UTILITY_HPP_
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -37,7 +37,7 @@ inline std::string read_null_terminated_string_unlimited(R& source) {
 }
 
 template <typename R, KTH_IS_READER(R)>
-inline boost::optional<std::string> read_null_terminated_string(R& source, size_t max) {
+inline std::optional<std::string> read_null_terminated_string(R& source, size_t max) {
     if (max == 0) {
         return boost::none;
     }

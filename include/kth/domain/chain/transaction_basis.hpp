@@ -9,10 +9,9 @@
 #include <cstdint>
 #include <istream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/input.hpp>

@@ -9,12 +9,11 @@
 #include <cstdint>
 #include <limits>
 #include <numeric>
+#include <optional>
 #include <sstream>
 #include <type_traits>
 #include <utility>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/input.hpp>

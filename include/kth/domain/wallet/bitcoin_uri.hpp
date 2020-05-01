@@ -8,9 +8,8 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
+#include <optional>
 #include <string>
-
-#include <boost/optional.hpp>
 
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/payment_address.hpp>

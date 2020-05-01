@@ -4,8 +4,10 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <optional>
+
 #include <kth/domain.hpp>
-#include <boost/optional.hpp>
+
 #include <boost/utility/in_place_factory.hpp>
 
 using namespace bc;
@@ -70,9 +72,9 @@ struct custom_reader
     std::string mypath;
 
     // Use optionals when there is a semantic distinction between no value and default value.
-    boost::optional<std::string> myfragment;
-    boost::optional<std::string> myparam1;
-    boost::optional<std::string> myparam2;
+    std::optional<std::string> myfragment;
+    std::optional<std::string> myparam1;
+    std::optional<std::string> myparam2;
 
 private:
     bool strict_;

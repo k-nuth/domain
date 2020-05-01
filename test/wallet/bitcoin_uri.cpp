@@ -4,8 +4,9 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <optional>
+
 #include <kth/domain.hpp>
-#include <boost/optional.hpp>
 
 using namespace bc;
 using namespace bc::wallet;

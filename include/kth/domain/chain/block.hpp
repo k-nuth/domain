@@ -9,10 +9,9 @@
 #include <cstdint>
 #include <istream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 #include <kth/domain/chain/block_basis.hpp>
 #include <kth/domain/chain/chain_state.hpp>
@@ -206,10 +205,10 @@ public:
 private:
 
     // These share a mutext as they are not expected to contend.
-    mutable boost::optional<bool> segregated_;
-    mutable boost::optional<size_t> total_inputs_;
-    mutable boost::optional<size_t> base_size_;
-    mutable boost::optional<size_t> total_size_;
+    mutable std::optional<bool> segregated_;
+    mutable std::optional<size_t> total_inputs_;
+    mutable std::optional<size_t> base_size_;
+    mutable std::optional<size_t> total_size_;
     mutable upgrade_mutex mutex_;
 };
 
