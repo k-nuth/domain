@@ -39,7 +39,7 @@ inline std::string read_null_terminated_string_unlimited(R& source) {
 template <typename R, KTH_IS_READER(R)>
 inline std::optional<std::string> read_null_terminated_string(R& source, size_t max) {
     if (max == 0) {
-        return boost::none;
+        return std::nullopt;
     }
 
     std::string res;
@@ -48,12 +48,12 @@ inline std::optional<std::string> read_null_terminated_string(R& source, size_t 
     while (source && b != 0) {
         res.push_back(b);
         if (res.size() >= max) {
-            return boost::none;
+            return std::nullopt;
         }
         b = source.read_byte();
     }
 
-    return source ? boost::make_optional(res) : boost::none;
+    return source ? boost::make_optional(res) : std::nullopt;
 }
 
 }  // namespace keoken

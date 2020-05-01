@@ -466,7 +466,7 @@ size_t block_basis::signature_operations(bool bip16, bool bip141) const {
 //     // Critical Section
 //     mutex_.lock_upgrade();
 
-//     if (total_inputs_ != boost::none) {
+//     if (total_inputs_ != std::nullopt) {
 //         value = total_inputs_.get();
 //         mutex_.unlock_upgrade();
 //         //---------------------------------------------------------------------
@@ -703,7 +703,7 @@ bool block_basis::is_valid_witness_commitment() const {
 //     // Critical Section
 //     mutex_.lock_upgrade();
 
-//     if (segregated_ != boost::none) {
+//     if (segregated_ != std::nullopt) {
 //         value = segregated_.get();
 //         mutex_.unlock_upgrade();
 //         //---------------------------------------------------------------------
