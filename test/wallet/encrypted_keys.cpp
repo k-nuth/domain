@@ -172,7 +172,7 @@ TEST_CASE("encrypted  encrypt private  vector 3 compressed  expected", "[encrypt
 }
 
 // #3 from: github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_unicode__expected) {
+TEST_CASE("encrypted  encrypt private  vector unicode  expected", "[encrypted  encrypt private]") {
     auto compression = false;
     uint8_t const version = 0x00;
     auto const encoded_password = base16_literal("cf92cc8100f0909080f09f92a9");
