@@ -88,11 +88,11 @@ TEST_CASE("message header  constructor 6  always  equals params", "[message head
         68644u);
 
     message::header instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_7__always__equals_params) {
+TEST_CASE("message header  constructor 7  always  equals params", "[message header]") {
     message::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
