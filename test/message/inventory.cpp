@@ -152,116 +152,115 @@ TEST_CASE("inventory  factory from data 3  valid input  success", "[inventory]")
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<inventory>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(inventory__inventories_accessor_1__always__returns_initialized_value) {
+TEST_CASE("inventory  inventories accessor 1  always  returns initialized value", "[inventory]") {
     const message::inventory_vector::list values =
         {
             message::inventory_vector(message::inventory_vector::type_id::error,
                                       hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))};
 
     message::inventory instance(values);
-    BOOST_REQUIRE(values == instance.inventories());
+    REQUIRE(values == instance.inventories());
 }
 
-BOOST_AUTO_TEST_CASE(inventory__inventories_accessor_2__always__returns_initialized_value) {
+TEST_CASE("inventory  inventories accessor 2  always  returns initialized value", "[inventory]") {
     const message::inventory_vector::list values =
         {
             message::inventory_vector(message::inventory_vector::type_id::error,
                                       hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))};
 
     const message::inventory instance(values);
-    BOOST_REQUIRE(values == instance.inventories());
+    REQUIRE(values == instance.inventories());
 }
 
-BOOST_AUTO_TEST_CASE(inventory__inventories_setter_1__roundtrip__success) {
+TEST_CASE("inventory  inventories setter 1  roundtrip  success", "[inventory]") {
     const message::inventory_vector::list values =
         {
             message::inventory_vector(message::inventory_vector::type_id::error,
                                       hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))};
 
     message::inventory instance;
-    BOOST_REQUIRE(values != instance.inventories());
+    REQUIRE(values != instance.inventories());
     instance.set_inventories(values);
-    BOOST_REQUIRE(values == instance.inventories());
+    REQUIRE(values == instance.inventories());
 }
 
-BOOST_AUTO_TEST_CASE(inventory__inventories_setter_2__roundtrip__success) {
+TEST_CASE("inventory  inventories setter 2  roundtrip  success", "[inventory]") {
     message::inventory_vector::list values =
         {
             message::inventory_vector(message::inventory_vector::type_id::error,
                                       hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))};
 
     message::inventory instance;
-    BOOST_REQUIRE_EQUAL(0u, instance.inventories().size());
+    REQUIRE(0u == instance.inventories().size());
     instance.set_inventories(std::move(values));
-    BOOST_REQUIRE_EQUAL(1u, instance.inventories().size());
+    REQUIRE(1u == instance.inventories().size());
 }
 
-BOOST_AUTO_TEST_CASE(inventory__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("inventory  operator assign equals  always  matches equivalent", "[inventory]") {
     const message::inventory_vector::list elements =
         {
             message::inventory_vector(message::inventory_vector::type_id::error,
                                       hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))};
 
     message::inventory instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = message::inventory(elements);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(elements == instance.inventories());
+    REQUIRE(instance.is_valid());
+    REQUIRE(elements == instance.inventories());
 }
 
-BOOST_AUTO_TEST_CASE(inventory__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("inventory  operator boolean equals  duplicates  returns true", "[inventory]") {
     const message::inventory expected(
         {message::inventory_vector(message::inventory_vector::type_id::error,
                                    hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))});
 
     message::inventory instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("inventory  operator boolean equals  differs  returns false", "[inventory]") {
     const message::inventory expected(
         {message::inventory_vector(message::inventory_vector::type_id::error,
                                    hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))});
 
     message::inventory instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("inventory  operator boolean not equals  duplicates  returns false", "[inventory]") {
     const message::inventory expected(
         {message::inventory_vector(message::inventory_vector::type_id::error,
                                    hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))});
 
     message::inventory instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("inventory  operator boolean not equals  differs  returns true", "[inventory]") {
     const message::inventory expected(
         {message::inventory_vector(message::inventory_vector::type_id::error,
                                    hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))});
 
     message::inventory instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory__count__no_matching_type__returns_zero) {
+TEST_CASE("inventory  count  no matching type  returns zero", "[inventory]") {
     message::inventory instance(
         {message::inventory_vector(message::inventory_vector::type_id::error,
                                    hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"))});
 
-    BOOST_REQUIRE_EQUAL(0u,
-                        instance.count(message::inventory_vector::type_id::block));
+    REQUIRE(0u == instance.count(message::inventory_vector::type_id::block));
 }
 
-BOOST_AUTO_TEST_CASE(inventory__count__matching_type__returns_count) {
+TEST_CASE("inventory  count  matching type  returns count", "[inventory]") {
     message::inventory instance(
         {message::inventory_vector(message::inventory_vector::type_id::error,
                                    hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b")),
