@@ -205,33 +205,33 @@ TEST_CASE("version  constructor 5  always  equals params", "[version]") {
     uint32_t height = 1246323u;
     auto const relay = true;
 
-    BOOST_REQUIRE(receiver.is_valid());
-    BOOST_REQUIRE(sender.is_valid());
+    REQUIRE(receiver.is_valid());
+    REQUIRE(sender.is_valid());
 
     message::version alpha(value, services, timestamp, receiver, sender, nonce, agent, height, relay);
-    BOOST_REQUIRE(alpha.is_valid());
+    REQUIRE(alpha.is_valid());
 
     message::version beta(std::move(alpha));
-    BOOST_REQUIRE(beta.is_valid());
-    BOOST_REQUIRE_EQUAL(value, beta.value());
-    BOOST_REQUIRE_EQUAL(services, beta.services());
-    BOOST_REQUIRE_EQUAL(timestamp, beta.timestamp());
-    BOOST_REQUIRE(receiver == beta.address_receiver());
-    BOOST_REQUIRE(sender == beta.address_sender());
-    BOOST_REQUIRE_EQUAL(nonce, beta.nonce());
-    BOOST_REQUIRE_EQUAL(agent, beta.user_agent());
-    BOOST_REQUIRE_EQUAL(height, beta.start_height());
-    BOOST_REQUIRE_EQUAL(relay, beta.relay());
+    REQUIRE(beta.is_valid());
+    REQUIRE(value == beta.value());
+    REQUIRE(services == beta.services());
+    REQUIRE(timestamp == beta.timestamp());
+    REQUIRE(receiver == beta.address_receiver());
+    REQUIRE(sender == beta.address_sender());
+    REQUIRE(nonce == beta.nonce());
+    REQUIRE(agent == beta.user_agent());
+    REQUIRE(height == beta.start_height());
+    REQUIRE(relay == beta.relay());
 }
 
-BOOST_AUTO_TEST_CASE(version__from_data__insufficient_bytes__invalid) {
+TEST_CASE("version  from data  insufficient bytes invalid", "[version]") {
     data_chunk const raw{0xab};
     message::version instance{};
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version_maximum, raw));
+    REQUIRE( ! entity_from_data(instance, version_maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(version__from_data__mismatched_sender_services__invalid) {
+TEST_CASE("version  from data  mismatched sender services invalid", "[version]") {
     uint64_t sender_services = 1515u;
     const message::version expected(
         210u,
