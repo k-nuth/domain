@@ -110,29 +110,29 @@ TEST_CASE("message transaction  constructor 6  always  equals equivalent tx", "[
         transaction::version_minimum, raw_tx);
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     transaction instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == tx);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_7__always__equals_equivalent_tx) {
+TEST_CASE("message transaction  constructor 7  always  equals equivalent tx", "[message transaction]") {
     transaction instance(15u, 1234u, chain::input::list{{}, {}}, chain::output::list{{}, {}, {}});
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.version() == 15u);
-    BOOST_REQUIRE(instance.locktime() == 1234u);
-    BOOST_REQUIRE(instance.inputs().size() == 2);
-    BOOST_REQUIRE(instance.outputs().size() == 3);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.version() == 15u);
+    REQUIRE(instance.locktime() == 1234u);
+    REQUIRE(instance.inputs().size() == 2);
+    REQUIRE(instance.outputs().size() == 3);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_data__failure) {
+TEST_CASE("message transaction  from data  insufficient data  failure", "[message transaction]") {
     data_chunk data(2);
     transaction instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, data));
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, version::level::minimum, data));
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__valid_junk__success) {
+TEST_CASE("message transaction  from data  valid junk  success", "[message transaction]") {
     auto junk = base16_literal(
         "000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0"
         "000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0");
