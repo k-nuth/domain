@@ -107,15 +107,14 @@ TEST_CASE("filter load  factory from data 1  valid input  success", "[filter loa
     auto const result = create<message::filter_load>(
         message::version::level::maximum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::version::level::maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::maximum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::maximum));
+    REQUIRE(expected.serialized_size(message::version::level::maximum) ==
                         result.serialized_size(message::version::level::maximum));
 }
 
-BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_2__valid_input__success) {
+TEST_CASE("filter load  factory from data 2  valid input  success", "[filter load]") {
     const message::filter_load expected{
         {0x05, 0xaa, 0xbb, 0xcc, 0xdd, 0xee},
         25,
