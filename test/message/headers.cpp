@@ -119,16 +119,16 @@ TEST_CASE("headers  constructor 6  always  equals params", "[headers]") {
              34564u)});
 
     headers instance(std::move(expected));
-    BOOST_REQUIRE_EQUAL(instance.elements().size(), 2u);
+    REQUIRE(instance.elements().size() == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_bytes__failure) {
+TEST_CASE("headers  from data  insufficient bytes  failure", "[headers]") {
     data_chunk const raw{0xab, 0xcd};
     headers instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, headers::version_minimum, raw));
+    REQUIRE( ! entity_from_data(instance, headers::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure) {
+TEST_CASE("headers  from data  insufficient version  failure", "[headers]") {
     static headers const expected{
         {10,
          hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
