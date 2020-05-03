@@ -146,14 +146,14 @@ TEST_CASE("address  factory from data 1  roundtrip  success", "[address]") {
     auto const data = expected.to_data(version::level::minimum);
     auto const result = create<address>(version::level::minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(equal(expected, result));
+    REQUIRE(result.is_valid());
+    REQUIRE(equal(expected, result));
     auto const serialized_size = result.serialized_size(version::level::minimum);
-    BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
+    REQUIRE(data.size() == serialized_size);
+    REQUIRE(expected.serialized_size(version::level::minimum) == serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
+TEST_CASE("address  factory from data 2  roundtrip  success", "[address]") {
     address const expected(
         {{734678u,
           5357534u,
