@@ -157,13 +157,13 @@ TEST_CASE("block transactions  from data  insufficient version  failure", "[bloc
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
     message::block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::block_transactions::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_1__valid_input__success) {
+TEST_CASE("block transactions  factory from data 1  valid input  success", "[block transactions]") {
     data_chunk raw = to_chunk(base16_literal(
         "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a0"
         "20100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
