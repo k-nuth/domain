@@ -837,7 +837,7 @@ script_test_list const invalid_context_free_scripts{
 
 ////// TODO(legacy): move these to operation tests.
 ////// These are always invalid due to parsing.
-////const script_test_list invalid_parse_scripts
+////script_test_list const invalid_parse_scripts
 ////{
 ////    { "0x4c01", "0x01 NOP", "PUSHDATA1 with not enough bytes" },
 ////    { "0x4d0200ff", "0x01 NOP", "PUSHDATA2 with not enough bytes" },
