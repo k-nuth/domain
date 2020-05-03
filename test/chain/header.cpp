@@ -123,11 +123,11 @@ TEST_CASE("chain header  factory from data 2  valid input  success", "[chain hea
 
     auto const result = create<chain::header>(istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success) {
+TEST_CASE("chain header  factory from data 3  valid input  success", "[chain header]") {
     chain::header const expected{
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
