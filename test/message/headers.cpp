@@ -139,10 +139,10 @@ TEST_CASE("headers  from data  insufficient version  failure", "[headers]") {
 
     data_chunk const data = expected.to_data(headers::version_minimum);
     headers instance{};
-    BOOST_REQUIRE(!entity_from_data(instance, headers::version_minimum - 1, data));
+    REQUIRE(!entity_from_data(instance, headers::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success) {
+TEST_CASE("headers  factory from data 1  valid input  success", "[headers]") {
     static headers const expected{
         {10,
          hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
