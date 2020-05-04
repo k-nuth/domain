@@ -156,11 +156,11 @@ TEST_CASE("reject  from data  code duplicate  success", "[reject]") {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_nonstandard__success) {
+TEST_CASE("reject  from data  code nonstandard  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::nonstandard,
         message::block::command,
