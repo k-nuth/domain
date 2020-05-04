@@ -102,18 +102,18 @@ TEST_CASE("message header  constructor 7  always  equals params", "[message head
         68644u);
 
     message::header instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__from_data__insufficient_bytes__failure) {
+TEST_CASE("message header  from data  insufficient bytes  failure", "[message header]") {
     data_chunk data(10);
     message::header header;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(header, message::header::version_maximum, data));
-    BOOST_REQUIRE_EQUAL(false, header.is_valid());
+    REQUIRE( ! entity_from_data(header, message::header::version_maximum, data));
+    REQUIRE( ! header.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input_canonical_version__no_transaction_count) {
+TEST_CASE("message header  factory from data 1  valid input canonical version  no transaction count", "[message header]") {
     auto const version = message::version::level::canonical;
     message::header expected{
         10u,
