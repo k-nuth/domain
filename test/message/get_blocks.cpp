@@ -114,15 +114,14 @@ TEST_CASE("get blocks  factory from data 2  valid input  success", "[get blocks]
     auto const result = create<message::get_blocks>(
         message::version::level::minimum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) ==
                         result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__factory_from_data_3__valid_input__success) {
+TEST_CASE("get blocks  factory from data 3  valid input  success", "[get blocks]") {
     const message::get_blocks expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
