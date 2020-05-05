@@ -258,10 +258,10 @@ TEST_CASE("version  from data  mismatched sender services invalid", "[version]")
     auto const result = create<message::version>(version_maximum, data);
 
     // HACK: disabled check due to inconsistent node implementation.
-    BOOST_REQUIRE(/*!*/ result.is_valid());
+    REQUIRE(/*!*/ result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__from_data__version_meets_bip37__success) {
+TEST_CASE("version  from data  version meets bip37  success", "[version]") {
     auto const sender_services = 1515u;
     const message::version expected{
         message::version::level::bip37,
