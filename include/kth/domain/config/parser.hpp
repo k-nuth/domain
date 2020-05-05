@@ -5,12 +5,13 @@
 #ifndef KTH_INFRASTUCTURE_CONFIG_PARSER_HPP
 #define KTH_INFRASTUCTURE_CONFIG_PARSER_HPP
 
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <string>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
+// #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <boost/throw_exception.hpp>
 
@@ -36,14 +37,14 @@ enum class load_error {
     success = 1 
 };
 
-// using namespace boost::filesystem;
+// using namespace std::filesystem;
 // using namespace boost::program_options;
 // using namespace boost::system;
 
-using boost::filesystem::path;
+using std::filesystem::path;
 using boost::program_options::command_line_parser;
 using boost::program_options::reading_file;
-using boost::system::error_code;
+using std::error_code;
 
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
