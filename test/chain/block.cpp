@@ -219,101 +219,101 @@ TEST_CASE("block  from data  insufficient transaction bytes  failure", "[block s
         "0114ffffffff0100f2052a0100000043410437b36a7221bc977dce712728a954"));
 
     chain::block instance;
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(block__genesis__mainnet__valid_structure) {
+TEST_CASE("block  genesis  mainnet  valid structure", "[block serialization]") {
     auto const genesis = chain::block::genesis_mainnet();
-    BOOST_REQUIRE(genesis.is_valid());
-    BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
-    BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
+    REQUIRE(genesis.is_valid());
+    REQUIRE(genesis.transactions().size() == 1u);
+    REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__genesis__testnet__valid_structure) {
+TEST_CASE("block  genesis  testnet  valid structure", "[block serialization]") {
     auto const genesis = chain::block::genesis_testnet();
-    BOOST_REQUIRE(genesis.is_valid());
-    BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
-    BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
+    REQUIRE(genesis.is_valid());
+    REQUIRE(genesis.transactions().size() == 1u);
+    REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__genesis__regtest__valid_structure) {
+TEST_CASE("block  genesis  regtest  valid structure", "[block serialization]") {
     auto const genesis = chain::block::genesis_regtest();
-    BOOST_REQUIRE(genesis.is_valid());
-    BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
-    BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
+    REQUIRE(genesis.is_valid());
+    REQUIRE(genesis.transactions().size() == 1u);
+    REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success) {
+TEST_CASE("block  factory from data 1  genesis mainnet  success", "[block serialization]") {
     auto const genesis = chain::block::genesis_mainnet();
-    BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
-    BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
+    REQUIRE(genesis.serialized_size() == 285u);
+    REQUIRE(genesis.header().serialized_size() == 80u);
 
     // Save genesis block.
     auto raw_block = genesis.to_data();
-    BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
+    REQUIRE(raw_block.size() == 285u);
 
     // Reload genesis block.
     auto const block = create<chain::block>(raw_block);
 
-    BOOST_REQUIRE(block.is_valid());
-    BOOST_REQUIRE(genesis.header() == block.header());
+    REQUIRE(block.is_valid());
+    REQUIRE(genesis.header() == block.header());
 
     // Verify merkle root from transactions.
-    BOOST_REQUIRE(genesis.header().merkle() == block.generate_merkle_root());
+    REQUIRE(genesis.header().merkle() == block.generate_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__factory_from_data_2__genesis_mainnet__success) {
+TEST_CASE("block  factory from data 2  genesis mainnet  success", "[block serialization]") {
     auto const genesis = chain::block::genesis_mainnet();
-    BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
-    BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
+    REQUIRE(genesis.serialized_size() == 285u);
+    REQUIRE(genesis.header().serialized_size() == 80u);
 
     // Save genesis block.
     auto raw_block = genesis.to_data();
-    BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
+    REQUIRE(raw_block.size() == 285u);
 
     // Reload genesis block.
     data_source stream(raw_block);
     auto const block = create<chain::block>(stream);
 
-    BOOST_REQUIRE(block.is_valid());
-    BOOST_REQUIRE(genesis.header() == block.header());
+    REQUIRE(block.is_valid());
+    REQUIRE(genesis.header() == block.header());
 
     // Verify merkle root from transactions.
-    BOOST_REQUIRE(genesis.header().merkle() == block.generate_merkle_root());
+    REQUIRE(genesis.header().merkle() == block.generate_merkle_root());
 }
 
-BOOST_AUTO_TEST_CASE(block__factory_from_data_3__genesis_mainnet__success) {
+TEST_CASE("block  factory from data 3  genesis mainnet  success", "[block serialization]") {
     auto const genesis = chain::block::genesis_mainnet();
-    BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
-    BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
+    REQUIRE(genesis.serialized_size() == 285u);
+    REQUIRE(genesis.header().serialized_size() == 80u);
 
     // Save genesis block.
     data_chunk raw_block = genesis.to_data();
-    BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
+    REQUIRE(raw_block.size() == 285u);
 
     // Reload genesis block.
     data_source stream(raw_block);
     istream_reader reader(stream);
     auto const block = create<chain::block>(reader);
 
-    BOOST_REQUIRE(block.is_valid());
-    BOOST_REQUIRE(genesis.header() == block.header());
+    REQUIRE(block.is_valid());
+    REQUIRE(genesis.header() == block.header());
 
     // Verify merkle root from transactions.
-    BOOST_REQUIRE(genesis.header().merkle() == block.generate_merkle_root());
+    REQUIRE(genesis.header().merkle() == block.generate_merkle_root());
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
-BOOST_AUTO_TEST_SUITE(block_generate_merkle_root_tests)
+// Start Boost Suite: block generate merkle root tests
 
-BOOST_AUTO_TEST_CASE(block__generate_merkle_root__block_with_zero_transactions__matches_null_hash) {
+TEST_CASE("block  generate merkle root  block with zero transactions  matches null hash", "[block generate merkle root]") {
     chain::block empty;
-    BOOST_REQUIRE(empty.generate_merkle_root() == null_hash);
+    REQUIRE(empty.generate_merkle_root() == null_hash);
 }
 
-BOOST_AUTO_TEST_CASE(block__generate_merkle_root__block_with_multiple_transactions__matches_historic_data) {
+TEST_CASE("block  generate merkle root  block with multiple transactions  matches historic data", "[block generate merkle root]") {
     // encodes the 100,000 block data.
     data_chunk const raw = to_chunk(base16_literal(
         "010000007f110631052deeee06f0754a3629ad7663e56359fd5f3aa7b3e30a00"
