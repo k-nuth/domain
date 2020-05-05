@@ -142,11 +142,11 @@ TEST_CASE("chain header  factory from data 3  valid input  success", "[chain hea
 
     auto const result = create<chain::header>(source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(header__version_accessor__always__returns_initialized_value) {
+TEST_CASE("chain header  version accessor  always  returns initialized value", "[chain header]") {
     uint32_t const value = 11234u;
     chain::header const instance(
         value,
