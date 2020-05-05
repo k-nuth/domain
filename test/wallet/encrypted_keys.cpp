@@ -182,11 +182,11 @@ TEST_CASE("encrypted  encrypt private  vector unicode  expected", "[encrypted  e
     KD_REQUIRE_ENCRYPT(secret, passphrase, version, compression, expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_SUITE(encrypted__decrypt1)
+// Start Boost Suite: encrypted  decrypt1
 
 // TODO(legacy): create compressed+multiplied and altchain/testnet vector(s).
 
