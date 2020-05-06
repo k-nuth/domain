@@ -132,11 +132,11 @@ TEST_CASE("from data insufficient version fails", "[merkle block]") {
     auto const data = expected.to_data(message::version::level::maximum);
     message::merkle_block instance{};
 
-    BOOST_REQUIRE(!entity_from_data(instance, message::merkle_block::version_minimum - 1, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, message::merkle_block::version_minimum - 1, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
+TEST_CASE("merkle block - roundtrip to data factory from data chunk", "[merkle block]") {
     const message::merkle_block expected{
         {10,
          hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
