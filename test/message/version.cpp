@@ -284,10 +284,10 @@ TEST_CASE("version  from data  version meets bip37  success", "[version]") {
 
     auto const data = expected.to_data(version_maximum);
     auto const result = create<message::version>(version_maximum, data);
-    BOOST_REQUIRE(result.is_valid());
+    REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__factory_from_data_1__valid_input__success) {
+TEST_CASE("version  factory from data 1  valid input  success", "[version]") {
     auto const sender_services = 1515u;
     const message::version expected{
         210u,
