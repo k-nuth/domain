@@ -194,114 +194,114 @@ TEST_CASE("encrypted  encrypt private  vector unicode  expected", "[encrypted  e
     ec_secret out_secret;                          \
     uint8_t out_version = 42;                      \
     bool out_is_compressed = true;                 \
-    BOOST_REQUIRE(decrypt(out_secret, out_version, out_is_compressed, key, passphrase))
+    REQUIRE(decrypt(out_secret, out_version, out_is_compressed, key, passphrase))
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_0__expected) {
+TEST_CASE("encrypted  decrypt private  vector 0  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg");
     KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_1__expected) {
+TEST_CASE("encrypted  decrypt private  vector 1  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq");
     KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_2_compressed__expected) {
+TEST_CASE("encrypted  decrypt private  vector 2 compressed  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo");
     KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_3_compressed__expected) {
+TEST_CASE("encrypted  decrypt private  vector 3 compressed  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PYLtMnXvfG3oJde97zRyLYFZCYizPU5T3LwgdYJz1fRhh16bU7u6PPmY7");
     KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_4_multiplied__expected) {
+TEST_CASE("encrypted  decrypt private  vector 4 multiplied  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfQu77ygVyJLZjfvMLyhLMQbYnu5uguoJJ4kMCLqWwPEdfpwANVS76gTX");
     KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "a43a940577f4e97f5c4d39eb14ff083a98187c64ea7c99ef7ce460833959a519");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "a43a940577f4e97f5c4d39eb14ff083a98187c64ea7c99ef7ce460833959a519");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_5_multiplied__expected) {
+TEST_CASE("encrypted  decrypt private  vector 5 multiplied  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfLGnQs6VZnrNpmVKfjotbnQuaJK4KZoPFrAjx1JMJUa1Ft8gnf5WxfKd");
     KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "c2c8036df268f498099350718c4a3ef3984d2be84618c2650f5171dcc5eb660a");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "c2c8036df268f498099350718c4a3ef3984d2be84618c2650f5171dcc5eb660a");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_6_multiplied_lot__expected) {
+TEST_CASE("encrypted  decrypt private  vector 6 multiplied lot  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PgNBNNzDkKdhkT6uJntUXwwzQV8Rr2tZcbkDcuC9DZRsS6AtHts4Ypo1j");
     KD_REQUIRE_DECRYPT_SECRET(key, "MOLON LABE");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "44ea95afbf138356a05ea32110dfd627232d0f2991ad221187be356f19fa8190");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "44ea95afbf138356a05ea32110dfd627232d0f2991ad221187be356f19fa8190");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_7_multiplied_lot__expected) {
+TEST_CASE("encrypted  decrypt private  vector 7 multiplied lot  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PgGWtx25kUg8QWvwuJAgorN6k9FbE25rv5dMRwu5SKMnfpfVe5mar2ngH");
     KD_REQUIRE_DECRYPT_SECRET(key, "ΜΟΛΩΝ ΛΑΒΕ");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "ca2759aa4adb0f96c414f36abeb8db59342985be9fa50faac228c8e7d90e3006");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "ca2759aa4adb0f96c414f36abeb8db59342985be9fa50faac228c8e7d90e3006");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_8_multiplied__expected) {
+TEST_CASE("encrypted  decrypt private  vector 8 multiplied  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfPAw5HErFdzMyBvGMwSfSWjKmzgm3jDg7RxQyVCSSBJFZLAZ6hVupmpn");
     KD_REQUIRE_DECRYPT_SECRET(key, "kth test");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "fb4bfb0bfe151d524b0b11983b9f826d6a0bc7f7bdc480864a1b557ff0c59eb4");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "fb4bfb0bfe151d524b0b11983b9f826d6a0bc7f7bdc480864a1b557ff0c59eb4");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_9_multiplied__expected) {
+TEST_CASE("encrypted  decrypt private  vector 9 multiplied  expected", "[encrypted  decrypt1]") {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
 //TODO(kth): replace the key
     KD_REQUIRE_DECRYPT_SECRET(key, "Libbitcoin BIP38 Test Vector");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "97c745cc980e5a070e12d0bff3f539b70748aadb406045fc1b42d4ded559a564");
-    BOOST_REQUIRE_EQUAL(out_version, expected_version);
-    BOOST_REQUIRE(!out_is_compressed);
+    REQUIRE(encode_base16(out_secret) == "97c745cc980e5a070e12d0bff3f539b70748aadb406045fc1b42d4ded559a564");
+    REQUIRE(out_version == expected_version);
+    REQUIRE(!out_is_compressed);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_SUITE(encrypted__decrypt_public)
+// Start Boost Suite: encrypted  decrypt public
 
 // TODO(legacy): create compressed and altchain/testnet vector(s).
 
