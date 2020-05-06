@@ -291,53 +291,53 @@ TEST_CASE("alert payload  factory from data 3  roundtrip  success", "[alert payl
     auto const result = create<message::alert_payload>(
         message::version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__version__roundtrip__success) {
+TEST_CASE("alert payload  version  roundtrip  success", "[alert payload]") {
     uint32_t value = 1234u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.version() != value);
+    REQUIRE(instance.version() != value);
     instance.set_version(value);
-    BOOST_REQUIRE_EQUAL(value, instance.version());
+    REQUIRE(value == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__relay_until__roundtrip__success) {
+TEST_CASE("alert payload  relay until  roundtrip  success", "[alert payload]") {
     uint64_t value = 5121234u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.relay_until() != value);
+    REQUIRE(instance.relay_until() != value);
     instance.set_relay_until(value);
-    BOOST_REQUIRE_EQUAL(value, instance.relay_until());
+    REQUIRE(value == instance.relay_until());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__expiration__roundtrip__success) {
+TEST_CASE("alert payload  expiration  roundtrip  success", "[alert payload]") {
     uint64_t value = 5121234u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.expiration() != value);
+    REQUIRE(instance.expiration() != value);
     instance.set_expiration(value);
-    BOOST_REQUIRE_EQUAL(value, instance.expiration());
+    REQUIRE(value == instance.expiration());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__id__roundtrip__success) {
+TEST_CASE("alert payload  id  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.id() != value);
+    REQUIRE(instance.id() != value);
     instance.set_id(value);
-    BOOST_REQUIRE_EQUAL(value, instance.id());
+    REQUIRE(value == instance.id());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__cancel__roundtrip__success) {
+TEST_CASE("alert payload  cancel  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.cancel() != value);
+    REQUIRE(instance.cancel() != value);
     instance.set_cancel(value);
-    BOOST_REQUIRE_EQUAL(value, instance.cancel());
+    REQUIRE(value == instance.cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  set cancel accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
