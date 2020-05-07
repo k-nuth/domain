@@ -147,13 +147,13 @@ TEST_CASE("message header  factory from data 1  valid input  success", "[message
 
     auto const result = create<message::header>(version, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success) {
+TEST_CASE("message header  factory from data 2  valid input  success", "[message header]") {
     auto const version = message::header::version_minimum;
     message::header expected{
         10u,
