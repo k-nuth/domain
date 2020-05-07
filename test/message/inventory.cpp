@@ -310,10 +310,10 @@ TEST_CASE("inventory  to hashes  matching type  returns hashes", "[inventory]") 
 
     hash_list result;
     instance.to_hashes(result, message::inventory_vector::type_id::error);
-    BOOST_REQUIRE(hashes == result);
+    REQUIRE(hashes == result);
 }
 
-BOOST_AUTO_TEST_CASE(inventory__reduce__matching_type__returns_empty_list) {
+TEST_CASE("inventory  reduce  matching type  returns empty list", "[inventory]") {
     const message::inventory_vector::list expected = {};
 
     message::inventory instance(
