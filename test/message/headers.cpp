@@ -173,13 +173,13 @@ TEST_CASE("headers  factory from data 2  valid input  success", "[headers]") {
     auto const data = expected.to_data(version);
     data_source istream(data);
     auto result = create<headers>(version, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(result.serialized_size(version), expected.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(result.serialized_size(version) == expected.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success) {
+TEST_CASE("headers  factory from data 3  valid input  success", "[headers]") {
     static headers const expected{
         {7,
          hash_literal("1234123412341234123412341234123412341234123412341234123412341234"),
