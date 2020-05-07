@@ -655,13 +655,13 @@ TEST_CASE("script generate signature hash  all  expected", "[script]") {
     auto const sighash = script::generate_signature_hash(new_tx, index, prevout_script, sighash_type);
     auto const result = encode_base16(sighash);
     auto const expected = "f89572635651b2e4f89778350616989183c98d1a721c911324bf9f17a0cf5bf0";
-    BOOST_REQUIRE_EQUAL(result, expected);
+    REQUIRE(result == expected);
 }
 
 // Ad-hoc test cases.
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid) {
+TEST_CASE("script native  block 290329 tx valid", "[script]") {
     //// DEBUG [blockchain] Verify failed [290329] : stack false (find and delete).
     //// libconsensus : false
     //// forks        : 1073742030
