@@ -367,10 +367,10 @@ TEST_CASE("block  header accessor  always  returns initialized value", "[block g
         chain::transaction(4, 16, {}, {})};
 
     chain::block instance(header, transactions);
-    BOOST_REQUIRE(header == instance.header());
+    REQUIRE(header == instance.header());
 }
 
-BOOST_AUTO_TEST_CASE(block__header_setter_1__roundtrip__success) {
+TEST_CASE("block  header setter 1  roundtrip  success", "[block generate merkle root]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
