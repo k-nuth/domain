@@ -286,21 +286,18 @@ TEST_CASE("block transactions  factory from data 3  valid input  success", "[blo
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = create<message::block_transactions>(
-        message::block_transactions::version_minimum, source);
+    auto const result = create<message::block_transactions>(message::block_transactions::version_minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::block_transactions::version_minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::block_transactions::version_minimum),
-                        result.serialized_size(message::block_transactions::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::block_transactions::version_minimum));
+    REQUIRE(expected.serialized_size(message::block_transactions::version_minimum) == result.serialized_size(message::block_transactions::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__block_hash_accessor_1__always__returns_initialized_value) {
+TEST_CASE("block transactions  block hash accessor 1  always  returns initialized value", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
