@@ -439,80 +439,80 @@ TEST_CASE("encrypted  create key pair  vector 9 compressed testnet  expected", "
     ec_compressed out_point;                                                      \
     encrypted_public out_public;                                                  \
     encrypted_private out_private;                                                \
-    BOOST_REQUIRE(create_key_pair(out_private, out_public, out_point, token, seed, version, compressed))
+    REQUIRE(create_key_pair(out_private, out_public, out_point, token, seed, version, compressed))
 
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__bad_checksum__false) {
+TEST_CASE("encrypted  create key pair with confirmation  bad checksum  false", "[encrypted  create key pair with confirmation]") {
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
     auto const token = base58_literal("passphraseo59BauW85etaRsKpbbTrEa5RRYw6bq5K9yrDf4r4N5fcirPdtDKmfJw9oYNoGN");
     ec_compressed out_point;
     encrypted_public out_public;
     encrypted_private out_private;
-    BOOST_REQUIRE(!create_key_pair(out_private, out_public, out_point, token, seed, 0, false));
+    REQUIRE(!create_key_pair(out_private, out_public, out_point, token, seed, 0, false));
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_8__expected) {
+TEST_CASE("encrypted  create key pair with confirmation  vector 8  expected", "[encrypted  create key pair with confirmation]") {
     auto compression = false;
     uint8_t const version = 0x00;
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
     auto const token = base58_literal("passphraseo59BauW85etaRsKpbbTrEa5RRYw6bq5K9yrDf4r4N5fcirPdtDKmfJw9oYNoGM");
     KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PfPAw5HErFdzMyBvGMwSfSWjKmzgm3jDg7RxQyVCSSBJFZLAZ6hVupmpn");
-    BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm38V5Nm1mn7GxPBAGTXawqXRwE1EbR19GqsvJ9JmF5VKLqi8nETmULpELkQvExCGkTNCH2An");
+    REQUIRE(encode_base58(out_private) == "6PfPAw5HErFdzMyBvGMwSfSWjKmzgm3jDg7RxQyVCSSBJFZLAZ6hVupmpn");
+    REQUIRE(encode_base58(out_public) == "cfrm38V5Nm1mn7GxPBAGTXawqXRwE1EbR19GqsvJ9JmF5VKLqi8nETmULpELkQvExCGkTNCH2An");
 
     ec_uncompressed decompressed;
-    BOOST_REQUIRE(decompress(decompressed, out_point));
-    BOOST_REQUIRE_EQUAL(encode_base16(decompressed), "04c13b65302bbbed4f7ad67bc68e928b58e7748d84091a2d42680dc52e7916079e103bd025079e984fb4439177224e48a2d9da5768d9b886d89d22c714169723a6");
+    REQUIRE(decompress(decompressed, out_point));
+    REQUIRE(encode_base16(decompressed) == "04c13b65302bbbed4f7ad67bc68e928b58e7748d84091a2d42680dc52e7916079e103bd025079e984fb4439177224e48a2d9da5768d9b886d89d22c714169723a6");
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9__expected) {
+TEST_CASE("encrypted  create key pair with confirmation  vector 9  expected", "[encrypted  create key pair with confirmation]") {
     auto compression = false;
     uint8_t const version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
     KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
-    BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm38V5ec4E5RKwBu46Jf5zfaE54nuB1NWHpHSpgX4GQqfzx7fvqm43mBHvr89pPgykDHts9VC");
+    REQUIRE(encode_base58(out_private) == "6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
+    REQUIRE(encode_base58(out_public) == "cfrm38V5ec4E5RKwBu46Jf5zfaE54nuB1NWHpHSpgX4GQqfzx7fvqm43mBHvr89pPgykDHts9VC");
 
     ec_uncompressed decompressed;
-    BOOST_REQUIRE(decompress(decompressed, out_point));
-    BOOST_REQUIRE_EQUAL(encode_base16(decompressed), "04c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52858af96a727252a99c54e871ff7bcf9b53cb74e4da1e15d9e83625e3c91222c0");
+    REQUIRE(decompress(decompressed, out_point));
+    REQUIRE(encode_base16(decompressed) == "04c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52858af96a727252a99c54e871ff7bcf9b53cb74e4da1e15d9e83625e3c91222c0");
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_compressed__expected) {
+TEST_CASE("encrypted  create key pair with confirmation  vector 9 compressed  expected", "[encrypted  create key pair with confirmation]") {
     auto compression = true;
     uint8_t const version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
     KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PnQ4ihgH1pxeUWa1SDPZ4xToaTdLtjebd8Qw6KJf8xDCW67ssaAqWuJkw");
-    BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm38VUEdzHWKfUjdNjV22wyFNGgtRHYhXdBFT7fWw7cCJbCobryAYUThq4BbTPP15g4SeBsug");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
+    REQUIRE(encode_base58(out_private) == "6PnQ4ihgH1pxeUWa1SDPZ4xToaTdLtjebd8Qw6KJf8xDCW67ssaAqWuJkw");
+    REQUIRE(encode_base58(out_public) == "cfrm38VUEdzHWKfUjdNjV22wyFNGgtRHYhXdBFT7fWw7cCJbCobryAYUThq4BbTPP15g4SeBsug");
+    REQUIRE(encode_base16(out_point) == "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
 }
 
 // altchain vectors are based on preliminary bidirectional mapping proposal.
-BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_compressed_testnet__expected) {
+TEST_CASE("encrypted  create key pair with confirmation  vector 9 compressed testnet  expected", "[encrypted  create key pair with confirmation]") {
     auto compression = true;
     uint8_t const version = 111;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
     KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
-    BOOST_REQUIRE_EQUAL(encode_base58(out_private), "8FELCpEDogaLG3WkLhSVpKKravcNDZ7HAQ7jwHApt1Rn4BHqaLAfo9nrRD");
-    BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm2zc77zW4FRDALEVBoKmmT79Q7KshtvLZoN62JADnXGPEcPosMx8sM8Ry4ieGW3FXUEoBwk2");
-    BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
+    REQUIRE(encode_base58(out_private) == "8FELCpEDogaLG3WkLhSVpKKravcNDZ7HAQ7jwHApt1Rn4BHqaLAfo9nrRD");
+    REQUIRE(encode_base58(out_public) == "cfrm2zc77zW4FRDALEVBoKmmT79Q7KshtvLZoN62JADnXGPEcPosMx8sM8Ry4ieGW3FXUEoBwk2");
+    REQUIRE(encode_base16(out_point) == "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
 // ----------------------------------------------------------------------------
 
 #ifdef WITH_ICU
 
-BOOST_AUTO_TEST_SUITE(encrypted__round_trips)
+// Start Boost Suite: encrypted  round trips
 
-BOOST_AUTO_TEST_CASE(encrypted__encrypt__compressed_testnet__matches_secret_version_and_compression) {
+TEST_CASE("encrypted  encrypt  compressed testnet  matches secret version and compression", "[encrypted  round trips]") {
     auto const secret = base16_literal("09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
     auto const passphrase = "passphrase";
 
