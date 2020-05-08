@@ -193,13 +193,13 @@ TEST_CASE("headers  factory from data 3  valid input  success", "[headers]") {
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<headers>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(result.serialized_size(version), expected.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(result.serialized_size(version) == expected.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(headers__elements_accessor_1__always__returns_initialized_value) {
+TEST_CASE("headers  elements accessor 1  always  returns initialized value", "[headers]") {
     header::list const expected{
         header(
             10u,
