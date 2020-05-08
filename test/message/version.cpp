@@ -340,13 +340,13 @@ TEST_CASE("version  factory from data 2  valid input  success", "[version]") {
     auto const data = expected.to_data(version_maximum);
     data_source istream(data);
     auto const result = create<message::version>(version_maximum, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(data.size() == result.serialized_size(version_maximum));
+    REQUIRE(expected.serialized_size(version_maximum) == result.serialized_size(version_maximum));
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(version__factory_from_data_3__valid_input__success) {
+TEST_CASE("version  factory from data 3  valid input  success", "[version]") {
     auto const sender_services = 1515u;
     const message::version expected(
         210u,
