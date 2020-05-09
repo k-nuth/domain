@@ -234,12 +234,12 @@ TEST_CASE("address  addresses setter 2  roundtrip  success", "[address]") {
 
     auto dup_value = value;
     address instance;
-    BOOST_REQUIRE(instance.addresses() != value);
+    REQUIRE(instance.addresses() != value);
     instance.set_addresses(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.addresses());
+    REQUIRE(value == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("address  operator assign equals  always  matches equivalent", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
