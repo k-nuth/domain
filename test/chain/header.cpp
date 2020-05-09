@@ -190,30 +190,30 @@ TEST_CASE("chain header  previous block hash accessor 2  always  returns initial
         4356344u,
         34564u);
 
-    BOOST_REQUIRE(value == instance.previous_block_hash());
+    REQUIRE(value == instance.previous_block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(header__previous_block_hash_setter_1__roundtrip__success) {
+TEST_CASE("chain header  previous block hash setter 1  roundtrip  success", "[chain header]") {
     auto const expected = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.previous_block_hash());
+    REQUIRE(expected != instance.previous_block_hash());
     instance.set_previous_block_hash(expected);
-    BOOST_REQUIRE(expected == instance.previous_block_hash());
+    REQUIRE(expected == instance.previous_block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(header__previous_block_hash_setter_2__roundtrip__success) {
+TEST_CASE("chain header  previous block hash setter 2  roundtrip  success", "[chain header]") {
     auto const expected = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
 
     // This must be non-const.
     auto duplicate = expected;
 
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.previous_block_hash());
+    REQUIRE(expected != instance.previous_block_hash());
     instance.set_previous_block_hash(std::move(duplicate));
-    BOOST_REQUIRE(expected == instance.previous_block_hash());
+    REQUIRE(expected == instance.previous_block_hash());
 }
 
-BOOST_AUTO_TEST_CASE(header__merkle_accessor_1__always__returns_initialized_value) {
+TEST_CASE("chain header  merkle accessor 1  always  returns initialized value", "[chain header]") {
     auto const value = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
     chain::header instance(
         11234u,
