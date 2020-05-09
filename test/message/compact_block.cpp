@@ -229,23 +229,20 @@ TEST_CASE("compact block  factory from data 3  valid input  success", "[compact 
     message::compact_block expected;
     entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
 
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::compact_block>(
         message::compact_block::version_minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::compact_block::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::compact_block::version_minimum),
-        result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(expected.serialized_size(message::compact_block::version_minimum) == result.serialized_size(message::compact_block::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__header_accessor_1__always__returns_initialized_value) {
+TEST_CASE("compact block  header accessor 1  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
