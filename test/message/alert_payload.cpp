@@ -379,44 +379,44 @@ TEST_CASE("alert payload  set cancel accessor 2  always  returns initialized", "
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(instance.is_valid());
+    REQUIRE(set_cancel == instance.set_cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  set cancel setter 1  roundtrip  success", "[alert payload]") {
     const std::vector<uint32_t> value = {68215u, 34542u, 4756u};
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_cancel() != value);
+    REQUIRE(instance.set_cancel() != value);
     instance.set_set_cancel(value);
-    BOOST_REQUIRE(value == instance.set_cancel());
+    REQUIRE(value == instance.set_cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  set cancel setter 2  roundtrip  success", "[alert payload]") {
     const std::vector<uint32_t> value = {68215u, 34542u, 4756u};
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_cancel() != value);
+    REQUIRE(instance.set_cancel() != value);
     instance.set_set_cancel(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.set_cancel());
+    REQUIRE(value == instance.set_cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__min_version__roundtrip__success) {
+TEST_CASE("alert payload  min version  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.min_version() != value);
+    REQUIRE(instance.min_version() != value);
     instance.set_min_version(value);
-    BOOST_REQUIRE_EQUAL(value, instance.min_version());
+    REQUIRE(value == instance.min_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__max_version__roundtrip__success) {
+TEST_CASE("alert payload  max version  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.max_version() != value);
+    REQUIRE(instance.max_version() != value);
     instance.set_max_version(value);
-    BOOST_REQUIRE_EQUAL(value, instance.max_version());
+    REQUIRE(value == instance.max_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  set sub version accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
