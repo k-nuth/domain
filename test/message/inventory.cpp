@@ -352,8 +352,8 @@ TEST_CASE("inventory  reduce  matching type  returns matches", "[inventory]") {
 
     message::inventory_vector::list result;
     instance.reduce(result, message::inventory_vector::type_id::error);
-    BOOST_REQUIRE_EQUAL(expected.size(), result.size());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(expected.size() == result.size());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
