@@ -192,11 +192,11 @@ TEST_CASE("merkle block - roundtrip to data factory from data reader", "[merkle 
     istream_reader source(istream);
     auto const result = create<message::merkle_block>(message::version::level::maximum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__header_accessor_1__always__returns_initialized_value) {
+TEST_CASE("merkle block  header accessor 1  always  returns initialized value", "[merkle block]") {
     chain::header const expected{
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
