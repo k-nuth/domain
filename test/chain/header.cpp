@@ -223,10 +223,10 @@ TEST_CASE("chain header  merkle accessor 1  always  returns initialized value", 
         4356344u,
         34564u);
 
-    BOOST_REQUIRE(value == instance.merkle());
+    REQUIRE(value == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__merkle_accessor_2__always__returns_initialized_value) {
+TEST_CASE("chain header  merkle accessor 2  always  returns initialized value", "[chain header]") {
     auto const value = hash_literal("fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe");
     chain::header const instance(
         11234u,
