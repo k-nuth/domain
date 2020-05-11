@@ -238,10 +238,10 @@ TEST_CASE("headers  elements accessor 2  always  returns initialized value", "[h
             34564u)};
 
     const message::headers instance(expected);
-    BOOST_REQUIRE(instance.elements() == expected);
+    REQUIRE(instance.elements() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__command_setter_1__roundtrip__success) {
+TEST_CASE("headers  command setter 1  roundtrip  success", "[headers]") {
     header::list const expected{
         header(
             10u,
