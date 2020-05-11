@@ -198,12 +198,12 @@ TEST_CASE("get blocks  start hashes setter 2  roundtrip  success", "[get blocks]
     hash_list values_duplicate = values;
 
     message::get_blocks instance;
-    BOOST_REQUIRE(values != instance.start_hashes());
+    REQUIRE(values != instance.start_hashes());
     instance.set_start_hashes(std::move(values_duplicate));
-    BOOST_REQUIRE(values == instance.start_hashes());
+    REQUIRE(values == instance.start_hashes());
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__stop_hash_accessor_1__always__returns_initialized_value) {
+TEST_CASE("get blocks  stop hash accessor 1  always  returns initialized value", "[get blocks]") {
     hash_digest expected = hash_literal(
         "7777777777777777777777777777777777777777777777777777777777777777");
 
