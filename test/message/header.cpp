@@ -205,17 +205,17 @@ TEST_CASE("message header  operator assign equals 1  always  matches equivalent"
         6523454u,
         68644u);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::header instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("message header  operator assign equals 2  always  matches equivalent", "[message header]") {
     message::header value(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
