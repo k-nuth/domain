@@ -458,36 +458,36 @@ TEST_CASE("alert payload  set sub version accessor 2  always  returns initialize
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(instance.is_valid());
+    REQUIRE(set_sub_version == instance.set_sub_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  set sub version setter 1  roundtrip  success", "[alert payload]") {
     const std::vector<std::string> value = {"asdfa", "sgfdf", "Tryertsd"};
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_sub_version() != value);
+    REQUIRE(instance.set_sub_version() != value);
     instance.set_set_sub_version(value);
-    BOOST_REQUIRE(value == instance.set_sub_version());
+    REQUIRE(value == instance.set_sub_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  set sub version setter 2  roundtrip  success", "[alert payload]") {
     const std::vector<std::string> value = {"asdfa", "sgfdf", "Tryertsd"};
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_sub_version() != value);
+    REQUIRE(instance.set_sub_version() != value);
     instance.set_set_sub_version(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.set_sub_version());
+    REQUIRE(value == instance.set_sub_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__priority__roundtrip__success) {
+TEST_CASE("alert payload  priority  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.priority() != value);
+    REQUIRE(instance.priority() != value);
     instance.set_priority(value);
-    BOOST_REQUIRE_EQUAL(value, instance.priority());
+    REQUIRE(value == instance.priority());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  comment accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
