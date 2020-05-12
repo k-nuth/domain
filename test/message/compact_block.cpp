@@ -287,10 +287,10 @@ TEST_CASE("compact block  header accessor 2  always  returns initialized value",
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     const message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(header == instance.header());
+    REQUIRE(header == instance.header());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__header_setter_1__roundtrip__success) {
+TEST_CASE("compact block  header setter 1  roundtrip  success", "[compact block]") {
     chain::header const value(10u,
                               hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                               hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
