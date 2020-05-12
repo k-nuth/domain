@@ -415,22 +415,22 @@ TEST_CASE("block  transactions accessor  always  returns initialized value", "[b
         chain::transaction(4, 16, {}, {})};
 
     chain::block instance(header, transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__transactions_setter_1__roundtrip__success) {
+TEST_CASE("block  transactions setter 1  roundtrip  success", "[block generate merkle root]") {
     chain::transaction::list const transactions{
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
         chain::transaction(4, 16, {}, {})};
 
     chain::block instance;
-    BOOST_REQUIRE(transactions != instance.transactions());
+    REQUIRE(transactions != instance.transactions());
     instance.set_transactions(transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__transactions_setter_2__roundtrip__success) {
+TEST_CASE("block  transactions setter 2  roundtrip  success", "[block generate merkle root]") {
     chain::transaction::list const transactions{
         chain::transaction(1, 48, {}, {}),
         chain::transaction(2, 32, {}, {}),
