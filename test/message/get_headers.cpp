@@ -219,10 +219,10 @@ TEST_CASE("get headers  operator boolean not equals  duplicates  returns false",
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     message::get_headers instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("get headers  operator boolean not equals  differs  returns true", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
