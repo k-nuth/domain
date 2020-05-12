@@ -752,27 +752,27 @@ TEST_CASE("script native  block 481824 tx valid", "[script]") {
     static auto const encoded_tx = "0200000000010140d43a99926d43eb0e619bf0b3d83b4a31f60c176beecfb9d35bf45e54d0f7420100000017160014a4b4ca48de0b3fffc15404a1acdc8dbaae226955ffffffff0100e1f5050000000017a9144a1154d50b03292b3024370901711946cb7cccc387024830450221008604ef8f6d8afa892dee0f31259b6ce02dd70c545cfcfed8148179971876c54a022076d771d6e91bed212783c9b06e0de600fab2d518fad6f15a2b191d7fbd262a3e0121039d25ab79f41f75ceaf882411fd41fa670a4c672c23ffaf0e361a969cde0692e800000000";
 
     data_chunk decoded_tx;
-    BOOST_REQUIRE(decode_base16(decoded_tx, encoded_tx));
+    REQUIRE(decode_base16(decoded_tx, encoded_tx));
 
     data_chunk decoded_script;
-    BOOST_REQUIRE(decode_base16(decoded_script, encoded_script));
+    REQUIRE(decode_base16(decoded_script, encoded_script));
 
     transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, decoded_tx, true, true));
-    BOOST_REQUIRE_GT(tx.inputs().size(), index);
+    REQUIRE(entity_from_data(tx, decoded_tx, true, true));
+    REQUIRE(tx.inputs().size() > index);
 
     auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
     prevout.set_value(value);
     prevout.set_script(create<script>(decoded_script, false));
-    BOOST_REQUIRE(prevout.script().is_valid());
+    REQUIRE(prevout.script().is_valid());
 
     auto const result = verify(tx, index, forks);
-    BOOST_REQUIRE_EQUAL(result.value(), error::success);
+    REQUIRE(result.value() == error::success);
 }
 
-BOOST_AUTO_TEST_CASE(script__native__testnet_block_892321_tx_missing_witness__invalid_witness) {
+TEST_CASE("script native  testnet block 892321 tx missing witness  invalid witness", "[script]") {
     //// DEBUG [blockchain] Verify failed [892321] : invalid witness
     //// libconsensus : false
     //// forks        : 1073758207
