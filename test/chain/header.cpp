@@ -236,30 +236,30 @@ TEST_CASE("chain header  merkle accessor 2  always  returns initialized value", 
         4356344u,
         34564u);
 
-    BOOST_REQUIRE(value == instance.merkle());
+    REQUIRE(value == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__merkle_setter_1__roundtrip__success) {
+TEST_CASE("chain header  merkle setter 1  roundtrip  success", "[chain header]") {
     auto const expected = hash_literal("abababababababababababababababababababababababababababababababab");
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.merkle());
+    REQUIRE(expected != instance.merkle());
     instance.set_merkle(expected);
-    BOOST_REQUIRE(expected == instance.merkle());
+    REQUIRE(expected == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__merkle_setter_2__roundtrip__success) {
+TEST_CASE("chain header  merkle setter 2  roundtrip  success", "[chain header]") {
     auto const expected = hash_literal("abababababababababababababababababababababababababababababababab");
 
     // This must be non-const.
     hash_digest duplicate = expected;
 
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.merkle());
+    REQUIRE(expected != instance.merkle());
     instance.set_merkle(std::move(duplicate));
-    BOOST_REQUIRE(expected == instance.merkle());
+    REQUIRE(expected == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__timestamp_accessor__always__returns_initialized_value) {
+TEST_CASE("chain header  timestamp accessor  always  returns initialized value", "[chain header]") {
     uint32_t value = 753234u;
     chain::header instance(
         11234u,
