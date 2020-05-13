@@ -232,7 +232,7 @@ TEST_CASE("get headers  operator boolean not equals  differs  returns true", "[g
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     message::get_headers instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
