@@ -440,12 +440,12 @@ TEST_CASE("block  transactions setter 2  roundtrip  success", "[block generate m
     chain::transaction::list dup_transactions(transactions);
 
     chain::block instance;
-    BOOST_REQUIRE(transactions != instance.transactions());
+    REQUIRE(transactions != instance.transactions());
     instance.set_transactions(std::move(dup_transactions));
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("block  operator assign equals  always  matches equivalent", "[block generate merkle root]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
