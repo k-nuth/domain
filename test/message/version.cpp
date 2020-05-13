@@ -439,17 +439,17 @@ TEST_CASE("version  services accessor  always  returns initialized value", "[ver
         100u,
         false);
 
-    BOOST_REQUIRE_EQUAL(expected, instance.services());
+    REQUIRE(expected == instance.services());
 }
 
-BOOST_AUTO_TEST_CASE(version__services_setter__roundtrip__success) {
+TEST_CASE("version  services setter  roundtrip  success", "[version]") {
     uint64_t const expected = 1515u;
     message::version instance;
     instance.set_services(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.services());
+    REQUIRE(expected == instance.services());
 }
 
-BOOST_AUTO_TEST_CASE(version__timestamp_accessor__always__returns_initialized_value) {
+TEST_CASE("version  timestamp accessor  always  returns initialized value", "[version]") {
     uint64_t const expected = 979797u;
     const message::version instance(
         210u,
