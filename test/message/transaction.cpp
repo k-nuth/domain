@@ -321,25 +321,25 @@ TEST_CASE("message transaction  factory from data 3  case 2 valid data  success"
         "ffff02c0e1e400000000001976a914884c09d7e1f6420976c40e040c30b2b622"
         "10c3d488ac20300500000000001976a914905f933de850988603aafeeb2fd7fc"
         "e61e66fe5d88ac00000000"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     data_source stream(raw_tx);
     istream_reader source(stream);
     auto const tx = create<transaction>(version::level::minimum, source);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave;
     data_sink ostream(resave);
     ostream_writer sink(ostream);
     tx.to_data(version::level::minimum, sink);
     ostream.flush();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("message transaction  operator assign equals 1  always  matches equivalent", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
