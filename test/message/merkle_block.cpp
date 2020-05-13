@@ -237,10 +237,10 @@ TEST_CASE("merkle block  header accessor 2  always  returns initialized value", 
         },
         {0xae, 0x56, 0x0f});
 
-    BOOST_REQUIRE(expected == instance.header());
+    REQUIRE(expected == instance.header());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__header_setter_1__roundtrip__success) {
+TEST_CASE("merkle block  header setter 1  roundtrip  success", "[merkle block]") {
     chain::header const expected{
         10,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
