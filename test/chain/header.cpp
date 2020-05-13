@@ -269,18 +269,18 @@ TEST_CASE("chain header  timestamp accessor  always  returns initialized value",
         4356344u,
         34564u);
 
-    BOOST_REQUIRE_EQUAL(value, instance.timestamp());
+    REQUIRE(value == instance.timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(header__timestamp_setter__roundtrip__success) {
+TEST_CASE("chain header  timestamp setter  roundtrip  success", "[chain header]") {
     uint32_t expected = 4521u;
     chain::header instance;
-    BOOST_REQUIRE(expected != instance.timestamp());
+    REQUIRE(expected != instance.timestamp());
     instance.set_timestamp(expected);
-    BOOST_REQUIRE(expected == instance.timestamp());
+    REQUIRE(expected == instance.timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(header__bits_accessor__always__returns_initialized_value) {
+TEST_CASE("chain header  bits accessor  always  returns initialized value", "[chain header]") {
     uint32_t value = 4356344u;
     chain::header instance(
         11234u,
