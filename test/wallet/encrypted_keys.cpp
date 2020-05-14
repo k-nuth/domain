@@ -591,24 +591,24 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
     uint8_t out_version1 = 42;
     bool out_is_compressed1 = false;
     ec_compressed compressed;
-    BOOST_REQUIRE(decrypt(out_secret1, out_version1, out_is_compressed1, private_key, passphrase));
-    BOOST_REQUIRE_EQUAL(out_is_compressed1, is_compressed);
-    BOOST_REQUIRE_EQUAL(out_version1, version);
-    BOOST_REQUIRE(secret_to_public(compressed, out_secret1));
-    BOOST_REQUIRE_EQUAL(encode_base16(out_point), encode_base16(compressed));
+    REQUIRE(decrypt(out_secret1, out_version1, out_is_compressed1, private_key, passphrase));
+    REQUIRE(out_is_compressed1 == is_compressed);
+    REQUIRE(out_version1 == version);
+    REQUIRE(secret_to_public(compressed, out_secret1));
+    REQUIRE(encode_base16(out_point) == encode_base16(compressed));
 
     // Extract the point from the public key.
     auto const& public_key = out_public_key;
     ec_compressed out_point2;
     uint8_t out_version2 = 42;
     bool out_is_compressed2 = false;
-    BOOST_REQUIRE(decrypt(out_point2, out_version2, out_is_compressed2, public_key, passphrase));
-    BOOST_REQUIRE_EQUAL(out_is_compressed2, is_compressed);
-    BOOST_REQUIRE_EQUAL(out_version2, version);
-    BOOST_REQUIRE_EQUAL(encode_base16(out_point2), encode_base16(compressed));
+    REQUIRE(decrypt(out_point2, out_version2, out_is_compressed2, public_key, passphrase));
+    REQUIRE(out_is_compressed2 == is_compressed);
+    REQUIRE(out_version2 == version);
+    REQUIRE(encode_base16(out_point2) == encode_base16(compressed));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
 #endif
 
