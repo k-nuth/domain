@@ -332,10 +332,10 @@ TEST_CASE("address  operator boolean not equals  duplicates  returns false", "[a
              159u)});
 
     address instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("address  operator boolean not equals  differs  returns true", "[address]") {
     address const expected(
         {network_address(
              734678u,
