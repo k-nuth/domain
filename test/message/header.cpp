@@ -244,10 +244,10 @@ TEST_CASE("message header  operator boolean equals 1  duplicates  returns true",
         3565u);
 
     message::header instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__differs__returns_false) {
+TEST_CASE("message header  operator boolean equals 1  differs  returns false", "[message header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
