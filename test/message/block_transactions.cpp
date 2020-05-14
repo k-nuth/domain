@@ -390,12 +390,12 @@ TEST_CASE("block transactions  transactions setter 2  roundtrip  success", "[blo
 
     chain::transaction::list dup_transactions = transactions;
     message::block_transactions instance;
-    BOOST_REQUIRE(transactions != instance.transactions());
+    REQUIRE(transactions != instance.transactions());
     instance.set_transactions(std::move(dup_transactions));
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block_transactions__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("block transactions  operator assign equals  always  matches equivalent", "[block transactions]") {
     hash_digest const hash = hash_literal(
         "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
