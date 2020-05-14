@@ -470,17 +470,17 @@ TEST_CASE("version  timestamp accessor  always  returns initialized value", "[ve
         100u,
         false);
 
-    BOOST_REQUIRE_EQUAL(expected, instance.timestamp());
+    REQUIRE(expected == instance.timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(version__timestamp_setter__roundtrip__success) {
+TEST_CASE("version  timestamp setter  roundtrip  success", "[version]") {
     uint64_t const expected = 979797u;
     message::version instance;
     instance.set_timestamp(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.timestamp());
+    REQUIRE(expected == instance.timestamp());
 }
 
-BOOST_AUTO_TEST_CASE(version__address_receiver_accessor__always__returns_initialized_value) {
+TEST_CASE("version  address receiver accessor  always  returns initialized value", "[version]") {
     const message::network_address expected{
         734678u,
         5357534u,
