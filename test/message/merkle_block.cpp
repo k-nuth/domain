@@ -267,11 +267,11 @@ TEST_CASE("merkle block  header setter 2  roundtrip  success", "[merkle block]")
             6523454,
             68644});
 
-    BOOST_REQUIRE(instance.header().is_valid());
+    REQUIRE(instance.header().is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__hashes_accessor_1__always__returns_initialized_value) {
-    const hash_list expected{
+TEST_CASE("merkle block  hashes accessor 1  always  returns initialized value", "[merkle block]") {
+    hash_list const expected{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
         hash_literal("ccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd"),
