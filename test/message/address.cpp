@@ -354,7 +354,7 @@ TEST_CASE("address  operator boolean not equals  differs  returns true", "[addre
              159u)});
 
     address instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
