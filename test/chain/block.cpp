@@ -483,10 +483,10 @@ TEST_CASE("block  operator boolean equals  duplicates  returns true", "[block ge
          chain::transaction(4, 16, {}, {})});
 
     chain::block instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("block  operator boolean equals  differs  returns false", "[block generate merkle root]") {
     const chain::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
