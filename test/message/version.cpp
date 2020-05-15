@@ -503,10 +503,10 @@ TEST_CASE("version  address receiver accessor  always  returns initialized value
         100u,
         false);
 
-    BOOST_REQUIRE(expected == instance.address_receiver());
+    REQUIRE(expected == instance.address_receiver());
 }
 
-//BOOST_AUTO_TEST_CASE(version__address_receiver_setter_1__roundtrip__success)
+// TEST_CASE("version  address receiver setter 1  roundtrip  success", "[None]")
 //{
 //    message::network_address expected
 //    {
