@@ -269,154 +269,154 @@ TEST_CASE("reject  factory from data 3  valid input  success", "[reject]") {
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::reject>(version_maximum, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version_maximum));
+    REQUIRE(expected.serialized_size(version_maximum) == result.serialized_size(version_maximum));
 }
 
-BOOST_AUTO_TEST_CASE(reject__code_accessor__always__returns_initialized_value) {
+TEST_CASE("reject  code accessor  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(code == instance.code());
+    REQUIRE(code == instance.code());
 }
 
-BOOST_AUTO_TEST_CASE(reject__code_setter__roundtrip__success) {
+TEST_CASE("reject  code setter  roundtrip  success", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance;
-    BOOST_REQUIRE(code != instance.code());
+    REQUIRE(code != instance.code());
     instance.set_code(code);
-    BOOST_REQUIRE(code == instance.code());
+    REQUIRE(code == instance.code());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_accessor_1__always__returns_initialized_value) {
+TEST_CASE("reject  message accessor 1  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(message, instance.message());
+    REQUIRE(message == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_accessor_2__always__returns_initialized_value) {
+TEST_CASE("reject  message accessor 2  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(message, instance.message());
+    REQUIRE(message == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_setter_1__roundtrip__success) {
+TEST_CASE("reject  message setter 1  roundtrip  success", "[reject]") {
     std::string message = "Alpha Beta";
     message::reject instance;
-    BOOST_REQUIRE(message != instance.message());
+    REQUIRE(message != instance.message());
     instance.set_message(message);
-    BOOST_REQUIRE_EQUAL(message, instance.message());
+    REQUIRE(message == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_setter_2__roundtrip__success) {
+TEST_CASE("reject  message setter 2  roundtrip  success", "[reject]") {
     std::string duplicate = "Gamma";
     std::string message = "Gamma";
     message::reject instance;
-    BOOST_REQUIRE(duplicate != instance.message());
+    REQUIRE(duplicate != instance.message());
     instance.set_message(std::move(message));
-    BOOST_REQUIRE_EQUAL(duplicate, instance.message());
+    REQUIRE(duplicate == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_accessor_1__always__returns_initialized_value) {
+TEST_CASE("reject  reason accessor 1  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
+    REQUIRE(reason == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_accessor_2__always__returns_initialized_value) {
+TEST_CASE("reject  reason accessor 2  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
+    REQUIRE(reason == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_setter_1__roundtrip__success) {
+TEST_CASE("reject  reason setter 1  roundtrip  success", "[reject]") {
     std::string reason = "Alpha Beta";
     message::reject instance;
-    BOOST_REQUIRE(reason != instance.reason());
+    REQUIRE(reason != instance.reason());
     instance.set_reason(reason);
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
+    REQUIRE(reason == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_setter_2__roundtrip__success) {
+TEST_CASE("reject  reason setter 2  roundtrip  success", "[reject]") {
     std::string duplicate = "Gamma";
     std::string reason = "Gamma";
     message::reject instance;
-    BOOST_REQUIRE(duplicate != instance.reason());
+    REQUIRE(duplicate != instance.reason());
     instance.set_reason(std::move(reason));
-    BOOST_REQUIRE_EQUAL(duplicate, instance.reason());
+    REQUIRE(duplicate == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_accessor_1__always__returns_initialized_value) {
+TEST_CASE("reject  data accessor 1  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_accessor_2__always__returns_initialized_value) {
+TEST_CASE("reject  data accessor 2  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_setter_1__roundtrip__success) {
+TEST_CASE("reject  data setter 1  roundtrip  success", "[reject]") {
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance;
-    BOOST_REQUIRE(data != instance.data());
+    REQUIRE(data != instance.data());
     instance.set_data(data);
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_setter_2__roundtrip__success) {
+TEST_CASE("reject  data setter 2  roundtrip  success", "[reject]") {
     hash_digest duplicate = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance;
-    BOOST_REQUIRE(duplicate != instance.data());
+    REQUIRE(duplicate != instance.data());
     instance.set_data(std::move(data));
-    BOOST_REQUIRE(duplicate == instance.data());
+    REQUIRE(duplicate == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("reject  operator assign equals  always  matches equivalent", "[reject]") {
     message::reject value(
         message::reject::reason_code::dust,
         "My Message",
         "My Reason",
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::reject instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("reject  operator boolean equals  duplicates  returns true", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         "My Message",
