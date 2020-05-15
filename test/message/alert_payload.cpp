@@ -569,11 +569,11 @@ TEST_CASE("alert payload  status bar accessor 1  always  returns initialized", "
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
+    REQUIRE(instance.is_valid());
+    REQUIRE(status_bar == instance.status_bar());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_2__always__returns_initialized) {
+TEST_CASE("alert payload  status bar accessor 2  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
