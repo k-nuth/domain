@@ -364,10 +364,10 @@ TEST_CASE("chain header  is valid proof of work  hash greater bits  returns fals
         0u,
         34564u);
 
-    BOOST_REQUIRE(!instance.is_valid_proof_of_work());
+    REQUIRE(!instance.is_valid_proof_of_work());
 }
 
-BOOST_AUTO_TEST_CASE(header__is_valid_proof_of_work__hash_less_than_bits__returns_true) {
+TEST_CASE("chain header  is valid proof of work  hash less than bits  returns true", "[chain header]") {
     chain::header const instance(
         4u,
         hash_literal("000000000000000003ddc1e929e2944b8b0039af9aa0d826c480a83d8b39c373"),
