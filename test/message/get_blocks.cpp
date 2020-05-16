@@ -282,10 +282,10 @@ TEST_CASE("get blocks  operator boolean equals  duplicates  returns true", "[get
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     message::get_blocks instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_blocks__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("get blocks  operator boolean equals  differs  returns false", "[get blocks]") {
     const message::get_blocks expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
