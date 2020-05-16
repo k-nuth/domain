@@ -343,10 +343,10 @@ TEST_CASE("headers  operator boolean equals  duplicates  returns true", "[header
              3000u}});
 
     message::headers instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("headers  operator boolean equals  differs  returns false", "[headers]") {
     const message::headers expected(
         {header{
              1u,
