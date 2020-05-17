@@ -435,10 +435,10 @@ TEST_CASE("reject  operator boolean equals  differs  returns false", "[reject]")
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     message::reject instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("reject - reject  operator boolean not equals  duplicates  returns false", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         "My Message",
