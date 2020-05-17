@@ -540,10 +540,10 @@ TEST_CASE("version  address receiver setter 2  roundtrip  success", "[version]")
         123u});
 
     const message::network_address result = instance.address_receiver();
-    BOOST_REQUIRE(result.is_valid());
+    REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__address_sender_accessor__always__returns_initialized_value) {
+TEST_CASE("version  address sender accessor  always  returns initialized value", "[version]") {
     const message::network_address expected{
         46324u,
         1515u,
