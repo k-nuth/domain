@@ -632,11 +632,11 @@ TEST_CASE("alert payload  reserved accessor 1  always  returns initialized", "[a
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_2__always__returns_initialized) {
+TEST_CASE("alert payload  reserved accessor 2  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
