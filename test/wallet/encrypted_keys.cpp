@@ -640,7 +640,7 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
 //    }
 //}
 //
-//BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__all_multiplied_versions__print_private_and_public_encrypted_keys)
+// TEST_CASE("encrypted  create key pair  all multiplied versions  print private and public encrypted keys", "[None]")
 //{
 //    encrypted_token out_token;
 //    create_token(out_token, "passphrase", base16_literal("baadf00dbaadf00d"));
