@@ -443,10 +443,10 @@ static const config::checkpoint testnet_graviton_active_checkpoint{
     "00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712};
 
 //2020-May hard fork
-static const config::checkpoint mainnet_graviton_active_checkpoint{
+static const config::checkpoint mainnet_phonon_active_checkpoint{
     "00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259};
 
-static const config::checkpoint testnet_graviton_active_checkpoint{
+static const config::checkpoint testnet_phonon_active_checkpoint{
     "0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461};
 
 //2020-Nov hard fork
