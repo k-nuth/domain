@@ -358,10 +358,10 @@ TEST_CASE("merkle block  flags accessor 1  always  returns initialized value", "
         },
         expected);
 
-    BOOST_REQUIRE(expected == instance.flags());
+    REQUIRE(expected == instance.flags());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block__flags_accessor_2__always__returns_initialized_value) {
+TEST_CASE("merkle block  flags accessor 2  always  returns initialized value", "[merkle block]") {
     data_chunk const expected{0xae, 0x56, 0x0f};
 
     const message::merkle_block instance(
