@@ -531,101 +531,101 @@ TEST_CASE("block  operator boolean not equals  differs  returns true", "[block g
          chain::transaction(4, 16, {}, {})});
 
     chain::block instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
-BOOST_AUTO_TEST_SUITE(block_is_distinct_transaction_set_tests)
+// Start Boost Suite: block is distinct transaction set tests
 
-BOOST_AUTO_TEST_CASE(block__distinct_transactions__empty__true) {
+TEST_CASE("block  distinct transactions  empty  true", "[block is distinct transaction set]") {
     chain::block value;
-    BOOST_REQUIRE(value.is_distinct_transaction_set());
+    REQUIRE(value.is_distinct_transaction_set());
 }
 
-BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__single__true) {
+TEST_CASE("validate block  is distinct tx set  single  true", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}});
-    BOOST_REQUIRE(value.is_distinct_transaction_set());
+    REQUIRE(value.is_distinct_transaction_set());
 }
 
-BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__duplicate__false) {
+TEST_CASE("validate block  is distinct tx set  duplicate  false", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {1, 0, {}, {}}});
-    BOOST_REQUIRE(!value.is_distinct_transaction_set());
+    REQUIRE(!value.is_distinct_transaction_set());
 }
 
-BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__distinct_by_version__true) {
+TEST_CASE("validate block  is distinct tx set  distinct by version  true", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {2, 0, {}, {}}, {3, 0, {}, {}}});
-    BOOST_REQUIRE(value.is_distinct_transaction_set());
+    REQUIRE(value.is_distinct_transaction_set());
 }
 
-BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__partialy_distinct_by_version__false) {
+TEST_CASE("validate block  is distinct tx set  partialy distinct by version  false", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {2, 0, {}, {}}, {2, 0, {}, {}}});
-    BOOST_REQUIRE(!value.is_distinct_transaction_set());
+    REQUIRE(!value.is_distinct_transaction_set());
 }
 
-BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__partialy_distinct_not_adjacent_by_version__false) {
+TEST_CASE("validate block  is distinct tx set  partialy distinct not adjacent by version  false", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {2, 0, {}, {}}, {1, 0, {}, {}}});
-    BOOST_REQUIRE(!value.is_distinct_transaction_set());
+    REQUIRE(!value.is_distinct_transaction_set());
 }
 
 #ifdef KTH_CURRENCY_BCH
-BOOST_AUTO_TEST_CASE(validate_block__is_cash_pow_valid__true) {
+TEST_CASE("validate block  is cash pow valid  true", "[block is distinct transaction set]") {
     uint32_t old_bits = 402736949;
     const domain::chain::compact bits(old_bits);
     uint256_t target(bits);
-    BOOST_REQUIRE_EQUAL(domain::chain::compact(domain::chain::chain_state::difficulty_adjustment_cash(target)).normal(), 402757890);
+    REQUIRE(domain::chain::compact(domain::chain::chain_state::difficulty_adjustment_cash(target)).normal() == 402757890);
 }
 #endif  //KTH_CURRENCY_BCH
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
-BOOST_AUTO_TEST_SUITE(block_is_forward_reference_tests)
+// Start Boost Suite: block is forward reference tests
 
-BOOST_AUTO_TEST_CASE(block__is_forward_reference__no_transactions__false) {
+TEST_CASE("block  is forward reference  no transactions  false", "[block is forward reference]") {
     chain::block value;
-    BOOST_REQUIRE(!value.is_forward_reference());
+    REQUIRE(!value.is_forward_reference());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_forward_reference__multiple_empty_transactions__false) {
+TEST_CASE("block  is forward reference  multiple empty transactions  false", "[block is forward reference]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {2, 0, {}, {}}});
-    BOOST_REQUIRE(!value.is_forward_reference());
+    REQUIRE(!value.is_forward_reference());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_forward_reference__backward_reference__false) {
+TEST_CASE("block  is forward reference  backward reference  false", "[block is forward reference]") {
     chain::block value;
     chain::transaction before{2, 0, {}, {}};
     chain::transaction after{1, 0, {{{before.hash(), 0}, {}, 0}}, {}};
     value.set_transactions({before, after});
-    BOOST_REQUIRE(!value.is_forward_reference());
+    REQUIRE(!value.is_forward_reference());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_forward_reference__duplicate_transactions__false) {
+TEST_CASE("block  is forward reference  duplicate transactions  false", "[block is forward reference]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {1, 0, {}, {}}});
-    BOOST_REQUIRE(!value.is_forward_reference());
+    REQUIRE(!value.is_forward_reference());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_forward_reference__coinbase_and_multiple_empty_transactions__false) {
+TEST_CASE("block  is forward reference  coinbase and multiple empty transactions  false", "[block is forward reference]") {
     chain::block value;
     chain::transaction coinbase{1, 0, {{{null_hash, chain::point::null_index}, {}, 0}}, {}};
     value.set_transactions({coinbase, {2, 0, {}, {}}, {3, 0, {}, {}}});
-    BOOST_REQUIRE(!value.is_forward_reference());
+    REQUIRE(!value.is_forward_reference());
 }
 
-BOOST_AUTO_TEST_CASE(block__is_forward_reference__forward_reference__true) {
+TEST_CASE("block  is forward reference  forward reference  true", "[block is forward reference]") {
     chain::block value;
     chain::transaction after{2, 0, {}, {}};
     chain::transaction before{1, 0, {{{after.hash(), 0}, {}, 0}}, {}};
     value.set_transactions({before, after});
-    BOOST_REQUIRE(value.is_forward_reference());
+    REQUIRE(value.is_forward_reference());
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
