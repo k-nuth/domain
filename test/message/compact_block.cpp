@@ -397,10 +397,10 @@ TEST_CASE("compact block  short ids accessor 2  always  returns initialized valu
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     const message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(short_ids == instance.short_ids());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_1__roundtrip__success) {
+TEST_CASE("compact block  short ids setter 1  roundtrip  success", "[compact block]") {
     const message::compact_block::short_id_list value = {
         convert_to_uint64t("aaaaaaaaaaaa"),
         convert_to_uint64t("bbbbbbbbbbbb"),
