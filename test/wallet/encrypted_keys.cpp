@@ -655,7 +655,7 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
 //    for (size_t version = 0x00; version <= 0xFF; ++version)
 //    {
 //        auto const byte = static_cast<uint8_t>(version);
-//        BOOST_REQUIRE(create_key_pair(out_private_key, out_public_key, unused, token, seed, byte, compressed));
+//       REQUIRE(create_key_pair(out_private_key, out_public_key, unused, token, seed, byte, compressed));
 //
 //        auto private_key = encode_base58(out_private_key);
 //        auto public_key = encode_base58(out_public_key);
