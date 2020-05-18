@@ -566,10 +566,10 @@ TEST_CASE("version  address sender accessor  always  returns initialized value",
         100u,
         false);
 
-    BOOST_REQUIRE(expected == instance.address_sender());
+    REQUIRE(expected == instance.address_sender());
 }
 
-//BOOST_AUTO_TEST_CASE(version__address_sender_setter_1__roundtrip__success)
+// TEST_CASE("version  address sender setter 1  roundtrip  success", "[None]")
 //{
 //    message::network_address expected
 //    {
