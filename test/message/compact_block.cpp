@@ -422,12 +422,12 @@ TEST_CASE("compact block  short ids setter 2  roundtrip  success", "[compact blo
     message::compact_block::short_id_list dup(value);
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.short_ids());
+    REQUIRE(value != instance.short_ids());
     instance.set_short_ids(std::move(dup));
-    BOOST_REQUIRE(value == instance.short_ids());
+    REQUIRE(value == instance.short_ids());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_1__always__returns_initialized_value) {
+TEST_CASE("compact block  transactions accessor 1  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
