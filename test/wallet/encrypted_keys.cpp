@@ -665,8 +665,8 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
 //    }
 //}
 //
-//BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
 
 // ----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
