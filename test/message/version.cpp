@@ -585,16 +585,16 @@ TEST_CASE("version  address sender accessor  always  returns initialized value",
 //    };
 //
 //    message::version instance;
-//    BOOST_REQUIRE(!instance.address_sender().is_valid());
+//    REQUIRE(!instance.address_sender().is_valid());
 //    instance.address_sender(expected);
 //    const message::network_address result = instance.address_sender();
-//    BOOST_REQUIRE(result == expected);
-//    BOOST_REQUIRE(result.is_valid());
+//    REQUIRE(result == expected);
+//    REQUIRE(result.is_valid());
 //}
 
-BOOST_AUTO_TEST_CASE(version__address_sender_setter_2__roundtrip__success) {
+TEST_CASE("version  address sender setter 2  roundtrip  success", "[version]") {
     message::version instance;
-    BOOST_REQUIRE(!instance.address_sender().is_valid());
+    REQUIRE(!instance.address_sender().is_valid());
     instance.set_address_sender(message::network_address{
         46324u,
         1515u,
