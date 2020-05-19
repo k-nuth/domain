@@ -427,18 +427,18 @@ TEST_CASE("headers  operator boolean not equals  differs  returns true", "[heade
              3000u}});
 
     message::headers instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_hashes__empty__returns_empty_list) {
+TEST_CASE("headers  to hashes  empty  returns empty list", "[headers]") {
     message::headers instance;
     hash_list result;
     instance.to_hashes(result);
-    BOOST_REQUIRE(result.empty());
+    REQUIRE(result.empty());
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_hashes__non_empty__returns_header_hash_list) {
-    const hash_list expected{
+TEST_CASE("headers  to hashes  non empty  returns header hash list", "[headers]") {
+    hash_list const expected{
         hash_literal("108127a4f5955a546b78807166d8cb9cd3eee1ed530c14d51095bc798685f4d6"),
         hash_literal("37ec64a548b6419769b152d70efc4c356f74c7fda567711d98cac3c55c34a890"),
         hash_literal("d9bbb4b47ca45ec8477cba125262b07b17daae944b54d1780e0a6373d2eed879")};
