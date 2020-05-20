@@ -603,10 +603,10 @@ TEST_CASE("version  address sender setter 2  roundtrip  success", "[version]") {
         351u});
 
     const message::network_address result = instance.address_sender();
-    BOOST_REQUIRE(result.is_valid());
+    REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(version__nonce_accessor__always__returns_initialized_value) {
+TEST_CASE("version  nonce accessor  always  returns initialized value", "[version]") {
     uint64_t const expected = 13626u;
     const message::version instance(
         210u,
