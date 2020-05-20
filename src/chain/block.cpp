@@ -294,15 +294,15 @@ size_t block::serialized_size(bool witness) const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (witness_val(witness) && total_size_ != boost::none) {
-        value = total_size_.get();
+    if (witness_val(witness) && total_size_ != std::nullopt) {
+        value = total_size_.value();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;
     }
 
-    if ( ! witness_val(witness) && base_size_ != boost::none) {
-        value = base_size_.get();
+    if ( ! witness_val(witness) && base_size_ != std::nullopt) {
+        value = base_size_.value();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;
@@ -329,19 +329,19 @@ size_t block::serialized_size(bool witness) const {
 // TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list const& value) {
     block_basis::set_transactions(value);
-    segregated_ = boost::none;
-    total_inputs_ = boost::none;
-    base_size_ = boost::none;
-    total_size_ = boost::none;
+    segregated_ = std::nullopt;
+    total_inputs_ = std::nullopt;
+    base_size_ = std::nullopt;
+    total_size_ = std::nullopt;
 }
 
 // TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list&& value) {
     block_basis::set_transactions(std::move(value));
-    segregated_ = boost::none;
-    total_inputs_ = boost::none;
-    base_size_ = boost::none;
-    total_size_ = boost::none;
+    segregated_ = std::nullopt;
+    total_inputs_ = std::nullopt;
+    base_size_ = std::nullopt;
+    total_size_ = std::nullopt;
 }
 
 // // Convenience property.
@@ -438,7 +438,7 @@ void block::strip_witness() {
     unique_lock lock(mutex_);
 
     // segregated_ = false;
-    // total_size_ = boost::none;
+    // total_size_ = std::nullopt;
     // std::for_each(transactions_.begin(), transactions_.end(), strip);
 
     block_basis::strip_witness();
@@ -500,8 +500,8 @@ size_t block::total_inputs(bool with_coinbase) const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (total_inputs_ != boost::none) {
-        value = total_inputs_.get();
+    if (total_inputs_ != std::nullopt) {
+        value = total_inputs_.value();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;
@@ -718,8 +718,8 @@ bool block::is_segregated() const {
     // Critical Section
     mutex_.lock_upgrade();
 
-    if (segregated_ != boost::none) {
-        value = segregated_.get();
+    if (segregated_ != std::nullopt) {
+        value = segregated_.value();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;

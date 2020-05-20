@@ -5,12 +5,13 @@
 #ifndef KTH_INFRASTUCTURE_CONFIG_PARSER_HPP
 #define KTH_INFRASTUCTURE_CONFIG_PARSER_HPP
 
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <string>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
+// #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <boost/throw_exception.hpp>
 
@@ -36,14 +37,14 @@ enum class load_error {
     success = 1 
 };
 
-// using namespace boost::filesystem;
+// using namespace std::filesystem;
 // using namespace boost::program_options;
 // using namespace boost::system;
 
-using boost::filesystem::path;
+using std::filesystem::path;
 using boost::program_options::command_line_parser;
 using boost::program_options::reading_file;
-using boost::system::error_code;
+using std::error_code;
 
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
@@ -146,10 +147,10 @@ public:
             checkpoints.emplace_back("00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712);  //time: 1573827462 - Nov 15, 2019 02:17:42 PM
             checkpoints.emplace_back("000000000ce59bbc9a046429e608395a1666bcf11f28692909dd88ac7348fbeb", 1341713);  //time: 1573828667 - Nov 15, 2019 02:37:47 PM
 
-            // //2020-May Hardfork - phonon - (1589544000)
-            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
-            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
-            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
+            //2020-May Hardfork - phonon - (1589544000)
+            checkpoints.emplace_back("0000000070f33c64cb94629680fbc57d17bea354a73e693affcb366d023db324", 1378460);  //time: 1589550734 - May 15, 2020 01:52:14 PM
+            checkpoints.emplace_back("0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461);  //time: 1589552066 - May 15, 2020 02:14:26 PM
+            checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
 
             // //2020-Nov Hardfork - axion - (1605441600)
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
@@ -235,11 +236,12 @@ public:
             checkpoints.emplace_back("00000000000000000074d2ba7b47eb241ee6aca95daf71cea539b32c660e2350", 609137);  //time: 1573826122 - Nov 15, 2019 01:55:22 PM
 
             checkpoints.emplace_back("00000000000000000177593a9861113e263bd9fb7679d6783ab88829b147662a", 620000);
+            checkpoints.emplace_back("000000000000000001c885feaa06e225ee51c37c98a293ab779e01912a99a620", 635000);
 
-            // //2020-May Hardfork - phonon - (1589544000)
-            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
-            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
-            // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2020 99:99:99 XX
+            //2020-May Hardfork - phonon - (1589544000)
+            checkpoints.emplace_back("000000000000000003302c47d01e78f1c86aa3b0e96b066761a5059bc8f5781a", 635258);  //time: 1589547409 - May 15, 2020 12:56:49 PM
+            checkpoints.emplace_back("00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259);  //time: 1589547811 - May 15, 2020 01:03:31 PM
+            checkpoints.emplace_back("0000000000000000021007984d36d32c49a249b216297694dfb9756f095aa645", 635260);  //time: 1589548077 - May 15, 2020 01:07:57 PM
 
             // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
 

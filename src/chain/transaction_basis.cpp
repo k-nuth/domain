@@ -9,12 +9,11 @@
 #include <cstdint>
 #include <limits>
 #include <numeric>
+#include <optional>
 #include <sstream>
 #include <type_traits>
 #include <utility>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/input.hpp>
@@ -334,7 +333,7 @@ bool transaction_basis::is_locktime_conflict() const {
 //     // Critical Section
 //     mutex_.lock_upgrade();
 
-//     if (total_input_value_ != boost::none) {
+//     if (total_input_value_ != std::nullopt) {
 //         value = total_input_value_.get();
 //         mutex_.unlock_upgrade();
 //         //---------------------------------------------------------------------
@@ -369,7 +368,7 @@ bool transaction_basis::is_locktime_conflict() const {
 //     // Critical Section
 //     mutex_.lock_upgrade();
 
-//     if (total_output_value_ != boost::none) {
+//     if (total_output_value_ != std::nullopt) {
 //         value = total_output_value_.get();
 //         mutex_.unlock_upgrade();
 //         //---------------------------------------------------------------------
@@ -532,7 +531,7 @@ bool transaction_basis::is_mature(size_t height) const {
 //     // Critical Section
 //     mutex_.lock_upgrade();
 
-//     if (segregated_ != boost::none) {
+//     if (segregated_ != std::nullopt) {
 //         value = segregated_.get();
 //         mutex_.unlock_upgrade();
 //         //---------------------------------------------------------------------
