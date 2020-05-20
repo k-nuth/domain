@@ -510,17 +510,17 @@ TEST_CASE("headers  to inventory  non empty  returns header hash inventory list"
 
     inventory_vector::list result;
     instance.to_inventory(result, inventory_vector::type_id::block);
-    BOOST_REQUIRE_EQUAL(result.size(), expected.size());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.size() == expected.size());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__is_sequential__empty__true) {
+TEST_CASE("headers  is sequential  empty  true", "[headers]") {
     static headers const instance;
-    BOOST_REQUIRE(instance.elements().empty());
-    BOOST_REQUIRE(instance.is_sequential());
+    REQUIRE(instance.elements().empty());
+    REQUIRE(instance.is_sequential());
 }
 
-BOOST_AUTO_TEST_CASE(headers__is_sequential__single__true) {
+TEST_CASE("headers  is sequential  single  true", "[headers]") {
     static header const first{
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
