@@ -658,25 +658,25 @@ TEST_CASE("version  user agent accessor  always  returns initialized value", "[v
         100u,
         false);
 
-    BOOST_REQUIRE_EQUAL(expected, instance.user_agent());
+    REQUIRE(expected == instance.user_agent());
 }
 
-BOOST_AUTO_TEST_CASE(version__user_agent_setter_1__roundtrip__success) {
+TEST_CASE("version  user agent setter 1  roundtrip  success", "[version]") {
     std::string const expected = "MyUseRAgenT";
     message::version instance;
     instance.set_user_agent(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.user_agent());
+    REQUIRE(expected == instance.user_agent());
 }
 
-BOOST_AUTO_TEST_CASE(version__user_agent_setter_2__roundtrip__success) {
+TEST_CASE("version  user agent setter 2  roundtrip  success", "[version]") {
     std::string expected = "MyUseRAgenT";
     message::version instance;
-    BOOST_REQUIRE(instance.user_agent().empty());
+    REQUIRE(instance.user_agent().empty());
     instance.set_user_agent(std::move(expected));
-    BOOST_REQUIRE_EQUAL(false, instance.user_agent().empty());
+    REQUIRE( ! instance.user_agent().empty());
 }
 
-BOOST_AUTO_TEST_CASE(version__start_height_accessor__always__returns_initialized_value) {
+TEST_CASE("version  start height accessor  always  returns initialized value", "[version]") {
     uint32_t const expected = 514u;
     const message::version instance(
         210u,
