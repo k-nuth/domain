@@ -548,11 +548,11 @@ TEST_CASE("message transaction  operator boolean equals 2  differs  returns fals
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE_EQUAL(false, alpha == beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__duplicates__returns_false) {
+TEST_CASE("message transaction  operator boolean not equals 2  duplicates  returns false", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
