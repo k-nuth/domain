@@ -335,7 +335,7 @@ TEST_CASE("message header  operator boolean not equals 2  differs  returns true"
         68644u);
 
     message::header instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
