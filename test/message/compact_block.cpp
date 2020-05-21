@@ -495,12 +495,12 @@ TEST_CASE("compact block  transactions setter 2  roundtrip  success", "[compact 
     message::prefilled_transaction::list dup(value);
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.transactions());
+    REQUIRE(value != instance.transactions());
     instance.set_transactions(std::move(dup));
-    BOOST_REQUIRE(value == instance.transactions());
+    REQUIRE(value == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("compact block  operator assign equals  always  matches equivalent", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
