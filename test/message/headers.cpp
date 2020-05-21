@@ -559,10 +559,10 @@ TEST_CASE("headers  is sequential  sequential  true", "[headers]") {
         3000u};
 
     headers const instance({first, second, third});
-    BOOST_REQUIRE(instance.is_sequential());
+    REQUIRE(instance.is_sequential());
 }
 
-BOOST_AUTO_TEST_CASE(headers__is_sequential__disordered__false) {
+TEST_CASE("headers  is sequential  disordered  false", "[headers]") {
     static header const first{
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
