@@ -2,18 +2,18 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_COMPACT_HPP
-#define KTH_CHAIN_COMPACT_HPP
+#ifndef KTH_DOMAIN_CHAIN_COMPACT_HPP
+#define KTH_DOMAIN_CHAIN_COMPACT_HPP
 
 #include <cstdint>
 
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 /// A signed but zero-floored scientific notation in 32 bits.
-class BC_API compact {
+class KD_API compact {
 public:
     /// Construct a normal form compact number from a 32 bit compact number.
     explicit 

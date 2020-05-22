@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_HEADER_HPP
-#define KTH_CHAIN_HEADER_HPP
+#ifndef KTH_DOMAIN_CHAIN_HEADER_HPP
+#define KTH_DOMAIN_CHAIN_HEADER_HPP
 
 #include <cstddef>
 #include <cstdint>
