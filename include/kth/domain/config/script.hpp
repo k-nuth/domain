@@ -13,12 +13,12 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between base16/raw script and script_type.
  */
-class BC_API script {
+class KD_API script {
 public:
     script() = default;
 
