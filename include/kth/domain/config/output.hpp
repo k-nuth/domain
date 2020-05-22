@@ -13,13 +13,13 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between a base58-string:number and
  * a vector of chain::output.
  */
-class BC_API output {
+class KD_API output {
 public:
 
     output();
