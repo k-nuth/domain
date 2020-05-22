@@ -400,7 +400,7 @@ set(kth_domain_sources_just_legacy
         src/chain/transaction.cpp
 
         src/machine/interpreter.cpp
-        # src/machine/number.cpp
+
         src/machine/opcode.cpp
         src/machine/operation.cpp
         src/machine/program.cpp
