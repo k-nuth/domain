@@ -9,11 +9,11 @@
 
 KTH_USE_MAIN
 
-int bc::main(int argc, char* argv[]) {
+int kth::main(int argc, char* argv[]) {
     return 0;
 }
 
-// int bc::main(int argc, char* argv[]) {
+// int kth::main(int argc, char* argv[]) {
 
 //     data_chunk out;
 //     data_sink ostream(out);

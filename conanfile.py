@@ -153,6 +153,6 @@ class KnuthDomainConan(KnuthConanFile):
             self.cpp_info.libs.append("wsock32")
 
         if not self.is_shared:
-            self.cpp_info.defines.append("BC_STATIC")
+            self.cpp_info.defines.append("KD_STATIC")
 
 
