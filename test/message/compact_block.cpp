@@ -613,7 +613,7 @@ TEST_CASE("compact block  operator boolean not equals  differs  returns true", "
          message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))});
 
     message::compact_block instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
