@@ -816,10 +816,10 @@ TEST_CASE("version  operator boolean equals  differs  returns false", "[version]
         false);
 
     message::version instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(version__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("version  operator boolean not equals  duplicates  returns false", "[version]") {
     const message::version expected(
         210u,
         15234u,
