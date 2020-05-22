@@ -11,13 +11,13 @@
 #include <kth/domain/chain/header.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between serialized and deserialized satoshi
  * header.
  */
-class BC_API header {
+class KD_API header {
 public:
     header() = default;
 

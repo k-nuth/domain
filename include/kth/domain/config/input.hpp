@@ -12,12 +12,12 @@
 #include <kth/domain/chain/input_point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper stub for chain::input.
  */
-class BC_API input {
+class KD_API input {
 public:
     input() = default;
 

@@ -11,12 +11,14 @@
 #include <kth/domain.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth::config {
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between base16 string and ec_secret.
  */
-class BC_API ec_private {
+class KD_API ec_private {
 public:
 
     ec_private() = default;

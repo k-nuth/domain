@@ -13,12 +13,12 @@
 #include <kth/domain.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between endorsement string and data_chunk.
  */
-class BC_API endorsement {
+class KD_API endorsement {
 public:
     endorsement() = default;
 
