@@ -16,12 +16,15 @@
 #include <boost/throw_exception.hpp>
 
 #include <kth/infrastructure/config/checkpoint.hpp>
-#include <kth/infrastructure/define.hpp>
+
+#include <kth/domain/define.hpp>
+//#include <kth/infrastructure/define.hpp>
+
 #include <kth/infrastructure/unicode/ifstream.hpp>
 
 #include <kth/domain/multi_crypto_support.hpp>
 
-namespace kth {
+namespace kth::domain {
 
 // These are just annoyingly long.
 using variables_map = boost::program_options::variables_map;
