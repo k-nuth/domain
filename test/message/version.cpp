@@ -868,7 +868,7 @@ TEST_CASE("version  operator boolean not equals  differs  returns true", "[versi
         false);
 
     message::version instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
