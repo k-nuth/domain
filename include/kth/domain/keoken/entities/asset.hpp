@@ -15,9 +15,9 @@
 namespace kth::keoken {
 namespace entities {
 
-class BC_API asset {
+class KD_API asset {
 public:
-    asset(asset_id_t id, std::string name, amount_t amount, bc::wallet::payment_address owner);
+    asset(asset_id_t id, std::string name, amount_t amount, kth::domain::wallet::payment_address owner);
 
     // Semiregular.
     //-------------------------------------------------------------------------

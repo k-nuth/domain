@@ -9,7 +9,7 @@
 
 #include <kth/domain/define.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 void inline add_child(pt::ptree& out_list, std::string const& name, const pt::ptree& element, bool json) {
     if (json) {

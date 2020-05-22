@@ -12,7 +12,7 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 #include <kth/domain/keoken/constants.hpp>
 #include <kth/domain/keoken/message/base.hpp>

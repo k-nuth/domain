@@ -24,11 +24,11 @@ namespace kth::keoken::wallet {
 static constexpr 
 uint64_t fees = 2000;
 
-using result_t = std::pair<kth::error::error_code_t, kth::chain::transaction>;
+using result_t = std::pair<kth::error::error_code_t, kth::domain::chain::transaction>;
 
-BC_API
-result_t tx_encode_create_asset(kth::chain::input_point::list const& outputs_to_spend,
-                                kth::wallet::payment_address const& asset_owner,
+KD_API
+result_t tx_encode_create_asset(kth::domain::chain::input_point::list const& outputs_to_spend,
+                                kth::domain::wallet::payment_address const& asset_owner,
                                 uint64_t utxo_satoshis,
                                 std::string const& asset_name,
                                 amount_t asset_amount,

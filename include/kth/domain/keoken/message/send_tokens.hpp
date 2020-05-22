@@ -12,14 +12,14 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/primitives.hpp>
 
 namespace kth::keoken::message {
 
-class BC_API send_tokens {
+class KD_API send_tokens {
 public:
     static
     uint16_t const version = 0;

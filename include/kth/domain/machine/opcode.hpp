@@ -2,19 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_OPCODE_HPP_
-#define KTH_MACHINE_OPCODE_HPP_
+#ifndef KTH_DOMAIN_MACHINE_OPCODE_HPP
+#define KTH_DOMAIN_MACHINE_OPCODE_HPP
 
 #include <cstdint>
 #include <string>
 
+#include <kth/domain/define.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 
-#include <kth/infrastructure/define.hpp>
+#include <kth/domain/define.hpp>
+//#include <kth/infrastructure/define.hpp>
+
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
 /// Determine if the fork is enabled in the active forks set.
 //TODO(fernando): duplicated in chain::script (domain)

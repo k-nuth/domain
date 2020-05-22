@@ -12,7 +12,7 @@ namespace kth::keoken {
 using asset_id_t = uint32_t;
 using amount_t = int64_t;
 
-}  // namespace keoken
-}  // namespace kth
+} // namespace keoken
+} // namespace kth
 
 #endif  //KTH_KEOKEN_PRIMITIVES_HPP_

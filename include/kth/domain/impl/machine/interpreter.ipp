@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_INTERPRETER_IPP
-#define KTH_MACHINE_INTERPRETER_IPP
+#ifndef KTH_DOMAIN_MACHINE_INTERPRETER_IPP
+#define KTH_DOMAIN_MACHINE_INTERPRETER_IPP
 
 #include <cstdint>
 #include <utility>

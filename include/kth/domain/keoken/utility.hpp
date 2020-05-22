@@ -10,7 +10,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
 namespace kth::keoken {

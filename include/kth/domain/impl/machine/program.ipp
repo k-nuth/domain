@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_PROGRAM_IPP
-#define KTH_MACHINE_PROGRAM_IPP
+#ifndef KTH_DOMAIN_MACHINE_PROGRAM_IPP
+#define KTH_DOMAIN_MACHINE_PROGRAM_IPP
 
 #include <algorithm>
 #include <cstddef>
