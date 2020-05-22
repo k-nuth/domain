@@ -2,8 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DOMAIN_CONCEPTS_HPP_
-#define KTH_DOMAIN_CONCEPTS_HPP_
+#ifndef KTH_DOMAIN_CONCEPTS_HPP
+#define KTH_DOMAIN_CONCEPTS_HPP
+
+#include <type_traits>
 
 // #define Reader typename //NOLINT
 // #define Writer typename //NOLINT
