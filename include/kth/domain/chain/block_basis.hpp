@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_BLOCK_BASIS_HPP_
-#define KTH_CHAIN_BLOCK_BASIS_HPP_
+#ifndef KTH_DOMAIN_CHAIN_BLOCK_BASIS_HPP
+#define KTH_DOMAIN_CHAIN_BLOCK_BASIS_HPP
 
 #include <cstddef>
 #include <cstdint>

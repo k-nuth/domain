@@ -2,25 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-///////////////////////////////////////////////////////////////////////////////
-//
-//        GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
-//
-///////////////////////////////////////////////////////////////////////////////
 #ifndef KTH_DOMAIN_HPP
 #define KTH_DOMAIN_HPP
 
-/**
- * API Users: Include only this header. Direct use of other headers is fragile
- * and unsupported as header organization is subject to change.
- *
- * Maintainers: Do not include this header internal to this library.
- */
-
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/version.hpp>
+
 #include <kth/domain/chain/block.hpp>
 #include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/common.hpp>
 #include <kth/domain/chain/compact.hpp>
 #include <kth/domain/chain/header.hpp>
 #include <kth/domain/chain/history.hpp>
