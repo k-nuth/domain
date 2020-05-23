@@ -9,7 +9,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 // Bitcoin compact for represents a value in base 256 notation as follows:
 // value = (-1^sign) * mantissa * 256^(exponent-3)

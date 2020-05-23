@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <boost/range/adaptor/reversed.hpp>
+
 #include <kth/domain/chain/block.hpp>
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/compact.hpp>

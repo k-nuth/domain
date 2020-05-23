@@ -16,7 +16,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 // Use system clock because we require accurate time of day.
 using wall_clock = std::chrono::system_clock;
