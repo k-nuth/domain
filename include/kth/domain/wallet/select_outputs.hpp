@@ -10,9 +10,9 @@
 #include <kth/domain/chain/points_value.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
-struct BC_API select_outputs {
+struct KD_API select_outputs {
     enum class algorithm {
         /// The smallest single sufficient unspent output, if one exists, or a
         /// sufficient set of unspent outputs, if such a set exists. The set is

@@ -16,10 +16,10 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 /// A class for working with stealth payment addresses.
-class BC_API stealth_address {
+class KD_API stealth_address {
 public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
     static

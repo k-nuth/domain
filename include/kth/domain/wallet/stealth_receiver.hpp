@@ -13,10 +13,10 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/utility/binary.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 /// This class does not support multisignature stealth addresses.
-class BC_API stealth_receiver {
+class KD_API stealth_receiver {
 public:
     /// Constructors.
     stealth_receiver(ec_secret const& scan_private,

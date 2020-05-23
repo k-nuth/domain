@@ -10,14 +10,16 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/wallet/uri.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
+
+using namespace kth::infrastructure::wallet;
 
 /**
  * Interface for URI deserialization.
  * The URI parser calls these methods as it extracts each URI component.
  * A false return from any setter is expected to terminate the parser.
  */
-class BC_API uri_reader {
+class KD_API uri_reader {
 public:
     /**
      * Parses any URI string into its individual components.

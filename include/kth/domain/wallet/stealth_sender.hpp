@@ -15,10 +15,10 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 /// This class does not support multisignature stealth addresses.
-class BC_API stealth_sender {
+class KD_API stealth_sender {
 public:
     /// Constructors.
     /// Generate a send address from the stealth address.
