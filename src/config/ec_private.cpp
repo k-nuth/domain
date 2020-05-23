@@ -10,10 +10,11 @@
 
 #include <boost/program_options.hpp>
 
-#include <kth/domain.hpp>
-#include <kth/domain/define.hpp>
+// #include <kth/domain.hpp>
+// #include <kth/domain/define.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 // ec_secret base16 format is private to bx.
 static

@@ -30,9 +30,9 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-using namespace bc::machine;
+using namespace kth::domain::machine;
 
 // Constructors.
 //-----------------------------------------------------------------------------
