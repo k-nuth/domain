@@ -13,10 +13,10 @@ size_t serialized_size() {
     return sizeof(uint16_t) + sizeof(uint16_t);
 }
 
-// void to_data(bc::writer& sink, uint16_t version, uint16_t type) {
+// void to_data(kth::writer& sink, uint16_t version, uint16_t type) {
 //     sink.write_2_bytes_big_endian(version);
 //     sink.write_2_bytes_big_endian(type);
 // }
 
-}  // namespace base
-}  // namespace kth::keoken::message
+} // namespace base
+} // namespace kth::keoken::message

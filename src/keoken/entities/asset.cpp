@@ -9,13 +9,13 @@
 namespace kth::keoken {
 namespace entities {
 
-// using namespace bc;
-using bc::wallet::payment_address;
+// using namespace kd;
+using kth::domain::wallet::payment_address;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
-asset::asset(asset_id_t id, std::string name, amount_t amount, bc::wallet::payment_address owner)
+asset::asset(asset_id_t id, std::string name, amount_t amount, kth::domain::wallet::payment_address owner)
     : id_(id), name_(std::move(name)), amount_(amount), owner_(std::move(owner)) {}
 
 // Operators.

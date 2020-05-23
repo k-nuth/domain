@@ -14,9 +14,9 @@
 
 namespace kth::keoken {
 
-using bc::data_chunk;
-using bc::machine::opcode;
-using bc::machine::operation;
+using kth::data_chunk;
+using kth::domain::machine::opcode;
+using kth::domain::machine::operation;
 
 template <typename I>
 data_chunk get_keoken_data(I f, I l) {

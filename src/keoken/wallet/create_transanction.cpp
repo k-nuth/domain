@@ -14,18 +14,18 @@
 
 namespace kth::keoken::wallet {
 
-// using namespace bc;
+// using namespace kd;
 using kth::data_chunk;
 using kth::ec_secret;
-using kth::chain::input_point;
-using kth::chain::output;
-using kth::chain::script;
-using kth::chain::transaction;
+using kth::domain::chain::input_point;
+using kth::domain::chain::output;
+using kth::domain::chain::script;
+using kth::domain::chain::transaction;
 using kth::error::success;
-using kth::wallet::ec_public;
-using kth::wallet::payment_address;
-using kth::wallet::raw_output_list;
-using kth::wallet::tx_encode;
+using kth::domain::wallet::ec_public;
+using kth::domain::wallet::payment_address;
+using kth::domain::wallet::raw_output_list;
+using kth::domain::wallet::tx_encode;
 
 namespace detail {
 // For internal use only

@@ -12,12 +12,12 @@
 
 namespace kth::keoken::message {
 
-using bc::data_chunk;
-using bc::data_sink;
-using bc::data_source;
-using bc::istream_reader;
-using bc::ostream_writer;
-// using bc::writer;
+using kth::data_chunk;
+using kth::data_sink;
+using kth::data_source;
+using kth::istream_reader;
+using kth::ostream_writer;
+// using kth::writer;
 
 // Constructors.
 //-------------------------------------------------------------------------

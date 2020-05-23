@@ -10,12 +10,14 @@
 
 #include <boost/program_options.hpp>
 
+#include <kth/domain/common.hpp>
 #include <kth/domain/chain/header.hpp>
 #include <kth/infrastructure/config/base16.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost::program_options;
+using namespace infrastructure::config;
 
 header::header(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;

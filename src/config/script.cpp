@@ -12,11 +12,12 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
+#include <kth/domain/common.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost;
 using namespace boost::program_options;
