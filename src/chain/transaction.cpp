@@ -22,7 +22,6 @@
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/program.hpp>
-// #include <kth/infrastructure/message/message_tools.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>

@@ -41,10 +41,11 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::chain {
-
-using namespace bc::machine;
+using namespace kth::domain::machine;
+using namespace kth::infrastructure::machine;
 using namespace boost::adaptors;
+
+namespace kth::domain::chain {
 
 // bit.ly/2cPazSa
 static

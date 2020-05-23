@@ -11,7 +11,7 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/constants.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 // Constructors.
 //-----------------------------------------------------------------------------

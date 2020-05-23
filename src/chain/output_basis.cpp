@@ -14,9 +14,9 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-// using namespace bc::wallet;
+// using namespace kth::domain::wallet;
 
 // This is a consensus critical value that must be set on reset.
 uint64_t const output_basis::not_found = sighash_null_value;

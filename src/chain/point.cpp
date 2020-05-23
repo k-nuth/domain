@@ -18,7 +18,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/serializer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 constexpr auto store_point_size = std::tuple_size<point>::value;
 

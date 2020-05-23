@@ -17,7 +17,7 @@
 ////#include <kth/infrastructure/utility/endian.hpp>
 #include <kth/infrastructure/utility/limits.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 // static auto const point_size = static_cast<unsigned>(std::tuple_size<point>::value);
 constexpr auto point_size = static_cast<unsigned>(std::tuple_size<point>::value);
