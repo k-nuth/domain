@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_ANNOUNCE_XVERSION_HPP_
-#define KTH_MESSAGE_ANNOUNCE_XVERSION_HPP_
+#ifndef KTH_DOMAIN_MESSAGE_ANNOUNCE_XVERSION_HPP_
+#define KTH_DOMAIN_MESSAGE_ANNOUNCE_XVERSION_HPP_
 
 #include <cstdint>
 #include <istream>

@@ -11,12 +11,12 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/encrypted_keys.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 /**
  * Serialization helper to convert between base58 string and bip38 token.
  */
-class BC_API ek_token {
+class KD_API ek_token {
 public:
     /// Constructors.
     ek_token();

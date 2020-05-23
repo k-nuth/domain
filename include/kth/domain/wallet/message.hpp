@@ -13,7 +13,7 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 /**
  * A message signature is an EC signature with one prefix byte.

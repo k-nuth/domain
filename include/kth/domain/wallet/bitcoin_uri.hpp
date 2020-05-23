@@ -16,12 +16,12 @@
 #include <kth/domain/wallet/stealth_address.hpp>
 // #include <kth/domain/wallet/uri_reader.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 /// A bitcoin URI corresponding to BIP 21 and BIP 72.
 /// The object is not constant, setters can change state after construction.
-// class BC_API bitcoin_uri : public uri_reader {
-class BC_API bitcoin_uri {
+// class KD_API bitcoin_uri : public uri_reader {
+class KD_API bitcoin_uri {
 public:
     /// Constructors.
     bitcoin_uri() = default;

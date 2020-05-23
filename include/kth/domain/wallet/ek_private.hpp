@@ -11,10 +11,10 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/encrypted_keys.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 /// Use to pass an encrypted private key.
-class BC_API ek_private {
+class KD_API ek_private {
 public:
     /// Constructors.
     ek_private();

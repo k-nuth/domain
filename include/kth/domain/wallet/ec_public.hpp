@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_EC_PUBLIC_HPP
-#define KTH_EC_PUBLIC_HPP
+#ifndef KTH_DOMAIN_WALLET_EC_PUBLIC_HPP
+#define KTH_DOMAIN_WALLET_EC_PUBLIC_HPP
 
 #include <cstdint>
 #include <iostream>
