@@ -2,12 +2,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_RULE_FORK_HPP_
-#define KTH_MACHINE_RULE_FORK_HPP_
+#ifndef KTH_DOMAIN_MACHINE_RULE_FORK_HPP
+#define KTH_DOMAIN_MACHINE_RULE_FORK_HPP
 
 #include <cstdint>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
 enum rule_fork : uint32_t {
     no_rules = 0,

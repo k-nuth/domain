@@ -12,7 +12,7 @@
 #include <kth/infrastructure/compat.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 
-namespace kth {
+namespace kth::domain {
 
 #define IF(T) std::enable_if<T>
 #define SIGN(T) std::is_signed<T>::value

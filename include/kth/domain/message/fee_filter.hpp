@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_FEE_FILTER_HPP
-#define KTH_MESSAGE_FEE_FILTER_HPP
+#ifndef KTH_DOMAIN_MESSAGE_FEE_FILTER_HPP
+#define KTH_DOMAIN_MESSAGE_FEE_FILTER_HPP
 
 #include <cstdint>
 #include <istream>
