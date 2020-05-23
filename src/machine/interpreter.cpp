@@ -4,12 +4,12 @@
 
 #include <kth/domain/machine/interpreter.hpp>
 
-#include <kth/domain/constants.hpp>
-#include <kth/domain/machine/operation.hpp>
-#include <kth/domain/machine/program.hpp>
-#include <kth/infrastructure/error.hpp>
+// #include <kth/domain/constants.hpp>
+// #include <kth/domain/machine/operation.hpp>
+// #include <kth/domain/machine/program.hpp>
+// #include <kth/infrastructure/error.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
 code interpreter::run(program& program) {
     code ec;

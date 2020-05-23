@@ -15,9 +15,9 @@
 #include <kth/infrastructure/machine/script_version.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
-using namespace bc::chain;
+using namespace kth::domain::chain;
 
 // Fixed tuning parameters, max_stack_size ensures no reallocation.
 static constexpr 

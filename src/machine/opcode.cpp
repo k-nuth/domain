@@ -9,13 +9,12 @@
 
 #include <boost/algorithm/string.hpp>
 
-// #include <kth/infrastructure/chain/script.hpp>
 #include <kth/infrastructure/constants.hpp>
 #include <kth/infrastructure/formats/base_16.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
-// using namespace bc::chain;
+// using namespace kth::domain::chain;
 
 #define RETURN_IF_OPCODE(text, code) \
 if (norm == text) { out_code = opcode::code; return true; }

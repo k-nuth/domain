@@ -13,29 +13,17 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const address::command = "addr";
 uint32_t const address::version_minimum = version::level::minimum;
 uint32_t const address::version_maximum = version::level::maximum;
 
-address address::factory_from_data(uint32_t version, data_chunk const& data) {
-    address instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-address address::factory_from_data(uint32_t version, std::istream& stream) {
-    address instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
-address::address(network_address::list const& addresses)
+address::address(infrastructure::message::network_address::list const& addresses)
     : addresses_(addresses) 
 {}
 
-address::address(network_address::list&& addresses)
+address::address(infrastructure::message::network_address::list&& addresses)
     : addresses_(std::move(addresses)) 
 {}
 

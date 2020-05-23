@@ -15,10 +15,11 @@
 #include <kth/infrastructure/utility/endian.hpp>
 #include <utility>
 
-namespace kth {
+namespace kth::domain {
 
-using namespace bc::chain;
-using namespace bc::machine;
+using namespace kth::domain::chain;
+using namespace kth::domain::machine;
+using namespace kth::infrastructure::machine;
 
 bool is_stealth_script(script const& script) {
     if (script.pattern() != script_pattern::null_data) {

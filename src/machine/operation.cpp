@@ -20,34 +20,10 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
 // Deserialization.
 //-----------------------------------------------------------------------------
-
-// static
-operation operation::factory_from_data(data_chunk const& encoded) {
-    operation instance;
-    instance.from_data(encoded);
-    return instance;
-}
-
-// static
-operation operation::factory_from_data(std::istream& stream) {
-    operation instance;
-    instance.from_data(stream);
-    return instance;
-}
-
-bool operation::from_data(data_chunk const& encoded) {
-    data_source istream(encoded);
-    return from_data(istream);
-}
-
-bool operation::from_data(std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r);
-}
 
 // TODO(legacy): optimize for larger data by using a shared byte array.
 //bool operation::from_data(reader& source)
