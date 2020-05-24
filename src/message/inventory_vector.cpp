@@ -13,7 +13,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 uint32_t inventory_vector::to_number(type_id type) {
     return static_cast<uint32_t>(type);

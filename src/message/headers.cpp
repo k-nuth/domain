@@ -20,23 +20,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const headers::command = "headers";
 uint32_t const headers::version_minimum = version::level::headers;
 uint32_t const headers::version_maximum = version::level::maximum;
-
-headers headers::factory_from_data(uint32_t version, data_chunk const& data) {
-    headers instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-headers headers::factory_from_data(uint32_t version, std::istream& stream) {
-    headers instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 // Uses headers copy assignment.
 headers::headers(header::list const& values)

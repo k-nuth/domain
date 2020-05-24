@@ -13,7 +13,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 size_t heading::maximum_size() {
     // This assumes that the heading doesn't shrink in size.

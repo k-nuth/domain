@@ -18,23 +18,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const inventory::command = "inv";
 uint32_t const inventory::version_minimum = version::level::minimum;
 uint32_t const inventory::version_maximum = version::level::maximum;
-
-inventory inventory::factory_from_data(uint32_t version, data_chunk const& data) {
-    inventory instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-inventory inventory::factory_from_data(uint32_t version, std::istream& stream) {
-    inventory instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 inventory::inventory(inventory_vector::list const& values)
     : inventories_(values) 
