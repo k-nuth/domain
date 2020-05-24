@@ -10,40 +10,17 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_address::command = "getaddr";
 uint32_t const get_address::version_minimum = version::level::minimum;
 uint32_t const get_address::version_maximum = version::level::maximum;
 
-get_address get_address::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_address instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_address get_address::factory_from_data(uint32_t version, std::istream& stream) {
-    get_address instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
 bool get_address::is_valid() const {
     return true;
 }
 
-void get_address::reset() {
-}
-
-bool get_address::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool get_address::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
+void get_address::reset() {}
 
 data_chunk get_address::to_data(uint32_t version) const {
     data_chunk data;

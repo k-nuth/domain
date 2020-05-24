@@ -8,23 +8,11 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_headers::command = "getheaders";
 uint32_t const get_headers::version_minimum = version::level::headers;
 uint32_t const get_headers::version_maximum = version::level::maximum;
-
-get_headers get_headers::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_headers instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_headers get_headers::factory_from_data(uint32_t version, std::istream& stream) {
-    get_headers instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 get_headers::get_headers(hash_list const& start, hash_digest const& stop)
     : get_blocks(start, stop) {

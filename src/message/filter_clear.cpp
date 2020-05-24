@@ -10,44 +10,16 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const filter_clear::command = "filterclear";
 uint32_t const filter_clear::version_minimum = version::level::bip37;
 uint32_t const filter_clear::version_maximum = version::level::maximum;
 
-filter_clear filter_clear::factory_from_data(uint32_t version, data_chunk const& data) {
-    filter_clear instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-filter_clear filter_clear::factory_from_data(uint32_t version, std::istream& stream) {
-    filter_clear instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
-//filter_clear filter_clear::factory_from_data(uint32_t version, reader& source)
-//{
-//    filter_clear instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
-
 // protected
 filter_clear::filter_clear(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
-
-// filter_clear::filter_clear(filter_clear const& x)
-//     : filter_clear(x.insufficient_version_) {
-// }
-
-// filter_clear::filter_clear(filter_clear&& x) noexcept
-//     : filter_clear(x.insufficient_version_) {
-// }
 
 bool filter_clear::is_valid() const {
     return !insufficient_version_;

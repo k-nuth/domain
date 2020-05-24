@@ -15,23 +15,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_block_transactions::command = "getblocktxn";
 uint32_t const get_block_transactions::version_minimum = version::level::bip152;
 uint32_t const get_block_transactions::version_maximum = version::level::bip152;
-
-get_block_transactions get_block_transactions::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_block_transactions instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_block_transactions get_block_transactions::factory_from_data(uint32_t version, std::istream& stream) {
-    get_block_transactions instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 get_block_transactions::get_block_transactions()
     : block_hash_(null_hash) 

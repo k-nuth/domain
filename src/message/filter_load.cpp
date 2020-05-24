@@ -13,23 +13,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const filter_load::command = "filterload";
 uint32_t const filter_load::version_minimum = version::level::bip37;
 uint32_t const filter_load::version_maximum = version::level::maximum;
-
-filter_load filter_load::factory_from_data(uint32_t version, data_chunk const& data) {
-    filter_load instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-filter_load filter_load::factory_from_data(uint32_t version, std::istream& stream) {
-    filter_load instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 filter_load::filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
     : filter_(filter), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {

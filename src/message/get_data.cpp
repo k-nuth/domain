@@ -13,23 +13,11 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_data::command = "getdata";
 uint32_t const get_data::version_minimum = version::level::minimum;
 uint32_t const get_data::version_maximum = version::level::maximum;
-
-get_data get_data::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_data instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_data get_data::factory_from_data(uint32_t version, std::istream& stream) {
-    get_data instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 get_data::get_data(inventory_vector::list const& values)
     : inventory(values) {

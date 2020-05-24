@@ -18,27 +18,15 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const header::command = "headers";
 uint32_t const header::version_minimum = version::level::minimum;
 uint32_t const header::version_maximum = version::level::maximum;
 
-header header::factory_from_data(uint32_t version, data_chunk const& data) {
-    header instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-header header::factory_from_data(uint32_t version, std::istream& stream) {
-    header instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
 size_t header::satoshi_fixed_size(uint32_t version) {
     auto const canonical = (version == version::level::canonical);
-    return chain::header::satoshi_fixed_size() + (canonical ? 0 : message::variable_uint_size(0));
+    return chain::header::satoshi_fixed_size() + (canonical ? 0 : infrastructure::message::variable_uint_size(0));
 }
 
 header::header(uint32_t version,

@@ -12,30 +12,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_blocks::command = "getblocks";
 uint32_t const get_blocks::version_minimum = version::level::minimum;
 uint32_t const get_blocks::version_maximum = version::level::maximum;
-
-get_blocks get_blocks::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_blocks instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_blocks get_blocks::factory_from_data(uint32_t version, std::istream& stream) {
-    get_blocks instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
-//get_blocks get_blocks::factory_from_data(uint32_t version, reader& source)
-//{
-//    get_blocks instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
 
 get_blocks::get_blocks()
     : stop_hash_(null_hash) {
