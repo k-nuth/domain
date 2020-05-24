@@ -18,25 +18,11 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/pseudo_random.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const compact_block::command = "cmpctblock";
 uint32_t const compact_block::version_minimum = version::level::bip152;
 uint32_t const compact_block::version_maximum = version::level::bip152;
-
-compact_block compact_block::factory_from_data(uint32_t version, data_chunk const& data) {
-    //std::cout << "compact_block::factory_from_data\n";
-    compact_block instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-compact_block compact_block::factory_from_data(uint32_t version, std::istream& stream) {
-    //std::cout << "compact_block::factory_from_data 2\n";
-    compact_block instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 compact_block compact_block::factory_from_block(message::block const& blk) {
     compact_block instance;

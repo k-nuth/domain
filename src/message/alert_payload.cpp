@@ -12,7 +12,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 // Libbitcon doesn't use this.
 const ec_uncompressed alert_payload::satoshi_public_key{

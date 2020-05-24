@@ -10,24 +10,14 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const fee_filter::command = "feefilter";
 uint32_t const fee_filter::version_minimum = version::level::bip133;
 uint32_t const fee_filter::version_maximum = version::level::bip133;
 
-fee_filter fee_filter::factory_from_data(uint32_t version, data_chunk const& data) {
-    fee_filter instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-fee_filter fee_filter::factory_from_data(uint32_t version, std::istream& stream) {
-    fee_filter instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
+// static
+constexpr
 size_t fee_filter::satoshi_fixed_size(uint32_t /*version*/) {
     return sizeof(minimum_fee_);
 }

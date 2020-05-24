@@ -14,23 +14,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const alert::command = "alert";
 uint32_t const alert::version_minimum = version::level::minimum;
 uint32_t const alert::version_maximum = version::level::maximum;
-
-alert alert::factory_from_data(uint32_t version, data_chunk const& data) {
-    alert instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-alert alert::factory_from_data(uint32_t version, std::istream& stream) {
-    alert instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 alert::alert(data_chunk const& payload, data_chunk const& signature)
     : payload_(payload), signature_(signature) {

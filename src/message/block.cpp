@@ -17,23 +17,11 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const block::command = "block";
 uint32_t const block::version_minimum = version::level::minimum;
 uint32_t const block::version_maximum = version::level::maximum;
-
-block block::factory_from_data(uint32_t version, data_chunk const& data) {
-    block instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-block block::factory_from_data(uint32_t version, std::istream& stream) {
-    block instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 block::block(chain::block&& x)
     : chain::block(std::move(x)) 
