@@ -10,23 +10,11 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const ping::command = "ping";
 uint32_t const ping::version_minimum = version::level::minimum;
 uint32_t const ping::version_maximum = version::level::maximum;
-
-ping ping::factory_from_data(uint32_t version, data_chunk const& data) {
-    ping instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-ping ping::factory_from_data(uint32_t version, std::istream& stream) {
-    ping instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 size_t ping::satoshi_fixed_size(uint32_t version) {
     return version < version::level::bip31 ? 0 : sizeof(nonce_);

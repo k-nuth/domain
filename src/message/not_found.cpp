@@ -11,23 +11,11 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const not_found::command = "notfound";
 uint32_t const not_found::version_minimum = version::level::bip37;
 uint32_t const not_found::version_maximum = version::level::maximum;
-
-not_found not_found::factory_from_data(uint32_t version, data_chunk const& data) {
-    not_found instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-not_found not_found::factory_from_data(uint32_t version, std::istream& stream) {
-    not_found instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 not_found::not_found(inventory_vector::list const& values)
     : inventory(values) {

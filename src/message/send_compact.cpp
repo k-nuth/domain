@@ -12,23 +12,11 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const send_compact::command = "sendcmpct";
 uint32_t const send_compact::version_minimum = version::level::bip152;
 uint32_t const send_compact::version_maximum = version::level::bip152;
-
-send_compact send_compact::factory_from_data(uint32_t version, data_chunk const& data) {
-    send_compact instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-send_compact send_compact::factory_from_data(uint32_t version, std::istream& stream) {
-    send_compact instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 size_t send_compact::satoshi_fixed_size(uint32_t /*version*/) {
     return 9;

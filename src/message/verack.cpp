@@ -10,40 +10,17 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const verack::command = "verack";
 uint32_t const verack::version_minimum = version::level::minimum;
 uint32_t const verack::version_maximum = version::level::maximum;
 
-verack verack::factory_from_data(uint32_t version, data_chunk const& data) {
-    verack instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-verack verack::factory_from_data(uint32_t version, std::istream& stream) {
-    verack instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
 bool verack::is_valid() const {
     return true;
 }
 
-void verack::reset() {
-}
-
-bool verack::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool verack::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
+void verack::reset() {}
 
 data_chunk verack::to_data(uint32_t version) const {
     data_chunk data;

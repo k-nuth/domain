@@ -16,23 +16,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const merkle_block::command = "merkleblock";
 uint32_t const merkle_block::version_minimum = version::level::bip37;
 uint32_t const merkle_block::version_maximum = version::level::maximum;
-
-merkle_block merkle_block::factory_from_data(uint32_t version, data_chunk const& data) {
-    merkle_block instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-merkle_block merkle_block::factory_from_data(uint32_t version, std::istream& stream) {
-    merkle_block instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags)
     : header_(header), total_transactions_(total_transactions), hashes_(hashes), flags_(flags) {

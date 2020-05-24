@@ -12,7 +12,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 #ifdef KTH_CURRENCY_BCH
 constexpr size_t max_index = max_uint32;
