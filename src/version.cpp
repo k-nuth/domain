@@ -11,4 +11,4 @@ char const* version() {
     return KTH_DOMAIN_VERSION;
 }
 
-}  // namespace kth::domain
+} // namespace kth::domain

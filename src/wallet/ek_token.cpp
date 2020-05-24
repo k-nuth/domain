@@ -14,7 +14,7 @@
 #include <kth/infrastructure/formats/base_58.hpp>
 #include <kth/infrastructure/math/checksum.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 ek_token::ek_token()
     : token_() 

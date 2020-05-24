@@ -16,7 +16,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 uint8_t const ec_public::compressed_even = 0x02;
 uint8_t const ec_public::compressed_odd = 0x03;

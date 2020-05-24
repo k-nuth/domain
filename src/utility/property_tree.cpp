@@ -22,12 +22,12 @@
 #include <kth/infrastructure/config/hash256.hpp>
 #include <kth/infrastructure/utility/collection.hpp>
 
-namespace kth {
+namespace kth::domain::config {
 
 using namespace pt;
-using namespace bc::config;
-using namespace bc::machine;
-using namespace bc::wallet;
+using namespace kth::infrastructure::config;
+using namespace kth::domain::machine;
+using namespace kth::domain::wallet;
 
 // property_tree is very odd in that what one might consider a node or element,
 // having a "containing" name cannot be added into another node without

@@ -14,14 +14,14 @@ namespace kth {
 namespace {
 
 // static config::currency currency_ = config::currency::none;
-// static config::settings network_ = config::settings::none;
+// static infrastructure::config::settings network_ = kth::infrastructure::config::settings::none;
 
 #ifdef KTH_CURRENCY_BCH
 // static   //Note(kth): static is redundant in a anonymous namespace
 std::string cashaddr_prefix_ = "bitcoincash";
 #endif  // KTH_CURRENCY_BCH
 
-}  // namespace
+} // namespace
 
 config::currency get_currency() {
 #ifdef KTH_CURRENCY_LTC

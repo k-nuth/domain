@@ -17,7 +17,7 @@
 #include <kth/infrastructure/formats/base_10.hpp>
 #include <kth/infrastructure/wallet/uri.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 static auto const bitcoin_scheme = "bitcoin";
 static auto const parameter_amount = "amount";
