@@ -22,7 +22,7 @@
 #include <kth/domain/keoken/message/send_tokens.hpp>
 #include <kth/domain/keoken/wallet/create_transaction.hpp>
 
-using namespace bc;
+using namespace kd;
 using namespace kth::keoken::wallet;
 
 #define SEED "fffb587496cc54912bbcef874fa9a61a"
