@@ -12,7 +12,7 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 stealth_sender::stealth_sender(stealth_address const& address,
                                data_chunk const& seed,
