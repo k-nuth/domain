@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 bool equal(address const& x, address const& y) {
     auto const left_addresses = x.addresses();

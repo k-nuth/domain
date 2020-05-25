@@ -3,10 +3,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <kth/domain.hpp>
+#include <kth/infrastructure.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::machine;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::machine;
 
 data_chunk valid_raw_operation = to_chunk(base16_literal("0900ff11ee22bb33aa44"));
 
