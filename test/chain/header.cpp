@@ -6,7 +6,8 @@
 #include <boost/test/unit_test.hpp>
 #include <chrono>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(chain_header_tests)
 

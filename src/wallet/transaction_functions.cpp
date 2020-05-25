@@ -2,22 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+//TODO(fernando): refactor everything
 
 #include <kth/domain/wallet/transaction_functions.hpp>
 
-#include <kth/domain.hpp>
-#include <kth/domain/config/ec_private.hpp>
 #include <kth/domain/config/input.hpp>
 #include <kth/domain/config/output.hpp>
 #include <kth/domain/config/script.hpp>
+#include <kth/infrastructure/machine/sighash_algorithm.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/tx-encode.cpp
 static
-bool push_scripts(chain::output::list& outputs,
-                         kth::config::output const& output,
-                         uint8_t script_version) {
+bool push_scripts(chain::output::list& outputs, config::output const& output, uint8_t script_version) {
     static constexpr uint64_t no_amount = 0;
 
     // explicit script

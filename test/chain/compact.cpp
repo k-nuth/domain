@@ -10,8 +10,9 @@
 
 BOOST_AUTO_TEST_SUITE(compact_tests)
 
-using namespace bc;
-using namespace bc::chain;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
 
 #define PRIMES "020305070b0d1113171d1f25292b2f353b3d4347494f53596165676b6d717f83"
 static auto const primes = hash_literal(PRIMES);
