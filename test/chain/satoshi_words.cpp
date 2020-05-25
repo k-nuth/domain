@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 // TODO(legacy): move this into the tests by source file organization.
 BOOST_AUTO_TEST_SUITE(satoshi_words)

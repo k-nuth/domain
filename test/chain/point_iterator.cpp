@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::chain;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
 
 #define SOURCE "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f0100"
 static auto const valid_raw_point_iterator_source = to_chunk(base16_literal(SOURCE));

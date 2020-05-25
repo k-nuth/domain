@@ -5,12 +5,15 @@
 #include <boost/test/unit_test.hpp>
 
 #include <kth/domain.hpp>
+#include <kth/infrastructure.hpp>
 #include <sstream>
 #include "script.hpp"
 
-using namespace bc;
-using namespace bc::chain;
-using namespace bc::machine;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
+using namespace kth::domain::machine;
+using namespace kth::infrastructure::machine;
 
 #define SCRIPT_RETURN "return"
 #define SCRIPT_RETURN_EMPTY "return []"

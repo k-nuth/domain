@@ -5,8 +5,10 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::chain;
+
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
 
 BOOST_AUTO_TEST_SUITE(point_value_tests)
 
