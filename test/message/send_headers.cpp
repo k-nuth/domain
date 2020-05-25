@@ -5,14 +5,15 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(send_headers_tests)
 
 BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
     const message::send_headers expected{};
     auto const data = expected.to_data(message::version::level::maximum);
-    auto const result = message::send_headers::factory_from_data(
+    auto const result = create<message::send_headers>(
         message::version::level::maximum, data);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());

@@ -5,14 +5,15 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(verack_tests)
 
 BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
     const message::verack expected{};
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::verack::factory_from_data(
+    auto const result = create<message::verack>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());

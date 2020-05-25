@@ -7,7 +7,8 @@
 #include <kth/domain.hpp>
 #include <string>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 // /Satoshi:0.12.1/
 // Invalid reject payload from [46.101.110.115:8333] bad data stream
