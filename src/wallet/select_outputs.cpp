@@ -11,9 +11,9 @@
 #include <kth/domain/constants.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
-using namespace bc::chain;
+using namespace kth::domain::chain;
 
 void select_outputs::greedy(points_value& out, const points_value& unspent, uint64_t minimum_value) {
     out.points.clear();

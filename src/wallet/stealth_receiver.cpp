@@ -12,7 +12,7 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/utility/binary.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 // TODO(legacy): use to factory and make address_ and spend_public_ const.
 stealth_receiver::stealth_receiver(ec_secret const& scan_private,

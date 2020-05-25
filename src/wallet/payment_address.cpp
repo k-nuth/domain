@@ -24,9 +24,10 @@
 #include <kth/infrastructure/wallet/cashaddr.hpp>
 #endif  //KTH_CURRENCY_BCH
 
-namespace kth::wallet {
+using namespace kth::infrastructure::machine;
+using namespace kth::infrastructure::wallet;
 
-using namespace bc::machine;
+namespace kth::domain::wallet {
 
 #ifdef KTH_CURRENCY_LTC
 uint8_t const payment_address::mainnet_p2kh = 0x30;
