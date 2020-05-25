@@ -9,9 +9,11 @@
 #include <boost/test/unit_test.hpp>
 
 #include <kth/domain.hpp>
+#include <kth/infrastructure.hpp>
 
-using namespace bc;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::wallet;
 
 BOOST_AUTO_TEST_SUITE(encrypted_tests)
 

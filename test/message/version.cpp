@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 static
 auto const version_maximum = message::version::level::maximum;
