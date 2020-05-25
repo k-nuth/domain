@@ -3,12 +3,15 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <kth/domain.hpp>
-#include <kth/domain/wallet/ec_public.hpp>
+#include <kth/infrastructure.hpp>
+// #include <kth/domain/wallet/ec_public.hpp>
 #include <kth/domain/wallet/transaction_functions.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::wallet;
+using namespace kth::infrastructure::wallet;
 
 BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
 

@@ -8,10 +8,11 @@
 
 #include <kth/domain.hpp>
 
-#include <boost/utility/in_place_factory.hpp>
+// #include <boost/utility/in_place_factory.hpp>
 
-using namespace bc;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::wallet;
 
 BOOST_AUTO_TEST_SUITE(uri_reader_tests)
 

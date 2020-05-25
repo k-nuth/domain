@@ -7,8 +7,9 @@
 #include <algorithm>
 #include <kth/domain.hpp>
 
-using namespace bc;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::wallet;
 
 BOOST_AUTO_TEST_SUITE(stealth_receiver_tests)
 

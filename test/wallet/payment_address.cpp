@@ -6,9 +6,10 @@
 #include <kth/domain/multi_crypto_support.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::chain;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
+using namespace kth::domain::wallet;
 
 BOOST_AUTO_TEST_SUITE(payment_address_tests)
 
