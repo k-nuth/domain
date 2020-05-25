@@ -15,7 +15,7 @@
 #include "parse_encrypted_key.hpp"
 #include "parse_encrypted_prefix.hpp"
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 const byte_array<parse_encrypted_private::magic_size>
     parse_encrypted_private::magic_{
