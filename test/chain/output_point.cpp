@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 auto const hash1 = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 auto const valid_raw_output_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));

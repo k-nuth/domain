@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 data_chunk valid_raw_output = to_chunk(base16_literal("20300500000000001976a914905f933de850988603aafeeb2fd7fce61e66fe5d88ac"));
 
