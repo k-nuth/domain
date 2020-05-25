@@ -13,7 +13,7 @@
 
 #include "parse_encrypted_key.hpp"
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 // Swap not defined.
 class parse_encrypted_public
