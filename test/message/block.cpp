@@ -3,10 +3,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <kth/domain.hpp>
+#include <kth/infrastructure.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(message_block_tests)
 
