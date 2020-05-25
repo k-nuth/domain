@@ -29,14 +29,14 @@
 #include "parse_encrypted_keys/parse_encrypted_public.hpp"
 #include "parse_encrypted_keys/parse_encrypted_token.hpp"
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 // Alias commonly-used constants for brevity.
 static constexpr auto half = half_hash_size;
 static constexpr auto quarter = quarter_hash_size;
 
 // Ensure that hash sizes are aligned with AES block size.
-static_assert(2 * quarter == bc::aes256_block_size, "oops!");
+static_assert(2 * quarter == kth::aes256_block_size, "oops!");
 
 // address_
 // ----------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 static constexpr uint8_t max_recovery_id = 3;
 static constexpr uint8_t magic_compressed = 31;
