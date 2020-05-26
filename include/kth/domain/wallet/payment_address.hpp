@@ -22,7 +22,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 static constexpr 
 size_t payment_size = 1U + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
