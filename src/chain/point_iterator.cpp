@@ -119,4 +119,4 @@ point_iterator point_iterator::decrease(unsigned value) const {
     return {*point_, index};
 }
 
-}  // namespace kth
+} // namespace kth

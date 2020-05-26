@@ -107,20 +107,6 @@ script& script::operator=(script const& x) {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-script script::factory_from_data(data_chunk const& encoded, bool prefix) {
-    script instance;
-    instance.from_data(encoded, prefix);
-    return instance;
-}
-
-// static
-script script::factory_from_data(std::istream& stream, bool prefix) {
-    script instance;
-    instance.from_data(stream, prefix);
-    return instance;
-}
-
 // Concurrent read/write is not supported, so no critical section.
 bool script::from_string(std::string const& mnemonic) {
     reset();
