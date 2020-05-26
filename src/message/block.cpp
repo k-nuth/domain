@@ -70,21 +70,8 @@ bool block::operator!=(block const& x) const {
     return !(*this == x);
 }
 
-// Witness is always deserialized if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
-bool block::from_data(uint32_t /*version*/, data_chunk const& data) {
-    return chain::block::from_data(data, true);
-}
-
-bool block::from_data(uint32_t /*version*/, std::istream& stream) {
-    return chain::block::from_data(stream, true);
-}
-
-
 // Witness is always serialized if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
+// NOTE: Witness on BCH is dissabled on the chain::block class
 data_chunk block::to_data(uint32_t /*unused*/) const {
     return chain::block::to_data(true);
 }
