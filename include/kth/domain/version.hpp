@@ -28,7 +28,7 @@ namespace domain {
 
 char const* version();
 
-}  // namespace domain
-}  // namespace kth
+} // namespace domain
+} // namespace kth
 
-#endif  // KTH_VERSION_HPP_
+#endif // KTH_DOMAIN_VERSION_HPP
