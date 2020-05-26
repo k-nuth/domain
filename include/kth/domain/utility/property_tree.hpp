@@ -35,21 +35,21 @@ using settings_list = std::map<std::string, std::string>;
  * @param[in]  header  The header.
  * @return             A property list.
  */
-BC_API pt::ptree property_list(const config::header& header);
+KD_API pt::ptree property_list(config::header const& header);
 
 /**
  * Generate a property tree for a block header.
  * @param[in]  header  The header.
  * @return             A property tree.
  */
-BC_API pt::ptree property_tree(const config::header& header);
+KD_API pt::ptree property_tree(config::header const& header);
 
 /**
  * Generate a property tree for a set of headers.
  * @param[in]  headers  The set of headers.
  * @return              A property tree.
  */
-BC_API pt::ptree property_tree(const std::vector<config::header>& headers,
+KD_API pt::ptree property_tree(std::vector<config::header> const& headers,
                                bool json);
 
 /**
