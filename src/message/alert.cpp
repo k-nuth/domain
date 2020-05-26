@@ -28,20 +28,6 @@ alert::alert(data_chunk&& payload, data_chunk&& signature)
     : payload_(std::move(payload)), signature_(std::move(signature)) {
 }
 
-// alert::alert(alert const& x)
-//     : alert(x.payload_, x.signature_) {
-// }
-
-// alert::alert(alert&& x) noexcept
-//     : alert(std::move(x.payload_), std::move(x.signature_)) {
-// }
-
-// alert& alert::operator=(alert&& x) noexcept {
-//     payload_ = std::move(x.payload_);
-//     signature_ = std::move(x.signature_);
-//     return *this;
-// }
-
 bool alert::operator==(alert const& x) const {
     return (payload_ == x.payload_) && (signature_ == x.signature_);
 }
