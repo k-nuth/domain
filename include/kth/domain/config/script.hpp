@@ -57,13 +57,13 @@ public:
      * @return  The byte serialized copy of the script.
      */
     [[nodiscard]]
-    bc::data_chunk to_data() const;
+    kth::data_chunk to_data() const;
 
     /**
      * Return a pretty-printed copy of the script.
      * @return  A mnemonic-printed copy of the internal script.
      */
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string to_string() const;
 
     /**

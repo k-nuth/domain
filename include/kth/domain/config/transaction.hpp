@@ -76,7 +76,6 @@ private:
     chain::transaction value_;
 };
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif
