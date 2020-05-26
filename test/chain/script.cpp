@@ -731,7 +731,7 @@ BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid) {
     BOOST_REQUIRE_EQUAL(result.value(), error::success);
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // SEGWIT TESTS
 BOOST_AUTO_TEST_CASE(script__native__block_481824_tx__valid) {
     //// DEBUG [blockchain] Verify failed [481824] : stack false

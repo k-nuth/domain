@@ -76,7 +76,7 @@ public:
         return source;
     }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     /// Convert message types to witness types.
     void to_witness();
 #endif

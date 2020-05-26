@@ -90,21 +90,32 @@ public:
     bool operator!=(reject const& x) const;
 
 
-    [[nodiscard]] reason_code code() const;
+    [[nodiscard]] 
+    reason_code code() const;
+    
     void set_code(reason_code value);
 
     std::string& message();
-    [[nodiscard]] std::string const& message() const;
+
+    [[nodiscard]] 
+    std::string const& message() const;
+    
     void set_message(std::string const& value);
     void set_message(std::string&& value);
 
     std::string& reason();
-    [[nodiscard]] std::string const& reason() const;
+    
+    [[nodiscard]] 
+    std::string const& reason() const;
+
     void set_reason(std::string const& value);
     void set_reason(std::string&& value);
 
     hash_digest& data();
-    [[nodiscard]] hash_digest const& data() const;
+
+    [[nodiscard]] 
+    hash_digest const& data() const;
+
     void set_data(hash_digest const& value);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -126,22 +137,23 @@ public:
 
             if (bytes.size() == hash_size) {
                 build_array(data_, {bytes});
-}
+            }
         }
 
         if (version < reject::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -156,10 +168,13 @@ public:
         }
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

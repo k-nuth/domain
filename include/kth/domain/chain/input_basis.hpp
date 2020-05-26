@@ -26,8 +26,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API input_basis {
 public:
@@ -40,7 +39,7 @@ public:
     input_basis(output_point const& previous_output, chain::script const& script, uint32_t sequence);
     input_basis(output_point&& previous_output, chain::script&& script, uint32_t sequence);
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     input_basis(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
     input_basis(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
 #endif
@@ -75,7 +74,7 @@ public:
     template <typename R, KTH_IS_READER(R)>
 
     bool from_data(R& source, bool wire = true, KTH_DECL_WITN_ARG) {
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -88,7 +87,7 @@ public:
 
         script_.from_data(source, true);
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // Transaction from_data handles the discontiguous wire witness decoding.
         if (witness_val(witness) && !wire) {
             witness_.from_data(source, true);
@@ -103,17 +102,20 @@ public:
         return source;
     }
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] data_chunk to_data(bool wire = true, bool witness = false) const;
+    [[nodiscard]] 
+    data_chunk to_data(bool wire = true, bool witness = false) const;
+    
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     template <typename W>
     void to_data(W& sink, bool wire = true, KTH_DECL_WITN_ARG) const {
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // Always write witness to store so that we know how to read it.
         witness |= !wire;
 #endif
@@ -121,7 +123,7 @@ public:
         previous_output_.to_data(sink, wire);
         script_.to_data(sink, true);
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // Transaction to_data handles the discontiguous wire witness encoding.
         if (witness_val(witness) && !wire) {
             witness_.to_data(sink, true);
@@ -133,25 +135,33 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] size_t serialized_size_non_witness(bool wire) const;
+    [[nodiscard]] 
+    size_t serialized_size_non_witness(bool wire) const;
 
     /// This accounts for wire witness, but does not read or write it.
-    [[nodiscard]] size_t serialized_size(bool wire = true, bool witness = false) const;
+    [[nodiscard]] 
+    size_t serialized_size(bool wire = true, bool witness = false) const;
 
 
     output_point& previous_output();
-    [[nodiscard]] output_point const& previous_output() const;
+    
+    [[nodiscard]] 
+    output_point const& previous_output() const;
+    
     void set_previous_output(output_point const& value);
     void set_previous_output(output_point&& value);
 
     // Deprecated (unsafe).
     chain::script& script();
-    [[nodiscard]] chain::script const& script() const;
+    
+    [[nodiscard]] 
+    chain::script const& script() const;
+    
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     // Deprecated (unsafe).
     chain::witness& witness();
     chain::witness const& witness() const;
@@ -159,28 +169,37 @@ public:
     void set_witness(chain::witness&& value);
 #endif // KTH_CURRENCY_BCH
 
-    [[nodiscard]] uint32_t sequence() const;
+    [[nodiscard]] 
+    uint32_t sequence() const;
+    
     void set_sequence(uint32_t value);
 
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
-    /// Clear witness.
+#if defined(KTH_SEGWIT_ENABLED)
     void strip_witness();
 #endif
 
     // Validation.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] bool is_final() const;
-    [[nodiscard]] bool is_segregated() const;
-    [[nodiscard]] bool is_locked(size_t block_height, uint32_t median_time_past) const;
-    [[nodiscard]] size_t signature_operations(bool bip16, bool bip141) const;
+    [[nodiscard]] 
+    bool is_final() const;
+    
+    [[nodiscard]] 
+    bool is_segregated() const;
+    
+    [[nodiscard]] 
+    bool is_locked(size_t block_height, uint32_t median_time_past) const;
+    
+    [[nodiscard]] 
+    size_t signature_operations(bool bip16, bool bip141) const;
+    
     bool extract_reserved_hash(hash_digest& out) const;
     bool extract_embedded_script(chain::script& out) const;
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     bool extract_witness_script(chain::script& out, chain::script const& prevout) const;
 #endif
 
@@ -190,15 +209,12 @@ public:
 private:
     output_point previous_output_;
     chain::script script_;
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     chain::witness witness_;
 #endif
     uint32_t sequence_{0};
 };
 
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+}  // namespace kth::chain
 
 #endif // KTH_CHAIN_INPUT_BASIS_HPP_

@@ -34,8 +34,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 // namespace detail {
 // // Read a length-prefixed collection of inputs or outputs from the source.
@@ -235,7 +234,7 @@ public:
 #endif
                 ) const {
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // Witness handling must be disabled for non-segregated txs.
         witness = witness && is_segregated();
 #endif
@@ -280,7 +279,7 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
@@ -356,7 +355,7 @@ private:
     mutable upgrade_mutex mutex_;
 };
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
 #else
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
@@ -364,11 +363,6 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
 
 code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
-
-
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+}  // namespace kth::chain
 
 #endif

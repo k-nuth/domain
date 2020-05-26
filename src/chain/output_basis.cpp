@@ -166,7 +166,7 @@ void output_basis::set_script(chain::script&& value) {
 //-----------------------------------------------------------------------------
 
 size_t output_basis::signature_operations(bool bip141) const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     bip141 = false;  // No segwit
 #endif
     // Penalize quadratic signature operations (bip141).

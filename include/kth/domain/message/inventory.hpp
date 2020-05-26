@@ -61,7 +61,10 @@ public:
 
 
     inventory_vector::list& inventories();
-    [[nodiscard]] inventory_vector::list const& inventories() const;
+    
+    [[nodiscard]] 
+    inventory_vector::list const& inventories() const;
+    
     void set_inventories(inventory_vector::list const& value);
     void set_inventories(inventory_vector::list&& value);
 
@@ -99,8 +102,9 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -109,16 +113,23 @@ public:
 
         for (auto const& inventory : inventories_) {
             inventory.to_data(version, sink);
-}
+        }
     }
 
     //void to_data(uint32_t version, writer& sink) const;
     void to_hashes(hash_list& out, type_id type) const;
     void reduce(inventory_vector::list& out, type_id type) const;
-    [[nodiscard]] bool is_valid() const;
+    
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
-    [[nodiscard]] size_t count(type_id type) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
+
+    [[nodiscard]] 
+    size_t count(type_id type) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

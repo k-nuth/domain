@@ -61,14 +61,18 @@ public:
 
 
     header::list& elements();
-    [[nodiscard]] header::list const& elements() const;
+    
+    [[nodiscard]] 
+    header::list const& elements() const;
+    
     void set_elements(header::list const& values);
     void set_elements(header::list&& values);
 
-    [[nodiscard]] bool is_sequential() const;
+    [[nodiscard]] 
+    bool is_sequential() const;
+    
     void to_hashes(hash_list& out) const;
-    void to_inventory(inventory_vector::list& out,
-                      inventory::type_id type) const;
+    void to_inventory(inventory_vector::list& out, inventory::type_id type) const;
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -105,7 +109,9 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -114,13 +120,17 @@ public:
 
         for (auto const& element : elements_) {
             element.to_data(version, sink);
-}
+        }
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

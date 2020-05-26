@@ -77,18 +77,24 @@ public:
     operator short_hash const&() const;
 
     /// Serializer.
-    [[nodiscard]] std::string encoded() const;
+    [[nodiscard]] 
+    std::string encoded() const;
 
 #ifdef KTH_CURRENCY_BCH
-    [[nodiscard]] std::string encoded_cashaddr() const;
+    [[nodiscard]] 
+    std::string encoded_cashaddr() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Accessors.
-    [[nodiscard]] uint8_t version() const;
-    [[nodiscard]] short_hash const& hash() const;
+    [[nodiscard]] 
+    uint8_t version() const;
+    
+    [[nodiscard]] 
+    short_hash const& hash() const;
 
     /// Methods.
-    [[nodiscard]] payment to_payment() const;
+    [[nodiscard]] 
+    payment to_payment() const;
 
 private:
     /// Validators.

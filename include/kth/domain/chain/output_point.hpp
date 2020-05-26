@@ -94,7 +94,8 @@ public:
     //-------------------------------------------------------------------------
 
     /// True if cached previous output is mature enough to spend from height.
-    [[nodiscard]] bool is_mature(size_t height) const;
+    [[nodiscard]] 
+    bool is_mature(size_t height) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_type validation;

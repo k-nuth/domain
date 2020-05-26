@@ -58,27 +58,31 @@ public:
 
         if (version < filter_clear::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
     void to_data(uint32_t  /*version*/, W&  /*sink*/) const {
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

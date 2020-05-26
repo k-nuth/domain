@@ -16,7 +16,11 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <kth/domain/chain/transaction.hpp>
+
+#if defined(KTH_SEGWIT_ENABLED)
 #include <kth/domain/chain/witness.hpp>
+#endif
+
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/interpreter.hpp>
 // #include <kth/domain/machine/operation.hpp>
@@ -681,6 +685,7 @@ bool script_basis::is_coinbase_pattern(operation::list const& ops, size_t height
 //*****************************************************************************
 // CONSENSUS: this pattern is used to commit to bip141 witness data.
 //*****************************************************************************
+#if defined(KTH_SEGWIT_ENABLED)
 bool script_basis::is_commitment_pattern(operation::list const& ops) {
     static auto const header = to_big_endian(witness_head);
 
@@ -688,13 +693,16 @@ bool script_basis::is_commitment_pattern(operation::list const& ops) {
     // Commitment is not executable so invalid trailing operations are allowed.
     return ops.size() > 1 && ops[0].code() == opcode::return_ && ops[1].code() == opcode::push_size_36 && std::equal(header.begin(), header.end(), ops[1].data().begin());
 }
+#endif
 
 //*****************************************************************************
 // CONSENSUS: this pattern is used in bip141 validation rules.
 //*****************************************************************************
+#if defined(KTH_SEGWIT_ENABLED)
 bool script_basis::is_witness_program_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].is_version() && ops[1].data().size() >= min_witness_program && ops[1].data().size() <= max_witness_program;
 }
+#endif
 
 // The satoshi client tests for 83 bytes total. This allows for the waste of
 // one byte to represent up to 75 bytes using the push_one_size opcode.
@@ -770,9 +778,11 @@ bool script_basis::is_pay_script_hash_pattern(operation::list const& ops) {
 //*****************************************************************************
 // CONSENSUS: this pattern is used to activate bip141 validation rules.
 //*****************************************************************************
+#if defined(KTH_SEGWIT_ENABLED)
 bool script_basis::is_pay_witness_script_hash_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].code() == opcode::push_size_0 && ops[1].code() == opcode::push_size_32;
 }
+#endif
 
 // The first push is based on wacky satoshi op_check_multisig behavior that
 // we must perpetuate, though it's appearance here is policy not consensus.
@@ -1023,7 +1033,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 // Validation.
 //-----------------------------------------------------------------------------
 
-// #ifdef KTH_CURRENCY_BCH
+// #if ! defined(KTH_SEGWIT_ENABLED)
 // code script_basis::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, script_basis const& prevout_script, uint64_t /*value*/) {
 // #else
 // code script_basis::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, witness const& input_witness, script_basis const& prevout_script, uint64_t value) {
@@ -1047,7 +1057,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 //         return error::stack_false;
 //     }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if defined(KTH_SEGWIT_ENABLED)
 //     bool witnessed;
 //     // Triggered by output script push of version and witness program (bip141).
 //     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
@@ -1082,7 +1092,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 //             return error::stack_false;
 //         }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if defined(KTH_SEGWIT_ENABLED)
 //         // Triggered by embedded push of version and witness program (bip141).
 //         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
 //             // The input script must be a push of the embedded_script (bip141).
@@ -1098,7 +1108,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 // #endif
 //     }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if defined(KTH_SEGWIT_ENABLED)
 //     // Witness must be empty if no bip141 or valid witness program (bip141).
 //     if ( ! witnessed && !input_witness.empty()) {
 //         return error::unexpected_witness;
@@ -1116,7 +1126,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 //     auto const& in = tx.inputs()[input];
 //     auto const& prevout = in.previous_output().validation.cache;
 
-// #ifdef KTH_CURRENCY_BCH
+// #if ! defined(KTH_SEGWIT_ENABLED)
 //     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 // #else
 //     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());

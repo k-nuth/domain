@@ -55,17 +55,26 @@ public:
 
 
     data_chunk& filter();
-    [[nodiscard]] data_chunk const& filter() const;
+    
+    [[nodiscard]] 
+    data_chunk const& filter() const;
+    
     void set_filter(data_chunk const& value);
     void set_filter(data_chunk&& value);
 
-    [[nodiscard]] uint32_t hash_functions() const;
+    [[nodiscard]] 
+    uint32_t hash_functions() const;
+    
     void set_hash_functions(uint32_t value);
 
-    [[nodiscard]] uint32_t tweak() const;
+    [[nodiscard]] 
+    uint32_t tweak() const;
+    
     void set_tweak(uint32_t value);
 
-    [[nodiscard]] uint8_t flags() const;
+    [[nodiscard]] 
+    uint8_t flags() const;
+    
     void set_flags(uint8_t value);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -104,7 +113,9 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -117,9 +128,13 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

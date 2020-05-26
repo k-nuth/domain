@@ -128,38 +128,55 @@ public:
     bool operator==(xversion const& x) const;
     bool operator!=(xversion const& x) const;
 
-    [[nodiscard]] uint32_t value() const;
+    [[nodiscard]] 
+    uint32_t value() const;
+
     void set_value(uint32_t value);
 
-    [[nodiscard]] uint64_t services() const;
+    [[nodiscard]] 
+    uint64_t services() const;
+    
     void set_services(uint64_t services);
 
-    [[nodiscard]] uint64_t timestamp() const;
+    [[nodiscard]] 
+    uint64_t timestamp() const;
+    
     void set_timestamp(uint64_t timestamp);
-
     network_address& address_receiver();
-    [[nodiscard]] network_address const& address_receiver() const;
-    //    void set_address_receiver(network_address const& address);
-    void set_address_receiver(network_address const& address);
+    
+    [[nodiscard]] 
+    network_address const& address_receiver() const;
 
+    void set_address_receiver(network_address const& address);
     network_address& address_sender();
-    [[nodiscard]] network_address const& address_sender() const;
-    //    void set_address_sender(network_address const& address);
+    
+    [[nodiscard]] 
+    network_address const& address_sender() const;
+
     void set_address_sender(network_address const& address);
 
-    [[nodiscard]] uint64_t nonce() const;
+    [[nodiscard]] 
+    uint64_t nonce() const;
+    
     void set_nonce(uint64_t nonce);
 
     std::string& user_agent();
-    [[nodiscard]] std::string const& user_agent() const;
+    
+    [[nodiscard]] 
+    std::string const& user_agent() const;
+    
     void set_user_agent(std::string const& agent);
     void set_user_agent(std::string&& agent);
 
-    [[nodiscard]] uint32_t start_height() const;
+    [[nodiscard]] 
+    uint32_t start_height() const;
+    
     void set_start_height(uint32_t height);
 
     // xversion >= 70001
-    [[nodiscard]] bool relay() const;
+    [[nodiscard]] 
+    bool relay() const;
+    
     void set_relay(bool relay);
 
     bool from_data(uint32_t xversion, data_chunk const& data);
@@ -203,7 +220,9 @@ public:
     }
 
     //bool from_data(uint32_t xversion, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t xversion) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t xversion) const;
+    
     void to_data(uint32_t xversion, data_sink& stream) const;
 
     template <typename W>
@@ -224,9 +243,13 @@ public:
     }
 
     //void to_data(uint32_t xversion, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t xversion) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t xversion) const;
 
 
     static std::string const command;

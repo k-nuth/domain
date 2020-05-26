@@ -54,7 +54,9 @@ public:
     bool operator!=(ping const& x) const;
 
 
-    [[nodiscard]] uint64_t nonce() const;
+    [[nodiscard]] 
+    uint64_t nonce() const;
+    
     void set_nonce(uint64_t value);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -78,7 +80,9 @@ public:
         return source;
     }
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -88,9 +92,13 @@ public:
         }
     }
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

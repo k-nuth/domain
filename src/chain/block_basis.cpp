@@ -328,39 +328,6 @@ hash_digest block_basis::hash() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-// chain::block_basis block_basis::genesis_mainnet() {
-//     data_chunk data;
-//     decode_base16(data, encoded_mainnet_genesis_block);
-//     auto const genesis = chain::block_basis::factory_from_data(data);
-
-//     KTH_ASSERT(genesis.is_valid());
-//     KTH_ASSERT(genesis.transactions().size() == 1);
-//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-//     return genesis;
-// }
-
-// chain::block_basis block_basis::genesis_testnet() {
-//     data_chunk data;
-//     decode_base16(data, encoded_testnet_genesis_block);
-//     auto const genesis = chain::block_basis::factory_from_data(data);
-
-//     KTH_ASSERT(genesis.is_valid());
-//     KTH_ASSERT(genesis.transactions().size() == 1);
-//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-//     return genesis;
-// }
-
-// chain::block_basis block_basis::genesis_regtest() {
-//     data_chunk data;
-//     decode_base16(data, encoded_regtest_genesis_block);
-//     auto const genesis = chain::block_basis::factory_from_data(data);
-
-//     KTH_ASSERT(genesis.is_valid());
-//     KTH_ASSERT(genesis.transactions().size() == 1);
-//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-//     return genesis;
-// }
-
 // With a 32 bit chain the size of the result should not exceed 43 and with a
 // 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
 size_t block_basis::locator_size(size_t top) {
@@ -402,7 +369,7 @@ block_basis::indexes block_basis::locator_heights(size_t top) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
 void block_basis::strip_witness() {
     auto const strip = [](transaction& transaction) {
@@ -433,7 +400,7 @@ uint64_t block_basis::subsidy(size_t height, bool retarget) {
 // size_t block_basis::signature_operations() const {
 //     auto const state = validation.state;
 //     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-// #ifdef KTH_CURRENCY_BCH
+// #if ! defined(KTH_SEGWIT_ENABLED)
 //     auto const bip141 = false;  // No segwit
 // #else
 //     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
@@ -443,7 +410,7 @@ uint64_t block_basis::subsidy(size_t height, bool retarget) {
 
 // Returns max_size_t in case of overflow.
 size_t block_basis::signature_operations(bool bip16, bool bip141) const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     bip141 = false;  // No segwit
 #endif
     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
@@ -669,7 +636,7 @@ bool block_basis::is_valid_coinbase_script(size_t height) const {
 }
 
 bool block_basis::is_valid_witness_commitment() const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #else
     if (transactions_.empty() || transactions_.front().inputs().empty()) {
@@ -693,73 +660,33 @@ bool block_basis::is_valid_witness_commitment() const {
 #endif // KTH_CURRENCY_BCH
 }
 
-// bool block_basis::is_segregated() const {
-// #ifdef KTH_CURRENCY_BCH
-//     return false;
-// #else
-//     bool value;
-
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     mutex_.lock_upgrade();
-
-//     if (segregated_ != std::nullopt) {
-//         value = segregated_.get();
-//         mutex_.unlock_upgrade();
-//         //---------------------------------------------------------------------
-//         return value;
-//     }
-
-//     mutex_.unlock_upgrade_and_lock();
-//     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//     auto const segregated = [](transaction const& tx) {
-//         return tx.is_segregated();
-//     };
-
-//     // If no block tx has witness data the commitment is optional (bip141).
-//     value = std::any_of(transactions_.begin(), transactions_.end(), segregated);
-
-//     mutex_.unlock();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return value;
-// #endif // KTH_CURRENCY_BCH
-// }
-
 code block_basis::check_transactions() const {
     code ec;
-
     for (auto const& tx : transactions_) {
         if ((ec = tx.check(false))) {
             return ec;
         }
     }
-
     return error::success;
 }
 
 code block_basis::accept_transactions(chain_state const& state) const {
     code ec;
-
     for (auto const& tx : transactions_) {
         if ( ! tx.validation.validated && (ec = tx.accept(state, false))) {
             return ec;
         }
     }
-
     return error::success;
 }
 
 code block_basis::connect_transactions(chain_state const& state) const {
     code ec;
-
     for (auto const& tx : transactions_) {
         if ( ! tx.validation.validated && (ec = tx.connect(state))) {
             return ec;
         }
     }
-
     return error::success;
 }
 
@@ -791,7 +718,6 @@ code block_basis::check(size_t serialized_size_false) const {
 
     if (is_extra_coinbases()) {
         return error::extra_coinbases;
-
         // TODO(legacy): determinable from tx pool graph.
     }
 
@@ -845,7 +771,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state.is_enabled(rule_fork::bip141_rule);
@@ -958,7 +884,7 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
 }
 
 bool is_segregated(block_basis const& blk) {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     (void)blk;
     return false;
 #else

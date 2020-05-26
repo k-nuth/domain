@@ -22,14 +22,14 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 
 class witness {};
 
 #else
+
 class BC_API witness {
 public:
     using operation = machine::operation;
@@ -188,9 +188,6 @@ private:
 };
 #endif // KTH_CURRENCY_BCH
 
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+}  // namespace kth::chain
 
 #endif

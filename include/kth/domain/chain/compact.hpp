@@ -30,16 +30,19 @@ public:
     compact(compact const& x);
 
     /// True if construction overflowed.
-    [[nodiscard]] bool is_overflowed() const;
+    [[nodiscard]] 
+    bool is_overflowed() const;
 
     /// Consensus-normalized compact number value.
     /// This is derived from the construction parameter.
-    [[nodiscard]] uint32_t normal() const;
+    [[nodiscard]] 
+    uint32_t normal() const;
 
     /// Big number that the compact number represents.
     /// This is either saved or generated from the construction parameter.
     operator uint256_t const&() const;
-    [[nodiscard]] uint256_t const& big() const;
+    [[nodiscard]] 
+    uint256_t const& big() const;
 
 private:
     static bool from_compact(uint256_t& out, uint32_t compact);

@@ -31,8 +31,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class transaction;
 class witness;
@@ -54,10 +53,8 @@ public:
     script(data_chunk const& encoded, bool prefix);
     script(data_chunk&& encoded, bool prefix);
 
-
     script(script const& x);
     script(script&& x) noexcept;
-    /// This class is move assignable and copy assignable.
     script& operator=(script const& x);
     script& operator=(script&& x) noexcept;
 
@@ -116,14 +113,16 @@ public:
     // Signing.
     //-------------------------------------------------------------------------
 
-    static hash_digest generate_signature_hash(transaction const& tx,
+    static 
+    hash_digest generate_signature_hash(transaction const& tx,
                                                uint32_t input_index,
                                                script const& script_code,
                                                uint8_t sighash_type,
                                                script_version version = script_version::unversioned,
                                                uint64_t value = max_uint64);
 
-    static bool check_signature(ec_signature const& signature,
+    static 
+    bool check_signature(ec_signature const& signature,
                                 uint8_t sighash_type,
                                 data_chunk const& public_key,
                                 script const& script_code,
@@ -132,7 +131,8 @@ public:
                                 script_version version = script_version::unversioned,
                                 uint64_t value = max_uint64);
 
-    static bool create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
+    static 
+    bool create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
@@ -143,7 +143,8 @@ public:
     // static hash_digest to_sequences(transaction const& tx);
 
     /// Determine if the fork is enabled in the active forks set.
-    static bool is_enabled(uint32_t active_forks, rule_fork fork) {
+    static 
+    bool is_enabled(uint32_t active_forks, rule_fork fork) {
         return (fork & active_forks) != 0;
     }
 
@@ -191,26 +192,15 @@ public:
     void find_and_delete(data_stack const& endorsements);
     bool is_unspendable() const;
 
-    // Validation.
-    //-------------------------------------------------------------------------
-
-//     static code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
 
-//     // TODO(legacy): move back to private.
-// #ifdef KTH_CURRENCY_BCH
-//     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t value);
-// #else
-//     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
-// #endif
-
-// protected:
-//     // So that input and output may call reset from their own.
-//     friend class input;
-//     friend class output;
 
     void reset();
+
+#if defined(KTH_SEGWIT_ENABLED)    
     bool is_pay_to_witness(uint32_t forks) const;
+#endif
+
     bool is_pay_to_script_hash(uint32_t forks) const;
 
 private:
@@ -232,9 +222,6 @@ private:
     mutable upgrade_mutex mutex_;
 };
 
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+}  // namespace kth::chain
 
 #endif

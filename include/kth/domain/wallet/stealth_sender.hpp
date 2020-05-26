@@ -36,10 +36,12 @@ public:
     operator bool() const;
 
     /// Attach this script to the output before the send output.
-    [[nodiscard]] chain::script const& stealth_script() const;
+    [[nodiscard]] 
+    chain::script const& stealth_script() const;
 
     /// The bitcoin payment address to which the payment will be made.
-    [[nodiscard]] const wallet::payment_address& payment_address() const;
+    [[nodiscard]] 
+    const wallet::payment_address& payment_address() const;
 
 private:
     void initialize(ec_secret const& ephemeral_private,

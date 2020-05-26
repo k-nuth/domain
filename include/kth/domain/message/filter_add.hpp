@@ -54,7 +54,10 @@ public:
     bool operator!=(filter_add const& x) const;
 
     data_chunk& data();
-    [[nodiscard]] data_chunk const& data() const;
+    
+    [[nodiscard]] 
+    data_chunk const& data() const;
+    
     void set_data(data_chunk const& value);
     void set_data(data_chunk&& value);
 
@@ -71,21 +74,24 @@ public:
             source.invalidate();
         } else {
             data_ = source.read_bytes(size);
-}
+        }
 
         if (version < filter_add::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -95,9 +101,14 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

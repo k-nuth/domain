@@ -20,8 +20,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API inventory_vector {
 public:
@@ -69,15 +68,23 @@ public:
     bool operator!=(inventory_vector const& x) const;
 
 
-    [[nodiscard]] type_id type() const;
+    [[nodiscard]] 
+    type_id type() const;
+    
     void set_type(type_id value);
 
     hash_digest& hash();
-    [[nodiscard]] hash_digest const& hash() const;
+    
+    [[nodiscard]] 
+    hash_digest const& hash() const;
+    
     void set_hash(hash_digest const& value);
 
-    [[nodiscard]] bool is_block_type() const;
-    [[nodiscard]] bool is_transaction_type() const;
+    [[nodiscard]] 
+    bool is_block_type() const;
+    
+    [[nodiscard]] 
+    bool is_transaction_type() const;
 
     bool from_data(uint32_t version, data_chunk const& data);
     bool from_data(uint32_t version, std::istream& stream);
@@ -98,7 +105,9 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -109,22 +118,23 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
 
-#ifndef KTH_CURRENCY_BCH    
+#if defined(KTH_SEGWIT_ENABLED)    
     void to_witness();
 #endif
     
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
-
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
 private:
     type_id type_{type_id::error};
     hash_digest hash_{null_hash};
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

@@ -7,8 +7,9 @@
 
 namespace kth {
 
-constexpr inline bool witness_default() {
-#ifdef KTH_CURRENCY_BCH
+constexpr inline 
+bool witness_default() {
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #else
     return true;
@@ -16,7 +17,7 @@ constexpr inline bool witness_default() {
 }
 
 constexpr inline
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 bool witness_val(bool /*x*/) {
     return false;
 #else
@@ -25,7 +26,7 @@ bool witness_val(bool x) {
 #endif
 }
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 #define KTH_DECL_WITN_ARG bool /*witness*/ = false      //NOLINT
 #define KTH_DEF_WITN_ARG bool /*witness = false*/       //NOLINT
 #else

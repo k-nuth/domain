@@ -115,12 +115,15 @@ public:
     }
 
     // constexpr
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] data_chunk to_data(bool wire = true) const;
+    [[nodiscard]] 
+    data_chunk to_data(bool wire = true) const;
+    
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <typename W>
@@ -138,8 +141,11 @@ public:
     // Iteration (limited to store serialization).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] point_iterator begin() const;
-    [[nodiscard]] point_iterator end() const;
+    [[nodiscard]] 
+    point_iterator begin() const;
+    
+    [[nodiscard]] 
+    point_iterator end() const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
@@ -149,20 +155,23 @@ public:
     size_t satoshi_fixed_size();
 
     // constexpr
-    [[nodiscard]] size_t serialized_size(bool wire = true) const;
+    [[nodiscard]] 
+    size_t serialized_size(bool wire = true) const;
 
     // deprecated (unsafe)
     // constexpr
     hash_digest& hash();
 
     // constexpr
-    [[nodiscard]] hash_digest const& hash() const;
+    [[nodiscard]] 
+    hash_digest const& hash() const;
 
     // constexpr
     void set_hash(hash_digest const& value);
 
     // constexpr
-    [[nodiscard]] uint32_t index() const;
+    [[nodiscard]] 
+    uint32_t index() const;
 
     // constexpr
     void set_index(uint32_t value);
@@ -171,13 +180,15 @@ public:
     //-------------------------------------------------------------------------
 
     /// This is for client-server, not related to consensus or p2p networking.
-    [[nodiscard]] uint64_t checksum() const;
+    [[nodiscard]] 
+    uint64_t checksum() const;
 
     // Validation.
     //-------------------------------------------------------------------------
 
     // constexpr
-    [[nodiscard]] bool is_null() const;
+    [[nodiscard]] 
+    bool is_null() const;
 
 // protected:
     // point(hash_digest const& hash, uint32_t index, bool valid);

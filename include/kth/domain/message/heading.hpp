@@ -91,21 +91,31 @@ public:
     bool operator!=(heading const& x) const;
 
 
-    [[nodiscard]] uint32_t magic() const;
+    [[nodiscard]] 
+    uint32_t magic() const;
+    
     void set_magic(uint32_t value);
 
     std::string& command();
-    [[nodiscard]] std::string const& command() const;
+    
+    [[nodiscard]] 
+    std::string const& command() const;
+    
     void set_command(std::string const& value);
     void set_command(std::string&& value);
 
-    [[nodiscard]] uint32_t payload_size() const;
+    [[nodiscard]] 
+    uint32_t payload_size() const;
+    
     void set_payload_size(uint32_t value);
 
-    [[nodiscard]] uint32_t checksum() const;
+    [[nodiscard]] 
+    uint32_t checksum() const;
+    
     void set_checksum(uint32_t value);
 
-    [[nodiscard]] message_type type() const;
+    [[nodiscard]] 
+    message_type type() const;
 
     bool from_data(data_chunk const& data);
     bool from_data(std::istream& stream);
@@ -126,7 +136,9 @@ public:
     }
 
     //bool from_data(reader& source);
-    [[nodiscard]] data_chunk to_data() const;
+    [[nodiscard]] 
+    data_chunk to_data() const;
+    
     void to_data(data_sink& stream) const;
 
     template <typename W>
@@ -138,7 +150,9 @@ public:
     }
 
     //void to_data(writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
 
 

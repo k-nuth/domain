@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_3__valid_input__success) {
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 BOOST_AUTO_TEST_CASE(get_data__to_witness__error__unchanged) {
     static auto const expected = inventory_vector::type_id::error;
     get_data instance{{expected, {}}};

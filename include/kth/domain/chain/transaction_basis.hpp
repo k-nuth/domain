@@ -33,8 +33,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 namespace detail {
 // Read a length-prefixed collection of inputs or outputs from the source.
@@ -73,10 +72,11 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
     std::for_each(puts.begin(), puts.end(), serialize);
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // Input list must be pre-populated as it determines witness count.
 template <typename R, KTH_IS_READER(R)>
-inline void read_witnesses(R& source, input::list& inputs) {
+inline 
+void read_witnesses(R& source, input::list& inputs) {
     auto const deserialize = [&](input& input) {
         input.witness().from_data(source, true);
     };
@@ -102,7 +102,7 @@ class transaction_basis;
 
 hash_digest hash_non_witness(transaction_basis const& tx);
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 hash_digest hash_witness(transaction_basis const& tx);
 #endif
 
@@ -173,11 +173,11 @@ public:
             // Wire (satoshi protocol) deserialization.
             version_ = source.read_4_bytes_little_endian();
             detail::read(source, inputs_, wire, witness_val(witness));
-#ifdef KTH_CURRENCY_BCH
-            auto const marker = false;
-#else
+#if defined(KTH_SEGWIT_ENABLED)
             // Detect witness as no inputs (marker) and expected flag (bip144).
             auto const marker = inputs_.size() == witness_marker && source.peek_byte() == witness_flag;
+#else
+            auto const marker = false;
 #endif
 
             // This is always enabled so caller should validate with is_segregated.
@@ -186,7 +186,7 @@ public:
                 source.skip(1);
                 detail::read(source, inputs_, wire, witness_val(witness));
                 detail::read(source, outputs_, wire, witness_val(witness));
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
                 detail::read_witnesses(source, inputs_);
 #endif
             } else {
@@ -210,7 +210,7 @@ public:
             version_ = static_cast<uint32_t>(version);
         }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // TODO(legacy): optimize by having reader skip witness data.
         if ( ! witness_val(witness)) {
             strip_witness();
@@ -224,12 +224,15 @@ public:
         return source;
     }
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    [[nodiscard]] data_chunk to_data(bool wire = true, bool witness = false) const;
+    [[nodiscard]] 
+    data_chunk to_data(bool wire = true, bool witness = false) const;
+    
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     // Witness is not used by outputs, just for template normalization.
@@ -244,7 +247,7 @@ public:
                 sink.write_byte(witness_flag);
                 detail::write(sink, inputs_, wire, witness_val(witness));
                 detail::write(sink, outputs_, wire, witness_val(witness));
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
                 detail::write_witnesses(sink, inputs_);
 #endif
             } else {
@@ -266,23 +269,34 @@ public:
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    [[nodiscard]] size_t serialized_size(bool wire = true, bool witness = false) const;
+    [[nodiscard]] 
+    size_t serialized_size(bool wire = true, bool witness = false) const;
 
-    [[nodiscard]] uint32_t version() const;
+    [[nodiscard]] 
+    uint32_t version() const;
+
     void set_version(uint32_t value);
 
-    [[nodiscard]] uint32_t locktime() const;
+    [[nodiscard]]
+    uint32_t locktime() const;
+    
     void set_locktime(uint32_t value);
 
     // Deprecated (unsafe).
     ins& inputs();
-    [[nodiscard]] const ins& inputs() const;
+
+    [[nodiscard]]
+    const ins& inputs() const;
+
     void set_inputs(const ins& value);
     void set_inputs(ins&& value);
 
     // Deprecated (unsafe).
     outs& outputs();
-    [[nodiscard]] const outs& outputs() const;
+    
+    [[nodiscard]] 
+    const outs& outputs() const;
+    
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
@@ -294,7 +308,7 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
@@ -302,46 +316,90 @@ public:
     // Validation.
     //-----------------------------------------------------------------------------
 
-    [[nodiscard]] uint64_t fees() const;
-    [[nodiscard]] point::list previous_outputs() const;
-    [[nodiscard]] point::list missing_previous_outputs() const;
-    [[nodiscard]] hash_list missing_previous_transactions() const;
-    [[nodiscard]] uint64_t total_input_value() const;
+    [[nodiscard]] 
+    uint64_t fees() const;
+    
+    [[nodiscard]] 
+    point::list previous_outputs() const;
+    
+    [[nodiscard]] 
+    point::list missing_previous_outputs() const;
+    
+    [[nodiscard]] 
+    hash_list missing_previous_transactions() const;
+    
+    [[nodiscard]] 
+    uint64_t total_input_value() const;
+    
     // uint64_t total_output_value() const;
-    [[nodiscard]] size_t signature_operations() const;
-    [[nodiscard]] size_t signature_operations(bool bip16, bool bip141) const;
-    [[nodiscard]] size_t weight() const;
+    
+    [[nodiscard]] 
+    size_t signature_operations() const;
+    
+    [[nodiscard]] 
+    size_t signature_operations(bool bip16, bool bip141) const;
+    
+    [[nodiscard]] 
+    size_t weight() const;
 
-    [[nodiscard]] bool is_coinbase() const;
-    [[nodiscard]] bool is_null_non_coinbase() const;
-    [[nodiscard]] bool is_oversized_coinbase() const;
-    [[nodiscard]] bool is_mature(size_t height) const;
+    [[nodiscard]] 
+    bool is_coinbase() const;
+
+    [[nodiscard]] 
+    bool is_null_non_coinbase() const;
+
+    [[nodiscard]] 
+    bool is_oversized_coinbase() const;
+
+    [[nodiscard]] 
+    bool is_mature(size_t height) const;
+
     // bool is_overspent() const;
-    [[nodiscard]] bool is_internal_double_spend() const;
-    [[nodiscard]] bool is_double_spend(bool include_unconfirmed) const;
-    [[nodiscard]] bool is_dusty(uint64_t minimum_output_value) const;
-    [[nodiscard]] bool is_missing_previous_outputs() const;
-    [[nodiscard]] bool is_final(size_t block_height, uint32_t block_time) const;
-    [[nodiscard]] bool is_locked(size_t block_height, uint32_t median_time_past) const;
-    [[nodiscard]] bool is_locktime_conflict() const;
+
+    [[nodiscard]] 
+    bool is_internal_double_spend() const;
+
+    [[nodiscard]] 
+    bool is_double_spend(bool include_unconfirmed) const;
+
+    [[nodiscard]] 
+    bool is_dusty(uint64_t minimum_output_value) const;
+
+    [[nodiscard]] 
+    bool is_missing_previous_outputs() const;
+
+    [[nodiscard]] 
+    bool is_final(size_t block_height, uint32_t block_time) const;
+
+    [[nodiscard]] 
+    bool is_locked(size_t block_height, uint32_t median_time_past) const;
+
+    [[nodiscard]] 
+    bool is_locktime_conflict() const;
 
     // bool is_segregated() const;
 
-    [[nodiscard]] code check(uint64_t total_output_value, bool transaction_pool = true, bool retarget = true) const;
+    [[nodiscard]] 
+    code check(uint64_t total_output_value, bool transaction_pool = true, bool retarget = true) const;
+    
     // code accept(bool transaction_pool = true) const;
-    [[nodiscard]] code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
+    
+    [[nodiscard]] 
+    code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
 
     // code connect() const;
     // code connect(chain_state const& state) const;
     // code connect_input(chain_state const& state, size_t input_index) const;
 
-    [[nodiscard]] bool is_standard() const;
+    [[nodiscard]] 
+    bool is_standard() const;
 
 // protected:
     void reset();
 
 protected:
-    [[nodiscard]] bool all_inputs_final() const;
+    [[nodiscard]] 
+    bool all_inputs_final() const;
 
 private:
     uint32_t version_{0};
@@ -350,22 +408,6 @@ private:
     output::list outputs_;
 };
 
-
-
-
-// #ifdef KTH_CURRENCY_BCH
-// code verify(transaction_basis const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
-// #else
-// code verify(transaction_basis const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
-// #endif
-
-// code verify(transaction_basis const& tx, uint32_t input, uint32_t forks);
-
-
-
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+}  // namespace kth::chain
 
 #endif // KTH_CHAIN_TRANSACTION_BASIS_HPP_

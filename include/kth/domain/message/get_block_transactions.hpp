@@ -53,11 +53,17 @@ public:
 
 
     hash_digest& block_hash();
-    [[nodiscard]] hash_digest const& block_hash() const;
+    
+    [[nodiscard]] 
+    hash_digest const& block_hash() const;
+    
     void set_block_hash(hash_digest const& value);
 
     std::vector<uint64_t>& indexes();
-    [[nodiscard]] const std::vector<uint64_t>& indexes() const;
+    
+    [[nodiscard]] 
+    const std::vector<uint64_t>& indexes() const;
+    
     void set_indexes(const std::vector<uint64_t>& values);
     void set_indexes(std::vector<uint64_t>&& values);
 
@@ -89,8 +95,9 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -99,13 +106,17 @@ public:
         sink.write_variable_little_endian(indexes_.size());
         for (auto const& element : indexes_) {
             sink.write_variable_little_endian(element);
-}
+        }
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

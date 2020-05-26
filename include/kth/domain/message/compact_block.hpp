@@ -65,19 +65,30 @@ public:
 
 
     chain::header& header();
-    [[nodiscard]] chain::header const& header() const;
+    
+    [[nodiscard]] 
+    chain::header const& header() const;
+    
     void set_header(chain::header const& value);
 
-    [[nodiscard]] uint64_t nonce() const;
+    [[nodiscard]] 
+    uint64_t nonce() const;
+    
     void set_nonce(uint64_t value);
 
     short_id_list& short_ids();
-    [[nodiscard]] const short_id_list& short_ids() const;
+    
+    [[nodiscard]] 
+    const short_id_list& short_ids() const;
+    
     void set_short_ids(const short_id_list& value);
     void set_short_ids(short_id_list&& value);
 
     prefilled_transaction::list& transactions();
-    [[nodiscard]] prefilled_transaction::list const& transactions() const;
+    
+    [[nodiscard]] 
+    prefilled_transaction::list const& transactions() const;
+    
     void set_transactions(prefilled_transaction::list const& value);
     void set_transactions(prefilled_transaction::list&& value);
 
@@ -145,7 +156,9 @@ public:
 
     bool from_block(message::block const& block);
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -173,9 +186,13 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

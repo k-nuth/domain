@@ -83,12 +83,15 @@ public:
         return source;
     }
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
 
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    [[nodiscard]] data_chunk to_data(bool wire = true) const;
+    [[nodiscard]]
+    data_chunk to_data(bool wire = true) const;
+
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <typename W>
@@ -104,41 +107,65 @@ public:
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
     static uint256_t proof(uint32_t bits);
-    [[nodiscard]] uint256_t proof() const;
+    
+    [[nodiscard]] 
+    uint256_t proof() const;
 
     static size_t satoshi_fixed_size();
-    [[nodiscard]] size_t serialized_size(bool wire = true) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(bool wire = true) const;
 
-    [[nodiscard]] uint32_t version() const;
+    [[nodiscard]] 
+    uint32_t version() const;
+
     void set_version(uint32_t value);
 
     // Deprecated (unsafe).
     hash_digest& previous_block_hash();
-    [[nodiscard]] hash_digest const& previous_block_hash() const;
+    
+    [[nodiscard]] 
+    hash_digest const& previous_block_hash() const;
+    
     void set_previous_block_hash(hash_digest const& value);
 
     // Deprecated (unsafe).
     hash_digest& merkle();
-    [[nodiscard]] hash_digest const& merkle() const;
+    
+    [[nodiscard]] 
+    hash_digest const& merkle() const;
+    
     void set_merkle(hash_digest const& value);
 
-    [[nodiscard]] uint32_t timestamp() const;
+    [[nodiscard]]
+    uint32_t timestamp() const;
+    
     void set_timestamp(uint32_t value);
 
-    [[nodiscard]] uint32_t bits() const;
+    [[nodiscard]] 
+    uint32_t bits() const;
+    
     void set_bits(uint32_t value);
 
-    [[nodiscard]] uint32_t nonce() const;
+    [[nodiscard]]
+    uint32_t nonce() const;
+    
     void set_nonce(uint32_t value);
 
     // Validation.
     //-----------------------------------------------------------------------------
 
-    [[nodiscard]] bool is_valid_timestamp() const;
-    [[nodiscard]] bool is_valid_proof_of_work(hash_digest const& hash, bool retarget = true) const;
+    [[nodiscard]]
+    bool is_valid_timestamp() const;
+    
+    [[nodiscard]] 
+    bool is_valid_proof_of_work(hash_digest const& hash, bool retarget = true) const;
 
-    [[nodiscard]] code check(hash_digest const& hash, bool retarget = false) const;
-    [[nodiscard]] code accept(chain_state const& state, hash_digest const& hash) const;
+    [[nodiscard]]
+    code check(hash_digest const& hash, bool retarget = false) const;
+    
+    [[nodiscard]] 
+    code accept(chain_state const& state, hash_digest const& hash) const;
 
 // protected:
     // So that block may call reset from its own.

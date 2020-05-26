@@ -94,12 +94,15 @@ public:
 
     bool from_string(std::string const& mnemonic);
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] data_chunk to_data() const;
+    [[nodiscard]] 
+    data_chunk to_data() const;
+    
     void to_data(data_sink& stream) const;
 
     template <typename W>
@@ -127,18 +130,22 @@ public:
 
     //void to_data(writer& sink) const;
 
-    [[nodiscard]] std::string to_string(uint32_t active_forks) const;
+    [[nodiscard]] 
+    std::string to_string(uint32_t active_forks) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] size_t serialized_size() const;
+    [[nodiscard]] 
+    size_t serialized_size() const;
 
     /// Get the op code [0..255], if is_valid is consistent with data.
-    [[nodiscard]] opcode code() const;
+    [[nodiscard]] 
+    opcode code() const;
 
     /// Get the data, empty if not a push code or if invalid.
-    [[nodiscard]] data_chunk const& data() const;
+    [[nodiscard]] 
+    data_chunk const& data() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
@@ -173,16 +180,35 @@ public:
     static bool is_relaxed_push(opcode code);
 
     /// Categories of operations.
-    [[nodiscard]] bool is_push() const;
-    [[nodiscard]] bool is_counted() const;
-    [[nodiscard]] bool is_version() const;
-    [[nodiscard]] bool is_positive() const;
-    [[nodiscard]] bool is_disabled() const;
-    [[nodiscard]] bool is_conditional() const;
-    [[nodiscard]] bool is_relaxed_push() const;
-    [[nodiscard]] bool is_oversized() const;
-    [[nodiscard]] bool is_minimal_push() const;
-    [[nodiscard]] bool is_nominal_push() const;
+    [[nodiscard]] 
+    bool is_push() const;
+
+    [[nodiscard]] 
+    bool is_counted() const;
+
+    [[nodiscard]] 
+    bool is_version() const;
+
+    [[nodiscard]] 
+    bool is_positive() const;
+
+    [[nodiscard]] 
+    bool is_disabled() const;
+
+    [[nodiscard]] 
+    bool is_conditional() const;
+
+    [[nodiscard]] 
+    bool is_relaxed_push() const;
+
+    [[nodiscard]] 
+    bool is_oversized() const;
+
+    [[nodiscard]] 
+    bool is_minimal_push() const;
+
+    [[nodiscard]] 
+    bool is_nominal_push() const;
 
 protected:
     operation(opcode code, data_chunk&& data, bool valid);

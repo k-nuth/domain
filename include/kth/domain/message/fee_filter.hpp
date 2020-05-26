@@ -53,7 +53,9 @@ public:
     bool operator==(fee_filter const& x) const;
     bool operator!=(fee_filter const& x) const;
 
-    [[nodiscard]] uint64_t minimum_fee() const;
+    [[nodiscard]] 
+    uint64_t minimum_fee() const;
+    
     void set_minimum_fee(uint64_t value);
 
     bool from_data(uint32_t version, data_chunk const& data);
@@ -81,7 +83,9 @@ public:
 
     //bool from_data(uint32_t version, reader& source);
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -91,9 +95,13 @@ public:
 
     //void to_data(uint32_t version, writer& sink) const;
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
 
     static std::string const command;

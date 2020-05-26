@@ -32,11 +32,20 @@ public:
     output(std::string const& tuple);
 
     /// Parsed properties
-    [[nodiscard]] bool is_stealth() const;
-    [[nodiscard]] uint64_t amount() const;
-    [[nodiscard]] uint8_t version() const;
-    [[nodiscard]] chain::script const& script() const;
-    [[nodiscard]] short_hash const& pay_to_hash() const;
+    [[nodiscard]] 
+    bool is_stealth() const;
+    
+    [[nodiscard]] 
+    uint64_t amount() const;
+    
+    [[nodiscard]] 
+    uint8_t version() const;
+    
+    [[nodiscard]] 
+    chain::script const& script() const;
+    
+    [[nodiscard]] 
+    short_hash const& pay_to_hash() const;
 
     /**
      * Overload stream in. Throws if input is invalid.

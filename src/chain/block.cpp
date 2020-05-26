@@ -352,6 +352,7 @@ void block::set_transactions(transaction::list&& value) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
+//TODO(fernando): refartor the following 3 member functions
 chain::block block::genesis_mainnet() {
     data_chunk data;
     decode_base16(data, encoded_mainnet_genesis_block);
@@ -426,7 +427,7 @@ block::indexes block::locator_heights(size_t top) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
 void block::strip_witness() {
     auto const strip = [](transaction& transaction) {
@@ -467,7 +468,7 @@ void block::strip_witness() {
 size_t block::signature_operations() const {
     auto const state = validation.state;
     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
@@ -709,7 +710,7 @@ size_t block::weight() const {
 // }
 
 bool block::is_segregated() const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #else
     bool value;

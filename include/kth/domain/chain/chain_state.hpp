@@ -156,6 +156,7 @@ public:
 #ifdef KTH_CURRENCY_BCH
     // [[nodiscard]] 
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
+    
     // [[nodiscard]] 
     // great_wall_t great_wall_activation_time() const;
 
@@ -370,6 +371,7 @@ private:
     uint32_t const median_time_past_;
     uint32_t const work_required_;
 
+//TODO(fernando): inherit BCH data and functions for a specific BCH class
 #ifdef KTH_CURRENCY_BCH
     // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
     // great_wall_t const great_wall_activation_time_;

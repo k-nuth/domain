@@ -84,7 +84,7 @@ inline bool bip9_bit0_active(size_t height, bool mainnet, bool testnet) {
 }
 
 inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet) {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
@@ -94,7 +94,7 @@ inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet
 }
 
 inline bool bip9_bit1_active(size_t height, bool mainnet, bool testnet) {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
@@ -1249,8 +1249,9 @@ chain_state::data chain_state::to_block(chain_state const& pool, block const& bl
 
 #ifndef KTH_CURRENCY_BCH
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
-    if (bip9_bit1_active(data.height, mainnet, testnet))
+    if (bip9_bit1_active(data.height, mainnet, testnet)) {
         data.bip9_bit1_hash = data.hash;
+    }
 #endif
 
     return data;

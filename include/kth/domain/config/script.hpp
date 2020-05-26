@@ -57,13 +57,15 @@ public:
      * Serialize the script to bytes according to the wire protocol.
      * @return  The byte serialized copy of the script.
      */
-    [[nodiscard]] bc::data_chunk to_data() const;
+    [[nodiscard]]
+    bc::data_chunk to_data() const;
 
     /**
      * Return a pretty-printed copy of the script.
      * @return  A mnemonic-printed copy of the internal script.
      */
-    [[nodiscard]] std::string to_string() const;
+    [[nodiscard]] 
+    std::string to_string() const;
 
     /**
      * Overload cast to internal type.

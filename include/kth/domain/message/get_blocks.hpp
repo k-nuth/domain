@@ -55,12 +55,18 @@ public:
 
 
     hash_list& start_hashes();
-    [[nodiscard]] hash_list const& start_hashes() const;
+    
+    [[nodiscard]] 
+    hash_list const& start_hashes() const;
+    
     void set_start_hashes(hash_list const& value);
     void set_start_hashes(hash_list&& value);
 
     hash_digest& stop_hash();
-    [[nodiscard]] hash_digest const& stop_hash() const;
+    
+    [[nodiscard]] 
+    hash_digest const& stop_hash() const;
+    
     void set_stop_hash(hash_digest const& value);
 
     // virtual  //TODO(fernando): check if this function is used in a run-time-polymorphic way
@@ -97,7 +103,9 @@ public:
         return source;
     }
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]] 
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -112,9 +120,13 @@ public:
         sink.write_hash(stop_hash_);
     }
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]] 
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]] 
+    size_t serialized_size(uint32_t version) const;
 
     static std::string const command;
     static uint32_t const version_minimum;

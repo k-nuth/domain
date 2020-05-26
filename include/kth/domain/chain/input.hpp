@@ -72,7 +72,7 @@ public:
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
 #endif // KTH_CURRENCY_BCH

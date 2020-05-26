@@ -218,7 +218,7 @@ data_chunk transaction::to_data(bool wire, bool witness
     , bool unconfirmed
 #endif
     ) const {
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     // Witness handling must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
@@ -251,7 +251,7 @@ void transaction::to_data(data_sink& stream, bool wire, bool witness
     , bool unconfirmed
 #endif
     ) const {
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     // Witness handling must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
@@ -273,7 +273,7 @@ size_t transaction::serialized_size(bool wire, bool witness
 #endif
     ) const {
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     // Witness hashing must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
@@ -366,7 +366,7 @@ void transaction::invalidate_cache() const {
 }
 
 hash_digest transaction::hash(bool witness) const {
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     // Witness hashing must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
@@ -375,7 +375,7 @@ hash_digest transaction::hash(bool witness) const {
     hash_mutex_.lock_upgrade(); //TODO(fernando): use RAII
 
     if (witness_val(witness)) {
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         if ( ! witness_hash_) {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             hash_mutex_.unlock_upgrade_and_lock(); //TODO(fernando): use RAII
@@ -464,7 +464,7 @@ hash_digest transaction::sequences_hash() const {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
 void transaction::strip_witness() {
     ///////////////////////////////////////////////////////////////////////////
@@ -549,7 +549,7 @@ bool transaction::is_overspent() const {
 size_t transaction::signature_operations() const {
     auto const state = validation.state;
     auto const bip16_enabled = state->is_enabled(bc::machine::rule_fork::bip16_rule);
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141_enabled = false;
 #else
     auto const bip141_enabled = state->is_enabled(bc::machine::rule_fork::bip141_rule);
@@ -564,7 +564,7 @@ size_t transaction::weight() const {
 }
 
 bool transaction::is_segregated() const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #endif
     bool value;
@@ -668,7 +668,7 @@ code transaction::connect(chain_state const& state) const {
 // }
 
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
 #else
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
@@ -693,7 +693,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
         return error::stack_false;
     }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     bool witnessed;
     // Triggered by output script push of version and witness program (bip141).
     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
@@ -728,7 +728,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
             return error::stack_false;
         }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // Triggered by embedded push of version and witness program (bip141).
         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
             // The input script must be a push of the embedded_script (bip141).
@@ -744,7 +744,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
 #endif
     }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     // Witness must be empty if no bip141 or valid witness program (bip141).
     if ( ! witnessed && !input_witness.empty()) {
         return error::unexpected_witness;
@@ -762,7 +762,7 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks) {
     auto const& in = tx.inputs()[input];
     auto const& prevout = in.previous_output().validation.cache;
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 #else
     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());

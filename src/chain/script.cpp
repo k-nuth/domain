@@ -1000,7 +1000,7 @@ script_pattern script::input_pattern() const {
 }
 
 bool script::is_pay_to_witness(uint32_t forks) const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     (void)forks;    //Note(kth): to mute the Linter
     return false;
 #else
@@ -1077,7 +1077,7 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-// #ifdef KTH_CURRENCY_BCH
+// #if ! defined(KTH_SEGWIT_ENABLED)
 // code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
 // #else
 // code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
@@ -1101,7 +1101,7 @@ bool script::is_unspendable() const {
 //         return error::stack_false;
 //     }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if defined(KTH_SEGWIT_ENABLED)
 //     bool witnessed;
 //     // Triggered by output script push of version and witness program (bip141).
 //     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
@@ -1136,7 +1136,7 @@ bool script::is_unspendable() const {
 //             return error::stack_false;
 //         }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if defined(KTH_SEGWIT_ENABLED)
 //         // Triggered by embedded push of version and witness program (bip141).
 //         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
 //             // The input script must be a push of the embedded_script (bip141).
@@ -1152,7 +1152,7 @@ bool script::is_unspendable() const {
 // #endif
 //     }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if defined(KTH_SEGWIT_ENABLED)
 //     // Witness must be empty if no bip141 or valid witness program (bip141).
 //     if ( ! witnessed && !input_witness.empty()) {
 //         return error::unexpected_witness;
@@ -1170,7 +1170,7 @@ bool script::is_unspendable() const {
 //     auto const& in = tx.inputs()[input];
 //     auto const& prevout = in.previous_output().validation.cache;
 
-// #ifdef KTH_CURRENCY_BCH
+// #if ! defined(KTH_SEGWIT_ENABLED)
 //     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 // #else
 //     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());

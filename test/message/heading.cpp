@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(heading__maximum_size__always__matches_satoshi_fixed_size) 
     BOOST_REQUIRE_EQUAL(heading::satoshi_fixed_size(), heading::maximum_size());
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // TODO(kth): This test is broken for networks bigger than 4Mbs
 //BOOST_AUTO_TEST_CASE(heading__maximum_payload_size__non_witness__matches_expected)
 //{

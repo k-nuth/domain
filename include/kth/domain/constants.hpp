@@ -142,7 +142,8 @@ constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 constexpr size_t max_block_sigops = max_block_size / max_sigops_factor;
 #endif  //KTH_CURRENCY_BCH
 
-constexpr inline size_t get_max_block_size() noexcept {
+constexpr inline 
+size_t get_max_block_size() noexcept {
 #ifdef KTH_CURRENCY_BCH
     return max_block_size_new;
 #else
@@ -394,13 +395,6 @@ static const config::checkpoint regtest_bip9_bit1_active_checkpoint{
 #ifdef KTH_CURRENCY_BCH
 
 //2017-August-01 hard fork
-//TODO(fernando): remove this commented lines (old code)
-// static const config::checkpoint mainnet_uahf_active_checkpoint{
-//     "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec", 478559};
-
-// static const config::checkpoint testnet_uahf_active_checkpoint{
-//     "00000000000e38fef93ed9582a7df43815d5c2ba9fd37ef70c9a0ea4a285b8f5", 1155876};
-
 static const config::checkpoint mainnet_uahf_active_checkpoint{
     "0000000000000000011865af4122fe3b144e2cbeea86142e8ff2fb4107352d43", 478558};
 
@@ -496,17 +490,23 @@ constexpr size_t max_locator = 43;
 // Witness serialization values (bip141).
 //-----------------------------------------------------------------------------
 
+#if defined(KTH_SEGWIT_ENABLED)
 constexpr uint8_t witness_marker = 0x00;
 constexpr uint8_t witness_flag = 0x01;
 constexpr uint32_t witness_head = 0xaa21a9ed;
+#endif
+
 constexpr size_t fast_sigops_factor = 4;
 constexpr size_t max_fast_sigops = fast_sigops_factor * get_max_block_sigops();
 constexpr size_t light_weight_factor = 4;
 constexpr size_t max_block_weight = light_weight_factor * get_max_block_size();
 constexpr size_t base_size_contribution = 3;
 constexpr size_t total_size_contribution = 1;
+
+#if defined(KTH_SEGWIT_ENABLED)
 constexpr size_t min_witness_program = 2;
 constexpr size_t max_witness_program = 40;
+#endif
 
 constexpr inline
 size_t get_max_block_weight() noexcept {
