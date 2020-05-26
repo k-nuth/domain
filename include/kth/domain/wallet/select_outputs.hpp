@@ -43,7 +43,6 @@ private:
                            uint64_t minimum_value);
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
