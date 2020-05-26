@@ -31,7 +31,7 @@ script::script(chain::script const& value)
 }
 
 script::script(data_chunk const& value) {
-    value_.from_data(value, false);
+    entity_from_data(value_, value, false);
 }
 
 script::script(const std::vector<std::string>& tokens) {
