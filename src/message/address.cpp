@@ -58,16 +58,6 @@ void address::reset() {
     addresses_.shrink_to_fit();
 }
 
-bool address::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool address::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk address::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

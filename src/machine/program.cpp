@@ -127,4 +127,4 @@ code program::evaluate(operation const& op) {
     return interpreter::run(op, *this);
 }
 
-}  // namespace kth
+} // namespace kth::domain::machine

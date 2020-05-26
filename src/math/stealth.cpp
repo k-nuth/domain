@@ -201,4 +201,4 @@ bool uncover_stealth(ec_secret& out_stealth,
     return true;
 }
 
-}  // namespace kth
+} // namespace kth::domain

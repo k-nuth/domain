@@ -49,4 +49,4 @@ code interpreter::run(operation const& op, program& program) {
     return run_op(op, program);
 }
 
-}  // namespace kth
+} // namespace kth::domain::machine
