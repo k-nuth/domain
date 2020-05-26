@@ -17,13 +17,18 @@
 #include <kth/infrastructure/machine/script_version.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
-class BC_API program {
+using operation = ::kth::domain::machine::operation;        //TODO(fernando): why this?
+using script_version = ::kth::infrastructure::machine::script_version;
+using number = ::kth::infrastructure::machine::number;
+
+class KD_API program {
 public:
     using value_type = data_stack::value_type;
     using op_iterator = operation::iterator;
 
+    //TODO(fernando): check this comment 
     // Older libstdc++ does not allow erase with const iterator.
     // This is a bug that requires we up the minimum compiler version.
     // So presently stack_iterator is a non-const iterator.
