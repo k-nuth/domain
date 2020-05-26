@@ -24,6 +24,6 @@ void to_data(W& sink, uint16_t version, uint16_t type) {
     sink.write_2_bytes_big_endian(type);
 }
 
-}  // namespace kth::keoken::message::base
+} // namespace kth::keoken::message::base
 
 #endif  //KTH_KEOKEN_MESSAGE_BASE_HPP_

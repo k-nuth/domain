@@ -20,7 +20,7 @@
 
 namespace kth::keoken::message {
 
-class BC_API create_asset {
+class KD_API create_asset {
 public:
     static
     uint16_t const version = 0;
