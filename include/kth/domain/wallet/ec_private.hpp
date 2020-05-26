@@ -16,7 +16,7 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 class payment_address;
 

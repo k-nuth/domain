@@ -37,11 +37,11 @@ public:
     operator encrypted_public const&() const;
 
     /// Serializer.
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] 
+    [[nodiscard]]
     encrypted_public const& public_key() const;
 
 private:

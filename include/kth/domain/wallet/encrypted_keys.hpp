@@ -109,7 +109,7 @@ enum ek_flag : uint8_t {
  * @param[in]  compressed   Set true to associate ec public key compression.
  * @return false if the token checksum is not valid.
  */
-BC_API bool create_key_pair(encrypted_private& out_private,
+KD_API bool create_key_pair(encrypted_private& out_private,
                             ec_compressed& out_point,
                             encrypted_token const& token,
                             const ek_seed& seed,

@@ -40,11 +40,11 @@ public:
     operator encrypted_token const&() const;
 
     /// Serializer.
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] 
+    [[nodiscard]]
     encrypted_token const& token() const;
 
 private:

@@ -43,32 +43,32 @@ public:
     operator bool() const;
 
     /// Get the serialized URI representation.
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded() const;
 
     /// Property getters.
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t amount() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string label() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string message() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string r() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string address() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     payment_address payment() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     stealth_address stealth() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string parameter(std::string const& key) const;
 
     /// Property setters.

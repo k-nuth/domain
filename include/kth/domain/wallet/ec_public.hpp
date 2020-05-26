@@ -14,14 +14,14 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 class ec_private;
 class payment_address;
 
 /// Use to pass an ec point as either ec_compressed or ec_uncompressed.
 /// ec_public doesn't carry a version for address creation or base58 encoding.
-class BC_API ec_public {
+class KD_API ec_public {
 public:
     static
     uint8_t const compressed_even;
