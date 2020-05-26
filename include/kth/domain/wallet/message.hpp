@@ -26,7 +26,7 @@ using message_signature = byte_array<message_signature_size>;
 /**
  * Hashes a messages in preparation for signing.
  */
-BC_API hash_digest hash_message(data_slice message);
+KD_API hash_digest hash_message(data_slice message);
 
 /**
  * Signs a message using deterministic signature.
