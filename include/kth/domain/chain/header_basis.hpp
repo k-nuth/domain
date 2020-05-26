@@ -23,12 +23,10 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
-
-namespace kth::chain {
-
-class BC_API header_basis {
+namespace kth::domain::chain {
+class KD_API header_basis {
 public:
     using list = std::vector<header_basis>;
     using ptr = std::shared_ptr<header_basis>;

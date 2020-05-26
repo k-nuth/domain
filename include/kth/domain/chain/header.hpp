@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/hash_memoizer.hpp>
 #include <kth/domain/chain/header_basis.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/error.hpp>
