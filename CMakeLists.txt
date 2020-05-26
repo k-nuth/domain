@@ -415,9 +415,7 @@ set(kth_domain_sources_just_legacy
         src/config/endorsement.cpp
         
         src/utility/property_tree.cpp
-        # src/utility/socket.cpp
 
-        # src/error.cpp
         src/multi_crypto_support.cpp
         src/version.cpp
 
