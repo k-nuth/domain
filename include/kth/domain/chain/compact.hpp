@@ -23,24 +23,20 @@ public:
     explicit 
     compact(uint256_t const& big);
 
-    compact(compact&& x) noexcept;
-
-    /// Copy constructor.
-    compact(compact const& x);
-
     /// True if construction overflowed.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_overflowed() const;
 
     /// Consensus-normalized compact number value.
     /// This is derived from the construction parameter.
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t normal() const;
 
     /// Big number that the compact number represents.
     /// This is either saved or generated from the construction parameter.
     operator uint256_t const&() const;
-    [[nodiscard]] 
+
+    [[nodiscard]]
     uint256_t const& big() const;
 
 private:

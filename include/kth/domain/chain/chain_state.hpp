@@ -17,19 +17,19 @@
 #include <kth/infrastructure/config/checkpoint.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 class block;
 class header;
 
-class BC_API chain_state {
+class KD_API chain_state {
 public:
-    using bitss = std::deque<uint32_t>;
-    using versions = std::deque<uint32_t>;
-    using timestamps = std::deque<uint32_t>;
+    using bitss = std::deque<uint32_t>;                 //TODO(fernando): why deque?
+    using versions = std::deque<uint32_t>;              //TODO(fernando): why deque?
+    using timestamps = std::deque<uint32_t>;            //TODO(fernando): why deque?
     using range = struct {size_t count; size_t high;};
     using ptr = std::shared_ptr<chain_state>;
-    using checkpoints = config::checkpoint::list;
+    using checkpoints = infrastructure::config::checkpoint::list;
 
     /// Heights used to identify construction requirements.
     /// All values are lower-bounded by the genesis block height.
