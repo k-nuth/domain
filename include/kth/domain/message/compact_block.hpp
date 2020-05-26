@@ -18,12 +18,12 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API compact_block {
+class KD_API compact_block {
 public:
     using ptr = std::shared_ptr<compact_block>;
     using const_ptr = std::shared_ptr<const compact_block>;
