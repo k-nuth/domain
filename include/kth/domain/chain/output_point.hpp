@@ -16,9 +16,9 @@
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-class BC_API output_point : public point {
+class KD_API output_point : public point {
 public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation_type {

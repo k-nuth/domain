@@ -22,12 +22,12 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-class BC_API point {
+class KD_API point {
 public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
