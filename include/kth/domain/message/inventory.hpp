@@ -22,30 +22,17 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API inventory {
+class KD_API inventory {
 public:
     using ptr = std::shared_ptr<inventory>;
     using const_ptr = std::shared_ptr<const inventory>;
     using type_id = inventory_vector::type_id;
 
-    static
-    inventory factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    inventory factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    inventory factory_from_data(uint32_t version, R& source) {
-        inventory instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     inventory() = default;
     inventory(inventory_vector::list const& values);

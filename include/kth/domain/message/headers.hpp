@@ -22,61 +22,40 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API headers {
+class KD_API headers {
 public:
     using ptr = std::shared_ptr<headers>;
     using const_ptr = std::shared_ptr<const headers>;
-
-    static
-    headers factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    headers factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    headers factory_from_data(uint32_t version, R& source) {
-        headers instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     headers() = default;
     headers(header::list const& values);
     headers(header::list&& values);
     headers(std::initializer_list<header> const& values);
 
-    // headers(headers const& x) = default;
-    // headers(headers&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // headers& operator=(headers&& x) = default;
-    // headers& operator=(headers const&) = default;
-
     bool operator==(headers const& x) const;
     bool operator!=(headers const& x) const;
 
-
     header::list& elements();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     header::list const& elements() const;
     
     void set_elements(header::list const& values);
     void set_elements(header::list&& values);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_sequential() const;
     
     void to_hashes(hash_list& out) const;
     void to_inventory(inventory_vector::list& out, inventory::type_id type) const;
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {

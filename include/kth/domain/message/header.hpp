@@ -18,12 +18,12 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API header : public chain::header {
+class KD_API header : public chain::header {
 public:
     using list = std::vector<header>;
     using ptr = std::shared_ptr<header>;
