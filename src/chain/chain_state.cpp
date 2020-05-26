@@ -18,75 +18,163 @@
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
+
 #include <kth/infrastructure/config/checkpoint.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/unicode/unicode.hpp>
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/timer.hpp>
 
-#include <boost/range/adaptor/reversed.hpp>
+namespace kth::domain::chain {
 
-namespace kth::chain {
-
-using namespace bc::config;
-using namespace bc::machine;
+using namespace infrastructure::config;
+using namespace kth::domain::machine;
 using namespace boost::adaptors;
+
+// Constructors.
+//-----------------------------------------------------------------------------
+
+// The allow_collisions hard fork is always activated (not configurable).
+chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
+#ifdef KTH_CURRENCY_BCH
+    // , magnetic_anomaly_t magnetic_anomaly_activation_time
+    // , great_wall_t great_wall_activation_time
+    // , graviton_t graviton_activation_time
+    , phonon_t phonon_activation_time
+    , axion_t axion_activation_time
+#endif  //KTH_CURRENCY_BCH
+)
+    : data_(std::move(values))
+    , forks_(forks | rule_fork::allow_collisions)
+    , checkpoints_(checkpoints)
+    , active_(activation(data_, forks_
+#ifdef KTH_CURRENCY_BCH
+        // , magnetic_anomaly_activation_time
+        // , great_wall_activation_time
+        // , graviton_activation_time
+        , phonon_activation_time
+        , axion_activation_time
+#endif  //KTH_CURRENCY_BCH
+        ))
+    , median_time_past_(median_time_past(data_, forks_))
+    , work_required_(work_required(data_, forks_))
+#ifdef KTH_CURRENCY_BCH
+    // , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
+    // , great_wall_activation_time_(great_wall_activation_time)
+    // , graviton_activation_time_(graviton_activation_time)
+    , phonon_activation_time_(phonon_activation_time)
+    , axion_activation_time_(axion_activation_time)
+#endif  //KTH_CURRENCY_BCH
+{}
+
+// Named constructors.
+//-----------------------------------------------------------------------------
+
+// Constructor (top to pool).
+// This generates a state for the pool above the presumed top block state.
+
+// static
+chain_state chain_state::from_top(chain_state const& top) {
+    return chain_state(to_pool(top), top.forks_, top.checkpoints_
+#ifdef KTH_CURRENCY_BCH
+        , top.phonon_activation_time_
+        , top.axion_activation_time_
+#endif  //KTH_CURRENCY_BCH
+    );
+}
+
+// Constructor (tx pool to block).
+// This assumes that the pool state is the same height as the block.
+
+// static
+chain_state chain_state::from_pool(chain_state const& pool, block const& block) {
+    return chain_state(to_block(pool, block), pool.forks_, pool.checkpoints_
+#ifdef KTH_CURRENCY_BCH
+        , pool.phonon_activation_time_
+        , pool.axion_activation_time_
+#endif  //KTH_CURRENCY_BCH
+    );
+}
+
+// Constructor (parent to header).
+// This assumes that parent is the state of the header's previous block.
+
+//static
+chain_state chain_state::from_parent(chain_state const& parent, header const& header) {
+    return chain_state(to_header(parent, header), parent.forks_, parent.checkpoints_
+#ifdef KTH_CURRENCY_BCH
+        , parent.phonon_activation_time_
+        , parent.axion_activation_time_
+#endif
+    );
+}
 
 // Inlines.
 //-----------------------------------------------------------------------------
 
-inline size_t version_sample_size(bool mainnet) {
+//TODO(fernando): pass the network enum instead of bool mainnet / bool testnet
+inline 
+size_t version_sample_size(bool mainnet) {
     return mainnet ? mainnet_sample : testnet_sample;
 }
 
-inline bool is_active(size_t count, bool mainnet) {
+inline 
+bool is_active(size_t count, bool mainnet) {
     return count >= (mainnet ? mainnet_active : testnet_active);
 }
 
-inline bool is_enforced(size_t count, bool mainnet) {
+inline 
+bool is_enforced(size_t count, bool mainnet) {
     return count >= (mainnet ? mainnet_enforce : testnet_enforce);
 }
 
-inline bool is_bip16_exception(const checkpoint& check, bool mainnet) {
+inline 
+bool is_bip16_exception(infrastructure::config::checkpoint const& check, bool mainnet) {
     return mainnet && check == mainnet_bip16_exception_checkpoint;
 }
 
-inline bool is_bip30_exception(const checkpoint& check, bool mainnet) {
+inline 
+bool is_bip30_exception(infrastructure::config::checkpoint const& check, bool mainnet) {
     return mainnet &&
            ((check == mainnet_bip30_exception_checkpoint1) ||
             (check == mainnet_bip30_exception_checkpoint2));
 }
 
-inline bool allow_collisions(hash_digest const& hash, bool mainnet, bool testnet) {
+inline 
+bool allow_collisions(hash_digest const& hash, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return (mainnet && hash == mainnet_bip34_active_checkpoint.hash()) ||
            (testnet && hash == testnet_bip34_active_checkpoint.hash()) ||
            (regtest && hash == regtest_bip34_active_checkpoint.hash());
 }
 
-inline bool allow_collisions(size_t height, bool mainnet, bool testnet) {
+inline 
+bool allow_collisions(size_t height, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return (mainnet && height == mainnet_bip34_active_checkpoint.height()) ||
            (testnet && height == testnet_bip34_active_checkpoint.height()) ||
            (regtest && height == regtest_bip34_active_checkpoint.height());
 }
 
-inline bool bip9_bit0_active(hash_digest const& hash, bool mainnet, bool testnet) {
+inline 
+bool bip9_bit0_active(hash_digest const& hash, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return (mainnet && hash == mainnet_bip9_bit0_active_checkpoint.hash()) ||
            (testnet && hash == testnet_bip9_bit0_active_checkpoint.hash()) ||
            (regtest && hash == regtest_bip9_bit0_active_checkpoint.hash());
 }
 
-inline bool bip9_bit0_active(size_t height, bool mainnet, bool testnet) {
+inline 
+bool bip9_bit0_active(size_t height, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return (mainnet && height == mainnet_bip9_bit0_active_checkpoint.height()) ||
            (testnet && height == testnet_bip9_bit0_active_checkpoint.height()) ||
            (regtest && height == regtest_bip9_bit0_active_checkpoint.height());
 }
 
-inline bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet) {
-#if ! defined(KTH_SEGWIT_ENABLED)
+inline 
+bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet) {
+#if defined(KTH_CURRENCY_BCH)
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
