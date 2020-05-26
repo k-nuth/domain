@@ -51,4 +51,4 @@ std::ostream& operator<<(std::ostream& output, ec_private const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth::domain::config

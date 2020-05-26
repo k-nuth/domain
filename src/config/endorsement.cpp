@@ -72,4 +72,4 @@ std::ostream& operator<<(std::ostream& output, const endorsement& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth

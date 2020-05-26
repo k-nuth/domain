@@ -80,4 +80,4 @@ std::ostream& operator<<(std::ostream& output, input const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth
