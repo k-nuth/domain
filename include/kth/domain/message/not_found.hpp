@@ -19,29 +19,15 @@
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API not_found : public inventory {
+class KD_API not_found : public inventory {
 public:
     using ptr = std::shared_ptr<not_found>;
     using const_ptr = std::shared_ptr<const not_found>;
-
-    static
-    not_found factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    not_found factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    not_found factory_from_data(uint32_t version, R& source) {
-        not_found instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     not_found() = default;
     not_found(inventory_vector::list const& values);

@@ -96,14 +96,14 @@
 namespace kth {
 
 #define DECLARE_MESSAGE_POINTER_TYPES(type) \
-    typedef message::type::ptr type##_ptr;  \
-    typedef message::type::const_ptr type##_const_ptr
+    using type##_ptr = domain::message::type::ptr;  \
+    using type##_const_ptr = domain::message::type::const_ptr
 
 #define DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES(type)                 \
-    typedef message::type::ptr_list type##_ptr_list;                     \
-    typedef message::type::const_ptr_list type##_const_ptr_list;         \
-    typedef message::type::const_ptr_list_ptr type##_const_ptr_list_ptr; \
-    typedef message::type::const_ptr_list_const_ptr type##_const_ptr_list_const_ptr
+    using type##_ptr_list = domain::message::type::ptr_list;                     \
+    using type##_const_ptr_list = domain::message::type::const_ptr_list;         \
+    using type##_const_ptr_list_ptr = domain::message::type::const_ptr_list_ptr; \
+    using type##_const_ptr_list_const_ptr = domain::message::type::const_ptr_list_const_ptr
 
 // HACK: declare these in bc namespace to reduce length.
 DECLARE_MESSAGE_POINTER_TYPES(address);
