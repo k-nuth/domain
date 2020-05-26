@@ -16,29 +16,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API block_transactions {
+class KD_API block_transactions {
 public:
     using ptr = std::shared_ptr<block_transactions>;
     using const_ptr = std::shared_ptr<const block_transactions>;
-
-    static
-    block_transactions factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    block_transactions factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    block_transactions factory_from_data(uint32_t version, R& source) {
-        block_transactions instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     block_transactions();
     block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
