@@ -41,10 +41,9 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-using namespace bc::config;
-using namespace bc::machine;
+using namespace kth::domain::machine;
 using namespace boost::adaptors;
 
 #ifdef KTH_CURRENCY_LTC

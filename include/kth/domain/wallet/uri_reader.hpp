@@ -72,7 +72,6 @@ public:
     virtual bool set_parameter(std::string const& key, std::string const& value) = 0;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

@@ -28,7 +28,7 @@ public:
     operator bool() const;
 
     /// Get the stealth address.
-    [[nodiscard]] 
+    [[nodiscard]]
     const wallet::stealth_address& stealth_address() const;
 
     /// Derive a payment address to compare against the blockchain.
