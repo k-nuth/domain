@@ -39,33 +39,6 @@ bool operator!=(create_asset const& a, create_asset const& b) {
     return !(a == b);
 }
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// static
-create_asset create_asset::factory_from_data(data_chunk const& data) {
-    create_asset instance;
-    instance.from_data(data);
-    return instance;
-}
-
-// static
-create_asset create_asset::factory_from_data(std::istream& stream) {
-    create_asset instance;
-    instance.from_data(stream);
-    return instance;
-}
-
-bool create_asset::from_data(data_chunk const& data) {
-    data_source istream(data);
-    return from_data(istream);
-}
-
-bool create_asset::from_data(std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r);
-}
-
 // Serialization.
 //-----------------------------------------------------------------------------
 

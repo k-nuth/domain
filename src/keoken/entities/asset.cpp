@@ -62,10 +62,10 @@ payment_address const& asset::owner() const {
     return owner_;
 }
 
-// void asset::set_owner(bc::wallet::payment_address x) {
+// void asset::set_owner(kth::domain::wallet::payment_address x) {
 //     owner_ = std::move(x);
 // }
 
-}  // namespace entities
-}  // namespace keoken
-}  // namespace kth
+} // namespace entities
+} // namespace keoken
+} // namespace kth
