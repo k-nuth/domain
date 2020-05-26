@@ -139,12 +139,12 @@ int kth::main(int argc, char* argv[]) {
 // }
 
 
-// int bc::main(int argc, char* argv[])
+// int kth::main(int argc, char* argv[])
 // {
-//     bc::wallet::payment_address const address1("1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"); // Legacy Address Format
-//     //bc::wallet::payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat Invalid
-//     //bc::wallet::payment_address const address2("bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"); // CashAddrFormat
-//     bc::wallet::payment_address const address2("bitcoincash:ppm2qsznhks23z7629mms6s4cwef74vcwvn0h829pq"); // CashAddrFormat
+//     kth::domain::wallet::payment_address const address1("1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"); // Legacy Address Format
+//     //kth::domain::wallet::payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat Invalid
+//     //kth::domain::wallet::payment_address const address2("bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"); // CashAddrFormat
+//     kth::domain::wallet::payment_address const address2("bitcoincash:ppm2qsznhks23z7629mms6s4cwef74vcwvn0h829pq"); // CashAddrFormat
 
 
 
