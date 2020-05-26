@@ -31,19 +31,19 @@ public:
     output(std::string const& tuple);
 
     /// Parsed properties
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_stealth() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t amount() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     chain::script const& script() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     short_hash const& pay_to_hash() const;
 
     /**

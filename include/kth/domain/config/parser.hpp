@@ -52,7 +52,7 @@ using std::error_code;
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
 template <typename ConcreteParser>
-class BI_API parser {
+class KD_API parser {
 public:
     ConcreteParser& derived() {
         return static_cast<ConcreteParser&>(*this);
