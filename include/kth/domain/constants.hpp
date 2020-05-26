@@ -38,24 +38,6 @@ static_assert(CHAR_BIT == 8, "8-bit bytes assumed");
 // http://eel.is/c++draft/cstdint#syn
 static_assert(std::is_same<uint8_t, unsigned char>::value);
 
-
-// #define BC_USER_AGENT "/knuth:" KTH_VERSION "/"
-
-// Generic constants.
-//-----------------------------------------------------------------------------
-
-// Defined <kth/infrastructure/constants.hpp>
-// constexpr int64_t min_int64 = MIN_INT64;
-// constexpr int64_t max_int64 = MAX_INT64;
-// constexpr int32_t min_int32 = MIN_INT32;
-// constexpr int32_t max_int32 = MAX_INT32;
-// constexpr uint64_t max_uint64 = MAX_UINT64;
-// constexpr uint32_t max_uint32 = MAX_UINT32;
-// constexpr uint16_t max_uint16 = MAX_UINT16;
-// constexpr uint8_t max_uint8 = MAX_UINT8;
-// constexpr uint64_t max_size_t = BC_MAX_SIZE;
-// constexpr uint8_t byte_bits = 8;
-
 // Consensus sentinels.
 //-----------------------------------------------------------------------------
 
