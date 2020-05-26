@@ -61,21 +61,6 @@ bool operator!=(output_point const& x, output_point const& y) {
     return !(x == y);
 }
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-output_point output_point::factory_from_data(data_chunk const& data, bool wire) {
-    output_point instance;
-    instance.from_data(data, wire);
-    return instance;
-}
-
-output_point output_point::factory_from_data(std::istream& stream, bool wire) {
-    output_point instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
 // Validation.
 //-----------------------------------------------------------------------------
 
