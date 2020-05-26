@@ -31,40 +31,30 @@ header_basis::header_basis(uint32_t version, hash_digest const& previous_block_h
 // Operators.
 //-----------------------------------------------------------------------------
 
-bool header_basis::operator==(header_basis const& x) const {
-    return (version_ == x.version_) && (previous_block_hash_ == x.previous_block_hash_) && (merkle_ == x.merkle_) && (timestamp_ == x.timestamp_) && (bits_ == x.bits_) && (nonce_ == x.nonce_);
+// friend
+bool operator==(header_basis const& x, header_basis const& y) {
+    return (x.version_ == y.version_) && (x.previous_block_hash_ == y.previous_block_hash_) && 
+           (x.merkle_ == y.merkle_) && (x.timestamp_ == y.timestamp_) && (x.bits_ == y.bits_) && 
+           (x.nonce_ == y.nonce_);
 }
 
-bool header_basis::operator!=(header_basis const& x) const {
-    return !(*this == x);
+//friend
+bool operator!=(header_basis const& x, header_basis const& y) {
+    return !(x == y);
 }
 
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-header_basis header_basis::factory_from_data(data_chunk const& data, bool wire) {
-    header_basis instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool header_basis::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-// static
-header_basis header_basis::factory_from_data(std::istream& stream, bool wire) {
-    header_basis instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool header_basis::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool header_basis::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool header_basis::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // protected
 void header_basis::reset() {
