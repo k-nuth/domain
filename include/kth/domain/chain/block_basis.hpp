@@ -13,7 +13,6 @@
 #include <string>
 #include <vector>
 
-#include <kth/domain/multi_crypto_settings.hpp>
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/header.hpp>
 #include <kth/domain/chain/transaction.hpp>

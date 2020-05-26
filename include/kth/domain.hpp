@@ -31,23 +31,16 @@
 #include <kth/domain/chain/witness.hpp>
 #endif
 
-#include <kth/domain/version.hpp>
 #include <kth/domain/config/parser.hpp>
+
 #include <kth/domain/machine/interpreter.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/program.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 
-// #include <kth/infrastructure/machine/number.hpp>
-// #include <kth/infrastructure/machine/script_pattern.hpp>
-// #include <kth/infrastructure/machine/script_version.hpp>
-// #include <kth/infrastructure/machine/sighash_algorithm.hpp>
-// #include <kth/infrastructure/math/checksum.hpp>
-// #include <kth/infrastructure/math/crypto.hpp>
-// #include <kth/infrastructure/math/elliptic_curve.hpp>
-
 #include <kth/domain/math/stealth.hpp>
+
 #include <kth/domain/message/address.hpp>
 #include <kth/domain/message/alert.hpp>
 #include <kth/domain/message/alert_payload.hpp>
