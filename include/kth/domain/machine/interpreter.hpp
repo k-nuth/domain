@@ -14,9 +14,9 @@
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
-class BC_API interpreter {
+class KD_API interpreter {
 public:
     using result = error::error_code_t;
 
