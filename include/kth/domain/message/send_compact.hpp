@@ -16,29 +16,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API send_compact {
+class KD_API send_compact {
 public:
     using ptr = std::shared_ptr<send_compact>;
     using const_ptr = std::shared_ptr<const send_compact>;
-
-    static
-    send_compact factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    send_compact factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    send_compact factory_from_data(uint32_t version, R& source) {
-        send_compact instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     static
     size_t satoshi_fixed_size(uint32_t version);

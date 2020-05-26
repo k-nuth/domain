@@ -17,30 +17,16 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API pong {
+class KD_API pong {
 public:
     using ptr = std::shared_ptr<pong>;
     using const_ptr = std::shared_ptr<const pong>;
-
-    static
-    pong factory_from_data(uint32_t version, data_chunk const& data);
     
-    static
-    pong factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    pong factory_from_data(uint32_t version, R& source) {
-        pong instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
     static
     size_t satoshi_fixed_size(uint32_t version);
 

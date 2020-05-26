@@ -16,29 +16,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API prefilled_transaction {
+class KD_API prefilled_transaction {
 public:
     using list = std::vector<prefilled_transaction>;
     using const_ptr = std::shared_ptr<const prefilled_transaction>;
-
-    static
-    prefilled_transaction factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    prefilled_transaction factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    prefilled_transaction factory_from_data(uint32_t version, R& source) {
-        prefilled_transaction instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     prefilled_transaction();
     prefilled_transaction(uint64_t index, chain::transaction const& tx);
