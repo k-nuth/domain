@@ -95,27 +95,15 @@ output::addresses_ptr output::addresses_cache() const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-output output::factory_from_data(data_chunk const& data, bool wire) {
-    output instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool output::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-output output::factory_from_data(std::istream& stream, bool wire) {
-    output instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool output::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool output::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool output::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // // protected
 // void output::reset() {
