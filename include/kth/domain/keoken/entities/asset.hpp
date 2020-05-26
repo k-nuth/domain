@@ -47,18 +47,18 @@ public:
     amount_t amount() const;
     // void set_amount(amount_t x);
 
-    bc::wallet::payment_address const& owner() const;
-    // void set_owner(bc::::wallet::payment_address x);
+    kth::domain::wallet::payment_address const& owner() const;
+    // void set_owner(kth::::wallet::payment_address x);
 
 private:
     asset_id_t id_;
     std::string name_;
     amount_t amount_;
-    bc::wallet::payment_address owner_;
+    kth::domain::wallet::payment_address owner_;
 };
 
-}  // namespace entities
-}  // namespace keoken
-}  // namespace kth
+} // namespace entities
+} // namespace keoken
+} // namespace kth
 
 #endif  //KTH_KEOKEN_ENTITIES_ASSET_HPP_
