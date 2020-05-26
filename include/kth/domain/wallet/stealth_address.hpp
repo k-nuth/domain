@@ -16,23 +16,26 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 /// A class for working with stealth payment addresses.
 class BC_API stealth_address {
 public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
-    static uint8_t const mainnet_p2kh;
+    static
+    uint8_t const mainnet_p2kh;
 
     /// If set and the spend_keys contains the scan_key then the key is reused.
-    static uint8_t const reuse_key_flag;
+    static
+    uint8_t const reuse_key_flag;
 
     /// This is advisory in nature and likely to be enforced by a server.
-    static const size_t min_filter_bits;
+    static
+    const size_t min_filter_bits;
 
     /// This is the protocol limit to the size of a stealth prefix filter.
-    static const size_t max_filter_bits;
+    static
+    const size_t max_filter_bits;
 
     /// Constructors.
     stealth_address();
@@ -80,9 +83,14 @@ public:
 
 private:
     /// Factories.
-    static stealth_address from_string(std::string const& encoded);
-    static stealth_address from_stealth(data_chunk const& decoded);
-    static stealth_address from_stealth(binary const& filter,
+    static
+    stealth_address from_string(std::string const& encoded);
+    
+    static
+    stealth_address from_stealth(data_chunk const& decoded);
+    
+    static
+    stealth_address from_stealth(binary const& filter,
                                         ec_compressed const& scan_key,
                                         point_list const& spend_keys,
                                         uint8_t signatures,

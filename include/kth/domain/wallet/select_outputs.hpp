@@ -10,8 +10,7 @@
 #include <kth/domain/chain/points_value.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 struct BC_API select_outputs {
     enum class algorithm {
@@ -26,17 +25,20 @@ struct BC_API select_outputs {
     };
 
     /// Select outpoints for a spend from a list of unspent outputs.
-    static void select(chain::points_value& out,
+    static
+    void select(chain::points_value& out,
                        const chain::points_value& unspent,
                        uint64_t minimum_value,
                        algorithm option = algorithm::greedy);
 
 private:
-    static void greedy(chain::points_value& out,
+    static
+    void greedy(chain::points_value& out,
                        const chain::points_value& unspent,
                        uint64_t minimum_value);
 
-    static void individual(chain::points_value& out,
+    static
+    void individual(chain::points_value& out,
                            const chain::points_value& unspent,
                            uint64_t minimum_value);
 };

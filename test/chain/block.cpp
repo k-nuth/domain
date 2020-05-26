@@ -8,7 +8,8 @@
 using namespace bc;
 
 // Test helper.
-static bool all_valid(chain::transaction::list const& transactions) {
+static
+bool all_valid(chain::transaction::list const& transactions) {
     auto valid = true;
 
     for (auto const& tx : transactions) {

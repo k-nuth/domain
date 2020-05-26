@@ -59,14 +59,14 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static 
+    static
     block_basis factory_from_data(data_chunk const& data, bool witness = false);
     
-    static 
+    static
     block_basis factory_from_data(std::istream& stream, bool witness = false);
 
     template <typename R, KTH_IS_READER(R)>
-    static 
+    static
     block_basis factory_from_data(R& source, bool witness = false) {
         block_basis instance;
         instance.from_data(source, witness_val(witness));
@@ -167,10 +167,10 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-    static 
+    static
     size_t locator_size(size_t top);
     
-    static 
+    static
     indexes locator_heights(size_t top);
 
 #if defined(KTH_SEGWIT_ENABLED)
@@ -180,10 +180,10 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
-    static 
+    static
     uint64_t subsidy(size_t height, bool retarget = true);
     
-    static 
+    static
     uint256_t proof(uint32_t bits);
 
     [[nodiscard]] 

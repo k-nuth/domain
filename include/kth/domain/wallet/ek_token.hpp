@@ -11,8 +11,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/encrypted_keys.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 /**
  * Serialization helper to convert between base58 string and bip38 token.
@@ -50,7 +49,8 @@ public:
 
 private:
     /// Factories.
-    static ek_token from_string(std::string const& encoded);
+    static
+    ek_token from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

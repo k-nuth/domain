@@ -11,8 +11,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/encrypted_keys.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 /// Use to pass an encrypted public key.
 class BC_API ek_public {
@@ -47,7 +46,8 @@ public:
 
 private:
     /// Factories.
-    static ek_public from_string(std::string const& encoded);
+    static
+    ek_public from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

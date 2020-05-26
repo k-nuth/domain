@@ -7,7 +7,8 @@
 
 using namespace bc;
 
-static auto const version_maximum = message::version::level::maximum;
+static
+auto const version_maximum = message::version::level::maximum;
 
 // "/Satoshi:1.1.1/" (70006) no relay
 // anarchistprime: bitcointalk.org/index.php?topic=1001407

@@ -18,7 +18,8 @@
 namespace kth::config {
 
 // endorsement format is currently private to bx.
-static bool decode_endorsement(bc::endorsement& endorsement,
+static
+bool decode_endorsement(bc::endorsement& endorsement,
                                std::string const& encoded) {
     bc::endorsement decoded;
     if ( ! decode_base16(decoded, encoded) ||
@@ -30,7 +31,8 @@ static bool decode_endorsement(bc::endorsement& endorsement,
     return true;
 }
 
-static std::string encode_endorsement(data_slice signature) {
+static
+std::string encode_endorsement(data_slice signature) {
     return encode_base16(signature);
 }
 

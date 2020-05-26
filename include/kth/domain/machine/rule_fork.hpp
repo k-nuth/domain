@@ -7,8 +7,7 @@
 
 #include <cstdint>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 enum rule_fork : uint32_t {
     no_rules = 0,

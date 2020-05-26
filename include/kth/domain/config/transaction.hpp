@@ -11,8 +11,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 /**
  * Serialization helper to convert between serialized and deserialized satoshi

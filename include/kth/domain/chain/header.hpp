@@ -27,8 +27,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API header : public header_basis {
 public:
@@ -65,12 +64,15 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static header factory_from_data(data_chunk const& data, bool wire = true);
-    // static header factory_from_data(std::istream& stream, bool wire=true);
-    static header factory_from_data(std::istream& stream, bool wire = true);
+    static
+    header factory_from_data(data_chunk const& data, bool wire = true);
+
+    static
+    header factory_from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
-    static header factory_from_data(R& source, bool wire = true) {
+    static
+    header factory_from_data(R& source, bool wire = true) {
         header instance;
         instance.from_data(source, wire);
         return instance;
@@ -155,8 +157,7 @@ private:
     mutable std::shared_ptr<hash_digest> hash_;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 //#include <kth/domain/concepts_undef.hpp>
 

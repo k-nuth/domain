@@ -13,8 +13,7 @@
 
 #include "parse_encrypted_prefix.hpp"
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 // Swap not defined.
 template <size_t PrefixSize>

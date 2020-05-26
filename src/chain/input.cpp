@@ -200,4 +200,4 @@ payment_address::list input::addresses() const {
     return addresses;
 }
 
-}  // namespace kth
+}  // namespace kth::chain

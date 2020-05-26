@@ -51,7 +51,8 @@ using namespace bc::machine;
 using namespace boost::adaptors;
 
 // bit.ly/2cPazSa
-static auto const one_hash = hash_literal("0000000000000000000000000000000000000000000000000000000000000001"); //NOLINT
+static
+auto const one_hash = hash_literal("0000000000000000000000000000000000000000000000000000000000000001"); //NOLINT
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -318,7 +319,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
     );
 }
 
-// static 
+// static
 // hash_digest sign_none(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type) {
 //     input::list ins;
 //     auto const& inputs = tx.inputs();
@@ -346,7 +347,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 //     return signature_hash({tx.version(), tx.locktime(), std::move(ins), {}}, sighash_type);
 // }
 
-// static 
+// static
 // hash_digest sign_single(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type) {
 //     input::list ins;
 //     auto const& inputs = tx.inputs();
@@ -383,7 +384,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 //                           sighash_type);
 // }
 
-// static 
+// static
 // hash_digest sign_all(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type) {
 //     input::list ins;
 //     auto const& inputs = tx.inputs();
@@ -514,7 +515,8 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 //     return bitcoin_hash(data);
 // }
 
-static size_t preimage_size(size_t script_size) {
+static
+size_t preimage_size(size_t script_size) {
     return sizeof(uint32_t) + hash_size + hash_size + point::satoshi_fixed_size() + script_size + sizeof(uint64_t) + sizeof(uint32_t) + hash_size + sizeof(uint32_t) + sizeof(uint32_t);
 }
 

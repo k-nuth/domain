@@ -19,19 +19,22 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API block_transactions {
 public:
     using ptr = std::shared_ptr<block_transactions>;
     using const_ptr = std::shared_ptr<const block_transactions>;
 
-    static block_transactions factory_from_data(uint32_t version, data_chunk const& data);
-    static block_transactions factory_from_data(uint32_t version, std::istream& stream);
+    static
+    block_transactions factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    block_transactions factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static block_transactions factory_from_data(uint32_t version, R& source) {
+    static
+    block_transactions factory_from_data(uint32_t version, R& source) {
         block_transactions instance;
         instance.from_data(version, source);
         return instance;
@@ -131,16 +134,20 @@ public:
     [[nodiscard]] 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 private:
     hash_digest block_hash_;
     chain::transaction::list transactions_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

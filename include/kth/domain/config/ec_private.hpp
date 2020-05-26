@@ -11,8 +11,7 @@
 #include <kth/domain.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 /**
  * Serialization helper to convert between base16 string and ec_secret.

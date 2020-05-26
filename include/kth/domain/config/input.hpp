@@ -12,8 +12,7 @@
 #include <kth/domain/chain/input_point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 /**
  * Serialization helper stub for chain::input.

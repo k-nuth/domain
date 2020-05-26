@@ -13,10 +13,10 @@
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
-// static constexpr auto invalid_code = opcode::disabled_xor;
+// static constexpr
+// auto invalid_code = opcode::disabled_xor;
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -97,7 +97,8 @@ bool operation::operator!=(operation const& x) const {
 //-----------------------------------------------------------------------------
 
 // TODO(legacy): consolidate with message implementation into common math utility.
-// static size_t variable_uint_size(uint64_t value)
+// static
+// size_t variable_uint_size(uint64_t value)
 // {
 //     if (value < 0xfd)
 //         return 1;

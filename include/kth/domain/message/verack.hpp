@@ -19,8 +19,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 // The checksum is ignored by the verack command.
 class BC_API verack {
@@ -28,18 +27,22 @@ public:
     using ptr = std::shared_ptr<verack>;
     using const_ptr = std::shared_ptr<const verack>;
 
-    static verack factory_from_data(uint32_t version, data_chunk const& data);
-    static verack factory_from_data(uint32_t version, std::istream& stream);
+    static
+    verack factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    verack factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static verack factory_from_data(uint32_t version, R& source) {
+    static
+    verack factory_from_data(uint32_t version, R& source) {
         verack instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static verack factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     verack() = default;
 
@@ -66,12 +69,17 @@ public:
     [[nodiscard]] 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

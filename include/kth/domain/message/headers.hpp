@@ -25,25 +25,26 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API headers {
 public:
     using ptr = std::shared_ptr<headers>;
     using const_ptr = std::shared_ptr<const headers>;
 
-    static headers factory_from_data(uint32_t version, data_chunk const& data);
-    static headers factory_from_data(uint32_t version, std::istream& stream);
+    static
+    headers factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    headers factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static headers factory_from_data(uint32_t version, R& source) {
+    static
+    headers factory_from_data(uint32_t version, R& source) {
         headers instance;
         instance.from_data(version, source);
         return instance;
     }
-
-    //static headers factory_from_data(uint32_t version, reader& source);
 
     headers() = default;
     headers(header::list const& values);
@@ -133,15 +134,20 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     header::list elements_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

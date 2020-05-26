@@ -30,8 +30,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using namespace bc::machine;
 
@@ -452,5 +451,4 @@ code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks
     }
 }
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain

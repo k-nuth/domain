@@ -9,9 +9,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 
 using bc::data_chunk;
 using bc::data_sink;
@@ -135,6 +133,4 @@ void send_tokens::set_amount(amount_t x) {
     amount_ = x;
 }
 
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+}  // namespace kth::keoken::message

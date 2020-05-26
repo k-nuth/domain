@@ -55,4 +55,4 @@ void point_value::set_value(uint64_t value) {
     value_ = value;
 }
 
-}  // namespace kth
+}  // namespace kth::chain

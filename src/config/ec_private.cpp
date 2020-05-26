@@ -16,7 +16,8 @@
 namespace kth::config {
 
 // ec_secret base16 format is private to bx.
-static bool decode_secret(ec_secret& secret, std::string const& encoded) {
+static
+bool decode_secret(ec_secret& secret, std::string const& encoded) {
     return decode_base16(secret, encoded) && verify(secret);
 }
 

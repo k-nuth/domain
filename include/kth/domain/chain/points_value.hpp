@@ -12,8 +12,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/utility/limits.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API points_value {
 public:
@@ -25,7 +24,6 @@ public:
     uint64_t value() const;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

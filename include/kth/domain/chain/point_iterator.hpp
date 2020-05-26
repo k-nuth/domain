@@ -11,8 +11,7 @@
 
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class point;
 
@@ -71,7 +70,6 @@ private:
     unsigned current_;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

@@ -12,8 +12,7 @@
 
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 namespace entities {
 
 class BC_API asset {

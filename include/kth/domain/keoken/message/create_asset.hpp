@@ -18,15 +18,18 @@
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 
 class BC_API create_asset {
 public:
-    static uint16_t const version = 0;
-    static uint16_t const type = 0;
-    static const size_t max_name_size = 32u + 1u;  //32 real chars plus null-terminated
+    static
+    uint16_t const version = 0;
+    
+    static
+    uint16_t const type = 0;
+    
+    static
+    const size_t max_name_size = 32u + 1u;  //32 real chars plus null-terminated
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -52,11 +55,15 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static create_asset factory_from_data(bc::data_chunk const& data);
-    static create_asset factory_from_data(std::istream& stream);
+    static
+    create_asset factory_from_data(bc::data_chunk const& data);
+    
+    static
+    create_asset factory_from_data(std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static create_asset factory_from_data(R& source) {
+    static
+    create_asset factory_from_data(R& source) {
         create_asset instance;
         instance.from_data(source);
         return instance;
@@ -120,8 +127,6 @@ private:
     amount_t amount_;
 };
 
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+}  // namespace kth::keoken::message
 
 #endif  //KTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_

@@ -6,8 +6,7 @@
 
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 namespace entities {
 
 // using namespace bc;

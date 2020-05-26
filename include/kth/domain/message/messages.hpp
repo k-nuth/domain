@@ -178,7 +178,6 @@ data_chunk serialize(uint32_t version, const Message& packet, uint32_t magic) {
 
 // BC_API size_t variable_uint_size(uint64_t value);
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

@@ -18,12 +18,11 @@
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace kth {
-namespace keoken {
-namespace wallet {
+namespace kth::keoken::wallet {
 
 // TODO(guillermo): calculate the fees instead of using a static value
-static constexpr uint64_t fees = 2000;
+static constexpr 
+uint64_t fees = 2000;
 
 using result_t = std::pair<kth::error::error_code_t, kth::chain::transaction>;
 

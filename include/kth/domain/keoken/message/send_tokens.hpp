@@ -17,14 +17,15 @@
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 
 class BC_API send_tokens {
 public:
-    static uint16_t const version = 0;
-    static uint16_t const type = 1;
+    static
+    uint16_t const version = 0;
+    
+    static
+    uint16_t const type = 1;
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -47,11 +48,15 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static send_tokens factory_from_data(bc::data_chunk const& data);
-    static send_tokens factory_from_data(std::istream& stream);
+    static
+    send_tokens factory_from_data(bc::data_chunk const& data);
+    
+    static
+    send_tokens factory_from_data(std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static send_tokens factory_from_data(R& source) {
+    static
+    send_tokens factory_from_data(R& source) {
         send_tokens instance;  //NOLINT
         instance.from_data(source);
         return instance;
@@ -102,8 +107,6 @@ private:
     amount_t amount_;
 };
 
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+}  // namespace kth::keoken::message
 
 #endif  //KTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_

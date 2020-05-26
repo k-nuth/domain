@@ -20,19 +20,22 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API get_block_transactions {
 public:
     using ptr = std::shared_ptr<get_block_transactions>;
     using const_ptr = std::shared_ptr<const get_block_transactions>;
 
-    static get_block_transactions factory_from_data(uint32_t version, data_chunk const& data);
-    static get_block_transactions factory_from_data(uint32_t version, std::istream& stream);
+    static
+    get_block_transactions factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    get_block_transactions factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static get_block_transactions factory_from_data(uint32_t version, R& source) {
+    static
+    get_block_transactions factory_from_data(uint32_t version, R& source) {
         get_block_transactions instance;
         instance.from_data(version, source);
         return instance;
@@ -118,16 +121,20 @@ public:
     [[nodiscard]] 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 private:
     hash_digest block_hash_;
     std::vector<uint64_t> indexes_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

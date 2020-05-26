@@ -25,8 +25,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API inventory {
 public:
@@ -34,11 +33,15 @@ public:
     using const_ptr = std::shared_ptr<const inventory>;
     using type_id = inventory_vector::type_id;
 
-    static inventory factory_from_data(uint32_t version, data_chunk const& data);
-    static inventory factory_from_data(uint32_t version, std::istream& stream);
+    static
+    inventory factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    inventory factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static inventory factory_from_data(uint32_t version, R& source) {
+    static
+    inventory factory_from_data(uint32_t version, R& source) {
         inventory instance;
         instance.from_data(version, source);
         return instance;
@@ -131,15 +134,20 @@ public:
     [[nodiscard]] 
     size_t count(type_id type) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     inventory_vector::list inventories_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

@@ -12,8 +12,7 @@
 
 #include <kth/domain/keoken/constants.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 
 using bc::data_chunk;
 using bc::machine::opcode;

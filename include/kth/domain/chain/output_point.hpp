@@ -16,8 +16,7 @@
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API output_point : public point {
 public:
@@ -79,12 +78,15 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static output_point factory_from_data(data_chunk const& data, bool wire = true);
-    static output_point factory_from_data(std::istream& stream, bool wire = true);
-    // static output_point factory_from_data(reader& source, bool wire=true);
+    static
+    output_point factory_from_data(data_chunk const& data, bool wire = true);
+    
+    static
+    output_point factory_from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
-    static output_point factory_from_data(R& source, bool wire = true) {
+    static
+    output_point factory_from_data(R& source, bool wire = true) {
         output_point instance;
         instance.from_data(source, wire);
         return instance;
@@ -105,7 +107,6 @@ public:
 //     friend class input;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

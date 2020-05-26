@@ -21,8 +21,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API reject {
 public:
@@ -60,17 +59,19 @@ public:
     using ptr = std::shared_ptr<reject>;
     using const_ptr = std::shared_ptr<const reject>;
 
-    static reject factory_from_data(uint32_t version, data_chunk const& data);
-    static reject factory_from_data(uint32_t version, std::istream& stream);
+    static
+    reject factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    reject factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static reject factory_from_data(uint32_t version, R& source) {
+    static
+    reject factory_from_data(uint32_t version, R& source) {
         reject instance;
         instance.from_data(version, source);
         return instance;
     }
-
-    //static reject factory_from_data(uint32_t version, reader& source);
 
     reject();
 
@@ -177,13 +178,22 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
-    static reason_code reason_from_byte(uint8_t byte);
-    static uint8_t reason_to_byte(reason_code value);
+    static
+    reason_code reason_from_byte(uint8_t byte);
+    
+    static
+    uint8_t reason_to_byte(reason_code value);
 
     reason_code code_{reason_code::undefined};
     std::string message_;
@@ -191,7 +201,6 @@ private:
     hash_digest data_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

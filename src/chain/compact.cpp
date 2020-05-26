@@ -15,14 +15,24 @@ namespace kth::chain {
 // value = (-1^sign) * mantissa * 256^(exponent-3)
 
 // [exponent:8 | sign:1 | mantissa:31]
-static constexpr uint32_t exp_byte = 0xff000000;
-static constexpr uint32_t sign_bit = 0x00800000;
-static constexpr uint32_t mantissa_max = ~(exp_byte | sign_bit);
-static constexpr uint32_t mantissa_bits = (sizeof(uint32_t) - 1) * 8;
+static constexpr
+uint32_t exp_byte = 0xff000000;
+
+static constexpr
+uint32_t sign_bit = 0x00800000;
+
+static constexpr
+uint32_t mantissa_max = ~(exp_byte | sign_bit);
+
+static constexpr
+uint32_t mantissa_bits = (sizeof(uint32_t) - 1) * 8;
 
 // assertions
-static constexpr uint32_t mantissa_mask = ~mantissa_max;
-static constexpr uint32_t first_byte_mask = 0xffffff00;
+static constexpr
+uint32_t mantissa_mask = ~mantissa_max;
+
+static constexpr
+uint32_t first_byte_mask = 0xffffff00;
 
 // Inlines
 //-----------------------------------------------------------------------------

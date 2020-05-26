@@ -13,8 +13,7 @@
 #include <kth/domain.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 /**
  * Serialization helper to convert between endorsement string and data_chunk.

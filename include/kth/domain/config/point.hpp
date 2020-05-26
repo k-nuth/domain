@@ -12,15 +12,15 @@
 #include <kth/domain/chain/output_point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 /**
  * Serialization helper to convert between text and an output_point.
  */
 class BC_API point {
 public:
-    static std::string const delimeter;
+    static
+    std::string const delimeter;
 
     point() = default;
 

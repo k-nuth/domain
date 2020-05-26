@@ -25,14 +25,14 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API point {
 public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
-    static constexpr uint32_t null_index = no_previous_output;
+    static constexpr 
+    uint32_t null_index = no_previous_output;
 
     using list = std::vector<point>;
     using indexes = std::vector<uint32_t>;
@@ -76,12 +76,15 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static point factory_from_data(data_chunk const& data, bool wire = true);
+    static
+    point factory_from_data(data_chunk const& data, bool wire = true);
 
-    static point factory_from_data(std::istream& stream, bool wire = true);
+    static
+    point factory_from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
-    static point factory_from_data(R& source, bool wire = true) {
+    static
+    point factory_from_data(R& source, bool wire = true) {
         point instance;
         instance.from_data(source, wire);
         return instance;
@@ -200,8 +203,7 @@ private:
     bool valid_{false};
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 // Standard hash.
 //-----------------------------------------------------------------------------
@@ -222,7 +224,8 @@ struct hash<bc::chain::point> {
 // Extend std namespace with the non-wire size of point (database key size).
 template <>
 struct tuple_size<bc::chain::point> {
-    static auto const value = std::tuple_size<bc::hash_digest>::value + sizeof(uint16_t);
+    static
+    auto const value = std::tuple_size<bc::hash_digest>::value + sizeof(uint16_t);
 
     operator std::size_t() const {
         return value;

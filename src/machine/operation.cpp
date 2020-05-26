@@ -76,7 +76,8 @@ string_list split_push_token(std::string const& token) {
     return split(trim_token(token), ".", false);
 }
 
-static bool opcode_from_data_prefix(opcode& out_code,
+static
+bool opcode_from_data_prefix(opcode& out_code,
                                     std::string const& prefix,
                                     data_chunk const& data) {
     constexpr auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
@@ -102,7 +103,8 @@ static bool opcode_from_data_prefix(opcode& out_code,
     return false;
 }
 
-static bool data_from_number_token(data_chunk& out_data,
+static
+bool data_from_number_token(data_chunk& out_data,
                                    std::string const& token) {
     try {
         out_data = number(boost::lexical_cast<int64_t>(token)).data();
@@ -184,7 +186,8 @@ void operation::to_data(data_sink& stream) const {
     to_data(sink_w);
 }
 
-static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
+static
+std::string opcode_to_prefix(opcode code, data_chunk const& data) {
     // If opcode is minimal for a size-based encoding, do not set a prefix.
     if (code == operation::opcode_from_size(data.size())) {
         return "";

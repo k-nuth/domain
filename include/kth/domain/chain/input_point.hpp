@@ -7,12 +7,10 @@
 
 #include <kth/domain/chain/point.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 using input_point = point;
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

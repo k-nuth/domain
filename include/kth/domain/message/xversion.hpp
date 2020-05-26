@@ -111,11 +111,15 @@ public:
 #endif                                //KTH_CURRENCY_BCH
     };
 
-    static xversion factory_from_data(uint32_t xversion, data_chunk const& data);
-    static xversion factory_from_data(uint32_t xversion, std::istream& stream);
+    static
+    xversion factory_from_data(uint32_t xversion, data_chunk const& data);
+    
+    static
+    xversion factory_from_data(uint32_t xversion, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static xversion factory_from_data(uint32_t xversion, R& source) {
+    static
+    xversion factory_from_data(uint32_t xversion, R& source) {
         message::xversion instance;
         instance.from_data(xversion, source);
         return instance;
@@ -252,10 +256,16 @@ public:
     size_t serialized_size(uint32_t xversion) const;
 
 
-    static std::string const command;
-    //    static const bounds xversion;
-    static uint32_t const xversion_minimum;
-    static uint32_t const xversion_maximum;
+    static
+    std::string const command;
+
+    //static
+    //const bounds xversion;
+    
+    static
+    uint32_t const xversion_minimum;
+    
+    staticuint32_t const xversion_maximum;
 
 private:
     uint32_t value_{0};

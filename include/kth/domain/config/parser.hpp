@@ -61,14 +61,14 @@ public:
 
     // The error is obtained from boost, which circumvents our localization.
     // English-only hack to patch missing arg name in boost exception message.
-    static 
+    static
     std::string format_invalid_parameter(std::string const& message) {
         std::string clean_message(message);
         boost::replace_all(clean_message, "for option is invalid", "is invalid");
         return "Error: " + clean_message;
     }
 
-    static 
+    static
     bool get_option(variables_map& variables, std::string const& name) {
         // Read settings from the map so we don't require an early notify call.
         auto const& variable = variables[name];
@@ -81,7 +81,7 @@ public:
         return variable.as<bool>();
     }    
 
-    static 
+    static
     path get_config_option(variables_map& variables, std::string const& name) {
         // read config from the map so we don't require an early notify
         auto const& config = variables[name];

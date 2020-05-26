@@ -19,22 +19,26 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API alert_payload {
 public:
-    static alert_payload factory_from_data(uint32_t version, data_chunk const& data);
-    static alert_payload factory_from_data(uint32_t version, std::istream& stream);
+    static
+    alert_payload factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    alert_payload factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static alert_payload factory_from_data(uint32_t version, R& source) {
+    static
+    alert_payload factory_from_data(uint32_t version, R& source) {
         alert_payload instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static alert_payload factory_from_data(uint32_t version, reader& source);
+    //static
+    //alert_payload factory_from_data(uint32_t version, reader& source);
 
     alert_payload() = default;
     alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, const std::vector<uint32_t>& set_cancel, uint32_t min_version, uint32_t max_version, const std::vector<std::string>& set_sub_version, uint32_t priority, std::string const& comment, std::string const& status_bar, std::string const& reserved);
@@ -209,7 +213,8 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static const ec_uncompressed satoshi_public_key;
+    static
+    const ec_uncompressed satoshi_public_key;
 
 private:
     uint32_t version_{0};
@@ -227,7 +232,6 @@ private:
     std::string reserved_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

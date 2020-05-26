@@ -22,8 +22,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API merkle_block {
 public:
@@ -31,17 +30,19 @@ public:
     using ptr = std::shared_ptr<merkle_block>;
     using const_ptr = std::shared_ptr<const merkle_block>;
 
-    static merkle_block factory_from_data(uint32_t version, data_chunk const& data);
-    static merkle_block factory_from_data(uint32_t version, std::istream& stream);
+    static
+    merkle_block factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    merkle_block factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static merkle_block factory_from_data(uint32_t version, R& source) {
+    static
+    merkle_block factory_from_data(uint32_t version, R& source) {
         merkle_block instance;
         instance.from_data(version, source);
         return instance;
     }
-
-    //static merkle_block factory_from_data(uint32_t version, reader& source);
 
     merkle_block() = default;
     merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags);
@@ -155,9 +156,15 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     chain::header header_;
@@ -166,7 +173,6 @@ private:
     data_chunk flags_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

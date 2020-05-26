@@ -31,18 +31,22 @@ public:
     using ptr = std::shared_ptr<xverack>;
     using const_ptr = std::shared_ptr<const xverack>;
 
-    static xverack factory_from_data(uint32_t version, data_chunk const& data);
-    static xverack factory_from_data(uint32_t version, std::istream& stream);
+    static
+    xverack factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    xverack factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static xverack factory_from_data(uint32_t version, R& source) {
+    static
+    xverack factory_from_data(uint32_t version, R& source) {
         xverack instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static xverack factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     xverack() = default;
 
@@ -69,9 +73,15 @@ public:
     [[nodiscard]] 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 };
 
 }  // namespace kth::message

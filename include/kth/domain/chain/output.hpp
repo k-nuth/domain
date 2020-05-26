@@ -25,8 +25,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API output : public output_basis {
 public:
@@ -35,12 +34,14 @@ public:
     /// This is a sentinel used in .value to indicate not found in store.
     /// This is a sentinel used in cache.value to indicate not populated.
     /// This is a consensus value used in script::generate_signature_hash.
-    static uint64_t const not_found;
+    static
+    uint64_t const not_found;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation {
         /// This is a non-consensus sentinel indicating output is unspent.
-        static uint32_t const not_spent;
+        static
+        uint32_t const not_spent;
 
         size_t spender_height = validation::not_spent;
     };
@@ -67,11 +68,15 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static output factory_from_data(data_chunk const& data, bool wire = true);
-    static output factory_from_data(std::istream& stream, bool wire = true);
+    static
+    output factory_from_data(data_chunk const& data, bool wire = true);
+    
+    static
+    output factory_from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
-    static output factory_from_data(R& source, bool wire = true) {
+    static
+    output factory_from_data(R& source, bool wire = true) {
         output instance;
         instance.from_data(source, wire);
         return instance;
@@ -140,8 +145,7 @@ private:
     mutable addresses_ptr addresses_;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 //#include <kth/domain/concepts_undef.hpp>
 

@@ -20,25 +20,29 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API address {
 public:
     using ptr = std::shared_ptr<address>;
     using const_ptr = std::shared_ptr<const address>;
 
-    static address factory_from_data(uint32_t version, data_chunk const& data);
-    static address factory_from_data(uint32_t version, std::istream& stream);
+    static
+    address factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    address factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static address factory_from_data(uint32_t version, R& source) {
+    static
+    address factory_from_data(uint32_t version, R& source) {
         address instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static address factory_from_data(uint32_t version, reader& source);
+    //static
+    //address factory_from_data(uint32_t version, reader& source);
 
     address() = default;
     address(network_address::list const& addresses);
@@ -122,15 +126,19 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 private:
     network_address::list addresses_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

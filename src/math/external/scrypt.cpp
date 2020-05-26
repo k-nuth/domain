@@ -47,13 +47,15 @@
 #endif
 #endif
 
-static inline uint32_t be32dec(const void* pp) {
+static inline 
+uint32_t be32dec(const void* pp) {
     uint8_t const* p = (uint8_t const*)pp;
     return ((uint32_t)(p[3]) + ((uint32_t)(p[2]) << 8) +
             ((uint32_t)(p[1]) << 16) + ((uint32_t)(p[0]) << 24));
 }
 
-static inline void be32enc(void* pp, uint32_t x) {
+static inline 
+void be32enc(void* pp, uint32_t x) {
     uint8_t* p = (uint8_t*)pp;
     p[3] = x & 0xff;
     p[2] = (x >> 8) & 0xff;
@@ -67,8 +69,8 @@ typedef struct HMAC_SHA256Context {
 } HMAC_SHA256_CTX;
 
 /* Initialize an HMAC-SHA256 operation with the given key. */
-static void
-HMAC_SHA256_Init(HMAC_SHA256_CTX* ctx, const void* _K, size_t Klen) {
+static
+void HMAC_SHA256_Init(HMAC_SHA256_CTX* ctx, const void* _K, size_t Klen) {
     unsigned char pad[64];
     unsigned char khash[32];
     const unsigned char* K = (const unsigned char*)_K;
@@ -102,15 +104,15 @@ HMAC_SHA256_Init(HMAC_SHA256_CTX* ctx, const void* _K, size_t Klen) {
 }
 
 /* Add bytes to the HMAC-SHA256 operation. */
-static void
-HMAC_SHA256_Update(HMAC_SHA256_CTX* ctx, const void* in, size_t len) {
+static
+void HMAC_SHA256_Update(HMAC_SHA256_CTX* ctx, const void* in, size_t len) {
     /* Feed data to the inner SHA256 operation. */
     SHA256_Update(&ctx->ictx, in, len);
 }
 
 /* Finish an HMAC-SHA256 operation. */
-static void
-HMAC_SHA256_Final(unsigned char digest[32], HMAC_SHA256_CTX* ctx) {
+static
+void HMAC_SHA256_Final(unsigned char digest[32], HMAC_SHA256_CTX* ctx) {
     unsigned char ihash[32];
 
     /* Finish the inner SHA256 operation. */
@@ -182,7 +184,8 @@ void PBKDF2_SHA256(uint8_t const* passwd, size_t passwdlen, uint8_t const* salt,
 
 #define ROTL(a, b) (((a) << (b)) | ((a) >> (32 - (b))))
 
-static inline void xor_salsa8(uint32_t B[16], uint32_t const Bx[16]) {
+static inline
+void xor_salsa8(uint32_t B[16], uint32_t const Bx[16]) {
     uint32_t x00, x01, x02, x03, x04, x05, x06, x07, x08, x09, x10, x11, x12, x13, x14, x15;
     int i;
 

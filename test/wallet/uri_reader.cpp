@@ -16,7 +16,8 @@ using namespace bc::wallet;
 BOOST_AUTO_TEST_SUITE(uri_reader_tests)
 
 // Test helper that relies on bitcoin_uri.
-static bitcoin_uri parse(std::string const& uri, bool strict = true) {
+static
+bitcoin_uri parse(std::string const& uri, bool strict = true) {
     return uri_reader::parse<bitcoin_uri>(uri, strict);
 }
 

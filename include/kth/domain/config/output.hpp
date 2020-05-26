@@ -13,8 +13,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 /**
  * Serialization helper to convert between a base58-string:number and

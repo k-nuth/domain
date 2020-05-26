@@ -49,7 +49,8 @@ using namespace boost::adaptors;
 
 #ifdef KTH_CURRENCY_LTC
 //Litecoin mainnet genesis block
-static std::string const encoded_mainnet_genesis_block =
+static
+std::string const encoded_mainnet_genesis_block =
     "01000000"                                                                                                                                          //version
     "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
     "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le *
@@ -70,7 +71,8 @@ static std::string const encoded_mainnet_genesis_block =
     "00000000";     //NOLINT                                                                                                                            //locktime
 
 //Litecoin testnet genesis block
-static std::string const encoded_testnet_genesis_block =
+static
+std::string const encoded_testnet_genesis_block =
     "01000000"                                                                                                                                          //version
     "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
     "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le
@@ -91,7 +93,8 @@ static std::string const encoded_testnet_genesis_block =
     "00000000";           //NOLINT                                                                                                                      //locktime
 #else  //KTH_CURRENCY_LTC
 
-static std::string const encoded_mainnet_genesis_block =
+static
+std::string const encoded_mainnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -111,7 +114,8 @@ static std::string const encoded_mainnet_genesis_block =
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000"; //NOLINT
 
-static std::string const encoded_testnet_genesis_block =
+static
+std::string const encoded_testnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -132,7 +136,8 @@ static std::string const encoded_testnet_genesis_block =
     "00000000"; //NOLINT
 #endif  //KTH_CURRENCY_LTC
 
-static std::string const encoded_regtest_genesis_block =
+static
+std::string const encoded_regtest_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"

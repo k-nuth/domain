@@ -12,8 +12,7 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 /// This structure is used in the client-server protocol in v2/v3.
 /// The stealth row excludes the sign byte (0x02) of the ephemeral public key.
@@ -35,7 +34,6 @@ struct BC_API stealth {
     hash_digest transaction_hash;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

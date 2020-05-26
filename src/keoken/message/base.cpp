@@ -6,9 +6,7 @@
 
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 namespace base {
 
 size_t serialized_size() {
@@ -21,6 +19,4 @@ size_t serialized_size() {
 // }
 
 }  // namespace base
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+}  // namespace kth::keoken::message

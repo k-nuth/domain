@@ -11,8 +11,7 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 /// A valued point, does not implement specialized serialization methods.
 class BC_API point_value : public point {
@@ -53,7 +52,6 @@ private:
     uint64_t value_{0};
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

@@ -77,14 +77,14 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static 
+    static
     block factory_from_data(data_chunk const& data, bool witness = false);
     
-    static 
+    static
     block factory_from_data(std::istream& stream, bool witness = false);
 
     template <typename R, KTH_IS_READER(R)>
-    static 
+    static
     block factory_from_data(R& source, bool witness = false) {
         block instance;
         instance.from_data(source, witness_val(witness));
@@ -120,19 +120,19 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-    static 
+    static
     block genesis_mainnet();
     
-    static 
+    static
     block genesis_testnet();
     
-    static 
+    static
     block genesis_regtest();
     
-    static 
+    static
     size_t locator_size(size_t top);
     
-    static 
+    static
     indexes locator_heights(size_t top);
 
 #if defined(KTH_SEGWIT_ENABLED)

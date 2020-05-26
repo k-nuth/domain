@@ -55,11 +55,15 @@ public:
     //-------------------------------------------------------------------------
     // Prefixed data assumed valid here though caller may confirm with is_valid.
 
-    static witness factory_from_data(data_chunk const& encoded, bool prefix);
-    static witness factory_from_data(std::istream& stream, bool prefix);
+    static
+    witness factory_from_data(data_chunk const& encoded, bool prefix);
+    
+    static
+    witness factory_from_data(std::istream& stream, bool prefix);
 
     template <typename R, KTH_IS_READER(R)>
-    static witness factory_from_data(R& source, bool prefix) {
+    static
+    witness factory_from_data(R& source, bool prefix) {
         witness instance;
         instance.from_data(source, prefix);
         return instance;
@@ -162,8 +166,11 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-    static bool is_push_size(data_stack const& stack);
-    static bool is_reserved_pattern(data_stack const& stack);
+    static
+    bool is_push_size(data_stack const& stack);
+    
+    static
+    bool is_reserved_pattern(data_stack const& stack);
 
     bool extract_sigop_script(script& out_script, script const& program_script) const;
     bool extract_embedded_script(script& out_script, data_stack& out_stack, script const& program_script) const;
@@ -180,8 +187,11 @@ public:
     void reset();
 
 private:
-    static size_t serialized_size(data_stack const& stack);
-    static operation::list to_pay_key_hash(data_chunk&& program);
+    static
+    size_t serialized_size(data_stack const& stack);
+    
+    static
+    operation::list to_pay_key_hash(data_chunk&& program);
 
     bool valid_{false};
     data_stack stack_;

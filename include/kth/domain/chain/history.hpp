@@ -13,8 +13,7 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 /// Use "kind" for union differentiation.
 enum class point_kind : uint32_t {
@@ -71,7 +70,6 @@ struct BC_API history {
     };
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

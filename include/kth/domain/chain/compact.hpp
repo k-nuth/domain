@@ -10,8 +10,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 /// A signed but zero-floored scientific notation in 32 bits.
 class BC_API compact {
@@ -45,15 +44,17 @@ public:
     uint256_t const& big() const;
 
 private:
-    static bool from_compact(uint256_t& out, uint32_t compact);
-    static uint32_t from_big(uint256_t const& big);
+    static
+    bool from_compact(uint256_t& out, uint32_t compact);
+    
+    static
+    uint32_t from_big(uint256_t const& big);
 
     uint256_t big_;
     uint32_t normal_;
     bool overflowed_;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 #endif

@@ -14,12 +14,11 @@
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 /// Determine if the fork is enabled in the active forks set.
 //TODO(fernando): duplicated in chain::script (domain)
-static 
+static
 bool is_enabled(uint32_t active_forks, rule_fork fork) {
     return (fork & active_forks) != 0;
 }

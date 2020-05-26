@@ -23,11 +23,13 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
-// static constexpr auto invalid_code = opcode::disabled_xor;
-constexpr auto invalid_code = opcode::disabled_xor;
+// static constexpr
+// auto invalid_code = opcode::disabled_xor;
+
+constexpr auto 
+invalid_code = opcode::disabled_xor;
 
 class BI_API operation {
 public:
@@ -56,11 +58,15 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static operation factory_from_data(data_chunk const& encoded);
-    static operation factory_from_data(std::istream& stream);
+    static
+    operation factory_from_data(data_chunk const& encoded);
+    
+    static
+    operation factory_from_data(std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static operation factory_from_data(R& source) {
+    static
+    operation factory_from_data(R& source) {
         operation instance;
         instance.from_data(source);
         return instance;
@@ -151,33 +157,57 @@ public:
     //-------------------------------------------------------------------------
 
     /// Compute nominal data opcode based on size alone.
-    static opcode opcode_from_size(size_t size);
+    static
+    opcode opcode_from_size(size_t size);
 
     /// Compute the minimal data opcode for a given chunk of data.
     /// Caller should clear data if converting to non-payload opcode.
-    static opcode minimal_opcode_from_data(data_chunk const& data);
+    static
+    opcode minimal_opcode_from_data(data_chunk const& data);
 
     /// Compute the nominal data opcode for a given chunk of data.
     /// Restricted to sized data, avoids conversion to numeric opcodes.
-    static opcode nominal_opcode_from_data(data_chunk const& data);
+    static
+    opcode nominal_opcode_from_data(data_chunk const& data);
 
     /// Convert the [1..16] value to the corresponding opcode (or undefined).
-    static opcode opcode_from_positive(uint8_t value);
+    static
+    opcode opcode_from_positive(uint8_t value);
 
     /// Convert the opcode to the corresponding [1..16] value (or undefined).
-    static uint8_t opcode_to_positive(opcode code);
+    static
+    uint8_t opcode_to_positive(opcode code);
 
     /// Categories of opcodes.
-    static bool is_push(opcode code);
-    static bool is_payload(opcode code);
-    static bool is_counted(opcode code);
-    static bool is_version(opcode code);
-    static bool is_numeric(opcode code);
-    static bool is_positive(opcode code);
-    static bool is_reserved(opcode code);
-    static bool is_disabled(opcode code);
-    static bool is_conditional(opcode code);
-    static bool is_relaxed_push(opcode code);
+    static
+    bool is_push(opcode code);
+    
+    static
+    bool is_payload(opcode code);
+    
+    static
+    bool is_counted(opcode code);
+    
+    static
+    bool is_version(opcode code);
+    
+    static
+    bool is_numeric(opcode code);
+    
+    static
+    bool is_positive(opcode code);
+    
+    static
+    bool is_reserved(opcode code);
+    
+    static
+    bool is_disabled(opcode code);
+    
+    static
+    bool is_conditional(opcode code);
+    
+    static
+    bool is_relaxed_push(opcode code);
 
     /// Categories of operations.
     [[nodiscard]] 
@@ -215,7 +245,8 @@ protected:
     operation(opcode code, data_chunk const& data, bool valid);
 
     template <typename R>
-    static uint32_t read_data_size(opcode code, R& source);
+    static
+    uint32_t read_data_size(opcode code, R& source);
 
     opcode opcode_from_data(data_chunk const& data, bool minimal);
     void reset();

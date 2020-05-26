@@ -13,13 +13,14 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 /**
  * A message signature is an EC signature with one prefix byte.
  */
-static constexpr size_t message_signature_size = 1 + ec_signature_size;
+static constexpr 
+size_t message_signature_size = 1 + ec_signature_size;
+
 using message_signature = byte_array<message_signature_size>;
 
 /**

@@ -38,22 +38,31 @@ public:
         reserved = witness | filtered_block
     };
 
-    static type_id to_type(uint32_t value);
-    static uint32_t to_number(type_id type);
-    static std::string to_string(type_id type);
+    static
+    type_id to_type(uint32_t value);
+    
+    static
+    uint32_t to_number(type_id type);
+    
+    static
+    std::string to_string(type_id type);
 
-    static inventory_vector factory_from_data(uint32_t version, data_chunk const& data);
-    static inventory_vector factory_from_data(uint32_t version, std::istream& stream);
+    static
+    inventory_vector factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    inventory_vector factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static inventory_vector factory_from_data(uint32_t version, R& source) {
+    static
+    inventory_vector factory_from_data(uint32_t version, R& source) {
         inventory_vector instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static inventory_vector factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     inventory_vector();
     inventory_vector(type_id type, hash_digest const& hash);

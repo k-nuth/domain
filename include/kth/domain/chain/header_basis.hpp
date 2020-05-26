@@ -26,8 +26,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API header_basis {
 public:
@@ -53,11 +52,15 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static header_basis factory_from_data(data_chunk const& data, bool wire = true);
-    static header_basis factory_from_data(std::istream& stream, bool wire = true);
+    static
+    header_basis factory_from_data(data_chunk const& data, bool wire = true);
+    
+    static
+    header_basis factory_from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
-    static header_basis factory_from_data(R& source, bool wire = true) {
+    static
+    header_basis factory_from_data(R& source, bool wire = true) {
         header_basis instance;
         instance.from_data(source, wire);
         return instance;
@@ -106,12 +109,14 @@ public:
 
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
-    static uint256_t proof(uint32_t bits);
+    static
+    uint256_t proof(uint32_t bits);
     
     [[nodiscard]] 
     uint256_t proof() const;
 
-    static size_t satoshi_fixed_size();
+    static
+    size_t satoshi_fixed_size();
     
     [[nodiscard]] 
     size_t serialized_size(bool wire = true) const;
@@ -188,8 +193,7 @@ hash_digest hash(header_basis const& header);
 hash_digest litecoin_proof_of_work_hash(header_basis const& header);
 #endif  //KTH_CURRENCY_LTC
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 // #include <kth/domain/concepts_undef.hpp>
 

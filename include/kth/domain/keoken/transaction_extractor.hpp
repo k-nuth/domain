@@ -8,8 +8,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 
 bc::data_chunk first_keoken_output(bc::chain::transaction const& tx);
 

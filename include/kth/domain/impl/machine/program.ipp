@@ -18,8 +18,7 @@
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 // Constant registers.
 //-----------------------------------------------------------------------------

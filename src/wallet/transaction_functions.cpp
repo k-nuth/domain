@@ -14,7 +14,8 @@
 namespace kth::wallet {
 
 //https://github.com/libbitcoin/libbitcoin-explorer/blob/master/src/commands/tx-encode.cpp
-static bool push_scripts(chain::output::list& outputs,
+static
+bool push_scripts(chain::output::list& outputs,
                          kth::config::output const& output,
                          uint8_t script_version) {
     static constexpr uint64_t no_amount = 0;

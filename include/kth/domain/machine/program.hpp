@@ -17,8 +17,7 @@
 #include <kth/infrastructure/machine/script_version.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::machine {
 
 class BC_API program {
 public:

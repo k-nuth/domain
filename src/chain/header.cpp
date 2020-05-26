@@ -222,4 +222,4 @@ code header::accept(chain_state const& state) const {
     return header_basis::accept(state, hash_pow());
 }
 
-}  // namespace kth
+}  // namespace kth::chain

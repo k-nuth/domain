@@ -24,8 +24,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 enum class message_type {
     unknown,
@@ -62,20 +61,28 @@ enum class message_type {
 
 class BC_API heading {
 public:
-    static size_t maximum_size();
-    static size_t maximum_payload_size(uint32_t version, bool witness);
-    static size_t satoshi_fixed_size();
-    static heading factory_from_data(data_chunk const& data);
-    static heading factory_from_data(std::istream& stream);
+    static
+    size_t maximum_size();
+    
+    static
+    size_t maximum_payload_size(uint32_t version, bool witness);
+    
+    static
+    size_t satoshi_fixed_size();
+    
+    static
+    heading factory_from_data(data_chunk const& data);
+    
+    static
+    heading factory_from_data(std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static heading factory_from_data(R& source) {
+    static
+    heading factory_from_data(R& source) {
         heading instance;
         instance.from_data(source);
         return instance;
     }
-
-    //static heading factory_from_data(reader& source);
 
     heading() = default;
     heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum);
@@ -163,7 +170,6 @@ private:
     uint32_t checksum_{0};
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

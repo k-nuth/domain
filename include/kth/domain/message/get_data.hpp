@@ -21,19 +21,22 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API get_data : public inventory {
 public:
     using ptr = std::shared_ptr<get_data>;
     using const_ptr = std::shared_ptr<const get_data>;
 
-    static get_data factory_from_data(uint32_t version, data_chunk const& data);
-    static get_data factory_from_data(uint32_t version, std::istream& stream);
+    static
+    get_data factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    get_data factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static get_data factory_from_data(uint32_t version, R& source) {
+    static
+    get_data factory_from_data(uint32_t version, R& source) {
         get_data instance;
         instance.from_data(version, source);
         return instance;
@@ -81,12 +84,16 @@ public:
     void to_witness();
 #endif
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

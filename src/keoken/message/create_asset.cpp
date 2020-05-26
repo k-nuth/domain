@@ -10,9 +10,7 @@
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/utility.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 
 using bc::data_chunk;
 using bc::data_sink;
@@ -117,6 +115,4 @@ void create_asset::set_amount(amount_t x) {
     amount_ = x;
 }
 
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+}  // namespace kth::keoken::message

@@ -10,8 +10,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/wallet/uri.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 /**
  * Interface for URI deserialization.
@@ -28,7 +27,8 @@ public:
      * according to the  `UriReader`.
      */
     template <class UriReader>
-    static UriReader parse(std::string const& uri, bool strict = true) {
+    static
+    UriReader parse(std::string const& uri, bool strict = true) {
         wallet::uri parsed;
         if ( ! parsed.decode(uri, strict)) {
             return UriReader();

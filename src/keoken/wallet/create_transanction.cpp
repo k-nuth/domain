@@ -12,9 +12,7 @@
 #include <kth/domain/keoken/message/create_asset.hpp>
 #include <kth/domain/keoken/message/send_tokens.hpp>
 
-namespace kth {
-namespace keoken {
-namespace wallet {
+namespace kth::keoken::wallet {
 
 // using namespace bc;
 using kth::data_chunk;

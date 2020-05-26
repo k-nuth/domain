@@ -68,11 +68,15 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static script factory_from_data(data_chunk const& encoded, bool prefix);
-    static script factory_from_data(std::istream& stream, bool prefix);
+    static
+    script factory_from_data(data_chunk const& encoded, bool prefix);
+    
+    static
+    script factory_from_data(std::istream& stream, bool prefix);
 
     template <typename R, KTH_IS_READER(R)>
-    static script factory_from_data(R& source, bool prefix) {
+    static
+    script factory_from_data(R& source, bool prefix) {
         script instance;
         instance.from_data(source, prefix);
         return instance;
@@ -113,7 +117,7 @@ public:
     // Signing.
     //-------------------------------------------------------------------------
 
-    static 
+    static
     hash_digest generate_signature_hash(transaction const& tx,
                                                uint32_t input_index,
                                                script const& script_code,
@@ -121,7 +125,7 @@ public:
                                                script_version version = script_version::unversioned,
                                                uint64_t value = max_uint64);
 
-    static 
+    static
     bool check_signature(ec_signature const& signature,
                                 uint8_t sighash_type,
                                 data_chunk const& public_key,
@@ -131,51 +135,94 @@ public:
                                 script_version version = script_version::unversioned,
                                 uint64_t value = max_uint64);
 
-    static 
+    static
     bool create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
 
     /// Transaction helpers.
-    // static hash_digest to_outputs(transaction const& tx);
-    // static hash_digest to_inpoints(transaction const& tx);
-    // static hash_digest to_sequences(transaction const& tx);
+    // static
+    // hash_digest to_outputs(transaction const& tx);
+
+    // static
+    // hash_digest to_inpoints(transaction const& tx);
+
+    // static
+    // hash_digest to_sequences(transaction const& tx);
 
     /// Determine if the fork is enabled in the active forks set.
-    static 
+    static
     bool is_enabled(uint32_t active_forks, rule_fork fork) {
         return (fork & active_forks) != 0;
     }
 
     /// Consensus patterns.
-    static bool is_push_only(operation::list const& ops);
-    static bool is_relaxed_push(operation::list const& ops);
-    static bool is_coinbase_pattern(operation::list const& ops, size_t height);
-    static bool is_commitment_pattern(operation::list const& ops);
-    static bool is_witness_program_pattern(operation::list const& ops);
+    static
+    bool is_push_only(operation::list const& ops);
+    
+    static
+    bool is_relaxed_push(operation::list const& ops);
+    
+    static
+    bool is_coinbase_pattern(operation::list const& ops, size_t height);
+    
+    static
+    bool is_commitment_pattern(operation::list const& ops);
+    
+    static
+    bool is_witness_program_pattern(operation::list const& ops);
 
     /// Common output patterns (psh and pwsh are also consensus).
-    static bool is_null_data_pattern(operation::list const& ops);
-    static bool is_pay_multisig_pattern(operation::list const& ops);
-    static bool is_pay_public_key_pattern(operation::list const& ops);
-    static bool is_pay_key_hash_pattern(operation::list const& ops);
-    static bool is_pay_script_hash_pattern(operation::list const& ops);
-    static bool is_pay_witness_script_hash_pattern(operation::list const& ops);
+    static
+    bool is_null_data_pattern(operation::list const& ops);
+
+    static
+    bool is_pay_multisig_pattern(operation::list const& ops);
+
+    static
+    bool is_pay_public_key_pattern(operation::list const& ops);
+
+    static
+    bool is_pay_key_hash_pattern(operation::list const& ops);
+
+    static
+    bool is_pay_script_hash_pattern(operation::list const& ops);
+
+    static
+    bool is_pay_witness_script_hash_pattern(operation::list const& ops);
 
     /// Common input patterns (skh is also consensus).
-    static bool is_sign_multisig_pattern(operation::list const& ops);
-    static bool is_sign_public_key_pattern(operation::list const& ops);
-    static bool is_sign_key_hash_pattern(operation::list const& ops);
-    static bool is_sign_script_hash_pattern(operation::list const& ops);
+    static
+    bool is_sign_multisig_pattern(operation::list const& ops);
+
+    static
+    bool is_sign_public_key_pattern(operation::list const& ops);
+
+    static
+    bool is_sign_key_hash_pattern(operation::list const& ops);
+
+    static
+    bool is_sign_script_hash_pattern(operation::list const& ops);
 
     /// Stack factories.
-    static operation::list to_null_data_pattern(data_slice data);
-    static operation::list to_pay_public_key_pattern(data_slice point);
-    static operation::list to_pay_key_hash_pattern(short_hash const& hash);
-    static operation::list to_pay_script_hash_pattern(short_hash const& hash);
-    static operation::list to_pay_multisig_pattern(uint8_t signatures, point_list const& points);
-    static operation::list to_pay_multisig_pattern(uint8_t signatures, data_stack const& points);
+    static
+    operation::list to_null_data_pattern(data_slice data);
+
+    static
+    operation::list to_pay_public_key_pattern(data_slice point);
+
+    static
+    operation::list to_pay_key_hash_pattern(short_hash const& hash);
+
+    static
+    operation::list to_pay_script_hash_pattern(short_hash const& hash);
+
+    static
+    operation::list to_pay_multisig_pattern(uint8_t signatures, point_list const& points);
+
+    static
+    operation::list to_pay_multisig_pattern(uint8_t signatures, data_stack const& points);
 
     // Utilities (non-static).
     //-------------------------------------------------------------------------
@@ -204,11 +251,17 @@ public:
     bool is_pay_to_script_hash(uint32_t forks) const;
 
 private:
-    static size_t serialized_size(operation::list const& ops);
-    static data_chunk operations_to_data(operation::list const& ops);
-    static hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type);
+    static
+    size_t serialized_size(operation::list const& ops);
+    
+    static
+    data_chunk operations_to_data(operation::list const& ops);
+    
+    static
+    hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type);
 
-    static hash_digest generate_version_0_signature_hash(transaction const& tx,
+    static
+    hash_digest generate_version_0_signature_hash(transaction const& tx,
                                                          uint32_t input_index,
                                                          script const& script_code,
                                                          uint64_t value,

@@ -27,8 +27,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::chain {
 
 class BC_API input : public input_basis {
 public:
@@ -50,17 +49,15 @@ public:
     input& operator=(input&& x) noexcept;
     input& operator=(input const& x);
 
-    // Operators.
-    //-------------------------------------------------------------------------
-
-    // bool operator==(input const& x) const;
-    // bool operator!=(input const& x) const;
-
-    static input factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
+    static
+    input factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    
+    static
+    input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     template <typename R, KTH_IS_READER(R)>
-    static input factory_from_data(R& source, bool wire = true, bool witness = false) {
+    static
+    input factory_from_data(R& source, bool wire = true, bool witness = false) {
         input instance;
         instance.from_data(source, wire, witness_val(witness));
         return instance;
@@ -109,8 +106,7 @@ private:
     mutable addresses_ptr addresses_;
 };
 
-}  // namespace chain
-}  // namespace kth
+}  // namespace kth::chain
 
 //#include <kth/domain/concepts_undef.hpp>
 

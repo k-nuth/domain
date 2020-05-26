@@ -194,4 +194,4 @@ bool output_basis::extract_committed_hash(hash_digest& out) const {
     return true;
 }
 
-}  // namespace kth
+}  // namespace kth::chain

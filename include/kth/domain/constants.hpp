@@ -275,25 +275,31 @@ constexpr uint32_t bip16_activation_time = 0x4f779a80;
 
 // Block 170060 was mined with an invalid p2sh (code shipped late).
 // bitcointalk.org/index.php?topic=63165.msg788832#msg788832
-static const config::checkpoint mainnet_bip16_exception_checkpoint{
+static
+const config::checkpoint mainnet_bip16_exception_checkpoint{
     "00000000000002dc756eebf4f49723ed8d30cc28a5f108eb94b1ba88ac4f9c22", 170060};
 
 // github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
-static const config::checkpoint mainnet_bip30_exception_checkpoint1{
+static
+const config::checkpoint mainnet_bip30_exception_checkpoint1{
     // TODO(legacy): figure out why this block validates without an exception.
     "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842};
 
-static const config::checkpoint mainnet_bip30_exception_checkpoint2{
+static
+const config::checkpoint mainnet_bip30_exception_checkpoint2{
     "00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880};
 
 // Hard fork to stop checking unspent duplicates above fixed bip34 activation.
-static const config::checkpoint mainnet_bip34_active_checkpoint{
+static
+const config::checkpoint mainnet_bip34_active_checkpoint{
     "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 710000};
 
-static const config::checkpoint testnet_bip34_active_checkpoint{
+static
+const config::checkpoint testnet_bip34_active_checkpoint{
     "8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573", 76};
 
-static const config::checkpoint regtest_bip34_active_checkpoint{
+static
+const config::checkpoint regtest_bip34_active_checkpoint{
     "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 100000000};
 
 #else  //KTH_CURRENCY_LTC
@@ -328,23 +334,30 @@ constexpr uint32_t bip16_activation_time = 0x4f3af580;
 
 // Block 170060 was mined with an invalid p2sh (code shipped late).
 // bitcointalk.org/index.php?topic=63165.msg788832#msg788832
-static const config::checkpoint mainnet_bip16_exception_checkpoint{
+static
+const config::checkpoint mainnet_bip16_exception_checkpoint{
     "00000000000002dc756eebf4f49723ed8d30cc28a5f108eb94b1ba88ac4f9c22", 170060};
 
 // github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
-static const config::checkpoint mainnet_bip30_exception_checkpoint1{
+static
+const config::checkpoint mainnet_bip30_exception_checkpoint1{
     "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842};
 
-static const config::checkpoint mainnet_bip30_exception_checkpoint2{
+static
+const config::checkpoint mainnet_bip30_exception_checkpoint2{
     "00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880};
 
 // bip90 stops checking unspent duplicates above this bip34 activation.
-static const config::checkpoint mainnet_bip34_active_checkpoint{
+static
+const config::checkpoint mainnet_bip34_active_checkpoint{
     "000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8", 227931};
 
-static const config::checkpoint testnet_bip34_active_checkpoint{
+static
+const config::checkpoint testnet_bip34_active_checkpoint{
     "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111};
-static const config::checkpoint regtest_bip34_active_checkpoint{
+
+static
+const config::checkpoint regtest_bip34_active_checkpoint{
     // Since bip90 assumes a historical bip34 activation block, use genesis.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 
@@ -353,38 +366,50 @@ static const config::checkpoint regtest_bip34_active_checkpoint{
 #ifdef KTH_CURRENCY_LTC
 
 // These cannot be reactivated in a future branch due to window expiration.
-static const config::checkpoint mainnet_bip9_bit0_active_checkpoint{
+static
+const config::checkpoint mainnet_bip9_bit0_active_checkpoint{
     "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b", 1201535};
-static const config::checkpoint testnet_bip9_bit0_active_checkpoint{
+static
+const config::checkpoint testnet_bip9_bit0_active_checkpoint{
     "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0", 0};
-static const config::checkpoint regtest_bip9_bit0_active_checkpoint{
+static
+const config::checkpoint regtest_bip9_bit0_active_checkpoint{
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 // These cannot be reactivated in a future branch due to window expiration.
-static const config::checkpoint mainnet_bip9_bit1_active_checkpoint{
+static
+const config::checkpoint mainnet_bip9_bit1_active_checkpoint{
     "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b", 1201535};
-static const config::checkpoint testnet_bip9_bit1_active_checkpoint{
+static
+const config::checkpoint testnet_bip9_bit1_active_checkpoint{
     "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0", 0};
-static const config::checkpoint regtest_bip9_bit1_active_checkpoint{
+static
+const config::checkpoint regtest_bip9_bit1_active_checkpoint{
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 
 #else
 
 // These cannot be reactivated in a future branch due to window expiration.
-static const config::checkpoint mainnet_bip9_bit0_active_checkpoint{
+static
+const config::checkpoint mainnet_bip9_bit0_active_checkpoint{
     "000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5", 419328};
-static const config::checkpoint testnet_bip9_bit0_active_checkpoint{
+static
+const config::checkpoint testnet_bip9_bit0_active_checkpoint{
     "00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb", 770112};
-static const config::checkpoint regtest_bip9_bit0_active_checkpoint{
+static
+const config::checkpoint regtest_bip9_bit0_active_checkpoint{
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 // These cannot be reactivated in a future branch due to window expiration.
-static const config::checkpoint mainnet_bip9_bit1_active_checkpoint{
+static
+const config::checkpoint mainnet_bip9_bit1_active_checkpoint{
     "0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893", 481824};
-static const config::checkpoint testnet_bip9_bit1_active_checkpoint{
+static
+const config::checkpoint testnet_bip9_bit1_active_checkpoint{
     "00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca", 834624};
-static const config::checkpoint regtest_bip9_bit1_active_checkpoint{
+static
+const config::checkpoint regtest_bip9_bit1_active_checkpoint{
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 
@@ -395,52 +420,66 @@ static const config::checkpoint regtest_bip9_bit1_active_checkpoint{
 #ifdef KTH_CURRENCY_BCH
 
 //2017-August-01 hard fork
-static const config::checkpoint mainnet_uahf_active_checkpoint{
+static
+const config::checkpoint mainnet_uahf_active_checkpoint{
     "0000000000000000011865af4122fe3b144e2cbeea86142e8ff2fb4107352d43", 478558};
 
-static const config::checkpoint testnet_uahf_active_checkpoint{
+static
+const config::checkpoint testnet_uahf_active_checkpoint{
     "00000000000e38fef93ed9582a7df43815d5c2ba9fd37ef70c9a0ea4a285b8f5", 1155876};
 
 //2017-November-13 hard fork
-static const config::checkpoint mainnet_daa_active_checkpoint{
+static
+const config::checkpoint mainnet_daa_active_checkpoint{
     "0000000000000000011ebf65b60d0a3de80b8175be709d653b4c1a1beeb6ab9c", 504031};
 
-static const config::checkpoint testnet_daa_active_checkpoint{
+static
+const config::checkpoint testnet_daa_active_checkpoint{
     "0000000000170ed0918077bde7b4d36cc4c91be69fa09211f748240dabe047fb", 1188697};
 
 //2018-May hard fork
-static const config::checkpoint mainnet_monolith_active_checkpoint{
+static
+const config::checkpoint mainnet_monolith_active_checkpoint{
     "0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530359};
 
-static const config::checkpoint testnet_monolith_active_checkpoint{
+static
+const config::checkpoint testnet_monolith_active_checkpoint{
     "0000000000327972b8470c11755adf8f4319796bafae01f5a6650490b98a17db", 1233078};
 
 //2018-November hard fork
-static const config::checkpoint mainnet_magnetic_anomaly_active_checkpoint{
+static
+const config::checkpoint mainnet_magnetic_anomaly_active_checkpoint{
     "0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c", 556767};
 
-static const config::checkpoint testnet_magnetic_anomaly_active_checkpoint{
+static
+const config::checkpoint testnet_magnetic_anomaly_active_checkpoint{
     "00000000000001fae0095cd4bea16f1ce8ab63f3f660a03c6d8171485f484b24", 1267996};
 
 //2019-May hard fork
-static const config::checkpoint mainnet_great_wall_active_checkpoint{
+static
+const config::checkpoint mainnet_great_wall_active_checkpoint{
     "000000000000000001b4b8e36aec7d4f9671a47872cb9a74dc16ca398c7dcc18", 582680};
 
-static const config::checkpoint testnet_great_wall_active_checkpoint{
+static
+const config::checkpoint testnet_great_wall_active_checkpoint{
     "00000000000000479138892ef0e4fa478ccc938fb94df862ef5bde7e8dee23d3", 1303885};
 
 //2019-Nov hard fork
-static const config::checkpoint mainnet_graviton_active_checkpoint{
+static
+const config::checkpoint mainnet_graviton_active_checkpoint{
     "000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136};
 
-static const config::checkpoint testnet_graviton_active_checkpoint{
+static
+const config::checkpoint testnet_graviton_active_checkpoint{
     "00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712};
 
 //2020-May hard fork
-static const config::checkpoint mainnet_phonon_active_checkpoint{
+static
+const config::checkpoint mainnet_phonon_active_checkpoint{
     "00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259};
 
-static const config::checkpoint testnet_phonon_active_checkpoint{
+static
+const config::checkpoint testnet_phonon_active_checkpoint{
     "0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461};
 
 //2020-Nov hard fork

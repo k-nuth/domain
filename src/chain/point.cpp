@@ -216,4 +216,4 @@ bool point::is_null() const {
     return (index_ == null_index) && (hash_ == null_hash);
 }
 
-}  // namespace kth
+}  // namespace kth::chain

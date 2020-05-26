@@ -23,8 +23,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API transaction : public chain::transaction {
 public:
@@ -58,11 +57,15 @@ public:
     bool operator!=(transaction const& x) const;
 
 
-    static transaction factory_from_data(uint32_t version, data_chunk const& data);
-    static transaction factory_from_data(uint32_t version, std::istream& stream);
+    static
+    transaction factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    transaction factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static transaction factory_from_data(uint32_t version, R& source) {
+    static
+    transaction factory_from_data(uint32_t version, R& source) {
         transaction instance;
         instance.from_data(version, source);
         return instance;
@@ -86,12 +89,17 @@ public:
 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

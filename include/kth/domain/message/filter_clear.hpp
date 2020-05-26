@@ -19,26 +19,32 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API filter_clear {
 public:
     using ptr = std::shared_ptr<filter_clear>;
     using const_ptr = std::shared_ptr<const filter_clear>;
 
-    static filter_clear factory_from_data(uint32_t version, data_chunk const& data);
-    static filter_clear factory_from_data(uint32_t version, std::istream& stream);
+    static
+    filter_clear factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    filter_clear factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static filter_clear factory_from_data(uint32_t version, R& source) {
+    static
+    filter_clear factory_from_data(uint32_t version, R& source) {
         filter_clear instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static filter_clear factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    //static
+    //filter_clear factory_from_data(uint32_t version, reader& source);
+    
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     // This is a default instance so is invalid.
     // The only way to make this valid is to deserialize it :/.
@@ -84,9 +90,14 @@ public:
     [[nodiscard]] 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 protected:
     filter_clear(bool insufficient_version);
@@ -95,7 +106,6 @@ private:
     bool insufficient_version_{true};
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

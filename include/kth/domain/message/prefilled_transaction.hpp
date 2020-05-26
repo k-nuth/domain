@@ -19,25 +19,26 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API prefilled_transaction {
 public:
     using list = std::vector<prefilled_transaction>;
     using const_ptr = std::shared_ptr<const prefilled_transaction>;
 
-    static prefilled_transaction factory_from_data(uint32_t version, data_chunk const& data);
-    static prefilled_transaction factory_from_data(uint32_t version, std::istream& stream);
+    static
+    prefilled_transaction factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    prefilled_transaction factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static prefilled_transaction factory_from_data(uint32_t version, R& source) {
+    static
+    prefilled_transaction factory_from_data(uint32_t version, R& source) {
         prefilled_transaction instance;
         instance.from_data(version, source);
         return instance;
     }
-
-    //static prefilled_transaction factory_from_data(uint32_t version, reader& source);
 
     prefilled_transaction();
     prefilled_transaction(uint64_t index, chain::transaction const& tx);
@@ -111,7 +112,6 @@ private:
     chain::transaction transaction_;
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

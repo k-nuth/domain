@@ -19,25 +19,29 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API send_headers {
 public:
     using ptr = std::shared_ptr<send_headers>;
     using const_ptr = std::shared_ptr<const send_headers>;
 
-    static send_headers factory_from_data(uint32_t version, data_chunk const& data);
-    static send_headers factory_from_data(uint32_t version, std::istream& stream);
+    static
+    send_headers factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    send_headers factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static send_headers factory_from_data(uint32_t version, R& source) {
+    static
+    send_headers factory_from_data(uint32_t version, R& source) {
         send_headers instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     send_headers() = default;
     send_headers(send_headers const& x) = default;
@@ -79,9 +83,15 @@ public:
     [[nodiscard]] 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 protected:
     send_headers(bool insufficient_version);
@@ -90,7 +100,6 @@ private:
     bool insufficient_version_{true};
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

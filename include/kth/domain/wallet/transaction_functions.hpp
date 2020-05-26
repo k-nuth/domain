@@ -12,8 +12,7 @@
 
 #include <kth/domain.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 using raw_output = std::pair<payment_address, uint64_t>;
 using raw_output_list = std::vector<raw_output>;

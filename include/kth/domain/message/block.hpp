@@ -23,8 +23,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API block : public chain::block {
 public:
@@ -35,17 +34,22 @@ public:
     using const_ptr_list_ptr = std::shared_ptr<const_ptr_list>;
     using const_ptr_list_const_ptr = std::shared_ptr<const const_ptr_list>;
 
-    static block factory_from_data(uint32_t version, data_chunk const& data);
-    static block factory_from_data(uint32_t version, std::istream& stream);
+    static
+    block factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    block factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static block factory_from_data(uint32_t version, R& source) {
+    static
+    block factory_from_data(uint32_t version, R& source) {
         block instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static block factory_from_data(uint32_t version, reader& source);
+    //static
+    //block factory_from_data(uint32_t version, reader& source);
 
     block() = default;
 
@@ -91,9 +95,14 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 };
 
 //TODO(fernando): check this family of functions: to_data_header_nonce
@@ -111,7 +120,6 @@ data_chunk to_data_header_nonce(block const& block, uint64_t nonce);
 
 hash_digest hash(block const& block, uint64_t nonce);
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

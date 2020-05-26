@@ -14,8 +14,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 class ec_private;
 class payment_address;
@@ -24,10 +23,17 @@ class payment_address;
 /// ec_public doesn't carry a version for address creation or base58 encoding.
 class BC_API ec_public {
 public:
-    static uint8_t const compressed_even;
-    static uint8_t const compressed_odd;
-    static uint8_t const uncompressed;
-    static uint8_t const mainnet_p2kh;
+    static
+    uint8_t const compressed_even;
+    
+    static
+    uint8_t const compressed_odd;
+    
+    static
+    uint8_t const uncompressed;
+    
+    static
+    uint8_t const mainnet_p2kh;
 
     /// Constructors.
     ec_public();
@@ -81,13 +87,21 @@ public:
 
 private:
     /// Validators.
-    static bool is_point(data_slice decoded);
+    static
+    bool is_point(data_slice decoded);
 
     /// Factories.
-    static ec_public from_data(data_chunk const& decoded);
-    static ec_public from_private(ec_private const& secret);
-    static ec_public from_string(std::string const& base16);
-    static ec_public from_point(ec_uncompressed const& point, bool compress);
+    static
+    ec_public from_data(data_chunk const& decoded);
+    
+    static
+    ec_public from_private(ec_private const& secret);
+    
+    static
+    ec_public from_string(std::string const& base16);
+    
+    static
+    ec_public from_point(ec_uncompressed const& point, bool compress);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

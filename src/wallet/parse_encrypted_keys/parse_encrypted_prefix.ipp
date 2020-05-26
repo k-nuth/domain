@@ -11,8 +11,7 @@
 #include <kth/domain/wallet/encrypted_keys.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::wallet {
 
 template <size_t Size>
 parse_encrypted_prefix<Size>::parse_encrypted_prefix(

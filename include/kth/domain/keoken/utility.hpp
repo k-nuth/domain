@@ -13,8 +13,7 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 
 //C++14
 template <typename E>

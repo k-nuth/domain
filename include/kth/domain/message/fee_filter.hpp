@@ -19,27 +19,32 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API fee_filter {
 public:
     using ptr = std::shared_ptr<fee_filter>;
     using const_ptr = std::shared_ptr<const fee_filter>;
 
-    static fee_filter factory_from_data(uint32_t version, data_chunk const& data);
-    static fee_filter factory_from_data(uint32_t version, std::istream& stream);
+    static
+    fee_filter factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    fee_filter factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static fee_filter factory_from_data(uint32_t version, R& source) {
+    static
+    fee_filter factory_from_data(uint32_t version, R& source) {
         fee_filter instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static fee_filter factory_from_data(uint32_t version, reader& source);
+    //static
+    //fee_filter factory_from_data(uint32_t version, reader& source);
 
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     fee_filter() = default;
     fee_filter(uint64_t minimum);
@@ -104,9 +109,14 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 protected:
     fee_filter(uint64_t minimum, bool insufficient_version);
@@ -116,7 +126,6 @@ private:
     bool insufficient_version_{true};
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

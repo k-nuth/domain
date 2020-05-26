@@ -20,7 +20,8 @@ namespace kth::config {
 using namespace boost::program_options;
 
 // point format is currently private to bx.
-static bool decode_point(chain::output_point& point, std::string const& tuple) {
+static
+bool decode_point(chain::output_point& point, std::string const& tuple) {
     auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() != 2) {
         return false;
@@ -38,7 +39,8 @@ static bool decode_point(chain::output_point& point, std::string const& tuple) {
 }
 
 // point format is currently private to bx.
-static std::string encode_point(const chain::output_point& point) {
+static
+std::string encode_point(const chain::output_point& point) {
     std::stringstream result;
     result << hash256(point.hash()) << point::delimeter << point.index();
     return result.str();

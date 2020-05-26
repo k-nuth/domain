@@ -38,7 +38,7 @@ public:
     /// minimizing overall querying.
     struct map {
         // This sentinel indicates that the value was not requested.
-        static 
+        static
         const size_t unrequested = max_size_t;
 
         /// [block - 1, floor(block - 2016, 0)] mainnet: 1, testnet: 2016|0
@@ -110,10 +110,10 @@ public:
     };
 
     /// Checkpoints must be ordered by height with greatest at back.
-    static 
+    static
     map get_map(size_t height, const checkpoints& checkpoints, uint32_t forks);
 
-    static 
+    static
     uint32_t signal_version(uint32_t forks);
 
     /// Create pool state from top chain top block state.
@@ -187,17 +187,18 @@ public:
     [[nodiscard]] 
     bool is_under_checkpoint() const;
 
-    static 
+    static
     bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
 #ifdef KTH_CURRENCY_BCH
-    static uint256_t difficulty_adjustment_cash(uint256_t const& target);
+    static
+    uint256_t difficulty_adjustment_cash(uint256_t const& target);
 #endif  //KTH_CURRENCY_BCH
 
     uint32_t get_next_work_required(uint32_t time_now);
 
 #ifdef KTH_CURRENCY_BCH
-    static 
+    static
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
     [[nodiscard]] 
@@ -228,7 +229,7 @@ protected:
         uint32_t minimum_version;
     };
 
-    static 
+    static
     activations activation(data const& values, uint32_t forks
 #ifdef KTH_CURRENCY_BCH
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
@@ -239,13 +240,13 @@ protected:
 #endif  //KTH_CURRENCY_BCH
     );
 
-    static 
+    static
     uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
 
-    // static 
+    // static
     // uint32_t work_required(data const& values, uint32_t forks, bool bitcoin_cash = false);
 
-    static 
+    static
     uint32_t work_required(data const& values, uint32_t forks);
 
 private:
@@ -271,30 +272,30 @@ private:
     static
     size_t bip9_bit1_height(size_t height, uint32_t forks);
 
-    // static 
+    // static
     // size_t uahf_height(size_t height, uint32_t forks);
 
-    // static 
+    // static
     // size_t daa_height(size_t height, uint32_t forks);
 
-    static 
+    static
     bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
     
     // ------------------------------------------------------------------------
 #ifdef KTH_CURRENCY_BCH
-    static 
+    static
     bool is_uahf_enabled(size_t height, uint32_t forks);
     
-    static 
+    static
     bool is_daa_enabled(size_t height, uint32_t forks);
     
-    static 
+    static
     bool is_monolith_enabled(size_t height, uint32_t forks);
     
-    static 
+    static
     bool is_magnetic_anomaly_enabled(size_t height, uint32_t forks);
     
-    static 
+    static
     bool is_great_wall_enabled(size_t height, uint32_t forks);
 
     static
@@ -308,52 +309,52 @@ private:
 #endif // KTH_CURRENCY_BCH
     // ------------------------------------------------------------------------
 
-    static 
+    static
     data to_pool(chain_state const& top);
     
-    static 
+    static
     data to_block(chain_state const& pool, block const& block);
     
-    static 
+    static
     data to_header(chain_state const& parent, header const& header);
 
-    static 
+    static
     uint32_t work_required_retarget(data const& values);
 
-    static 
+    static
     uint32_t retarget_timespan(chain_state::data const& values);
 
     // TODO(kth): make function private again. Moved to public in the litecoin merge
-    // static 
+    // static
     // bool is_retarget_height(size_t height);
 
     // easy blocks
     //TODO(kth):
 
 #ifdef KTH_CURRENCY_BCH
-    static 
+    static
     uint32_t cash_difficulty_adjustment(data const& values);
     
-    static 
+    static
     uint32_t work_required_adjust_cash(data const& values);
 #endif  //KTH_CURRENCY_BCH
 
-    static 
+    static
     uint32_t work_required_easy(data const& values);
     
-    static 
+    static
     uint32_t elapsed_time_limit(chain_state::data const& values);
     
-    static 
+    static
     bool is_retarget_or_non_limit(size_t height, uint32_t bits);
 
-    static 
+    static
     uint32_t easy_work_required(data const& values, bool daa_active);
     
-    static 
+    static
     uint32_t easy_time_limit(chain_state::data const& values);
     
-    static 
+    static
     size_t retarget_distance(size_t height);
 
     // This is retained as an optimization for other constructions.

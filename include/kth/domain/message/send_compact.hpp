@@ -19,26 +19,29 @@
 #include <kth/domain/common.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::message {
 
 class BC_API send_compact {
 public:
     using ptr = std::shared_ptr<send_compact>;
     using const_ptr = std::shared_ptr<const send_compact>;
 
-    static send_compact factory_from_data(uint32_t version, data_chunk const& data);
-    static send_compact factory_from_data(uint32_t version, std::istream& stream);
+    static
+    send_compact factory_from_data(uint32_t version, data_chunk const& data);
+    
+    static
+    send_compact factory_from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    static send_compact factory_from_data(uint32_t version, R& source) {
+    static
+    send_compact factory_from_data(uint32_t version, R& source) {
         send_compact instance;
         instance.from_data(version, source);
         return instance;
     }
 
-    //static send_compact factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     send_compact() = default;
     send_compact(bool high_bandwidth_mode, uint64_t version);
@@ -111,16 +114,21 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     bool high_bandwidth_mode_{false};
     uint64_t version_{0};
 };
 
-}  // namespace message
-}  // namespace kth
+}  // namespace kth::message
 
 #endif

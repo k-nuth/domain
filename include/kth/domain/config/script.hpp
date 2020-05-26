@@ -13,8 +13,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::config {
 
 /**
  * Serialization helper to convert between base16/raw script and script_type.
