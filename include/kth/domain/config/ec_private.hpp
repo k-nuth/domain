@@ -47,8 +47,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-                                    ec_private& argument);
+    friend 
+    std::istream& operator>>(std::istream& input, ec_private& argument);
 
     /**
      * Overload stream out.

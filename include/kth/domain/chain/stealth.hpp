@@ -12,11 +12,11 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 /// This structure is used in the client-server protocol in v2/v3.
 /// The stealth row excludes the sign byte (0x02) of the ephemeral public key.
-struct BC_API stealth_compact {
+struct KD_API stealth_compact {
     using list = std::vector<stealth_compact>;
 
     hash_digest ephemeral_public_key_hash;

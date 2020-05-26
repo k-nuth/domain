@@ -28,20 +28,20 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 class transaction;
 class witness;
 
-class BC_API script : public script_basis {
+class KD_API script : public script_basis {
 public:
     using operation = machine::operation;
     using rule_fork = machine::rule_fork;
-    using script_pattern = machine::script_pattern;
-    using script_version = machine::script_version;
+    using script_pattern = infrastructure::machine::script_pattern;
+    using script_version = infrastructure::machine::script_version;
 
     // Constructors.
     //-------------------------------------------------------------------------

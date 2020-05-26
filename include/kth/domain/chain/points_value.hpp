@@ -12,18 +12,18 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/utility/limits.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-class BC_API points_value {
+class KD_API points_value {
 public:
     /// A set of valued points.
     point_value::list points;
 
     /// Total value of the current set of points.
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t value() const;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif

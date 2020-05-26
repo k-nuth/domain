@@ -11,10 +11,10 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 /// A valued point, does not implement specialized serialization methods.
-class BC_API point_value : public point {
+class KD_API point_value : public point {
 public:
     using list = std::vector<point_value>;
 

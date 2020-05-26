@@ -11,12 +11,12 @@
 
 #include <kth/domain/define.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 class point;
 
 /// A point iterator for store serialization (does not support wire).
-class BC_API point_iterator {
+class KD_API point_iterator {
 public:
     using pointer = uint8_t;
     using reference = uint8_t;
