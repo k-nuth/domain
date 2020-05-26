@@ -36,9 +36,10 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+// using namespace kth::domain::machine;
+using namespace kth::infrastructure::machine;
 
-// using namespace bc::machine;
+namespace kth::domain::chain {
 
 // Constructors.
 //-----------------------------------------------------------------------------
