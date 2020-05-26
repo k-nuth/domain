@@ -48,22 +48,8 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    send_tokens factory_from_data(bc::data_chunk const& data);
-    
-    static
-    send_tokens factory_from_data(std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    send_tokens factory_from_data(R& source) {
-        send_tokens instance;  //NOLINT
-        instance.from_data(source);
-        return instance;
-    }
-
-    bool from_data(bc::data_chunk const& data);
-    bool from_data(std::istream& stream);
+    // bool from_data(kth::data_chunk const& data);
+    // bool from_data(std::istream& stream);
 
     //Note: from_data and to_data are not longer simetrical.
     template <typename R, KTH_IS_READER(R)>

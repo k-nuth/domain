@@ -36,11 +36,11 @@ result_t tx_encode_create_asset(kth::domain::chain::input_point::list const& out
                                 uint32_t tx_version = 1,
                                 uint8_t script_version = 5);
 
-BC_API
-result_t tx_encode_send_token(kth::chain::input_point::list const& outputs_to_spend,
-                              kth::wallet::payment_address const& asset_owner,
+KD_API
+result_t tx_encode_send_token(kth::domain::chain::input_point::list const& outputs_to_spend,
+                              kth::domain::wallet::payment_address const& asset_owner,
                               uint64_t utxo_satoshis,
-                              kth::wallet::payment_address const& asset_receiver,
+                              kth::domain::wallet::payment_address const& asset_receiver,
                               uint64_t dust,
                               asset_id_t asset_id,
                               amount_t asset_amount,
