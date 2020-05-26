@@ -58,27 +58,27 @@ public:
     operator data_chunk() const;
 
     /// Serializer.
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     ec_compressed const& scan_key() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     point_list const& spend_keys() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t signatures() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     binary const& filter() const;
 
     /// Methods.
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_chunk() const;
 
 private:
