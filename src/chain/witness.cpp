@@ -87,37 +87,15 @@ bool witness::operator!=(witness const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-witness witness::factory_from_data(data_chunk const& encoded, bool prefix) {
-    witness instance;
-    instance.from_data(encoded, prefix);
-    return instance;
-}
+// bool witness::from_data(data_chunk const& encoded, bool prefix) {
+//     data_source istream(encoded);
+//     return from_data(istream, prefix);
+// }
 
-// static
-witness witness::factory_from_data(std::istream& stream, bool prefix) {
-    witness instance;
-    instance.from_data(stream, prefix);
-    return instance;
-}
-
-// static
-//witness witness::factory_from_data(reader& source, bool prefix)
-//{
-//    witness instance;
-//    instance.from_data(source, prefix);
-//    return instance;
-//}
-
-bool witness::from_data(data_chunk const& encoded, bool prefix) {
-    data_source istream(encoded);
-    return from_data(istream, prefix);
-}
-
-bool witness::from_data(std::istream& stream, bool prefix) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, prefix);
-}
+// bool witness::from_data(std::istream& stream, bool prefix) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, prefix);
+// }
 
 // Prefixed data assumed valid here though caller may confirm with is_valid.
 //bool witness::from_data(reader& source, bool prefix)
