@@ -17,64 +17,43 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API get_block_transactions {
+class KD_API get_block_transactions {
 public:
     using ptr = std::shared_ptr<get_block_transactions>;
     using const_ptr = std::shared_ptr<const get_block_transactions>;
-
-    static
-    get_block_transactions factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    get_block_transactions factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    get_block_transactions factory_from_data(uint32_t version, R& source) {
-        get_block_transactions instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     get_block_transactions();
     get_block_transactions(hash_digest const& block_hash, const std::vector<uint64_t>& indexes);
     get_block_transactions(hash_digest const& block_hash, std::vector<uint64_t>&& indexes);
 
-    // get_block_transactions(get_block_transactions const& x) = default;
-    // get_block_transactions(get_block_transactions&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // get_block_transactions& operator=(get_block_transactions&& x) = default;
-    // get_block_transactions& operator=(get_block_transactions const&) = default;
-
     bool operator==(get_block_transactions const& x) const;
     bool operator!=(get_block_transactions const& x) const;
 
-
     hash_digest& block_hash();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_digest const& block_hash() const;
     
     void set_block_hash(hash_digest const& value);
 
     std::vector<uint64_t>& indexes();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     const std::vector<uint64_t>& indexes() const;
     
     void set_indexes(const std::vector<uint64_t>& values);
     void set_indexes(std::vector<uint64_t>&& values);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         block_hash_ = source.read_hash();

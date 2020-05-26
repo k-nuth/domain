@@ -14,12 +14,12 @@
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API get_headers : public get_blocks {
+class KD_API get_headers : public get_blocks {
 public:
     using ptr = std::shared_ptr<get_headers>;
     using const_ptr = std::shared_ptr<const get_headers>;

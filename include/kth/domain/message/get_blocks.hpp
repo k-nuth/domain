@@ -19,47 +19,26 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API get_blocks {
+class KD_API get_blocks {
 public:
     using ptr = std::shared_ptr<get_blocks>;
     using const_ptr = std::shared_ptr<const get_blocks>;
-
-    static
-    get_blocks factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    get_blocks factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    get_blocks factory_from_data(uint32_t version, R& source) {
-        get_blocks instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     get_blocks();
     get_blocks(hash_list const& start, hash_digest const& stop);
     get_blocks(hash_list&& start, hash_digest const& stop);
 
-    // get_blocks(get_blocks const& x) = default;
-    // get_blocks(get_blocks&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // get_blocks& operator=(get_blocks&& x) = default;
-    // get_blocks& operator=(get_blocks const&) = default;
-
     bool operator==(get_blocks const& x) const;
     bool operator!=(get_blocks const& x) const;
 
-
     hash_list& start_hashes();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_list const& start_hashes() const;
     
     void set_start_hashes(hash_list const& value);
