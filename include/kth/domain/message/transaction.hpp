@@ -20,12 +20,12 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API transaction : public chain::transaction {
+class KD_API transaction : public chain::transaction {
 public:
     using ptr = std::shared_ptr<transaction>;
     using const_ptr = std::shared_ptr<const transaction>;
