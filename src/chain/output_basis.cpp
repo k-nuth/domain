@@ -75,27 +75,15 @@ bool output_basis::operator!=(output_basis const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-output_basis output_basis::factory_from_data(data_chunk const& data, bool wire) {
-    output_basis instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool output_basis::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-output_basis output_basis::factory_from_data(std::istream& stream, bool wire) {
-    output_basis instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool output_basis::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool output_basis::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool output_basis::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // protected
 void output_basis::reset() {
