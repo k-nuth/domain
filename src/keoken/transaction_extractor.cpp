@@ -64,7 +64,7 @@ data_chunk get_keoken_data(operation::list const& ops) {
     return get_keoken_data(ops.begin(), ops.end());
 }
 
-data_chunk first_keoken_output(bc::chain::transaction const& tx) {
+data_chunk first_keoken_output(kth::domain::chain::transaction const& tx) {
     //precondition: tx is a confirmed transaction
     for (auto const& out : tx.outputs()) {
         auto const& keo_data = get_keoken_data(out.script().operations());
