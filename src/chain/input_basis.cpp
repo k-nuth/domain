@@ -74,27 +74,15 @@ bool input_basis::operator!=(input_basis const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-input_basis input_basis::factory_from_data(data_chunk const& data, bool wire, bool witness) {
-    input_basis instance;
-    instance.from_data(data, wire, witness_val(witness));
-    return instance;
-}
+// bool input_basis::from_data(data_chunk const& data, bool wire, bool witness) {
+//     data_source istream(data);
+//     return from_data(istream, wire, witness_val(witness));
+// }
 
-input_basis input_basis::factory_from_data(std::istream& stream, bool wire, bool witness) {
-    input_basis instance;
-    instance.from_data(stream, wire, witness_val(witness));
-    return instance;
-}
-
-bool input_basis::from_data(data_chunk const& data, bool wire, bool witness) {
-    data_source istream(data);
-    return from_data(istream, wire, witness_val(witness));
-}
-
-bool input_basis::from_data(std::istream& stream, bool wire, bool witness) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire, witness_val(witness));
-}
+// bool input_basis::from_data(std::istream& stream, bool wire, bool witness) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire, witness_val(witness));
+// }
 
 void input_basis::reset() {
     previous_output_.reset();
