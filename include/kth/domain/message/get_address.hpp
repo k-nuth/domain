@@ -16,62 +16,48 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API get_address {
+class KD_API get_address {
 public:
     using ptr = std::shared_ptr<get_address>;
     using const_ptr = std::shared_ptr<const get_address>;
-
-    static
-    get_address factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    get_address factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    get_address factory_from_data(uint32_t version, R& source) {
-        get_address instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     static
     size_t satoshi_fixed_size(uint32_t version);
 
     get_address() = default;
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
     
     void to_data(uint32_t version, data_sink& stream) const;
 
     //TODO(fernando): this function is empty!!!!!
     template <typename W>
-    void to_data(uint32_t  /*version*/, W&  /*sink*/) const {
+    void to_data(uint32_t /*version*/, W&  /*sink*/) const {
 
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
     
     void reset();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
     static

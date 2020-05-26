@@ -17,33 +17,16 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API filter_add {
+class KD_API filter_add {
 public:
     using ptr = std::shared_ptr<filter_add>;
     using const_ptr = std::shared_ptr<const filter_add>;
-
-    static
-    filter_add factory_from_data(uint32_t version, data_chunk const& data);
     
-    static
-    filter_add factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    filter_add factory_from_data(uint32_t version, R& source) {
-        filter_add instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static
-    //filter_add factory_from_data(uint32_t version, reader& source);
-
     filter_add() = default;
     filter_add(data_chunk const& data);
     filter_add(data_chunk&& data);

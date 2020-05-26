@@ -17,72 +17,48 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API filter_load {
+class KD_API filter_load {
 public:
     using ptr = std::shared_ptr<filter_load>;
     using const_ptr = std::shared_ptr<const filter_load>;
-
-    static
-    filter_load factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    filter_load factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    filter_load factory_from_data(uint32_t version, R& source) {
-        filter_load instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static
-    //filter_load factory_from_data(uint32_t version, reader& source);
 
     filter_load() = default;
     filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
     filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags);
 
-    // filter_load(filter_load const& x) = default;
-    // filter_load(filter_load&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // filter_load& operator=(filter_load&& x) = default;
-    // filter_load& operator=(filter_load const&) = default;
-
     bool operator==(filter_load const& x) const;
     bool operator!=(filter_load const& x) const;
 
-
     data_chunk& filter();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk const& filter() const;
     
     void set_filter(data_chunk const& value);
     void set_filter(data_chunk&& value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t hash_functions() const;
     
     void set_hash_functions(uint32_t value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t tweak() const;
     
     void set_tweak(uint32_t value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t flags() const;
     
     void set_flags(uint8_t value);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
