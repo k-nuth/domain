@@ -38,53 +38,23 @@ header& header::operator=(header const& x) {
     return *this;
 }
 
-// Operators.
-//-----------------------------------------------------------------------------
-
-// bool header::operator==(header const& x) const {
-//     return (version_ == x.version_) 
-//         && (previous_block_hash_ == x.previous_block_hash_) 
-//         && (merkle_ == x.merkle_) 
-//         && (timestamp_ == x.timestamp_) 
-//         && (bits_ == x.bits_) 
-//         && (nonce_ == x.nonce_);
-// }
-
-// bool header::operator!=(header const& x) const {
-//     return !(*this == x);
-// }
-
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-header header::factory_from_data(data_chunk const& data, bool wire) {
-    header instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool header::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-// static
-header header::factory_from_data(std::istream& stream, bool wire) {
-    header instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool header::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool header::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool header::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // protected
 void header::reset() {
     header_basis::reset();
-    invalidate_cache();
+    invalidate();
 }
 
 // Serialization.
