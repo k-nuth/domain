@@ -18,16 +18,18 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
+
+using namespace kth::infrastructure::message;
 
 // Implementation of BU xversion and xverack messages
 // https://github.com/BitcoinUnlimited/BitcoinUnlimited/blob/dev/doc/xversionmessage.md
 
 // The checksum is ignored by the xversion command.
-class BC_API xversion {
+class KD_API xversion {
 public:
     using ptr = std::shared_ptr<xversion>;
     using const_ptr = std::shared_ptr<const xversion>;

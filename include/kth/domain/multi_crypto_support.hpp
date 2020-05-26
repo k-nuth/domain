@@ -23,7 +23,7 @@ constexpr uint32_t ltc_regtest = 0xdab5bffaU;
 constexpr uint32_t bch_mainnet = 0xe8f3e1e3U;
 constexpr uint32_t bch_testnet = 0xf4f3e5f4U;
 constexpr uint32_t bch_regtest = 0xfabfb5daU;
-}  // namespace netmagic
+} // namespace netmagic
 
 namespace config {
 
