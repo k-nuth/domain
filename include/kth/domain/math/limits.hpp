@@ -161,6 +161,6 @@ To range_constrain(From value, To minimum, To maximum) {
 #undef UNSIGNED_SIGNED
 #undef UNSIGNED_UNSIGNED
 
-}  // namespace kth
+} // namespace kth
 
 #endif

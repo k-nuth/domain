@@ -19,37 +19,16 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
-#include <kth/domain/concepts.hpp>
+namespace kth::domain::message {
 
-namespace kth::message {
-
-class BC_API address {
+class KD_API address {
 public:
     using ptr = std::shared_ptr<address>;
     using const_ptr = std::shared_ptr<const address>;
 
-    static
-    address factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    address factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    address factory_from_data(uint32_t version, R& source) {
-        address instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static
-    //address factory_from_data(uint32_t version, reader& source);
-
     address() = default;
-    address(network_address::list const& addresses);
-    address(network_address::list&& addresses);
-
+    address(infrastructure::message::network_address::list const& addresses);
+    address(infrastructure::message::network_address::list&& addresses);
 
     /// This class is move assignable but not copy assignable.
     // address(address const& x);
