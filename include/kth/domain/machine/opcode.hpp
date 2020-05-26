@@ -26,8 +26,7 @@ bool is_enabled(uint32_t active_forks, rule_fork fork) {
     return (fork & active_forks) != 0;
 }
 
-enum class opcode : uint8_t
-{
+enum class opcode : uint8_t {
     //-------------------------------------------------------------------------
     // is_relaxed_push, is_push (excluding reserved_80)
 

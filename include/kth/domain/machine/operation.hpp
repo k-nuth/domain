@@ -12,7 +12,10 @@
 
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
-#include <kth/infrastructure/define.hpp>
+
+#include <kth/domain/define.hpp>
+//#include <kth/infrastructure/define.hpp>
+
 #include <kth/infrastructure/machine/script_pattern.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
