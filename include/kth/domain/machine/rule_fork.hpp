@@ -100,7 +100,6 @@ enum rule_fork : uint32_t {
     all_rules = 0xffffffff
 };
 
-} // namespace machine
-} // namespace kth
+} // namespace kth::domain::machine
 
-#endif // KTH_MACHINE_RULE_FORK_HPP_
+#endif // KTH_DOMAIN_MACHINE_RULE_FORK_HPP
