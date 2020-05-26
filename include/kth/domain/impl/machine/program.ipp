@@ -18,7 +18,9 @@
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
+
+using script_version = ::kth::infrastructure::machine::script_version;
 
 // Constant registers.
 //-----------------------------------------------------------------------------
