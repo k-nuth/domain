@@ -34,24 +34,24 @@ result_t sign_and_set(script const& output_script,
                       ec_public const& public_key,
                       uint64_t amount,
                       transaction& tx) {
-    auto sig = kth::wallet::input_signature_bch(private_key, output_script, tx, amount, 0);
+    auto sig = kth::domain::wallet::input_signature_bch(private_key, output_script, tx, amount, 0);
     if (sig.first != success) {
         return {sig.first, {}};
     }
 
-    return kth::wallet::input_set(sig.second, public_key, tx);
+    return kth::domain::wallet::input_set(sig.second, public_key, tx);
 }
 
-}  // namespace detail
+} // namespace detail
 
 output create_keoken_output(data_chunk const& keoken_message) {
     // data_chunk header;
     // kth::decode_base16(header,"00004b50");
 
     // Note: Adding an op_code using {data_chunk} automatically adds the size on front of the message
-    kth::machine::operation::list op_codes = {
-        {kth::machine::opcode::return_},
-        bc::to_chunk(protocol_name),
+    kth::domain::machine::operation::list op_codes = {
+        {kth::domain::machine::opcode::return_},
+        kth::to_chunk(protocol_name),
         {keoken_message}};
 
     return {0, op_codes};
