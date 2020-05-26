@@ -13,21 +13,9 @@
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+using number = kth::infrastructure::machine::number;
 
-// static constexpr
-// auto invalid_code = opcode::disabled_xor;
-
-// Constructors.
-//-----------------------------------------------------------------------------
-
-// inline 
-// operation::operation()
-//     : code_(invalid_code)
-// {
-//     // The failed-state code must be disabled so it will never pass evaluation.
-//     KTH_ASSERT(is_disabled());
-// }
+namespace kth::domain::machine {
 
 inline 
 operation::operation(data_chunk&& uncoded, bool minimal)
