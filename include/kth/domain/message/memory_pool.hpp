@@ -16,29 +16,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API memory_pool {
+class KD_API memory_pool {
 public:
     using ptr = std::shared_ptr<memory_pool>;
     using const_ptr = std::shared_ptr<const memory_pool>;
-
-    static
-    memory_pool factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    memory_pool factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    memory_pool factory_from_data(uint32_t version, R& source) {
-        memory_pool instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     static
     size_t satoshi_fixed_size(uint32_t version);
