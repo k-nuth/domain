@@ -16,34 +16,17 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
-class BC_API fee_filter {
+class KD_API fee_filter {
 public:
     using ptr = std::shared_ptr<fee_filter>;
     using const_ptr = std::shared_ptr<const fee_filter>;
 
-    static
-    fee_filter factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    fee_filter factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    fee_filter factory_from_data(uint32_t version, R& source) {
-        fee_filter instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static
-    //fee_filter factory_from_data(uint32_t version, reader& source);
-
-    static
+    static constexpr
     size_t satoshi_fixed_size(uint32_t version);
 
     fee_filter() = default;
