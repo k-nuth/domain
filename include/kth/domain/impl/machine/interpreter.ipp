@@ -14,13 +14,20 @@
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/program.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/machine/number.hpp>
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
+
+// kth::domain::machine::rule_fork
+// using pepe = bip66_rule;
+// using pepe2 = bip66_rule;
+static constexpr auto pepe3 = bip66_rule;
+static constexpr auto pepe4 = rule_fork::bip65_rule;
 
 static constexpr
 auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
