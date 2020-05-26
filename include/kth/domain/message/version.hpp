@@ -18,13 +18,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
+
+using namespace kth::infrastructure::message;
 
 // The checksum is ignored by the version command.
-class BC_API version {
+class KD_API version {
 public:
     using ptr = std::shared_ptr<version>;
     using const_ptr = std::shared_ptr<const version>;

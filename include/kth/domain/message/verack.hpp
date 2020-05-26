@@ -16,57 +16,43 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 // The checksum is ignored by the verack command.
-class BC_API verack {
+class KD_API verack {
 public:
     using ptr = std::shared_ptr<verack>;
     using const_ptr = std::shared_ptr<const verack>;
-
-    static
-    verack factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    verack factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    verack factory_from_data(uint32_t version, R& source) {
-        verack instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     static
     size_t satoshi_fixed_size(uint32_t version);
 
     verack() = default;
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
     
     void to_data(uint32_t version, data_sink& stream) const;
     void to_data(uint32_t version, writer& sink) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
     
     void reset();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
     static
