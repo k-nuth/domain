@@ -40,7 +40,7 @@ using namespace kth::domain::wallet;
 
 // headers
 
-ptree property_list(const config::header& header) {
+ptree property_list(config::header const& header) {
     chain::header const& block_header = header;
 
     ptree tree;
