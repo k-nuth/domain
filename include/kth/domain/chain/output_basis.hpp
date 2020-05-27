@@ -43,11 +43,6 @@ public:
     output_basis(uint64_t value, chain::script const& script);
     output_basis(uint64_t value, chain::script&& script);
 
-    // output_basis(output_basis const& x) = default;
-    // output_basis(output_basis&& x) = default;
-    // output_basis& operator=(output_basis const& x) = default;
-    // output_basis& operator=(output_basis&& x) = default;
-
     // Operators.
     //-------------------------------------------------------------------------
     bool operator==(output_basis const& x) const;
