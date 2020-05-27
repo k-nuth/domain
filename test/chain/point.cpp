@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(point__from_data__insufficient_bytes__failure) {
     data_chunk data(10);
     chain::point instance;
 
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
