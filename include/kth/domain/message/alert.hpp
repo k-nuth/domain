@@ -41,7 +41,7 @@ public:
 
     data_chunk& payload();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk const& payload() const;
     
     void set_payload(data_chunk const& value);
