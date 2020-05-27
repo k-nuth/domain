@@ -439,7 +439,6 @@ bool program::succeeded() const {
     ////return std::all_of(condition_.begin(), condition_.end(), true);
 }
 
-}  // namespace machine
-}  // namespace kth
+} // namespace kth::domain::machine
 
 #endif
