@@ -86,16 +86,6 @@ void reject::reset() {
     data_.fill(0);
 }
 
-bool reject::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool reject::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk reject::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
