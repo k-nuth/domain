@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(header__from_data__insufficient_bytes__failure) {
 
     chain::header header;
 
-    BOOST_REQUIRE(!header.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(header, data));
     BOOST_REQUIRE(!header.is_valid());
 }
 
