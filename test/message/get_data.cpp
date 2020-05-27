@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{0xab, 0xcd};
     get_data instance;
     static auto const version = version::level::maximum;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version, raw));
 }
 
 BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_version__failure) {
