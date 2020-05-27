@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(get_headers__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0xcd};
     message::get_headers instance;
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::get_headers::version_minimum, raw));
 }
 
