@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(operation__from_data__insufficient_bytes__failure) {
     data_chunk const data;
     operation instance;
 
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
