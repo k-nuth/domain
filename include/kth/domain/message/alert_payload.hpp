@@ -96,7 +96,7 @@ public:
 
     std::string& status_bar();
 
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string const& status_bar() const;
 
     void set_status_bar(std::string const& value);
