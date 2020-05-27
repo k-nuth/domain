@@ -42,7 +42,7 @@ operation::operation(data_chunk const& uncoded, bool minimal)
 {
     if ( ! valid_) {
         reset();
-}
+    }
 
     // Revert data if opcode_from_data produced a numeric encoding.
     if (minimal && !is_payload(code_)) {
