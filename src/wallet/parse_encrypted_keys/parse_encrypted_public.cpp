@@ -56,4 +56,4 @@ bool parse_encrypted_public::verify_magic() const {
     return slice<0, magic_size>(prefix()) == magic_;
 }
 
-}  // namespace kth
+} // namespace kth

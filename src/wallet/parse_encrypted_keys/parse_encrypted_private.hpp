@@ -45,7 +45,6 @@ private:
     const half_hash data2_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
