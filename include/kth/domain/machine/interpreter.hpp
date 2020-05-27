@@ -238,8 +238,7 @@ private:
     result run_op(operation const& op, program& program);
 };
 
-}  // namespace machine
-}  // namespace kth
+} // namespace kth::domain::machine
 
 #include <kth/domain/impl/machine/interpreter.ipp>
 

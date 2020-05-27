@@ -48,30 +48,30 @@ result_t tx_encode_send_token(kth::domain::chain::input_point::list const& outpu
                               uint32_t tx_version = 1,
                               uint8_t script_version = 5);
 
-BC_API
-result_t create_asset_tx_complete(kth::chain::input_point const& output_to_spend,
-                                  kth::chain::script const& output_script,
+KD_API
+result_t create_asset_tx_complete(kth::domain::chain::input_point const& output_to_spend,
+                                  kth::domain::chain::script const& output_script,
                                   kth::ec_secret const& private_key,
-                                  kth::wallet::ec_public const& public_key,
+                                  kth::domain::wallet::ec_public const& public_key,
                                   uint64_t amount,
-                                  kth::wallet::payment_address const& addr,
+                                  kth::domain::wallet::payment_address const& addr,
                                   std::string const& asset_name,
                                   amount_t asset_amount);
 
-BC_API
-result_t send_token_tx_complete(kth::chain::input_point const& output_to_spend,
-                                kth::chain::script const& output_script,
+KD_API
+result_t send_token_tx_complete(kth::domain::chain::input_point const& output_to_spend,
+                                kth::domain::chain::script const& output_script,
                                 kth::ec_secret const& private_key,
-                                kth::wallet::ec_public const& public_key,
+                                kth::domain::wallet::ec_public const& public_key,
                                 uint64_t amount,
-                                kth::wallet::payment_address const& addr_origin,
-                                kth::wallet::payment_address const& addr_dest,
+                                kth::domain::wallet::payment_address const& addr_origin,
+                                kth::domain::wallet::payment_address const& addr_dest,
                                 uint64_t dust,
                                 asset_id_t asset_id,
                                 amount_t asset_amount);
 
-}  // namespace wallet
-}  // namespace keoken
-}  // namespace kth
+} // namespace wallet
+} // namespace keoken
+} // namespace kth
 
 #endif  //KTH_KEOKEN_WALLET_CREATE_TRANSACTION_HPP_
