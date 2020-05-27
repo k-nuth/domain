@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_version_failure) {
     data_chunk const data = expected.to_data(message::version::level::maximum);
     message::memory_pool instance{};
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::memory_pool::version_minimum - 1, data));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
