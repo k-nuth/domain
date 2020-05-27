@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(header__constructor_7__always__equals_params) {
 BOOST_AUTO_TEST_CASE(header__from_data__insufficient_bytes__failure) {
     data_chunk data(10);
     message::header header;
-    BOOST_REQUIRE_EQUAL(false, header.from_data(message::header::version_maximum, data));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(header, message::header::version_maximum, data));
     BOOST_REQUIRE_EQUAL(false, header.is_valid());
 }
 
