@@ -22,7 +22,7 @@ enum class point_kind : uint32_t {
 };
 
 /// This structure models the client-server protocol in v1/v2/v3.
-struct BC_API history_compact {
+struct KD_API history_compact {
     using list = std::vector<history_compact>;
 
     // The type of point (output or spend).
