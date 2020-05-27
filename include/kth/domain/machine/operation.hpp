@@ -23,18 +23,16 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
-// static constexpr
-// auto invalid_code = opcode::disabled_xor;
+//TODO(fernando): static?
+constexpr 
+auto invalid_code = opcode::disabled_xor;
 
-constexpr auto 
-invalid_code = opcode::disabled_xor;
-
-class BI_API operation {
+class KD_API operation {
 public:
     using list = std::vector<operation>;
     using iterator = list::const_iterator;

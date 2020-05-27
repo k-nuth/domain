@@ -60,35 +60,35 @@ public:
     program(chain::script const& script, program&& x, bool move);
 
     /// Constant registers.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t forks() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t input_index() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t value() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     script_version version() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     chain::transaction const& transaction() const;
 
     /// Program registers.
-    [[nodiscard]] 
+    [[nodiscard]]
     op_iterator begin() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     op_iterator jump() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     op_iterator end() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t operation_count() const;
 
     /// Instructions.
