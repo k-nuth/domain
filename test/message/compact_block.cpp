@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_5__always__equals_params) {
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0xcd};
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::compact_block::version_minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::compact_block::version_minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transaction__failure) {
