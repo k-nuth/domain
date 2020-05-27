@@ -63,10 +63,6 @@
 #include <kth/domain/message/inventory_vector.hpp>
 #include <kth/domain/message/memory_pool.hpp>
 #include <kth/domain/message/merkle_block.hpp>
-
-// #include <kth/infrastructure/math/uint256.hpp>
-// #include <kth/infrastructure/message/message_tools.hpp>
-
 #include <kth/domain/message/messages.hpp>
 #include <kth/domain/message/not_found.hpp>
 #include <kth/domain/message/ping.hpp>
