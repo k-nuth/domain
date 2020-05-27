@@ -27,19 +27,6 @@ filter_add::filter_add(data_chunk&& data)
     : data_(std::move(data)) {
 }
 
-// filter_add::filter_add(filter_add const& x)
-//     : filter_add(x.data_) {
-// }
-
-// filter_add::filter_add(filter_add&& x) noexcept
-//     : filter_add(std::move(x.data_)) 
-// {}
-
-// filter_add& filter_add::operator=(filter_add&& x) noexcept {
-//     data_ = std::move(x.data_);
-//     return *this;
-// }
-
 bool filter_add::operator==(filter_add const& x) const {
     return (data_ == x.data_);
 }
