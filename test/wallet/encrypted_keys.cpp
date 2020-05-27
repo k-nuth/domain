@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(encrypted__fixture__unicode_passphrase__matches_encrypted_t
 
 BOOST_AUTO_TEST_SUITE(encrypted__create_token_lot)
 
-#define BC_REQUIRE_CREATE_TOKEN_LOT(passphrase, bytes, lot, sequence) \
+#define KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, bytes, lot, sequence) \
     encrypted_token out_token;                                        \
     BOOST_REQUIRE(create_token(out_token, passphrase, bytes, lot, sequence))
 
