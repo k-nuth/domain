@@ -50,14 +50,11 @@ pt::ptree property_tree_list(std::string const& name, const Values& values, bool
  * @returns              A new property tree containing the list.
  */
 template <typename Values>
-pt::ptree property_tree_list_of_lists(std::string const& name,
-                                      const Values& values,
-                                      bool json) {
+pt::ptree property_tree_list_of_lists(std::string const& name, const Values& values, bool json) {
     pt::ptree list;
     for (auto const& value : values) {
         add_child(list, name, property_list(value, json), json);
-}
-
+    }
     return list;
 }
 
