@@ -97,12 +97,12 @@ public:
     }
 
     static
-    config::checkpoint::list default_checkpoints(bool easy_blocks, bool retarget) {
-        config::checkpoint::list checkpoints;
+    kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_blocks, bool retarget) {
+        kth::infrastructure::config::checkpoint::list checkpoints;
 
     //TODO(fernando): Set Litecoin checkpoints
 #if defined(KTH_CURRENCY_BCH)
-        if (get_network(easy_blocks, retarget) == config::settings::testnet) {
+        if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::testnet) {
             // BCH Testnet
             checkpoints.reserve(17);
             checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);

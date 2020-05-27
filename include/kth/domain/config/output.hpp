@@ -66,7 +66,6 @@ private:
     short_hash pay_to_hash_;
 };
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif
