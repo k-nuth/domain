@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream) {
     const message::verack expected{};
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    auto const result = message::verack::factory_from_data(
+    auto const result = create<message::verack>(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());
