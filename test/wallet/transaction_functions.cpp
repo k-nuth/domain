@@ -28,17 +28,17 @@ BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
 kth::ec_secret create_secret_from_seed(std::string const& seed_str) {
     kth::data_chunk seed;
     kth::decode_base16(seed, seed_str);
-    kth::wallet::hd_private const key(seed);
+    hd_private const key(seed);
     // Secret key
     kth::ec_secret secret_key(key.secret());
     return secret_key;
 }
 
-kth::wallet::ec_public secret_to_compressed_public(kth::ec_secret const& secret_key) {
+ec_public secret_to_compressed_public(kth::ec_secret const& secret_key) {
     //Public key
     kth::ec_compressed point;
     kth::secret_to_public(point, secret_key);
-    kth::wallet::ec_public public_key(point, true /*compress*/);
+    ec_public public_key(point, true /*compress*/);
 
     return public_key;
 }
