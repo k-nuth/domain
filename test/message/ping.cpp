@@ -42,13 +42,13 @@ BOOST_AUTO_TEST_CASE(ping__satoshi_fixed_size__bip31_version__8) {
 
 BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__maximum_version_empty_data__invalid) {
     static auto const version = message::version::level::maximum;
-    auto const result = message::ping::factory_from_data(version, data_chunk{});
+    auto const result = create<message::ping>(version, data_chunk{});
     BOOST_REQUIRE(!result.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_empty_data__valid) {
     static auto const version = message::version::level::minimum;
-    auto const result = message::ping::factory_from_data(version, data_chunk{});
+    auto const result = create<message::ping>(version, data_chunk{});
     BOOST_REQUIRE(result.is_valid());
 }
 
