@@ -132,4 +132,4 @@ bool verify_message(data_slice message, payment_address const& address, const me
            (hash == address.hash());
 }
 
-}  // namespace kth
+} // namespace kth
