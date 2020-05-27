@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0x11};
     message::filter_load instance;
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::maximum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::maximum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_version__failure) {
