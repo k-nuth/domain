@@ -51,6 +51,6 @@ private:
     bool overflowed_;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif
