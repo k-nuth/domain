@@ -110,24 +110,8 @@ public:
     };
 
     /// Checkpoints must be ordered by height with greatest at back.
-    static
-    map get_map(size_t height, const checkpoints& checkpoints, uint32_t forks);
-
-    static
-    uint32_t signal_version(uint32_t forks);
-
-    /// Create pool state from top chain top block state.
-    chain_state(chain_state const& top);
-
-    /// Create block state from tx pool chain state of same height.
-    chain_state(chain_state const& pool, const chain::block& block);
-
-    /// Create header state from header pool chain state of previous height.
-    chain_state(chain_state const& parent, chain::header const& header);
-
-    /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
-    chain_state(data&& values, const checkpoints& checkpoints, uint32_t forks
+    chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
 #ifdef KTH_CURRENCY_BCH
                 // , magnetic_anomaly_t magnetic_anomaly_activation_time
                 // , great_wall_t great_wall_activation_time
