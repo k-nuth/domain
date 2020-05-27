@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__from_data__insufficient_bytes__failure) {
     data_chunk raw{0xab, 0x11};
     message::alert_payload instance;
 
-    BOOST_REQUIRE(!instance.from_data(message::version::level::minimum, raw));
+    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
