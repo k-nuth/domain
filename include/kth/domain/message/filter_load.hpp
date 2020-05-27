@@ -70,36 +70,36 @@ public:
             source.invalidate();
         } else {
             filter_ = source.read_bytes(size);
-}
+        }
 
         hash_functions_ = source.read_4_bytes_little_endian();
 
         if (hash_functions_ > max_filter_functions) {
             source.invalidate();
-}
+        }
 
         tweak_ = source.read_4_bytes_little_endian();
         flags_ = source.read_byte();
 
         if (version < filter_load::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
     
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_variable_little_endian(filter_.size());
         sink.write_bytes(filter_);
         sink.write_4_bytes_little_endian(hash_functions_);
