@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_2__always__equals_transaction) {
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(tx.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
     transaction instance(tx);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(instance == tx);
