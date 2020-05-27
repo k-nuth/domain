@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(pong__satoshi_fixed_size__minimum_version__returns_8) {
 
 BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__minimum_version_empty_data__invalid) {
     static auto const version = message::version::level::minimum;
-    auto const result = message::pong::factory_from_data(version, data_chunk{});
+    auto const result = create<message::pong>(version, data_chunk{});
     BOOST_REQUIRE(!result.is_valid());
 }
 
