@@ -45,18 +45,6 @@ std::string inventory_vector::to_string(type_id type) {
     }
 }
 
-inventory_vector inventory_vector::factory_from_data(uint32_t version, data_chunk const& data) {
-    inventory_vector instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-inventory_vector inventory_vector::factory_from_data(uint32_t version, std::istream& stream) {
-    inventory_vector instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
 inventory_vector::inventory_vector()
     : hash_(null_hash) 
 {}
