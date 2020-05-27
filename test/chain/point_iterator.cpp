@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_bool_at_end__returns_false) {
 
 BOOST_AUTO_TEST_CASE(point_iterator__operator_asterisk__initialized_point__matches_source) {
     point point;
-    BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
+    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
     point_iterator instance(point);
 
     for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++) {
