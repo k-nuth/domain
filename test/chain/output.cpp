@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(output__constructor_2__valid_input__returns_input_initializ
     uint64_t value = 643u;
     chain::script script;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(script.from_data(data, false));
+    BOOST_REQUIRE(entity_from_data(script, data, false));
 
     chain::output instance(value, script);
     BOOST_REQUIRE(instance.is_valid());
