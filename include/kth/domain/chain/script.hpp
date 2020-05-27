@@ -68,20 +68,6 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    script factory_from_data(data_chunk const& encoded, bool prefix);
-    
-    static
-    script factory_from_data(std::istream& stream, bool prefix);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    script factory_from_data(R& source, bool prefix) {
-        script instance;
-        instance.from_data(source, prefix);
-        return instance;
-    }
-
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list&& ops);
     void from_operations(operation::list const& ops);
