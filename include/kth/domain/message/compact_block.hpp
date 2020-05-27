@@ -34,20 +34,6 @@ public:
     using short_id_list = std::vector<short_id>;
 
     static
-    compact_block factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    compact_block factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    compact_block factory_from_data(uint32_t version, R& source) {
-        compact_block instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    static
     compact_block factory_from_block(message::block const& blk);
 
     compact_block() = default;
