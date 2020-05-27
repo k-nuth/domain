@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_data_fails) {
     data_chunk const data{10};
     message::merkle_block instance{};
 
-    BOOST_REQUIRE(!instance.from_data(message::version::level::maximum, data));
+    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::maximum, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
