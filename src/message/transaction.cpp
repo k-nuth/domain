@@ -70,20 +70,8 @@ bool transaction::operator!=(transaction const& x) const {
     return !(*this == x);
 }
 
-// Witness is always deserialized if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
-bool transaction::from_data(uint32_t /*version*/, data_chunk const& data) {
-    return chain::transaction::from_data(data, true, true);
-}
-
-bool transaction::from_data(uint32_t /*version*/, std::istream& stream) {
-    return chain::transaction::from_data(stream, true, true);
-}
-
 // Witness is always serialized if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
+// NOTE: Witness on BCH is dissabled on the chain::block class
 data_chunk transaction::to_data(uint32_t /*version*/, bool witness) const {
     return chain::transaction::to_data(true, witness);
 }
