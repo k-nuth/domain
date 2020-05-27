@@ -36,7 +36,6 @@ uint8_t const payment_address::mainnet_p2kh = 0x00;
 #endif
 
 uint8_t const payment_address::mainnet_p2sh = 0x05;
-
 uint8_t const payment_address::testnet_p2kh = 0x6f;
 uint8_t const payment_address::testnet_p2sh = 0xc4;
 
