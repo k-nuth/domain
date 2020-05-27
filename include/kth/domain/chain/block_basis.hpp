@@ -20,6 +20,8 @@
 #include <kth/domain/concepts.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/asio.hpp>
