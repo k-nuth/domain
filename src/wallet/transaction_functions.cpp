@@ -29,14 +29,14 @@ bool push_scripts(chain::output::list& outputs, config::output const& output, ui
         return false;
     }
 
-    kth::machine::operation::list payment_ops;
+    machine::operation::list payment_ops;
     auto const hash = output.pay_to_hash();
 
     // This presumes stealth versions are the same as non-stealth.
     if (output.version() != script_version) {
-        payment_ops = kth::chain::script::to_pay_key_hash_pattern(hash);
+        payment_ops = chain::script::to_pay_key_hash_pattern(hash);
     } else if (output.version() == script_version) {
-        payment_ops = kth::chain::script::to_pay_script_hash_pattern(hash);
+        payment_ops = chain::script::to_pay_script_hash_pattern(hash);
     } else {
         return false;
     }
