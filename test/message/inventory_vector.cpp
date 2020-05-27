@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__constructor_5__always__equals_params) {
 BOOST_AUTO_TEST_CASE(inventory_vector__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{1};
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version::level::minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success) {
