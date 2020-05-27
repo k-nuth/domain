@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(block__is_valid_merkle_root__valid__returns_true) {
         "ab48788ac00000000"));
 
     chain::block instance;
-    BOOST_REQUIRE(instance.from_data(raw_block));
+    BOOST_REQUIRE(entity_from_data(instance, raw_block));
     BOOST_REQUIRE(instance.is_valid_merkle_root());
 }
 
