@@ -23,8 +23,7 @@ bitcoin_uri parse(std::string const& uri, bool strict = true) {
 }
 
 // Demonstrate custom uri_reader.
-struct custom_reader
-    : public uri_reader {
+struct custom_reader : public uri_reader {
     custom_reader()
         : strict_(true), authority_(false) {
     }
