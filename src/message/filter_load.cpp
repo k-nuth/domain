@@ -27,22 +27,6 @@ filter_load::filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t 
     : filter_(std::move(filter)), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }
 
-// filter_load::filter_load(filter_load const& x)
-//     : filter_load(x.filter_, x.hash_functions_, x.tweak_, x.flags_) {
-// }
-
-// filter_load::filter_load(filter_load&& x) noexcept
-//     : filter_load(std::move(x.filter_), x.hash_functions_, x.tweak_, x.flags_) {
-// }
-
-// filter_load& filter_load::operator=(filter_load&& x) noexcept {
-//     filter_ = std::move(x.filter_);
-//     hash_functions_ = x.hash_functions_;
-//     tweak_ = x.tweak_;
-//     flags_ = x.flags_;
-//     return *this;
-// }
-
 bool filter_load::operator==(filter_load const& x) const {
     return (filter_ == x.filter_) && (hash_functions_ == x.hash_functions_) && (tweak_ == x.tweak_) && (flags_ == x.flags_);
 }
