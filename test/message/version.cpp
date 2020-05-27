@@ -32,42 +32,42 @@ BOOST_AUTO_TEST_SUITE(version_tests)
 BOOST_AUTO_TEST_CASE(version__factory__therealbitcoin_dot_org__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_THEREALBITCOIN_1));
-    auto const version = message::version::factory_from_data(version_maximum, payload);
+    auto const version = create<message::version>(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(version__factory__anarchistprime1__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_1));
-    auto const version = message::version::factory_from_data(version_maximum, payload);
+    auto const version = create<message::version>(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(version__factory__anarchistprime2__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_ANARCHISTPRIME_2));
-    auto const version = message::version::factory_from_data(version_maximum, payload);
+    auto const version = create<message::version>(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(version__factory__falcon1__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_FALCON_1));
-    auto const version = message::version::factory_from_data(version_maximum, payload);
+    auto const version = create<message::version>(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(version__factory__falcon2__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_FALCON_2));
-    auto const version = message::version::factory_from_data(version_maximum, payload);
+    auto const version = create<message::version>(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(version__factory__satoshi1__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, NO_RELAY_SATOSHI_1));
-    auto const version = message::version::factory_from_data(version_maximum, payload);
+    auto const version = create<message::version>(version_maximum, payload);
     BOOST_REQUIRE(version.is_valid());
 }
 
