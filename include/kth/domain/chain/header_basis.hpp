@@ -34,7 +34,6 @@ public:
     using ptr_list = std::vector<header_basis>;
     using const_ptr_list = std::vector<const_ptr>;
 
-
     // Constructors.
     //-----------------------------------------------------------------------------
 
