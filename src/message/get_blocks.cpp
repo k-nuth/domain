@@ -30,20 +30,6 @@ get_blocks::get_blocks(hash_list&& start, hash_digest const& stop)
     : start_hashes_(std::move(start)), stop_hash_(stop) {
 }
 
-// get_blocks::get_blocks(get_blocks const& x)
-//     : get_blocks(x.start_hashes_, x.stop_hash_) {
-// }
-
-// get_blocks::get_blocks(get_blocks&& x) noexcept
-//     : get_blocks(std::move(x.start_hashes_), std::move(x.stop_hash_)) 
-// {}
-
-// get_blocks& get_blocks::operator=(get_blocks&& x) noexcept {
-//     start_hashes_ = std::move(x.start_hashes_);
-//     stop_hash_ = std::move(x.stop_hash_);
-//     return *this;
-// }
-
 bool get_blocks::operator==(get_blocks const& x) const {
     auto result = (start_hashes_.size() == x.start_hashes_.size()) &&
                   (stop_hash_ == x.stop_hash_);

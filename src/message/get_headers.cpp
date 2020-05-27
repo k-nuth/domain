@@ -23,16 +23,6 @@ get_headers::get_headers(hash_list&& start, hash_digest const& stop)
     : get_headers(start, stop) 
 {}
 
-// get_headers::get_headers(get_headers&& x) noexcept
-//     : get_blocks(x) 
-// {}
-
-// get_headers& get_headers::operator=(get_headers&& x) noexcept {
-//     set_start_hashes(x.start_hashes());
-//     set_stop_hash(x.stop_hash());
-//     return *this;
-// }
-
 bool get_headers::operator==(get_headers const& x) const {
     return (static_cast<get_blocks const&>(*this) == static_cast<get_blocks const&>(x));
 }

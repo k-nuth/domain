@@ -56,24 +56,6 @@ bool get_data::operator!=(get_data const& x) const {
     return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
-// bool get_data::from_data(uint32_t version, data_chunk const& data) {
-//     return inventory::from_data(version, data);
-// }
-
-// bool get_data::from_data(uint32_t version, std::istream& stream) {
-//     return inventory::from_data(version, stream);
-// }
-
-bool get_data::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool get_data::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 #if defined(KTH_SEGWIT_ENABLED)
 void get_data::to_witness() {
     auto const convert = [](inventory_vector& element) {
