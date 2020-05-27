@@ -40,15 +40,6 @@ bool pong::operator==(pong const& x) const {
 bool pong::operator!=(pong const& x) const {
     return !(*this == x);
 }
-bool pong::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool pong::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
 
 data_chunk pong::to_data(uint32_t version) const {
     data_chunk data;

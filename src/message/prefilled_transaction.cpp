@@ -20,29 +20,15 @@ constexpr size_t max_index = max_uint32;
 constexpr size_t max_index = max_uint16;
 #endif
 
-prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, data_chunk const& data) {
-    prefilled_transaction instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, std::istream& stream) {
-    prefilled_transaction instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
 prefilled_transaction::prefilled_transaction()
     : index_(max_index) 
 {}
 
-prefilled_transaction::prefilled_transaction(uint64_t index,
-                                             chain::transaction const& tx)
+prefilled_transaction::prefilled_transaction(uint64_t index, chain::transaction const& tx)
     : index_(index), transaction_(tx) {
 }
 
-prefilled_transaction::prefilled_transaction(uint64_t index,
-                                             chain::transaction&& tx)
+prefilled_transaction::prefilled_transaction(uint64_t index, chain::transaction&& tx)
     : index_(index), transaction_(std::move(tx)) {
 }
 
