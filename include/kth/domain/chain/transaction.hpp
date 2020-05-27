@@ -95,9 +95,9 @@ namespace kth::domain::chain {
 // }
 // #endif // not defined KTH_CURRENCY_BCH
 
-// }  // namespace detail
+// } // namespace detail
 
-class BC_API transaction : public transaction_basis {
+class KD_API transaction : public transaction_basis {
 public:
     using ins = input::list;
     using outs = output::list;
