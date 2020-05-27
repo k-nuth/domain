@@ -66,8 +66,8 @@ public:
     // Serialization.
     //-------------------------------------------------------------------------
 
-    bc::data_chunk to_data() const;
-    void to_data(bc::data_sink& stream) const;
+    kth::data_chunk to_data() const;
+    void to_data(kth::data_sink& stream) const;
 
     //Note: from_data and to_data are not longer simetrical.
     template <typename W>
