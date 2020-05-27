@@ -67,7 +67,7 @@ ec_public::ec_public(ec_compressed const& point, bool compress)
 // ----------------------------------------------------------------------------
 
 bool ec_public::is_point(data_slice decoded) {
-    return bc::is_public_key(decoded);
+    return kth::is_public_key(decoded);
 }
 
 // Factories.
