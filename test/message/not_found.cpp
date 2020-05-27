@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(not_found__constructor_7__always__equals_params) {
 BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{0xab, 0xcd};
     not_found instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version::level::minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure) {
