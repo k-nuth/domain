@@ -74,4 +74,4 @@ const wallet::payment_address& stealth_sender::payment_address() const {
     return address_;
 }
 
-}  // namespace kth
+} // namespace kth
