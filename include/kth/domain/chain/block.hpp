@@ -31,9 +31,9 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-class BC_API block : public block_basis {
+class KD_API block : public block_basis {
 public:
     using list = std::vector<block>;
     using indexes = std::vector<size_t>;
