@@ -54,23 +54,4 @@ bool not_found::operator!=(not_found const& x) const {
     return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
-// bool not_found::from_data(uint32_t version, data_chunk const& data) {
-//     return inventory::from_data(version, data);
-// }
-
-// bool not_found::from_data(uint32_t version, std::istream& stream) {
-//     return inventory::from_data(version, stream);
-// }
-
-
-bool not_found::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool not_found::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
-}  // namespace kth
+} // namespace kth
