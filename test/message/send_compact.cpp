@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(send_compact__constructor_4__always__equals_params) {
 BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_1__valid_input__success) {
     const message::send_compact expected{true, 164};
     auto const data = expected.to_data(message::send_compact::version_minimum);
-    auto const result = message::send_compact::factory_from_data(
+    auto const result = create<message::send_compact>(
         message::send_compact::version_minimum, data);
 
     BOOST_REQUIRE_EQUAL(
