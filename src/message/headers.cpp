@@ -39,19 +39,6 @@ headers::headers(std::initializer_list<header> const& values)
     : elements_(values) {
 }
 
-// headers::headers(headers const& x)
-//     : headers(x.elements_) {
-// }
-
-// headers::headers(headers&& x) noexcept
-//     : headers(std::move(x.elements_)) 
-// {}
-
-// headers& headers::operator=(headers&& x) noexcept {
-//     elements_ = std::move(x.elements_);
-//     return *this;
-// }
-
 bool headers::operator==(headers const& x) const {
     return elements_ == x.elements_;
 }
