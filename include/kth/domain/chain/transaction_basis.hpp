@@ -31,10 +31,10 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 namespace detail {
 // Read a length-prefixed collection of inputs or outputs from the source.
