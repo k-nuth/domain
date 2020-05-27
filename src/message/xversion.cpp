@@ -64,23 +64,6 @@ void xversion::reset() {
     relay_ = false;
 }
 
-bool xversion::from_data(uint32_t version, data_chunk const& data) {
-    //TODO(fernando): implement this!
-    return true;
-    // data_source istream(data);
-    // return from_data(version, istream);
-}
-
-bool xversion::from_data(uint32_t version, std::istream& stream) {
-    stream.ignore(std::numeric_limits<std::streamsize>::max(), std::istream::traits_type::eof());
-    auto const consumed = stream.peek() == std::istream::traits_type::eof();
-
-    //TODO(fernando): implement this!
-    return true;
-    // istream_reader stream_r(stream);
-    // return from_data(version, stream_r);
-}
-
 data_chunk xversion::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
