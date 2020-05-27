@@ -56,20 +56,20 @@ protected:
     void increment();
     void decrement();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     point_iterator increase(unsigned value) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     point_iterator decrease(unsigned value) const;
 
 private:
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t current() const;
 
     point const* point_;
     unsigned current_;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif

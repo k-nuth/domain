@@ -43,7 +43,7 @@ public:
     // Properties (accessors).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t value() const;
     
     void set_value(uint64_t value);
