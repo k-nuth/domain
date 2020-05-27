@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__from_data__insufficient_bytes__fail
     data_chunk const raw{0xab, 0xcd};
     message::get_block_transactions instance{};
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_1__valid_input__success) {
