@@ -58,25 +58,10 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    input_basis factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    
-    static
-    input_basis factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
+    // bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
+    // bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     template <typename R, KTH_IS_READER(R)>
-    static
-    input_basis factory_from_data(R& source, bool wire = true, bool witness = false) {
-        input_basis instance;
-        instance.from_data(source, wire, witness_val(witness));
-        return instance;
-    }
-
-    bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    bool from_data(std::istream& stream, bool wire = true, bool witness = false);
-
-    template <typename R, KTH_IS_READER(R)>
-
     bool from_data(R& source, bool wire = true, KTH_DECL_WITN_ARG) {
 #if defined(KTH_SEGWIT_ENABLED)
         // Always write witness to store so that we know how to read it.
