@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(block__factory_data_1__genesis_mainnet__success) {
     BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
 
     // Reload genesis block.
-    auto const block = block::factory_from_data(version::level::minimum, raw_block);
+    auto const block = create<message::block>(version::level::minimum, raw_block);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
