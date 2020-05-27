@@ -30,10 +30,10 @@ class witness {};
 
 #else
 
-class BC_API witness {
+class KD_API witness {
 public:
     using operation = machine::operation;
-    using iterator = data_stack::const_iterator;
+    using iterator = machine::const_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------
