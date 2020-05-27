@@ -43,20 +43,20 @@ BOOST_AUTO_TEST_CASE(fee_filter__constructor_4__always__equals_params) {
 BOOST_AUTO_TEST_CASE(fee_filter__from_data__insufficient_bytes_failure) {
     data_chunk const raw = {0xab, 0x11};
     fee_filter instance;
-    BOOST_REQUIRE(!instance.from_data(version::level::maximum, raw));
+    BOOST_REQUIRE(!entity_from_data(instance, version::level::maximum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(fee_filter__from_data__insufficient_version_failure) {
     const fee_filter expected{1};
     auto const data = expected.to_data(fee_filter::version_maximum);
     fee_filter instance;
-    BOOST_REQUIRE(!instance.from_data(filter_add::version_minimum - 1, data));
+    BOOST_REQUIRE(!entity_from_data(instance, filter_add::version_minimum - 1, data));
 }
 
 BOOST_AUTO_TEST_CASE(fee_filter__factory_from_data_1__roundtrip__success) {
     const fee_filter expected{123};
     auto const data = expected.to_data(fee_filter::version_maximum);
-    auto const result = fee_filter::factory_from_data(fee_filter::version_maximum, data);
+    auto const result = create<fee_filter>(fee_filter::version_maximum, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
 
