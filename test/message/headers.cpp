@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_6__always__equals_params) {
 BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0xcd};
     headers instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(headers::version_minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, headers::version_minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure) {
