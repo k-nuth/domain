@@ -333,4 +333,4 @@ std::ostream& operator<<(std::ostream& out, stealth_address const& of) {
     return out;
 }
 
-}  // namespace kth
+} // namespace kth
