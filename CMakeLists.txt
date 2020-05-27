@@ -444,8 +444,6 @@ set(kth_domain_sources_just_legacy
         src/message/inventory_vector.cpp
         src/message/memory_pool.cpp
         src/message/merkle_block.cpp
-        # src/message/messages.cpp
-        # src/message/network_address.cpp
         src/message/not_found.cpp
         src/message/ping.cpp
         src/message/pong.cpp
