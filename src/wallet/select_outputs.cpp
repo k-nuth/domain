@@ -105,4 +105,4 @@ void select_outputs::select(points_value& out, const points_value& unspent, uint
     }
 }
 
-}  // namespace kth
+} // namespace kth
