@@ -16,14 +16,14 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_version_failure) {
     auto const raw = expected.to_data(version::level::maximum);
     filter_clear instance{};
 
-    BOOST_REQUIRE(!instance.from_data(filter_clear::version_minimum - 1, raw));
+    BOOST_REQUIRE(!entity_from_data(instance, filter_clear::version_minimum - 1, raw));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
     static const filter_clear expected{};
     auto const data = expected.to_data(version::level::maximum);
-    auto const result = filter_clear::factory_from_data(version::level::maximum, data);
+    auto const result = create<filter_clear>(version::level::maximum, data);
 
     BOOST_REQUIRE_EQUAL(data.size(), 0u);
     BOOST_REQUIRE(result.is_valid());
