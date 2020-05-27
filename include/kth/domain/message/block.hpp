@@ -34,23 +34,6 @@ public:
     using const_ptr_list_ptr = std::shared_ptr<const_ptr_list>;
     using const_ptr_list_const_ptr = std::shared_ptr<const const_ptr_list>;
 
-    static
-    block factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    block factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    block factory_from_data(uint32_t version, R& source) {
-        block instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static
-    //block factory_from_data(uint32_t version, reader& source);
-
     block() = default;
 
     block(chain::block const& x);
