@@ -40,12 +40,12 @@ class transaction;
 class witness;
 #endif
 
-class BC_API script_basis {
+class KD_API script_basis {
 public:
     using operation = machine::operation;
     using rule_fork = machine::rule_fork;
-    using script_pattern = machine::script_pattern;
-    using script_version = machine::script_version;
+    using script_pattern = infrastructure::machine::script_pattern;
+    using script_version = infrastructure::machine::script_version;
 
     // Constructors.
     //-------------------------------------------------------------------------

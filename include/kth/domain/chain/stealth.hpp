@@ -26,7 +26,7 @@ struct KD_API stealth_compact {
 
 /// This structure is used between client and API callers in v2/v3.
 /// The normal stealth row includes the sign byte of the ephemeral public key.
-struct BC_API stealth {
+struct KD_API stealth {
     using list = std::vector<stealth>;
 
     ec_compressed ephemeral_public_key;
