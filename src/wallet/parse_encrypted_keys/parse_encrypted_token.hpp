@@ -48,7 +48,6 @@ private:
     hash_digest const data_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
