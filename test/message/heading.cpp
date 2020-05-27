@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(heading__from_data__insufficient_bytes__failure) {
         0xab, 0xcd};
 
     heading instance;
-    BOOST_REQUIRE(!instance.from_data(raw));
+    BOOST_REQUIRE(!entity_from_data(instance, raw));
 }
 
 BOOST_AUTO_TEST_CASE(heading__factory_from_data_1__valid_input__success) {
