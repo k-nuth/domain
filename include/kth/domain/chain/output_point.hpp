@@ -78,25 +78,11 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    output_point factory_from_data(data_chunk const& data, bool wire = true);
-    
-    static
-    output_point factory_from_data(std::istream& stream, bool wire = true);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    output_point factory_from_data(R& source, bool wire = true) {
-        output_point instance;
-        instance.from_data(source, wire);
-        return instance;
-    }
-
     // Validation.
     //-------------------------------------------------------------------------
 
     /// True if cached previous output is mature enough to spend from height.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_mature(size_t height) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
