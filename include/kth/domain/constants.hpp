@@ -258,30 +258,30 @@ constexpr uint32_t bip16_activation_time = 0x4f779a80;
 // Block 170060 was mined with an invalid p2sh (code shipped late).
 // bitcointalk.org/index.php?topic=63165.msg788832#msg788832
 static
-const config::checkpoint mainnet_bip16_exception_checkpoint{
+const infrastructure::config::checkpoint mainnet_bip16_exception_checkpoint{
     "00000000000002dc756eebf4f49723ed8d30cc28a5f108eb94b1ba88ac4f9c22", 170060};
 
 // github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
 static
-const config::checkpoint mainnet_bip30_exception_checkpoint1{
+const infrastructure::config::checkpoint mainnet_bip30_exception_checkpoint1{
     // TODO(legacy): figure out why this block validates without an exception.
     "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842};
 
 static
-const config::checkpoint mainnet_bip30_exception_checkpoint2{
+const infrastructure::config::checkpoint mainnet_bip30_exception_checkpoint2{
     "00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880};
 
 // Hard fork to stop checking unspent duplicates above fixed bip34 activation.
 static
-const config::checkpoint mainnet_bip34_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_bip34_active_checkpoint{
     "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 710000};
 
 static
-const config::checkpoint testnet_bip34_active_checkpoint{
+const infrastructure::config::checkpoint testnet_bip34_active_checkpoint{
     "8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573", 76};
 
 static
-const config::checkpoint regtest_bip34_active_checkpoint{
+const infrastructure::config::checkpoint regtest_bip34_active_checkpoint{
     "fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf", 100000000};
 
 #else  //KTH_CURRENCY_LTC
