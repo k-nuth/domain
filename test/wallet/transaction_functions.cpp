@@ -47,8 +47,8 @@ BOOST_AUTO_TEST_CASE(seed_to_wallet_compressed__test) {
     auto secret = create_secret_from_seed(SEED);
     auto pub_key = secret_to_compressed_public(secret);
     // Payment Address
-    uint8_t const version = kth::wallet::payment_address::testnet_p2kh;  // testnet_p2sh
-    kth::wallet::payment_address address(pub_key, version);
+    uint8_t const version = payment_address::testnet_p2kh;  // testnet_p2sh
+    payment_address address(pub_key, version);
 
     BOOST_REQUIRE_EQUAL(address.encoded(), WALLET);
 }
