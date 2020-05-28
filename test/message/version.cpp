@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(version__from_data__insufficient_bytes__invalid) {
     data_chunk const raw{0xab};
     message::version instance{};
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version_maximum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version_maximum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(version__from_data__mismatched_sender_services__invalid) {
