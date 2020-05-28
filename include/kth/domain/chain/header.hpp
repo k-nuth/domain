@@ -49,7 +49,7 @@ public:
     using header_basis::header_basis; // inherit constructors from header_basis
 
     header() = default;
-    header(header const& x, hash_digest const& hash);
+    // header(header const& x, hash_digest const& hash);
 
     /// This class is copy constructible and copy assignable.
     // Note(kth): Cannot be defaulted because the std::mutex data member.
