@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(point__from_data__roundtrip__success) {
     chain::point point;
 
     BOOST_REQUIRE(point != initial);
-    BOOST_REQUIRE(point.from_data(initial.to_data()));
+    BOOST_REQUIRE(entity_from_data(point, initial.to_data()));
     BOOST_REQUIRE(point.is_valid());
     BOOST_REQUIRE(point == initial);
 }
