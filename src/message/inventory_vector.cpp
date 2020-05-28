@@ -53,15 +53,6 @@ inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
     : type_(type), hash_(hash) 
 {}
 
-// inventory_vector::inventory_vector(inventory_vector const& x)
-//     : type_(x.type_), hash_(x.hash_) 
-// {}
-
-// void inventory_vector::operator=(inventory_vector const& x) {
-//     type_ = x.type_;
-//     hash_ = x.hash_;
-// }
-
 bool inventory_vector::operator==(inventory_vector const& x) const {
     return (hash_ == x.hash_) && (type_ == x.type_);
 }
