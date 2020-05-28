@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(get_blocks__factory_from_data_1__valid_input__success) {
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::get_blocks::factory_from_data(
+    auto const result = create<message::get_blocks>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
