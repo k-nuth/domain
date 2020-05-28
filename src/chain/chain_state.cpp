@@ -183,8 +183,9 @@ bool bip9_bit1_active(hash_digest const& hash, bool mainnet, bool testnet) {
            (regtest && hash == regtest_bip9_bit1_active_checkpoint.hash());
 }
 
-inline bool bip9_bit1_active(size_t height, bool mainnet, bool testnet) {
-#if ! defined(KTH_SEGWIT_ENABLED)
+inline 
+bool bip9_bit1_active(size_t height, bool mainnet, bool testnet) {
+#if defined(KTH_CURRENCY_BCH)
     return false;
 #endif
     auto const regtest = !mainnet && !testnet;
