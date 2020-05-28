@@ -53,4 +53,4 @@ std::ostream& operator<<(std::ostream& output, header const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth
