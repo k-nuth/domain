@@ -138,6 +138,6 @@ result_t send_token_tx_complete(input_point const& output_to_spend,
     return {success, sign_and_set_result.second};
 }
 
-}  // namespace wallet
-}  // namespace keoken
-}  // namespace kth
+} // namespace wallet
+} // namespace keoken
+} // namespace kth
