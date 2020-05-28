@@ -87,7 +87,7 @@ void block_transactions::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t block_transactions::serialized_size(uint32_t /*version*/) const {
-    auto size = hash_size + message::variable_uint_size(transactions_.size());
+    auto size = hash_size + infrastructure::message::variable_uint_size(transactions_.size());
 
     for (auto const& element : transactions_) {
         size += element.serialized_size(/*wire*/ true, witness_default()
