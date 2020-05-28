@@ -34,15 +34,15 @@ enum class currency {
     litecoin
 };
 
-}  // namespace config
+} // namespace config
 
 config::currency get_currency();
 
-// void set_network(config::settings x);
+// void set_network(infrastructure::config::settings x);
 // void set_network(uint32_t identifier);
-// config::settings get_network();
-config::settings get_network(uint32_t identifier);
-config::settings get_network(bool easy_blocks, bool retarget);
+// infrastructure::config::settings get_network();
+infrastructure::config::settings get_network(uint32_t identifier);
+infrastructure::config::settings get_network(bool easy_blocks, bool retarget);
 
 #ifdef KTH_CURRENCY_BCH
 std::string cashaddr_prefix();
