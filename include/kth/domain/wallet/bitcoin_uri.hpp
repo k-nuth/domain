@@ -99,7 +99,6 @@ private:
     std::map<std::string, std::string> query_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
