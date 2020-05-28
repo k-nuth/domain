@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_version__failure) {
 
     auto const raw = expected.to_data(version::level::maximum);
     get_data instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(get_data::version_minimum - 1, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, get_data::version_minimum - 1, raw));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
