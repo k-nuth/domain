@@ -88,73 +88,32 @@ size_t header::serialized_size(bool wire) const {
 
 void header::set_version(uint32_t value) {
     header_basis::set_version(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_previous_block_hash(hash_digest const& value) {
     header_basis::set_previous_block_hash(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_merkle(hash_digest const& value) {
     header_basis::set_merkle(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_timestamp(uint32_t value) {
     header_basis::set_timestamp(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_bits(uint32_t value) {
     header_basis::set_bits(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_nonce(uint32_t value) {
     header_basis::set_nonce(value);
-    invalidate_cache();
-}
-
-// Cache.
-//-----------------------------------------------------------------------------
-
-// protected
-void header::invalidate_cache() const {
-    ///////////////////////////////////////////////////////////////////////////
-    // Critical Section
-    mutex_.lock_upgrade();
-
-    if (hash_) {
-        mutex_.unlock_upgrade_and_lock();
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        hash_.reset();
-        //---------------------------------------------------------------------
-        mutex_.unlock_and_lock_upgrade();
-    }
-
-    mutex_.unlock_upgrade();
-    ///////////////////////////////////////////////////////////////////////////
-}
-
-hash_digest header::hash() const {
-    ///////////////////////////////////////////////////////////////////////////
-    // Critical Section
-    mutex_.lock_upgrade();
-
-    if ( ! hash_) {
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        mutex_.unlock_upgrade_and_lock();
-        hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data()));
-        mutex_.unlock_and_lock_upgrade();
-        //---------------------------------------------------------------------
-    }
-
-    auto const hash = *hash_;
-    mutex_.unlock_upgrade();
-    ///////////////////////////////////////////////////////////////////////////
-
-    return hash;
+    invalidate();
 }
 
 #ifdef KTH_CURRENCY_LTC
