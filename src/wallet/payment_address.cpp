@@ -96,6 +96,8 @@ bool payment_address::is_address(data_slice decoded) {
 
 // Factories.
 // ----------------------------------------------------------------------------
+
+//TODO(fernando): move BCH cashaddr to another place
 #ifdef KTH_CURRENCY_BCH
 
 template <unsigned int frombits, unsigned int tobits, bool pad, typename O, typename I>
