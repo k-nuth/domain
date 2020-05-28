@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_2__valid_input__success) {
     const message::send_compact expected{false, 5};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     data_source istream(data);
-    auto const result = message::send_compact::factory_from_data(
+    auto const result = create<message::send_compact>(
         message::send_compact::version_minimum, istream);
 
     BOOST_REQUIRE_EQUAL(
