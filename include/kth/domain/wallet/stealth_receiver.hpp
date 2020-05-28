@@ -47,7 +47,6 @@ private:
     wallet::stealth_address address_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
