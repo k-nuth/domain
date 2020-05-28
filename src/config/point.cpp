@@ -81,4 +81,4 @@ std::ostream& operator<<(std::ostream& output, point const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth
