@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transactio
         "3434565656565678789a9a02010000000100000000000001000000010000000"));
 
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::compact_block::version_minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::compact_block::version_minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure) {
