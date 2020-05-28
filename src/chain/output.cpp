@@ -206,4 +206,4 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     return addresses;
 }
 
-}  // namespace kth
+} // namespace kth
