@@ -155,20 +155,6 @@ transaction& transaction::operator=(transaction&& x) noexcept {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-transaction transaction::factory_from_data(data_chunk const& data, bool wire, bool witness) {
-    transaction instance;
-    instance.from_data(data, wire, witness_val(witness));
-    return instance;
-}
-
-// static
-transaction transaction::factory_from_data(std::istream& stream, bool wire, bool witness) {
-    transaction instance;
-    instance.from_data(stream, wire, witness_val(witness));
-    return instance;
-}
-
 bool transaction::from_data(data_chunk const& data, bool wire, bool witness
 #ifdef KTH_CACHED_RPC_DATA
     , bool unconfirmed
