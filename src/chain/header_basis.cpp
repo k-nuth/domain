@@ -94,19 +94,6 @@ void header_basis::to_data(data_sink& stream, bool wire) const {
     to_data(sink_w, wire);
 }
 
-// Size.
-//-----------------------------------------------------------------------------
-
-// static
-size_t header_basis::satoshi_fixed_size() {
-    return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + sizeof(bits_) + sizeof(nonce_);
-}
-
-inline
-size_t header_basis::serialized_size(bool /*wire*/) const {
-    return satoshi_fixed_size();
-}
-
 // Accessors.
 //-----------------------------------------------------------------------------
 
