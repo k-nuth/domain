@@ -57,18 +57,18 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
                                                              uint32_t locktime /*= 0*/,
                                                              uint32_t tx_version /*= 1*/,
                                                              uint8_t script_version /*= 5*/) {
-    kth::chain::transaction tx;
+    chain::transaction tx;
     tx.set_version(tx_version);
     tx.set_locktime(locktime);
 
     for (auto const& input : outputs_to_spend) {
         //TODO(kth): move the elements instead of pushing back
-        tx.inputs().push_back(kth::config::input(input));
+        tx.inputs().push_back(config::input(input));
     }
 
     for (auto const& output : destiny_and_amount) {
         std::string destiny_string = output.first.encoded() + ":" + std::to_string(output.second);
-        if ( ! push_scripts(tx.outputs(), kth::config::output(destiny_string), script_version)) {
+        if ( ! push_scripts(tx.outputs(), config::output(destiny_string), script_version)) {
             return {error::error_code_t::invalid_output, {}};
         }
     }
