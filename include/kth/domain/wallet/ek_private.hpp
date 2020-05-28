@@ -55,7 +55,6 @@ private:
     encrypted_private private_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
