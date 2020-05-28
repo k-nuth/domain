@@ -113,20 +113,6 @@ public:
 #endif                                //KTH_CURRENCY_BCH
     };
 
-    static
-    xversion factory_from_data(uint32_t xversion, data_chunk const& data);
-    
-    static
-    xversion factory_from_data(uint32_t xversion, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    xversion factory_from_data(uint32_t xversion, R& source) {
-        message::xversion instance;
-        instance.from_data(xversion, source);
-        return instance;
-    }
-
     xversion() = default;
     xversion(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
     xversion(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
