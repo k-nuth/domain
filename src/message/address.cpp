@@ -75,24 +75,24 @@ void address::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t address::serialized_size(uint32_t version) const {
-    return message::variable_uint_size(addresses_.size()) +
-           (addresses_.size() * network_address::satoshi_fixed_size(version, true));
+    return infrastructure::message::variable_uint_size(addresses_.size()) +
+           (addresses_.size() * infrastructure::message::network_address::satoshi_fixed_size(version, true));
 }
 
-network_address::list& address::addresses() {
+infrastructure::message::network_address::list& address::addresses() {
     return addresses_;
 }
 
-network_address::list const& address::addresses() const {
+infrastructure::message::network_address::list const& address::addresses() const {
     return addresses_;
 }
 
-void address::set_addresses(network_address::list const& value) {
+void address::set_addresses(infrastructure::message::network_address::list const& value) {
     addresses_ = value;
 }
 
-void address::set_addresses(network_address::list&& value) {
+void address::set_addresses(infrastructure::message::network_address::list&& value) {
     addresses_ = std::move(value);
 }
 
-}  // namespace kth
+} // namespace kth
