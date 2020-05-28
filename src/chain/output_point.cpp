@@ -75,4 +75,4 @@ bool output_point::is_mature(size_t height) const {
     return floor_subtract(height, validation.height) >= coinbase_maturity;
 }
 
-}  // namespace kth
+} // namespace kth::domain::chain
