@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_version_fails) {
     auto const data = expected.to_data(message::version::level::maximum);
     message::merkle_block instance{};
 
-    BOOST_REQUIRE(!instance.from_data(message::merkle_block::version_minimum - 1, data));
+    BOOST_REQUIRE(!entity_from_data(instance, message::merkle_block::version_minimum - 1, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
