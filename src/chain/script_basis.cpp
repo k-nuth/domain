@@ -59,8 +59,7 @@ auto const one_hash = hash_literal("00000000000000000000000000000000000000000000
 
 script_basis::script_basis(data_chunk&& encoded, bool prefix) {
     if (prefix) {
-        valid_ = from_data(static_cast<data_chunk const&>(encoded), prefix);
-        // valid_ = from_data(encoded, prefix);
+        valid_ = entity_from_data(*this, encoded, prefix);
         return;
     }
 
