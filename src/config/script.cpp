@@ -75,4 +75,4 @@ std::ostream& operator<<(std::ostream& output, script const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth
