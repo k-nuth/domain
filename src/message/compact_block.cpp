@@ -138,9 +138,9 @@ size_t compact_block::serialized_size(uint32_t version) const {
     //std::cout << "compact_block::serialized_size\n";
 
     auto size = chain::header::satoshi_fixed_size() +
-                message::variable_uint_size(short_ids_.size()) +
+                infrastructure::message::variable_uint_size(short_ids_.size()) +
                 (short_ids_.size() * 6u) +
-                message::variable_uint_size(transactions_.size()) + 8u;
+                infrastructure::message::variable_uint_size(transactions_.size()) + 8u;
 
     // NOTE: Witness flag is controlled by prefilled tx
     for (auto const& tx : transactions_) {
