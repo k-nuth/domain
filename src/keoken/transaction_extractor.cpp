@@ -75,5 +75,5 @@ data_chunk first_keoken_output(kth::domain::chain::transaction const& tx) {
     return data_chunk{};
 }
 
-}  // namespace keoken
-}  // namespace kth
+} // namespace keoken
+} // namespace kth
