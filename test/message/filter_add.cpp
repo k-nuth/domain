@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(filter_add__from_data__insufficient_version__failure) {
     auto const data = expected.to_data(message::version::level::maximum);
     message::filter_add instance;
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::filter_add::version_minimum - 1, data));
 }
 
