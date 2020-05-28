@@ -42,8 +42,6 @@ public:
 
     transaction& operator=(chain::transaction&& x);
 
-
-
     transaction(transaction const& x) = default;
     transaction(transaction&& x) = default;
     /// This class is move assignable but not copy assignable.
