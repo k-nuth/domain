@@ -130,7 +130,7 @@ KD_API bool create_key_pair(encrypted_private& out_private,
  * @param[in]  compressed   Set true to associate ec public key compression.
  * @return false if the token checksum is not valid.
  */
-BC_API bool create_key_pair(encrypted_private& out_private,
+KD_API bool create_key_pair(encrypted_private& out_private,
                             encrypted_public& out_public,
                             ec_compressed& out_point,
                             encrypted_token const& token,
