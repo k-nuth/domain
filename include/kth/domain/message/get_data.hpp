@@ -72,6 +72,6 @@ public:
     uint32_t const version_maximum;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
