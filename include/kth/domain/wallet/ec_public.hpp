@@ -59,30 +59,30 @@ public:
     operator ec_compressed const&() const;
 
     /// Serializer.
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] 
+    [[nodiscard]]
     ec_compressed const& point() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint16_t version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t payment_version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t wif_version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool compressed() const;
 
     /// Methods.
     bool to_data(data_chunk& out) const;
     bool to_uncompressed(ec_uncompressed& out) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     payment_address to_payment_address(uint8_t version = mainnet_p2kh) const;
 
 private:
