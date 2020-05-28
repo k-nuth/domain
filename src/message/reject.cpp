@@ -103,8 +103,8 @@ void reject::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t reject::serialized_size(uint32_t /*version*/) const {
-    size_t size = 1u + message::variable_uint_size(message_.size()) +
-                  message_.size() + message::variable_uint_size(reason_.size()) +
+    size_t size = 1u + infrastructure::message::variable_uint_size(message_.size()) +
+                  message_.size() + infrastructure::message::variable_uint_size(reason_.size()) +
                   reason_.size();
 
     if ((message_ == block::command) ||
