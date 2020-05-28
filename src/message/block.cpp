@@ -81,13 +81,10 @@ void block::to_data(uint32_t /*version*/, data_sink& stream) const {
 }
 
 // Witness size is always counted if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
+// NOTE: Witness on BCH is dissabled on the chain::block class
 size_t block::serialized_size(uint32_t /*unused*/) const {
     return chain::block::serialized_size(true);
 }
-
-
 
 // //TODO(fernando): check this family of functions: to_data_header_nonce
 // void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
