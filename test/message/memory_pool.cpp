@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_version_failure) {
 BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
     const message::memory_pool expected{};
     auto const data = expected.to_data(message::version::level::maximum);
-    auto const result = message::memory_pool::factory_from_data(
+    auto const result = create<message::memory_pool>(
         message::version::level::maximum, data);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());
