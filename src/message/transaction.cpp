@@ -82,10 +82,9 @@ void transaction::to_data(uint32_t /*version*/, data_sink& stream, bool witness)
 
 
 // Witness size is always counted if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
+// NOTE: Witness on BCH is dissabled on the chain::block class
 size_t transaction::serialized_size(uint32_t /*unused*/) const {
     return chain::transaction::serialized_size(true, true);
 }
 
-}  // namespace kth
+} // namespace kth
