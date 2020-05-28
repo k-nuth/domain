@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure) {
 
     data_chunk const data = expected.to_data(headers::version_minimum);
     headers instance{};
-    BOOST_REQUIRE(!instance.from_data(headers::version_minimum - 1, data));
+    BOOST_REQUIRE(!entity_from_data(instance, headers::version_minimum - 1, data));
 }
 
 BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success) {
