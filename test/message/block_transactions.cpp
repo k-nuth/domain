@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_transaction_byt
 
     message::block_transactions instance{};
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::block_transactions::version_minimum, raw));
 }
 
