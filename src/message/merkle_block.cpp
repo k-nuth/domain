@@ -106,8 +106,8 @@ void merkle_block::to_data(uint32_t version, data_sink& stream) const {
 
 size_t merkle_block::serialized_size(uint32_t /*version*/) const {
     return header_.serialized_size() + 4u +
-           message::variable_uint_size(hashes_.size()) + (hash_size * hashes_.size()) +
-           message::variable_uint_size(flags_.size()) + flags_.size();
+           infrastructure::message::variable_uint_size(hashes_.size()) + (hash_size * hashes_.size()) +
+           infrastructure::message::variable_uint_size(flags_.size()) + flags_.size();
 }
 
 chain::header& merkle_block::header() {
