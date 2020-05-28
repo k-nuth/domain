@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(script__from_data__to_data_weird__roundtrips) {
         "74b1d185dbf5b4db4ddb0642848868685174519c6351670068"));
 
     script weird;
-    BOOST_REQUIRE(weird.from_data(weird_raw_script, false));
+    BOOST_REQUIRE(entity_from_data(weird, weird_raw_script, false));
 
     auto const roundtrip_result = weird.to_data(false);
     BOOST_REQUIRE(roundtrip_result == weird_raw_script);
