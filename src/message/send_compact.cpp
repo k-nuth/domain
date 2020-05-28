@@ -95,4 +95,4 @@ void send_compact::set_version(uint64_t version) {
     version_ = version;
 }
 
-}  // namespace kth
+} // namespace kth
