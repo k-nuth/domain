@@ -54,13 +54,13 @@ ptree property_list(config::header const& header) {
     return tree;
 }
 
-ptree property_tree(const config::header& header) {
+ptree property_tree(config::header const& header) {
     ptree tree;
     tree.add_child("header", property_list(header));
     return tree;
 }
 
-ptree property_tree(const std::vector<config::header>& headers, bool json) {
+ptree property_tree(std::vector<config::header> const& headers, bool json) {
     ptree tree;
     tree.add_child("headers", property_tree_list("header", headers, json));
     return tree;
