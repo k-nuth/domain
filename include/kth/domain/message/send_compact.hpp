@@ -42,18 +42,18 @@ public:
     bool operator!=(send_compact const& x) const;
 
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool high_bandwidth_mode() const;
     
     void set_high_bandwidth_mode(bool mode);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t version() const;
     
     void set_version(uint64_t version);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
