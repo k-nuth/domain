@@ -59,7 +59,7 @@ enum class message_type {
     xversion
 };
 
-class BC_API heading {
+class KD_API heading {
 public:
     static
     size_t maximum_size();
