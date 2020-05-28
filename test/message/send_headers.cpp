@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader) {
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::send_headers::factory_from_data(
+    auto const result = create<message::send_headers>(
         message::version::level::maximum, source);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());
