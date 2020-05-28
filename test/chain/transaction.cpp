@@ -178,10 +178,10 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_3__valid_input__returns_input_init
     uint32_t locktime = 4568656u;
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(inputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS))));
+    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(outputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     // These must be non-const.
     auto dup_inputs = inputs;
