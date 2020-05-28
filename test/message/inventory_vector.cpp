@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success
 
     static auto const version = version::level::minimum;
     auto const data = expected.to_data(version);
-    auto const result = inventory_vector::factory_from_data(version, data);
+    auto const result = create<inventory_vector>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
