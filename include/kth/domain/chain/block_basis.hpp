@@ -32,7 +32,7 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 constexpr
 size_t weight(size_t serialized_size_true, size_t serialized_size_false) {
