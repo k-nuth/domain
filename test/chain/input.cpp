@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_2__valid_input__returns_input_initialize
 BOOST_AUTO_TEST_CASE(input__constructor_3__valid_input__returns_input_initialized) {
     output_point const previous_output{null_hash, 5434u};
     script script;
-    BOOST_REQUIRE(script.from_data(to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
+    BOOST_REQUIRE(entity_from_data(script, to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
 
     uint32_t sequence = 4568656u;
 
