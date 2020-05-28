@@ -235,4 +235,4 @@ void heading::set_checksum(uint32_t value) {
     checksum_ = value;
 }
 
-}  // namespace kth
+} // namespace kth
