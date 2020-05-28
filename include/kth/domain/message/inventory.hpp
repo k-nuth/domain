@@ -40,32 +40,21 @@ public:
     inventory(hash_list const& hashes, type_id type);
     inventory(std::initializer_list<inventory_vector> const& values);
 
-    // inventory(inventory const& x) = default;
-    // inventory(inventory&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // inventory& operator=(inventory&& x) = default;
-    // inventory& operator=(inventory const&) = default;
-
     bool operator==(inventory const& x) const;
     bool operator!=(inventory const& x) const;
 
-
     inventory_vector::list& inventories();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     inventory_vector::list const& inventories() const;
     
     void set_inventories(inventory_vector::list const& value);
     void set_inventories(inventory_vector::list&& value);
 
-    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_chunk const& data);
-
-    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
     bool from_data(uint32_t version, R& source) {
         reset();
 
