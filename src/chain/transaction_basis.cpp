@@ -57,37 +57,6 @@ transaction_basis::transaction_basis(uint32_t version, uint32_t locktime, input:
     , outputs_(std::move(outputs))
 {}
 
-// transaction_basis::transaction_basis(transaction_basis const& x)
-//     : version_(x.version_)
-//     , locktime_(x.locktime_)
-//     , inputs_(x.inputs_)
-//     , outputs_(x.outputs_)
-// {}
-
-// transaction_basis::transaction_basis(transaction_basis&& x) noexcept
-//     : version_(x.version_)
-//     , locktime_(x.locktime_)
-//     , inputs_(std::move(x.inputs_))
-//     , outputs_(std::move(x.outputs_))
-// {}
-
-// transaction_basis& transaction_basis::operator=(transaction_basis const& x) {
-//     version_ = x.version_;
-//     locktime_ = x.locktime_;
-//     inputs_ = x.inputs_;
-//     outputs_ = x.outputs_;
-//     return *this;
-// }
-
-// transaction_basis& transaction_basis::operator=(transaction_basis&& x) noexcept {
-//     version_ = x.version_;
-//     locktime_ = x.locktime_;
-//     inputs_ = std::move(x.inputs_);
-//     outputs_ = std::move(x.outputs_);
-//     return *this;
-// }
-
-
 // Operators.
 //-----------------------------------------------------------------------------
 
