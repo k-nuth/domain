@@ -69,12 +69,12 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_size_0__success) {
     auto const raw_operation = to_chunk(base16_literal("00"));
     operation instance;
 
-    BOOST_REQUIRE(instance.from_data(raw_operation));
+    BOOST_REQUIRE(entity_from_data(instance, raw_operation));
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(raw_operation == instance.to_data());
 
     operation duplicate;
-    BOOST_REQUIRE(duplicate.from_data(instance.to_data()));
+    BOOST_REQUIRE(entity_from_data(duplicate,instance.to_data()));
     BOOST_REQUIRE(instance == duplicate);
 
     BOOST_REQUIRE(instance.code() == opcode::push_size_0);
