@@ -43,25 +43,14 @@ public:
     // Operators.
     //-----------------------------------------------------------------------------
     
-    bool operator==(header_basis const& x) const;
-    bool operator!=(header_basis const& x) const;
+    friend
+    bool operator==(header_basis const& x, header_basis const& y);
+
+    friend
+    bool operator!=(header_basis const& x, header_basis const& y);
 
     // Deserialization.
     //-----------------------------------------------------------------------------
-
-    static
-    header_basis factory_from_data(data_chunk const& data, bool wire = true);
-    
-    static
-    header_basis factory_from_data(std::istream& stream, bool wire = true);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    header_basis factory_from_data(R& source, bool wire = true) {
-        header_basis instance;
-        instance.from_data(source, wire);
-        return instance;
-    }
 
     bool from_data(data_chunk const& data, bool wire = true);
 
