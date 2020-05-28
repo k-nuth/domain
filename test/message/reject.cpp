@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(reject__constructor_5__always__equals_params) {
 BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{0xab};
     message::reject instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version_maximum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version_maximum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure) {
