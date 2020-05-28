@@ -53,17 +53,22 @@ struct custom_reader : public uri_reader {
     }
 
     virtual bool set_fragment(std::string const& fragment) {
-        myfragment = boost::in_place(fragment);
+        // myfragment = boost::in_place(fragment);
+        myfragment = std::optional<std::string>{std::in_place, fragment};
         return true;
     }
 
     virtual bool set_parameter(std::string const& key, std::string const& value) {
-        if (key == "myparam1")
-            myparam1 = boost::in_place(value);
-        else if (key == "myparam2")
-            myparam2 = boost::in_place(value);
-        else
+        if (key == "myparam1") {
+            // myparam1 = boost::in_place(value);
+            myparam1 = std::optional<std::string>{std::in_place, value};
+
+        } else if (key == "myparam2") {
+            // myparam2 = boost::in_place(value);
+            myparam2 = std::optional<std::string>{std::in_place, value};
+        } else {
             return !strict_;
+        }
 
         return true;
     }
