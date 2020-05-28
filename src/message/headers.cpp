@@ -47,7 +47,6 @@ bool headers::operator!=(headers const& x) const {
     return !(*this == x);
 }
 
-
 bool headers::is_valid() const {
     return !elements_.empty();
 }
