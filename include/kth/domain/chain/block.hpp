@@ -77,22 +77,8 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    block factory_from_data(data_chunk const& data, bool witness = false);
-    
-    static
-    block factory_from_data(std::istream& stream, bool witness = false);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    block factory_from_data(R& source, bool witness = false) {
-        block instance;
-        instance.from_data(source, witness_val(witness));
-        return instance;
-    }
-
-    bool from_data(data_chunk const& data, bool witness = false);
-    bool from_data(std::istream& stream, bool witness = false);
+    // bool from_data(data_chunk const& data, bool witness = false);
+    // bool from_data(std::istream& stream, bool witness = false);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
