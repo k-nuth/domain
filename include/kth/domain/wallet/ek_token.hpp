@@ -58,7 +58,6 @@ private:
     encrypted_token token_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
