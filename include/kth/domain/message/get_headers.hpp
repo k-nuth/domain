@@ -37,22 +37,8 @@ public:
     bool operator==(get_headers const& x) const;
     bool operator!=(get_headers const& x) const;
 
-    static
-    get_headers factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    get_headers factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    get_headers factory_from_data(uint32_t version, R& source) {
-        get_headers instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    // bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    // bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
