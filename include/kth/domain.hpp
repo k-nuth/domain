@@ -92,6 +92,4 @@
 #include <kth/domain/wallet/stealth_sender.hpp>
 #include <kth/domain/wallet/uri_reader.hpp>
 
-// #include <kth/infrastructure.hpp>
-
 #endif //KTH_DOMAIN_HPP
