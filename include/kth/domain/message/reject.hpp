@@ -59,20 +59,6 @@ public:
     using ptr = std::shared_ptr<reject>;
     using const_ptr = std::shared_ptr<const reject>;
 
-    static
-    reject factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    reject factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    reject factory_from_data(uint32_t version, R& source) {
-        reject instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
     reject();
 
     reject(reason_code code, std::string const& message, std::string const& reason);
