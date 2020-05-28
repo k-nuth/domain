@@ -45,4 +45,4 @@ size_t xverack::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-}  // namespace kth
+} // namespace kth
