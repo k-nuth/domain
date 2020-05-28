@@ -169,6 +169,7 @@ bool output_basis::is_dust(uint64_t minimum_output_value) const {
     return value_ < minimum_output_value && !script_.is_unspendable();
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool output_basis::extract_committed_hash(hash_digest& out) const {
     auto const& ops = script_.operations();
 
