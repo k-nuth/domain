@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success) {
         0x46, 0x72, 0x33, 0x26, 0xe4, 0xe8, 0xa4, 0xf1};
 
     const message::alert expected{raw_payload, raw_signature};
-    auto const result = message::alert::factory_from_data(
+    auto const result = create<message::alert>(
         message::version::level::minimum, raw);
 
     BOOST_REQUIRE(result.is_valid());
