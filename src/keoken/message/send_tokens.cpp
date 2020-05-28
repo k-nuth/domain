@@ -88,4 +88,4 @@ void send_tokens::set_amount(amount_t x) {
     amount_ = x;
 }
 
-}  // namespace kth::keoken::message
+} // namespace kth::keoken::message
