@@ -206,30 +206,6 @@ bool block_basis::operator!=(block_basis const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-block_basis block_basis::factory_from_data(data_chunk const& data, bool witness) {
-    block_basis instance;
-    instance.from_data(data, witness_val(witness));
-    return instance;
-}
-
-// static
-block_basis block_basis::factory_from_data(std::istream& stream, bool witness) {
-    block_basis instance;
-    instance.from_data(stream, witness_val(witness));
-    return instance;
-}
-
-bool block_basis::from_data(data_chunk const& data, bool witness) {
-    data_source istream(data);
-    return from_data(istream, witness_val(witness));
-}
-
-bool block_basis::from_data(std::istream& stream, bool witness) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, witness_val(witness));
-}
-
 // private
 void block_basis::reset() {
     header_.reset();

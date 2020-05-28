@@ -205,41 +205,6 @@ block& block::operator=(block&& x) noexcept {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-block block::factory_from_data(data_chunk const& data, bool witness) {
-    block instance;
-    instance.from_data(data, witness_val(witness));
-    return instance;
-}
-
-// static
-block block::factory_from_data(std::istream& stream, bool witness) {
-    block instance;
-    instance.from_data(stream, witness_val(witness));
-    return instance;
-}
-
-// static
-//block block::factory_from_data(reader& source, bool witness)
-//{
-//#ifdef KTH_CURRENCY_BCH
-//    witness = false;
-//#endif
-//    block instance;
-//    instance.from_data(source, witness);
-//    return instance;
-//}
-
-bool block::from_data(data_chunk const& data, bool witness) {
-    data_source istream(data);
-    return from_data(istream, witness_val(witness));
-}
-
-bool block::from_data(std::istream& stream, bool witness) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, witness_val(witness));
-}
-
 // // private
 // void block::reset() {
 //     block_basis::reset();
