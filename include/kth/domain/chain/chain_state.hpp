@@ -121,54 +121,90 @@ public:
 #endif  //KTH_CURRENCY_BCH
     );
 
+    // Named constructors
+
+    static
+    chain_state from_top(chain_state const& top);
+
+    static
+    chain_state from_pool(chain_state const& pool, block const& block);
+
+    static
+    chain_state from_parent(chain_state const& parent, header const& header);
+
+
+
+    //TODO(fernando): if I delete the copy the Linter complains  
+    // // non-copyable and non-movable class
+    // chain_state(chain_state const&) = delete;               //NOLINT
+    // chain_state& operator=(chain_state const&) = delete;    //NOLINT
+
+
+    // /// Create pool state from top chain top block state.
+    // chain_state(chain_state const& top);
+
+    // /// Create block state from tx pool chain state of same height.
+    // chain_state(chain_state const& pool, const chain::block& block);
+
+    // /// Create header state from header pool chain state of previous height.
+    // chain_state(chain_state const& parent, chain::header const& header);
+
+
+
+    /// Checkpoints must be ordered by height with greatest at back.
+    static
+    map get_map(size_t height, checkpoints const& checkpoints, uint32_t forks);
+
+    static
+    uint32_t signal_version(uint32_t forks);
+
     /// Properties.
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t height() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t enabled_forks() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t minimum_version() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t median_time_past() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t work_required() const;
 
 #ifdef KTH_CURRENCY_BCH
-    // [[nodiscard]] 
+    // [[nodiscard]]
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
     
-    // [[nodiscard]] 
+    // [[nodiscard]]
     // great_wall_t great_wall_activation_time() const;
 
-    // [[nodiscard]] 
+    // [[nodiscard]]
     // graviton_t graviton_activation_time() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     phonon_t phonon_activation_time() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     axion_t axion_activation_time() const;
-
 #endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
 
     /// Determine if the fork is set for this block.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_enabled(machine::rule_fork fork) const;
 
     /// Determine if this block hash fails a checkpoint at this height.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_checkpoint_conflict(hash_digest const& hash) const;
 
     /// This block height is less than or equal to that of the top checkpoint.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_under_checkpoint() const;
 
     static
