@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_1__valid_input__success) {
         0u};
 
     auto const data = expected.to_data();
-    auto const result = heading::factory_from_data(data);
+    auto const result = create<heading>(data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
