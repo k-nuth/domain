@@ -145,7 +145,7 @@ size_t witness::serialized_size(data_stack const& stack) {
     auto const sum = [](size_t total, data_chunk const& element) {
         // Tokens encoded as variable integer prefixed byte array (bip144).
         auto const size = element.size();
-        return total + message::variable_uint_size(size) + size;
+        return total + infrastructure::message::variable_uint_size(size) + size;
     };
 
     return std::accumulate(stack.begin(), stack.end(), size_t(0), sum);
