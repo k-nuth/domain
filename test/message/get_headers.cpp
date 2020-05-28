@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(get_headers__from_data__insufficient_version__failure) {
     auto const data = expected.to_data(message::get_headers::version_minimum);
     message::get_headers instance{};
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::get_headers::version_minimum - 1, data));
 }
 
