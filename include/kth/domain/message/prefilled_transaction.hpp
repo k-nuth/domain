@@ -39,24 +39,24 @@ public:
     bool operator!=(prefilled_transaction const& x) const;
 
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t index() const;
     
     void set_index(uint64_t value);
 
     chain::transaction& transaction();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     chain::transaction const& transaction() const;
     
     void set_transaction(chain::transaction const& tx);
     void set_transaction(chain::transaction&& tx);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         index_ = source.read_variable_little_endian();
