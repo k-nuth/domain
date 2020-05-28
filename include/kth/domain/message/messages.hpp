@@ -136,7 +136,7 @@ DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES(transaction);
 #undef DECLARE_MESSAGE_POINTER_TYPES
 #undef DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES
 
-namespace message {
+namespace domain::message {
 
 /// Serialize a message object to the Bitcoin wire protocol encoding.
 template <typename Message>
