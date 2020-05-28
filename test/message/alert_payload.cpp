@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__wiki_sample_test__succe
         "See bitcoin.org/feb20 if you have trouble connecting after 20 February",
         ""};
 
-    auto const result = message::alert_payload::factory_from_data(
+    auto const result = create<message::alert_payload>(
         message::version::level::minimum, raw);
 
     BOOST_REQUIRE(result.is_valid());
