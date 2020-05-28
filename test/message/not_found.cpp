@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure) {
     auto const version = version::level::maximum;
     data_chunk const raw = expected.to_data(version);
     not_found instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(not_found::version_minimum - 1, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, not_found::version_minimum - 1, raw));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
