@@ -100,7 +100,7 @@ ec_public ec_public::from_data(data_chunk const& decoded) {
     }
 
     ec_compressed compressed;
-    return bc::compress(compressed, to_array<ec_uncompressed_size>(decoded)) ? ec_public(compressed, false) : ec_public();
+    return kth::compress(compressed, to_array<ec_uncompressed_size>(decoded)) ? ec_public(compressed, false) : ec_public();
 }
 
 ec_public ec_public::from_point(ec_uncompressed const& point, bool compress) {
