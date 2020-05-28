@@ -64,26 +64,26 @@ public:
             source.invalidate();
         } else {
             indexes_.reserve(count);
-}
+        }
 
         for (size_t position = 0; position < count && source; ++position) {
             indexes_.push_back(source.read_size_little_endian());
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
 
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_hash(block_hash_);
         sink.write_variable_little_endian(indexes_.size());
         for (auto const& element : indexes_) {
