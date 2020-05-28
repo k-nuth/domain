@@ -117,7 +117,7 @@ void inventory::reduce(inventory_vector::list& out, type_id type) const {
 }
 
 size_t inventory::serialized_size(uint32_t version) const {
-    return message::variable_uint_size(inventories_.size()) + inventories_.size() * inventory_vector::satoshi_fixed_size(version);
+    return infrastructure::message::variable_uint_size(inventories_.size()) + inventories_.size() * inventory_vector::satoshi_fixed_size(version);
 }
 
 size_t inventory::count(type_id type) const {
