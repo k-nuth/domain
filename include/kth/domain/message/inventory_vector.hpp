@@ -48,20 +48,6 @@ public:
     std::string to_string(type_id type);
 
     static
-    inventory_vector factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    inventory_vector factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    inventory_vector factory_from_data(uint32_t version, R& source) {
-        inventory_vector instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    static
     size_t satoshi_fixed_size(uint32_t version);
 
     inventory_vector();
