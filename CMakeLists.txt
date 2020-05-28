@@ -458,18 +458,13 @@ set(kth_domain_sources_just_legacy
         src/message/xversion.cpp
         
         src/wallet/bitcoin_uri.cpp
-        # src/wallet/dictionary.cpp
         src/wallet/ec_private.cpp
         src/wallet/ec_public.cpp
         src/wallet/ek_private.cpp
         src/wallet/ek_public.cpp
         src/wallet/ek_token.cpp
         src/wallet/encrypted_keys.cpp
-        # src/wallet/hd_private.cpp
-        # src/wallet/hd_public.cpp
         src/wallet/message.cpp
-        # src/wallet/mini_keys.cpp
-        # src/wallet/mnemonic.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_key.hpp
         src/wallet/parse_encrypted_keys/parse_encrypted_key.ipp
         src/wallet/parse_encrypted_keys/parse_encrypted_prefix.hpp
