@@ -100,7 +100,7 @@ private:
     stealth_address(uint8_t version, binary const& filter, ec_compressed const& scan_key, point_list const& spend_keys, uint8_t signatures);
 
     /// Helpers.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool reuse_key() const;
     
     [[nodiscard]]
