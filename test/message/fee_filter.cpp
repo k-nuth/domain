@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(fee_filter__factory_from_data_2__roundtrip__success) {
     const fee_filter expected{325};
     auto const data = expected.to_data(fee_filter::version_maximum);
     data_source istream(data);
-    auto const result = fee_filter::factory_from_data(fee_filter::version_maximum, istream);
+    auto const result = create<fee_filter>(fee_filter::version_maximum, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
 
