@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(block__factory_data_2__genesis_mainnet__success) {
 
     // Reload genesis block.
     data_source stream(raw_block);
-    auto const block = block::factory_from_data(version::level::minimum, stream);
+    auto const block = create<message::block>(version::level::minimum, stream);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
