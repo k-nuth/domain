@@ -476,13 +476,11 @@ set(kth_domain_sources_just_legacy
         src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp
         src/wallet/payment_address.cpp
-        # src/wallet/qrcode.cpp
         src/wallet/select_outputs.cpp
         src/wallet/select_outputs.cpp
         src/wallet/stealth_address.cpp
         src/wallet/stealth_receiver.cpp
         src/wallet/stealth_sender.cpp
-        # src/wallet/uri.cpp
 )
 
 set(kth_domain_sources_just_kth
