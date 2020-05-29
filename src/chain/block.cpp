@@ -222,35 +222,7 @@ block& block::operator=(block&& x) noexcept {
 
 data_chunk block::to_data(bool witness) const {
     return block_basis::to_data(serialized_size(witness_val(witness)), witness);
-
-    // data_chunk data;
-    // auto const size = serialized_size(witness_val(witness));
-    // data.reserve(size);
-    // data_sink ostream(data);
-    // to_data(ostream);
-    // ostream.flush();
-    // KTH_ASSERT(data.size() == size);
-    // return data;
 }
-
-// void block::to_data(data_sink& stream, bool witness) const {
-//     ostream_writer sink_w(stream);
-//     to_data(sink_w, witness_val(witness));
-// }
-
-
-
-// hash_list block::to_hashes(bool witness) const {
-//     hash_list out;
-//     out.reserve(transactions_.size());
-//     auto const to_hash = [&out, witness](transaction const& tx) {
-//         out.push_back(tx.hash(witness_val(witness)));
-//     };
-
-//     // Hash ordering matters, don't use std::transform here.
-//     std::for_each(transactions_.begin(), transactions_.end(), to_hash);
-//     return out;
-// }
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
