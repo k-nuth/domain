@@ -104,11 +104,11 @@ std::pair<error::error_code_t, data_chunk> input_signature_old(kth::ec_secret co
     }
 
     if (anyone_can_pay) {
-        sign_type |= kth::machine::sighash_algorithm::anyone_can_pay;
+        sign_type |= infrastructure::machine::sighash_algorithm::anyone_can_pay;
     }
 
     kth::endorsement endorse;
-    if ( ! kth::chain::script::create_endorsement(endorse, private_key, output_script, tx, index, sign_type)) {
+    if ( ! chain::script::create_endorsement(endorse, private_key, output_script, tx, index, sign_type)) {
         return {error::error_code_t::input_sign_failed, {}};
     }
     return {error::error_code_t::success, endorse};
