@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(filter_add__factory_from_data_1__valid_input__success) {
          0x37, 0xc0, 0xb0, 0x32, 0xf0, 0xd6, 0x6e, 0xdf}};
 
     auto const data = expected.to_data(message::version::level::maximum);
-    auto const result = message::filter_add::factory_from_data(
+    auto const result = create<message::filter_add>(
         message::version::level::maximum, data);
 
     BOOST_REQUIRE(result.is_valid());
