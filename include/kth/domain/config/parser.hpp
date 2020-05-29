@@ -166,7 +166,7 @@ public:
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
 
 
-        } else if (get_network(easy_blocks, retarget) == config::settings::mainnet) {
+        } else if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::mainnet) {
             // BCH Mainnet
             checkpoints.reserve(32); //TODO(fernando): check reserve parameter, capacity
             checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
