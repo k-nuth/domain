@@ -96,7 +96,7 @@ inline void write_witnesses(W& sink, input::list const& inputs) {
 }
 #endif // not defined KTH_CURRENCY_BCH
 
-}  // namespace detail
+} // namespace detail
 
 
 class transaction_basis;
