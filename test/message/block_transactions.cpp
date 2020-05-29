@@ -154,14 +154,14 @@ BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_version__failur
         "00"));
 
     message::block_transactions expected;
-    expected.from_data(message::block_transactions::version_minimum, raw);
+    entity_from_data(expected, message::block_transactions::version_minimum, raw);
 
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
     message::block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::block_transactions::version_minimum - 1, data));
 }
 
