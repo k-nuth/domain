@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
-    network_address::list const addresses{
+    infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
