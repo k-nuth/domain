@@ -805,7 +805,7 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
     ec_signature signature;
     der_signature distinguished;
     auto public_key = public_keys.begin();
-    auto bip66 = chain::script::is_enabled(program.forks(), bip66_rule);
+    auto bip66 = chain::script::is_enabled(program.forks(), rule_fork::bip66_rule);
 
 #if ! defined(KTH_CURRENCY_BCH)
     auto bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
