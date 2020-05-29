@@ -51,4 +51,4 @@ void set_cashaddr_prefix(std::string const& x);
 
 } // namespace kth
 
-#endif /*KTH_MULTI_CRYPTO_SUPPORT_HPP_*/
+#endif // KTH_DOMAIN_MULTI_CRYPTO_SUPPORT_HPP
