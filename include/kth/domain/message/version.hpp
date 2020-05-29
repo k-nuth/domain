@@ -124,60 +124,60 @@ public:
     bool operator!=(version const& x) const;
 
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t value() const;
     
     void set_value(uint32_t value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t services() const;
     
     void set_services(uint64_t services);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t timestamp() const;
     
     void set_timestamp(uint64_t timestamp);
 
     network_address& address_receiver();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     network_address const& address_receiver() const;
     
     void set_address_receiver(network_address const& address);
     network_address& address_sender();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     network_address const& address_sender() const;
 
     void set_address_sender(network_address const& address);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t nonce() const;
     
     void set_nonce(uint64_t nonce);
 
     std::string& user_agent();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string const& user_agent() const;
     
     void set_user_agent(std::string const& agent);
     void set_user_agent(std::string&& agent);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t start_height() const;
     
     void set_start_height(uint32_t height);
 
     // version >= 70001
-    [[nodiscard]] 
+    [[nodiscard]]
     bool relay() const;
     
     void set_relay(bool relay);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
