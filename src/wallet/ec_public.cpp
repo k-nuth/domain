@@ -109,7 +109,7 @@ ec_public ec_public::from_point(ec_uncompressed const& point, bool compress) {
     }
 
     ec_compressed compressed;
-    return bc::compress(compressed, point) ? ec_public(compressed, compress) : ec_public();
+    return kth::compress(compressed, point) ? ec_public(compressed, compress) : ec_public();
 }
 
 // Cast operators.
