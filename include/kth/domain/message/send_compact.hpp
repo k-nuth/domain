@@ -79,24 +79,24 @@ public:
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
 
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_byte(static_cast<uint8_t>(high_bandwidth_mode_));
         sink.write_8_bytes_little_endian(this->version_);
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
     
     void reset();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
 
