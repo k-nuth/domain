@@ -183,14 +183,14 @@ void alert_payload::to_data(uint32_t version, data_sink& stream) const {
 
 size_t alert_payload::serialized_size(uint32_t /*version*/) const {
     size_t size = 40u +
-                  message::variable_uint_size(comment_.size()) + comment_.size() +
-                  message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
-                  message::variable_uint_size(reserved_.size()) + reserved_.size() +
-                  message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
-                  message::variable_uint_size(set_sub_version_.size());
+                  infrastructure::message::variable_uint_size(comment_.size()) + comment_.size() +
+                  infrastructure::message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
+                  infrastructure::message::variable_uint_size(reserved_.size()) + reserved_.size() +
+                  infrastructure::message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
+                  infrastructure::message::variable_uint_size(set_sub_version_.size());
 
     for (auto const& sub_version : set_sub_version_) {
-        size += message::variable_uint_size(sub_version.size()) + sub_version.size();
+        size += infrastructure::message::variable_uint_size(sub_version.size()) + sub_version.size();
     }
 
     return size;
