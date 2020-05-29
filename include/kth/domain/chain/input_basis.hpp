@@ -124,17 +124,17 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size_non_witness(bool wire) const;
 
     /// This accounts for wire witness, but does not read or write it.
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(bool wire = true, bool witness = false) const;
 
 
     output_point& previous_output();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     output_point const& previous_output() const;
     
     void set_previous_output(output_point const& value);
