@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_1__valid_input__success) {
         0xab};
 
     auto const data = expected.to_data(message::version::level::maximum);
-    auto const result = message::filter_load::factory_from_data(
+    auto const result = create<message::filter_load>(
         message::version::level::maximum, data);
 
     BOOST_REQUIRE(result.is_valid());
