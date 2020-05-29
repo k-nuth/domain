@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
         {0x00}};
 
     auto const data = expected.to_data(message::version::level::maximum);
-    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, data);
+    auto const result = create<message::merkle_block>(message::version::level::maximum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
