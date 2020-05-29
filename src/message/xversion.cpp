@@ -186,4 +186,4 @@ void xversion::set_relay(bool relay) {
     relay_ = relay;
 }
 
-}  // namespace kth
+} // namespace kth
