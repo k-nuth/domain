@@ -151,7 +151,6 @@ public:
     transaction& operator=(transaction const& x);
     transaction& operator=(transaction&& x) noexcept;
 
-
     // Operators.
     //-----------------------------------------------------------------------------
 
