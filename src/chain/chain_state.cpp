@@ -194,7 +194,8 @@ bool bip9_bit1_active(size_t height, bool mainnet, bool testnet) {
            (regtest && height == regtest_bip9_bit1_active_checkpoint.height());
 }
 
-inline bool bip34(size_t height, bool frozen, bool mainnet, bool testnet) {
+inline 
+bool bip34(size_t height, bool frozen, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return frozen &&
            ((mainnet && height >= mainnet_bip34_freeze) || (testnet && height >= testnet_bip34_freeze) || (regtest
