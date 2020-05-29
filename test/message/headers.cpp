@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success) {
 
     static auto const version = headers::version_minimum;
     auto const data = expected.to_data(version);
-    auto const result = headers::factory_from_data(version, data);
+    auto const result = create<headers>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
     BOOST_REQUIRE_EQUAL(result.serialized_size(version), data.size());
