@@ -162,6 +162,6 @@ private:
     mutable upgrade_mutex mutex_;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif
