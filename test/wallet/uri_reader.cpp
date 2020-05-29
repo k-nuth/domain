@@ -236,11 +236,11 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_optional_parameter_type__t
     BOOST_REQUIRE_EQUAL(custom.myscheme, "foo");
     BOOST_REQUIRE_EQUAL(custom.mypath, "part/abc");
     BOOST_REQUIRE(custom.myfragment);
-    BOOST_REQUIRE_EQUAL(custom.myfragment.get(), "myfrag");
+    BOOST_REQUIRE_EQUAL(custom.myfragment.value(), "myfrag");
     BOOST_REQUIRE(custom.myparam1);
-    BOOST_REQUIRE_EQUAL(custom.myparam1.get(), "1");
+    BOOST_REQUIRE_EQUAL(custom.myparam1.value(), "1");
     BOOST_REQUIRE(custom.myparam2);
-    BOOST_REQUIRE_EQUAL(custom.myparam2.get(), "2");
+    BOOST_REQUIRE_EQUAL(custom.myparam2.value(), "2");
 }
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_unsupported_component__invalid) {
