@@ -72,21 +72,21 @@ KD_API pt::ptree property_tree(chain::input const& tx_input);
  * @param[in]  json       Use json array formatting.
  * @return                A property tree.
  */
-BC_API pt::ptree property_tree(const chain::input::list& tx_inputs, bool json);
+KD_API pt::ptree property_tree(const chain::input::list& tx_inputs, bool json);
 
 /**
  * Generate a property list for an input.
  * @param[in]  input  The input.
  * @return            A property list.
  */
-BC_API pt::ptree property_list(const config::input& input);
+KD_API pt::ptree property_list(const config::input& input);
 
 /**
  * Generate a property tree for an input.
  * @param[in]  input  The input.
  * @return            A property tree.
  */
-BC_API pt::ptree property_tree(const config::input& input);
+KD_API pt::ptree property_tree(const config::input& input);
 
 /**
  * Generate a property tree for a set of inputs.
