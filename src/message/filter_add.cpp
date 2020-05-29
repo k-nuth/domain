@@ -61,7 +61,7 @@ void filter_add::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t filter_add::serialized_size(uint32_t /*version*/) const {
-    return message::variable_uint_size(data_.size()) + data_.size();
+    return infrastructure::message::variable_uint_size(data_.size()) + data_.size();
 }
 
 data_chunk& filter_add::data() {
