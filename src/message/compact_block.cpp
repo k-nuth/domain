@@ -243,4 +243,4 @@ hash_digest hash(compact_block const& block) {
     return sha256_hash(to_data_header_nonce(block));
 }
 
-}  // namespace kth
+} // namespace kth
