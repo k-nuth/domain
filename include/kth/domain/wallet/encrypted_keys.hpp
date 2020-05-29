@@ -147,7 +147,7 @@ KD_API bool create_key_pair(encrypted_private& out_private,
  * @param[in]  entropy     A random value for use in the encryption.
  * @return false if the token could not be created from the entropy.
  */
-BC_API bool create_token(encrypted_token& out_token,
+KD_API bool create_token(encrypted_token& out_token,
                          std::string const& passphrase,
                          const ek_entropy& entropy);
 
