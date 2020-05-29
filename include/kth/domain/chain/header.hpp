@@ -65,24 +65,10 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static
-    header factory_from_data(data_chunk const& data, bool wire = true);
+    // bool from_data(data_chunk const& data, bool wire = true);
 
-    static
-    header factory_from_data(std::istream& stream, bool wire = true);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    header factory_from_data(R& source, bool wire = true) {
-        header instance;
-        instance.from_data(source, wire);
-        return instance;
-    }
-
-    bool from_data(data_chunk const& data, bool wire = true);
-
-    //TODO(fernando): check what happend when replacing std::istream to data_source
-    bool from_data(std::istream& stream, bool wire = true);
+    // //TODO(fernando): check what happend when replacing std::istream to data_source
+    // bool from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
