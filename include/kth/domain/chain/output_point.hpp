@@ -93,6 +93,6 @@ public:
 //     friend class input;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif
