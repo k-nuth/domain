@@ -221,22 +221,22 @@ public:
     static
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_monolith_enabled() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_magnetic_anomaly_enabled() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_great_wall_enabled() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_graviton_enabled() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_phonon_enabled() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_axion_enabled() const;
 #endif  //KTH_CURRENCY_BCH
 
