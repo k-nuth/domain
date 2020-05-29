@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(output__constructor_3__valid_input__returns_input_initializ
 
 BOOST_AUTO_TEST_CASE(output__constructor_4__valid_input__returns_input_initialized) {
     chain::output expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
 
     chain::output instance(expected);
     BOOST_REQUIRE(instance.is_valid());
