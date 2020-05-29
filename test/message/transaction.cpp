@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_4__always__equals_equivalent_tx) {
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(tx.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
     auto const inputs = tx.inputs();
     auto const outputs = tx.outputs();
     transaction instance(tx.version(), tx.locktime(), inputs, outputs);
