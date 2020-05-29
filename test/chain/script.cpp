@@ -173,14 +173,14 @@ BOOST_AUTO_TEST_CASE(script__from_data__to_data_weird__roundtrips) {
 
 BOOST_AUTO_TEST_CASE(script__factory_from_data_chunk_test) {
     auto const raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
-    auto const instance = script::factory_from_data(raw, false);
+    auto const instance = create<script>(raw, false);
     BOOST_REQUIRE(instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(script__factory_from_data_stream_test) {
     auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     data_source istream(raw);
-    auto instance = script::factory_from_data(istream, false);
+    auto instance = create<script>(istream, false);
     BOOST_REQUIRE(instance.is_valid());
 }
 
