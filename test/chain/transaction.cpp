@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_3__valid_input__returns_input_init
 BOOST_AUTO_TEST_CASE(transaction__constructor_4__valid_input__returns_input_initialized) {
     auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
 
     chain::transaction instance(expected);
     BOOST_REQUIRE(instance.is_valid());
