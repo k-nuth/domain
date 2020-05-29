@@ -40,10 +40,11 @@ size_t weight(size_t serialized_size_true, size_t serialized_size_false) {
     return base_size_contribution * serialized_size_false + total_size_contribution * serialized_size_true;
 }
 
-class BC_API block_basis {
+using indexes = std::vector<size_t>;
+
+class KD_API block_basis {
 public:
     using list = std::vector<block_basis>;
-    using indexes = std::vector<size_t>;
 
     // Constructors.
     //-------------------------------------------------------------------------
