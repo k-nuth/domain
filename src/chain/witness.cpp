@@ -257,7 +257,7 @@ witness::iterator witness::end() const {
 
 size_t witness::serialized_size(bool prefix) const {
     // Witness prefix is an element count, not a byte length (unlike script).
-    return (prefix ? message::variable_uint_size(stack_.size()) : 0u) +
+    return (prefix ? infrastructure::message::variable_uint_size(stack_.size()) : 0u) +
            serialized_size(stack_);
 }
 
