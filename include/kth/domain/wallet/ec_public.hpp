@@ -111,7 +111,6 @@ private:
     ec_compressed point_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
