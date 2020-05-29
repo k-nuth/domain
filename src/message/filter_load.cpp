@@ -64,7 +64,7 @@ void filter_load::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t filter_load::serialized_size(uint32_t /*version*/) const {
-    return 1u + 4u + 4u + message::variable_uint_size(filter_.size()) + filter_.size();
+    return 1u + 4u + 4u + infrastructure::message::variable_uint_size(filter_.size()) + filter_.size();
 }
 
 data_chunk& filter_load::filter() {
