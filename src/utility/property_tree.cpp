@@ -258,4 +258,4 @@ ptree property_tree(const settings_list& settings) {
     return tree;
 }
 
-}  // namespace kth
+} // namespace kth::domain::config
