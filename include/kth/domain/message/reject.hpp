@@ -77,14 +77,14 @@ public:
     bool operator!=(reject const& x) const;
 
 
-    [[nodiscard]] 
+    [[nodiscard]]
     reason_code code() const;
     
     void set_code(reason_code value);
 
     std::string& message();
 
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string const& message() const;
     
     void set_message(std::string const& value);
