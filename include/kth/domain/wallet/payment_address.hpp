@@ -55,16 +55,6 @@ public:
     using list = std::vector<payment_address>;
     using ptr = std::shared_ptr<payment_address>;
 
-    /// Extract a payment address list from an input or output script.
-    static
-    list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    
-    static
-    list extract_input(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    
-    static
-    list extract_output(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-
     /// Constructors.
     payment_address();
     payment_address(payment_address const& x) = default;
