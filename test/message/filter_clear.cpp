@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader) {
     auto const data = expected.to_data(version::level::maximum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = filter_clear::factory_from_data(version::level::maximum, source);
+    auto const result = create<filter_clear>(version::level::maximum, source);
 
     BOOST_REQUIRE_EQUAL(data.size(), 0u);
     BOOST_REQUIRE(result.is_valid());
