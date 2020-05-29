@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_2__round_trip__expected) {
     static auto const version = message::version::level::minimum;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto const result = message::pong::factory_from_data(version, istream);
+    auto const result = create<message::pong>(version, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
