@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(get_block_transactions__factory_from_data_2__valid_input__s
 
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    auto result = message::get_block_transactions::factory_from_data(
+    auto result = create<message::get_block_transactions>(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
