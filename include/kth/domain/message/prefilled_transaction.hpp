@@ -64,18 +64,18 @@ public:
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
     
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_variable_little_endian(index_);
         transaction_.to_data(sink, /*wire*/ true, witness_default()
 #ifdef KTH_CACHED_RPC_DATA        
