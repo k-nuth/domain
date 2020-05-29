@@ -104,13 +104,13 @@ public:
     }
 
     // constexpr
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(bool wire = true) const;
     
     void to_data(data_sink& stream, bool wire = true) const;
