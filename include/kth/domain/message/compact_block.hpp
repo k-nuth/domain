@@ -45,19 +45,19 @@ public:
 
     chain::header& header();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     chain::header const& header() const;
     
     void set_header(chain::header const& value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t nonce() const;
     
     void set_nonce(uint64_t value);
 
     short_id_list& short_ids();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     const short_id_list& short_ids() const;
     
     void set_short_ids(const short_id_list& value);
