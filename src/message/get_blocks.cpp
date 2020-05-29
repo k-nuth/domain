@@ -72,7 +72,7 @@ void get_blocks::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t get_blocks::serialized_size(uint32_t /*version*/) const {
-    return size_t(36) + message::variable_uint_size(start_hashes_.size()) + hash_size * start_hashes_.size();
+    return size_t(36) + infrastructure::message::variable_uint_size(start_hashes_.size()) + hash_size * start_hashes_.size();
 }
 
 hash_list& get_blocks::start_hashes() {
