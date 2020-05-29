@@ -68,33 +68,6 @@ bool transaction_basis::operator!=(transaction_basis const& x) const {
     return !(*this == x);
 }
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// static
-transaction_basis transaction_basis::factory_from_data(data_chunk const& data, bool wire, bool witness) {
-    transaction_basis instance;
-    instance.from_data(data, wire, witness_val(witness));
-    return instance;
-}
-
-// static
-transaction_basis transaction_basis::factory_from_data(std::istream& stream, bool wire, bool witness) {
-    transaction_basis instance;
-    instance.from_data(stream, wire, witness_val(witness));
-    return instance;
-}
-
-bool transaction_basis::from_data(data_chunk const& data, bool wire, bool witness) {
-    data_source istream(data);
-    return from_data(istream, wire, witness_val(witness));
-}
-
-bool transaction_basis::from_data(std::istream& stream, bool wire, bool witness) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire, witness_val(witness));
-}
-
 // protected
 void transaction_basis::reset() {
     version_ = 0;
