@@ -59,23 +59,6 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    operation factory_from_data(data_chunk const& encoded);
-    
-    static
-    operation factory_from_data(std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    operation factory_from_data(R& source) {
-        operation instance;
-        instance.from_data(source);
-        return instance;
-    }
-
-    bool from_data(data_chunk const& encoded);
-    bool from_data(std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         ////reset();
