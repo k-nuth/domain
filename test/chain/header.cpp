@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success) {
     auto const data = expected.to_data();
     data_source istream(data);
 
-    auto const result = chain::header::factory_from_data(istream);
+    auto const result = create<chain::header>(istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
