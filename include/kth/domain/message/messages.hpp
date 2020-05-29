@@ -176,8 +176,9 @@ data_chunk serialize(uint32_t version, const Message& packet, uint32_t magic) {
     return data;
 }
 
-// BC_API size_t variable_uint_size(uint64_t value);
+// KD_API size_t variable_uint_size(uint64_t value);
 
-}  // namespace kth::message
+} // namespace domain::message
+} // namespace kth
 
 #endif
