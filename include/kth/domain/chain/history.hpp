@@ -48,7 +48,7 @@ struct KD_API history_compact {
 /// This structure is used between client and API callers in v3.
 /// This structure models the client-server protocol in v1/v2.
 /// The height values here are 64 bit, but 32 bits on the wire.
-struct BC_API history {
+struct KD_API history {
     using list = std::vector<history>;
 
     /// If there is no output this is null_hash:max.
