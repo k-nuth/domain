@@ -54,26 +54,13 @@ public:
     bool operator==(transaction const& x) const;
     bool operator!=(transaction const& x) const;
 
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
-    static
-    transaction factory_from_data(uint32_t version, data_chunk const& data);
-    
-    static
-    transaction factory_from_data(uint32_t version, std::istream& stream);
-
+    // Witness is always deserialized if present.
+    // NOTE: Witness on BCH is dissabled on the chain::block class
     template <typename R, KTH_IS_READER(R)>
-    static
-    transaction factory_from_data(uint32_t version, R& source) {
-        transaction instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         return chain::transaction::from_data(source, true, true);
     }
 
