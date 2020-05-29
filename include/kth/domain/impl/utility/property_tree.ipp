@@ -78,7 +78,6 @@ pt::ptree property_value_list(std::string const& name, const Values& values, boo
     return list;
 }
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif
