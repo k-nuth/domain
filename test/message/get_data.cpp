@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_1__valid_input__success) {
 
     static auto const version = version::level::maximum;
     auto const data = expected.to_data(version);
-    auto const result = get_data::factory_from_data(version, data);
+    auto const result = create<get_data>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
