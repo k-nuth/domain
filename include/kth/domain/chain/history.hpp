@@ -70,6 +70,6 @@ struct KD_API history {
     };
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif
