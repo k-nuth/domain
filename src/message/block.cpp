@@ -114,4 +114,4 @@ hash_digest hash(block const& block, uint64_t nonce) {
     return sha256_hash(to_data_header_nonce(block, nonce));
 }
 
-}  // namespace kth
+} // namespace kth
