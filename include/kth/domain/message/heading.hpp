@@ -70,20 +70,6 @@ public:
     static
     size_t satoshi_fixed_size();
     
-    static
-    heading factory_from_data(data_chunk const& data);
-    
-    static
-    heading factory_from_data(std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    heading factory_from_data(R& source) {
-        heading instance;
-        instance.from_data(source);
-        return instance;
-    }
-
     heading() = default;
     heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum);
     heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum);
