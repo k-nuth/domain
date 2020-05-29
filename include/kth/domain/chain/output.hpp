@@ -131,7 +131,7 @@ private:
     mutable addresses_ptr addresses_;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 //#include <kth/domain/concepts_undef.hpp>
 
