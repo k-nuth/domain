@@ -101,30 +101,30 @@ public:
     operator ec_secret const&() const;
 
     /// Serializer.
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] 
+    [[nodiscard]]
     ec_secret const& secret() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint16_t version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t payment_version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t wif_version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool compressed() const;
 
     /// Methods.
-    [[nodiscard]] 
+    [[nodiscard]]
     ec_public to_public() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     payment_address to_payment_address() const;
 
 private:
