@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(point__factory_from_data_1__roundtrip__success) {
 
     BOOST_REQUIRE(raw == data);
 
-    auto point = chain::point::factory_from_data(raw);
+    auto point = create<chain::point>(raw);
 
     BOOST_REQUIRE(point.is_valid());
     BOOST_REQUIRE_EQUAL(encode_hash(point.hash()), "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
