@@ -72,7 +72,7 @@ public:
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
 
     // Serialization.
