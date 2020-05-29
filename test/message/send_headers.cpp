@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(from_data_reader_version_prior_bip130_failure) {
     data_source istream(data);
     istream_reader source(istream);
     message::send_headers instance{};
-    auto const result = instance.from_data(message::version::level::bip130 - 1, source);
+    auto const result = entity_from_data(instance, message::version::level::bip130 - 1, source);
 
     BOOST_REQUIRE(!result);
     BOOST_REQUIRE(!instance.is_valid());
