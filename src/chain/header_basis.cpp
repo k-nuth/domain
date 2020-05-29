@@ -281,4 +281,4 @@ code header_basis::accept(chain_state const& state, hash_digest const& hash) con
 // code header_basis::accept(chain_state const& state) const {
 // }
 
-}  // namespace kth
+} // namespace kth
