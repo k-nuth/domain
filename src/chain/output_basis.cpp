@@ -182,5 +182,6 @@ bool output_basis::extract_committed_hash(hash_digest& out) const {
     std::copy_n(start, hash_size, out.begin());
     return true;
 }
+#endif
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
