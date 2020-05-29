@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream) {
     const message::memory_pool expected{};
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
-    auto const result = message::memory_pool::factory_from_data(
+    auto const result = create<message::memory_pool>(
         message::version::level::maximum, istream);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());
