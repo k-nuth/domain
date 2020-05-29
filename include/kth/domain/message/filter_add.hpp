@@ -76,25 +76,25 @@ public:
 
     //bool from_data(uint32_t version, reader& source);
     
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
     
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_variable_little_endian(data_.size());
         sink.write_bytes(data_);
     }
 
     //void to_data(uint32_t version, writer& sink) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
     
     void reset();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
     static
