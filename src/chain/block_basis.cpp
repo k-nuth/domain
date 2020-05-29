@@ -254,18 +254,6 @@ hash_list block_basis::to_hashes(bool witness) const {
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
 
-// // Full block serialization is always canonical encoding.
-// size_t block_basis::serialized_size(bool witness) const {
-//     auto const sum = [witness](size_t total, transaction const& tx) {
-//         return safe_add(total, tx.serialized_size(true, witness_val(witness)));
-//     };
-
-//     auto const& txs = transactions_;
-//     return header_.serialized_size(true) +
-//            message::variable_uint_size(txs.size()) +
-//            std::accumulate(txs.begin(), txs.end(), size_t(0), sum);
-// }
-
 chain::header& block_basis::header() {
     return header_;
 }
