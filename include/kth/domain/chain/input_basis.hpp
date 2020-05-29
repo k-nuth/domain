@@ -91,13 +91,13 @@ public:
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(bool wire = true, bool witness = false) const;
     
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
