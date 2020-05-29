@@ -52,6 +52,6 @@ private:
     uint64_t value_{0};
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif
