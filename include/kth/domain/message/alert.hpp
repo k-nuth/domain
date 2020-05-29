@@ -49,17 +49,17 @@ public:
 
     data_chunk& signature();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk const& signature() const;
     
     void set_signature(data_chunk const& value);
     void set_signature(data_chunk&& value);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         payload_ = source.read_bytes(source.read_size_little_endian());
