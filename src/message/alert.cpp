@@ -64,8 +64,8 @@ void alert::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t alert::serialized_size(uint32_t /*version*/) const {
-    return message::variable_uint_size(payload_.size()) + payload_.size() +
-           message::variable_uint_size(signature_.size()) + signature_.size();
+    return infrastructure::message::variable_uint_size(payload_.size()) + payload_.size() +
+           infrastructure::message::variable_uint_size(signature_.size()) + signature_.size();
 }
 
 data_chunk& alert::payload() {
