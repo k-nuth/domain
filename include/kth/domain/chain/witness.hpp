@@ -55,20 +55,6 @@ public:
     //-------------------------------------------------------------------------
     // Prefixed data assumed valid here though caller may confirm with is_valid.
 
-    static
-    witness factory_from_data(data_chunk const& encoded, bool prefix);
-    
-    static
-    witness factory_from_data(std::istream& stream, bool prefix);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    witness factory_from_data(R& source, bool prefix) {
-        witness instance;
-        instance.from_data(source, prefix);
-        return instance;
-    }
-
     /// Deserialization invalidates the iterator.
     bool from_data(data_chunk const& encoded, bool prefix);
     bool from_data(std::istream& stream, bool prefix);
