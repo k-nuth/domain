@@ -407,7 +407,6 @@ bool operation::is_nominal_push() const {
     return code_ == nominal_opcode_from_data(data_);
 }
 
-} // namespace machine
-} // namespace kth
+} // namespace kth::domain::machine
 
-#endif
+#endif // KTH_DOMAIN_MACHINE_OPERATION_IPP
