@@ -34,6 +34,6 @@ struct KD_API stealth {
     hash_digest transaction_hash;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif
