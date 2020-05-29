@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__roundtrip__success) {
         {0x04, 0xff, 0xab, 0xcd, 0xee}};
 
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::alert::factory_from_data(
+    auto const result = create<message::alert>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
