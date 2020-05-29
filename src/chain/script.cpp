@@ -708,6 +708,7 @@ bool script::is_coinbase_pattern(operation::list const& ops, size_t height) {
 //*****************************************************************************
 // CONSENSUS: this pattern is used to commit to bip141 witness data.
 //*****************************************************************************
+#if defined(KTH_SEGWIT_ENABLED)
 bool script::is_commitment_pattern(operation::list const& ops) {
     static auto const header = to_big_endian(witness_head);
 

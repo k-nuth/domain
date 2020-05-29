@@ -69,7 +69,7 @@ script_basis::script_basis(data_chunk&& encoded, bool prefix) {
 }
 
 script_basis::script_basis(data_chunk const& encoded, bool prefix) {
-    valid_ = from_data(encoded, prefix);
+    valid_ = entity_from_data(*this, encoded, prefix);
 }
 
 // Operators.
