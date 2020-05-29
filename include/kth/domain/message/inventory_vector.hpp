@@ -63,29 +63,29 @@ public:
     bool operator!=(inventory_vector const& x) const;
 
 
-    [[nodiscard]] 
+    [[nodiscard]]
     type_id type() const;
     
     void set_type(type_id value);
 
     hash_digest& hash();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_digest const& hash() const;
     
     void set_hash(hash_digest const& value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_block_type() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_transaction_type() const;
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         auto const raw_type = source.read_4_bytes_little_endian();
