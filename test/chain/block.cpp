@@ -220,33 +220,33 @@ BOOST_AUTO_TEST_CASE(block__from_data__insufficient_transaction_bytes__failure) 
         "0114ffffffff0100f2052a0100000043410437b36a7221bc977dce712728a954"));
 
     chain::block instance;
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(block__genesis__mainnet__valid_structure) {
-    auto const genesis = bc::chain::block::genesis_mainnet();
+    auto const genesis = chain::block::genesis_mainnet();
     BOOST_REQUIRE(genesis.is_valid());
     BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
     BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
 BOOST_AUTO_TEST_CASE(block__genesis__testnet__valid_structure) {
-    auto const genesis = bc::chain::block::genesis_testnet();
+    auto const genesis = chain::block::genesis_testnet();
     BOOST_REQUIRE(genesis.is_valid());
     BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
     BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
 BOOST_AUTO_TEST_CASE(block__genesis__regtest__valid_structure) {
-    auto const genesis = bc::chain::block::genesis_regtest();
+    auto const genesis = chain::block::genesis_regtest();
     BOOST_REQUIRE(genesis.is_valid());
     BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
     BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
 BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success) {
-    auto const genesis = bc::chain::block::genesis_mainnet();
+    auto const genesis = chain::block::genesis_mainnet();
     BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
     BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
 
