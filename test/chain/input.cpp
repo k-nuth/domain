@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_3__valid_input__returns_input_initialize
 
 BOOST_AUTO_TEST_CASE(input__constructor_4__valid_input__returns_input_initialized) {
     input expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
 
     input instance(expected);
     BOOST_REQUIRE(instance.is_valid());
