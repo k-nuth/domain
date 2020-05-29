@@ -104,13 +104,13 @@ public:
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
 
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         header_.to_data(sink);
 
         auto const total32 = safe_unsigned<uint32_t>(total_transactions_);
