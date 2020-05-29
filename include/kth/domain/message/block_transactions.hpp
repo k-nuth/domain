@@ -75,7 +75,7 @@ public:
 
         // Order is required.
         for (auto& tx : transactions_) {
-            if ( ! tx.from_data(source, true, witness_default())) {
+            if ( ! entity_from_data(tx, source, true, witness_default())) {
                 break;
             }
         }
