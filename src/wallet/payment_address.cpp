@@ -479,4 +479,4 @@ payment_address::list payment_address::extract_output(
     }
 }
 
-}  // namespace kth
+} // namespace kth::domain::wallet
