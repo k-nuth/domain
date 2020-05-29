@@ -170,12 +170,12 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure) {
         "3434565656565678789a9a0201000000010000000000000100000001000000000000"));
 
     message::compact_block expected;
-    expected.from_data(message::compact_block::version_minimum, raw);
+    entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::compact_block::version_minimum - 1, data));
 }
 
