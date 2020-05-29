@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(create_transaction__test) {
     std::vector<std::pair<payment_address, uint64_t>> outputs;
     outputs.push_back({payment_address(WALLET), 199999000});
 
-    auto result = kth::wallet::tx_encode(outputs_to_spend, outputs);
+    auto result = tx_encode(outputs_to_spend, outputs);
 
     BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
     BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), TX_ENCODE);
