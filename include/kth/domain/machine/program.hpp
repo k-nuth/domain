@@ -124,45 +124,44 @@ public:
     void erase(stack_iterator const& first, stack_iterator const& last);
 
     /// Primary push/pop optimizations (passive).
-    [[nodiscard]] 
+    [[nodiscard]]
     bool empty() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool stack_true(bool clean) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool stack_result(bool clean) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_stack_overflow() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool if_(operation const& op) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     value_type const& item(size_t index) const;
 
 
     value_type& item(size_t index);
 
     bool top(number& out_number, size_t maxiumum_size = max_number_size) const;
-    // bool top(number& out_number, size_t maxiumum_size = max_number_size) /*const*/;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     stack_iterator position(size_t index) const;
 
     stack_mutable_iterator position(size_t index);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     operation::list subscript() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t size() const;
 
     // Alternate stack.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool empty_alternate() const;
 
     void push_alternate(value_type&& value);
