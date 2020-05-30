@@ -86,30 +86,6 @@ bool script_basis::operator!=(script_basis const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-script_basis script_basis::factory_from_data(data_chunk const& encoded, bool prefix) {
-    script_basis instance;
-    instance.from_data(encoded, prefix);
-    return instance;
-}
-
-// static
-script_basis script_basis::factory_from_data(std::istream& stream, bool prefix) {
-    script_basis instance;
-    instance.from_data(stream, prefix);
-    return instance;
-}
-
-bool script_basis::from_data(data_chunk const& encoded, bool prefix) {
-    data_source istream(encoded);
-    return from_data(istream, prefix);
-}
-
-bool script_basis::from_data(std::istream& stream, bool prefix) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, prefix);
-}
-
 // Concurrent read/write is not supported, so no critical section.
 bool script_basis::from_string(std::string const& mnemonic) {
     reset();
