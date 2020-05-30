@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_5__valid_input__returns_input_init
 
     // This must be non-const.
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
 
     chain::transaction instance(std::move(expected));
     BOOST_REQUIRE(instance.is_valid());
