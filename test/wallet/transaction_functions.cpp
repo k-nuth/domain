@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(sign_transaction__test) {
     chain::transaction tx;
     data_chunk raw_data;
     kth::decode_base16(raw_data, TX_ENCODE);
-    tx.from_data(raw_data);
+    entity_from_data(tx, raw_data);
     BOOST_REQUIRE_EQUAL(kth::encode_base16(tx.to_data()), TX_ENCODE);
     // Amount
     uint64_t const amount = 200000000;
