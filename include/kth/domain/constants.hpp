@@ -349,24 +349,24 @@ const infrastructure::config::checkpoint regtest_bip34_active_checkpoint{
 
 // These cannot be reactivated in a future branch due to window expiration.
 static
-const config::checkpoint mainnet_bip9_bit0_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_bip9_bit0_active_checkpoint{
     "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b", 1201535};
 static
-const config::checkpoint testnet_bip9_bit0_active_checkpoint{
+const infrastructure::config::checkpoint testnet_bip9_bit0_active_checkpoint{
     "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0", 0};
 static
-const config::checkpoint regtest_bip9_bit0_active_checkpoint{
+const infrastructure::config::checkpoint regtest_bip9_bit0_active_checkpoint{
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 // These cannot be reactivated in a future branch due to window expiration.
 static
-const config::checkpoint mainnet_bip9_bit1_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_bip9_bit1_active_checkpoint{
     "b50ce9202c152e481ca509156028af954654ed13e4b0656eb497554aa753db0b", 1201535};
 static
-const config::checkpoint testnet_bip9_bit1_active_checkpoint{
+const infrastructure::config::checkpoint testnet_bip9_bit1_active_checkpoint{
     "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0", 0};
 static
-const config::checkpoint regtest_bip9_bit1_active_checkpoint{
+const infrastructure::config::checkpoint regtest_bip9_bit1_active_checkpoint{
     // The activation window is fixed and closed, so assume genesis activation.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
 
