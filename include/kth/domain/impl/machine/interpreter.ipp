@@ -1350,7 +1350,6 @@ interpreter::result interpreter::run_op(operation const& op,
     }
 }
 
-}  // namespace machine
-}  // namespace kth
+} // namespace kth::domain::machine
 
 #endif
