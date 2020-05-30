@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_2__valid_input__success) {
 
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
-    auto const result = message::filter_load::factory_from_data(
+    auto const result = create<message::filter_load>(
         message::version::level::maximum, istream);
 
     BOOST_REQUIRE(result.is_valid());
