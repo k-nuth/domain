@@ -284,7 +284,7 @@ BOOST_AUTO_TEST_CASE(version__from_data__version_meets_bip37__success) {
         true};
 
     auto const data = expected.to_data(version_maximum);
-    auto const result = message::version::factory_from_data(version_maximum, data);
+    auto const result = create<message::version>(version_maximum, data);
     BOOST_REQUIRE(result.is_valid());
 }
 
