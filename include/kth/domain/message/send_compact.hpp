@@ -115,6 +115,6 @@ private:
     uint64_t version_{0};
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
