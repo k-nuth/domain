@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data();
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = heading::factory_from_data(source);
+    auto const result = create<heading>(source);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
