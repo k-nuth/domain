@@ -160,23 +160,6 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static
-    transaction factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    
-    static
-    transaction factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    transaction factory_from_data(R& source, bool wire = true, bool witness = false) {
-        transaction instance;
-        instance.from_data(source, wire, witness_val(witness));
-        return instance;
-    }
-
-    //static
-    //transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
-
     bool from_data(data_chunk const& data, bool wire = true, bool witness = false
 #ifdef KTH_CACHED_RPC_DATA
                     , bool unconfirmed = false
