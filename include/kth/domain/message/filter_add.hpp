@@ -110,6 +110,6 @@ private:
     data_chunk data_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
