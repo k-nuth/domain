@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_3__valid_input__su
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::prefilled_transaction::factory_from_data(
+    auto const result = create<message::prefilled_transaction>(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
