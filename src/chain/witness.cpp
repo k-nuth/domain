@@ -312,7 +312,7 @@ bool witness::extract_sigop_script(script& out_script,
 
                 case hash_size:
                     if ( ! stack_.empty()) {
-                        out_script.from_data(stack_.back(), false);
+                        entity_from_data(out_script, stack_.back(), false);
                     }
 
                     return true;
