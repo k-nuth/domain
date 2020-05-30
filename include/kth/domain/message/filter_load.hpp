@@ -133,6 +133,6 @@ private:
     uint8_t flags_{0x00};
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
