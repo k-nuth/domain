@@ -94,7 +94,7 @@ KD_API pt::ptree property_tree(const config::input& input);
  * @param[in]  json    Use json array formatting.
  * @return             A property tree.
  */
-BC_API pt::ptree property_tree(const std::vector<config::input>& inputs,
+KD_API pt::ptree property_tree(const std::vector<config::input>& inputs,
                                bool json);
 
 /**
