@@ -292,58 +292,16 @@ hash_digest block_basis::hash() const {
     return header_.hash();
 }
 
-// Utilities.
-//-----------------------------------------------------------------------------
-
-// With a 32 bit chain the size of the result should not exceed 43 and with a
-// 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
-size_t block_basis::locator_size(size_t top) {
-    // Set rounding behavior, not consensus-related, thread side effect :<.
-    std::fesetround(FE_UPWARD);
-
-    auto const first_ten_or_top = std::min(size_t(10), top);
-    auto const remaining = top - first_ten_or_top;
-    auto const back_off = remaining == 0 ? 0.0 : remaining == 1 ? 1.0 : std::log2(remaining);
-    auto const rounded_up_log = static_cast<size_t>(std::nearbyint(back_off));
-    return first_ten_or_top + rounded_up_log + size_t(1);
-}
-
-// This algorithm is a network best practice, not a consensus rule.
-block_basis::indexes block_basis::locator_heights(size_t top) {
-    size_t step = 1;
-    block_basis::indexes heights;
-    auto const reservation = locator_size(top);
-    heights.reserve(reservation);
-
-    // Start at the top of the chain and work backwards to zero.
-    for (auto height = top; height > 0; height = floor_subtract(height, step)) {
-        // Push top 10 indexes first, then back off exponentially.
-        if (heights.size() >= 10) {
-            step <<= 1U;
-        }
-
-        heights.push_back(height);
-    }
-
-    // Push the genesis block index.
-    heights.push_back(0);
-
-    // Validate the reservation computation.
-    KTH_ASSERT(heights.size() <= reservation);
-    return heights;
-}
 
 // Utilities.
 //-----------------------------------------------------------------------------
 
 #if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
-void block_basis::strip_witness() {
-    auto const strip = [](transaction& transaction) {
-        transaction.strip_witness();
-    };
-
-    std::for_each(transactions_.begin(), transactions_.end(), strip);
+void strip_witness(block_basis& blk) {
+    std::for_each(blk.transactions().begin(), blk.transactions().end(), [](transaction& tx) {
+        tx.strip_witness();
+    });
 }
 #endif
 
