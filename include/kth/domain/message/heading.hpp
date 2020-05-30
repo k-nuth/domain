@@ -84,30 +84,30 @@ public:
     bool operator!=(heading const& x) const;
 
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t magic() const;
     
     void set_magic(uint32_t value);
 
     std::string& command();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string const& command() const;
     
     void set_command(std::string const& value);
     void set_command(std::string&& value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t payload_size() const;
     
     void set_payload_size(uint32_t value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t checksum() const;
     
     void set_checksum(uint32_t value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     message_type type() const;
 
     bool from_data(data_chunk const& data);
