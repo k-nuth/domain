@@ -133,4 +133,4 @@ void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = value;
 }
 
-}  // namespace kth
+} // namespace kth
