@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(script__factory_from_data_reader_test) {
     auto raw = to_chunk(base16_literal("76a914fc7b44566256621affb1541cc9d59f08336d276b88ac"));
     data_source istream(raw);
     istream_reader source(istream);
-    auto const instance = script::factory_from_data(source, false);
+    auto const instance = create<script>(source, false);
     BOOST_REQUIRE(instance.is_valid());
 }
 
