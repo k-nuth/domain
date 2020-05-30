@@ -113,6 +113,6 @@ private:
     amount_t amount_;
 };
 
-}  // namespace kth::keoken::message
+} // namespace kth::keoken::message
 
 #endif  //KTH_KEOKEN_MESSAGE_CREATE_ASSET_HPP_
