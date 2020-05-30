@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(output_point__factory_from_data_2__roundtrip__success) {
                               0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
 
     data_source istream(data);
-    auto point = chain::output_point::factory_from_data(istream);
+    auto point = create<chain::output_point>(istream);
 
     BOOST_REQUIRE(point.is_valid());
     BOOST_REQUIRE_EQUAL(encode_hash(point.hash()), "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
