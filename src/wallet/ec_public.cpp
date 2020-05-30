@@ -177,7 +177,7 @@ bool ec_public::to_uncompressed(ec_uncompressed& out) const {
         return false;
     }
 
-    return bc::decompress(out, to_array<ec_compressed_size>(point_));
+    return kth::decompress(out, to_array<ec_compressed_size>(point_));
 }
 
 payment_address ec_public::to_payment_address(uint8_t version) const {
