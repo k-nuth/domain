@@ -161,7 +161,7 @@ KD_API bool create_token(encrypted_token& out_token,
  * @return false if the lot and/or sequence are out of range or the token
  * could not be created from the entropy.
  */
-BC_API bool create_token(encrypted_token& out_token,
+KD_API bool create_token(encrypted_token& out_token,
                          std::string const& passphrase,
                          const ek_salt& salt,
                          uint32_t lot,
