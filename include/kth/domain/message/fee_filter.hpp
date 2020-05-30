@@ -109,6 +109,6 @@ private:
     bool insufficient_version_{true};
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
