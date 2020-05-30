@@ -92,7 +92,7 @@ public:
 
     std::string& reason();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string const& reason() const;
 
     void set_reason(std::string const& value);
