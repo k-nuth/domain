@@ -174,10 +174,10 @@ public:
     void negate();
     void close();
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool closed() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool succeeded() const;
 
 private:
