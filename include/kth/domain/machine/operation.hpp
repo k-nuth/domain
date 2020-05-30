@@ -84,13 +84,13 @@ public:
 
     bool from_string(std::string const& mnemonic);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data() const;
     
     void to_data(data_sink& stream) const;
