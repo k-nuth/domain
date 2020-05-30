@@ -118,4 +118,4 @@ void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
 }
 
-}  // namespace kth
+} // namespace kth
