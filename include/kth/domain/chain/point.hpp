@@ -130,10 +130,10 @@ public:
     // Iteration (limited to store serialization).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     point_iterator begin() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     point_iterator end() const;
 
     // Properties (size, accessors, cache).
