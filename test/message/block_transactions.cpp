@@ -194,13 +194,13 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_1__valid_input__succe
         "00"));
 
     message::block_transactions expected;
-    expected.from_data(message::block_transactions::version_minimum, raw);
+    entity_from_data(expected, message::block_transactions::version_minimum, raw);
 
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
-    auto const result = message::block_transactions::factory_from_data(
+    auto const result = create<message::block_transactions>(
         message::block_transactions::version_minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
