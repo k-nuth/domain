@@ -123,7 +123,7 @@ bool is_overspent(transaction_basis const& tx);
 bool is_segregated(transaction_basis const& tx);
 
 
-class BC_API transaction_basis {
+class KD_API transaction_basis {
 public:
     using ins = input::list;
     using outs = output::list;
