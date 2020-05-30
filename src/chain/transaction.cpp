@@ -637,23 +637,6 @@ code transaction::connect(chain_state const& state) const {
     return error::success;
 }
 
-// bool transaction::is_standard() const {
-//     for (auto const& in : inputs()) {
-//         if (in.script().pattern() == kth::machine::script_pattern::non_standard) {
-//             return false;
-//         }
-//     }
-
-//     for (auto const& out : outputs()) {
-//         if (out.script().pattern() == kth::machine::script_pattern::non_standard) {
-//             return false;
-//         }
-//     }
-
-//     return true;
-// }
-
-
 #if ! defined(KTH_SEGWIT_ENABLED)
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
 #else
