@@ -52,7 +52,7 @@ KD_API bool sign_message(message_signature& out_signature, data_slice message, s
  * private key is in compressed format.
  * @return true if signature encoding is successful.
  */
-BC_API bool sign_message(message_signature& out_signature, data_slice message, ec_secret const& secret, bool compressed = true);
+KD_API bool sign_message(message_signature& out_signature, data_slice message, ec_secret const& secret, bool compressed = true);
 
 /**
  * Verifies a message.
