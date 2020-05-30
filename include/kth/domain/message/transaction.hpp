@@ -68,7 +68,7 @@ public:
     void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink, bool witness = true) const {
+    void to_data(uint32_t /*version*/, W& sink, bool witness = true) const {
         chain::transaction::to_data(sink, true, witness);
     }
 
