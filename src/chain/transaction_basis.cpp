@@ -78,7 +78,6 @@ void transaction_basis::reset() {
     outputs_.shrink_to_fit();
 }
 
-
 bool transaction_basis::is_valid() const {
     return (version_ != 0) || (locktime_ != 0) || !inputs_.empty() || !outputs_.empty();
 }
