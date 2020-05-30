@@ -723,6 +723,7 @@ bool script::is_commitment_pattern(operation::list const& ops) {
 bool script::is_witness_program_pattern(operation::list const& ops) {
     return ops.size() == 2 && ops[0].is_version() && ops[1].data().size() >= min_witness_program && ops[1].data().size() <= max_witness_program;
 }
+#endif
 
 // The satoshi client tests for 83 bytes total. This allows for the waste of
 // one byte to represent up to 75 bytes using the push_one_size opcode.
