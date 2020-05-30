@@ -264,7 +264,7 @@ public:
             checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);
         }
 #elif defined(KTH_CURRENCY_BTC)
-        if (get_network(easy_blocks, retarget) == config::settings::testnet) {
+        if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::testnet) {
             // BTC Testnet
             checkpoints.reserve(15);
             checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
