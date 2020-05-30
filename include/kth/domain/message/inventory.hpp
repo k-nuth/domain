@@ -99,15 +99,15 @@ public:
     void to_hashes(hash_list& out, type_id type) const;
     void reduce(inventory_vector::list& out, type_id type) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
     
     void reset();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t count(type_id type) const;
 
     static
