@@ -205,7 +205,8 @@ bool bip34(size_t height, bool frozen, bool mainnet, bool testnet) {
                                                                                                            ));
 }
 
-inline bool bip66(size_t height, bool frozen, bool mainnet, bool testnet) {
+inline 
+bool bip66(size_t height, bool frozen, bool mainnet, bool testnet) {
     auto const regtest = !mainnet && !testnet;
     return frozen &&
            ((mainnet && height >= mainnet_bip66_freeze) ||
