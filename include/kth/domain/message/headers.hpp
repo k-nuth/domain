@@ -127,6 +127,6 @@ private:
     header::list elements_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
