@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream) {
 
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
-    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, istream);
+    auto const result = create<message::merkle_block>(message::version::level::maximum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
