@@ -74,32 +74,45 @@ public:
     bool operator!=(payment_address const& x) const;
     bool operator<(payment_address const& x) const;
 
-    friend std::istream& operator>>(std::istream& in, payment_address& to);
-    friend std::ostream& operator<<(std::ostream& out, payment_address const& of);
+    friend
+    std::istream& operator>>(std::istream& in, payment_address& to);
+    
+    friend
+    std::ostream& operator<<(std::ostream& out, payment_address const& of);
 
     /// Cast operators.
     operator bool() const;
     operator short_hash const&() const;
 
     /// Serializer.
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded() const;
 
 #ifdef KTH_CURRENCY_BCH
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string encoded_cashaddr() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Accessors.
-    [[nodiscard]] 
+    [[nodiscard]]
     uint8_t version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     short_hash const& hash() const;
 
     /// Methods.
-    [[nodiscard]] 
+    [[nodiscard]]
     payment to_payment() const;
+
+    /// Extract a payment address list from an input or output script.
+    static
+    list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
+    
+    static
+    list extract_input(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
+    
+    static
+    list extract_output(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
 
 private:
     /// Validators.
