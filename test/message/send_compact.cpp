@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_3__valid_input__success) {
 BOOST_AUTO_TEST_CASE(send_compact__from_data_1__invalid_mode_byte__failure) {
     data_chunk raw_data{0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
     message::send_compact msg;
-    bool result = msg.from_data(message::send_compact::version_minimum, raw_data);
+    bool result = entity_from_data(msg, message::send_compact::version_minimum, raw_data);
     BOOST_REQUIRE(!result);
 }
 
