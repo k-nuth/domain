@@ -212,7 +212,7 @@ public:
     }
 
     //bool from_data(uint32_t xversion, reader& source);
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t xversion) const;
     
     void to_data(uint32_t xversion, data_sink& stream) const;
