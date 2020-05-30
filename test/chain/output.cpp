@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(output__constructor_4__valid_input__returns_input_initializ
 BOOST_AUTO_TEST_CASE(output__constructor_5__valid_input__returns_input_initialized) {
     // This must be non-const.
     chain::output expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
 
     chain::output instance(std::move(expected));
     BOOST_REQUIRE(instance.is_valid());
