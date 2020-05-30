@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_token_lot__passphrase_lot_max__expected) 
     const size_t sequence = 0;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
-    BC_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
+    KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 }
 
