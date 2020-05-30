@@ -546,7 +546,7 @@ target_include_directories(kth-domain PUBLIC
   $<INSTALL_INTERFACE:include>)
   
 if (NOT ENABLE_SHARED)
-    target_compile_definitions(kth-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+    target_compile_definitions(kth-domain PUBLIC -DKD_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
 target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
