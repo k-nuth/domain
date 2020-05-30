@@ -99,8 +99,6 @@ public:
         return source;
     }
 
-    //bool from_data(reader& source, bool prefix);
-
     /// The witness deserialized ccording to count and size prefixing.
     bool is_valid() const;
 
