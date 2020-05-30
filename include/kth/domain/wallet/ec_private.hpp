@@ -150,7 +150,6 @@ private:
     ec_secret secret_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
