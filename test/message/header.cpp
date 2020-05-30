@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
 
-    auto const result = message::header::factory_from_data(version, istream);
+    auto const result = create<message::header>(version, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
