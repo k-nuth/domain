@@ -88,10 +88,10 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(bool wire = true) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t value() const;
     
     void set_value(uint64_t value);
