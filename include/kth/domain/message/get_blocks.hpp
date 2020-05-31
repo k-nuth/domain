@@ -123,6 +123,6 @@ private:
     hash_digest stop_hash_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
