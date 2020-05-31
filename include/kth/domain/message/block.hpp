@@ -100,6 +100,6 @@ data_chunk to_data_header_nonce(block const& block, uint64_t nonce);
 
 hash_digest hash(block const& block, uint64_t nonce);
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
