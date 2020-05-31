@@ -117,9 +117,9 @@ public:
     uint32_t const version_maximum;
 
 private:
-    network_address::list addresses_;
+    infrastructure::message::network_address::list addresses_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
