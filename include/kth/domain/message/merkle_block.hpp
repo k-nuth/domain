@@ -152,6 +152,6 @@ private:
     data_chunk flags_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
