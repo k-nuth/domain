@@ -235,12 +235,12 @@ public:
     }
 
     //void to_data(uint32_t xversion, writer& sink) const;
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
     
     void reset();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(uint32_t xversion) const;
 
 
