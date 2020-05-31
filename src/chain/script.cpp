@@ -914,19 +914,23 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures, data_stack c
 // Utilities (non-static).
 //-----------------------------------------------------------------------------
 
+#if defined(KTH_SEGWIT_ENABLED)
 data_chunk script::witness_program() const {
     // The first operations access must be method-based to guarantee the cache.
     auto const& ops = operations();
     return is_witness_program_pattern(ops) ? ops[1].data() : data_chunk{};
 }
+#endif
 
 script_version script::version() const {
     // The first operations access must be method-based to guarantee the cache.
     auto const& ops = operations();
 
+#if defined(KTH_SEGWIT_ENABLED)
     if ( ! is_witness_program_pattern(ops)) {
         return script_version::unversioned;
     }
+#endif
 
     // Version 0 is specified, others are reserved (bip141).
     return (ops[0].code() == opcode::push_size_0) ? script_version::zero : script_version::reserved;
