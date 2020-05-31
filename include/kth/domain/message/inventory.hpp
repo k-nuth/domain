@@ -124,6 +124,6 @@ private:
     inventory_vector::list inventories_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
