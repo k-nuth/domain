@@ -199,7 +199,7 @@ size_t script_basis::serialized_size(bool prefix) const {
     auto size = bytes_.size();
 
     if (prefix) {
-        size += message::variable_uint_size(size);
+        size += infrastructure::message::variable_uint_size(size);
     }
 
     return size;
