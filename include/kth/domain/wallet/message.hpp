@@ -62,15 +62,14 @@ KD_API bool sign_message(message_signature& out_signature, data_slice message, e
  * @return false if the signature does not match the address or if there are
  * any errors in the signature encoding.
  */
-BC_API bool verify_message(data_slice message, payment_address const& address, const message_signature& signature);
+KD_API bool verify_message(data_slice message, payment_address const& address, const message_signature& signature);
 
 /// Exposed primarily for independent testability.
-BC_API bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id, bool compressed);
+KD_API bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id, bool compressed);
 
 /// Exposed primarily for independent testability.
-BC_API bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed, uint8_t magic);
+KD_API bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed, uint8_t magic);
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif
