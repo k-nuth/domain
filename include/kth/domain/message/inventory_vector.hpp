@@ -122,7 +122,7 @@ public:
     void to_witness();
 #endif
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
 private:
