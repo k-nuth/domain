@@ -385,7 +385,7 @@ private:
     uint32_t const forks_;
 
     // Checkpoints do not affect the data that is collected or promoted.
-    config::checkpoint::list const& checkpoints_;
+    infrastructure::config::checkpoint::list const& checkpoints_;
 
     // These are computed on construct from sample and checkpoints.
     activations const active_;
