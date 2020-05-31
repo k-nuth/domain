@@ -138,8 +138,7 @@ private:
     payment_address from_public(ec_public const& point, uint8_t version);
     
     static
-    payment_address from_script(chain::script const& script,
-                                       uint8_t version);
+    payment_address from_script(chain::script const& script, uint8_t version);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

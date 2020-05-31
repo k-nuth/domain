@@ -281,16 +281,15 @@ void block::set_transactions(transaction::list const& value) {
 // TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list&& value) {
     block_basis::set_transactions(std::move(value));
+
+#if defined(KTH_SEGWIT_ENABLED)
     segregated_ = std::nullopt;
+#endif
+
     total_inputs_ = std::nullopt;
     base_size_ = std::nullopt;
     total_size_ = std::nullopt;
 }
-
-// // Convenience property.
-// hash_digest block::hash() const {
-//     return header_.hash();
-// }
 
 // Utilities.
 //-----------------------------------------------------------------------------
