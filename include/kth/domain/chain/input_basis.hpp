@@ -143,7 +143,7 @@ public:
     // Deprecated (unsafe).
     chain::script& script();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     chain::script const& script() const;
     
     void set_script(chain::script const& value);
