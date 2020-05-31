@@ -120,21 +120,21 @@ public:
 
     //void to_data(writer& sink) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string to_string(uint32_t active_forks) const;
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size() const;
 
     /// Get the op code [0..255], if is_valid is consistent with data.
-    [[nodiscard]] 
+    [[nodiscard]]
     opcode code() const;
 
     /// Get the data, empty if not a push code or if invalid.
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk const& data() const;
 
     // Utilities.
