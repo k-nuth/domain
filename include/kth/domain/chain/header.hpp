@@ -113,7 +113,7 @@ public:
     void set_bits(uint32_t value);
     void set_nonce(uint32_t value);
 
-    hash_digest hash() const;
+    // hash_digest hash() const;
     hash_digest hash_pow() const;
 
 #ifdef KTH_CURRENCY_LTC
