@@ -186,7 +186,7 @@ private:
 
     void reserve_stacks();
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool stack_to_bool(bool clean) const;
 
     chain::script const& script_;
