@@ -124,17 +124,17 @@ public:
         sink.write_bytes(bytes_);
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     std::string to_string(uint32_t active_forks) const;
 
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(bool prefix) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk const& bytes() const;
     // operation::list const& operations() const;
 
