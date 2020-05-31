@@ -93,21 +93,27 @@ public:
         sink.write_4_bytes_little_endian(nonce_);
     }
 
-    // Properties (size, accessors, cache).
+    // Properties (size, accessors).
     //-----------------------------------------------------------------------------
     static
     uint256_t proof(uint32_t bits);
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint256_t proof() const;
 
-    static
-    size_t satoshi_fixed_size();
+    static constexpr
+    size_t satoshi_fixed_size() {
+        return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + 
+            sizeof(bits_) + sizeof(nonce_);
+    }
     
-    [[nodiscard]] 
-    size_t serialized_size(bool wire = true) const;
+    [[nodiscard]]
+    constexpr
+    size_t serialized_size(bool /*wire*/) const {
+        return satoshi_fixed_size();
+    }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t version() const;
 
     void set_version(uint32_t value);
