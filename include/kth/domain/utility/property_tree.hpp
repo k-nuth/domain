@@ -102,14 +102,14 @@ KD_API pt::ptree property_tree(const std::vector<config::input>& inputs,
  * @param[in]  tx_output  The transaction output.
  * @return                A property list.
  */
-BC_API pt::ptree property_list(const chain::output& tx_output);
+KD_API pt::ptree property_list(const chain::output& tx_output);
 
 /**
  * Generate a property tree for a transaction output.
  * @param[in]  tx_output  The transaction output.
  * @return                A property tree.
  */
-BC_API pt::ptree property_tree(const chain::output& tx_output);
+KD_API pt::ptree property_tree(const chain::output& tx_output);
 
 /**
  * Generate a property tree for a set of transaction outputs.
