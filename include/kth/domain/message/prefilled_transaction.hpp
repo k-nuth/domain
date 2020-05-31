@@ -98,6 +98,6 @@ private:
     chain::transaction transaction_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
