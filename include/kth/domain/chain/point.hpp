@@ -144,7 +144,7 @@ public:
     size_t satoshi_fixed_size();
 
     // constexpr
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(bool wire = true) const;
 
     // deprecated (unsafe)
