@@ -313,6 +313,7 @@ uint256_t block_basis::proof() const {
     return header_.proof();
 }
 
+// static
 uint64_t block_basis::subsidy(size_t height, bool retarget) {
     static auto const overflow = sizeof(uint64_t) * byte_bits;
     auto subsidy = initial_block_subsidy_satoshi();
