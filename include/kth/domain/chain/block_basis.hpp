@@ -61,23 +61,6 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static
-    block_basis factory_from_data(data_chunk const& data, bool witness = false);
-    
-    static
-    block_basis factory_from_data(std::istream& stream, bool witness = false);
-
-    template <typename R, KTH_IS_READER(R)>
-    static
-    block_basis factory_from_data(R& source, bool witness = false) {
-        block_basis instance;
-        instance.from_data(source, witness_val(witness));
-        return instance;
-    }
-
-    bool from_data(data_chunk const& data, bool witness = false);
-    bool from_data(std::istream& stream, bool witness = false);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {
         // validation.start_deserialize = asio::steady_clock::now();
