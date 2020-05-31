@@ -129,7 +129,7 @@ public:
     }
 
     //bool from_data(reader& source);
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data() const;
     
     void to_data(data_sink& stream) const;
