@@ -290,7 +290,7 @@ public:
             checkpoints.emplace_back("000000000000fce208da3e3b8afcc369835926caa44044e9c2f0caa48c8eba0f", 1400000);
             checkpoints.emplace_back("0000000000049a6b07f91975568dc96bb1aec1a24c6bdadb21eb17c9f1b7256f", 1500000);
 
-        } else if (get_network(easy_blocks, retarget) == config::settings::mainnet) {
+        } else if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::mainnet) {
             // BTC Mainnet
             checkpoints.reserve(30);
             checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
