@@ -88,11 +88,11 @@ BOOST_AUTO_TEST_CASE(input__from_data__valid_data__success) {
     boost::iostreams::stream<byte_source<std::array<uint8_t, 64>>> stream(source);
 
     input instance;
-    BOOST_REQUIRE(instance.from_data(stream));
+    BOOST_REQUIRE(entity_from_data(instance, stream));
 }
 
 BOOST_AUTO_TEST_CASE(input__factory_from_data_1__valid_input__success) {
-    auto const instance = input::factory_from_data(valid_raw_input);
+    auto const instance = create<input>(valid_raw_input);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_input.size());
 
