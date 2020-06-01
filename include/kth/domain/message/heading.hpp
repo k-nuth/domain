@@ -143,7 +143,7 @@ public:
     }
 
     //void to_data(writer& sink) const;
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid() const;
     
     void reset();
