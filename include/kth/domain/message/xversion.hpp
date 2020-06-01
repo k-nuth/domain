@@ -253,7 +253,8 @@ public:
     static
     uint32_t const xversion_minimum;
     
-    staticuint32_t const xversion_maximum;
+    static
+    uint32_t const xversion_maximum;
 
 private:
     uint32_t value_{0};
