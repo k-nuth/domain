@@ -223,11 +223,13 @@ bool bip65(size_t height, bool frozen, bool mainnet, bool testnet) {
             (regtest && height >= regtest_bip65_freeze));
 }
 
-inline uint32_t timestamp_high(chain_state::data const& values) {
+inline 
+uint32_t timestamp_high(chain_state::data const& values) {
     return values.timestamp.ordered.back();
 }
 
-inline uint32_t bits_high(chain_state::data const& values) {
+inline 
+uint32_t bits_high(chain_state::data const& values) {
     return values.bits.ordered.back();
 }
 
