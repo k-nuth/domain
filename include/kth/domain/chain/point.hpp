@@ -152,14 +152,14 @@ public:
     hash_digest& hash();
 
     // constexpr
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_digest const& hash() const;
 
     // constexpr
     void set_hash(hash_digest const& value);
 
     // constexpr
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t index() const;
 
     // constexpr
