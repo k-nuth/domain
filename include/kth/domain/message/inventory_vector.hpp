@@ -130,6 +130,6 @@ private:
     hash_digest hash_{null_hash};
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
