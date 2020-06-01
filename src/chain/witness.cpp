@@ -429,4 +429,4 @@ code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks
     }
 }
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
