@@ -403,65 +403,65 @@ const infrastructure::config::checkpoint regtest_bip9_bit1_active_checkpoint{
 
 //2017-August-01 hard fork
 static
-const config::checkpoint mainnet_uahf_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_uahf_active_checkpoint{
     "0000000000000000011865af4122fe3b144e2cbeea86142e8ff2fb4107352d43", 478558};
 
 static
-const config::checkpoint testnet_uahf_active_checkpoint{
+const infrastructure::config::checkpoint testnet_uahf_active_checkpoint{
     "00000000000e38fef93ed9582a7df43815d5c2ba9fd37ef70c9a0ea4a285b8f5", 1155876};
 
 //2017-November-13 hard fork
 static
-const config::checkpoint mainnet_daa_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_daa_active_checkpoint{
     "0000000000000000011ebf65b60d0a3de80b8175be709d653b4c1a1beeb6ab9c", 504031};
 
 static
-const config::checkpoint testnet_daa_active_checkpoint{
+const infrastructure::config::checkpoint testnet_daa_active_checkpoint{
     "0000000000170ed0918077bde7b4d36cc4c91be69fa09211f748240dabe047fb", 1188697};
 
 //2018-May hard fork
 static
-const config::checkpoint mainnet_monolith_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_monolith_active_checkpoint{
     "0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530359};
 
 static
-const config::checkpoint testnet_monolith_active_checkpoint{
+const infrastructure::config::checkpoint testnet_monolith_active_checkpoint{
     "0000000000327972b8470c11755adf8f4319796bafae01f5a6650490b98a17db", 1233078};
 
 //2018-November hard fork
 static
-const config::checkpoint mainnet_magnetic_anomaly_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_magnetic_anomaly_active_checkpoint{
     "0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c", 556767};
 
 static
-const config::checkpoint testnet_magnetic_anomaly_active_checkpoint{
+const infrastructure::config::checkpoint testnet_magnetic_anomaly_active_checkpoint{
     "00000000000001fae0095cd4bea16f1ce8ab63f3f660a03c6d8171485f484b24", 1267996};
 
 //2019-May hard fork
 static
-const config::checkpoint mainnet_great_wall_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_great_wall_active_checkpoint{
     "000000000000000001b4b8e36aec7d4f9671a47872cb9a74dc16ca398c7dcc18", 582680};
 
 static
-const config::checkpoint testnet_great_wall_active_checkpoint{
+const infrastructure::config::checkpoint testnet_great_wall_active_checkpoint{
     "00000000000000479138892ef0e4fa478ccc938fb94df862ef5bde7e8dee23d3", 1303885};
 
 //2019-Nov hard fork
 static
-const config::checkpoint mainnet_graviton_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_graviton_active_checkpoint{
     "000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136};
 
 static
-const config::checkpoint testnet_graviton_active_checkpoint{
+const infrastructure::config::checkpoint testnet_graviton_active_checkpoint{
     "00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712};
 
 //2020-May hard fork
 static
-const config::checkpoint mainnet_phonon_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_phonon_active_checkpoint{
     "00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259};
 
 static
-const config::checkpoint testnet_phonon_active_checkpoint{
+const infrastructure::config::checkpoint testnet_phonon_active_checkpoint{
     "0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461};
 
 //2020-Nov hard fork
