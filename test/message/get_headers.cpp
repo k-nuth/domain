@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(message::get_headers::version_minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::get_headers::factory_from_data(
+    auto const result = create<message::get_headers>(
         message::get_headers::version_minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
