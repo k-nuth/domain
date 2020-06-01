@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = not_found::factory_from_data(version, source);
+    auto const result = create<not_found>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
