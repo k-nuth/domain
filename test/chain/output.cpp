@@ -68,12 +68,12 @@ BOOST_AUTO_TEST_CASE(output__from_data__insufficient_bytes__failure) {
 
     chain::output instance;
 
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(output__factory_from_data_1__valid_input_success) {
-    auto instance = chain::output::factory_from_data(valid_raw_output);
+    auto instance = create<chain::output>(valid_raw_output);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_output.size());
 
