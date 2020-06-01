@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success) {
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::alert::factory_from_data(
+    auto const result = create<message::alert>(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
