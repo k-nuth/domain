@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_5__valid_input__returns_input_init
 BOOST_AUTO_TEST_CASE(transaction__constructor_6__valid_input__returns_input_initialized) {
     auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
     hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(expected, expected_hash);
