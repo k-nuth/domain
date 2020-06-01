@@ -180,7 +180,7 @@ std::pair<error::error_code_t, chain::transaction> input_set(data_chunk const& s
                                                              wallet::ec_public const& public_key,
                                                              chain::transaction const& raw_tx,
                                                              uint32_t index /*= 0*/) {
-    kth::config::script script("[" + kth::encode_base16(signature) + "] [" + public_key.encoded() + "]");
+    config::script script("[" + kth::encode_base16(signature) + "] [" + public_key.encoded() + "]");
     return input_set(script, raw_tx, index);
 }
 
