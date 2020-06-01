@@ -112,6 +112,6 @@ private:
     data_chunk signature_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
