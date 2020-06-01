@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(set_signature__test) {
     chain::transaction tx;
     data_chunk raw_data;
     kth::decode_base16(raw_data, TX_ENCODE);
-    tx.from_data(raw_data);
+    entity_from_data(tx, raw_data);
 
     // SCRIPT
     auto secret = create_secret_from_seed(SEED);
