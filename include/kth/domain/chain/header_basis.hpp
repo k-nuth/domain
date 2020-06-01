@@ -129,7 +129,7 @@ public:
     // Deprecated (unsafe).
     hash_digest& merkle();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_digest const& merkle() const;
     
     void set_merkle(hash_digest const& value);
