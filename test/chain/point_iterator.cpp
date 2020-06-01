@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(point_iterator__copy_assigment) {
     point point;
     uint8_t offset = 5u;
-    BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
+    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
 
     point_iterator instance(point, offset);
     point_iterator expected(instance);
