@@ -218,4 +218,4 @@ std::ostream& operator<<(std::ostream& out, ec_public const& of) {
     return out;
 }
 
-}  // namespace kth
+} // namespace kth
