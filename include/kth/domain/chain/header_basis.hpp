@@ -121,7 +121,7 @@ public:
     // Deprecated (unsafe).
     hash_digest& previous_block_hash();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_digest const& previous_block_hash() const;
     
     void set_previous_block_hash(hash_digest const& value);
