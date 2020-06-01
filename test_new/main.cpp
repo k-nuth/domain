@@ -76,8 +76,8 @@ TEST_CASE("[test_read_null_terminated_string] 2") {
 
 TEST_CASE("[test_read_null_terminated_string] 3") {
     data_chunk data = {'A', 'B', 'C', 0};
-    bc::data_source ds(data);
-    bc::istream_reader source(ds);
+    kth::data_source ds(data);
+    kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 3);
     REQUIRE(!bool(ret));
