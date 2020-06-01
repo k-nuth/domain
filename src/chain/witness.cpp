@@ -362,7 +362,7 @@ bool witness::extract_embedded_script(script& out_script,
                 }
 
                 // The script is popped off the initial witness stack (bip141).
-                out_script.from_data(pop(out_stack), false);
+                entity_from_data(out_script, pop(out_stack), false);
 
                 // Stack elements must be within push size limit (bip141).
                 if ( ! is_push_size(out_stack)) {
