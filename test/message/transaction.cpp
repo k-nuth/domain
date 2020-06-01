@@ -106,11 +106,11 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_6__always__equals_equivalent_tx) {
         "0000001976a9141ee32412020a324b93b1a1acfdfff6ab9ca8fac288ac000000"
         "00"));
 
-    transaction value = transaction::factory_from_data(
+    transaction value = create<transaction>(
         transaction::version_minimum, raw_tx);
 
     chain::transaction tx;
-    BOOST_REQUIRE(tx.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
     transaction instance(std::move(value));
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(instance == tx);
