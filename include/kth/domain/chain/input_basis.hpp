@@ -158,7 +158,7 @@ public:
     void set_witness(chain::witness&& value);
 #endif // KTH_CURRENCY_BCH
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t sequence() const;
     
     void set_sequence(uint32_t value);
