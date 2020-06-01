@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(send_compact__from_data_1__insufficient_version__failure) {
     const message::send_compact expected{true, 257};
     data_chunk raw_data = expected.to_data(message::send_compact::version_minimum);
     message::send_compact msg;
-    bool result = msg.from_data(message::send_compact::version_minimum - 1, raw_data);
+    bool result = entity_from_data(msg, message::send_compact::version_minimum - 1, raw_data);
     BOOST_REQUIRE(!result);
 }
 
