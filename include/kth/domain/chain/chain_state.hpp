@@ -402,6 +402,6 @@ private:
 #endif  //KTH_CURRENCY_BCH
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 #endif
