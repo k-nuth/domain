@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success) {
 }
 
 BOOST_AUTO_TEST_CASE(block__factory_from_data_2__genesis_mainnet__success) {
-    auto const genesis = bc::chain::block::genesis_mainnet();
+    auto const genesis = chain::block::genesis_mainnet();
     BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
     BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
 
