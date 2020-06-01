@@ -994,6 +994,7 @@ script_pattern script::input_pattern() const {
     return script_pattern::non_standard;
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool script::is_pay_to_witness(uint32_t forks) const {
 #if ! defined(KTH_SEGWIT_ENABLED)
     (void)forks;    //Note(kth): to mute the Linter
