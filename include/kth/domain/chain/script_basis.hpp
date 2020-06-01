@@ -190,10 +190,10 @@ public:
     static
     bool is_coinbase_pattern(operation::list const& ops, size_t height);
     
+#if defined(KTH_SEGWIT_ENABLED)
     static
     bool is_commitment_pattern(operation::list const& ops);
 
-#if defined(KTH_SEGWIT_ENABLED)
     static
     bool is_witness_program_pattern(operation::list const& ops);
 #endif
