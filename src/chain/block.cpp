@@ -298,7 +298,7 @@ void block::set_transactions(transaction::list&& value) {
 chain::block block::genesis_mainnet() {
     data_chunk data;
     decode_base16(data, encoded_mainnet_genesis_block);
-    auto const genesis = chain::block::factory_from_data(data);
+    auto const genesis = create<chain::block>(data);
 
     KTH_ASSERT(genesis.is_valid());
     KTH_ASSERT(genesis.transactions().size() == 1);
