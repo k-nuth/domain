@@ -245,7 +245,7 @@ data_chunk const& script_basis::bytes() const {
 //     while ( ! stream_r.is_exhausted()) {
 //         // op.from_data(stream_r);
 //         // operations_.push_back(std::move(op));
-//         operations_.push_back(operation::factory_from_data(stream_r));
+//         operations_.push_back(create<operation>(stream_r));
 //     }
 
 //     operations_.shrink_to_fit();
