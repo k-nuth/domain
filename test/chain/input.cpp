@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(input__from_data__insufficient_data__failure) {
 
     input instance;
 
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
