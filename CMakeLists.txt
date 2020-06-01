@@ -630,33 +630,20 @@ if (WITH_TESTS)
         test/chain/point.cpp
         test/chain/point_iterator.cpp
         test/chain/satoshi_words.cpp
-        # test/chain/script/script.cpp
-        # test/chain/script/script.hpp
         test/chain/script.cpp
         test/chain/transaction.cpp
-
 
         test/main.cpp
         
         test/machine/opcode.cpp
         test/machine/operation.cpp
 
-        # test/math/big_number.cpp
-        # test/math/big_number.hppcompact
-        # test/math/checksum.cpp
-        # test/math/elliptic_curve.cpp
-        # test/math/hash.cpp
-        # test/math/hash.hpp
-        # test/math/hash_number.cpp
         test/math/limits.cpp
-        # test/math/script_number.cpp
-        # test/math/script_number.hpp
         test/math/stealth.cpp
 
         test/message/address.cpp
         test/message/alert.cpp
         test/message/alert_payload.cpp
-        # test/message/block_message.cpp
         test/message/block.cpp
         test/message/block_transactions.cpp
         test/message/compact_block.cpp
