@@ -209,6 +209,6 @@ private:
     std::string reserved_;
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
