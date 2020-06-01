@@ -113,7 +113,7 @@ public:
         // NOTE: Witness flag is controlled by prefilled tx
         // Order is required.
         for (auto& tx : transactions_) {
-            if ( ! tx.from_data(version, source)) {
+            if ( ! entity_from_data(tx, version, source)) {
                 break;
             }
         }
