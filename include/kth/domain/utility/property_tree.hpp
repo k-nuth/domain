@@ -117,7 +117,7 @@ KD_API pt::ptree property_tree(const chain::output& tx_output);
  * @param[in]  json        Use json array formatting.
  * @return                 A property tree.
  */
-BC_API pt::ptree property_tree(const chain::output::list& tx_outputs,
+KD_API pt::ptree property_tree(const chain::output::list& tx_outputs,
                                bool json);
 
 /**
