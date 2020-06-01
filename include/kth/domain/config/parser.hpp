@@ -345,17 +345,17 @@ public:
     }
 
     static
-    void fix_checkpoints(bool easy_blocks, bool retarget, config::checkpoint::list& checkpoints) {
+    void fix_checkpoints(bool easy_blocks, bool retarget, kth::infrastructure::config::checkpoint::list& checkpoints) {
         auto const def_checkpoints = default_checkpoints(easy_blocks, retarget);
 
-        auto const it = std::max_element(def_checkpoints.begin(), def_checkpoints.end(), [](checkpoint const& x, checkpoint const& y) {
+        auto const it = std::max_element(def_checkpoints.begin(), def_checkpoints.end(), [](auto const& x, auto const& y) {
             return x.height() < y.height();
         });
 
         if (it != def_checkpoints.end()) {
             auto const max_checkpoint_height = it->height();
 
-            checkpoints.erase(std::remove_if(checkpoints.begin(), checkpoints.end(), [max_checkpoint_height](checkpoint const& x) {
+            checkpoints.erase(std::remove_if(checkpoints.begin(), checkpoints.end(), [max_checkpoint_height](auto const& x) {
                 return x.height() <= max_checkpoint_height;
             }), checkpoints.end());
 
