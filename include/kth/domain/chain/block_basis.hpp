@@ -81,7 +81,7 @@ public:
 
         // Order is required, explicit loop allows early termination.
         for (auto& tx : transactions_) {
-            if ( ! tx.from_data(source, true, witness_val(witness))) {
+            if ( ! entity_from_data(tx, source, true, witness_val(witness))) {
                 break;
             }
         }
