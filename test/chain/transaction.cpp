@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_7__valid_input__returns_input_init
     // This must be non-const.
     chain::transaction expected;
 
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
     hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(std::move(expected), expected_hash);
