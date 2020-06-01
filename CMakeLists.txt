@@ -656,22 +656,18 @@ if (WITH_TESTS)
         test/message/get_blocks.cpp
         test/message/get_data.cpp
         test/message/get_headers.cpp
-        # test/message/header_message.cpp
         test/message/headers.cpp
         test/message/heading.cpp
         test/message/inventory.cpp
         test/message/inventory_vector.cpp
         test/message/memory_pool.cpp
         test/message/merkle_block.cpp
-        # test/message/network_address.cpp
         test/message/not_found.cpp
         test/message/ping.cpp
         test/message/pong.cpp
         test/message/prefilled_transaction.cpp
         test/message/reject.cpp
-        # test/message/send_compact_blocks.cpp
         test/message/send_headers.cpp
-        # test/message/transaction_message.cpp
         test/message/transaction.cpp
         test/message/verack.cpp
         test/message/version.cpp
