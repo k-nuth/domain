@@ -187,7 +187,7 @@ KD_API bool encrypt(encrypted_private& out_private, ec_secret const& secret, std
  * @param[in]  passphrase      The passphrase from the encryption or token.
  * @return false if the key checksum or passphrase is not valid.
  */
-BC_API bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed, encrypted_private const& key, std::string const& passphrase);
+KD_API bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed, encrypted_private const& key, std::string const& passphrase);
 
 /**
  * DEPRECATED
