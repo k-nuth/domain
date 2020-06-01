@@ -234,13 +234,13 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_3__valid_input__success) {
         "3434565656565678789a9a0201000000010000000000000100000001000000000000"));
 
     message::compact_block expected;
-    expected.from_data(message::compact_block::version_minimum, raw);
+    entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::compact_block::factory_from_data(
+    auto const result = create<message::compact_block>(
         message::compact_block::version_minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

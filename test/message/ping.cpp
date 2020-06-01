@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(ping__from_data_1__maximum_version__success_expected_nonce)
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
     message::ping instance;
-    BOOST_REQUIRE(instance.from_data(message::ping::version_maximum, data));
+    BOOST_REQUIRE(entity_from_data(instance, message::ping::version_maximum, data));
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(instance == expected);
 }
