@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(output__factory_from_data_1__valid_input_success) {
 
 BOOST_AUTO_TEST_CASE(output__factory_from_data_2__valid_input_success) {
     data_source stream(valid_raw_output);
-    auto instance = chain::output::factory_from_data(stream);
+    auto instance = create<chain::output>(stream);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_output.size());
 
