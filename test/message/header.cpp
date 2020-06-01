@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success) {
     data_source istream(data);
     istream_reader source(istream);
 
-    auto const result = message::header::factory_from_data(version, source);
+    auto const result = create<message::header>(version, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
