@@ -103,7 +103,6 @@ data_chunk transaction_basis::to_data(bool wire, bool witness) const {
     return data;
 }
 
-
 void transaction_basis::to_data(data_sink& stream, bool wire, bool witness) const {
     ostream_writer sink_w(stream);
     to_data(sink_w, wire, witness_val(witness));
