@@ -738,4 +738,4 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks) {
 #endif
 }
 
-}  // namespace kth
+} // namespace kth
