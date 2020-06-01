@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_7__always__equals_equivalent_tx) {
 BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_data__failure) {
     data_chunk data(2);
     transaction instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version::level::minimum, data));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, data));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
