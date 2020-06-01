@@ -134,18 +134,18 @@ BOOST_AUTO_TEST_CASE(address__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab};
     address instance;
 
-    BOOST_REQUIRE(!instance.from_data(version::level::minimum, raw));
+    BOOST_REQUIRE(!entity_from_data(instance, version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success) {
-    const address expected(
+    address const expected(
         {{734678u,
           5357534u,
           base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
           123u}});
 
     auto const data = expected.to_data(version::level::minimum);
-    auto const result = address::factory_from_data(version::level::minimum, data);
+    auto const result = create<address>(version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
