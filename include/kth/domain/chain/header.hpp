@@ -137,15 +137,13 @@ public:
     // friend class block;
 
     void reset();
-    void invalidate_cache() const;
+    // void invalidate_cache() const;
 
-private:
-    mutable upgrade_mutex mutex_;
-    mutable std::shared_ptr<hash_digest> hash_;
+// private:
+//     mutable upgrade_mutex mutex_;
+//     mutable std::shared_ptr<hash_digest> hash_;
 };
 
-}  // namespace kth::chain
-
-//#include <kth/domain/concepts_undef.hpp>
+} // namespace kth::domain::chain
 
 #endif
