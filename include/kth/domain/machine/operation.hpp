@@ -194,34 +194,34 @@ public:
     bool is_relaxed_push(opcode code);
 
     /// Categories of operations.
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_push() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_counted() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_version() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_positive() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_disabled() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_conditional() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_relaxed_push() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_oversized() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_minimal_push() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_nominal_push() const;
 
 protected:
