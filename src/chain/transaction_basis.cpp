@@ -123,14 +123,19 @@ size_t transaction_basis::serialized_size(bool wire, bool witness) const {
     };
 
     // Must be both witness and wire encoding for bip144 serialization.
-    return (wire && witness_val(witness) ? sizeof(witness_marker) : 0) 
-         + (wire && witness_val(witness) ? sizeof(witness_flag) : 0) 
-         + (wire ? sizeof(version_) : message::variable_uint_size(version_)) 
-         + (wire ? sizeof(locktime_) : message::variable_uint_size(locktime_)) 
-         + message::variable_uint_size(inputs_.size()) 
-         + message::variable_uint_size(outputs_.size()) 
+    return 
+           (wire ? sizeof(version_) : infrastructure::message::variable_uint_size(version_)) 
+         + (wire ? sizeof(locktime_) : infrastructure::message::variable_uint_size(locktime_)) 
+         + infrastructure::message::variable_uint_size(inputs_.size()) 
+         + infrastructure::message::variable_uint_size(outputs_.size()) 
          + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins) 
-         + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs);
+         + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs)
+
+#if defined(KTH_SEGWIT_ENABLED)
+         + (wire && witness_val(witness) ? sizeof(witness_marker) : 0) 
+         + (wire && witness_val(witness) ? sizeof(witness_flag) : 0) 
+#endif
+        ;
 }
 
 // Accessors.
