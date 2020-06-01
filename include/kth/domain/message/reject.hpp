@@ -138,13 +138,13 @@ public:
         return source;
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
 
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_string(message_);
         sink.write_byte(reason_to_byte(code_));
         sink.write_string(reason_);
