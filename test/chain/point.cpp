@@ -187,20 +187,20 @@ BOOST_AUTO_TEST_CASE(point__index__roundtrip__success) {
 
 BOOST_AUTO_TEST_CASE(point__operator_assign_equals_1__always__matches_equivalent) {
     chain::point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_point));
     chain::point instance;
 
     // This must be non-const.
     chain::point value;
 
-    BOOST_REQUIRE(value.from_data(valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(value, valid_raw_point));
     instance = std::move(value);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(point__operator_assign_equals_2__always__matches_equivalent) {
     chain::point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_point));
     chain::point instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);
