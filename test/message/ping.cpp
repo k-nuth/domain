@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__minimum_version_round_trip__zero
     auto const data = value.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::ping::factory_from_data(version, source);
+    auto const result = create<message::ping>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
 }
