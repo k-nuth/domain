@@ -148,24 +148,22 @@ private:
 };
 
 /// The pre-encoded structure of a payment address or other similar data.
-struct BC_API wrapped_data {
+struct KD_API wrapped_data {
     uint8_t version;
     data_chunk payload;
     uint32_t checksum;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 // Allow payment_address to be in indexed in std::*map classes.
 namespace std {
 template <>
-struct hash<bc::wallet::payment_address> {
-    size_t operator()(const bc::wallet::payment_address& address) const {
-        return std::hash<bc::short_hash>()(address.hash());
+struct hash<kth::domain::wallet::payment_address> {
+    size_t operator()(const kth::domain::wallet::payment_address& address) const {
+        return std::hash<kth::short_hash>()(address.hash());
     }
 };
-
-}  // namespace std
+} // namespace std
 
 #endif
