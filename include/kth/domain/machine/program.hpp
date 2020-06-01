@@ -204,8 +204,7 @@ private:
     bool_stack condition_;
 };
 
-}  // namespace machine
-}  // namespace kth
+} // namespace kth::domain::machine
 
 #include <kth/domain/impl/machine/program.ipp>
 
