@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE(script__from_data__internal_invalid_wire_code__success) {
         "8292e8a8ade38191e381a6e381afe38184e381aae38184"));
 
     script instance;
-    BOOST_REQUIRE(instance.from_data(raw, false));
+    BOOST_REQUIRE(entity_from_data(instance, raw, false));
 }
 
 BOOST_AUTO_TEST_CASE(script__from_string__empty__success) {
