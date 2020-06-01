@@ -322,18 +322,6 @@ uint64_t block_basis::subsidy(size_t height, bool retarget) {
     return subsidy;
 }
 
-// // Returns max_size_t in case of overflow or unpopulated chain state.
-// size_t block_basis::signature_operations() const {
-//     auto const state = validation.state;
-//     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-// #if ! defined(KTH_SEGWIT_ENABLED)
-//     auto const bip141 = false;  // No segwit
-// #else
-//     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
-// #endif
-//     return state ? signature_operations(bip16, bip141) : max_size_t;
-// }
-
 // Returns max_size_t in case of overflow.
 size_t block_basis::signature_operations(bool bip16, bool bip141) const {
 #if ! defined(KTH_SEGWIT_ENABLED)
