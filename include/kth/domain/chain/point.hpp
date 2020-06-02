@@ -198,8 +198,8 @@ namespace std {
 
 // Extend std namespace with our hash wrapper (database key, not checksum).
 template <>
-struct hash<bc::chain::point> {
-    size_t operator()(const bc::chain::point& point) const {
+struct hash<kth::domain::chain::point> {
+    size_t operator()(const kth::domain::chain::point& point) const {
         size_t seed = 0;
         boost::hash_combine(seed, point.hash());
         boost::hash_combine(seed, point.index());
