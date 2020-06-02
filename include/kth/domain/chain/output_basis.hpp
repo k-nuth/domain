@@ -108,13 +108,15 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t signature_operations(bool bip141) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_dust(uint64_t minimum_output_value) const;
-    
+
+#if defined(KTH_SEGWIT_ENABLED)    
     bool extract_committed_hash(hash_digest& out) const;
+#endif
 
 // protected:
     void reset();
