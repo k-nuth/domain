@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
 
     auto const data = expected.to_data(version::level::minimum);
     data_source istream(data);
-    auto const result = address::factory_from_data(version::level::minimum, istream);
+    auto const result = create<address>(version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
