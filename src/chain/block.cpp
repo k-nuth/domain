@@ -320,7 +320,7 @@ chain::block block::genesis_testnet() {
 chain::block block::genesis_regtest() {
     data_chunk data;
     decode_base16(data, encoded_regtest_genesis_block);
-    auto const genesis = chain::block::factory_from_data(data);
+    auto const genesis = create<chain::block>(data);
 
     KTH_ASSERT(genesis.is_valid());
     KTH_ASSERT(genesis.transactions().size() == 1);
