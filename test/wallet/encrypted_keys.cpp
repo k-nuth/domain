@@ -107,21 +107,21 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__create_token_entropy)
 
-#define BC_CREATE_TOKEN_ENTROPY(passphrase, bytes) \
+#define KD_CREATE_TOKEN_ENTROPY(passphrase, bytes) \
     encrypted_token out_token;                     \
     create_token(out_token, passphrase, bytes)
 
 BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__defaults__expected) {
     auto const passphrase = "";
     auto const entropy = base16_literal("baadf00dbaadf00d");
-    BC_CREATE_TOKEN_ENTROPY(passphrase, entropy);
+    KD_CREATE_TOKEN_ENTROPY(passphrase, entropy);
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphraseqVHzjNrYRo5G6yLmJ7TQ49fKnQtsgjybNgNHAKBCQKoFZcTNjNJtg4oCUgtPt3");
 }
 
 BOOST_AUTO_TEST_CASE(encrypted__create_token_entropy__passphrase__expected) {
     auto const passphrase = "passphrase";
     auto const entropy = base16_literal("baadf00dbaadf00d");
-    BC_CREATE_TOKEN_ENTROPY(passphrase, entropy);
+    KD_CREATE_TOKEN_ENTROPY(passphrase, entropy);
     BOOST_REQUIRE_EQUAL(encode_base58(out_token), "passphraseqVHzjNrYRo5G6sfRB4YdSaQ2m8URnkBYS1UT6JBju5G5o45YRZKLDpK6J3PEGq");
 }
 
