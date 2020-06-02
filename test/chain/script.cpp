@@ -562,7 +562,7 @@ BOOST_AUTO_TEST_CASE(script__checksig__single__uses_one_hash) {
     decode_base16(script_data, "76a91433cef61749d11ba2adf091a5e045678177fe3a6d88ac");
 
     script script_code;
-    BOOST_REQUIRE(script_code.from_data(script_data, false));
+    BOOST_REQUIRE(entity_from_data(script_code, script_data, false));
 
     ec_signature signature;
     static auto const index = 1u;

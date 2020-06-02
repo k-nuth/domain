@@ -577,9 +577,9 @@ BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__partialy_distinct_not_a
 #ifdef KTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(validate_block__is_cash_pow_valid__true) {
     uint32_t old_bits = 402736949;
-    const chain::compact bits(old_bits);
+    const domain::chain::compact bits(old_bits);
     uint256_t target(bits);
-    BOOST_REQUIRE_EQUAL(chain::compact(chain::chain_state::difficulty_adjustment_cash(target)).normal(), 402757890);
+    BOOST_REQUIRE_EQUAL(domain::chain::compact(domain::chain::chain_state::difficulty_adjustment_cash(target)).normal(), 402757890);
 }
 #endif  //KTH_CURRENCY_BCH
 

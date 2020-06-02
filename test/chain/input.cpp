@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE(input__signature_operations__bip16_inactive__returns_script
 BOOST_AUTO_TEST_CASE(input__signature_operations__bip16_active_cache_empty__returns_script_sigops) {
     auto const raw_script = to_chunk(base16_literal("02acad"));
     script script;
-    BOOST_REQUIRE(script.from_data(raw_script, true));
+    BOOST_REQUIRE(entity_from_data(script, raw_script, true));
     input instance;
     instance.set_script(script);
     BOOST_REQUIRE_EQUAL(script.sigops(false), instance.signature_operations(true, false));

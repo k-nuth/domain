@@ -452,9 +452,6 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     }
 #endif
 
-    // if ( ! bip141 && is_segregated()) {
-    //     return error::empty_transaction;
-    // }
 #if defined(KTH_SEGWIT_ENABLED)
     if ( ! bip141 && is_segregated) {
         return error::empty_transaction;

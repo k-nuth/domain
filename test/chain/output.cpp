@@ -152,15 +152,15 @@ BOOST_AUTO_TEST_CASE(output__script_setter_2__roundtrip__success) {
 
 BOOST_AUTO_TEST_CASE(output__operator_assign_equals_1__always__matches_equivalent) {
     chain::output expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
     chain::output instance;
-    instance = chain::output::factory_from_data(valid_raw_output);
+    instance = create<chain::output>(valid_raw_output);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(output__operator_assign_equals_2__always__matches_equivalent) {
     chain::output expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
     chain::output instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);
