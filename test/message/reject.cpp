@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_dust__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
