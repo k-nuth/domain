@@ -209,16 +209,16 @@ struct hash<kth::domain::chain::point> {
 
 // Extend std namespace with the non-wire size of point (database key size).
 template <>
-struct tuple_size<bc::chain::point> {
+struct tuple_size<kth::domain::chain::point> {
     static
-    auto const value = std::tuple_size<bc::hash_digest>::value + sizeof(uint16_t);
+    auto const value = std::tuple_size<kth::hash_digest>::value + sizeof(uint16_t);
 
     operator std::size_t() const {
         return value;
     }
 };
 
-}  // namespace std
+} // namespace std
 
 //#include <kth/domain/concepts_undef.hpp>
 
