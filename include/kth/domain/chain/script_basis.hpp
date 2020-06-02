@@ -321,6 +321,6 @@ private:
 
 machine::operation::list operations(script_basis const& script);
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
-#endif // KTH_CHAIN_SCRIPT_BASIS_HPP_
+#endif // KTH_DOMAIN_CHAIN_SCRIPT_BASIS_HPP
