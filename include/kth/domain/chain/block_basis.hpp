@@ -132,7 +132,7 @@ public:
     // deprecated (unsafe)
     chain::header& header();
 
-    [[nodiscard]] 
+    [[nodiscard]]
     chain::header const& header() const;
 
     void set_header(chain::header const& value);
