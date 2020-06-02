@@ -426,15 +426,17 @@ code transaction_basis::check(uint64_t total_output_value, bool transaction_pool
 
 // These checks assume that prevout caching is completed on all tx.inputs.
 code transaction_basis::accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated /*= false*/, bool transaction_pool /*= true*/) const {
-    auto const bip16 = state.is_enabled(bc::machine::rule_fork::bip16_rule);
-    auto const bip30 = state.is_enabled(bc::machine::rule_fork::bip30_rule);
-    auto const bip68 = state.is_enabled(bc::machine::rule_fork::bip68_rule);
+    auto const bip16 = state.is_enabled(kth::domain::machine::rule_fork::bip16_rule);
+    auto const bip30 = state.is_enabled(kth::domain::machine::rule_fork::bip30_rule);
+    auto const bip68 = state.is_enabled(kth::domain::machine::rule_fork::bip68_rule);
+
 #if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
 #else
-    auto const bip141 = state.is_enabled(bc::machine::rule_fork::bip141_rule);
+    auto const bip141 = state.is_enabled(kth::domain::machine::rule_fork::bip141_rule);
 #endif
-    auto const revert_bip30 = state.is_enabled(bc::machine::rule_fork::allow_collisions);
+
+    auto const revert_bip30 = state.is_enabled(kth::domain::machine::rule_fork::allow_collisions);
 
     // bip141 discounts segwit sigops by increasing limit and legacy weight.
     auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
