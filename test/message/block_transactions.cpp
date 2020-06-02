@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_3__valid_input__succe
     BOOST_REQUIRE(raw == data);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::block_transactions::factory_from_data(
+    auto const result = create<message::block_transactions>(
         message::block_transactions::version_minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
