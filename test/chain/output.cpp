@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(output__value__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(output__script_setter_1__roundtrip__success) {
     chain::script value;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(value.from_data(data, false));
+    BOOST_REQUIRE(entity_from_data(value, data, false));
 
     chain::output instance;
     BOOST_REQUIRE(value != instance.script());
