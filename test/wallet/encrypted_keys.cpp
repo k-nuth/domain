@@ -499,7 +499,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_comp
     uint8_t const version = 111;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
-    BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "8FELCpEDogaLG3WkLhSVpKKravcNDZ7HAQ7jwHApt1Rn4BHqaLAfo9nrRD");
     BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm2zc77zW4FRDALEVBoKmmT79Q7KshtvLZoN62JADnXGPEcPosMx8sM8Ry4ieGW3FXUEoBwk2");
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
