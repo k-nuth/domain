@@ -1140,11 +1140,12 @@ operation::list operations(script_basis const& script) {
     while ( ! stream_r.is_exhausted()) {
         // op.from_data(stream_r);
         // res.push_back(std::move(op));
-        res.push_back(operation::factory_from_data(stream_r));
+        // res.push_back(create<operation>(stream_r));
+        res.push_back(create<operation>(stream_r));
     }
 
     res.shrink_to_fit();
     return res;
 }
 
-}  // namespace kth
+} // namespace kth
