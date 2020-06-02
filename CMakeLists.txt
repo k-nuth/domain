@@ -807,7 +807,7 @@ set(_kth_domain_headers
     kth/domain/compat.hpp
     kth/domain/constants.hpp
     kth/domain/define.hpp
-    # kth/domain/error.hpp
+
     kth/domain/handlers.hpp
     kth/domain/version.hpp
 
