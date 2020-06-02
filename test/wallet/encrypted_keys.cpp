@@ -472,7 +472,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9__exp
     uint8_t const version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
-    BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
     BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm38V5ec4E5RKwBu46Jf5zfaE54nuB1NWHpHSpgX4GQqfzx7fvqm43mBHvr89pPgykDHts9VC");
 
@@ -487,7 +487,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_9_comp
     uint8_t const version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
-    BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PnQ4ihgH1pxeUWa1SDPZ4xToaTdLtjebd8Qw6KJf8xDCW67ssaAqWuJkw");
     BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm38VUEdzHWKfUjdNjV22wyFNGgtRHYhXdBFT7fWw7cCJbCobryAYUThq4BbTPP15g4SeBsug");
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
