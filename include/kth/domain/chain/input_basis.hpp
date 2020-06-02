@@ -173,16 +173,16 @@ public:
     // Validation.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_final() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_segregated() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_locked(size_t block_height, uint32_t median_time_past) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t signature_operations(bool bip16, bool bip141) const;
     
     bool extract_reserved_hash(hash_digest& out) const;
