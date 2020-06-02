@@ -293,11 +293,11 @@ public:
 // protected:
 
 #if defined(KTH_SEGWIT_ENABLED)
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_pay_to_witness(uint32_t forks) const;
 #endif
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_pay_to_script_hash(uint32_t forks) const;
 
 // private:
