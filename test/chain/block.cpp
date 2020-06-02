@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_CASE(block__generate_merkle_root__block_with_multiple_transactio
         "76a914eb675c349c474bec8dea2d79d12cff6f330ab48788ac00000000"));
 
     chain::block block100k;
-    BOOST_REQUIRE(block100k.from_data(raw));
+    BOOST_REQUIRE(entity_from_data(block100k, raw));
     BOOST_REQUIRE(block100k.is_valid());
 
     auto const serial = block100k.to_data();
