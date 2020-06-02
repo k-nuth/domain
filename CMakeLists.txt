@@ -687,7 +687,7 @@ if (WITH_TESTS)
 
 _group_sources(kth_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-#    TODO: Fer: chequear si hay nuevos tests en los makefiles (no Cmake)
+# TODO(fernando): check if there are new tests in Makefile (no Cmake)
   _add_tests(kth_domain_test
     address_tests
     alert_payload_tests
