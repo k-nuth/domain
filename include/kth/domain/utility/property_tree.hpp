@@ -133,7 +133,7 @@ KD_API pt::ptree property_list(const chain::point_value& point);
  * @param[in]  json  Use json array formatting.
  * @return           A property tree.
  */
-BC_API pt::ptree property_tree(const chain::points_value& values, bool json);
+KD_API pt::ptree property_tree(chain::points_value const& values, bool json);
 
 /**
  * Generate a property list for a transaction.
