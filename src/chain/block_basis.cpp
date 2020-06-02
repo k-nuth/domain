@@ -694,6 +694,8 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     }
 #endif
 
+    // TODO(legacy): relates height to total of tx.size(true) (pool cache).
+    // NOTE: for BCH bit141 is set as false
     // if (bip141 && weight() > max_block_weight) {
     if (bip141 && weight > max_block_weight) {
         return error::block_weight_limit;

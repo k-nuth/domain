@@ -470,7 +470,6 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     // the original is spent in the new block. This is not necessary nor is it
     // described by BIP30, but it is in the code referenced by BIP30.
     //*************************************************************************
-    // if (bip30 && !revert_bip30 && validation.duplicate) {
     if (bip30 && !revert_bip30 && is_duplicated) {
         return error::unspent_duplicate;
     }

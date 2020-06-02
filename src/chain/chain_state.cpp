@@ -762,8 +762,7 @@ typename chain_state::timestamps::const_iterator timestamps_position(chain_state
     return times.begin();
 }
 
-std::vector<typename chain_state::timestamps::value_type>
-timestamps_subset(chain_state::timestamps const& times, bool tip) {
+std::vector<typename chain_state::timestamps::value_type> timestamps_subset(chain_state::timestamps const& times, bool tip) {
     auto at = timestamps_position(times, tip);
     auto n = (std::min)(static_cast<size_t>(std::distance(at, times.end())), median_time_past_interval);
     std::vector<typename chain_state::timestamps::value_type> subset(n);

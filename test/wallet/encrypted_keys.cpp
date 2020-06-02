@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_1__expected) {
     uint8_t const version = 0x00;
     auto const expected = "6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq";
     auto const secret = base16_literal("09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
-    BC_REQUIRE_ENCRYPT(secret, "Satoshi", version, compression, expected);
+    KD_REQUIRE_ENCRYPT(secret, "Satoshi", version, compression, expected);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_2_compressed__expected) 
     uint8_t const version = 0x00;
     auto const expected = "6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo";
     auto const secret = base16_literal("cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
-    BC_REQUIRE_ENCRYPT(secret, "TestingOneTwoThree", version, compression, expected);
+    KD_REQUIRE_ENCRYPT(secret, "TestingOneTwoThree", version, compression, expected);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply

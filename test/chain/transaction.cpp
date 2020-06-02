@@ -454,7 +454,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_1__case_1__success) {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
 
-    chain::transaction tx = chain::transaction::factory_from_data(raw_tx);
+    chain::transaction tx = create<chain::transaction>(raw_tx);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
@@ -470,7 +470,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_1__case_2__success) {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
 
-    chain::transaction tx = chain::transaction::factory_from_data(raw_tx);
+    chain::transaction tx = create<chain::transaction>(raw_tx);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 

@@ -158,37 +158,37 @@ public:
     static
     uint256_t proof(uint32_t bits);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t fees() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t claim() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t reward(size_t height) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint256_t proof() const;
     
     [[nodiscard]]
     hash_digest generate_merkle_root(bool witness = false) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t signature_operations(bool bip16, bool bip141) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_extra_coinbases() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_final(size_t height, uint32_t block_time) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_distinct_transaction_set() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid_coinbase_claim(size_t height) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid_coinbase_script(size_t height) const;
     
 #if defined(KTH_SEGWIT_ENABLED)

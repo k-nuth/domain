@@ -835,54 +835,19 @@ set(_kth_domain_headers
     kth/domain/machine/operation.hpp
     kth/domain/machine/program.hpp
     kth/domain/machine/rule_fork.hpp
-    kth/domain/machine/script_pattern.hpp
-    kth/domain/machine/sighash_algorithm.hpp
-    kth/domain/machine/script_version.hpp
-
-    # kth/domain/config/authority.hpp
-    # kth/domain/config/base16.hpp
-    # kth/domain/config/base2.hpp
-    # kth/domain/config/base58.hpp
-    # kth/domain/config/base64.hpp
-    # kth/domain/config/checkpoint.hpp
-    # kth/domain/config/directory.hpp
-    # kth/domain/config/endpoint.hpp
-    # kth/domain/config/hash160.hpp
-    # kth/domain/config/hash256.hpp
-    # kth/domain/config/parameter.hpp
+    
     kth/domain/config/parser.hpp
-    # kth/domain/config/printer.hpp
-    # kth/domain/config/settings.hpp
-    # kth/domain/config/sodium.hpp
-
-    # kth/domain/config/header.hpp
-    # kth/domain/config/input.hpp
-    # kth/domain/config/output.hpp
-    # kth/domain/config/transaction.hpp
-    # kth/domain/config/script.hpp
-    # kth/domain/config/ec_private.hpp
-    # kth/domain/config/endorsement.hpp
     
     kth/domain/utility/property_tree.hpp
     kth/domain/impl/utility/property_tree.ipp
-    # kth/domain/utility/socket.hpp
-    
-  
-    # kth/domain/impl/math/checksum.ipp
-    # kth/domain/impl/math/hash.ipp
 
     kth/domain/impl/machine/interpreter.ipp
     kth/domain/impl/machine/number.ipp
     kth/domain/impl/machine/operation.ipp
     kth/domain/impl/machine/program.ipp
 
-    # kth/domain/math/checksum.hpp
-    # kth/domain/math/crypto.hpp
-    # kth/domain/math/elliptic_curve.hpp
-    # kth/domain/math/hash.hpp
     kth/domain/math/limits.hpp
     kth/domain/math/stealth.hpp
-    # kth/domain/math/uint256.hpp
     
     kth/domain/message/address.hpp
     kth/domain/message/alert.hpp
@@ -907,7 +872,7 @@ set(_kth_domain_headers
     kth/domain/message/memory_pool.hpp
     kth/domain/message/merkle_block.hpp
     kth/domain/message/messages.hpp
-    # kth/domain/message/network_address.hpp
+
     kth/domain/message/not_found.hpp
     kth/domain/message/ping.hpp
     kth/domain/message/pong.hpp

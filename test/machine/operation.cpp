@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(operation__from_data__roundtrip_push_four_size__success) {
 }
 
 BOOST_AUTO_TEST_CASE(operation__factory_from_data_1__roundtrip__success) {
-    auto operation = operation::factory_from_data(valid_raw_operation);
+    auto operation = create<machine::operation>(valid_raw_operation);
 
     BOOST_REQUIRE(operation.is_valid());
     data_chunk output = operation.to_data();
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(operation__factory_from_data_1__roundtrip__success) {
 
 BOOST_AUTO_TEST_CASE(operation__factory_from_data_2__roundtrip__success) {
     data_source istream(valid_raw_operation);
-    auto operation = operation::factory_from_data(istream);
+    auto operation = create<machine::operation>(istream);
 
     BOOST_REQUIRE(operation.is_valid());
     data_chunk output = operation.to_data();

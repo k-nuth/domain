@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
-    network_address::list const value{
+    infrastructure::message::network_address::list const value{
         network_address(
             734678u,
             5357534u,
@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
-    network_address::list const value{
+    infrastructure::message::network_address::list const value{
         network_address(
             734678u,
             5357534u,

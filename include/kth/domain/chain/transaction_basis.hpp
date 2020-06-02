@@ -416,6 +416,6 @@ private:
     output::list outputs_;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
-#endif // KTH_CHAIN_TRANSACTION_BASIS_HPP_
+#endif // KTH_DOMAIN_CHAIN_TRANSACTION_BASIS_HPP

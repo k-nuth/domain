@@ -121,8 +121,8 @@ TEST_CASE("[test_read_null_terminated_string] 7") {
 
 TEST_CASE("[test_read_null_terminated_string] 8") {
     data_chunk data = {0};
-    bc::data_source ds(data);
-    bc::istream_reader source(ds);
+    kth::data_source ds(data);
+    kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 1);
     REQUIRE(bool(ret));
@@ -131,8 +131,8 @@ TEST_CASE("[test_read_null_terminated_string] 8") {
 
 TEST_CASE("[test_read_null_terminated_string] 9") {
     data_chunk data = {};
-    bc::data_source ds(data);
-    bc::istream_reader source(ds);
+    kth::data_source ds(data);
+    kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 1);
     REQUIRE(!bool(ret));
