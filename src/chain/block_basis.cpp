@@ -677,9 +677,6 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
     if (state.is_under_checkpoint()) {
         return error::success;
-
-        // TODO(legacy): relates height to total of tx.size(true) (pool cache).
-        // NOTE: for BCH bit141 is set as false
     }
 
 #if defined(KTH_CURRENCY_BCH)

@@ -742,8 +742,7 @@ bool chain_state::is_graviton_enabled(size_t height, uint32_t forks) {
 
 #endif // KTH_CURRENCY_BCH
 
-typename chain_state::timestamps::const_iterator
-timestamps_position(chain_state::timestamps const& times, bool tip) {
+typename chain_state::timestamps::const_iterator timestamps_position(chain_state::timestamps const& times, bool tip) {
 #ifdef KTH_CURRENCY_BCH
     if (tip) {
         if (times.size() >= bitcoin_cash_offset_tip) {
