@@ -302,7 +302,7 @@ public:
     // Deprecated (unsafe).
     outs& outputs();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     const outs& outputs() const;
     
     void set_outputs(const outs& value);
