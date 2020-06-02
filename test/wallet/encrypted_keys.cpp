@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(encrypted__encrypt_private)
 
-#define BC_REQUIRE_ENCRYPT(secret, passphrase, version, compressed, expected)     \
+#define KD_REQUIRE_ENCRYPT(secret, passphrase, version, compressed, expected)     \
     encrypted_private out_private;                                                \
     BOOST_REQUIRE(encrypt(out_private, secret, passphrase, version, compressed)); \
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), expected)
