@@ -452,10 +452,6 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     //     result.forks |= (rule_fork::cash_replay_protection & forks);
     // }
 
-
-
-
-
     if (is_uahf_enabled(values.height, forks)) {
         // result.forks |= (rule_fork::cash_verify_flags_script_enable_sighash_forkid & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_STRICTENC & forks);

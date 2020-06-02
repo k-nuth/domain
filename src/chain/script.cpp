@@ -1174,4 +1174,4 @@ bool script::is_unspendable() const {
 // #endif
 // }
 
-}  // namespace kth
+} // namespace kth
