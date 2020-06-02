@@ -149,7 +149,7 @@ KD_API pt::ptree property_list(config::transaction const& transaction, bool json
  * @param[in]  json         Use json array formatting.
  * @return                  A property tree.
  */
-BC_API pt::ptree property_tree(const config::transaction& transaction, bool json);
+KD_API pt::ptree property_tree(config::transaction const& transaction, bool json);
 
 /**
  * Generate a property tree for a set of transactions.
