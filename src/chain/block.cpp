@@ -393,19 +393,6 @@ void block::strip_witness() {
 // Validation helpers.
 //-----------------------------------------------------------------------------
 
-// // [GetBlockProof]
-// uint256_t block::proof() const {
-//     return header_.proof();
-// }
-
-// uint64_t block::subsidy(size_t height, bool retarget) {
-//     static auto const overflow = sizeof(uint64_t) * byte_bits;
-//     auto subsidy = initial_block_subsidy_satoshi();
-//     auto const halvings = height / subsidy_interval(retarget);
-//     subsidy >>= (halvings >= overflow ? 0 : halvings);
-//     return subsidy;
-// }
-
 // Returns max_size_t in case of overflow or unpopulated chain state.
 size_t block::signature_operations() const {
     auto const state = validation.state;
