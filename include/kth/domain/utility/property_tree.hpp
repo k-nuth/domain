@@ -125,7 +125,7 @@ KD_API pt::ptree property_tree(const chain::output::list& tx_outputs,
  * @param[in]  point  The point value.
  * @return            A property list.
  */
-BC_API pt::ptree property_list(const chain::point_value& point);
+KD_API pt::ptree property_list(const chain::point_value& point);
 
 /**
  * Generate a property tree for points value.
