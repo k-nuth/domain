@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_0__expected) {
     uint8_t const version = 0x00;
     auto const expected = "6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg";
     auto const secret = base16_literal("cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
-    BC_REQUIRE_ENCRYPT(secret, "TestingOneTwoThree", version, compression, expected);
+    KD_REQUIRE_ENCRYPT(secret, "TestingOneTwoThree", version, compression, expected);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
