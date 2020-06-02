@@ -165,14 +165,14 @@ KD_API pt::ptree property_tree(const std::vector<config::transaction>& transacti
  * @param[in]  wrapper  The wrapper instance.
  * @return              A property list.
  */
-BC_API pt::ptree property_list(const wallet::wrapped_data& wrapper);
+KD_API pt::ptree property_list(const wallet::wrapped_data& wrapper);
 
 /**
  * Generate a property tree for a wrapper.
  * @param[in]  wrapper  The wrapper instance.
  * @return              A property tree.
  */
-BC_API pt::ptree property_tree(const wallet::wrapped_data& wrapper);
+KD_API pt::ptree property_tree(const wallet::wrapped_data& wrapper);
 
 /**
  * Create a property list for the fetch-tx-index command.

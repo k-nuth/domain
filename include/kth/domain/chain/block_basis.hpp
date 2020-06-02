@@ -196,40 +196,40 @@ public:
     bool is_valid_witness_commitment() const;
 #endif    
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_forward_reference() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_canonical_ordered() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_internal_double_spend() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid_merkle_root() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     code check(size_t serialized_size_false) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     code check_transactions() const;
         
-    [[nodiscard]] 
+    [[nodiscard]]
     code accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions = true) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     code accept_transactions(chain_state const& state) const;
         
-    [[nodiscard]] 
+    [[nodiscard]]
     code connect(chain_state const& state) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     code connect_transactions(chain_state const& state) const;
 
 // protected:
     void reset();
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t non_coinbase_input_count() const;
 
 private:

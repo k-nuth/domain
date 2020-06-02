@@ -703,12 +703,11 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
     if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;
-
     }
+
     // TODO(legacy): relates height to total of tx.fee (pool cach).
     if ( ! is_valid_coinbase_claim(state.height())) {
         return error::coinbase_value_limit;
-
     }
 
     // TODO(legacy): relates median time past to tx.locktime (pool cache min tx.time).

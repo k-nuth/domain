@@ -467,42 +467,8 @@ bool block::is_segregated() const {
     return value;
 #endif // KTH_CURRENCY_BCH
 }
+#endif // defined(KTH_SEGWIT_ENABLED)
 
-// code block::check_transactions() const {
-//     code ec;
-
-//     for (auto const& tx : transactions_) {
-//         if ((ec = tx.check(false))) {
-//             return ec;
-//         }
-//     }
-
-//     return error::success;
-// }
-
-// code block::accept_transactions(chain_state const& state) const {
-//     code ec;
-
-//     for (auto const& tx : transactions_) {
-//         if ((ec = tx.accept(state, false))) {
-//             return ec;
-//         }
-//     }
-
-//     return error::success;
-// }
-
-// code block::connect_transactions(chain_state const& state) const {
-//     code ec;
-
-//     for (auto const& tx : transactions_) {
-//         if ((ec = tx.connect(state))) {
-//             return ec;
-//         }
-//     }
-
-//     return error::success;
-// }
 
 // Validation.
 //-----------------------------------------------------------------------------
