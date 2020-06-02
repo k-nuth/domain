@@ -209,30 +209,30 @@ BOOST_AUTO_TEST_CASE(point__operator_assign_equals_2__always__matches_equivalent
 BOOST_AUTO_TEST_CASE(point__operator_boolean_equals__duplicates__returns_true) {
     chain::point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_point));
     BOOST_REQUIRE(alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(point__operator_boolean_equals__differs__returns_false) {
     chain::point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_point));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(point__operator_boolean_not_equals__duplicates__returns_false) {
     chain::point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_point));
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(point__operator_boolean_not_equals__differs__returns_true) {
     chain::point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_point));
     BOOST_REQUIRE(alpha != beta);
 }
 
