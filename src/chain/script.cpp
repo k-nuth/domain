@@ -1006,6 +1006,7 @@ bool script::is_pay_to_witness(uint32_t forks) const {
            is_witness_program_pattern(operations());
 #endif
 }
+#endif
 
 bool script::is_pay_to_script_hash(uint32_t forks) const {
     // This is used internally as an optimization over using script::pattern.

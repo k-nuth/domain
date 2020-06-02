@@ -287,7 +287,6 @@ bool chain_state::is_phonon_enabled() const {
 //     return is_mtp_activated(median_time_past(), axion_activation_time());
 // }
 
-
 // 2021-May
 // //static
 // bool chain_state::is_unnamed_enabled() const {
