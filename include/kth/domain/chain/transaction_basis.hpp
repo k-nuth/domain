@@ -233,18 +233,35 @@ public:
             // Wire (satoshi protocol) serialization.
             sink.write_4_bytes_little_endian(version_);
 
-            if (witness_val(witness)) {
-                sink.write_byte(witness_marker);
-                sink.write_byte(witness_flag);
-                detail::write(sink, inputs_, wire, witness_val(witness));
-                detail::write(sink, outputs_, wire, witness_val(witness));
+//             if (witness_val(witness)) {
+//                 sink.write_byte(witness_val);
+//                 sink.write_byte(witness_val);
+//                 detail::write(sink, inputs_, wire, witness_val(witness));
+//                 detail::write(sink, outputs_, wire, witness_val(witness));
+// #if defined(KTH_SEGWIT_ENABLED)
+//                 detail::write_witnesses(sink, inputs_);
+// #endif
+//             } else {
+//                 detail::write(sink, inputs_, wire, witness_val(witness));
+//                 detail::write(sink, outputs_, wire, witness_val(witness));
+//             }
+
 #if defined(KTH_SEGWIT_ENABLED)
+            if (witness_val(witness)) {
+                sink.write_byte(witness_val);
+                sink.write_byte(witness_val);
                 detail::write_witnesses(sink, inputs_);
-#endif
-            } else {
-                detail::write(sink, inputs_, wire, witness_val(witness));
-                detail::write(sink, outputs_, wire, witness_val(witness));
             }
+#endif //defined(KTH_SEGWIT_ENABLED)
+
+            detail::write(sink, inputs_, wire, witness_val(witness));
+            detail::write(sink, outputs_, wire, witness_val(witness));
+
+#if defined(KTH_SEGWIT_ENABLED)
+            if (witness_val(witness)) {
+                detail::write_witnesses(sink, inputs_);
+            }
+#endif //defined(KTH_SEGWIT_ENABLED)
 
             sink.write_4_bytes_little_endian(locktime_);
         } else {
