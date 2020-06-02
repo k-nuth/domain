@@ -140,27 +140,14 @@ public:
     // deprecated (unsafe)
     transaction::list& transactions();
 
-    [[nodiscard]] 
+    [[nodiscard]]
     transaction::list const& transactions() const;
 
     void set_transactions(transaction::list const& value);
     void set_transactions(transaction::list&& value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_digest hash() const;
-
-    // Utilities.
-    //-------------------------------------------------------------------------
-
-    static
-    size_t locator_size(size_t top);
-    
-    static
-    indexes locator_heights(size_t top);
-
-#if defined(KTH_SEGWIT_ENABLED)
-    void strip_witness();
-#endif
 
     // Validation.
     //-------------------------------------------------------------------------
