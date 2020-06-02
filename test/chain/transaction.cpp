@@ -436,7 +436,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure)
 ////
 ////    data_source wire_stream(data_wire);
 ////    chain::transaction wire_tx;
-////    BOOST_REQUIRE(wire_tx.from_data(wire_stream, wire));
+////    BOOST_REQUIRE(entity_from_data(wire_tx, wire_stream, wire));
 ////    BOOST_REQUIRE(data_wire == wire_tx.to_data(wire));
 ////
 ////    auto const get_store_text = encode_base16(wire_tx.to_data(!wire));
