@@ -189,7 +189,7 @@ private:
     bool valid_{false};
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
 // Standard hash.
 //-----------------------------------------------------------------------------
