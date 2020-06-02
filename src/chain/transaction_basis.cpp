@@ -378,62 +378,6 @@ bool transaction_basis::is_mature(size_t height) const {
     return std::all_of(inputs_.begin(), inputs_.end(), mature);
 }
 
-// bool transaction_basis::is_segregated() const {
-// #if ! defined(KTH_SEGWIT_ENABLED)
-//     return false;
-// #endif
-//     bool value;
-
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     mutex_.lock_upgrade();
-
-//     if (segregated_ != std::nullopt) {
-//         value = segregated_.get();
-//         mutex_.unlock_upgrade();
-//         //---------------------------------------------------------------------
-//         return value;
-//     }
-
-//     mutex_.unlock_upgrade_and_lock();
-//     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//     auto const segregated = [](input const& input) {
-//         return input.is_segregated();
-//     };
-
-//     // If no block tx is has witness data the commitment is optional (bip141).
-//     value = std::any_of(inputs_.begin(), inputs_.end(), segregated);
-//     mutex_.unlock();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return value;
-// }
-
-// // Coinbase transactions return success, to simplify iteration.
-// code transaction_basis::connect_input(chain_state const& state, size_t input_index) const {
-//     if (input_index >= inputs_.size()) {
-//         return error::operation_failed;
-//     }
-
-//     if (is_coinbase()) {
-//         return error::success;
-//     }
-
-//     auto const& prevout = inputs_[input_index].previous_output().validation;
-
-//     // Verify that the previous output cache has been populated.
-//     if ( ! prevout.cache.is_valid()) {
-//         return error::missing_previous_output;
-//     }
-
-//     auto const forks = state.enabled_forks();
-//     auto const index32 = static_cast<uint32_t>(input_index);
-
-//     // Verify the transaction input script against the previous output.
-//     return verify(*this, index32, forks);
-// }
-
 // Validation.
 //-----------------------------------------------------------------------------
 
