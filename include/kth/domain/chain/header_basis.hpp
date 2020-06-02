@@ -155,18 +155,14 @@ public:
     [[nodiscard]]
     bool is_valid_timestamp() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_valid_proof_of_work(hash_digest const& hash, bool retarget = true) const;
 
     [[nodiscard]]
     code check(hash_digest const& hash, bool retarget = false) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     code accept(chain_state const& state, hash_digest const& hash) const;
-
-// protected:
-    // So that block may call reset from its own.
-    // friend class block;
 
     void reset();
 
