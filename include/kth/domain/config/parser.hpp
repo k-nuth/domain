@@ -410,7 +410,7 @@ protected:
         if ( ! config_path.empty()) {
             if (exists(config_path, code)) {
                 auto const& path = config_path.string();
-                bc::ifstream file(path);
+                kth::ifstream file(path);
 
                 if ( ! file.good()) {
                     BOOST_THROW_EXCEPTION(reading_file(path.c_str()));
