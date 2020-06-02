@@ -220,17 +220,17 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_2__always__matches_equ
 
 BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_3__always__matches_equivalent) {
     chain::point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     chain::point value;
-    BOOST_REQUIRE(value.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(value, valid_raw_output_point));
     instance = std::move(value);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equivalent) {
     chain::point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);
