@@ -512,6 +512,7 @@ bool block_basis::is_valid_coinbase_script(size_t height) const {
     return script::is_coinbase_pattern(script.operations(), height);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool block_basis::is_valid_witness_commitment() const {
 #if ! defined(KTH_SEGWIT_ENABLED)
     return false;
