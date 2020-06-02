@@ -405,24 +405,6 @@ size_t block::signature_operations() const {
     return state ? block_basis::signature_operations(bip16, bip141) : max_size_t;
 }
 
-// // Returns max_size_t in case of overflow.
-// size_t block::signature_operations(bool bip16, bool bip141) const {
-// #ifdef KTH_CURRENCY_BCH
-//     bip141 = false;  // No segwit
-// #endif
-//     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
-//         return ceiling_add(total, tx.signature_operations(bip16, bip141));
-//     };
-
-//     //*************************************************************************
-//     // CONSENSUS: Legacy sigops are counted in coinbase scripts despite the
-//     // fact that coinbase input scripts are never executed. There is no need
-//     // to exclude p2sh coinbase sigops since there is never a script to count.
-//     //*************************************************************************
-//     auto const& txs = transactions_;
-//     return std::accumulate(txs.begin(), txs.end(), size_t{0}, value);
-// }
-
 size_t block::total_inputs(bool with_coinbase) const {
     size_t value;
 
