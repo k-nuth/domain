@@ -169,14 +169,14 @@ public:
     //-------------------------------------------------------------------------
 
     /// This is for client-server, not related to consensus or p2p networking.
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t checksum() const;
 
     // Validation.
     //-------------------------------------------------------------------------
 
     // constexpr
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_null() const;
 
 // protected:
