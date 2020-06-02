@@ -123,7 +123,7 @@ public:
         std::for_each(transactions_.begin(), transactions_.end(), to);
     }
 
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_list to_hashes(bool witness = false) const;
 
     // Properties (size, accessors, cache).
