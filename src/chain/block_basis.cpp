@@ -340,43 +340,6 @@ size_t block_basis::signature_operations(bool bip16, bool bip141) const {
     return std::accumulate(txs.begin(), txs.end(), size_t{0}, value);
 }
 
-// size_t block_basis::total_inputs(bool with_coinbase) const {
-//     size_t value;
-
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     mutex_.lock_upgrade();
-
-//     if (total_inputs_ != std::nullopt) {
-//         value = total_inputs_.get();
-//         mutex_.unlock_upgrade();
-//         //---------------------------------------------------------------------
-//         return value;
-//     }
-
-//     mutex_.unlock_upgrade_and_lock();
-//     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//     auto const inputs = [](size_t total, transaction const& tx) {
-//         return safe_add(total, tx.inputs().size());
-//     };
-
-//     auto const& txs = transactions_;
-//     const size_t offset = with_coinbase ? 0 : 1;
-//     value = std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
-//     total_inputs_ = value;
-//     mutex_.unlock();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return value;
-// }
-
-// size_t block_basis::weight(size_t serialized_size_true, size_t serialized_size_false) const {
-//     // Block weight is 3 * Base size * + 1 * Total size (bip141).
-//     return base_size_contribution * serialized_size_false +
-//            total_size_contribution * serialized_size_true;
-// }
-
 // True if there is another coinbase other than the first tx.
 // No txs or coinbases returns false.
 bool block_basis::is_extra_coinbases() const {
