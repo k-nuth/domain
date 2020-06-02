@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(input__factory_from_data_1__valid_input__success) {
 
 BOOST_AUTO_TEST_CASE(input__factory_from_data_2__valid_input__success) {
     data_source stream(valid_raw_input);
-    auto instance = input::factory_from_data(stream);
+    auto instance = create<input>(stream);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_input.size());
 
