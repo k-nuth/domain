@@ -126,8 +126,6 @@ private:
     chain::script script_;
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
-//#include <kth/domain/concepts_undef.hpp>
-
-#endif // KTH_CHAIN_OUTPUT_BASIS_HPP_
+#endif // KTH_DOMAIN_CHAIN_OUTPUT_BASIS_HPP
