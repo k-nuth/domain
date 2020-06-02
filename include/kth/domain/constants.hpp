@@ -582,6 +582,6 @@ constexpr uint64_t max_money(bool retarget = true) {
     return recursive_money * subsidy_interval(retarget);
 }
 
-}  // namespace kth
+} // namespace kth
 
 #endif
