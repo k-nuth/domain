@@ -263,36 +263,36 @@ BOOST_AUTO_TEST_CASE(script__pattern__null_data_return_only__non_standard) {
     script instance;
     instance.from_string(SCRIPT_RETURN);
     BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.input_pattern() == machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
 }
 
 BOOST_AUTO_TEST_CASE(script__pattern__null_data_empty__null_data) {
     script instance;
     instance.from_string(SCRIPT_RETURN_EMPTY);
     BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == machine::script_pattern::null_data);
-    BOOST_REQUIRE(instance.input_pattern() == machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == machine::script_pattern::null_data);
+    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::null_data);
+    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::null_data);
 }
 
 BOOST_AUTO_TEST_CASE(script__pattern__null_data_80_bytes__null_data) {
     script instance;
     instance.from_string(SCRIPT_RETURN_80);
     BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == machine::script_pattern::null_data);
-    BOOST_REQUIRE(instance.input_pattern() == machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == machine::script_pattern::null_data);
+    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::null_data);
+    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::null_data);
 }
 
 BOOST_AUTO_TEST_CASE(script__pattern__null_data_81_bytes__non_standard) {
     script instance;
     instance.from_string(SCRIPT_RETURN_81);
     BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.output_pattern() == machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.input_pattern() == machine::script_pattern::non_standard);
-    BOOST_REQUIRE(instance.pattern() == machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.output_pattern() == infrastructure::machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.input_pattern() == infrastructure::machine::script_pattern::non_standard);
+    BOOST_REQUIRE(instance.pattern() == infrastructure::machine::script_pattern::non_standard);
 }
 
 // pay_multisig
