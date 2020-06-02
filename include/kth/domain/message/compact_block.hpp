@@ -195,6 +195,6 @@ data_chunk to_data_header_nonce(compact_block const& block);
 
 hash_digest hash(compact_block const& block);
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
