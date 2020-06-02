@@ -440,6 +440,6 @@ protected:
 };
 
 } // namespace config
-} // namespace kth
+} // namespace kth::domain
 
 #endif
