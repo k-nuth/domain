@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__succes
         "00"));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
 
-    auto const tx = transaction::factory_from_data(version::level::minimum, raw_tx);
+    auto const tx = create<transaction>(version::level::minimum, raw_tx);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
