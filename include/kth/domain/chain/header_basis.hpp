@@ -139,7 +139,7 @@ public:
     
     void set_timestamp(uint32_t value);
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t bits() const;
     
     void set_bits(uint32_t value);
