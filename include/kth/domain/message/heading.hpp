@@ -156,6 +156,6 @@ private:
     uint32_t checksum_{0};
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif
