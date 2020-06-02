@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
     data_chunk const data = expected.to_data(version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = address::factory_from_data(version::level::minimum, source);
+    auto const result = create<address>(version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
