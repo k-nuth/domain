@@ -444,7 +444,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure)
 ////    auto const data_store = to_chunk(base16_literal(TX3_STORE_SERIALIZED_V3));
 ////    data_source store_stream(data_store);
 ////    chain::transaction store_tx;
-////    BOOST_REQUIRE(store_tx.from_data(store_stream, !wire));
+////    BOOST_REQUIRE(entity_from_data(store_tx, store_stream, !wire));
 ////    BOOST_REQUIRE(data_store == store_tx.to_data(!wire));
 ////    BOOST_REQUIRE(wire_tx == store_tx);
 ////}
