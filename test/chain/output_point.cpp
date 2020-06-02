@@ -239,60 +239,60 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equ
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__duplicates__returns_true) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE(alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__differs__returns_false) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__duplicates__returns_true) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE(alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__differs__returns_false) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__duplicates__returns_false) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__differs__returns_true) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE(alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__duplicates__returns_false) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__differs__returns_true) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE(alpha != beta);
 }
 
