@@ -204,6 +204,6 @@ private:
     uint32_t sequence_{0};
 };
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
-#endif // KTH_CHAIN_INPUT_BASIS_HPP_
+#endif // KTH_DOMAIN_CHAIN_INPUT_BASIS_HPP
