@@ -1194,32 +1194,6 @@ chain_state::data chain_state::to_pool(chain_state const& top) {
     return data;
 }
 
-// Constructor (top to pool).
-// This generates a state for the pool above the presumed top block state.
-chain_state::chain_state(chain_state const& top)
-    : data_(to_pool(top))
-    , forks_(top.forks_)
-    , checkpoints_(top.checkpoints_)
-    , active_(activation(data_, forks_
-#ifdef KTH_CURRENCY_BCH
-            // , top.magnetic_anomaly_activation_time_
-            // , top.great_wall_activation_time_
-            // , top.graviton_activation_time_
-            , top.phonon_activation_time_
-            , top.axion_activation_time_
-#endif  //KTH_CURRENCY_BCH
-      ))
-    , median_time_past_(median_time_past(data_, forks_))
-    , work_required_(work_required(data_, forks_))
-#ifdef KTH_CURRENCY_BCH
-    // , magnetic_anomaly_activation_time_(top.magnetic_anomaly_activation_time_)
-    // , great_wall_activation_time_(top.great_wall_activation_time_)
-    // , graviton_activation_time_(top.graviton_activation_time_)
-    , phonon_activation_time_(top.phonon_activation_time_)
-    , axion_activation_time_(top.axion_activation_time_)
-#endif  //KTH_CURRENCY_BCH
-{}
-
 chain_state::data chain_state::to_block(chain_state const& pool, block const& block) {
     // Alias configured forks.
     auto const forks = pool.forks_;

@@ -588,7 +588,7 @@ BOOST_AUTO_TEST_CASE(script__checksig__normal__success) {
     decode_base16(script_data, "76a914fcc9b36d38cf55d7d5b4ee4dddb6b2c17612f48c88ac");
 
     script script_code;
-    BOOST_REQUIRE(script_code.from_data(script_data, false));
+    BOOST_REQUIRE(entity_from_data(script_code, script_data, false));
 
     ec_signature signature;
     static auto const index = 0u;

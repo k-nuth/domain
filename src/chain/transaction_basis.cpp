@@ -488,7 +488,6 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
         return error::coinbase_maturity;
     }
 
-    // if (is_overspent()) {
     if (is_overspent) {
         return error::spend_exceeds_value;
     }
