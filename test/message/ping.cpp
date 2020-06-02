@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__bip31_version_round_trip__expect
     static auto const version = message::version::level::bip31;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto const result = message::ping::factory_from_data(version, istream);
+    auto const result = create<message::ping>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
 }
