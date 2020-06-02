@@ -149,8 +149,8 @@ TEST_CASE("[test_get_keoken_output_empty]") {
         "0000001976a9141ee32412020a324b93b1a1acfdfff6ab9ca8fac288ac000000"
         "00"));
 
-    kth::chain::transaction tx;
-    tx.from_data(raw_tx);
+    kth::domain::chain::transaction tx;
+    entity_from_data(tx, raw_tx);
 
     REQUIRE(tx.is_valid());
     auto ret = first_keoken_output(tx);

@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent) {
-    network_address::list const addresses{
+    infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
             5357534u,

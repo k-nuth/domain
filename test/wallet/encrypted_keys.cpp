@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_3_compressed__expected) 
     uint8_t const version = 0x00;
     auto const expected = "6PYLtMnXvfG3oJde97zRyLYFZCYizPU5T3LwgdYJz1fRhh16bU7u6PPmY7";
     auto const secret = base16_literal("09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
-    BC_REQUIRE_ENCRYPT(secret, "Satoshi", version, compression, expected);
+    KD_REQUIRE_ENCRYPT(secret, "Satoshi", version, compression, expected);
 }
 
 // #3 from: github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply

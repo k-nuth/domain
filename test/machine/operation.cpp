@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(operation__factory_from_data_2__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(operation__factory_from_data_3__roundtrip__success) {
     data_source istream(valid_raw_operation);
     istream_reader source(istream);
-    auto operation = operation::factory_from_data(source);
+    auto operation = create<machine::operation>(source);
 
     BOOST_REQUIRE(operation.is_valid());
     data_chunk output = operation.to_data();
