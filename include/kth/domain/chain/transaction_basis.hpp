@@ -277,10 +277,10 @@ public:
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t serialized_size(bool wire = true, bool witness = false) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint32_t version() const;
 
     void set_version(uint32_t value);
