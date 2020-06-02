@@ -257,29 +257,29 @@ public:
     /// Common pattern detection.
 
 #if defined(KTH_SEGWIT_ENABLED)
-    [[nodiscard]] 
+    [[nodiscard]]
     data_chunk witness_program() const;
 #endif
 
-    [[nodiscard]] 
+    [[nodiscard]]
     script_version version() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     script_pattern pattern() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     script_pattern output_pattern() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     script_pattern input_pattern() const;
 
     /// Consensus computations.
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t sigops(bool accurate) const;
     
     void find_and_delete(data_stack const& endorsements);
     
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_unspendable() const;
 
 
