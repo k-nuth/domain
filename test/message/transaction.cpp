@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__valid_junk__success) {
     boost::iostreams::stream<byte_source<std::array<uint8_t, 64>>> stream(source);
 
     transaction tx;
-    BOOST_REQUIRE(tx.from_data(version::level::minimum, stream));
+    BOOST_REQUIRE(entity_from_data(tx, version::level::minimum, stream));
 }
 
 BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__success) {
