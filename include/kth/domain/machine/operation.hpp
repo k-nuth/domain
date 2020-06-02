@@ -241,8 +241,7 @@ private:
     bool valid_{false};
 };
 
-}  // namespace machine
-}  // namespace kth
+} // namespace kth::domain::machine
 
 #include <kth/domain/impl/machine/operation.ipp>
 
