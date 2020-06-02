@@ -237,14 +237,22 @@ private:
     transaction::list transactions_;
 };
 
-size_t total_inputs(block_basis const& blk, bool with_coinbase = true);
-
 #if defined(KTH_SEGWIT_ENABLED)
+void strip_witness(block_basis& blk);
 bool is_segregated(block_basis const& blk);
 #endif
 
+// Non-member functions.
+//-------------------------------------------------------------------------
+
+size_t locator_size(size_t top);
+
+indexes locator_heights(size_t top);
+
+size_t total_inputs(block_basis const& blk, bool with_coinbase = true);
+
 size_t serialized_size(block_basis const& blk, bool witness = false);
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
-#endif // KTH_CHAIN_BLOCK_BASIS_HPP_
+#endif // KTH_DOMAIN_CHAIN_BLOCK_BASIS_HPP

@@ -510,27 +510,15 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     return error::success;
 }
 
-// code transaction_basis::connect(chain_state const& state) const {
-//     code ec;
-
-//     for (size_t input = 0; input < inputs_.size(); ++input) {
-//         if ((ec = connect_input(state, input))) {
-//             return ec;
-//         }
-//     }
-
-//     return error::success;
-// }
-
 bool transaction_basis::is_standard() const {
     for (auto const& in : inputs()) {
-        if (in.script().pattern() == kth::machine::script_pattern::non_standard) {
+        if (in.script().pattern() == script_pattern::non_standard) {
             return false;
         }
     }
 
     for (auto const& out : outputs()) {
-        if (out.script().pattern() == kth::machine::script_pattern::non_standard) {
+        if (out.script().pattern() == script_pattern::non_standard) {
             return false;
         }
     }

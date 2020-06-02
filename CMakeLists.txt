@@ -887,8 +887,7 @@ set(_kth_domain_headers
     kth/domain/message/xversion.hpp
 
     kth/domain/wallet/bitcoin_uri.hpp
-    # kth/domain/wallet/cashaddr.hpp
-    # kth/domain/wallet/dictionary.hpp
+
     kth/domain/wallet/ec_private.hpp
     kth/domain/wallet/ec_public.hpp
     kth/domain/wallet/ek_private.hpp

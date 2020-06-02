@@ -296,15 +296,15 @@ BOOST_AUTO_TEST_CASE(input__sequence__roundtrip__success) {
 
 BOOST_AUTO_TEST_CASE(input__operator_assign_equals_1__always__matches_equivalent) {
     input expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
     input instance;
-    instance = input::factory_from_data(valid_raw_input);
+    instance = create<input>(valid_raw_input);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(input__operator_assign_equals_2__always__matches_equivalent) {
     input expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
     input instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);

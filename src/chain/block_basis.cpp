@@ -715,16 +715,18 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
         return error::block_non_final;
     }
 
+#if defined(KTH_SEGWIT_ENABLED)
     // TODO(legacy): relates height to tx.hash(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
     if (bip141 && !is_valid_witness_commitment()) {
         return error::invalid_witness_commitment;
-
-        // TODO(legacy): determine if performance benefit is worth excluding sigops here.
-        // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).
-        // This recomputes sigops to include p2sh from prevouts.
-        // NOTE: for BCH bit141 is set as false
     }
+#endif //defined(KTH_SEGWIT_ENABLED)
+
+
+    // TODO(legacy): determine if performance benefit is worth excluding sigops here.
+    // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).
+    // This recomputes sigops to include p2sh from prevouts.
 
     if (transactions && (signature_operations(bip16, bip141) > allowed_sigops)) {
         return error::block_embedded_sigop_limit;

@@ -1234,32 +1234,6 @@ chain_state::data chain_state::to_block(chain_state const& pool, block const& bl
     return data;
 }
 
-// Constructor (tx pool to block).
-// This assumes that the pool state is the same height as the block.
-chain_state::chain_state(chain_state const& pool, block const& block)
-    : data_(to_block(pool, block))
-    , forks_(pool.forks_)
-    , checkpoints_(pool.checkpoints_)
-    , active_(activation(data_, forks_
-#ifdef KTH_CURRENCY_BCH
-        // , pool.magnetic_anomaly_activation_time_
-        // , pool.great_wall_activation_time_
-        // , pool.graviton_activation_time_
-        , pool.phonon_activation_time_
-        , pool.axion_activation_time_
-#endif  //KTH_CURRENCY_BCH
-        ))
-    , median_time_past_(median_time_past(data_, forks_))
-    , work_required_(work_required(data_, forks_))
-#ifdef KTH_CURRENCY_BCH
-    // , magnetic_anomaly_activation_time_(pool.magnetic_anomaly_activation_time_)
-    // , great_wall_activation_time_(pool.great_wall_activation_time_)
-    // , graviton_activation_time_(pool.graviton_activation_time_)
-    , phonon_activation_time_(pool.phonon_activation_time_)
-    , axion_activation_time_(pool.axion_activation_time_)
-#endif  //KTH_CURRENCY_BCH
-{}
-
 chain_state::data chain_state::to_header(chain_state const& parent, header const& header) {
     // Alias configured forks.
     auto const forks = parent.forks_;

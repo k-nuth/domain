@@ -495,13 +495,4 @@ code block::connect() const {
     return state ? block_basis::connect(*state) : error::operation_failed;
 }
 
-// code block::connect(chain_state const& state) const {
-//     validation.start_connect = asio::steady_clock::now();
-
-//     if (state.is_under_checkpoint()) {
-//         return error::success;
-//     }
-//     return connect_transactions(state);
-// }
-
-}  // namespace kth
+} // namespace kth

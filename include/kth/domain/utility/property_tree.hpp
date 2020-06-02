@@ -181,7 +181,7 @@ KD_API pt::ptree property_tree(const wallet::wrapped_data& wrapper);
  * @param[in]  index   The tx index.
  * @returns            A new property list containing the list.
  */
-BC_API pt::ptree property_list(hash_digest const& hash, size_t height, size_t index);
+KD_API pt::ptree property_list(hash_digest const& hash, size_t height, size_t index);
 
 /**
  * Create a property tree for the fetch-tx-index command.
