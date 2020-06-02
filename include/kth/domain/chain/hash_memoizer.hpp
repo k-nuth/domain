@@ -1,0 +1,91 @@
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_DOMAIN_CHAIN_HASH_MEMOIZER_HPP
+#define KTH_DOMAIN_CHAIN_HASH_MEMOIZER_HPP
+
+// #include <cstddef>
+// #include <cstdint>
+// #include <istream>
+// #include <memory>
+// #include <string>
+// #include <vector>
+
+// #include <kth/domain/chain/chain_state.hpp>
+// #include <kth/domain/chain/header_basis.hpp>
+// #include <kth/domain/define.hpp>
+// #include <kth/infrastructure/error.hpp>
+// #include <kth/infrastructure/math/hash.hpp>
+// #include <kth/infrastructure/utility/container_sink.hpp>
+// #include <kth/infrastructure/utility/container_source.hpp>
+// #include <kth/infrastructure/utility/data.hpp>
+// #include <kth/infrastructure/utility/reader.hpp>
+#include <kth/infrastructure/utility/thread.hpp>
+// #include <kth/infrastructure/utility/writer.hpp>
+
+// #include <kth/domain/utils.hpp>
+// #include <kth/domain/concepts.hpp>
+
+namespace kth::domain::chain {
+
+template <typename T>
+class hash_memoizer {
+public:
+
+    // header() = default;
+    // header(header const& x, hash_digest const& hash);
+
+    // /// This class is copy constructible and copy assignable.
+    // // Note(kth): Cannot be defaulted because the std::mutex data member.
+    // header(header const& x);
+    // header& operator=(header const& x);
+
+    hash_digest hash() const {
+        ///////////////////////////////////////////////////////////////////////////
+        // Critical Section
+        mutex_.lock_upgrade();
+
+        if ( ! hash_) {
+            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            mutex_.unlock_upgrade_and_lock();
+            hash_ = std::make_shared<hash_digest>(bitcoin_hash(derived().to_data()));
+            mutex_.unlock_and_lock_upgrade();
+            //---------------------------------------------------------------------
+        }
+
+        auto const hash = *hash_;
+        mutex_.unlock_upgrade();
+        ///////////////////////////////////////////////////////////////////////////
+
+        return hash;
+    }    
+
+    void invalidate() const {
+        ///////////////////////////////////////////////////////////////////////////
+        // Critical Section
+        mutex_.lock_upgrade();
+
+        if (hash_) {
+            mutex_.unlock_upgrade_and_lock();
+            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            hash_.reset();
+            //---------------------------------------------------------------------
+            mutex_.unlock_and_lock_upgrade();
+        }
+
+        mutex_.unlock_upgrade();
+        ///////////////////////////////////////////////////////////////////////////
+    }
+
+private:
+    T& derived() {return *static_cast<T*>(this);}
+    T const& derived() const {return *static_cast<T const*>(this);}
+
+    mutable upgrade_mutex mutex_;
+    mutable std::shared_ptr<hash_digest> hash_;
+};
+
+} // namespace kth::domain::chain
+
+#endif // KTH_DOMAIN_CHAIN_HASH_MEMOIZER_HPP
