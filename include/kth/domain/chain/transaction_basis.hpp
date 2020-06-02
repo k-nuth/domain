@@ -324,89 +324,89 @@ public:
     // Validation.
     //-----------------------------------------------------------------------------
 
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t fees() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     point::list previous_outputs() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     point::list missing_previous_outputs() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     hash_list missing_previous_transactions() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     uint64_t total_input_value() const;
     
     // uint64_t total_output_value() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t signature_operations() const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t signature_operations(bool bip16, bool bip141) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     size_t weight() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_coinbase() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_null_non_coinbase() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_oversized_coinbase() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_mature(size_t height) const;
 
     // bool is_overspent() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_internal_double_spend() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_double_spend(bool include_unconfirmed) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_dusty(uint64_t minimum_output_value) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_missing_previous_outputs() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_final(size_t block_height, uint32_t block_time) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_locked(size_t block_height, uint32_t median_time_past) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_locktime_conflict() const;
 
     // bool is_segregated() const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     code check(uint64_t total_output_value, bool transaction_pool = true, bool retarget = true) const;
     
     // code accept(bool transaction_pool = true) const;
     
-    [[nodiscard]] 
+    [[nodiscard]]
     code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
 
     // code connect() const;
     // code connect(chain_state const& state) const;
     // code connect_input(chain_state const& state, size_t input_index) const;
 
-    [[nodiscard]] 
+    [[nodiscard]]
     bool is_standard() const;
 
 // protected:
     void reset();
 
 protected:
-    [[nodiscard]] 
+    [[nodiscard]]
     bool all_inputs_final() const;
 
 private:
