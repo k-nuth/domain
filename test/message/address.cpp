@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
-    const address expected(
+    address const expected(
         {{734678u,
           5357534u,
           base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
