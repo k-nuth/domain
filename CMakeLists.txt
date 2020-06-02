@@ -676,15 +676,9 @@ if (WITH_TESTS)
         test/wallet/ec_private.cpp
         test/wallet/ec_public.cpp
         test/wallet/encrypted_keys.cpp
-        # test/wallet/hd_private.cpp
-        # test/wallet/hd_public.cpp
         test/wallet/message.cpp
-        # test/wallet/mnemonic.cpp
-        # test/wallet/mnemonic.hpp
         test/wallet/payment_address.cpp
-        # test/wallet/qrcode.cpp
         test/wallet/stealth_address.cpp
-        # test/wallet/uri.cpp
         test/wallet/uri_reader.cpp
         test/wallet/transaction_functions.cpp
     )
