@@ -181,8 +181,6 @@ hash_digest hash(header_basis const& header);
 hash_digest litecoin_proof_of_work_hash(header_basis const& header);
 #endif  //KTH_CURRENCY_LTC
 
-}  // namespace kth::chain
+} // namespace kth::domain::chain
 
-// #include <kth/domain/concepts_undef.hpp>
-
-#endif // KTH_CHAIN_HEADER_BASIS_HPP_
+#endif // KTH_DOMAIN_CHAIN_HEADER_BASIS_HPP
