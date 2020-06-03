@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_6_lot__expected) {
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_7_lot__expected) {
     uint8_t const version = 0x00;
     auto const key = base58_literal("cfrm38V8G4qq2ywYEFfWLD5Cc6msj9UwsG2Mj4Z6QdGJAFQpdatZLavkgRd1i4iBMdRngDqDs51");
-    BC_REQUIRE_DECRYPT_POINT(key, "ΜΟΛΩΝ ΛΑΒΕ", version);
+    KD_REQUIRE_DECRYPT_POINT(key, "ΜΟΛΩΝ ΛΑΒΕ", version);
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "0215fb4e4e62fcec936920dbda69e83facfe2cc5e152fafcf474c8fa0dcf5023f3");
     BOOST_REQUIRE_EQUAL(derived_address, "1Lurmih3KruL4xDB5FmHof38yawNtP9oGf");
 }
