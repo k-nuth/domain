@@ -337,7 +337,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_7_lot__expected) {
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_8__expected) {
     uint8_t const version = 0x00;
     auto const key = base58_literal("cfrm38V5Nm1mn7GxPBAGTXawqXRwE1EbR19GqsvJ9JmF5VKLqi8nETmULpELkQvExCGkTNCH2An");
-    BC_REQUIRE_DECRYPT_POINT(key, "kth test", version);
+    KD_REQUIRE_DECRYPT_POINT(key, "kth test", version);
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c13b65302bbbed4f7ad67bc68e928b58e7748d84091a2d42680dc52e7916079e");
     BOOST_REQUIRE_EQUAL(derived_address, "1NQgLnFz1ZzF6KkCJ4SM3xz3Jy1q2hEEax");
 }

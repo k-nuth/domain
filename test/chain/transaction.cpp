@@ -967,7 +967,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals__differs__returns_
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
     BOOST_REQUIRE(alpha != beta);
 }
 
