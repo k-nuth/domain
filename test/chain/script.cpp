@@ -795,14 +795,14 @@ BOOST_AUTO_TEST_CASE(script__native__testnet_block_892321_tx_missing_witness__in
     BOOST_REQUIRE(decode_base16(decoded_script, encoded_script));
 
     transaction tx;
-    BOOST_REQUIRE(tx.from_data(decoded_tx, true, true));
+    BOOST_REQUIRE(entity_from_data(tx, decoded_tx, true, true));
     BOOST_REQUIRE_GT(tx.inputs().size(), index);
 
     auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
     prevout.set_value(value);
-    prevout.set_script(script::factory_from_data(decoded_script, false));
+    prevout.set_script(create<script>(decoded_script, false));
     BOOST_REQUIRE(prevout.script().is_valid());
 
     auto const result = verify(tx, index, forks);

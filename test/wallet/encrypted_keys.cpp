@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_2_compressed__expected) 
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_3_compressed__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PYLtMnXvfG3oJde97zRyLYFZCYizPU5T3LwgdYJz1fRhh16bU7u6PPmY7");
-    BC_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
+    KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(out_is_compressed);

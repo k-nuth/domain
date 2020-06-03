@@ -592,7 +592,7 @@ BOOST_AUTO_TEST_CASE(transaction__inputs_setter_2__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__outputs_setter_1__roundtrip__success) {
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(outputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     chain::transaction instance;
     BOOST_REQUIRE(outputs != instance.outputs());
