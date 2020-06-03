@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__differs__return
 
     transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(transaction::version_minimum, raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
     BOOST_REQUIRE(alpha != beta);
 }
 

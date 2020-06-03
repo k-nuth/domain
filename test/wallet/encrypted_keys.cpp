@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_3_compressed__expected) 
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_4_multiplied__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfQu77ygVyJLZjfvMLyhLMQbYnu5uguoJJ4kMCLqWwPEdfpwANVS76gTX");
-    BC_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
+    KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "a43a940577f4e97f5c4d39eb14ff083a98187c64ea7c99ef7ce460833959a519");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(!out_is_compressed);
