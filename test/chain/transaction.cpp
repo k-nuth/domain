@@ -650,7 +650,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_within_boun
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(inputs.back().script().from_data(data_chunk(50), false));
+    BOOST_REQUIRE(entity_from_data(inputs.back().script(), data_chunk(50), false));
     BOOST_REQUIRE(instance.is_coinbase());
     BOOST_REQUIRE(inputs.back().script().serialized_size(false) >= min_coinbase_size);
     BOOST_REQUIRE(inputs.back().script().serialized_size(false) <= max_coinbase_size);
