@@ -1042,12 +1042,12 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_no_find_and_delete_tx__valid) {
     data_chunk decoded_tx;
     data_chunk decoded_script;
     BOOST_REQUIRE(decode_base16(decoded_tx, "0100000000010169c12106097dc2e0526493ef67f21269fe888ef05c7a3a5dacab38e1ac8387f14c1d000000ffffffff01010000000000000000034830450220487fb382c4974de3f7d834c1b617fe15860828c7f96454490edd6d891556dcc9022100baf95feb48f845d5bfc9882eb6aeefa1bc3790e39f59eaa46ff7f15ae626c53e012102a9781d66b61fb5a7ef00ac5ad5bc6ffc78be7b44a566e3c87870e1079368df4c4aad4830450220487fb382c4974de3f7d834c1b617fe15860828c7f96454490edd6d891556dcc9022100baf95feb48f845d5bfc9882eb6aeefa1bc3790e39f59eaa46ff7f15ae626c53e0100000000"));
-    BOOST_REQUIRE(tx.from_data(decoded_tx, true, true));
+    BOOST_REQUIRE(entity_from_data(tx, decoded_tx, true, true));
     BOOST_REQUIRE_EQUAL(tx.inputs().size(), 1u);
 
     auto& prevout0 = tx.inputs()[0].previous_output().validation.cache;
     BOOST_REQUIRE(decode_base16(decoded_script, "00209e1be07558ea5cc8e02ed1d80c0911048afad949affa36d5c3951e3159dbea19"));
-    prevout0.set_script(script::factory_from_data(decoded_script, false));
+    prevout0.set_script(create<script>(decoded_script, false));
     prevout0.set_value(200000);
     BOOST_REQUIRE(prevout0.script().is_valid());
 

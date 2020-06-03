@@ -941,8 +941,8 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals__duplicates__returns_t
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(raw_tx));
-    BOOST_REQUIRE(beta.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
+    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
     BOOST_REQUIRE(alpha == beta);
 }
 

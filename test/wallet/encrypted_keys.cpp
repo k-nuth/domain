@@ -306,7 +306,7 @@ BOOST_AUTO_TEST_SUITE(encrypted__decrypt_public)
 
 // TODO(legacy): create compressed and altchain/testnet vector(s).
 
-#define BC_REQUIRE_DECRYPT_POINT(key, passphrase, version)                              \
+#define KD_REQUIRE_DECRYPT_POINT(key, passphrase, version)                              \
     ec_compressed out_point;                                                            \
     uint8_t out_version = 42;                                                           \
     bool out_is_compressed = true;                                                      \
@@ -319,7 +319,7 @@ BOOST_AUTO_TEST_SUITE(encrypted__decrypt_public)
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_6_lot__expected) {
     uint8_t const version = 0x00;
     auto const key = base58_literal("cfrm38V8aXBn7JWA1ESmFMUn6erxeBGZGAxJPY4e36S9QWkzZKtaVqLNMgnifETYw7BPwWC9aPD");
-    BC_REQUIRE_DECRYPT_POINT(key, "MOLON LABE", version);
+    KD_REQUIRE_DECRYPT_POINT(key, "MOLON LABE", version);
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "03e20f3b812f630d0374eefe776e983549d5cdde87780be45cb9def7ee339dfed4");
     BOOST_REQUIRE_EQUAL(derived_address, "1Jscj8ALrYu2y9TD8NrpvDBugPedmbj4Yh");
 }
