@@ -676,7 +676,4 @@ bool is_segregated(transaction_basis const& tx) {
     return std::any_of(tx.inputs().begin(), tx.inputs().end(), segregated);
 }
 
-
-
-
-}  // namespace kth
+} // namespace kth

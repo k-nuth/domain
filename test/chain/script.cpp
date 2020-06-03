@@ -645,7 +645,7 @@ BOOST_AUTO_TEST_CASE(script__generate_signature_hash__all__expected) {
     data_chunk tx_data;
     decode_base16(tx_data, "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970000000000ffffffff0000000000");
     transaction new_tx;
-    BOOST_REQUIRE(new_tx.from_data(tx_data));
+    BOOST_REQUIRE(entity_from_data(new_tx, tx_data));
 
     script prevout_script;
     BOOST_REQUIRE(prevout_script.from_string("dup hash160 [88350574280395ad2c3e2ee20e322073d94e5e40] equalverify checksig"));
@@ -683,13 +683,13 @@ BOOST_AUTO_TEST_CASE(script__native__block_290329_tx__valid) {
     BOOST_REQUIRE(decode_base16(decoded_script, encoded_script));
 
     transaction tx;
-    BOOST_REQUIRE(tx.from_data(decoded_tx));
+    BOOST_REQUIRE(entity_from_data(tx, decoded_tx));
     BOOST_REQUIRE_GT(tx.inputs().size(), index);
 
     auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
-    prevout.set_script(script::factory_from_data(decoded_script, false));
+    prevout.set_script(create<script>(decoded_script, false));
     BOOST_REQUIRE(prevout.script().is_valid());
 
     ////std::cout << prevout.script().to_string(forks) << std::endl;
@@ -721,13 +721,13 @@ BOOST_AUTO_TEST_CASE(script__native__block_438513_tx__valid) {
     BOOST_REQUIRE(decode_base16(decoded_script, encoded_script));
 
     transaction tx;
-    BOOST_REQUIRE(tx.from_data(decoded_tx));
+    BOOST_REQUIRE(entity_from_data(tx, decoded_tx));
     BOOST_REQUIRE_GT(tx.inputs().size(), index);
 
     auto const& input = tx.inputs()[index];
     auto& prevout = input.previous_output().validation.cache;
 
-    prevout.set_script(script::factory_from_data(decoded_script, false));
+    prevout.set_script(create<script>(decoded_script, false));
     BOOST_REQUIRE(prevout.script().is_valid());
 
     auto const result = verify(tx, index, forks);

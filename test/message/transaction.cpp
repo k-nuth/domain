@@ -387,9 +387,9 @@ BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equi
         "e61e66fe5d88ac00000000"));
 
     transaction expected;
-    BOOST_REQUIRE(expected.from_data(transaction::version_minimum, raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, transaction::version_minimum, raw_tx));
     transaction instance;
-    instance = transaction::factory_from_data(transaction::version_minimum, raw_tx);
+    instance = create<transaction>(transaction::version_minimum, raw_tx);
     BOOST_REQUIRE(instance == expected);
 }
 
@@ -415,8 +415,8 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__duplicates__returns
 
     transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(beta.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
     BOOST_REQUIRE(alpha == beta);
 }
 
@@ -442,7 +442,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__differs__returns_fa
 
     transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(transaction::version_minimum, raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 

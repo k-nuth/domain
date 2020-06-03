@@ -824,8 +824,8 @@ size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
 
     auto const& txs = blk.transactions();
     return blk.header().serialized_size(true) +
-           message::variable_uint_size(txs.size()) +
+           infrastructure::message::variable_uint_size(txs.size()) +
            std::accumulate(txs.begin(), txs.end(), size_t(0), sum);
 }
 
-}  // namespace kth
+} // namespace kth

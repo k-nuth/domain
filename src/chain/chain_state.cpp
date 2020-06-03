@@ -1338,12 +1338,12 @@ bool chain_state::is_enabled(rule_fork fork) const {
 }
 
 bool chain_state::is_checkpoint_conflict(hash_digest const& hash) const {
-    return !checkpoint::validate(hash, data_.height, checkpoints_);
+    return ! infrastructure::config::checkpoint::validate(hash, data_.height, checkpoints_);
 }
 
 bool chain_state::is_under_checkpoint() const {
     // This assumes that the checkpoints are sorted.
-    return checkpoint::covered(data_.height, checkpoints_);
+    return infrastructure::config::checkpoint::covered(data_.height, checkpoints_);
 }
 
 // Mining.
@@ -1355,4 +1355,4 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     return work_required(values, this->enabled_forks());
 }
 
-}  // namespace kth
+} // namespace kth

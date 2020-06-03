@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_SUITE(encrypted__decrypt1)
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_0__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg");
-    BC_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
+    KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(!out_is_compressed);
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_0__expected) {
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_1__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq");
-    BC_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
+    KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(!out_is_compressed);
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_1__expected) {
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_2_compressed__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo");
-    BC_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
+    KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(out_is_compressed);

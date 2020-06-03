@@ -315,7 +315,7 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__differs__returns_false) {
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_false) {
-    const address expected(
+    address const expected(
         {network_address(
              734678u,
              5357534u,
@@ -337,7 +337,7 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_f
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__differs__returns_true) {
-    const address expected(
+    address const expected(
         {network_address(
              734678u,
              5357534u,

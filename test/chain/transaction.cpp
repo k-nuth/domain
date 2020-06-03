@@ -538,7 +538,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_2__success) {
 
     data_source stream(raw_tx);
     istream_reader source(stream);
-    chain::transaction tx = chain::transaction::factory_from_data(source);
+    chain::transaction tx = create<chain::transaction>(source);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
@@ -567,7 +567,7 @@ BOOST_AUTO_TEST_CASE(transaction__locktime__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__inputs_setter_1__roundtrip__success) {
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(inputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS))));
+    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
 
     chain::transaction instance;
     BOOST_REQUIRE(inputs != instance.inputs());
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_CASE(transaction__inputs_setter_1__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__inputs_setter_2__roundtrip__success) {
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(inputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS))));
+    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
 
     // This must be non-const.
     auto dup_inputs = inputs;
