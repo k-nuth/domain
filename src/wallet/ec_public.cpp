@@ -16,7 +16,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 uint8_t const ec_public::compressed_even = 0x02;
 uint8_t const ec_public::compressed_odd = 0x03;
@@ -67,7 +67,7 @@ ec_public::ec_public(ec_compressed const& point, bool compress)
 // ----------------------------------------------------------------------------
 
 bool ec_public::is_point(data_slice decoded) {
-    return bc::is_public_key(decoded);
+    return kth::is_public_key(decoded);
 }
 
 // Factories.
@@ -100,7 +100,7 @@ ec_public ec_public::from_data(data_chunk const& decoded) {
     }
 
     ec_compressed compressed;
-    return bc::compress(compressed, to_array<ec_uncompressed_size>(decoded)) ? ec_public(compressed, false) : ec_public();
+    return kth::compress(compressed, to_array<ec_uncompressed_size>(decoded)) ? ec_public(compressed, false) : ec_public();
 }
 
 ec_public ec_public::from_point(ec_uncompressed const& point, bool compress) {
@@ -109,7 +109,7 @@ ec_public ec_public::from_point(ec_uncompressed const& point, bool compress) {
     }
 
     ec_compressed compressed;
-    return bc::compress(compressed, point) ? ec_public(compressed, compress) : ec_public();
+    return kth::compress(compressed, point) ? ec_public(compressed, compress) : ec_public();
 }
 
 // Cast operators.
@@ -177,7 +177,7 @@ bool ec_public::to_uncompressed(ec_uncompressed& out) const {
         return false;
     }
 
-    return bc::decompress(out, to_array<ec_compressed_size>(point_));
+    return kth::decompress(out, to_array<ec_compressed_size>(point_));
 }
 
 payment_address ec_public::to_payment_address(uint8_t version) const {
@@ -218,4 +218,4 @@ std::ostream& operator<<(std::ostream& out, ec_public const& of) {
     return out;
 }
 
-}  // namespace kth
+} // namespace kth

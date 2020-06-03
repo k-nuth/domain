@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(chain_transaction_tests)
 
@@ -159,10 +160,10 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_2__valid_input__returns_input_init
     uint32_t locktime = 4568656u;
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(inputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS))));
+    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(outputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     chain::transaction instance(version, locktime, inputs, outputs);
     BOOST_REQUIRE(instance.is_valid());
@@ -177,10 +178,10 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_3__valid_input__returns_input_init
     uint32_t locktime = 4568656u;
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(inputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS))));
+    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(outputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     // These must be non-const.
     auto dup_inputs = inputs;
@@ -197,7 +198,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_3__valid_input__returns_input_init
 BOOST_AUTO_TEST_CASE(transaction__constructor_4__valid_input__returns_input_initialized) {
     auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
 
     chain::transaction instance(expected);
     BOOST_REQUIRE(instance.is_valid());
@@ -209,7 +210,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_5__valid_input__returns_input_init
 
     // This must be non-const.
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
 
     chain::transaction instance(std::move(expected));
     BOOST_REQUIRE(instance.is_valid());
@@ -218,7 +219,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_5__valid_input__returns_input_init
 BOOST_AUTO_TEST_CASE(transaction__constructor_6__valid_input__returns_input_initialized) {
     auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
     hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(expected, expected_hash);
@@ -233,7 +234,7 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_7__valid_input__returns_input_init
     // This must be non-const.
     chain::transaction expected;
 
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
     hash_digest const expected_hash = hash_literal(TX1_HASH);
 
     chain::transaction instance(std::move(expected), expected_hash);
@@ -409,21 +410,21 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_version_bytes__failure
 
     chain::transaction instance;
 
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_input_bytes__failure) {
     data_chunk data = to_chunk(base16_literal("0000000103"));
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure) {
     data_chunk data = to_chunk(base16_literal("000000010003"));
     chain::transaction instance;
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -435,7 +436,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure)
 ////
 ////    data_source wire_stream(data_wire);
 ////    chain::transaction wire_tx;
-////    BOOST_REQUIRE(wire_tx.from_data(wire_stream, wire));
+////    BOOST_REQUIRE(entity_from_data(wire_tx, wire_stream, wire));
 ////    BOOST_REQUIRE(data_wire == wire_tx.to_data(wire));
 ////
 ////    auto const get_store_text = encode_base16(wire_tx.to_data(!wire));
@@ -443,7 +444,7 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_output_bytes__failure)
 ////    auto const data_store = to_chunk(base16_literal(TX3_STORE_SERIALIZED_V3));
 ////    data_source store_stream(data_store);
 ////    chain::transaction store_tx;
-////    BOOST_REQUIRE(store_tx.from_data(store_stream, !wire));
+////    BOOST_REQUIRE(entity_from_data(store_tx, store_stream, !wire));
 ////    BOOST_REQUIRE(data_store == store_tx.to_data(!wire));
 ////    BOOST_REQUIRE(wire_tx == store_tx);
 ////}
@@ -453,7 +454,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_1__case_1__success) {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
 
-    chain::transaction tx = chain::transaction::factory_from_data(raw_tx);
+    chain::transaction tx = create<chain::transaction>(raw_tx);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
@@ -469,7 +470,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_1__case_2__success) {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
 
-    chain::transaction tx = chain::transaction::factory_from_data(raw_tx);
+    chain::transaction tx = create<chain::transaction>(raw_tx);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
@@ -485,7 +486,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_2__case_1__success) {
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
 
     data_source stream(raw_tx);
-    chain::transaction tx = chain::transaction::factory_from_data(stream);
+    chain::transaction tx = create<chain::transaction>(stream);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
@@ -502,7 +503,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_2__case_2__success) {
     BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
 
     data_source stream(raw_tx);
-    chain::transaction tx = chain::transaction::factory_from_data(stream);
+    chain::transaction tx = create<chain::transaction>(stream);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
@@ -519,7 +520,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_1__success) {
 
     data_source stream(raw_tx);
     istream_reader source(stream);
-    chain::transaction tx = chain::transaction::factory_from_data(source);
+    chain::transaction tx = create<chain::transaction>(source);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
@@ -537,7 +538,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_2__success) {
 
     data_source stream(raw_tx);
     istream_reader source(stream);
-    chain::transaction tx = chain::transaction::factory_from_data(source);
+    chain::transaction tx = create<chain::transaction>(source);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
@@ -566,7 +567,7 @@ BOOST_AUTO_TEST_CASE(transaction__locktime__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__inputs_setter_1__roundtrip__success) {
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(inputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS))));
+    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
 
     chain::transaction instance;
     BOOST_REQUIRE(inputs != instance.inputs());
@@ -577,7 +578,7 @@ BOOST_AUTO_TEST_CASE(transaction__inputs_setter_1__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__inputs_setter_2__roundtrip__success) {
     chain::input::list inputs;
     inputs.emplace_back();
-    BOOST_REQUIRE(inputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS))));
+    BOOST_REQUIRE(entity_from_data(inputs.back(), to_chunk(base16_literal(TX0_INPUTS))));
 
     // This must be non-const.
     auto dup_inputs = inputs;
@@ -591,7 +592,7 @@ BOOST_AUTO_TEST_CASE(transaction__inputs_setter_2__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__outputs_setter_1__roundtrip__success) {
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(outputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     chain::transaction instance;
     BOOST_REQUIRE(outputs != instance.outputs());
@@ -602,7 +603,7 @@ BOOST_AUTO_TEST_CASE(transaction__outputs_setter_1__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__outputs_setter_2__roundtrip__success) {
     chain::output::list outputs;
     outputs.emplace_back();
-    BOOST_REQUIRE(outputs.back().from_data(to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
+    BOOST_REQUIRE(entity_from_data(outputs.back(), to_chunk(base16_literal(TX0_INPUTS_LAST_OUTPUT))));
 
     // This must be non-const.
     auto dup_outputs = outputs;
@@ -616,7 +617,7 @@ BOOST_AUTO_TEST_CASE(transaction__outputs_setter_2__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__non_coinbase_tx__returns_false) {
     static auto const data = to_chunk(base16_literal(TX5));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(data));
+    BOOST_REQUIRE(entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_coinbase());
     BOOST_REQUIRE(!instance.is_oversized_coinbase());
 }
@@ -637,7 +638,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_above_max__
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(inputs.back().script().from_data(data_chunk(max_coinbase_size + 10), false));
+    BOOST_REQUIRE(entity_from_data(inputs.back().script(), data_chunk(max_coinbase_size + 10), false));
     BOOST_REQUIRE(instance.is_coinbase());
     BOOST_REQUIRE(inputs.back().script().serialized_size(false) > max_coinbase_size);
     BOOST_REQUIRE(instance.is_oversized_coinbase());
@@ -649,7 +650,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_within_boun
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(inputs.back().script().from_data(data_chunk(50), false));
+    BOOST_REQUIRE(entity_from_data(inputs.back().script(), data_chunk(50), false));
     BOOST_REQUIRE(instance.is_coinbase());
     BOOST_REQUIRE(inputs.back().script().serialized_size(false) >= min_coinbase_size);
     BOOST_REQUIRE(inputs.back().script().serialized_size(false) <= max_coinbase_size);
@@ -659,7 +660,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_within_boun
 BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__coinbase_tx__returns_false) {
     static auto const data = to_chunk(base16_literal(TX6));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(data));
+    BOOST_REQUIRE(entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_null_non_coinbase());
 }
 
@@ -836,35 +837,35 @@ BOOST_AUTO_TEST_CASE(transaction__is_dusty__no_outputs_zero__returns_false) {
 BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_above_both__returns_true) {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
     BOOST_REQUIRE(instance.is_dusty(1740950001));
 }
 
 BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_below_both__returns_false) {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
     BOOST_REQUIRE(!instance.is_dusty(257999999));
 }
 
 BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_at_upper__returns_true) {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
     BOOST_REQUIRE(instance.is_dusty(1740950000));
 }
 
 BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_at_lower__returns_false) {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
     BOOST_REQUIRE(!instance.is_dusty(258000000));
 }
 
 BOOST_AUTO_TEST_CASE(transaction__is_dusty__two_outputs_limit_between_both__returns_true) {
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(instance, raw_tx));
     BOOST_REQUIRE(instance.is_dusty(258000001));
 }
 
@@ -921,16 +922,16 @@ BOOST_AUTO_TEST_CASE(transaction__is_mature__premature_non_coinbase_prevout__ret
 BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equivalent) {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
     chain::transaction instance;
-    instance = chain::transaction::factory_from_data(raw_tx);
+    instance = create<chain::transaction>(raw_tx);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equivalent) {
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
     chain::transaction instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);
@@ -940,8 +941,8 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals__duplicates__returns_t
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(raw_tx));
-    BOOST_REQUIRE(beta.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
+    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
     BOOST_REQUIRE(alpha == beta);
 }
 
@@ -949,7 +950,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals__differs__returns_fals
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
     BOOST_REQUIRE(!(alpha == beta));
 }
 
@@ -957,8 +958,8 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals__duplicates__retur
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(raw_tx));
-    BOOST_REQUIRE(beta.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
+    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
     BOOST_REQUIRE(!(alpha != beta));
 }
 
@@ -966,7 +967,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals__differs__returns_
     static auto const raw_tx = to_chunk(base16_literal(TX4));
     chain::transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(alpha.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, raw_tx));
     BOOST_REQUIRE(alpha != beta);
 }
 
@@ -975,7 +976,7 @@ BOOST_AUTO_TEST_CASE(transaction__hash__block320670__success) {
     static auto const expected = hash_literal(TX7_HASH);
     static auto const data = to_chunk(base16_literal(TX7));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(data));
+    BOOST_REQUIRE(entity_from_data(instance, data));
     BOOST_REQUIRE(expected == instance.hash());
     BOOST_REQUIRE(data == instance.to_data());
 }

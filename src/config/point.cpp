@@ -15,19 +15,21 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost::program_options;
+using namespace infrastructure::config;
 
 // point format is currently private to bx.
-static bool decode_point(chain::output_point& point, std::string const& tuple) {
+static
+bool decode_point(chain::output_point& point, std::string const& tuple) {
     auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() != 2) {
         return false;
     }
 
     // validate and deserialize the transaction hash
-    const hash256 digest(tokens[0]);
+    hash256 const digest(tokens[0]);
     hash_digest const& txhash = digest;
 
     // copy the input point values
@@ -38,7 +40,8 @@ static bool decode_point(chain::output_point& point, std::string const& tuple) {
 }
 
 // point format is currently private to bx.
-static std::string encode_point(const chain::output_point& point) {
+static
+std::string encode_point(const chain::output_point& point) {
     std::stringstream result;
     result << hash256(point.hash()) << point::delimeter << point.index();
     return result.str();
@@ -78,4 +81,4 @@ std::ostream& operator<<(std::ostream& output, point const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth

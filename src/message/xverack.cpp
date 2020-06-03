@@ -10,39 +10,17 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const xverack::command = "xverack";
 uint32_t const xverack::version_minimum = version::level::minimum;
 uint32_t const xverack::version_maximum = version::level::maximum;
-
-xverack xverack::factory_from_data(uint32_t version, data_chunk const& data) {
-    xverack instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-xverack xverack::factory_from_data(uint32_t version, std::istream& stream) {
-    xverack instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 bool xverack::is_valid() const {
     return true;
 }
 
 void xverack::reset() {
-}
-
-bool xverack::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool xverack::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
 }
 
 data_chunk xverack::to_data(uint32_t version) const {
@@ -67,4 +45,4 @@ size_t xverack::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-}  // namespace kth
+} // namespace kth

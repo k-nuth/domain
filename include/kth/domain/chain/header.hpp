@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_HEADER_HPP
-#define KTH_CHAIN_HEADER_HPP
+#ifndef KTH_DOMAIN_CHAIN_HEADER_HPP
+#define KTH_DOMAIN_CHAIN_HEADER_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/chain/hash_memoizer.hpp>
 #include <kth/domain/chain/header_basis.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/error.hpp>
@@ -24,13 +25,12 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
-class BC_API header : public header_basis {
+class KD_API header : public header_basis, public hash_memoizer<header> {                                 // NOLINT(cppcoreguidelines-special-member-functions)
 public:
     using list = std::vector<header>;
     using ptr = std::shared_ptr<header>;
@@ -49,7 +49,7 @@ public:
     using header_basis::header_basis; // inherit constructors from header_basis
 
     header() = default;
-    header(header const& x, hash_digest const& hash);
+    // header(header const& x, hash_digest const& hash);
 
     /// This class is copy constructible and copy assignable.
     // Note(kth): Cannot be defaulted because the std::mutex data member.
@@ -65,21 +65,10 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static header factory_from_data(data_chunk const& data, bool wire = true);
-    // static header factory_from_data(std::istream& stream, bool wire=true);
-    static header factory_from_data(std::istream& stream, bool wire = true);
+    // bool from_data(data_chunk const& data, bool wire = true);
 
-    template <typename R, KTH_IS_READER(R)>
-    static header factory_from_data(R& source, bool wire = true) {
-        header instance;
-        instance.from_data(source, wire);
-        return instance;
-    }
-
-    bool from_data(data_chunk const& data, bool wire = true);
-
-    //TODO(fernando): check what happend when replacing std::istream to data_source
-    bool from_data(std::istream& stream, bool wire = true);
+    // //TODO(fernando): check what happend when replacing std::istream to data_source
+    // bool from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
@@ -124,7 +113,7 @@ public:
     void set_bits(uint32_t value);
     void set_nonce(uint32_t value);
 
-    hash_digest hash() const;
+    // hash_digest hash() const;
     hash_digest hash_pow() const;
 
 #ifdef KTH_CURRENCY_LTC
@@ -148,16 +137,13 @@ public:
     // friend class block;
 
     void reset();
-    void invalidate_cache() const;
+    // void invalidate_cache() const;
 
-private:
-    mutable upgrade_mutex mutex_;
-    mutable std::shared_ptr<hash_digest> hash_;
+// private:
+//     mutable upgrade_mutex mutex_;
+//     mutable std::shared_ptr<hash_digest> hash_;
 };
 
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+} // namespace kth::domain::chain
 
 #endif

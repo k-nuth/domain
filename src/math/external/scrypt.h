@@ -25,13 +25,15 @@ extern void (*scrypt_1024_1_1_256_sp_detected)(const char* input, char* output, 
 
 void PBKDF2_SHA256(uint8_t const* passwd, size_t passwdlen, uint8_t const* salt, size_t saltlen, uint64_t c, uint8_t* buf, size_t dkLen);
 
-static inline uint32_t le32dec(const void* pp) {
+static inline
+uint32_t le32dec(const void* pp) {
     uint8_t const* p = (uint8_t const*)pp;
     return ((uint32_t)(p[0]) + ((uint32_t)(p[1]) << 8) +
             ((uint32_t)(p[2]) << 16) + ((uint32_t)(p[3]) << 24));
 }
 
-static inline void le32enc(void* pp, uint32_t x) {
+static inline
+void le32enc(void* pp, uint32_t x) {
     uint8_t* p = (uint8_t*)pp;
     p[0] = x & 0xff;
     p[1] = (x >> 8) & 0xff;

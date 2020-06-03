@@ -12,7 +12,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 // Libbitcon doesn't use this.
 const ec_uncompressed alert_payload::satoshi_public_key{
@@ -22,18 +22,6 @@ const ec_uncompressed alert_payload::satoshi_public_key{
      0xea, 0xd8, 0x56, 0x4f, 0xf0, 0xdb, 0x22, 0x20, 0x9e, 0x03, 0x74,
      0x78, 0x2c, 0x09, 0x3b, 0xb8, 0x99, 0x69, 0x2d, 0x52, 0x4e, 0x9d,
      0x6a, 0x69, 0x56, 0xe7, 0xc5, 0xec, 0xbc, 0xd6, 0x82, 0x84}};
-
-alert_payload alert_payload::factory_from_data(uint32_t version, data_chunk const& data) {
-    alert_payload instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-alert_payload alert_payload::factory_from_data(uint32_t version, std::istream& stream) {
-    alert_payload instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 alert_payload::alert_payload(
     uint32_t version,
@@ -177,16 +165,6 @@ void alert_payload::reset() {
     reserved_.shrink_to_fit();
 }
 
-bool alert_payload::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool alert_payload::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk alert_payload::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -205,14 +183,14 @@ void alert_payload::to_data(uint32_t version, data_sink& stream) const {
 
 size_t alert_payload::serialized_size(uint32_t /*version*/) const {
     size_t size = 40u +
-                  message::variable_uint_size(comment_.size()) + comment_.size() +
-                  message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
-                  message::variable_uint_size(reserved_.size()) + reserved_.size() +
-                  message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
-                  message::variable_uint_size(set_sub_version_.size());
+                  infrastructure::message::variable_uint_size(comment_.size()) + comment_.size() +
+                  infrastructure::message::variable_uint_size(status_bar_.size()) + status_bar_.size() +
+                  infrastructure::message::variable_uint_size(reserved_.size()) + reserved_.size() +
+                  infrastructure::message::variable_uint_size(set_cancel_.size()) + (4 * set_cancel_.size()) +
+                  infrastructure::message::variable_uint_size(set_sub_version_.size());
 
     for (auto const& sub_version : set_sub_version_) {
-        size += message::variable_uint_size(sub_version.size()) + sub_version.size();
+        size += infrastructure::message::variable_uint_size(sub_version.size()) + sub_version.size();
     }
 
     return size;
@@ -362,4 +340,4 @@ void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
 }
 
-}  // namespace kth
+} // namespace kth

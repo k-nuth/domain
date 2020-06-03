@@ -3,12 +3,15 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <kth/domain.hpp>
-#include <kth/domain/wallet/ec_public.hpp>
+#include <kth/infrastructure.hpp>
+// #include <kth/domain/wallet/ec_public.hpp>
 #include <kth/domain/wallet/transaction_functions.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::wallet;
+using namespace kth::infrastructure::wallet;
 
 BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
 
@@ -25,17 +28,17 @@ BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
 kth::ec_secret create_secret_from_seed(std::string const& seed_str) {
     kth::data_chunk seed;
     kth::decode_base16(seed, seed_str);
-    kth::wallet::hd_private const key(seed);
+    hd_private const key(seed);
     // Secret key
     kth::ec_secret secret_key(key.secret());
     return secret_key;
 }
 
-kth::wallet::ec_public secret_to_compressed_public(kth::ec_secret const& secret_key) {
+ec_public secret_to_compressed_public(kth::ec_secret const& secret_key) {
     //Public key
     kth::ec_compressed point;
     kth::secret_to_public(point, secret_key);
-    kth::wallet::ec_public public_key(point, true /*compress*/);
+    ec_public public_key(point, true /*compress*/);
 
     return public_key;
 }
@@ -44,8 +47,8 @@ BOOST_AUTO_TEST_CASE(seed_to_wallet_compressed__test) {
     auto secret = create_secret_from_seed(SEED);
     auto pub_key = secret_to_compressed_public(secret);
     // Payment Address
-    uint8_t const version = kth::wallet::payment_address::testnet_p2kh;  // testnet_p2sh
-    kth::wallet::payment_address address(pub_key, version);
+    uint8_t const version = payment_address::testnet_p2kh;  // testnet_p2sh
+    payment_address address(pub_key, version);
 
     BOOST_REQUIRE_EQUAL(address.encoded(), WALLET);
 }
@@ -62,7 +65,7 @@ BOOST_AUTO_TEST_CASE(create_transaction__test) {
     std::vector<std::pair<payment_address, uint64_t>> outputs;
     outputs.push_back({payment_address(WALLET), 199999000});
 
-    auto result = kth::wallet::tx_encode(outputs_to_spend, outputs);
+    auto result = tx_encode(outputs_to_spend, outputs);
 
     BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
     BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), TX_ENCODE);
@@ -82,7 +85,7 @@ BOOST_AUTO_TEST_CASE(sign_transaction__test) {
     chain::transaction tx;
     data_chunk raw_data;
     kth::decode_base16(raw_data, TX_ENCODE);
-    tx.from_data(raw_data);
+    entity_from_data(tx, raw_data);
     BOOST_REQUIRE_EQUAL(kth::encode_base16(tx.to_data()), TX_ENCODE);
     // Amount
     uint64_t const amount = 200000000;
@@ -101,7 +104,7 @@ BOOST_AUTO_TEST_CASE(set_signature__test) {
     chain::transaction tx;
     data_chunk raw_data;
     kth::decode_base16(raw_data, TX_ENCODE);
-    tx.from_data(raw_data);
+    entity_from_data(tx, raw_data);
 
     // SCRIPT
     auto secret = create_secret_from_seed(SEED);

@@ -10,13 +10,15 @@
 
 #include <boost/program_options.hpp>
 
-#include <kth/domain.hpp>
-#include <kth/domain/define.hpp>
+// #include <kth/domain.hpp>
+// #include <kth/domain/define.hpp>
+#include <kth/infrastructure/formats/base_16.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 // ec_secret base16 format is private to bx.
-static bool decode_secret(ec_secret& secret, std::string const& encoded) {
+static
+bool decode_secret(ec_secret& secret, std::string const& encoded) {
     return decode_base16(secret, encoded) && verify(secret);
 }
 
@@ -49,4 +51,4 @@ std::ostream& operator<<(std::ostream& output, ec_private const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth::domain::config

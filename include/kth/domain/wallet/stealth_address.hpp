@@ -16,23 +16,26 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 /// A class for working with stealth payment addresses.
-class BC_API stealth_address {
+class KD_API stealth_address {
 public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
-    static uint8_t const mainnet_p2kh;
+    static
+    uint8_t const mainnet_p2kh;
 
     /// If set and the spend_keys contains the scan_key then the key is reused.
-    static uint8_t const reuse_key_flag;
+    static
+    uint8_t const reuse_key_flag;
 
     /// This is advisory in nature and likely to be enforced by a server.
-    static const size_t min_filter_bits;
+    static
+    const size_t min_filter_bits;
 
     /// This is the protocol limit to the size of a stealth prefix filter.
-    static const size_t max_filter_bits;
+    static
+    const size_t max_filter_bits;
 
     /// Constructors.
     stealth_address();
@@ -55,23 +58,39 @@ public:
     operator data_chunk() const;
 
     /// Serializer.
-    [[nodiscard]] std::string encoded() const;
+    [[nodiscard]]
+    std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] uint8_t version() const;
-    [[nodiscard]] ec_compressed const& scan_key() const;
-    [[nodiscard]] point_list const& spend_keys() const;
-    [[nodiscard]] uint8_t signatures() const;
-    [[nodiscard]] binary const& filter() const;
+    [[nodiscard]]
+    uint8_t version() const;
+    
+    [[nodiscard]]
+    ec_compressed const& scan_key() const;
+    
+    [[nodiscard]]
+    point_list const& spend_keys() const;
+    
+    [[nodiscard]]
+    uint8_t signatures() const;
+    
+    [[nodiscard]]
+    binary const& filter() const;
 
     /// Methods.
-    [[nodiscard]] data_chunk to_chunk() const;
+    [[nodiscard]]
+    data_chunk to_chunk() const;
 
 private:
     /// Factories.
-    static stealth_address from_string(std::string const& encoded);
-    static stealth_address from_stealth(data_chunk const& decoded);
-    static stealth_address from_stealth(binary const& filter,
+    static
+    stealth_address from_string(std::string const& encoded);
+    
+    static
+    stealth_address from_stealth(data_chunk const& decoded);
+    
+    static
+    stealth_address from_stealth(binary const& filter,
                                         ec_compressed const& scan_key,
                                         point_list const& spend_keys,
                                         uint8_t signatures,
@@ -81,8 +100,11 @@ private:
     stealth_address(uint8_t version, binary const& filter, ec_compressed const& scan_key, point_list const& spend_keys, uint8_t signatures);
 
     /// Helpers.
-    [[nodiscard]] bool reuse_key() const;
-    [[nodiscard]] uint8_t options() const;
+    [[nodiscard]]
+    bool reuse_key() const;
+    
+    [[nodiscard]]
+    uint8_t options() const;
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
@@ -94,7 +116,6 @@ private:
     binary filter_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

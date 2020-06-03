@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(filter_load_tests)
 
@@ -78,7 +79,7 @@ BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0x11};
     message::filter_load instance;
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::maximum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::maximum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_version__failure) {
@@ -91,7 +92,7 @@ BOOST_AUTO_TEST_CASE(filter_load__from_data__insufficient_version__failure) {
     data_chunk const data = expected.to_data(message::version::level::maximum);
     message::filter_load instance;
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::filter_load::version_minimum - 1, data));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
@@ -104,7 +105,7 @@ BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_1__valid_input__success) {
         0xab};
 
     auto const data = expected.to_data(message::version::level::maximum);
-    auto const result = message::filter_load::factory_from_data(
+    auto const result = create<message::filter_load>(
         message::version::level::maximum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -124,7 +125,7 @@ BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_2__valid_input__success) {
 
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
-    auto const result = message::filter_load::factory_from_data(
+    auto const result = create<message::filter_load>(
         message::version::level::maximum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -145,7 +146,7 @@ BOOST_AUTO_TEST_CASE(filter_load__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::filter_load::factory_from_data(
+    auto const result = create<message::filter_load>(
         message::version::level::maximum, source);
 
     BOOST_REQUIRE(result.is_valid());

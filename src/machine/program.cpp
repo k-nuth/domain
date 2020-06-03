@@ -15,15 +15,22 @@
 #include <kth/infrastructure/machine/script_version.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
-using namespace bc::chain;
+using namespace kth::domain::chain;
 
 // Fixed tuning parameters, max_stack_size ensures no reallocation.
-static constexpr size_t stack_capactity = max_stack_size;
-static constexpr size_t condition_capactity = max_counted_ops;
-static chain::transaction const default_tx_;
-static chain::script const default_script_;
+static constexpr 
+size_t stack_capactity = max_stack_size;
+
+static constexpr 
+size_t condition_capactity = max_counted_ops;
+
+static
+chain::transaction const default_tx_;
+
+static
+chain::script const default_script_;
 
 void program::reserve_stacks() {
     primary_.reserve(stack_capactity);
@@ -120,4 +127,4 @@ code program::evaluate(operation const& op) {
     return interpreter::run(op, *this);
 }
 
-}  // namespace kth
+} // namespace kth::domain::machine

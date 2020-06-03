@@ -19,11 +19,11 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <kth/domain/chain/chain_state.hpp>
+#include <kth/domain/common.hpp>
 #include <kth/domain/chain/compact.hpp>
 #include <kth/domain/chain/input_point.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/constants.hpp>
-// #include <kth/infrastructure/message/message_tools.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
@@ -41,15 +41,15 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-using namespace bc::config;
-using namespace bc::machine;
+using namespace kth::domain::machine;
 using namespace boost::adaptors;
 
 #ifdef KTH_CURRENCY_LTC
 //Litecoin mainnet genesis block
-static std::string const encoded_mainnet_genesis_block =
+static
+std::string const encoded_mainnet_genesis_block =
     "01000000"                                                                                                                                          //version
     "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
     "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le *
@@ -70,7 +70,8 @@ static std::string const encoded_mainnet_genesis_block =
     "00000000";     //NOLINT                                                                                                                            //locktime
 
 //Litecoin testnet genesis block
-static std::string const encoded_testnet_genesis_block =
+static
+std::string const encoded_testnet_genesis_block =
     "01000000"                                                                                                                                          //version
     "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
     "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le
@@ -91,7 +92,8 @@ static std::string const encoded_testnet_genesis_block =
     "00000000";           //NOLINT                                                                                                                      //locktime
 #else  //KTH_CURRENCY_LTC
 
-static std::string const encoded_mainnet_genesis_block =
+static
+std::string const encoded_mainnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -111,7 +113,8 @@ static std::string const encoded_mainnet_genesis_block =
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000"; //NOLINT
 
-static std::string const encoded_testnet_genesis_block =
+static
+std::string const encoded_testnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -132,7 +135,8 @@ static std::string const encoded_testnet_genesis_block =
     "00000000"; //NOLINT
 #endif  //KTH_CURRENCY_LTC
 
-static std::string const encoded_regtest_genesis_block =
+static
+std::string const encoded_regtest_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -201,41 +205,6 @@ block& block::operator=(block&& x) noexcept {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-block block::factory_from_data(data_chunk const& data, bool witness) {
-    block instance;
-    instance.from_data(data, witness_val(witness));
-    return instance;
-}
-
-// static
-block block::factory_from_data(std::istream& stream, bool witness) {
-    block instance;
-    instance.from_data(stream, witness_val(witness));
-    return instance;
-}
-
-// static
-//block block::factory_from_data(reader& source, bool witness)
-//{
-//#ifdef KTH_CURRENCY_BCH
-//    witness = false;
-//#endif
-//    block instance;
-//    instance.from_data(source, witness);
-//    return instance;
-//}
-
-bool block::from_data(data_chunk const& data, bool witness) {
-    data_source istream(data);
-    return from_data(istream, witness_val(witness));
-}
-
-bool block::from_data(std::istream& stream, bool witness) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, witness_val(witness));
-}
-
 // // private
 // void block::reset() {
 //     block_basis::reset();
@@ -253,35 +222,7 @@ bool block::from_data(std::istream& stream, bool witness) {
 
 data_chunk block::to_data(bool witness) const {
     return block_basis::to_data(serialized_size(witness_val(witness)), witness);
-
-    // data_chunk data;
-    // auto const size = serialized_size(witness_val(witness));
-    // data.reserve(size);
-    // data_sink ostream(data);
-    // to_data(ostream);
-    // ostream.flush();
-    // KTH_ASSERT(data.size() == size);
-    // return data;
 }
-
-// void block::to_data(data_sink& stream, bool witness) const {
-//     ostream_writer sink_w(stream);
-//     to_data(sink_w, witness_val(witness));
-// }
-
-
-
-// hash_list block::to_hashes(bool witness) const {
-//     hash_list out;
-//     out.reserve(transactions_.size());
-//     auto const to_hash = [&out, witness](transaction const& tx) {
-//         out.push_back(tx.hash(witness_val(witness)));
-//     };
-
-//     // Hash ordering matters, don't use std::transform here.
-//     std::for_each(transactions_.begin(), transactions_.end(), to_hash);
-//     return out;
-// }
 
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
@@ -325,11 +266,13 @@ size_t block::serialized_size(bool witness) const {
     return value;
 }
 
-
 // TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list const& value) {
     block_basis::set_transactions(value);
+
+#if defined(KTH_SEGWIT_ENABLED)
     segregated_ = std::nullopt;
+#endif
     total_inputs_ = std::nullopt;
     base_size_ = std::nullopt;
     total_size_ = std::nullopt;
@@ -338,24 +281,24 @@ void block::set_transactions(transaction::list const& value) {
 // TODO(legacy): see set_header comments.
 void block::set_transactions(transaction::list&& value) {
     block_basis::set_transactions(std::move(value));
+
+#if defined(KTH_SEGWIT_ENABLED)
     segregated_ = std::nullopt;
+#endif
+
     total_inputs_ = std::nullopt;
     base_size_ = std::nullopt;
     total_size_ = std::nullopt;
 }
 
-// // Convenience property.
-// hash_digest block::hash() const {
-//     return header_.hash();
-// }
-
 // Utilities.
 //-----------------------------------------------------------------------------
 
+//TODO(fernando): refartor the following 3 member functions
 chain::block block::genesis_mainnet() {
     data_chunk data;
     decode_base16(data, encoded_mainnet_genesis_block);
-    auto const genesis = chain::block::factory_from_data(data);
+    auto const genesis = create<chain::block>(data);
 
     KTH_ASSERT(genesis.is_valid());
     KTH_ASSERT(genesis.transactions().size() == 1);
@@ -366,7 +309,7 @@ chain::block block::genesis_mainnet() {
 chain::block block::genesis_testnet() {
     data_chunk data;
     decode_base16(data, encoded_testnet_genesis_block);
-    auto const genesis = chain::block::factory_from_data(data);
+    auto const genesis = create<chain::block>(data);
 
     KTH_ASSERT(genesis.is_valid());
     KTH_ASSERT(genesis.transactions().size() == 1);
@@ -377,7 +320,7 @@ chain::block block::genesis_testnet() {
 chain::block block::genesis_regtest() {
     data_chunk data;
     decode_base16(data, encoded_regtest_genesis_block);
-    auto const genesis = chain::block::factory_from_data(data);
+    auto const genesis = create<chain::block>(data);
 
     KTH_ASSERT(genesis.is_valid());
     KTH_ASSERT(genesis.transactions().size() == 1);
@@ -426,7 +369,7 @@ block::indexes block::locator_heights(size_t top) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
 void block::strip_witness() {
     auto const strip = [](transaction& transaction) {
@@ -450,48 +393,17 @@ void block::strip_witness() {
 // Validation helpers.
 //-----------------------------------------------------------------------------
 
-// // [GetBlockProof]
-// uint256_t block::proof() const {
-//     return header_.proof();
-// }
-
-// uint64_t block::subsidy(size_t height, bool retarget) {
-//     static auto const overflow = sizeof(uint64_t) * byte_bits;
-//     auto subsidy = initial_block_subsidy_satoshi();
-//     auto const halvings = height / subsidy_interval(retarget);
-//     subsidy >>= (halvings >= overflow ? 0 : halvings);
-//     return subsidy;
-// }
-
 // Returns max_size_t in case of overflow or unpopulated chain state.
 size_t block::signature_operations() const {
     auto const state = validation.state;
     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
 #endif
     return state ? block_basis::signature_operations(bip16, bip141) : max_size_t;
 }
-
-// // Returns max_size_t in case of overflow.
-// size_t block::signature_operations(bool bip16, bool bip141) const {
-// #ifdef KTH_CURRENCY_BCH
-//     bip141 = false;  // No segwit
-// #endif
-//     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
-//         return ceiling_add(total, tx.signature_operations(bip16, bip141));
-//     };
-
-//     //*************************************************************************
-//     // CONSENSUS: Legacy sigops are counted in coinbase scripts despite the
-//     // fact that coinbase input scripts are never executed. There is no need
-//     // to exclude p2sh coinbase sigops since there is never a script to count.
-//     //*************************************************************************
-//     auto const& txs = transactions_;
-//     return std::accumulate(txs.begin(), txs.end(), size_t{0}, value);
-// }
 
 size_t block::total_inputs(bool with_coinbase) const {
     size_t value;
@@ -525,191 +437,9 @@ size_t block::weight() const {
     //        total_size_contribution * serialized_size(true);
 }
 
-// // True if there is another coinbase other than the first tx.
-// // No txs or coinbases returns false.
-// bool block::is_extra_coinbases() const {
-//     if (transactions_.empty()) {
-//         return false;
-//     }
-
-//     auto const value = [](transaction const& tx) {
-//         return tx.is_coinbase();
-//     };
-
-//     auto const& txs = transactions_;
-//     return std::any_of(txs.begin() + 1, txs.end(), value);
-// }
-
-// bool block::is_final(size_t height, uint32_t block_time) const {
-//     auto const value = [=](transaction const& tx) {
-//         return tx.is_final(height, block_time);
-//     };
-
-//     auto const& txs = transactions_;
-//     return std::all_of(txs.begin(), txs.end(), value);
-// }
-
-// // Distinctness is defined by transaction hash.
-// bool block::is_distinct_transaction_set() const {
-//     auto const hasher = [](transaction const& tx) { return tx.hash(); };
-//     auto const& txs = transactions_;
-//     hash_list hashes(txs.size());
-//     std::transform(txs.begin(), txs.end(), hashes.begin(), hasher);
-//     std::sort(hashes.begin(), hashes.end());
-//     auto const distinct_end = std::unique(hashes.begin(), hashes.end());
-//     return distinct_end == hashes.end();
-// }
-
-// hash_digest block::generate_merkle_root(bool witness) const {
-//     if (transactions_.empty()) {
-//         return null_hash;
-//     }
-
-//     hash_list update;
-//     auto merkle = to_hashes(witness_val(witness));
-
-//     // Initial capacity is half of the original list (clear doesn't reset).
-//     update.reserve((merkle.size() + 1) / 2);
-
-//     while (merkle.size() > 1) {
-//         // If number of hashes is odd, duplicate last hash in the list.
-//         if (merkle.size() % 2 != 0) {
-//             merkle.push_back(merkle.back());
-//         }
-
-//         for (auto it = merkle.begin(); it != merkle.end(); it += 2) {
-//             update.push_back(bitcoin_hash(build_chunk({it[0], it[1]})));
-//         }
-
-//         std::swap(merkle, update);
-//         update.clear();
-//     }
-
-//     // There is now only one item in the list.
-//     return merkle.front();
-// }
-
-// size_t block::non_coinbase_input_count() const {
-//     if (transactions_.empty()) {
-//         return 0;
-//     }
-
-//     auto const counter = [](size_t sum, transaction const& tx) {
-//         return sum + tx.inputs().size();
-//     };
-
-//     auto const& txs = transactions_;
-//     return std::accumulate(txs.begin() + 1, txs.end(), size_t(0), counter);
-// }
-
-// //****************************************************************************
-// // CONSENSUS: This is only necessary because satoshi stores and queries as it
-// // validates, imposing an otherwise unnecessary partial transaction ordering.
-// //*****************************************************************************
-// bool block::is_forward_reference() const {
-//     std::unordered_map<hash_digest, bool> hashes(transactions_.size());
-//     auto const is_forward = [&hashes](input const& input) {
-//         return hashes.count(input.previous_output().hash()) != 0;
-//     };
-
-//     for (auto const& tx : reverse(transactions_)) {
-//         hashes.emplace(tx.hash(), true);
-
-//         if (std::any_of(tx.inputs().begin(), tx.inputs().end(), is_forward)) {
-//             return true;
-//         }
-//     }
-
-//     return false;
-// }
-
-// // This is an early check that is redundant with block pool accept checks.
-// bool block::is_internal_double_spend() const {
-//     if (transactions_.empty()) {
-//         return false;
-//     }
-
-//     point::list outs;
-//     outs.reserve(non_coinbase_input_count());
-//     auto const& txs = transactions_;
-
-//     // Merge the prevouts of all non-coinbase transactions into one set.
-//     for (auto tx = txs.begin() + 1; tx != txs.end(); ++tx) {
-//         auto out = tx->previous_outputs();
-//         std::move(out.begin(), out.end(), std::inserter(outs, outs.end()));
-//     }
-
-//     std::sort(outs.begin(), outs.end());
-//     auto const distinct_end = std::unique(outs.begin(), outs.end());
-//     auto const distinct = (distinct_end == outs.end());
-//     return !distinct;
-// }
-
-// bool block::is_valid_merkle_root() const {
-//     return generate_merkle_root() == header_.merkle();
-// }
-
-// // Overflow returns max_uint64.
-// uint64_t block::fees() const {
-//     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
-//     auto const value = [](uint64_t total, transaction const& tx) {
-//         return ceiling_add(total, tx.fees());
-//     };
-
-//     auto const& txs = transactions_;
-//     return std::accumulate(txs.begin(), txs.end(), uint64_t{0}, value);
-// }
-
-// uint64_t block::claim() const {
-//     return transactions_.empty() ? 0 : transactions_.front().total_output_value();
-// }
-
-// // Overflow returns max_uint64.
-// uint64_t block::reward(size_t height) const {
-//     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
-//     return ceiling_add(fees(), subsidy(height));
-// }
-
-// bool block::is_valid_coinbase_claim(size_t height) const {
-//     return claim() <= reward(height);
-// }
-
-// bool block::is_valid_coinbase_script(size_t height) const {
-//     if (transactions_.empty() || transactions_.front().inputs().empty()) {
-//         return false;
-//     }
-
-//     auto const& script = transactions_.front().inputs().front().script();
-//     return script::is_coinbase_pattern(script.operations(), height);
-// }
-
-// bool block::is_valid_witness_commitment() const {
-// #ifdef KTH_CURRENCY_BCH
-//     return false;
-// #else
-//     if (transactions_.empty() || transactions_.front().inputs().empty()) {
-//         return false;
-//     }
-
-//     hash_digest reserved, committed;
-//     auto const& coinbase = transactions_.front();
-
-//     // Last output of commitment pattern holds committed value (bip141).
-//     if (coinbase.inputs().front().extract_reserved_hash(reserved)) {
-//         for (auto const& output : reverse(coinbase.outputs())) {
-//             if (output.extract_committed_hash(committed)) {
-//                 return committed == bitcoin_hash(build_chunk({generate_merkle_root(true), reserved}));
-//             }
-//         }
-//     }
-
-//     // If no txs in block are segregated the commitment is optional (bip141).
-//     return !is_segregated();
-// #endif // KTH_CURRENCY_BCH
-// }
-
+#if defined(KTH_SEGWIT_ENABLED)
 bool block::is_segregated() const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #else
     bool value;
@@ -737,42 +467,8 @@ bool block::is_segregated() const {
     return value;
 #endif // KTH_CURRENCY_BCH
 }
+#endif // defined(KTH_SEGWIT_ENABLED)
 
-// code block::check_transactions() const {
-//     code ec;
-
-//     for (auto const& tx : transactions_) {
-//         if ((ec = tx.check(false))) {
-//             return ec;
-//         }
-//     }
-
-//     return error::success;
-// }
-
-// code block::accept_transactions(chain_state const& state) const {
-//     code ec;
-
-//     for (auto const& tx : transactions_) {
-//         if ((ec = tx.accept(state, false))) {
-//             return ec;
-//         }
-//     }
-
-//     return error::success;
-// }
-
-// code block::connect_transactions(chain_state const& state) const {
-//     code ec;
-
-//     for (auto const& tx : transactions_) {
-//         if ((ec = tx.connect(state))) {
-//             return ec;
-//         }
-//     }
-
-//     return error::success;
-// }
 
 // Validation.
 //-----------------------------------------------------------------------------
@@ -799,13 +495,4 @@ code block::connect() const {
     return state ? block_basis::connect(*state) : error::operation_failed;
 }
 
-// code block::connect(chain_state const& state) const {
-//     validation.start_connect = asio::steady_clock::now();
-
-//     if (state.is_under_checkpoint()) {
-//         return error::success;
-//     }
-//     return connect_transactions(state);
-// }
-
-}  // namespace kth
+} // namespace kth

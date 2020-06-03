@@ -12,11 +12,12 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
+#include <kth/domain/common.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost;
 using namespace boost::program_options;
@@ -30,7 +31,7 @@ script::script(chain::script const& value)
 }
 
 script::script(data_chunk const& value) {
-    value_.from_data(value, false);
+    entity_from_data(value_, value, false);
 }
 
 script::script(const std::vector<std::string>& tokens) {
@@ -74,4 +75,4 @@ std::ostream& operator<<(std::ostream& output, script const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth

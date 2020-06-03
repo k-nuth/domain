@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_POINTS_VALUE_HPP
-#define KTH_CHAIN_POINTS_VALUE_HPP
+#ifndef KTH_DOMAIN_CHAIN_POINTS_VALUE_HPP
+#define KTH_DOMAIN_CHAIN_POINTS_VALUE_HPP
 
 #include <cstdint>
 #include <numeric>
@@ -12,19 +12,18 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/utility/limits.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
-class BC_API points_value {
+class KD_API points_value {
 public:
     /// A set of valued points.
     point_value::list points;
 
     /// Total value of the current set of points.
-    [[nodiscard]] uint64_t value() const;
+    [[nodiscard]]
+    uint64_t value() const;
 };
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
 #endif

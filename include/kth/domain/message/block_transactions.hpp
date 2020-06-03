@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_BLOCK_TRANSACTIONS_HPP
-#define KTH_MESSAGE_BLOCK_TRANSACTIONS_HPP
+#ifndef KTH_DOMAIN_MESSAGE_BLOCK_TRANSACTIONS_HPP
+#define KTH_DOMAIN_MESSAGE_BLOCK_TRANSACTIONS_HPP
 
 #include <istream>
 
@@ -16,26 +16,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API block_transactions {
+class KD_API block_transactions {
 public:
     using ptr = std::shared_ptr<block_transactions>;
     using const_ptr = std::shared_ptr<const block_transactions>;
-
-    static block_transactions factory_from_data(uint32_t version, data_chunk const& data);
-    static block_transactions factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static block_transactions factory_from_data(uint32_t version, R& source) {
-        block_transactions instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     block_transactions();
     block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions);
@@ -52,16 +41,22 @@ public:
 
 
     hash_digest& block_hash();
-    [[nodiscard]] hash_digest const& block_hash() const;
+    
+    [[nodiscard]]
+    hash_digest const& block_hash() const;
+    
     void set_block_hash(hash_digest const& value);
 
     chain::transaction::list& transactions();
-    [[nodiscard]] chain::transaction::list const& transactions() const;
+    
+    [[nodiscard]]
+    chain::transaction::list const& transactions() const;
+    
     void set_transactions(chain::transaction::list const& x);
     void set_transactions(chain::transaction::list&& x);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -80,7 +75,7 @@ public:
 
         // Order is required.
         for (auto& tx : transactions_) {
-            if ( ! tx.from_data(source, true, witness_default())) {
+            if ( ! entity_from_data(tx, source, true, witness_default())) {
                 break;
             }
         }
@@ -97,11 +92,13 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_hash(block_hash_);
         sink.write_variable_little_endian(transactions_.size());
 
@@ -115,20 +112,28 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 private:
     hash_digest block_hash_;
     chain::transaction::list transactions_;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

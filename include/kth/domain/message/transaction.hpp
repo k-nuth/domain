@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_TRANSACTION_HPP
-#define KTH_MESSAGE_TRANSACTION_HPP
+#ifndef KTH_DOMAIN_MESSAGE_TRANSACTION_HPP
+#define KTH_DOMAIN_MESSAGE_TRANSACTION_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -20,13 +20,12 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API transaction : public chain::transaction {
+class KD_API transaction : public chain::transaction {
 public:
     using ptr = std::shared_ptr<transaction>;
     using const_ptr = std::shared_ptr<const transaction>;
@@ -43,8 +42,6 @@ public:
 
     transaction& operator=(chain::transaction&& x);
 
-
-
     transaction(transaction const& x) = default;
     transaction(transaction&& x) = default;
     /// This class is move assignable but not copy assignable.
@@ -57,22 +54,13 @@ public:
     bool operator==(transaction const& x) const;
     bool operator!=(transaction const& x) const;
 
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
-    static transaction factory_from_data(uint32_t version, data_chunk const& data);
-    static transaction factory_from_data(uint32_t version, std::istream& stream);
-
+    // Witness is always deserialized if present.
+    // NOTE: Witness on BCH is dissabled on the chain::block class
     template <typename R, KTH_IS_READER(R)>
-    static transaction factory_from_data(uint32_t version, R& source) {
-        transaction instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         return chain::transaction::from_data(source, true, true);
     }
 
@@ -80,18 +68,23 @@ public:
     void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink, bool witness = true) const {
+    void to_data(uint32_t /*version*/, W& sink, bool witness = true) const {
         chain::transaction::to_data(sink, true, witness);
     }
 
     size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

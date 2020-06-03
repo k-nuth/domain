@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_POINT_ITERATOR_HPP
-#define KTH_CHAIN_POINT_ITERATOR_HPP
+#ifndef KTH_DOMAIN_CHAIN_POINT_ITERATOR_HPP
+#define KTH_DOMAIN_CHAIN_POINT_ITERATOR_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -11,13 +11,12 @@
 
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
 class point;
 
 /// A point iterator for store serialization (does not support wire).
-class BC_API point_iterator {
+class KD_API point_iterator {
 public:
     using pointer = uint8_t;
     using reference = uint8_t;
@@ -56,17 +55,21 @@ public:
 protected:
     void increment();
     void decrement();
-    [[nodiscard]] point_iterator increase(unsigned value) const;
-    [[nodiscard]] point_iterator decrease(unsigned value) const;
+    
+    [[nodiscard]]
+    point_iterator increase(unsigned value) const;
+    
+    [[nodiscard]]
+    point_iterator decrease(unsigned value) const;
 
 private:
-    [[nodiscard]] uint8_t current() const;
+    [[nodiscard]]
+    uint8_t current() const;
 
     point const* point_;
     unsigned current_;
 };
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
 #endif

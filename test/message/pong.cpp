@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(pong_tests)
 
@@ -36,7 +37,7 @@ BOOST_AUTO_TEST_CASE(pong__satoshi_fixed_size__minimum_version__returns_8) {
 
 BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__minimum_version_empty_data__invalid) {
     static auto const version = message::version::level::minimum;
-    auto const result = message::pong::factory_from_data(version, data_chunk{});
+    auto const result = create<message::pong>(version, data_chunk{});
     BOOST_REQUIRE(!result.is_valid());
 }
 
@@ -46,7 +47,7 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__round_trip__expected) {
 
     static auto const version = message::version::level::minimum;
     auto const data = expected.to_data(version);
-    auto const result = message::pong::factory_from_data(version, data);
+    auto const result = create<message::pong>(version, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -61,7 +62,7 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_2__round_trip__expected) {
     static auto const version = message::version::level::minimum;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto const result = message::pong::factory_from_data(version, istream);
+    auto const result = create<message::pong>(version, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -77,7 +78,7 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_3__round_trip__expected) {
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::pong::factory_from_data(version, source);
+    auto const result = create<message::pong>(version, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_BLOCK_HPP
-#define KTH_MESSAGE_BLOCK_HPP
+#ifndef KTH_DOMAIN_MESSAGE_BLOCK_HPP
+#define KTH_DOMAIN_MESSAGE_BLOCK_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -20,13 +20,12 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API block : public chain::block {
+class KD_API block : public chain::block {
 public:
     using ptr = std::shared_ptr<block>;
     using const_ptr = std::shared_ptr<const block>;
@@ -34,18 +33,6 @@ public:
     using const_ptr_list = std::vector<const_ptr>;
     using const_ptr_list_ptr = std::shared_ptr<const_ptr_list>;
     using const_ptr_list_const_ptr = std::shared_ptr<const const_ptr_list>;
-
-    static block factory_from_data(uint32_t version, data_chunk const& data);
-    static block factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static block factory_from_data(uint32_t version, R& source) {
-        block instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static block factory_from_data(uint32_t version, reader& source);
 
     block() = default;
 
@@ -68,13 +55,10 @@ public:
     bool operator==(block const& x) const;
     bool operator!=(block const& x) const;
 
-
-
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
-
+    // Witness is always deserialized if present.
+    // NOTE: Witness on BCH is dissabled on the chain::block class
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         return chain::block::from_data(source, true);
     }
 
@@ -83,7 +67,7 @@ public:
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         chain::block::to_data(sink, true);
     }
 
@@ -91,9 +75,14 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 };
 
 //TODO(fernando): check this family of functions: to_data_header_nonce
@@ -111,7 +100,6 @@ data_chunk to_data_header_nonce(block const& block, uint64_t nonce);
 
 hash_digest hash(block const& block, uint64_t nonce);
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

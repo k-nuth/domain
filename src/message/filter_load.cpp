@@ -13,23 +13,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const filter_load::command = "filterload";
 uint32_t const filter_load::version_minimum = version::level::bip37;
 uint32_t const filter_load::version_maximum = version::level::maximum;
-
-filter_load filter_load::factory_from_data(uint32_t version, data_chunk const& data) {
-    filter_load instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-filter_load filter_load::factory_from_data(uint32_t version, std::istream& stream) {
-    filter_load instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 filter_load::filter_load(data_chunk const& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
     : filter_(filter), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
@@ -38,22 +26,6 @@ filter_load::filter_load(data_chunk const& filter, uint32_t hash_functions, uint
 filter_load::filter_load(data_chunk&& filter, uint32_t hash_functions, uint32_t tweak, uint8_t flags)
     : filter_(std::move(filter)), hash_functions_(hash_functions), tweak_(tweak), flags_(flags) {
 }
-
-// filter_load::filter_load(filter_load const& x)
-//     : filter_load(x.filter_, x.hash_functions_, x.tweak_, x.flags_) {
-// }
-
-// filter_load::filter_load(filter_load&& x) noexcept
-//     : filter_load(std::move(x.filter_), x.hash_functions_, x.tweak_, x.flags_) {
-// }
-
-// filter_load& filter_load::operator=(filter_load&& x) noexcept {
-//     filter_ = std::move(x.filter_);
-//     hash_functions_ = x.hash_functions_;
-//     tweak_ = x.tweak_;
-//     flags_ = x.flags_;
-//     return *this;
-// }
 
 bool filter_load::operator==(filter_load const& x) const {
     return (filter_ == x.filter_) && (hash_functions_ == x.hash_functions_) && (tweak_ == x.tweak_) && (flags_ == x.flags_);
@@ -75,16 +47,6 @@ void filter_load::reset() {
     flags_ = 0x00;
 }
 
-bool filter_load::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool filter_load::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk filter_load::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -102,7 +64,7 @@ void filter_load::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t filter_load::serialized_size(uint32_t /*version*/) const {
-    return 1u + 4u + 4u + message::variable_uint_size(filter_.size()) + filter_.size();
+    return 1u + 4u + 4u + infrastructure::message::variable_uint_size(filter_.size()) + filter_.size();
 }
 
 data_chunk& filter_load::filter() {
@@ -145,4 +107,4 @@ void filter_load::set_flags(uint8_t value) {
     flags_ = value;
 }
 
-}  // namespace kth
+} // namespace kth

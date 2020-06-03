@@ -12,7 +12,7 @@
 #include <kth/infrastructure/compat.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 
-namespace kth {
+namespace kth::domain {
 
 #define IF(T) std::enable_if<T>
 #define SIGN(T) std::is_signed<T>::value
@@ -161,6 +161,6 @@ To range_constrain(From value, To minimum, To maximum) {
 #undef UNSIGNED_SIGNED
 #undef UNSIGNED_UNSIGNED
 
-}  // namespace kth
+} // namespace kth
 
 #endif

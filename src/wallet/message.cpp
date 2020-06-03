@@ -11,7 +11,7 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 static constexpr uint8_t max_recovery_id = 3;
 static constexpr uint8_t magic_compressed = 31;
@@ -34,7 +34,8 @@ hash_digest hash_message(data_slice message) {
     return bitcoin_hash(data);
 }
 
-static bool recover(short_hash& out_hash, bool compressed, ec_signature const& compact, uint8_t recovery_id, hash_digest const& message_digest) {
+static
+bool recover(short_hash& out_hash, bool compressed, ec_signature const& compact, uint8_t recovery_id, hash_digest const& message_digest) {
     const recoverable_signature recoverable{
         compact,
         recovery_id};
@@ -131,4 +132,4 @@ bool verify_message(data_slice message, payment_address const& address, const me
            (hash == address.hash());
 }
 
-}  // namespace kth
+} // namespace kth

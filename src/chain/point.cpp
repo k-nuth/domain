@@ -18,7 +18,7 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/serializer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 constexpr auto store_point_size = std::tuple_size<point>::value;
 
@@ -78,29 +78,15 @@ bool operator>=(point const& x, point const& y) {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-point point::factory_from_data(data_chunk const& data, bool wire) {
-    point instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool point::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-// static
-point point::factory_from_data(std::istream& stream, bool wire) {
-    point instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool point::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool point::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool point::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // protected
 void point::reset() {
@@ -216,4 +202,4 @@ bool point::is_null() const {
     return (index_ == null_index) && (hash_ == null_hash);
 }
 
-}  // namespace kth
+} // namespace kth::domain::chain

@@ -15,23 +15,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_block_transactions::command = "getblocktxn";
 uint32_t const get_block_transactions::version_minimum = version::level::bip152;
 uint32_t const get_block_transactions::version_maximum = version::level::bip152;
-
-get_block_transactions get_block_transactions::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_block_transactions instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_block_transactions get_block_transactions::factory_from_data(uint32_t version, std::istream& stream) {
-    get_block_transactions instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 get_block_transactions::get_block_transactions()
     : block_hash_(null_hash) 
@@ -84,16 +72,6 @@ void get_block_transactions::reset() {
     indexes_.shrink_to_fit();
 }
 
-bool get_block_transactions::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool get_block_transactions::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk get_block_transactions::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -111,10 +89,10 @@ void get_block_transactions::to_data(uint32_t version, data_sink& stream) const 
 }
 
 size_t get_block_transactions::serialized_size(uint32_t /*version*/) const {
-    auto size = hash_size + message::variable_uint_size(indexes_.size());
+    auto size = hash_size + infrastructure::message::variable_uint_size(indexes_.size());
 
     for (auto const& element : indexes_) {
-        size += message::variable_uint_size(element);
+        size += infrastructure::message::variable_uint_size(element);
     }
 
     return size;
@@ -148,4 +126,4 @@ void get_block_transactions::set_indexes(std::vector<uint64_t>&& values) {
     indexes_ = values;
 }
 
-}  // namespace kth
+} // namespace kth

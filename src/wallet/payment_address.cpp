@@ -24,9 +24,10 @@
 #include <kth/infrastructure/wallet/cashaddr.hpp>
 #endif  //KTH_CURRENCY_BCH
 
-namespace kth::wallet {
+using namespace kth::infrastructure::machine;
+using namespace kth::infrastructure::wallet;
 
-using namespace bc::machine;
+namespace kth::domain::wallet {
 
 #ifdef KTH_CURRENCY_LTC
 uint8_t const payment_address::mainnet_p2kh = 0x30;
@@ -35,7 +36,6 @@ uint8_t const payment_address::mainnet_p2kh = 0x00;
 #endif
 
 uint8_t const payment_address::mainnet_p2sh = 0x05;
-
 uint8_t const payment_address::testnet_p2kh = 0x6f;
 uint8_t const payment_address::testnet_p2sh = 0xc4;
 
@@ -96,6 +96,8 @@ bool payment_address::is_address(data_slice decoded) {
 
 // Factories.
 // ----------------------------------------------------------------------------
+
+//TODO(fernando): move BCH cashaddr to another place
 #ifdef KTH_CURRENCY_BCH
 
 template <unsigned int frombits, unsigned int tobits, bool pad, typename O, typename I>
@@ -477,4 +479,4 @@ payment_address::list payment_address::extract_output(
     }
 }
 
-}  // namespace kth
+} // namespace kth::domain::wallet

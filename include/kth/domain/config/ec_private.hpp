@@ -11,13 +11,14 @@
 #include <kth/domain.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+#include <kth/infrastructure/math/elliptic_curve.hpp>
+
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between base16 string and ec_secret.
  */
-class BC_API ec_private {
+class KD_API ec_private {
 public:
 
     ec_private() = default;
@@ -46,8 +47,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-                                    ec_private& argument);
+    friend 
+    std::istream& operator>>(std::istream& input, ec_private& argument);
 
     /**
      * Overload stream out.
@@ -55,8 +56,8 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-                                    ec_private const& argument);
+    friend 
+    std::ostream& operator<<(std::ostream& output, ec_private const& argument);
 
 private:
     /**
@@ -65,7 +66,6 @@ private:
     ec_secret value_;
 };
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif

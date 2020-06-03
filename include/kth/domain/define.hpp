@@ -2,61 +2,59 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DEFINE_HPP
-#define KTH_DEFINE_HPP
+#ifndef KTH_DOMAIN_DEFINE_HPP
+#define KTH_DOMAIN_DEFINE_HPP
 
 #include <kth/infrastructure/compat.hpp>
 
-// Create bc namespace alias.
-namespace kth {
-}  // namespace kth
-
-namespace bc = kth;
+// Create kd namespace alias.
+namespace kth::domain {}
+namespace kd = kth::domain;
 
 // See http://gcc.gnu.org/wiki/Visibility
 
 // Generic helper definitions for shared library support
 #if defined _MSC_VER || defined __CYGWIN__
-#define BC_HELPER_DLL_IMPORT __declspec(dllimport)
-#define BC_HELPER_DLL_EXPORT __declspec(dllexport)
-#define BC_HELPER_DLL_LOCAL
+#define KD_HELPER_DLL_IMPORT __declspec(dllimport)
+#define KD_HELPER_DLL_EXPORT __declspec(dllexport)
+#define KD_HELPER_DLL_LOCAL
 #else
 #if __GNUC__ >= 4
-#define BC_HELPER_DLL_IMPORT __attribute__((visibility("default")))
-#define BC_HELPER_DLL_EXPORT __attribute__((visibility("default")))
-#define BC_HELPER_DLL_LOCAL __attribute__((visibility("internal")))
+#define KD_HELPER_DLL_IMPORT __attribute__((visibility("default")))
+#define KD_HELPER_DLL_EXPORT __attribute__((visibility("default")))
+#define KD_HELPER_DLL_LOCAL __attribute__((visibility("internal")))
 #else
-#define BC_HELPER_DLL_IMPORT
-#define BC_HELPER_DLL_EXPORT
-#define BC_HELPER_DLL_LOCAL
+#define KD_HELPER_DLL_IMPORT
+#define KD_HELPER_DLL_EXPORT
+#define KD_HELPER_DLL_LOCAL
 #endif
 #endif
 
-// Now we use the generic helper definitions above to define BC_API
-// and BC_INTERNAL. BC_API is used for the public API symbols. It either DLL
-// imports or DLL exports (or does nothing for static build) BC_INTERNAL is
+// Now we use the generic helper definitions above to define KD_API
+// and KD_INTERNAL. KD_API is used for the public API symbols. It either DLL
+// imports or DLL exports (or does nothing for static build) KD_INTERNAL is
 // used for non-api symbols.
 
-#if defined BC_STATIC
-#define BC_API
-#define BC_INTERNAL
-#elif defined BC_DLL
-#define BC_API BC_HELPER_DLL_EXPORT
-#define BC_INTERNAL BC_HELPER_DLL_LOCAL
+#if defined KD_STATIC
+#define KD_API
+#define KD_INTERNAL
+#elif defined KD_DLL
+#define KD_API KD_HELPER_DLL_EXPORT
+#define KD_INTERNAL KD_HELPER_DLL_LOCAL
 #else
-#define BC_API BC_HELPER_DLL_IMPORT
-#define BC_INTERNAL BC_HELPER_DLL_LOCAL
+#define KD_API KD_HELPER_DLL_IMPORT
+#define KD_INTERNAL KD_HELPER_DLL_LOCAL
 #endif
 
 // Tag to deprecate functions and methods.
 // Gives a compiler warning when they are used.
 #if defined _MSC_VER || defined __CYGWIN__
-#define BC_DEPRECATED __declspec(deprecated)
+#define KD_DEPRECATED __declspec(deprecated)
 #else
 #if __GNUC__ >= 4
-#define BC_DEPRECATED __attribute__((deprecated))
+#define KD_DEPRECATED __attribute__((deprecated))
 #else
-#define BC_DEPRECATED
+#define KD_DEPRECATED
 #endif
 #endif
 

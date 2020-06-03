@@ -14,45 +14,61 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 /**
  * The maximum lot and sequence values for encrypted key token creation.
  */
-static constexpr uint32_t ek_max_lot = 1048575;
-static constexpr uint32_t ek_max_sequence = 4095;
+static constexpr 
+uint32_t ek_max_lot = 1048575;
+
+static constexpr 
+uint32_t ek_max_sequence = 4095;
 
 /**
  * A seed for use in creating an intermediate passphrase (token).
  */
-static constexpr size_t ek_salt_size = 4;
+static constexpr 
+size_t ek_salt_size = 4;
+
 using ek_salt = byte_array<ek_salt_size>;
 
 /**
  * A seed for use in creating an intermediate passphrase (token).
  */
-static constexpr size_t ek_entropy_size = 8;
+static constexpr 
+size_t ek_entropy_size = 8;
+
 using ek_entropy = byte_array<ek_entropy_size>;
 
 /**
  * A seed for use in creating a key pair.
  */
-static constexpr size_t ek_seed_size = 24;
+static constexpr 
+size_t ek_seed_size = 24;
+
 using ek_seed = byte_array<ek_seed_size>;
 
 /**
  * An intermediate passphrase (token) type (checked but not base58 encoded).
  */
-static constexpr size_t encrypted_token_encoded_size = 72;
-static constexpr size_t encrypted_token_decoded_size = 53;
+static constexpr 
+size_t encrypted_token_encoded_size = 72;
+
+static constexpr 
+size_t encrypted_token_decoded_size = 53;
+
 using encrypted_token = byte_array<encrypted_token_decoded_size>;
 
 /**
  * An encrypted private key type (checked but not base58 encoded).
  */
-static constexpr size_t ek_private_encoded_size = 58;
-static constexpr size_t ek_private_decoded_size = 43;
+static constexpr 
+size_t ek_private_encoded_size = 58;
+
+static constexpr 
+size_t ek_private_decoded_size = 43;
+
 using encrypted_private = byte_array<ek_private_decoded_size>;
 
 /**
@@ -60,8 +76,12 @@ using encrypted_private = byte_array<ek_private_decoded_size>;
  * An encrypted public key type (checked but not base58 encoded).
  * This is refered to as a confirmation code in bip38.
  */
-static constexpr size_t encrypted_public_encoded_size = 75;
-static constexpr size_t encrypted_public_decoded_size = 55;
+static constexpr 
+size_t encrypted_public_encoded_size = 75;
+
+static constexpr 
+size_t encrypted_public_decoded_size = 55;
+
 using encrypted_public = byte_array<encrypted_public_decoded_size>;
 
 // BIP38
@@ -89,7 +109,7 @@ enum ek_flag : uint8_t {
  * @param[in]  compressed   Set true to associate ec public key compression.
  * @return false if the token checksum is not valid.
  */
-BC_API bool create_key_pair(encrypted_private& out_private,
+KD_API bool create_key_pair(encrypted_private& out_private,
                             ec_compressed& out_point,
                             encrypted_token const& token,
                             const ek_seed& seed,
@@ -110,7 +130,7 @@ BC_API bool create_key_pair(encrypted_private& out_private,
  * @param[in]  compressed   Set true to associate ec public key compression.
  * @return false if the token checksum is not valid.
  */
-BC_API bool create_key_pair(encrypted_private& out_private,
+KD_API bool create_key_pair(encrypted_private& out_private,
                             encrypted_public& out_public,
                             ec_compressed& out_point,
                             encrypted_token const& token,
@@ -127,7 +147,7 @@ BC_API bool create_key_pair(encrypted_private& out_private,
  * @param[in]  entropy     A random value for use in the encryption.
  * @return false if the token could not be created from the entropy.
  */
-BC_API bool create_token(encrypted_token& out_token,
+KD_API bool create_token(encrypted_token& out_token,
                          std::string const& passphrase,
                          const ek_entropy& entropy);
 
@@ -141,7 +161,7 @@ BC_API bool create_token(encrypted_token& out_token,
  * @return false if the lot and/or sequence are out of range or the token
  * could not be created from the entropy.
  */
-BC_API bool create_token(encrypted_token& out_token,
+KD_API bool create_token(encrypted_token& out_token,
                          std::string const& passphrase,
                          const ek_salt& salt,
                          uint32_t lot,
@@ -156,7 +176,7 @@ BC_API bool create_token(encrypted_token& out_token,
  * @param[in]  compressed   Set true to associate ec public key compression.
  * @return false if the secret could not be converted to a public key.
  */
-BC_API bool encrypt(encrypted_private& out_private, ec_secret const& secret, std::string const& passphrase, uint8_t version, bool compressed = true);
+KD_API bool encrypt(encrypted_private& out_private, ec_secret const& secret, std::string const& passphrase, uint8_t version, bool compressed = true);
 
 /**
  * Decrypt the ec secret associated with the encrypted private key.
@@ -167,7 +187,7 @@ BC_API bool encrypt(encrypted_private& out_private, ec_secret const& secret, std
  * @param[in]  passphrase      The passphrase from the encryption or token.
  * @return false if the key checksum or passphrase is not valid.
  */
-BC_API bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed, encrypted_private const& key, std::string const& passphrase);
+KD_API bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed, encrypted_private const& key, std::string const& passphrase);
 
 /**
  * DEPRECATED
@@ -179,11 +199,10 @@ BC_API bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compr
  * @param[in]  passphrase      The passphrase of the associated token.
  * @return false if the key    checksum or passphrase is not valid.
  */
-BC_API bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compressed, encrypted_public const& key, std::string const& passphrase);
+KD_API bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compressed, encrypted_public const& key, std::string const& passphrase);
 
 #endif  // WITH_ICU
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

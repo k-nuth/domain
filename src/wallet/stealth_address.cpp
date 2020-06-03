@@ -19,9 +19,9 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
-using namespace bc::chain;
+using namespace kth::domain::chain;
 
 static constexpr uint8_t version_size = sizeof(uint8_t);
 static constexpr uint8_t options_size = sizeof(uint8_t);
@@ -333,4 +333,4 @@ std::ostream& operator<<(std::ostream& out, stealth_address const& of) {
     return out;
 }
 
-}  // namespace kth
+} // namespace kth

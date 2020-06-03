@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::wallet;
 
 BOOST_AUTO_TEST_SUITE(select_outputs_tests)
 

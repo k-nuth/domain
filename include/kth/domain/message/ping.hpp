@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_PING_HPP
-#define KTH_MESSAGE_PING_HPP
+#ifndef KTH_DOMAIN_MESSAGE_PING_HPP
+#define KTH_DOMAIN_MESSAGE_PING_HPP
 
 #include <cstdint>
 #include <istream>
@@ -18,29 +18,18 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API ping {
+class KD_API ping {
 public:
     using ptr = std::shared_ptr<ping>;
     using const_ptr = std::shared_ptr<const ping>;
 
-    static ping factory_from_data(uint32_t version, data_chunk const& data);
-    static ping factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static ping factory_from_data(uint32_t version, R& source) {
-        ping instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static ping factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     ping() = default;
     ping(uint64_t nonce);
@@ -54,11 +43,13 @@ public:
     bool operator!=(ping const& x) const;
 
 
-    [[nodiscard]] uint64_t nonce() const;
+    [[nodiscard]]
+    uint64_t nonce() const;
+    
     void set_nonce(uint64_t value);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -78,7 +69,9 @@ public:
         return source;
     }
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -88,13 +81,23 @@ public:
         }
     }
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     uint64_t nonce_{0};
@@ -102,7 +105,6 @@ private:
     bool valid_{false};
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

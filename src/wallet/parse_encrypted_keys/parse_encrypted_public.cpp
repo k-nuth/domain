@@ -15,7 +15,7 @@
 #include "parse_encrypted_key.hpp"
 #include "parse_encrypted_prefix.hpp"
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 // This prefix results in the prefix "cfrm" in the base58 encoding but is
 // modified when the payment address is Bitcoin mainnet (0).
@@ -56,4 +56,4 @@ bool parse_encrypted_public::verify_magic() const {
     return slice<0, magic_size>(prefix()) == magic_;
 }
 
-}  // namespace kth
+} // namespace kth

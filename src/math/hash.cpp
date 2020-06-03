@@ -34,4 +34,4 @@ hash_digest litecoin_hash(data_slice data) {
 }
 #endif  //KTH_CURRENCY_LTC
 
-}  // namespace kth
+} // namespace kth

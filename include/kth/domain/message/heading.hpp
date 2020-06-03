@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_HEADING_HPP
-#define KTH_MESSAGE_HEADING_HPP
+#ifndef KTH_DOMAIN_MESSAGE_HEADING_HPP
+#define KTH_DOMAIN_MESSAGE_HEADING_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -21,11 +21,10 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
 enum class message_type {
     unknown,
@@ -60,23 +59,17 @@ enum class message_type {
     xversion
 };
 
-class BC_API heading {
+class KD_API heading {
 public:
-    static size_t maximum_size();
-    static size_t maximum_payload_size(uint32_t version, bool witness);
-    static size_t satoshi_fixed_size();
-    static heading factory_from_data(data_chunk const& data);
-    static heading factory_from_data(std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static heading factory_from_data(R& source) {
-        heading instance;
-        instance.from_data(source);
-        return instance;
-    }
-
-    //static heading factory_from_data(reader& source);
-
+    static
+    size_t maximum_size();
+    
+    static
+    size_t maximum_payload_size(uint32_t version, bool witness);
+    
+    static
+    size_t satoshi_fixed_size();
+    
     heading() = default;
     heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum);
     heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum);
@@ -91,21 +84,31 @@ public:
     bool operator!=(heading const& x) const;
 
 
-    [[nodiscard]] uint32_t magic() const;
+    [[nodiscard]]
+    uint32_t magic() const;
+    
     void set_magic(uint32_t value);
 
     std::string& command();
-    [[nodiscard]] std::string const& command() const;
+    
+    [[nodiscard]]
+    std::string const& command() const;
+    
     void set_command(std::string const& value);
     void set_command(std::string&& value);
 
-    [[nodiscard]] uint32_t payload_size() const;
+    [[nodiscard]]
+    uint32_t payload_size() const;
+    
     void set_payload_size(uint32_t value);
 
-    [[nodiscard]] uint32_t checksum() const;
+    [[nodiscard]]
+    uint32_t checksum() const;
+    
     void set_checksum(uint32_t value);
 
-    [[nodiscard]] message_type type() const;
+    [[nodiscard]]
+    message_type type() const;
 
     bool from_data(data_chunk const& data);
     bool from_data(std::istream& stream);
@@ -126,7 +129,9 @@ public:
     }
 
     //bool from_data(reader& source);
-    [[nodiscard]] data_chunk to_data() const;
+    [[nodiscard]]
+    data_chunk to_data() const;
+    
     void to_data(data_sink& stream) const;
 
     template <typename W>
@@ -138,7 +143,9 @@ public:
     }
 
     //void to_data(writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
 
 
@@ -149,7 +156,6 @@ private:
     uint32_t checksum_{0};
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

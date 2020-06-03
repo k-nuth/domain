@@ -10,15 +10,16 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/wallet/uri.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
+
+using namespace kth::infrastructure::wallet;
 
 /**
  * Interface for URI deserialization.
  * The URI parser calls these methods as it extracts each URI component.
  * A false return from any setter is expected to terminate the parser.
  */
-class BC_API uri_reader {
+class KD_API uri_reader {
 public:
     /**
      * Parses any URI string into its individual components.
@@ -28,7 +29,8 @@ public:
      * according to the  `UriReader`.
      */
     template <class UriReader>
-    static UriReader parse(std::string const& uri, bool strict = true) {
+    static
+    UriReader parse(std::string const& uri, bool strict = true) {
         wallet::uri parsed;
         if ( ! parsed.decode(uri, strict)) {
             return UriReader();
@@ -70,7 +72,6 @@ public:
     virtual bool set_parameter(std::string const& key, std::string const& value) = 0;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

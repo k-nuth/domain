@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::chain;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
 
 #define SOURCE "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f0100"
 static auto const valid_raw_point_iterator_source = to_chunk(base16_literal(SOURCE));
@@ -26,7 +27,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_bool_at_end__returns_false) {
 
 BOOST_AUTO_TEST_CASE(point_iterator__operator_asterisk__initialized_point__matches_source) {
     point point;
-    BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
+    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
     point_iterator instance(point);
 
     for (size_t i = 0; i < valid_raw_point_iterator_source.size(); i++, instance++) {
@@ -40,7 +41,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_asterisk__initialized_point__match
 
 BOOST_AUTO_TEST_CASE(point_iterator__operator_arrow__initialized_point__matches_source) {
     point point;
-    BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
+    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
     point_iterator instance(point);
     BOOST_REQUIRE(valid_raw_point_iterator_source.size() > 0);
 
@@ -56,7 +57,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_arrow__initialized_point__matches_
 BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus_int__roundtrip__success) {
     point point;
     uint8_t offset = 5u;
-    BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
+    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
 
     point_iterator instance(point, offset);
     point_iterator expected(instance);
@@ -73,7 +74,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus_int__roundtrip__success
 BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus__roundtrip__success) {
     point point;
     uint8_t offset = 5u;
-    BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
+    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
 
     point_iterator instance(point, offset);
     point_iterator expected(instance);
@@ -88,7 +89,7 @@ BOOST_AUTO_TEST_CASE(point_iterator__operator_plus_minus__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(point_iterator__copy_assigment) {
     point point;
     uint8_t offset = 5u;
-    BOOST_REQUIRE(point.from_data(valid_raw_point_iterator_source, false));
+    BOOST_REQUIRE(entity_from_data(point, valid_raw_point_iterator_source, false));
 
     point_iterator instance(point, offset);
     point_iterator expected(instance);

@@ -13,23 +13,11 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_data::command = "getdata";
 uint32_t const get_data::version_minimum = version::level::minimum;
 uint32_t const get_data::version_maximum = version::level::maximum;
-
-get_data get_data::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_data instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_data get_data::factory_from_data(uint32_t version, std::istream& stream) {
-    get_data instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 get_data::get_data(inventory_vector::list const& values)
     : inventory(values) {
@@ -68,25 +56,7 @@ bool get_data::operator!=(get_data const& x) const {
     return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
-// bool get_data::from_data(uint32_t version, data_chunk const& data) {
-//     return inventory::from_data(version, data);
-// }
-
-// bool get_data::from_data(uint32_t version, std::istream& stream) {
-//     return inventory::from_data(version, stream);
-// }
-
-bool get_data::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool get_data::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 void get_data::to_witness() {
     auto const convert = [](inventory_vector& element) {
         element.to_witness();
@@ -96,4 +66,4 @@ void get_data::to_witness() {
 }
 #endif
 
-}  // namespace kth
+} // namespace kth

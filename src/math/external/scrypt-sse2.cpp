@@ -38,7 +38,8 @@
 
 #include <emmintrin.h>
 
-static inline void xor_salsa8_sse2(__m128i B[4], const __m128i Bx[4]) {
+static inline 
+void xor_salsa8_sse2(__m128i B[4], const __m128i Bx[4]) {
     __m128i X0, X1, X2, X3;
     __m128i T;
     int i;

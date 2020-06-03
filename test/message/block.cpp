@@ -3,10 +3,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <kth/domain.hpp>
+#include <kth/infrastructure.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(message_block_tests)
 
@@ -147,7 +149,7 @@ BOOST_AUTO_TEST_CASE(block__factory_data_1__genesis_mainnet__success) {
     BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
 
     // Reload genesis block.
-    auto const block = block::factory_from_data(version::level::minimum, raw_block);
+    auto const block = create<message::block>(version::level::minimum, raw_block);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -171,7 +173,7 @@ BOOST_AUTO_TEST_CASE(block__factory_data_2__genesis_mainnet__success) {
 
     // Reload genesis block.
     data_source stream(raw_block);
-    auto const block = block::factory_from_data(version::level::minimum, stream);
+    auto const block = create<message::block>(version::level::minimum, stream);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -199,7 +201,7 @@ BOOST_AUTO_TEST_CASE(block__factory_data_3__genesis_mainnet__success) {
     // Reload genesis block.
     data_source stream(raw_block);
     istream_reader reader(stream);
-    auto const block = block::factory_from_data(version::level::minimum + 1, reader);
+    auto const block = create<message::block>(version::level::minimum + 1, reader);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());

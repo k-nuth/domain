@@ -2,30 +2,31 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_OPCODE_HPP_
-#define KTH_MACHINE_OPCODE_HPP_
+#ifndef KTH_DOMAIN_MACHINE_OPCODE_HPP
+#define KTH_DOMAIN_MACHINE_OPCODE_HPP
 
 #include <cstdint>
 #include <string>
 
+#include <kth/domain/define.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 
-#include <kth/infrastructure/define.hpp>
+#include <kth/domain/define.hpp>
+//#include <kth/infrastructure/define.hpp>
+
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::domain::machine {
 
 /// Determine if the fork is enabled in the active forks set.
 //TODO(fernando): duplicated in chain::script (domain)
-static 
+static
 bool is_enabled(uint32_t active_forks, rule_fork fork) {
     return (fork & active_forks) != 0;
 }
 
-enum class opcode : uint8_t
-{
+enum class opcode : uint8_t {
     //-------------------------------------------------------------------------
     // is_relaxed_push, is_push (excluding reserved_80)
 
@@ -305,19 +306,17 @@ enum class opcode : uint8_t
 };
 
 /// Convert the opcode to a mnemonic string.
-BI_API std::string opcode_to_string(opcode value, uint32_t active_forks);
+KD_API std::string opcode_to_string(opcode value, uint32_t active_forks);
 
 /// Convert a string to an opcode.
-BI_API bool opcode_from_string(opcode& out_code, std::string const& value);
+KD_API bool opcode_from_string(opcode& out_code, std::string const& value);
 
 /// Convert any opcode to a string hexadecimal representation.
-BI_API std::string opcode_to_hexadecimal(opcode code);
+KD_API std::string opcode_to_hexadecimal(opcode code);
 
 /// Convert any hexadecimal byte to an opcode.
-BI_API bool opcode_from_hexadecimal(opcode& out_code,
-    std::string const& value);
+KD_API bool opcode_from_hexadecimal(opcode& out_code, std::string const& value);
 
-} // namespace machine
-} // namespace kth
+} // namespace kth::domain::machine
 
-#endif // KTH_MACHINE_OPCODE_HPP_
+#endif // KTH_DOMAIN_MACHINE_OPCODE_HPP

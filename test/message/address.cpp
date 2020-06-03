@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 bool equal(address const& x, address const& y) {
     auto const left_addresses = x.addresses();
@@ -29,7 +30,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_1__always__invalid) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
-    network_address::list const addresses{
+    infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -53,7 +54,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
-    network_address::list const addresses{
+    infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -79,7 +80,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
-    network_address::list const addresses{
+    infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -105,7 +106,7 @@ BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
 }
 
 BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params) {
-    network_address::list const addresses{
+    infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -133,18 +134,18 @@ BOOST_AUTO_TEST_CASE(address__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab};
     address instance;
 
-    BOOST_REQUIRE(!instance.from_data(version::level::minimum, raw));
+    BOOST_REQUIRE(!entity_from_data(instance, version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success) {
-    const address expected(
+    address const expected(
         {{734678u,
           5357534u,
           base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
           123u}});
 
     auto const data = expected.to_data(version::level::minimum);
-    auto const result = address::factory_from_data(version::level::minimum, data);
+    auto const result = create<address>(version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
@@ -154,7 +155,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
-    const address expected(
+    address const expected(
         {{734678u,
           5357534u,
           base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
@@ -162,7 +163,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
 
     auto const data = expected.to_data(version::level::minimum);
     data_source istream(data);
-    auto const result = address::factory_from_data(version::level::minimum, istream);
+    auto const result = create<address>(version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
@@ -172,7 +173,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
-    const address expected(
+    address const expected(
         {{734678u,
           5357534u,
           base16_literal("47816a40bb92bdb4e0b8256861f96a55"),
@@ -181,7 +182,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
     data_chunk const data = expected.to_data(version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = address::factory_from_data(version::level::minimum, source);
+    auto const result = create<address>(version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(equal(expected, result));
@@ -191,7 +192,7 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
-    network_address::list const value{
+    infrastructure::message::network_address::list const value{
         network_address(
             734678u,
             5357534u,
@@ -215,7 +216,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
-    network_address::list const value{
+    infrastructure::message::network_address::list const value{
         network_address(
             734678u,
             5357534u,
@@ -240,7 +241,7 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent) {
-    network_address::list const addresses{
+    infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
             5357534u,
@@ -270,7 +271,7 @@ BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__duplicates__returns_true) {
-    const address expected(
+    address const expected(
         {network_address(
              734678u,
              5357534u,
@@ -292,7 +293,7 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__duplicates__returns_true)
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__differs__returns_false) {
-    const address expected(
+    address const expected(
         {network_address(
              734678u,
              5357534u,
@@ -314,7 +315,7 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__differs__returns_false) {
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_false) {
-    const address expected(
+    address const expected(
         {network_address(
              734678u,
              5357534u,
@@ -336,7 +337,7 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_f
 }
 
 BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__differs__returns_true) {
-    const address expected(
+    address const expected(
         {network_address(
              734678u,
              5357534u,

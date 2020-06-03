@@ -6,8 +6,9 @@
 #include <kth/infrastructure.hpp>
 #include <kth/domain.hpp>
 
-using namespace bc;
-using namespace bc::machine;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::machine;
 
 BOOST_AUTO_TEST_SUITE(opcode_tests)
 

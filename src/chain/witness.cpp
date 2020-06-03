@@ -30,10 +30,9 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
-using namespace bc::machine;
+using namespace kth::domain::machine;
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -88,37 +87,15 @@ bool witness::operator!=(witness const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-witness witness::factory_from_data(data_chunk const& encoded, bool prefix) {
-    witness instance;
-    instance.from_data(encoded, prefix);
-    return instance;
-}
+// bool witness::from_data(data_chunk const& encoded, bool prefix) {
+//     data_source istream(encoded);
+//     return from_data(istream, prefix);
+// }
 
-// static
-witness witness::factory_from_data(std::istream& stream, bool prefix) {
-    witness instance;
-    instance.from_data(stream, prefix);
-    return instance;
-}
-
-// static
-//witness witness::factory_from_data(reader& source, bool prefix)
-//{
-//    witness instance;
-//    instance.from_data(source, prefix);
-//    return instance;
-//}
-
-bool witness::from_data(data_chunk const& encoded, bool prefix) {
-    data_source istream(encoded);
-    return from_data(istream, prefix);
-}
-
-bool witness::from_data(std::istream& stream, bool prefix) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, prefix);
-}
+// bool witness::from_data(std::istream& stream, bool prefix) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, prefix);
+// }
 
 // Prefixed data assumed valid here though caller may confirm with is_valid.
 //bool witness::from_data(reader& source, bool prefix)
@@ -168,7 +145,7 @@ size_t witness::serialized_size(data_stack const& stack) {
     auto const sum = [](size_t total, data_chunk const& element) {
         // Tokens encoded as variable integer prefixed byte array (bip144).
         auto const size = element.size();
-        return total + message::variable_uint_size(size) + size;
+        return total + infrastructure::message::variable_uint_size(size) + size;
     };
 
     return std::accumulate(stack.begin(), stack.end(), size_t(0), sum);
@@ -280,7 +257,7 @@ witness::iterator witness::end() const {
 
 size_t witness::serialized_size(bool prefix) const {
     // Witness prefix is an element count, not a byte length (unlike script).
-    return (prefix ? message::variable_uint_size(stack_.size()) : 0u) +
+    return (prefix ? infrastructure::message::variable_uint_size(stack_.size()) : 0u) +
            serialized_size(stack_);
 }
 
@@ -335,7 +312,7 @@ bool witness::extract_sigop_script(script& out_script,
 
                 case hash_size:
                     if ( ! stack_.empty()) {
-                        out_script.from_data(stack_.back(), false);
+                        entity_from_data(out_script, stack_.back(), false);
                     }
 
                     return true;
@@ -385,7 +362,7 @@ bool witness::extract_embedded_script(script& out_script,
                 }
 
                 // The script is popped off the initial witness stack (bip141).
-                out_script.from_data(pop(out_stack), false);
+                entity_from_data(out_script, pop(out_stack), false);
 
                 // Stack elements must be within push size limit (bip141).
                 if ( ! is_push_size(out_stack)) {
@@ -452,5 +429,4 @@ code witness::verify(transaction const& tx, uint32_t input_index, uint32_t forks
     }
 }
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain

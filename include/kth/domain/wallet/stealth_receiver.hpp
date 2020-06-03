@@ -13,11 +13,10 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/utility/binary.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 /// This class does not support multisignature stealth addresses.
-class BC_API stealth_receiver {
+class KD_API stealth_receiver {
 public:
     /// Constructors.
     stealth_receiver(ec_secret const& scan_private,
@@ -29,7 +28,8 @@ public:
     operator bool() const;
 
     /// Get the stealth address.
-    [[nodiscard]] const wallet::stealth_address& stealth_address() const;
+    [[nodiscard]]
+    const wallet::stealth_address& stealth_address() const;
 
     /// Derive a payment address to compare against the blockchain.
     bool derive_address(payment_address& out_address,
@@ -47,7 +47,6 @@ private:
     wallet::stealth_address address_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

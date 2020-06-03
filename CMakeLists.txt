@@ -400,7 +400,7 @@ set(kth_domain_sources_just_legacy
         src/chain/transaction.cpp
 
         src/machine/interpreter.cpp
-        # src/machine/number.cpp
+
         src/machine/opcode.cpp
         src/machine/operation.cpp
         src/machine/program.cpp
@@ -415,9 +415,7 @@ set(kth_domain_sources_just_legacy
         src/config/endorsement.cpp
         
         src/utility/property_tree.cpp
-        # src/utility/socket.cpp
 
-        # src/error.cpp
         src/multi_crypto_support.cpp
         src/version.cpp
 
@@ -446,8 +444,6 @@ set(kth_domain_sources_just_legacy
         src/message/inventory_vector.cpp
         src/message/memory_pool.cpp
         src/message/merkle_block.cpp
-        # src/message/messages.cpp
-        # src/message/network_address.cpp
         src/message/not_found.cpp
         src/message/ping.cpp
         src/message/pong.cpp
@@ -462,18 +458,13 @@ set(kth_domain_sources_just_legacy
         src/message/xversion.cpp
         
         src/wallet/bitcoin_uri.cpp
-        # src/wallet/dictionary.cpp
         src/wallet/ec_private.cpp
         src/wallet/ec_public.cpp
         src/wallet/ek_private.cpp
         src/wallet/ek_public.cpp
         src/wallet/ek_token.cpp
         src/wallet/encrypted_keys.cpp
-        # src/wallet/hd_private.cpp
-        # src/wallet/hd_public.cpp
         src/wallet/message.cpp
-        # src/wallet/mini_keys.cpp
-        # src/wallet/mnemonic.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_key.hpp
         src/wallet/parse_encrypted_keys/parse_encrypted_key.ipp
         src/wallet/parse_encrypted_keys/parse_encrypted_prefix.hpp
@@ -485,13 +476,11 @@ set(kth_domain_sources_just_legacy
         src/wallet/parse_encrypted_keys/parse_encrypted_token.cpp
         src/wallet/parse_encrypted_keys/parse_encrypted_token.hpp
         src/wallet/payment_address.cpp
-        # src/wallet/qrcode.cpp
         src/wallet/select_outputs.cpp
         src/wallet/select_outputs.cpp
         src/wallet/stealth_address.cpp
         src/wallet/stealth_receiver.cpp
         src/wallet/stealth_sender.cpp
-        # src/wallet/uri.cpp
 )
 
 set(kth_domain_sources_just_kth
@@ -557,7 +546,7 @@ target_include_directories(kth-domain PUBLIC
   $<INSTALL_INTERFACE:include>)
   
 if (NOT ENABLE_SHARED)
-    target_compile_definitions(kth-domain PUBLIC -DBC_STATIC) #TODO(fernando): manage with Conan????
+    target_compile_definitions(kth-domain PUBLIC -DKD_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
 target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
@@ -641,33 +630,20 @@ if (WITH_TESTS)
         test/chain/point.cpp
         test/chain/point_iterator.cpp
         test/chain/satoshi_words.cpp
-        # test/chain/script/script.cpp
-        # test/chain/script/script.hpp
         test/chain/script.cpp
         test/chain/transaction.cpp
-
 
         test/main.cpp
         
         test/machine/opcode.cpp
         test/machine/operation.cpp
 
-        # test/math/big_number.cpp
-        # test/math/big_number.hppcompact
-        # test/math/checksum.cpp
-        # test/math/elliptic_curve.cpp
-        # test/math/hash.cpp
-        # test/math/hash.hpp
-        # test/math/hash_number.cpp
         test/math/limits.cpp
-        # test/math/script_number.cpp
-        # test/math/script_number.hpp
         test/math/stealth.cpp
 
         test/message/address.cpp
         test/message/alert.cpp
         test/message/alert_payload.cpp
-        # test/message/block_message.cpp
         test/message/block.cpp
         test/message/block_transactions.cpp
         test/message/compact_block.cpp
@@ -680,22 +656,18 @@ if (WITH_TESTS)
         test/message/get_blocks.cpp
         test/message/get_data.cpp
         test/message/get_headers.cpp
-        # test/message/header_message.cpp
         test/message/headers.cpp
         test/message/heading.cpp
         test/message/inventory.cpp
         test/message/inventory_vector.cpp
         test/message/memory_pool.cpp
         test/message/merkle_block.cpp
-        # test/message/network_address.cpp
         test/message/not_found.cpp
         test/message/ping.cpp
         test/message/pong.cpp
         test/message/prefilled_transaction.cpp
         test/message/reject.cpp
-        # test/message/send_compact_blocks.cpp
         test/message/send_headers.cpp
-        # test/message/transaction_message.cpp
         test/message/transaction.cpp
         test/message/verack.cpp
         test/message/version.cpp
@@ -704,15 +676,9 @@ if (WITH_TESTS)
         test/wallet/ec_private.cpp
         test/wallet/ec_public.cpp
         test/wallet/encrypted_keys.cpp
-        # test/wallet/hd_private.cpp
-        # test/wallet/hd_public.cpp
         test/wallet/message.cpp
-        # test/wallet/mnemonic.cpp
-        # test/wallet/mnemonic.hpp
         test/wallet/payment_address.cpp
-        # test/wallet/qrcode.cpp
         test/wallet/stealth_address.cpp
-        # test/wallet/uri.cpp
         test/wallet/uri_reader.cpp
         test/wallet/transaction_functions.cpp
     )
@@ -721,7 +687,7 @@ if (WITH_TESTS)
 
 _group_sources(kth_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-#    TODO: Fer: chequear si hay nuevos tests en los makefiles (no Cmake)
+# TODO(fernando): check if there are new tests in Makefile (no Cmake)
   _add_tests(kth_domain_test
     address_tests
     alert_payload_tests
@@ -841,7 +807,7 @@ set(_kth_domain_headers
     kth/domain/compat.hpp
     kth/domain/constants.hpp
     kth/domain/define.hpp
-    # kth/domain/error.hpp
+
     kth/domain/handlers.hpp
     kth/domain/version.hpp
 
@@ -869,54 +835,19 @@ set(_kth_domain_headers
     kth/domain/machine/operation.hpp
     kth/domain/machine/program.hpp
     kth/domain/machine/rule_fork.hpp
-    kth/domain/machine/script_pattern.hpp
-    kth/domain/machine/sighash_algorithm.hpp
-    kth/domain/machine/script_version.hpp
-
-    # kth/domain/config/authority.hpp
-    # kth/domain/config/base16.hpp
-    # kth/domain/config/base2.hpp
-    # kth/domain/config/base58.hpp
-    # kth/domain/config/base64.hpp
-    # kth/domain/config/checkpoint.hpp
-    # kth/domain/config/directory.hpp
-    # kth/domain/config/endpoint.hpp
-    # kth/domain/config/hash160.hpp
-    # kth/domain/config/hash256.hpp
-    # kth/domain/config/parameter.hpp
+    
     kth/domain/config/parser.hpp
-    # kth/domain/config/printer.hpp
-    # kth/domain/config/settings.hpp
-    # kth/domain/config/sodium.hpp
-
-    # kth/domain/config/header.hpp
-    # kth/domain/config/input.hpp
-    # kth/domain/config/output.hpp
-    # kth/domain/config/transaction.hpp
-    # kth/domain/config/script.hpp
-    # kth/domain/config/ec_private.hpp
-    # kth/domain/config/endorsement.hpp
     
     kth/domain/utility/property_tree.hpp
     kth/domain/impl/utility/property_tree.ipp
-    # kth/domain/utility/socket.hpp
-    
-  
-    # kth/domain/impl/math/checksum.ipp
-    # kth/domain/impl/math/hash.ipp
 
     kth/domain/impl/machine/interpreter.ipp
     kth/domain/impl/machine/number.ipp
     kth/domain/impl/machine/operation.ipp
     kth/domain/impl/machine/program.ipp
 
-    # kth/domain/math/checksum.hpp
-    # kth/domain/math/crypto.hpp
-    # kth/domain/math/elliptic_curve.hpp
-    # kth/domain/math/hash.hpp
     kth/domain/math/limits.hpp
     kth/domain/math/stealth.hpp
-    # kth/domain/math/uint256.hpp
     
     kth/domain/message/address.hpp
     kth/domain/message/alert.hpp
@@ -941,7 +872,7 @@ set(_kth_domain_headers
     kth/domain/message/memory_pool.hpp
     kth/domain/message/merkle_block.hpp
     kth/domain/message/messages.hpp
-    # kth/domain/message/network_address.hpp
+
     kth/domain/message/not_found.hpp
     kth/domain/message/ping.hpp
     kth/domain/message/pong.hpp
@@ -956,8 +887,7 @@ set(_kth_domain_headers
     kth/domain/message/xversion.hpp
 
     kth/domain/wallet/bitcoin_uri.hpp
-    # kth/domain/wallet/cashaddr.hpp
-    # kth/domain/wallet/dictionary.hpp
+
     kth/domain/wallet/ec_private.hpp
     kth/domain/wallet/ec_public.hpp
     kth/domain/wallet/ek_private.hpp
@@ -975,11 +905,11 @@ set(_kth_domain_headers
     kth/domain/wallet/stealth_address.hpp
     kth/domain/wallet/stealth_receiver.hpp
     kth/domain/wallet/stealth_sender.hpp
-    # kth/domain/wallet/uri.hpp
+
     kth/domain/wallet/uri_reader.hpp
     kth/domain/wallet/transaction_functions.hpp
     kth/domain.hpp
-    )
+  )
 
 foreach (_header ${_kth_domain_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)

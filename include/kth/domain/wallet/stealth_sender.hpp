@@ -15,11 +15,10 @@
 #include <kth/infrastructure/utility/binary.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 /// This class does not support multisignature stealth addresses.
-class BC_API stealth_sender {
+class KD_API stealth_sender {
 public:
     /// Constructors.
     /// Generate a send address from the stealth address.
@@ -36,10 +35,12 @@ public:
     operator bool() const;
 
     /// Attach this script to the output before the send output.
-    [[nodiscard]] chain::script const& stealth_script() const;
+    [[nodiscard]]
+    chain::script const& stealth_script() const;
 
     /// The bitcoin payment address to which the payment will be made.
-    [[nodiscard]] const wallet::payment_address& payment_address() const;
+    [[nodiscard]]
+    const wallet::payment_address& payment_address() const;
 
 private:
     void initialize(ec_secret const& ephemeral_private,
@@ -52,7 +53,6 @@ private:
     wallet::payment_address address_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

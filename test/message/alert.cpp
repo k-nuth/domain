@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(alert_tests)
 
@@ -67,7 +68,7 @@ BOOST_AUTO_TEST_CASE(alert__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0x11};
     message::alert instance;
 
-    BOOST_REQUIRE(!instance.from_data(message::version::level::minimum, raw));
+    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -118,7 +119,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__wiki_sample__success) {
         0x46, 0x72, 0x33, 0x26, 0xe4, 0xe8, 0xa4, 0xf1};
 
     const message::alert expected{raw_payload, raw_signature};
-    auto const result = message::alert::factory_from_data(
+    auto const result = create<message::alert>(
         message::version::level::minimum, raw);
 
     BOOST_REQUIRE(result.is_valid());
@@ -137,7 +138,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_1__roundtrip__success) {
         {0x04, 0xff, 0xab, 0xcd, 0xee}};
 
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::alert::factory_from_data(
+    auto const result = create<message::alert>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -153,7 +154,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_2__roundtrip__success) {
 
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    auto const result = message::alert::factory_from_data(message::version::level::minimum, istream);
+    auto const result = create<message::alert>(message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -169,7 +170,7 @@ BOOST_AUTO_TEST_CASE(alert__factory_from_data_3__roundtrip__success) {
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::alert::factory_from_data(
+    auto const result = create<message::alert>(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

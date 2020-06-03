@@ -6,17 +6,16 @@
 
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 namespace entities {
 
-// using namespace bc;
-using bc::wallet::payment_address;
+// using namespace kd;
+using kth::domain::wallet::payment_address;
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
-asset::asset(asset_id_t id, std::string name, amount_t amount, bc::wallet::payment_address owner)
+asset::asset(asset_id_t id, std::string name, amount_t amount, kth::domain::wallet::payment_address owner)
     : id_(id), name_(std::move(name)), amount_(amount), owner_(std::move(owner)) {}
 
 // Operators.
@@ -63,10 +62,10 @@ payment_address const& asset::owner() const {
     return owner_;
 }
 
-// void asset::set_owner(bc::wallet::payment_address x) {
+// void asset::set_owner(kth::domain::wallet::payment_address x) {
 //     owner_ = std::move(x);
 // }
 
-}  // namespace entities
-}  // namespace keoken
-}  // namespace kth
+} // namespace entities
+} // namespace keoken
+} // namespace kth

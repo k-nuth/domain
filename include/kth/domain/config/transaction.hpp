@@ -11,14 +11,13 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between serialized and deserialized satoshi
  * transaction.
  */
-class BC_API transaction {
+class KD_API transaction {
 public:
     transaction() = default;
 
@@ -77,7 +76,6 @@ private:
     chain::transaction value_;
 };
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif

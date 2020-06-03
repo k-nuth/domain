@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_REJECT_HPP
-#define KTH_MESSAGE_REJECT_HPP
+#ifndef KTH_DOMAIN_MESSAGE_REJECT_HPP
+#define KTH_DOMAIN_MESSAGE_REJECT_HPP
 
 #include <cstdint>
 #include <istream>
@@ -18,13 +18,12 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API reject {
+class KD_API reject {
 public:
     enum class reason_code : uint8_t {
         /// The reason code is not defined.
@@ -60,18 +59,6 @@ public:
     using ptr = std::shared_ptr<reject>;
     using const_ptr = std::shared_ptr<const reject>;
 
-    static reject factory_from_data(uint32_t version, data_chunk const& data);
-    static reject factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static reject factory_from_data(uint32_t version, R& source) {
-        reject instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static reject factory_from_data(uint32_t version, reader& source);
-
     reject();
 
     reject(reason_code code, std::string const& message, std::string const& reason);
@@ -90,25 +77,36 @@ public:
     bool operator!=(reject const& x) const;
 
 
-    [[nodiscard]] reason_code code() const;
+    [[nodiscard]]
+    reason_code code() const;
+    
     void set_code(reason_code value);
 
     std::string& message();
-    [[nodiscard]] std::string const& message() const;
+
+    [[nodiscard]]
+    std::string const& message() const;
+    
     void set_message(std::string const& value);
     void set_message(std::string&& value);
 
     std::string& reason();
-    [[nodiscard]] std::string const& reason() const;
+    
+    [[nodiscard]]
+    std::string const& reason() const;
+
     void set_reason(std::string const& value);
     void set_reason(std::string&& value);
 
     hash_digest& data();
-    [[nodiscard]] hash_digest const& data() const;
+
+    [[nodiscard]]
+    hash_digest const& data() const;
+
     void set_data(hash_digest const& value);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -126,26 +124,27 @@ public:
 
             if (bytes.size() == hash_size) {
                 build_array(data_, {bytes});
-}
+            }
         }
 
         if (version < reject::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_string(message_);
         sink.write_byte(reason_to_byte(code_));
         sink.write_string(reason_);
@@ -156,19 +155,31 @@ public:
         }
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
-    static reason_code reason_from_byte(uint8_t byte);
-    static uint8_t reason_to_byte(reason_code value);
+    static
+    reason_code reason_from_byte(uint8_t byte);
+    
+    static
+    uint8_t reason_to_byte(reason_code value);
 
     reason_code code_{reason_code::undefined};
     std::string message_;
@@ -176,7 +187,6 @@ private:
     hash_digest data_;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

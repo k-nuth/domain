@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_WALLET_PAYMENT_ADDRESS_HPP
-#define KTH_WALLET_PAYMENT_ADDRESS_HPP
+#ifndef KTH_DOMAIN_WALLET_PAYMENT_ADDRESS_HPP
+#define KTH_DOMAIN_WALLET_PAYMENT_ADDRESS_HPP
 
 #include <algorithm>
 #include <cstdint>
@@ -22,33 +22,38 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
-static constexpr size_t payment_size = 1U + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
+static constexpr 
+size_t payment_size = 1U + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
+
 using payment = byte_array<payment_size>;
 
 /// A class for working with non-stealth payment addresses.
-class BC_API payment_address {
+class KD_API payment_address {
 public:
-    static uint8_t const mainnet_p2kh;
-    static uint8_t const mainnet_p2sh;
+    static
+    uint8_t const mainnet_p2kh;
+    
+    static
+    uint8_t const mainnet_p2sh;
 
-    static uint8_t const testnet_p2kh;
-    static uint8_t const testnet_p2sh;
+    static
+    uint8_t const testnet_p2kh;
+    
+    static
+    uint8_t const testnet_p2sh;
 
 #ifdef KTH_CURRENCY_BCH
-    static std::string const cashaddr_prefix_mainnet;
-    static std::string const cashaddr_prefix_testnet;
+    static
+    std::string const cashaddr_prefix_mainnet;
+    
+    static
+    std::string const cashaddr_prefix_testnet;
 #endif
 
     using list = std::vector<payment_address>;
     using ptr = std::shared_ptr<payment_address>;
-
-    /// Extract a payment address list from an input or output script.
-    static list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    static list extract_input(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    static list extract_output(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
 
     /// Constructors.
     payment_address();
@@ -69,43 +74,71 @@ public:
     bool operator!=(payment_address const& x) const;
     bool operator<(payment_address const& x) const;
 
-    friend std::istream& operator>>(std::istream& in, payment_address& to);
-    friend std::ostream& operator<<(std::ostream& out, payment_address const& of);
+    friend
+    std::istream& operator>>(std::istream& in, payment_address& to);
+    
+    friend
+    std::ostream& operator<<(std::ostream& out, payment_address const& of);
 
     /// Cast operators.
     operator bool() const;
     operator short_hash const&() const;
 
     /// Serializer.
-    [[nodiscard]] std::string encoded() const;
+    [[nodiscard]]
+    std::string encoded() const;
 
 #ifdef KTH_CURRENCY_BCH
-    [[nodiscard]] std::string encoded_cashaddr() const;
+    [[nodiscard]]
+    std::string encoded_cashaddr() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Accessors.
-    [[nodiscard]] uint8_t version() const;
-    [[nodiscard]] short_hash const& hash() const;
+    [[nodiscard]]
+    uint8_t version() const;
+    
+    [[nodiscard]]
+    short_hash const& hash() const;
 
     /// Methods.
-    [[nodiscard]] payment to_payment() const;
+    [[nodiscard]]
+    payment to_payment() const;
+
+    /// Extract a payment address list from an input or output script.
+    static
+    list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
+    
+    static
+    list extract_input(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
+    
+    static
+    list extract_output(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
 
 private:
     /// Validators.
-    static bool is_address(data_slice decoded);
+    static
+    bool is_address(data_slice decoded);
 
     /// Factories.
-    static payment_address from_string(std::string const& address);
+    static
+    payment_address from_string(std::string const& address);
 
 #ifdef KTH_CURRENCY_BCH
-    static payment_address from_string_cashaddr(std::string const& address);
+    static
+    payment_address from_string_cashaddr(std::string const& address);
 #endif  //KTH_CURRENCY_BCH
 
-    static payment_address from_payment(payment const& decoded);
-    static payment_address from_private(ec_private const& secret);
-    static payment_address from_public(ec_public const& point, uint8_t version);
-    static payment_address from_script(chain::script const& script,
-                                       uint8_t version);
+    static
+    payment_address from_payment(payment const& decoded);
+    
+    static
+    payment_address from_private(ec_private const& secret);
+    
+    static
+    payment_address from_public(ec_public const& point, uint8_t version);
+    
+    static
+    payment_address from_script(chain::script const& script, uint8_t version);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
@@ -115,24 +148,22 @@ private:
 };
 
 /// The pre-encoded structure of a payment address or other similar data.
-struct BC_API wrapped_data {
+struct KD_API wrapped_data {
     uint8_t version;
     data_chunk payload;
     uint32_t checksum;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 // Allow payment_address to be in indexed in std::*map classes.
 namespace std {
 template <>
-struct hash<bc::wallet::payment_address> {
-    size_t operator()(const bc::wallet::payment_address& address) const {
-        return std::hash<bc::short_hash>()(address.hash());
+struct hash<kth::domain::wallet::payment_address> {
+    size_t operator()(const kth::domain::wallet::payment_address& address) const {
+        return std::hash<kth::short_hash>()(address.hash());
     }
 };
-
-}  // namespace std
+} // namespace std
 
 #endif

@@ -2,17 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_INPUT_POINT_HPP
-#define KTH_CHAIN_INPUT_POINT_HPP
+#ifndef KTH_DOMAIN_CHAIN_INPUT_POINT_HPP
+#define KTH_DOMAIN_CHAIN_INPUT_POINT_HPP
 
 #include <kth/domain/chain/point.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
 using input_point = point;
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
 #endif

@@ -9,19 +9,20 @@
 
 #include <kth/domain/chain/script.hpp>
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 #include <kth/domain/chain/witness.hpp>
 #endif
 
+#include <kth/domain/common.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-using namespace bc::machine;
+using namespace kth::domain::machine;
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -36,7 +37,7 @@ input_basis::input_basis(output_point const& previous_output, chain::script cons
       script_(script),
       sequence_(sequence) {}
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 input_basis::input_basis(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
     : previous_output_(previous_output)
     , script_(script)
@@ -60,7 +61,7 @@ bool input_basis::operator==(input_basis const& x) const {
     return (sequence_ == x.sequence_) 
         && (previous_output_ == x.previous_output_) 
         && (script_ == x.script_) 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         && (witness_ == x.witness_)
 #endif
         ;
@@ -73,32 +74,20 @@ bool input_basis::operator!=(input_basis const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-input_basis input_basis::factory_from_data(data_chunk const& data, bool wire, bool witness) {
-    input_basis instance;
-    instance.from_data(data, wire, witness_val(witness));
-    return instance;
-}
+// bool input_basis::from_data(data_chunk const& data, bool wire, bool witness) {
+//     data_source istream(data);
+//     return from_data(istream, wire, witness_val(witness));
+// }
 
-input_basis input_basis::factory_from_data(std::istream& stream, bool wire, bool witness) {
-    input_basis instance;
-    instance.from_data(stream, wire, witness_val(witness));
-    return instance;
-}
-
-bool input_basis::from_data(data_chunk const& data, bool wire, bool witness) {
-    data_source istream(data);
-    return from_data(istream, wire, witness_val(witness));
-}
-
-bool input_basis::from_data(std::istream& stream, bool wire, bool witness) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire, witness_val(witness));
-}
+// bool input_basis::from_data(std::istream& stream, bool wire, bool witness) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire, witness_val(witness));
+// }
 
 void input_basis::reset() {
     previous_output_.reset();
     script_.reset();
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     witness_.reset();
 #endif
     sequence_ = 0;
@@ -109,7 +98,7 @@ bool input_basis::is_valid() const {
     return sequence_ != 0 
         || previous_output_.is_valid() 
         || script_.is_valid() 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         || witness_.is_valid()
 #endif
         ;
@@ -143,7 +132,7 @@ size_t input_basis::serialized_size_non_witness(bool wire) const {
 }
 
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 size_t input_basis::serialized_size(bool wire, bool /*witness*/) const {
     return serialized_size_non_witness(wire);
 }
@@ -195,7 +184,7 @@ void input_basis::set_script(chain::script&& value) {
     script_ = std::move(value);
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 chain::witness const& input_basis::witness() const {
     return witness_;
 }
@@ -226,7 +215,7 @@ void input_basis::set_sequence(uint32_t value) {
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 void input_basis::strip_witness() {
     witness_.clear();
 }
@@ -240,7 +229,7 @@ bool input_basis::is_final() const {
 }
 
 bool input_basis::is_segregated() const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #else
     // If no block tx is has witness data the commitment is optional (bip141).
@@ -272,7 +261,7 @@ bool input_basis::is_locked(size_t block_height, uint32_t median_time_past) cons
 // This requires that previous outputs have been populated.
 // This cannot overflow because each total is limited by max ops.
 size_t input_basis::signature_operations(bool bip16, bool bip141) const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     bip141 = false;  // No segwit
 #endif
     
@@ -295,7 +284,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
 
     chain::script embedded;
     if (bip16 && extract_embedded_script(embedded)) {
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         if (bip141 && witness_.extract_sigop_script(witness, embedded)) {
             // Add sigops in the embedded witness (bip141).
             return sigops + witness.sigops(true);
@@ -327,10 +316,11 @@ bool input_basis::extract_embedded_script(chain::script& out) const {
 
     // Parse the embedded script from the last input script item (data).
     // This cannot fail because there is no prefix to invalidate the length.
-    return out.from_data(ops.back().data(), false);
+    // return out.from_data(ops.back().data(), false);
+    return entity_from_data(out, ops.back().data(), false);
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 bool input_basis::extract_reserved_hash(hash_digest& out) const {
     auto const& stack = witness_.stack();
 
@@ -343,4 +333,4 @@ bool input_basis::extract_reserved_hash(hash_digest& out) const {
 }
 #endif // KTH_CURRENCY_BCH
 
-}  // namespace kth
+} // namespace kth

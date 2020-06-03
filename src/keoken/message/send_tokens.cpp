@@ -9,16 +9,14 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 
-using bc::data_chunk;
-using bc::data_sink;
-using bc::data_source;
-using bc::istream_reader;
-using bc::ostream_writer;
-// using bc::writer;
+using kth::data_chunk;
+using kth::data_sink;
+using kth::data_source;
+using kth::istream_reader;
+using kth::ostream_writer;
+// using kth::writer;
 
 // Constructors.
 //-------------------------------------------------------------------------
@@ -38,51 +36,6 @@ bool operator==(send_tokens const& a, send_tokens const& b) {
 bool operator!=(send_tokens const& a, send_tokens const& b) {
     return !(a == b);
 }
-
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// static
-send_tokens send_tokens::factory_from_data(data_chunk const& data) {
-    send_tokens instance;  //NOLINT
-    instance.from_data(data);
-    return instance;
-}
-
-// static
-send_tokens send_tokens::factory_from_data(std::istream& stream) {
-    send_tokens instance;  //NOLINT
-    instance.from_data(stream);
-    return instance;
-}
-
-// // static
-// send_tokens send_tokens::factory_from_data(bc::reader& source) {
-//     send_tokens instance;  //NOLINT
-//     instance.from_data(source);
-//     return instance;
-// }
-
-bool send_tokens::from_data(data_chunk const& data) {
-    data_source istream(data);
-    return from_data(istream);
-}
-
-bool send_tokens::from_data(std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r);
-}
-
-// //Note: from_data and to_data are not longer simetrical.
-// bool send_tokens::from_data(bc::reader& source) {
-//     asset_id_ = source.read_4_bytes_big_endian();
-//     amount_ = source.read_8_bytes_big_endian();
-
-//     // if ( ! source)
-//     //     reset();
-
-//     return source;
-// }
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -135,6 +88,4 @@ void send_tokens::set_amount(amount_t x) {
     amount_ = x;
 }
 
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+} // namespace kth::keoken::message

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_ANNOUNCE_VERSION_HPP
-#define KTH_MESSAGE_ANNOUNCE_VERSION_HPP
+#ifndef KTH_DOMAIN_MESSAGE_ANNOUNCE_VERSION_HPP
+#define KTH_DOMAIN_MESSAGE_ANNOUNCE_VERSION_HPP
 
 #include <cstdint>
 #include <istream>
@@ -18,13 +18,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
+
+using namespace kth::infrastructure::message;
 
 // The checksum is ignored by the version command.
-class BC_API version {
+class KD_API version {
 public:
     using ptr = std::shared_ptr<version>;
     using const_ptr = std::shared_ptr<const version>;
@@ -108,16 +110,6 @@ public:
 #endif                                //KTH_CURRENCY_BCH
     };
 
-    static version factory_from_data(uint32_t version, data_chunk const& data);
-    static version factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static version factory_from_data(uint32_t version, R& source) {
-        message::version instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
     version() = default;
     version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay);
     version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string&& user_agent, uint32_t start_height, bool relay);
@@ -132,42 +124,60 @@ public:
     bool operator!=(version const& x) const;
 
 
-    [[nodiscard]] uint32_t value() const;
+    [[nodiscard]]
+    uint32_t value() const;
+    
     void set_value(uint32_t value);
 
-    [[nodiscard]] uint64_t services() const;
+    [[nodiscard]]
+    uint64_t services() const;
+    
     void set_services(uint64_t services);
 
-    [[nodiscard]] uint64_t timestamp() const;
+    [[nodiscard]]
+    uint64_t timestamp() const;
+    
     void set_timestamp(uint64_t timestamp);
 
     network_address& address_receiver();
-    [[nodiscard]] network_address const& address_receiver() const;
-    //    void set_address_receiver(network_address const& address);
+    
+    [[nodiscard]]
+    network_address const& address_receiver() const;
+    
     void set_address_receiver(network_address const& address);
-
     network_address& address_sender();
-    [[nodiscard]] network_address const& address_sender() const;
-    //    void set_address_sender(network_address const& address);
+    
+    [[nodiscard]]
+    network_address const& address_sender() const;
+
     void set_address_sender(network_address const& address);
 
-    [[nodiscard]] uint64_t nonce() const;
+    [[nodiscard]]
+    uint64_t nonce() const;
+    
     void set_nonce(uint64_t nonce);
 
     std::string& user_agent();
-    [[nodiscard]] std::string const& user_agent() const;
+    
+    [[nodiscard]]
+    std::string const& user_agent() const;
+    
     void set_user_agent(std::string const& agent);
     void set_user_agent(std::string&& agent);
 
-    [[nodiscard]] uint32_t start_height() const;
+    [[nodiscard]]
+    uint32_t start_height() const;
+    
     void set_start_height(uint32_t height);
 
     // version >= 70001
-    [[nodiscard]] bool relay() const;
+    [[nodiscard]]
+    bool relay() const;
+    
     void set_relay(bool relay);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -207,7 +217,9 @@ public:
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -228,14 +240,26 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    //    static const bounds version;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    //static
+    //const bounds version;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     uint32_t value_{0};
@@ -251,6 +275,6 @@ private:
     bool relay_{false};
 };
 
-}  // namespace kth::message
+} // namespace kth::domain::message
 
 #endif

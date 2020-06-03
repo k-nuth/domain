@@ -2,13 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_ADDRESS_HPP
-#define KTH_MESSAGE_ADDRESS_HPP
+#ifndef KTH_DOMAIN_MESSAGE_ADDRESS_HPP
+#define KTH_DOMAIN_MESSAGE_ADDRESS_HPP
 
 #include <istream>
 #include <memory>
 #include <string>
 
+#include <kth/domain/utils.hpp>
+#include <kth/domain/concepts.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/message/network_address.hpp>
@@ -17,33 +19,16 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
-#include <kth/domain/concepts.hpp>
+namespace kth::domain::message {
 
-namespace kth {
-namespace message {
-
-class BC_API address {
+class KD_API address {
 public:
     using ptr = std::shared_ptr<address>;
     using const_ptr = std::shared_ptr<const address>;
 
-    static address factory_from_data(uint32_t version, data_chunk const& data);
-    static address factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static address factory_from_data(uint32_t version, R& source) {
-        address instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static address factory_from_data(uint32_t version, reader& source);
-
     address() = default;
-    address(network_address::list const& addresses);
-    address(network_address::list&& addresses);
-
+    address(infrastructure::message::network_address::list const& addresses);
+    address(infrastructure::message::network_address::list&& addresses);
 
     /// This class is move assignable but not copy assignable.
     // address(address const& x);
@@ -58,13 +43,16 @@ public:
     bool operator!=(address const& x) const;
 
 
-    network_address::list& addresses();
-    [[nodiscard]] network_address::list const& addresses() const;
-    void set_addresses(network_address::list const& value);
-    void set_addresses(network_address::list&& value);
+    infrastructure::message::network_address::list& addresses();
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    [[nodiscard]]
+    infrastructure::message::network_address::list const& addresses() const;
+
+    void set_addresses(infrastructure::message::network_address::list const& value);
+    void set_addresses(infrastructure::message::network_address::list&& value);
+
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -94,7 +82,9 @@ public:
 
     //bool from_data(uint32_t version, reader& source);
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -103,25 +93,33 @@ public:
 
         for (auto const& net_address : addresses_) {
             net_address.to_data(version, sink, true);
-}
+        }
     }
 
     //void to_data(uint32_t version, writer& sink) const;
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 private:
-    network_address::list addresses_;
+    infrastructure::message::network_address::list addresses_;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

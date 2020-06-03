@@ -13,23 +13,11 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const reject::command = "reject";
 uint32_t const reject::version_minimum = version::level::bip61;
 uint32_t const reject::version_maximum = version::level::maximum;
-
-reject reject::factory_from_data(uint32_t version, data_chunk const& data) {
-    reject instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-reject reject::factory_from_data(uint32_t version, std::istream& stream) {
-    reject instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 reject::reject()
     :  data_(null_hash) 
@@ -98,16 +86,6 @@ void reject::reset() {
     data_.fill(0);
 }
 
-bool reject::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool reject::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk reject::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -125,8 +103,8 @@ void reject::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t reject::serialized_size(uint32_t /*version*/) const {
-    size_t size = 1u + message::variable_uint_size(message_.size()) +
-                  message_.size() + message::variable_uint_size(reason_.size()) +
+    size_t size = 1u + infrastructure::message::variable_uint_size(message_.size()) +
+                  message_.size() + infrastructure::message::variable_uint_size(reason_.size()) +
                   reason_.size();
 
     if ((message_ == block::command) ||
@@ -235,4 +213,4 @@ uint8_t reject::reason_to_byte(reason_code value) {
     }
 }
 
-}  // namespace kth
+} // namespace kth

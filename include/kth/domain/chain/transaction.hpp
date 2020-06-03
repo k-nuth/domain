@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_TRANSACTION_HPP
-#define KTH_CHAIN_TRANSACTION_HPP
+#ifndef KTH_DOMAIN_CHAIN_TRANSACTION_HPP
+#define KTH_DOMAIN_CHAIN_TRANSACTION_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -31,11 +31,10 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
 // namespace detail {
 // // Read a length-prefixed collection of inputs or outputs from the source.
@@ -96,9 +95,9 @@ namespace chain {
 // }
 // #endif // not defined KTH_CURRENCY_BCH
 
-// }  // namespace detail
+// } // namespace detail
 
-class BC_API transaction : public transaction_basis {
+class KD_API transaction : public transaction_basis {
 public:
     using ins = input::list;
     using outs = output::list;
@@ -152,7 +151,6 @@ public:
     transaction& operator=(transaction const& x);
     transaction& operator=(transaction&& x) noexcept;
 
-
     // Operators.
     //-----------------------------------------------------------------------------
 
@@ -161,18 +159,6 @@ public:
 
     // Deserialization.
     //-----------------------------------------------------------------------------
-
-    static transaction factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    static transaction factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
-
-    template <typename R, KTH_IS_READER(R)>
-    static transaction factory_from_data(R& source, bool wire = true, bool witness = false) {
-        transaction instance;
-        instance.from_data(source, wire, witness_val(witness));
-        return instance;
-    }
-
-    //static transaction factory_from_data(reader& source, bool wire=true, bool witness=false);
 
     bool from_data(data_chunk const& data, bool wire = true, bool witness = false
 #ifdef KTH_CACHED_RPC_DATA
@@ -235,7 +221,7 @@ public:
 #endif
                 ) const {
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
         // Witness handling must be disabled for non-segregated txs.
         witness = witness && is_segregated();
 #endif
@@ -280,7 +266,7 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     /// Clear witness from all inputs (does not change default hash).
     void strip_witness();
 #endif
@@ -356,7 +342,7 @@ private:
     mutable upgrade_mutex mutex_;
 };
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
 #else
 code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
@@ -364,11 +350,6 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
 
 code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
-
-
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+} // namespace kth::domain::chain
 
 #endif

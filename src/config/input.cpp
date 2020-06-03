@@ -15,12 +15,13 @@
 #include <kth/domain/config/point.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost::program_options;
 
 // input is currently a private encoding in bx.
-static bool decode_input(chain::input& input, std::string const& tuple) {
+static
+bool decode_input(chain::input& input, std::string const& tuple) {
     auto const tokens = split(tuple, point::delimeter);
     if (tokens.size() != 2 && tokens.size() != 3) {
         return false;
@@ -37,7 +38,8 @@ static bool decode_input(chain::input& input, std::string const& tuple) {
 }
 
 // input is currently a private encoding in bx.
-static std::string encode_input(chain::input const& input) {
+static
+std::string encode_input(chain::input const& input) {
     std::stringstream result;
     result << point(input.previous_output()) << point::delimeter
            << input.sequence();
@@ -78,4 +80,4 @@ std::ostream& operator<<(std::ostream& output, input const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth

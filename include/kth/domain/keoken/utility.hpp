@@ -10,11 +10,10 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 
 //C++14
 template <typename E>
@@ -56,7 +55,7 @@ inline std::optional<std::string> read_null_terminated_string(R& source, size_t 
     return source ? boost::make_optional(res) : std::nullopt;
 }
 
-}  // namespace keoken
-}  // namespace kth
+} // namespace keoken
+} // namespace kth
 
 #endif  //KTH_KEOKEN_UTILITY_HPP_

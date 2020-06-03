@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_SCRIPT_BASIS_HPP_
-#define KTH_CHAIN_SCRIPT_BASIS_HPP_
+#ifndef KTH_DOMAIN_CHAIN_SCRIPT_BASIS_HPP
+#define KTH_DOMAIN_CHAIN_SCRIPT_BASIS_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -29,21 +29,23 @@
 #include <kth/infrastructure/utility/writer.hpp>
 
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
 class transaction;
-class witness;
 
-class BC_API script_basis {
+#if defined(KTH_SEGWIT_ENABLED)
+class witness;
+#endif
+
+class KD_API script_basis {
 public:
     using operation = machine::operation;
     using rule_fork = machine::rule_fork;
-    using script_pattern = machine::script_pattern;
-    using script_version = machine::script_version;
+    using script_pattern = infrastructure::machine::script_pattern;
+    using script_version = infrastructure::machine::script_version;
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -66,19 +68,10 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static script_basis factory_from_data(data_chunk const& encoded, bool prefix);
-    static script_basis factory_from_data(std::istream& stream, bool prefix);
 
-    template <typename R, KTH_IS_READER(R)>
-    static script_basis factory_from_data(R& source, bool prefix) {
-        script_basis instance;
-        instance.from_data(source, prefix);
-        return instance;
-    }
-
-    /// Deserialization invalidates the iterator.
-    bool from_data(data_chunk const& encoded, bool prefix);
-    bool from_data(std::istream& stream, bool prefix);
+    // /// Deserialization invalidates the iterator.
+    // bool from_data(data_chunk const& encoded, bool prefix);
+    // bool from_data(std::istream& stream, bool prefix);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
@@ -111,12 +104,14 @@ public:
     bool from_string(std::string const& mnemonic);
 
     /// A script object is valid if the byte count matches the prefix.
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
 
     // Serialization.
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] data_chunk to_data(bool prefix) const;
+    [[nodiscard]]
+    data_chunk to_data(bool prefix) const;
     void to_data(data_sink& stream, bool prefix) const;
 
     template <typename W>
@@ -129,28 +124,34 @@ public:
         sink.write_bytes(bytes_);
     }
 
-    [[nodiscard]] std::string to_string(uint32_t active_forks) const;
+    [[nodiscard]]
+    std::string to_string(uint32_t active_forks) const;
 
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] size_t serialized_size(bool prefix) const;
-    [[nodiscard]] data_chunk const& bytes() const;
+    [[nodiscard]]
+    size_t serialized_size(bool prefix) const;
+    
+    [[nodiscard]]
+    data_chunk const& bytes() const;
     // operation::list const& operations() const;
 
 
     // Signing.
     //-------------------------------------------------------------------------
 
-    // static hash_digest generate_signature_hash(transaction const& tx,
+    // static
+    // hash_digest generate_signature_hash(transaction const& tx,
     //                                            uint32_t input_index,
     //                                            script_basis const& script_code,
     //                                            uint8_t sighash_type,
     //                                            script_version version = script_version::unversioned,
     //                                            uint64_t value = max_uint64);
 
-    // static bool check_signature(ec_signature const& signature,
+    // static
+    // bool check_signature(ec_signature const& signature,
     //                             uint8_t sighash_type,
     //                             data_chunk const& public_key,
     //                             script_basis const& script_code,
@@ -159,95 +160,158 @@ public:
     //                             script_version version = script_version::unversioned,
     //                             uint64_t value = max_uint64);
 
-    // static bool create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
+    // static
+    // bool create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
 
     // Utilities (static).
     //-------------------------------------------------------------------------
 
     /// Transaction helpers.
-    // static hash_digest to_outputs(transaction const& tx);
-    // static hash_digest to_inpoints(transaction const& tx);
-    // static hash_digest to_sequences(transaction const& tx);
+    // static
+    // hash_digest to_outputs(transaction const& tx);
+    // static
+    // hash_digest to_inpoints(transaction const& tx);
+    // static
+    // hash_digest to_sequences(transaction const& tx);
 
     /// Determine if the fork is enabled in the active forks set.
-    static bool is_enabled(uint32_t active_forks, rule_fork fork) {
+    static
+    bool is_enabled(uint32_t active_forks, rule_fork fork) {
         return (fork & active_forks) != 0;
     }
 
     /// Consensus patterns.
-    static bool is_push_only(operation::list const& ops);
-    static bool is_relaxed_push(operation::list const& ops);
-    static bool is_coinbase_pattern(operation::list const& ops, size_t height);
-    static bool is_commitment_pattern(operation::list const& ops);
-    static bool is_witness_program_pattern(operation::list const& ops);
+    static
+    bool is_push_only(operation::list const& ops);
+    
+    static
+    bool is_relaxed_push(operation::list const& ops);
+    
+    static
+    bool is_coinbase_pattern(operation::list const& ops, size_t height);
+    
+#if defined(KTH_SEGWIT_ENABLED)
+    static
+    bool is_commitment_pattern(operation::list const& ops);
+
+    static
+    bool is_witness_program_pattern(operation::list const& ops);
+#endif
 
     /// Common output patterns (psh and pwsh are also consensus).
-    static bool is_null_data_pattern(operation::list const& ops);
-    static bool is_pay_multisig_pattern(operation::list const& ops);
-    static bool is_pay_public_key_pattern(operation::list const& ops);
-    static bool is_pay_key_hash_pattern(operation::list const& ops);
-    static bool is_pay_script_hash_pattern(operation::list const& ops);
-    static bool is_pay_witness_script_hash_pattern(operation::list const& ops);
+    static
+    bool is_null_data_pattern(operation::list const& ops);
+    
+    static
+    bool is_pay_multisig_pattern(operation::list const& ops);
+    
+    static
+    bool is_pay_public_key_pattern(operation::list const& ops);
+    
+    static
+    bool is_pay_key_hash_pattern(operation::list const& ops);
+    
+    static
+    bool is_pay_script_hash_pattern(operation::list const& ops);
+
+#if defined(KTH_SEGWIT_ENABLED)
+    static
+    bool is_pay_witness_script_hash_pattern(operation::list const& ops);
+#endif
 
     /// Common input patterns (skh is also consensus).
-    static bool is_sign_multisig_pattern(operation::list const& ops);
-    static bool is_sign_public_key_pattern(operation::list const& ops);
-    static bool is_sign_key_hash_pattern(operation::list const& ops);
-    static bool is_sign_script_hash_pattern(operation::list const& ops);
+    static
+    bool is_sign_multisig_pattern(operation::list const& ops);
+    
+    static
+    bool is_sign_public_key_pattern(operation::list const& ops);
+    
+    static
+    bool is_sign_key_hash_pattern(operation::list const& ops);
+    
+    static
+    bool is_sign_script_hash_pattern(operation::list const& ops);
 
     /// Stack factories.
-    static operation::list to_null_data_pattern(data_slice data);
-    static operation::list to_pay_public_key_pattern(data_slice point);
-    static operation::list to_pay_key_hash_pattern(short_hash const& hash);
-    static operation::list to_pay_script_hash_pattern(short_hash const& hash);
-    static operation::list to_pay_multisig_pattern(uint8_t signatures, point_list const& points);
-    static operation::list to_pay_multisig_pattern(uint8_t signatures, data_stack const& points);
+    static
+    operation::list to_null_data_pattern(data_slice data);
+    
+    static
+    operation::list to_pay_public_key_pattern(data_slice point);
+    
+    static
+    operation::list to_pay_key_hash_pattern(short_hash const& hash);
+    
+    static
+    operation::list to_pay_script_hash_pattern(short_hash const& hash);
+    
+    static
+    operation::list to_pay_multisig_pattern(uint8_t signatures, point_list const& points);
+    
+    static
+    operation::list to_pay_multisig_pattern(uint8_t signatures, data_stack const& points);
 
     // Utilities (non-static).
     //-------------------------------------------------------------------------
 
     /// Common pattern detection.
-    [[nodiscard]] data_chunk witness_program() const;
-    [[nodiscard]] script_version version() const;
-    [[nodiscard]] script_pattern pattern() const;
-    [[nodiscard]] script_pattern output_pattern() const;
-    [[nodiscard]] script_pattern input_pattern() const;
+
+#if defined(KTH_SEGWIT_ENABLED)
+    [[nodiscard]]
+    data_chunk witness_program() const;
+#endif
+
+    [[nodiscard]]
+    script_version version() const;
+    
+    [[nodiscard]]
+    script_pattern pattern() const;
+    
+    [[nodiscard]]
+    script_pattern output_pattern() const;
+    
+    [[nodiscard]]
+    script_pattern input_pattern() const;
 
     /// Consensus computations.
-    [[nodiscard]] size_t sigops(bool accurate) const;
+    [[nodiscard]]
+    size_t sigops(bool accurate) const;
+    
     void find_and_delete(data_stack const& endorsements);
-    [[nodiscard]] bool is_unspendable() const;
-
-    // Validation.
-    //-------------------------------------------------------------------------
-
-//     static code verify(transaction const& tx, uint32_t input, uint32_t forks);
+    
+    [[nodiscard]]
+    bool is_unspendable() const;
 
 
-//     // TODO(legacy): move back to private.
-// #ifdef KTH_CURRENCY_BCH
-//     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, script_basis const& prevout_script, uint64_t value);
-// #else
-//     static code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script_basis const& input_script, witness const& input_witness, script_basis const& prevout_script, uint64_t value);
-// #endif
+
+
+
+
 
     void reset();
 
 // protected:
-    [[nodiscard]] bool is_pay_to_witness(uint32_t forks) const;
-    [[nodiscard]] bool is_pay_to_script_hash(uint32_t forks) const;
+
+#if defined(KTH_SEGWIT_ENABLED)
+    [[nodiscard]]
+    bool is_pay_to_witness(uint32_t forks) const;
+#endif
+
+    [[nodiscard]]
+    bool is_pay_to_script_hash(uint32_t forks) const;
 
 // private:
-    static size_t serialized_size(operation::list const& ops);
+    static
+    size_t serialized_size(operation::list const& ops);
 private:
-    static data_chunk operations_to_data(operation::list const& ops);
-    // static hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
+    static
+    data_chunk operations_to_data(operation::list const& ops);
+    
+    // static
+    // hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
 
-    static hash_digest generate_version_0_signature_hash(transaction const& tx,
-                                                         uint32_t input_index,
-                                                         script_basis const& script_code,
-                                                         uint64_t value,
-                                                         uint8_t sighash_type);
+    static
+    hash_digest generate_version_0_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint64_t value, uint8_t sighash_type);
 
     void find_and_delete_(data_chunk const& endorsement);
 
@@ -257,9 +321,6 @@ private:
 
 machine::operation::list operations(script_basis const& script);
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
-//#include <kth/domain/concepts_undef.hpp>
-
-#endif // KTH_CHAIN_SCRIPT_BASIS_HPP_
+#endif // KTH_DOMAIN_CHAIN_SCRIPT_BASIS_HPP

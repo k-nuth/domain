@@ -20,34 +20,10 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::machine {
+namespace kth::domain::machine {
 
 // Deserialization.
 //-----------------------------------------------------------------------------
-
-// static
-operation operation::factory_from_data(data_chunk const& encoded) {
-    operation instance;
-    instance.from_data(encoded);
-    return instance;
-}
-
-// static
-operation operation::factory_from_data(std::istream& stream) {
-    operation instance;
-    instance.from_data(stream);
-    return instance;
-}
-
-bool operation::from_data(data_chunk const& encoded) {
-    data_source istream(encoded);
-    return from_data(istream);
-}
-
-bool operation::from_data(std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r);
-}
 
 // TODO(legacy): optimize for larger data by using a shared byte array.
 //bool operation::from_data(reader& source)
@@ -76,7 +52,8 @@ string_list split_push_token(std::string const& token) {
     return split(trim_token(token), ".", false);
 }
 
-static bool opcode_from_data_prefix(opcode& out_code,
+static
+bool opcode_from_data_prefix(opcode& out_code,
                                     std::string const& prefix,
                                     data_chunk const& data) {
     constexpr auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
@@ -102,7 +79,8 @@ static bool opcode_from_data_prefix(opcode& out_code,
     return false;
 }
 
-static bool data_from_number_token(data_chunk& out_data,
+static
+bool data_from_number_token(data_chunk& out_data,
                                    std::string const& token) {
     try {
         out_data = number(boost::lexical_cast<int64_t>(token)).data();
@@ -184,7 +162,8 @@ void operation::to_data(data_sink& stream) const {
     to_data(sink_w);
 }
 
-static std::string opcode_to_prefix(opcode code, data_chunk const& data) {
+static
+std::string opcode_to_prefix(opcode code, data_chunk const& data) {
     // If opcode is minimal for a size-based encoding, do not set a prefix.
     if (code == operation::opcode_from_size(data.size())) {
         return "";
@@ -216,4 +195,4 @@ std::string operation::to_string(uint32_t active_forks) const {
     return "[" + opcode_to_prefix(code_, data_) + encode_base16(data_) + "]";
 }
 
-}  // namespace kth
+} // namespace kth

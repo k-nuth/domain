@@ -2,13 +2,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_RULE_FORK_HPP_
-#define KTH_MACHINE_RULE_FORK_HPP_
+#ifndef KTH_DOMAIN_MACHINE_RULE_FORK_HPP
+#define KTH_DOMAIN_MACHINE_RULE_FORK_HPP
 
 #include <cstdint>
 
-namespace kth {
-namespace machine {
+namespace kth::domain::machine {
 
 enum rule_fork : uint32_t {
     no_rules = 0,
@@ -47,15 +46,6 @@ enum rule_fork : uint32_t {
     bip113_rule = 1U << 10,
 
 #ifdef KTH_CURRENCY_BCH
-    //TODO(fernando): remove this commented code
-    // cash_low_s_rule = 1U << 15,
-    // // cash_monolith_opcodes = 1u << 16,
-    // cash_verify_flags_script_enable_sighash_forkid = 1U << 16,
-    // cash_replay_protection = 1U << 17,
-    // cash_checkdatasig = 1U << 18,
-    // cash_schnorr = 1U << 19,
-    // cash_segwit_recovery = 1U << 20,
-
     bch_uahf = 1U << 11,                //2017-Aug Hardfork - Bitcoin Cash UAHF (1501590000)
     bch_daa  = 1U << 12,                //2017-Nov Hardfork - DAA - (1510600000)
     bch_monolith = 1U << 13,            //2018-May Hardfork - monolith - (1526400000)
@@ -65,7 +55,6 @@ enum rule_fork : uint32_t {
     bch_phonon = 1U << 17,              //2020-May Hardfork - phonon - (1589544000)
     // bch_axion = 1U << 18,            //2020-Nov Hardfork - axion - (1605441600)
     // bch_unnamed = 1U << 19,          //2021-May Hardfork - unnamed - (9999999999)
-
     bch_replay_protection = 1U << 18,
 #else 
     // Just for segwit coins
@@ -111,7 +100,6 @@ enum rule_fork : uint32_t {
     all_rules = 0xffffffff
 };
 
-} // namespace machine
-} // namespace kth
+} // namespace kth::domain::machine
 
-#endif // KTH_MACHINE_RULE_FORK_HPP_
+#endif // KTH_DOMAIN_MACHINE_RULE_FORK_HPP

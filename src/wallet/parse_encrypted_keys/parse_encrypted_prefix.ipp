@@ -11,8 +11,7 @@
 #include <kth/domain/wallet/encrypted_keys.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 template <size_t Size>
 parse_encrypted_prefix<Size>::parse_encrypted_prefix(
@@ -40,7 +39,6 @@ void parse_encrypted_prefix<Size>::valid(bool value) {
     valid_ = value;
 }
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

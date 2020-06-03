@@ -13,7 +13,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 uint32_t inventory_vector::to_number(type_id type) {
     return static_cast<uint32_t>(type);
@@ -45,18 +45,6 @@ std::string inventory_vector::to_string(type_id type) {
     }
 }
 
-inventory_vector inventory_vector::factory_from_data(uint32_t version, data_chunk const& data) {
-    inventory_vector instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-inventory_vector inventory_vector::factory_from_data(uint32_t version, std::istream& stream) {
-    inventory_vector instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
 inventory_vector::inventory_vector()
     : hash_(null_hash) 
 {}
@@ -64,15 +52,6 @@ inventory_vector::inventory_vector()
 inventory_vector::inventory_vector(type_id type, hash_digest const& hash)
     : type_(type), hash_(hash) 
 {}
-
-// inventory_vector::inventory_vector(inventory_vector const& x)
-//     : type_(x.type_), hash_(x.hash_) 
-// {}
-
-// void inventory_vector::operator=(inventory_vector const& x) {
-//     type_ = x.type_;
-//     hash_ = x.hash_;
-// }
 
 bool inventory_vector::operator==(inventory_vector const& x) const {
     return (hash_ == x.hash_) && (type_ == x.type_);
@@ -91,23 +70,13 @@ void inventory_vector::reset() {
     hash_.fill(0);
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 void inventory_vector::to_witness() {
     if (type_ == type_id::block || type_ == type_id::transaction) {
         type_ = to_type(to_number(type_) | to_number(type_id::witness));
     }
 }
 #endif
-
-bool inventory_vector::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool inventory_vector::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
 
 data_chunk inventory_vector::to_data(uint32_t version) const {
     data_chunk data;
@@ -164,4 +133,4 @@ void inventory_vector::set_hash(hash_digest const& value) {
     hash_ = value;
 }
 
-}  // namespace kth
+} // namespace kth

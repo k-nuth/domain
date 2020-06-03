@@ -10,23 +10,11 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const send_headers::command = "sendheaders";
 uint32_t const send_headers::version_minimum = version::level::bip130;
 uint32_t const send_headers::version_maximum = version::level::maximum;
-
-send_headers send_headers::factory_from_data(uint32_t version, data_chunk const& data) {
-    send_headers instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-send_headers send_headers::factory_from_data(uint32_t version, std::istream& stream) {
-    send_headers instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 size_t send_headers::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
@@ -54,16 +42,6 @@ void send_headers::reset() {
     insufficient_version_ = true;
 }
 
-bool send_headers::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool send_headers::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk send_headers::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -83,4 +61,4 @@ size_t send_headers::serialized_size(uint32_t version) const {
     return send_headers::satoshi_fixed_size(version);
 }
 
-}  // namespace kth
+} // namespace kth

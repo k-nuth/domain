@@ -23,7 +23,6 @@
 #include <kth/domain/chain/input_point.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/constants.hpp>
-// #include <kth/infrastructure/message/message_tools.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
@@ -41,15 +40,15 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-using namespace bc::config;
-using namespace bc::machine;
+using namespace kth::domain::machine;
 using namespace boost::adaptors;
 
 #ifdef KTH_CURRENCY_LTC
 //Litecoin mainnet genesis block
-static std::string const encoded_mainnet_genesis_block =
+static
+std::string const encoded_mainnet_genesis_block =
     "01000000"                                                                                                                                          //version
     "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
     "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le *
@@ -70,7 +69,8 @@ static std::string const encoded_mainnet_genesis_block =
     "00000000";     //NOLINT                                                                                                                            //locktime
 
 //Litecoin testnet genesis block
-static std::string const encoded_testnet_genesis_block =
+static
+std::string const encoded_testnet_genesis_block =
     "01000000"                                                                                                                                          //version
     "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
     "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le
@@ -91,7 +91,8 @@ static std::string const encoded_testnet_genesis_block =
     "00000000";           //NOLINT                                                                                                                      //locktime
 #else  //KTH_CURRENCY_LTC
 
-static std::string const encoded_mainnet_genesis_block =
+static
+std::string const encoded_mainnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -111,7 +112,8 @@ static std::string const encoded_mainnet_genesis_block =
     "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
     "00000000"; //NOLINT
 
-static std::string const encoded_testnet_genesis_block =
+static
+std::string const encoded_testnet_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -132,7 +134,8 @@ static std::string const encoded_testnet_genesis_block =
     "00000000"; //NOLINT
 #endif  //KTH_CURRENCY_LTC
 
-static std::string const encoded_regtest_genesis_block =
+static
+std::string const encoded_regtest_genesis_block =
     "01000000"
     "0000000000000000000000000000000000000000000000000000000000000000"
     "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -203,30 +206,6 @@ bool block_basis::operator!=(block_basis const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-block_basis block_basis::factory_from_data(data_chunk const& data, bool witness) {
-    block_basis instance;
-    instance.from_data(data, witness_val(witness));
-    return instance;
-}
-
-// static
-block_basis block_basis::factory_from_data(std::istream& stream, bool witness) {
-    block_basis instance;
-    instance.from_data(stream, witness_val(witness));
-    return instance;
-}
-
-bool block_basis::from_data(data_chunk const& data, bool witness) {
-    data_source istream(data);
-    return from_data(istream, witness_val(witness));
-}
-
-bool block_basis::from_data(std::istream& stream, bool witness) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, witness_val(witness));
-}
-
 // private
 void block_basis::reset() {
     header_.reset();
@@ -275,18 +254,6 @@ hash_list block_basis::to_hashes(bool witness) const {
 // Properties (size, accessors, cache).
 //-----------------------------------------------------------------------------
 
-// // Full block serialization is always canonical encoding.
-// size_t block_basis::serialized_size(bool witness) const {
-//     auto const sum = [witness](size_t total, transaction const& tx) {
-//         return safe_add(total, tx.serialized_size(true, witness_val(witness)));
-//     };
-
-//     auto const& txs = transactions_;
-//     return header_.serialized_size(true) +
-//            message::variable_uint_size(txs.size()) +
-//            std::accumulate(txs.begin(), txs.end(), size_t(0), sum);
-// }
-
 chain::header& block_basis::header() {
     return header_;
 }
@@ -325,91 +292,16 @@ hash_digest block_basis::hash() const {
     return header_.hash();
 }
 
-// Utilities.
-//-----------------------------------------------------------------------------
-
-// chain::block_basis block_basis::genesis_mainnet() {
-//     data_chunk data;
-//     decode_base16(data, encoded_mainnet_genesis_block);
-//     auto const genesis = chain::block_basis::factory_from_data(data);
-
-//     KTH_ASSERT(genesis.is_valid());
-//     KTH_ASSERT(genesis.transactions().size() == 1);
-//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-//     return genesis;
-// }
-
-// chain::block_basis block_basis::genesis_testnet() {
-//     data_chunk data;
-//     decode_base16(data, encoded_testnet_genesis_block);
-//     auto const genesis = chain::block_basis::factory_from_data(data);
-
-//     KTH_ASSERT(genesis.is_valid());
-//     KTH_ASSERT(genesis.transactions().size() == 1);
-//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-//     return genesis;
-// }
-
-// chain::block_basis block_basis::genesis_regtest() {
-//     data_chunk data;
-//     decode_base16(data, encoded_regtest_genesis_block);
-//     auto const genesis = chain::block_basis::factory_from_data(data);
-
-//     KTH_ASSERT(genesis.is_valid());
-//     KTH_ASSERT(genesis.transactions().size() == 1);
-//     KTH_ASSERT(genesis.generate_merkle_root() == genesis.header().merkle());
-//     return genesis;
-// }
-
-// With a 32 bit chain the size of the result should not exceed 43 and with a
-// 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
-size_t block_basis::locator_size(size_t top) {
-    // Set rounding behavior, not consensus-related, thread side effect :<.
-    std::fesetround(FE_UPWARD);
-
-    auto const first_ten_or_top = std::min(size_t(10), top);
-    auto const remaining = top - first_ten_or_top;
-    auto const back_off = remaining == 0 ? 0.0 : remaining == 1 ? 1.0 : std::log2(remaining);
-    auto const rounded_up_log = static_cast<size_t>(std::nearbyint(back_off));
-    return first_ten_or_top + rounded_up_log + size_t(1);
-}
-
-// This algorithm is a network best practice, not a consensus rule.
-block_basis::indexes block_basis::locator_heights(size_t top) {
-    size_t step = 1;
-    block_basis::indexes heights;
-    auto const reservation = locator_size(top);
-    heights.reserve(reservation);
-
-    // Start at the top of the chain and work backwards to zero.
-    for (auto height = top; height > 0; height = floor_subtract(height, step)) {
-        // Push top 10 indexes first, then back off exponentially.
-        if (heights.size() >= 10) {
-            step <<= 1U;
-        }
-
-        heights.push_back(height);
-    }
-
-    // Push the genesis block index.
-    heights.push_back(0);
-
-    // Validate the reservation computation.
-    KTH_ASSERT(heights.size() <= reservation);
-    return heights;
-}
 
 // Utilities.
 //-----------------------------------------------------------------------------
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
-void block_basis::strip_witness() {
-    auto const strip = [](transaction& transaction) {
-        transaction.strip_witness();
-    };
-
-    std::for_each(transactions_.begin(), transactions_.end(), strip);
+void strip_witness(block_basis& blk) {
+    std::for_each(blk.transactions().begin(), blk.transactions().end(), [](transaction& tx) {
+        tx.strip_witness();
+    });
 }
 #endif
 
@@ -421,6 +313,7 @@ uint256_t block_basis::proof() const {
     return header_.proof();
 }
 
+// static
 uint64_t block_basis::subsidy(size_t height, bool retarget) {
     static auto const overflow = sizeof(uint64_t) * byte_bits;
     auto subsidy = initial_block_subsidy_satoshi();
@@ -429,21 +322,9 @@ uint64_t block_basis::subsidy(size_t height, bool retarget) {
     return subsidy;
 }
 
-// // Returns max_size_t in case of overflow or unpopulated chain state.
-// size_t block_basis::signature_operations() const {
-//     auto const state = validation.state;
-//     auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
-// #ifdef KTH_CURRENCY_BCH
-//     auto const bip141 = false;  // No segwit
-// #else
-//     auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
-// #endif
-//     return state ? signature_operations(bip16, bip141) : max_size_t;
-// }
-
 // Returns max_size_t in case of overflow.
 size_t block_basis::signature_operations(bool bip16, bool bip141) const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     bip141 = false;  // No segwit
 #endif
     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
@@ -458,43 +339,6 @@ size_t block_basis::signature_operations(bool bip16, bool bip141) const {
     auto const& txs = transactions_;
     return std::accumulate(txs.begin(), txs.end(), size_t{0}, value);
 }
-
-// size_t block_basis::total_inputs(bool with_coinbase) const {
-//     size_t value;
-
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     mutex_.lock_upgrade();
-
-//     if (total_inputs_ != std::nullopt) {
-//         value = total_inputs_.get();
-//         mutex_.unlock_upgrade();
-//         //---------------------------------------------------------------------
-//         return value;
-//     }
-
-//     mutex_.unlock_upgrade_and_lock();
-//     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//     auto const inputs = [](size_t total, transaction const& tx) {
-//         return safe_add(total, tx.inputs().size());
-//     };
-
-//     auto const& txs = transactions_;
-//     const size_t offset = with_coinbase ? 0 : 1;
-//     value = std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
-//     total_inputs_ = value;
-//     mutex_.unlock();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return value;
-// }
-
-// size_t block_basis::weight(size_t serialized_size_true, size_t serialized_size_false) const {
-//     // Block weight is 3 * Base size * + 1 * Total size (bip141).
-//     return base_size_contribution * serialized_size_false +
-//            total_size_contribution * serialized_size_true;
-// }
 
 // True if there is another coinbase other than the first tx.
 // No txs or coinbases returns false.
@@ -668,8 +512,9 @@ bool block_basis::is_valid_coinbase_script(size_t height) const {
     return script::is_coinbase_pattern(script.operations(), height);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool block_basis::is_valid_witness_commitment() const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     return false;
 #else
     if (transactions_.empty() || transactions_.front().inputs().empty()) {
@@ -690,76 +535,38 @@ bool block_basis::is_valid_witness_commitment() const {
 
     // If no txs in block are segregated the commitment is optional (bip141).
     return !is_segregated(*this);
-#endif // KTH_CURRENCY_BCH
+#endif // KTH_SEGWIT_ENABLED
 }
+#endif // KTH_SEGWIT_ENABLED
 
-// bool block_basis::is_segregated() const {
-// #ifdef KTH_CURRENCY_BCH
-//     return false;
-// #else
-//     bool value;
-
-//     ///////////////////////////////////////////////////////////////////////////
-//     // Critical Section
-//     mutex_.lock_upgrade();
-
-//     if (segregated_ != std::nullopt) {
-//         value = segregated_.get();
-//         mutex_.unlock_upgrade();
-//         //---------------------------------------------------------------------
-//         return value;
-//     }
-
-//     mutex_.unlock_upgrade_and_lock();
-//     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//     auto const segregated = [](transaction const& tx) {
-//         return tx.is_segregated();
-//     };
-
-//     // If no block tx has witness data the commitment is optional (bip141).
-//     value = std::any_of(transactions_.begin(), transactions_.end(), segregated);
-
-//     mutex_.unlock();
-//     ///////////////////////////////////////////////////////////////////////////
-
-//     return value;
-// #endif // KTH_CURRENCY_BCH
-// }
 
 code block_basis::check_transactions() const {
     code ec;
-
     for (auto const& tx : transactions_) {
         if ((ec = tx.check(false))) {
             return ec;
         }
     }
-
     return error::success;
 }
 
 code block_basis::accept_transactions(chain_state const& state) const {
     code ec;
-
     for (auto const& tx : transactions_) {
         if ( ! tx.validation.validated && (ec = tx.accept(state, false))) {
             return ec;
         }
     }
-
     return error::success;
 }
 
 code block_basis::connect_transactions(chain_state const& state) const {
     code ec;
-
     for (auto const& tx : transactions_) {
         if ( ! tx.validation.validated && (ec = tx.connect(state))) {
             return ec;
         }
     }
-
     return error::success;
 }
 
@@ -791,7 +598,6 @@ code block_basis::check(size_t serialized_size_false) const {
 
     if (is_extra_coinbases()) {
         return error::extra_coinbases;
-
         // TODO(legacy): determinable from tx pool graph.
     }
 
@@ -845,7 +651,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
 #else
     auto const bip141 = state.is_enabled(rule_fork::bip141_rule);
@@ -871,9 +677,6 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
     if (state.is_under_checkpoint()) {
         return error::success;
-
-        // TODO(legacy): relates height to total of tx.size(true) (pool cache).
-        // NOTE: for BCH bit141 is set as false
     }
 
 #if defined(KTH_CURRENCY_BCH)
@@ -891,6 +694,8 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     }
 #endif
 
+    // TODO(legacy): relates height to total of tx.size(true) (pool cache).
+    // NOTE: for BCH bit141 is set as false
     // if (bip141 && weight() > max_block_weight) {
     if (bip141 && weight > max_block_weight) {
         return error::block_weight_limit;
@@ -898,12 +703,11 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
     if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;
-
     }
+
     // TODO(legacy): relates height to total of tx.fee (pool cach).
     if ( ! is_valid_coinbase_claim(state.height())) {
         return error::coinbase_value_limit;
-
     }
 
     // TODO(legacy): relates median time past to tx.locktime (pool cache min tx.time).
@@ -911,16 +715,18 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
         return error::block_non_final;
     }
 
+#if defined(KTH_SEGWIT_ENABLED)
     // TODO(legacy): relates height to tx.hash(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
     if (bip141 && !is_valid_witness_commitment()) {
         return error::invalid_witness_commitment;
-
-        // TODO(legacy): determine if performance benefit is worth excluding sigops here.
-        // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).
-        // This recomputes sigops to include p2sh from prevouts.
-        // NOTE: for BCH bit141 is set as false
     }
+#endif //defined(KTH_SEGWIT_ENABLED)
+
+
+    // TODO(legacy): determine if performance benefit is worth excluding sigops here.
+    // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).
+    // This recomputes sigops to include p2sh from prevouts.
 
     if (transactions && (signature_operations(bip16, bip141) > allowed_sigops)) {
         return error::block_embedded_sigop_limit;
@@ -933,18 +739,57 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     return ec;
 }
 
-// code block_basis::connect() const {
-//     auto const state = validation.state;
-//     return state ? connect(*state) : error::operation_failed;
-// }
-
 code block_basis::connect(chain_state const& state) const {
-    // validation.start_connect = asio::steady_clock::now();
-
     if (state.is_under_checkpoint()) {
         return error::success;
     }
     return connect_transactions(state);
+}
+
+
+
+
+
+// Non-member functions.
+//-----------------------------------------------------------------------------
+
+// With a 32 bit chain the size of the result should not exceed 43 and with a
+// 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
+size_t locator_size(size_t top) {
+    // Set rounding behavior, not consensus-related, thread side effect :<.
+    std::fesetround(FE_UPWARD);
+
+    auto const first_ten_or_top = std::min(size_t(10), top);
+    auto const remaining = top - first_ten_or_top;
+    auto const back_off = remaining == 0 ? 0.0 : remaining == 1 ? 1.0 : std::log2(remaining);
+    auto const rounded_up_log = static_cast<size_t>(std::nearbyint(back_off));
+    return first_ten_or_top + rounded_up_log + size_t(1);
+}
+
+// This algorithm is a network best practice, not a consensus rule.
+// static
+indexes locator_heights(size_t top) {
+    size_t step = 1;
+    indexes heights;
+    auto const reservation = locator_size(top);
+    heights.reserve(reservation);
+
+    // Start at the top of the chain and work backwards to zero.
+    for (auto height = top; height > 0; height = floor_subtract(height, step)) {
+        // Push top 10 indexes first, then back off exponentially.
+        if (heights.size() >= 10) {
+            step <<= 1U;
+        }
+
+        heights.push_back(height);
+    }
+
+    // Push the genesis block index.
+    heights.push_back(0);
+
+    // Validate the reservation computation.
+    KTH_ASSERT(heights.size() <= reservation);
+    return heights;
 }
 
 size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
@@ -958,7 +803,7 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
 }
 
 bool is_segregated(block_basis const& blk) {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     (void)blk;
     return false;
 #else
@@ -979,9 +824,8 @@ size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
 
     auto const& txs = blk.transactions();
     return blk.header().serialized_size(true) +
-           message::variable_uint_size(txs.size()) +
+           infrastructure::message::variable_uint_size(txs.size()) +
            std::accumulate(txs.begin(), txs.end(), size_t(0), sum);
 }
 
-
-}  // namespace kth
+} // namespace kth

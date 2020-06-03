@@ -7,18 +7,14 @@
 
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-// Platform check.
+//TODO(fernando): Platform check, put in another place
 static_assert(std::is_same<std::uint8_t, char>::value || std::is_same<std::uint8_t, unsigned char>::value,
               "Knuth requires std::uint8_t to be implemented as char or unsigned char.");
 
-namespace kth {
-namespace keoken {
-namespace message {
-
-namespace base {
+namespace kth::keoken::message::base {
 
 size_t serialized_size();
 
@@ -28,10 +24,6 @@ void to_data(W& sink, uint16_t version, uint16_t type) {
     sink.write_2_bytes_big_endian(type);
 }
 
-}  // namespace base
-
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+} // namespace kth::keoken::message::base
 
 #endif  //KTH_KEOKEN_MESSAGE_BASE_HPP_

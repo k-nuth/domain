@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(get_data_tests)
 
@@ -100,7 +101,7 @@ BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{0xab, 0xcd};
     get_data instance;
     static auto const version = version::level::maximum;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version, raw));
 }
 
 BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_version__failure) {
@@ -110,7 +111,7 @@ BOOST_AUTO_TEST_CASE(get_data__from_data__insufficient_version__failure) {
 
     auto const raw = expected.to_data(version::level::maximum);
     get_data instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(get_data::version_minimum - 1, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, get_data::version_minimum - 1, raw));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
@@ -121,7 +122,7 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_1__valid_input__success) {
 
     static auto const version = version::level::maximum;
     auto const data = expected.to_data(version);
-    auto const result = get_data::factory_from_data(version, data);
+    auto const result = create<get_data>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -136,7 +137,7 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_2__valid_input__success) {
     static auto const version = version::level::maximum;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto const result = get_data::factory_from_data(version, istream);
+    auto const result = create<get_data>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -152,14 +153,14 @@ BOOST_AUTO_TEST_CASE(get_data__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = get_data::factory_from_data(version, source);
+    auto const result = create<get_data>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 BOOST_AUTO_TEST_CASE(get_data__to_witness__error__unchanged) {
     static auto const expected = inventory_vector::type_id::error;
     get_data instance{{expected, {}}};

@@ -16,13 +16,12 @@
 #include <kth/domain/wallet/stealth_address.hpp>
 // #include <kth/domain/wallet/uri_reader.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 /// A bitcoin URI corresponding to BIP 21 and BIP 72.
 /// The object is not constant, setters can change state after construction.
-// class BC_API bitcoin_uri : public uri_reader {
-class BC_API bitcoin_uri {
+// class KD_API bitcoin_uri : public uri_reader {
+class KD_API bitcoin_uri {
 public:
     /// Constructors.
     bitcoin_uri() = default;
@@ -44,17 +43,33 @@ public:
     operator bool() const;
 
     /// Get the serialized URI representation.
-    [[nodiscard]] std::string encoded() const;
+    [[nodiscard]]
+    std::string encoded() const;
 
     /// Property getters.
-    [[nodiscard]] uint64_t amount() const;
-    [[nodiscard]] std::string label() const;
-    [[nodiscard]] std::string message() const;
-    [[nodiscard]] std::string r() const;
-    [[nodiscard]] std::string address() const;
-    [[nodiscard]] payment_address payment() const;
-    [[nodiscard]] stealth_address stealth() const;
-    [[nodiscard]] std::string parameter(std::string const& key) const;
+    [[nodiscard]]
+    uint64_t amount() const;
+    
+    [[nodiscard]]
+    std::string label() const;
+    
+    [[nodiscard]]
+    std::string message() const;
+    
+    [[nodiscard]]
+    std::string r() const;
+    
+    [[nodiscard]]
+    std::string address() const;
+    
+    [[nodiscard]]
+    payment_address payment() const;
+    
+    [[nodiscard]]
+    stealth_address stealth() const;
+    
+    [[nodiscard]]
+    std::string parameter(std::string const& key) const;
 
     /// Property setters.
     void set_amount(uint64_t satoshis);
@@ -84,7 +99,6 @@ private:
     std::map<std::string, std::string> query_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

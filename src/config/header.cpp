@@ -10,12 +10,14 @@
 
 #include <boost/program_options.hpp>
 
+#include <kth/domain/common.hpp>
 #include <kth/domain/chain/header.hpp>
 #include <kth/infrastructure/config/base16.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost::program_options;
+using namespace infrastructure::config;
 
 header::header(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;
@@ -37,7 +39,7 @@ std::istream& operator>>(std::istream& input, header& argument) {
     std::string hexcode;
     input >> hexcode;
 
-    if ( ! argument.value_.from_data(base16(hexcode))) {
+    if ( ! entity_from_data(argument.value_, base16(hexcode))) {
         BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
     }
 
@@ -51,4 +53,4 @@ std::ostream& operator<<(std::ostream& output, header const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth

@@ -12,19 +12,20 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 #include <kth/domain/keoken/message/base.hpp>
 #include <kth/domain/keoken/primitives.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 
-class BC_API send_tokens {
+class KD_API send_tokens {
 public:
-    static uint16_t const version = 0;
-    static uint16_t const type = 1;
+    static
+    uint16_t const version = 0;
+    
+    static
+    uint16_t const type = 1;
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -47,18 +48,8 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static send_tokens factory_from_data(bc::data_chunk const& data);
-    static send_tokens factory_from_data(std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static send_tokens factory_from_data(R& source) {
-        send_tokens instance;  //NOLINT
-        instance.from_data(source);
-        return instance;
-    }
-
-    bool from_data(bc::data_chunk const& data);
-    bool from_data(std::istream& stream);
+    // bool from_data(kth::data_chunk const& data);
+    // bool from_data(std::istream& stream);
 
     //Note: from_data and to_data are not longer simetrical.
     template <typename R, KTH_IS_READER(R)>
@@ -75,8 +66,8 @@ public:
     // Serialization.
     //-------------------------------------------------------------------------
 
-    bc::data_chunk to_data() const;
-    void to_data(bc::data_sink& stream) const;
+    kth::data_chunk to_data() const;
+    void to_data(kth::data_sink& stream) const;
 
     //Note: from_data and to_data are not longer simetrical.
     template <typename W>
@@ -102,8 +93,6 @@ private:
     amount_t amount_;
 };
 
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+} // namespace kth::keoken::message
 
 #endif  //KTH_KEOKEN_MESSAGE_SEND_TOKENS_HPP_

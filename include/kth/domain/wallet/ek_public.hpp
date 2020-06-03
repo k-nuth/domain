@@ -11,11 +11,10 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/encrypted_keys.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 /// Use to pass an encrypted public key.
-class BC_API ek_public {
+class KD_API ek_public {
 public:
     /// Constructors.
     ek_public();
@@ -38,14 +37,17 @@ public:
     operator encrypted_public const&() const;
 
     /// Serializer.
-    [[nodiscard]] std::string encoded() const;
+    [[nodiscard]]
+    std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] encrypted_public const& public_key() const;
+    [[nodiscard]]
+    encrypted_public const& public_key() const;
 
 private:
     /// Factories.
-    static ek_public from_string(std::string const& encoded);
+    static
+    ek_public from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
@@ -53,7 +55,6 @@ private:
     encrypted_public public_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

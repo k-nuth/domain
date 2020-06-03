@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_SEND_COMPACT_BLOCKS_HPP
-#define KTH_MESSAGE_SEND_COMPACT_BLOCKS_HPP
+#ifndef KTH_DOMAIN_MESSAGE_SEND_COMPACT_BLOCKS_HPP
+#define KTH_DOMAIN_MESSAGE_SEND_COMPACT_BLOCKS_HPP
 
 #include <istream>
 #include <memory>
@@ -16,29 +16,18 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API send_compact {
+class KD_API send_compact {
 public:
     using ptr = std::shared_ptr<send_compact>;
     using const_ptr = std::shared_ptr<const send_compact>;
 
-    static send_compact factory_from_data(uint32_t version, data_chunk const& data);
-    static send_compact factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static send_compact factory_from_data(uint32_t version, R& source) {
-        send_compact instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static send_compact factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     send_compact() = default;
     send_compact(bool high_bandwidth_mode, uint64_t version);
@@ -53,14 +42,18 @@ public:
     bool operator!=(send_compact const& x) const;
 
 
-    [[nodiscard]] bool high_bandwidth_mode() const;
+    [[nodiscard]]
+    bool high_bandwidth_mode() const;
+    
     void set_high_bandwidth_mode(bool mode);
 
-    [[nodiscard]] uint64_t version() const;
+    [[nodiscard]]
+    uint64_t version() const;
+    
     void set_version(uint64_t version);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -70,48 +63,58 @@ public:
 
         if (mode > 1) {
             source.invalidate();
-}
+        }
 
         high_bandwidth_mode_ = (mode == 1);
         this->version_ = source.read_8_bytes_little_endian();
 
         if (version < send_compact::version_minimum) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_byte(static_cast<uint8_t>(high_bandwidth_mode_));
         sink.write_8_bytes_little_endian(this->version_);
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     bool high_bandwidth_mode_{false};
     uint64_t version_{0};
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

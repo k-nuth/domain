@@ -10,44 +10,16 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const filter_clear::command = "filterclear";
 uint32_t const filter_clear::version_minimum = version::level::bip37;
 uint32_t const filter_clear::version_maximum = version::level::maximum;
 
-filter_clear filter_clear::factory_from_data(uint32_t version, data_chunk const& data) {
-    filter_clear instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-filter_clear filter_clear::factory_from_data(uint32_t version, std::istream& stream) {
-    filter_clear instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
-//filter_clear filter_clear::factory_from_data(uint32_t version, reader& source)
-//{
-//    filter_clear instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
-
-
 // protected
 filter_clear::filter_clear(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
-
-// filter_clear::filter_clear(filter_clear const& x)
-//     : filter_clear(x.insufficient_version_) {
-// }
-
-// filter_clear::filter_clear(filter_clear&& x) noexcept
-//     : filter_clear(x.insufficient_version_) {
-// }
 
 bool filter_clear::is_valid() const {
     return !insufficient_version_;
@@ -56,16 +28,6 @@ bool filter_clear::is_valid() const {
 // This is again a default instance so is invalid.
 void filter_clear::reset() {
     insufficient_version_ = true;
-}
-
-bool filter_clear::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool filter_clear::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
 }
 
 data_chunk filter_clear::to_data(uint32_t version) const {
@@ -92,4 +54,4 @@ size_t filter_clear::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-}  // namespace kth
+} // namespace kth

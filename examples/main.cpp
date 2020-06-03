@@ -9,11 +9,11 @@
 
 KTH_USE_MAIN
 
-int bc::main(int argc, char* argv[]) {
+int kth::main(int argc, char* argv[]) {
     return 0;
 }
 
-// int bc::main(int argc, char* argv[]) {
+// int kth::main(int argc, char* argv[]) {
 
 //     data_chunk out;
 //     data_sink ostream(out);
@@ -139,12 +139,12 @@ int bc::main(int argc, char* argv[]) {
 // }
 
 
-// int bc::main(int argc, char* argv[])
+// int kth::main(int argc, char* argv[])
 // {
-//     bc::wallet::payment_address const address1("1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"); // Legacy Address Format
-//     //bc::wallet::payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat Invalid
-//     //bc::wallet::payment_address const address2("bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"); // CashAddrFormat
-//     bc::wallet::payment_address const address2("bitcoincash:ppm2qsznhks23z7629mms6s4cwef74vcwvn0h829pq"); // CashAddrFormat
+//     kth::domain::wallet::payment_address const address1("1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"); // Legacy Address Format
+//     //kth::domain::wallet::payment_address const address2("bitcoincash:qpzry9x8gf2tvdw0s3jn54khce6mua7lcw20ayyn"); // CashAddrFormat Invalid
+//     //kth::domain::wallet::payment_address const address2("bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"); // CashAddrFormat
+//     kth::domain::wallet::payment_address const address2("bitcoincash:ppm2qsznhks23z7629mms6s4cwef74vcwvn0h829pq"); // CashAddrFormat
 
 
 
@@ -159,34 +159,34 @@ int bc::main(int argc, char* argv[]) {
 // }
 
 //// Testing out our http://utf8everywhere.org implementation.
-//int bc::main(int argc, char* argv[])
+//int kth::main(int argc, char* argv[])
 //{
 //    // Windows utf8 everywhere demonstration.
 //    set_utf8_stdio();
 //
-//    bc::cout << "output : acción.кошка.日本国" << std::endl;
-//    bc::cerr << "error : acción.кошка.日本国" << std::endl;
+//    kth::cout << "output : acción.кошка.日本国" << std::endl;
+//    kth::cerr << "error : acción.кошка.日本国" << std::endl;
 //
-//    bc::cout << "Enter text to input..." << std::endl;
+//    kth::cout << "Enter text to input..." << std::endl;
 //    std::string console;
-//    bc::cin >> console;
-//    bc::cout << "input[0]  : " << console << std::endl;
+//    kth::cin >> console;
+//    kth::cout << "input[0]  : " << console << std::endl;
 //
 //    if (argc > 1)
-//        bc::cout << "argv[1] : " << argv[1] << std::endl;
+//        kth::cout << "argv[1] : " << argv[1] << std::endl;
 //
 //#ifdef _MSC_VER
 //    if (environ[0] != nullptr)
-//        bc::cout << "environ[0] : " << environ[0] << std::endl;
+//        kth::cout << "environ[0] : " << environ[0] << std::endl;
 //#endif
 //
 //    // Extracting Satoshi's words.
-//    auto const block = bc::chain::block::genesis_mainnet();
+//    auto const block = kth::domain::chain::block::genesis_mainnet();
 //    auto const& tx = block.transactions().front();
 //    auto const& input = tx.inputs().front();
 //    auto script const = input.script().to_data(false);
 //    std::string message(script.begin() + sizeof(uint64_t), script.end());
-//    bc::cout << message << std::endl;
+//    kth::cout << message << std::endl;
 //
 //    return EXIT_SUCCESS;
 //}

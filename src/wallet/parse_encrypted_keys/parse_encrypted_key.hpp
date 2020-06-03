@@ -13,8 +13,7 @@
 
 #include "parse_encrypted_prefix.hpp"
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 // Swap not defined.
 template <size_t PrefixSize>
@@ -40,8 +39,7 @@ private:
     const ek_entropy entropy_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #include "parse_encrypted_key.ipp"
 

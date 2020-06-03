@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_GET_BLOCKS_HPP
-#define KTH_MESSAGE_GET_BLOCKS_HPP
+#ifndef KTH_DOMAIN_MESSAGE_GET_BLOCKS_HPP
+#define KTH_DOMAIN_MESSAGE_GET_BLOCKS_HPP
 
 #include <istream>
 #include <memory>
@@ -19,58 +19,44 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API get_blocks {
+class KD_API get_blocks {
 public:
     using ptr = std::shared_ptr<get_blocks>;
     using const_ptr = std::shared_ptr<const get_blocks>;
-
-    static get_blocks factory_from_data(uint32_t version, data_chunk const& data);
-    static get_blocks factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static get_blocks factory_from_data(uint32_t version, R& source) {
-        get_blocks instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     get_blocks();
     get_blocks(hash_list const& start, hash_digest const& stop);
     get_blocks(hash_list&& start, hash_digest const& stop);
 
-    // get_blocks(get_blocks const& x) = default;
-    // get_blocks(get_blocks&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // get_blocks& operator=(get_blocks&& x) = default;
-    // get_blocks& operator=(get_blocks const&) = default;
-
     bool operator==(get_blocks const& x) const;
     bool operator!=(get_blocks const& x) const;
 
-
     hash_list& start_hashes();
-    [[nodiscard]] hash_list const& start_hashes() const;
+    
+    [[nodiscard]]
+    hash_list const& start_hashes() const;
+    
     void set_start_hashes(hash_list const& value);
     void set_start_hashes(hash_list&& value);
 
     hash_digest& stop_hash();
-    [[nodiscard]] hash_digest const& stop_hash() const;
+    
+    [[nodiscard]]
+    hash_digest const& stop_hash() const;
+    
     void set_stop_hash(hash_digest const& value);
 
-    // virtual  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, data_chunk const& data);
-    // virtual  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         // Discard protocol version because it is stupid.
@@ -97,7 +83,9 @@ public:
         return source;
     }
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -112,13 +100,22 @@ public:
         sink.write_hash(stop_hash_);
     }
 
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 private:
     // 10 sequential hashes, then exponential samples until reaching genesis.
@@ -126,7 +123,6 @@ private:
     hash_digest stop_hash_;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

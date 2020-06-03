@@ -8,21 +8,22 @@
 
 #include <kth/domain.hpp>
 
-#include <boost/utility/in_place_factory.hpp>
+// #include <boost/utility/in_place_factory.hpp>
 
-using namespace bc;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::wallet;
 
 BOOST_AUTO_TEST_SUITE(uri_reader_tests)
 
 // Test helper that relies on bitcoin_uri.
-static bitcoin_uri parse(std::string const& uri, bool strict = true) {
+static
+bitcoin_uri parse(std::string const& uri, bool strict = true) {
     return uri_reader::parse<bitcoin_uri>(uri, strict);
 }
 
 // Demonstrate custom uri_reader.
-struct custom_reader
-    : public uri_reader {
+struct custom_reader : public uri_reader {
     custom_reader()
         : strict_(true), authority_(false) {
     }
@@ -52,17 +53,22 @@ struct custom_reader
     }
 
     virtual bool set_fragment(std::string const& fragment) {
-        myfragment = boost::in_place(fragment);
+        // myfragment = boost::in_place(fragment);
+        myfragment = std::optional<std::string>{std::in_place, fragment};
         return true;
     }
 
     virtual bool set_parameter(std::string const& key, std::string const& value) {
-        if (key == "myparam1")
-            myparam1 = boost::in_place(value);
-        else if (key == "myparam2")
-            myparam2 = boost::in_place(value);
-        else
+        if (key == "myparam1") {
+            // myparam1 = boost::in_place(value);
+            myparam1 = std::optional<std::string>{std::in_place, value};
+
+        } else if (key == "myparam2") {
+            // myparam2 = boost::in_place(value);
+            myparam2 = std::optional<std::string>{std::in_place, value};
+        } else {
             return !strict_;
+        }
 
         return true;
     }
@@ -230,11 +236,11 @@ BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_optional_parameter_type__t
     BOOST_REQUIRE_EQUAL(custom.myscheme, "foo");
     BOOST_REQUIRE_EQUAL(custom.mypath, "part/abc");
     BOOST_REQUIRE(custom.myfragment);
-    BOOST_REQUIRE_EQUAL(custom.myfragment.get(), "myfrag");
+    BOOST_REQUIRE_EQUAL(custom.myfragment.value(), "myfrag");
     BOOST_REQUIRE(custom.myparam1);
-    BOOST_REQUIRE_EQUAL(custom.myparam1.get(), "1");
+    BOOST_REQUIRE_EQUAL(custom.myparam1.value(), "1");
     BOOST_REQUIRE(custom.myparam2);
-    BOOST_REQUIRE_EQUAL(custom.myparam2.get(), "2");
+    BOOST_REQUIRE_EQUAL(custom.myparam2.value(), "2");
 }
 
 BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_unsupported_component__invalid) {

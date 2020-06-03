@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(message_header_tests)
 
@@ -109,7 +110,7 @@ BOOST_AUTO_TEST_CASE(header__constructor_7__always__equals_params) {
 BOOST_AUTO_TEST_CASE(header__from_data__insufficient_bytes__failure) {
     data_chunk data(10);
     message::header header;
-    BOOST_REQUIRE_EQUAL(false, header.from_data(message::header::version_maximum, data));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(header, message::header::version_maximum, data));
     BOOST_REQUIRE_EQUAL(false, header.is_valid());
 }
 
@@ -125,7 +126,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input_canonical_version_
 
     auto const data = expected.to_data(version);
 
-    auto const result = message::header::factory_from_data(version, data);
+    auto const result = create<message::header>(version, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -145,7 +146,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input__success) {
 
     auto const data = expected.to_data(version);
 
-    auto const result = message::header::factory_from_data(version, data);
+    auto const result = create<message::header>(version, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -166,7 +167,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
 
-    auto const result = message::header::factory_from_data(version, istream);
+    auto const result = create<message::header>(version, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -188,7 +189,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success) {
     data_source istream(data);
     istream_reader source(istream);
 
-    auto const result = message::header::factory_from_data(version, source);
+    auto const result = create<message::header>(version, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);

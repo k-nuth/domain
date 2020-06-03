@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_PREFILLED_TRANSACTION_HPP
-#define KTH_MESSAGE_PREFILLED_TRANSACTION_HPP
+#ifndef KTH_DOMAIN_MESSAGE_PREFILLED_TRANSACTION_HPP
+#define KTH_DOMAIN_MESSAGE_PREFILLED_TRANSACTION_HPP
 
 #include <istream>
 
@@ -16,28 +16,15 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API prefilled_transaction {
+class KD_API prefilled_transaction {
 public:
     using list = std::vector<prefilled_transaction>;
     using const_ptr = std::shared_ptr<const prefilled_transaction>;
-
-    static prefilled_transaction factory_from_data(uint32_t version, data_chunk const& data);
-    static prefilled_transaction factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static prefilled_transaction factory_from_data(uint32_t version, R& source) {
-        prefilled_transaction instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static prefilled_transaction factory_from_data(uint32_t version, reader& source);
 
     prefilled_transaction();
     prefilled_transaction(uint64_t index, chain::transaction const& tx);
@@ -52,19 +39,24 @@ public:
     bool operator!=(prefilled_transaction const& x) const;
 
 
-    [[nodiscard]] uint64_t index() const;
+    [[nodiscard]]
+    uint64_t index() const;
+    
     void set_index(uint64_t value);
 
     chain::transaction& transaction();
-    [[nodiscard]] chain::transaction const& transaction() const;
+    
+    [[nodiscard]]
+    chain::transaction const& transaction() const;
+    
     void set_transaction(chain::transaction const& tx);
     void set_transaction(chain::transaction&& tx);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         index_ = source.read_variable_little_endian();
@@ -72,17 +64,18 @@ public:
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_variable_little_endian(index_);
         transaction_.to_data(sink, /*wire*/ true, witness_default()
 #ifdef KTH_CACHED_RPC_DATA        
@@ -91,10 +84,13 @@ public:
                              );
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
 
 private:
@@ -102,7 +98,6 @@ private:
     chain::transaction transaction_;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

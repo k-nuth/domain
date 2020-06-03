@@ -9,8 +9,7 @@
 
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::domain::config {
 
 void inline add_child(pt::ptree& out_list, std::string const& name, const pt::ptree& element, bool json) {
     if (json) {
@@ -37,8 +36,7 @@ pt::ptree property_tree_list(std::string const& name, const Values& values, bool
     pt::ptree list;
     for (auto const& value : values) {
         add_child(list, name, property_list(value), json);
-}
-
+    }
     return list;
 }
 
@@ -52,14 +50,11 @@ pt::ptree property_tree_list(std::string const& name, const Values& values, bool
  * @returns              A new property tree containing the list.
  */
 template <typename Values>
-pt::ptree property_tree_list_of_lists(std::string const& name,
-                                      const Values& values,
-                                      bool json) {
+pt::ptree property_tree_list_of_lists(std::string const& name, const Values& values, bool json) {
     pt::ptree list;
     for (auto const& value : values) {
         add_child(list, name, property_list(value, json), json);
-}
-
+    }
     return list;
 }
 
@@ -83,7 +78,6 @@ pt::ptree property_value_list(std::string const& name, const Values& values, boo
     return list;
 }
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif

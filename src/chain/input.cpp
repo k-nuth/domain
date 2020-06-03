@@ -9,7 +9,7 @@
 
 #include <kth/domain/chain/script.hpp>
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 #include <kth/domain/chain/witness.hpp>
 #endif
 
@@ -20,10 +20,10 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-using namespace bc::wallet;
-using namespace bc::machine;
+using namespace kth::domain::wallet;
+using namespace kth::domain::machine;
 
 // Constructors.
 //-----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ input::addresses_ptr input::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
-// #ifdef KTH_CURRENCY_BCH
+// #if ! defined(KTH_SEGWIT_ENABLED)
 // input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
 //     : previous_output_(previous_output)
 //     , script_(script)
@@ -61,7 +61,7 @@ input::addresses_ptr input::addresses_cache() const {
 //     , sequence_(sequence) 
 // {}
 
-// #ifdef KTH_CURRENCY_BCH
+// #if ! defined(KTH_SEGWIT_ENABLED)
 // input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
 //     : previous_output_(std::move(previous_output))
 //     , script_(std::move(script))
@@ -104,7 +104,7 @@ input& input::operator=(input&& x) noexcept {
 //     return (sequence_ == x.sequence_) 
 //         && (previous_output_ == x.previous_output_) 
 //         && (script_ == x.script_) 
-// #ifndef KTH_CURRENCY_BCH
+// #if defined(KTH_SEGWIT_ENABLED)
 //         && (witness_ == x.witness_)
 // #endif
 //         ;
@@ -113,21 +113,6 @@ input& input::operator=(input&& x) noexcept {
 // bool input::operator!=(input const& x) const {
 //     return !(*this == x);
 // }
-
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-input input::factory_from_data(data_chunk const& data, bool wire, bool witness) {
-    input instance;
-    instance.from_data(data, wire, witness_val(witness));
-    return instance;
-}
-
-input input::factory_from_data(std::istream& stream, bool wire, bool witness) {
-    input instance;
-    instance.from_data(stream, wire, witness_val(witness));
-    return instance;
-}
 
 
 // Accessors.
@@ -143,7 +128,7 @@ void input::set_script(chain::script&& value) {
     invalidate_cache();
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 void input::set_witness(chain::witness const& value) {
     input_basis::set_witness(value);
     invalidate_cache();
@@ -200,4 +185,4 @@ payment_address::list input::addresses() const {
     return addresses;
 }
 
-}  // namespace kth
+} // namespace kth::domain::chain

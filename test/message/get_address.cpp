@@ -5,14 +5,15 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(get_address_tests)
 
 BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
     const message::get_address expected{};
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::get_address::factory_from_data(
+    auto const result = create<message::get_address>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());
@@ -24,7 +25,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream) {
     const message::get_address expected{};
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    auto const result = message::get_address::factory_from_data(
+    auto const result = create<message::get_address>(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());
@@ -37,7 +38,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader) {
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::get_address::factory_from_data(
+    auto const result = create<message::get_address>(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE_EQUAL(0u, data.size());

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_INPUT_HPP
-#define KTH_CHAIN_INPUT_HPP
+#ifndef KTH_DOMAIN_CHAIN_INPUT_HPP
+#define KTH_DOMAIN_CHAIN_INPUT_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -24,13 +24,12 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
-class BC_API input : public input_basis {
+class KD_API input : public input_basis {
 public:
     using list = std::vector<input>;
 
@@ -50,29 +49,13 @@ public:
     input& operator=(input&& x) noexcept;
     input& operator=(input const& x);
 
-    // Operators.
-    //-------------------------------------------------------------------------
-
-    // bool operator==(input const& x) const;
-    // bool operator!=(input const& x) const;
-
-    static input factory_from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    static input factory_from_data(std::istream& stream, bool wire = true, bool witness = false);
-
-    template <typename R, KTH_IS_READER(R)>
-    static input factory_from_data(R& source, bool wire = true, bool witness = false) {
-        input instance;
-        instance.from_data(source, wire, witness_val(witness));
-        return instance;
-    }
-
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     void set_witness(chain::witness const& value);
     void set_witness(chain::witness&& value);
 #endif // KTH_CURRENCY_BCH
@@ -109,8 +92,7 @@ private:
     mutable addresses_ptr addresses_;
 };
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
 //#include <kth/domain/concepts_undef.hpp>
 

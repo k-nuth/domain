@@ -18,7 +18,7 @@
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost::program_options;
 
@@ -122,4 +122,4 @@ std::istream& operator>>(std::istream& input, output& argument) {
     return input;
 }
 
-}  // namespace kth
+} // namespace kth

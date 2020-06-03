@@ -15,12 +15,13 @@
 #include <kth/domain.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 // endorsement format is currently private to bx.
-static bool decode_endorsement(bc::endorsement& endorsement,
+static
+bool decode_endorsement(kth::endorsement& endorsement,
                                std::string const& encoded) {
-    bc::endorsement decoded;
+    kth::endorsement decoded;
     if ( ! decode_base16(decoded, encoded) ||
         (decoded.size() > max_endorsement_size)) {
         return false;
@@ -30,7 +31,8 @@ static bool decode_endorsement(bc::endorsement& endorsement,
     return true;
 }
 
-static std::string encode_endorsement(data_slice signature) {
+static
+std::string encode_endorsement(data_slice signature) {
     return encode_base16(signature);
 }
 
@@ -70,4 +72,4 @@ std::ostream& operator<<(std::ostream& output, const endorsement& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth

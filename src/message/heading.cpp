@@ -13,7 +13,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 size_t heading::maximum_size() {
     // This assumes that the heading doesn't shrink in size.
@@ -33,8 +33,10 @@ size_t heading::maximum_size() {
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
 size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness) {
-    /*    static constexpr size_t vector = sizeof(uint32_t) + hash_size;
-    static constexpr size_t maximum = 3u + vector * max_inventory;
+    /*    static constexpr 
+    size_t vector = sizeof(uint32_t) + hash_size;
+    static constexpr 
+    size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */
 
@@ -44,18 +46,6 @@ size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness) {
 size_t heading::satoshi_fixed_size() {
     return sizeof(uint32_t) + command_size + sizeof(uint32_t) +
            sizeof(uint32_t);
-}
-
-heading heading::factory_from_data(data_chunk const& data) {
-    heading instance;
-    instance.from_data(data);
-    return instance;
-}
-
-heading heading::factory_from_data(std::istream& stream) {
-    heading instance;
-    instance.from_data(stream);
-    return instance;
 }
 
 heading::heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum)
@@ -245,4 +235,4 @@ void heading::set_checksum(uint32_t value) {
     checksum_ = value;
 }
 
-}  // namespace kth
+} // namespace kth

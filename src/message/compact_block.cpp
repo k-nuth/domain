@@ -18,25 +18,11 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/pseudo_random.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const compact_block::command = "cmpctblock";
 uint32_t const compact_block::version_minimum = version::level::bip152;
 uint32_t const compact_block::version_maximum = version::level::bip152;
-
-compact_block compact_block::factory_from_data(uint32_t version, data_chunk const& data) {
-    //std::cout << "compact_block::factory_from_data\n";
-    compact_block instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-compact_block compact_block::factory_from_data(uint32_t version, std::istream& stream) {
-    //std::cout << "compact_block::factory_from_data 2\n";
-    compact_block instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 compact_block compact_block::factory_from_block(message::block const& blk) {
     compact_block instance;
@@ -128,20 +114,6 @@ bool compact_block::from_block(message::block const& block) {
     return true;
 }
 
-bool compact_block::from_data(uint32_t version, data_chunk const& data) {
-    //std::cout << "compact_block::from_data\n";
-
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool compact_block::from_data(uint32_t version, std::istream& stream) {
-    //std::cout << "compact_block::from_data 2\n";
-
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk compact_block::to_data(uint32_t version) const {
     //std::cout << "compact_block::to_data\n";
 
@@ -166,9 +138,9 @@ size_t compact_block::serialized_size(uint32_t version) const {
     //std::cout << "compact_block::serialized_size\n";
 
     auto size = chain::header::satoshi_fixed_size() +
-                message::variable_uint_size(short_ids_.size()) +
+                infrastructure::message::variable_uint_size(short_ids_.size()) +
                 (short_ids_.size() * 6u) +
-                message::variable_uint_size(transactions_.size()) + 8u;
+                infrastructure::message::variable_uint_size(transactions_.size()) + 8u;
 
     // NOTE: Witness flag is controlled by prefilled tx
     for (auto const& tx : transactions_) {
@@ -271,4 +243,4 @@ hash_digest hash(compact_block const& block) {
     return sha256_hash(to_data_header_nonce(block));
 }
 
-}  // namespace kth
+} // namespace kth

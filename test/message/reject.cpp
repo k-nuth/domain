@@ -7,7 +7,8 @@
 #include <kth/domain.hpp>
 #include <string>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 // /Satoshi:0.12.1/
 // Invalid reject payload from [46.101.110.115:8333] bad data stream
@@ -29,7 +30,7 @@ BOOST_AUTO_TEST_SUITE(reject_tests)
 BOOST_AUTO_TEST_CASE(reject__factory_from_data__tx_nonstandard_empty_data__valid) {
     data_chunk payload;
     BOOST_REQUIRE(decode_base16(payload, MALFORMED_REJECT));
-    auto const reject = message::reject::factory_from_data(version_maximum, payload);
+    auto const reject = create<message::reject>(version_maximum, payload);
     BOOST_REQUIRE(reject.is_valid());
 }
 
@@ -92,7 +93,7 @@ BOOST_AUTO_TEST_CASE(reject__constructor_5__always__equals_params) {
 BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{0xab};
     message::reject instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version_maximum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version_maximum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure) {
@@ -104,7 +105,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::reject::version_minimum - 1, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::reject::version_minimum - 1, raw));
 }
 
 BOOST_AUTO_TEST_CASE(reject__from_data__code_malformed__success) {
@@ -116,7 +117,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_malformed__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -130,7 +131,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_invalid__success) {
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -143,7 +144,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_obsolete__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -156,7 +157,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_duplicate__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -169,7 +170,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_nonstandard__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -182,7 +183,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_dust__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -195,7 +196,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_insufficient_fee__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -209,7 +210,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_checkpoint__success) {
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -223,7 +224,7 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_undefined__success) {
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(instance.from_data(message::reject::version_minimum, raw));
+    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
     BOOST_REQUIRE(expected == instance);
 }
 
@@ -235,7 +236,7 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_1__valid_input__success) {
         data);
 
     auto const data = expected.to_data(version_maximum);
-    auto const result = message::reject::factory_from_data(version_maximum, data);
+    auto const result = create<message::reject>(version_maximum, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
@@ -251,7 +252,7 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_2__valid_input__success) {
 
     auto const data = expected.to_data(version_maximum);
     data_source istream(data);
-    auto const result = message::reject::factory_from_data(version_maximum, istream);
+    auto const result = create<message::reject>(version_maximum, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
@@ -268,7 +269,7 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(version_maximum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::reject::factory_from_data(version_maximum, source);
+    auto const result = create<message::reject>(version_maximum, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));

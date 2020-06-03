@@ -13,23 +13,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const filter_add::command = "filteradd";
 uint32_t const filter_add::version_minimum = version::level::bip37;
 uint32_t const filter_add::version_maximum = version::level::maximum;
-
-filter_add filter_add::factory_from_data(uint32_t version, data_chunk const& data) {
-    filter_add instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-filter_add filter_add::factory_from_data(uint32_t version, std::istream& stream) {
-    filter_add instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 filter_add::filter_add(data_chunk const& data)
     : data_(data) {
@@ -38,19 +26,6 @@ filter_add::filter_add(data_chunk const& data)
 filter_add::filter_add(data_chunk&& data)
     : data_(std::move(data)) {
 }
-
-// filter_add::filter_add(filter_add const& x)
-//     : filter_add(x.data_) {
-// }
-
-// filter_add::filter_add(filter_add&& x) noexcept
-//     : filter_add(std::move(x.data_)) 
-// {}
-
-// filter_add& filter_add::operator=(filter_add&& x) noexcept {
-//     data_ = std::move(x.data_);
-//     return *this;
-// }
 
 bool filter_add::operator==(filter_add const& x) const {
     return (data_ == x.data_);
@@ -67,16 +42,6 @@ bool filter_add::is_valid() const {
 void filter_add::reset() {
     data_.clear();
     data_.shrink_to_fit();
-}
-
-bool filter_add::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool filter_add::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
 }
 
 data_chunk filter_add::to_data(uint32_t version) const {
@@ -96,7 +61,7 @@ void filter_add::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t filter_add::serialized_size(uint32_t /*version*/) const {
-    return message::variable_uint_size(data_.size()) + data_.size();
+    return infrastructure::message::variable_uint_size(data_.size()) + data_.size();
 }
 
 data_chunk& filter_add::data() {
@@ -115,4 +80,4 @@ void filter_add::set_data(data_chunk&& value) {
     data_ = std::move(value);
 }
 
-}  // namespace kth
+} // namespace kth

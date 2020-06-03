@@ -13,9 +13,10 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/infrastructure/config/base16.hpp>
 
-namespace kth::config {
+namespace kth::domain::config {
 
 using namespace boost::program_options;
+using namespace infrastructure::config;
 
 transaction::transaction(std::string const& hexcode) {
     std::stringstream(hexcode) >> *this;
@@ -53,4 +54,4 @@ std::ostream& operator<<(std::ostream& output, transaction const& argument) {
     return output;
 }
 
-}  // namespace kth
+} // namespace kth

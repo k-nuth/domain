@@ -12,12 +12,11 @@
 
 #include <kth/domain/keoken/constants.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 
-using bc::data_chunk;
-using bc::machine::opcode;
-using bc::machine::operation;
+using kth::data_chunk;
+using kth::domain::machine::opcode;
+using kth::domain::machine::operation;
 
 template <typename I>
 data_chunk get_keoken_data(I f, I l) {
@@ -65,7 +64,7 @@ data_chunk get_keoken_data(operation::list const& ops) {
     return get_keoken_data(ops.begin(), ops.end());
 }
 
-data_chunk first_keoken_output(bc::chain::transaction const& tx) {
+data_chunk first_keoken_output(kth::domain::chain::transaction const& tx) {
     //precondition: tx is a confirmed transaction
     for (auto const& out : tx.outputs()) {
         auto const& keo_data = get_keoken_data(out.script().operations());
@@ -76,5 +75,5 @@ data_chunk first_keoken_output(bc::chain::transaction const& tx) {
     return data_chunk{};
 }
 
-}  // namespace keoken
-}  // namespace kth
+} // namespace keoken
+} // namespace kth

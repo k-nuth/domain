@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(heading_tests)
 
@@ -82,7 +83,7 @@ BOOST_AUTO_TEST_CASE(heading__from_data__insufficient_bytes__failure) {
         0xab, 0xcd};
 
     heading instance;
-    BOOST_REQUIRE(!instance.from_data(raw));
+    BOOST_REQUIRE(!entity_from_data(instance, raw));
 }
 
 BOOST_AUTO_TEST_CASE(heading__factory_from_data_1__valid_input__success) {
@@ -93,7 +94,7 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_1__valid_input__success) {
         0u};
 
     auto const data = expected.to_data();
-    auto const result = heading::factory_from_data(data);
+    auto const result = create<heading>(data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
@@ -108,7 +109,7 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_2__valid_input__success) {
 
     auto const data = expected.to_data();
     data_source istream(data);
-    auto const result = heading::factory_from_data(istream);
+    auto const result = create<heading>(istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
@@ -124,7 +125,7 @@ BOOST_AUTO_TEST_CASE(heading__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data();
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = heading::factory_from_data(source);
+    auto const result = create<heading>(source);
     BOOST_REQUIRE_EQUAL(data.size(), heading::satoshi_fixed_size());
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -298,7 +299,7 @@ BOOST_AUTO_TEST_CASE(heading__maximum_size__always__matches_satoshi_fixed_size) 
     BOOST_REQUIRE_EQUAL(heading::satoshi_fixed_size(), heading::maximum_size());
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 // TODO(kth): This test is broken for networks bigger than 4Mbs
 //BOOST_AUTO_TEST_CASE(heading__maximum_payload_size__non_witness__matches_expected)
 //{

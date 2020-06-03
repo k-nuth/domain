@@ -13,14 +13,13 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between a base58-string:number and
  * a vector of chain::output.
  */
-class BC_API output {
+class KD_API output {
 public:
 
     output();
@@ -32,11 +31,20 @@ public:
     output(std::string const& tuple);
 
     /// Parsed properties
-    [[nodiscard]] bool is_stealth() const;
-    [[nodiscard]] uint64_t amount() const;
-    [[nodiscard]] uint8_t version() const;
-    [[nodiscard]] chain::script const& script() const;
-    [[nodiscard]] short_hash const& pay_to_hash() const;
+    [[nodiscard]]
+    bool is_stealth() const;
+    
+    [[nodiscard]]
+    uint64_t amount() const;
+    
+    [[nodiscard]]
+    uint8_t version() const;
+    
+    [[nodiscard]]
+    chain::script const& script() const;
+    
+    [[nodiscard]]
+    short_hash const& pay_to_hash() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -58,7 +66,6 @@ private:
     short_hash pay_to_hash_;
 };
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif

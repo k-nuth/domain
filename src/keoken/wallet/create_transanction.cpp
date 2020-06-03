@@ -12,22 +12,20 @@
 #include <kth/domain/keoken/message/create_asset.hpp>
 #include <kth/domain/keoken/message/send_tokens.hpp>
 
-namespace kth {
-namespace keoken {
-namespace wallet {
+namespace kth::keoken::wallet {
 
-// using namespace bc;
+// using namespace kd;
 using kth::data_chunk;
 using kth::ec_secret;
-using kth::chain::input_point;
-using kth::chain::output;
-using kth::chain::script;
-using kth::chain::transaction;
+using kth::domain::chain::input_point;
+using kth::domain::chain::output;
+using kth::domain::chain::script;
+using kth::domain::chain::transaction;
 using kth::error::success;
-using kth::wallet::ec_public;
-using kth::wallet::payment_address;
-using kth::wallet::raw_output_list;
-using kth::wallet::tx_encode;
+using kth::domain::wallet::ec_public;
+using kth::domain::wallet::payment_address;
+using kth::domain::wallet::raw_output_list;
+using kth::domain::wallet::tx_encode;
 
 namespace detail {
 // For internal use only
@@ -36,24 +34,24 @@ result_t sign_and_set(script const& output_script,
                       ec_public const& public_key,
                       uint64_t amount,
                       transaction& tx) {
-    auto sig = kth::wallet::input_signature_bch(private_key, output_script, tx, amount, 0);
+    auto sig = kth::domain::wallet::input_signature_bch(private_key, output_script, tx, amount, 0);
     if (sig.first != success) {
         return {sig.first, {}};
     }
 
-    return kth::wallet::input_set(sig.second, public_key, tx);
+    return kth::domain::wallet::input_set(sig.second, public_key, tx);
 }
 
-}  // namespace detail
+} // namespace detail
 
 output create_keoken_output(data_chunk const& keoken_message) {
     // data_chunk header;
     // kth::decode_base16(header,"00004b50");
 
     // Note: Adding an op_code using {data_chunk} automatically adds the size on front of the message
-    kth::machine::operation::list op_codes = {
-        {kth::machine::opcode::return_},
-        bc::to_chunk(protocol_name),
+    kth::domain::machine::operation::list op_codes = {
+        {kth::domain::machine::opcode::return_},
+        kth::to_chunk(protocol_name),
         {keoken_message}};
 
     return {0, op_codes};
@@ -140,6 +138,6 @@ result_t send_token_tx_complete(input_point const& output_to_spend,
     return {success, sign_and_set_result.second};
 }
 
-}  // namespace wallet
-}  // namespace keoken
-}  // namespace kth
+} // namespace wallet
+} // namespace keoken
+} // namespace kth

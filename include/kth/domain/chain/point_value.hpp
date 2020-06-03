@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_POINT_VALUE_HPP
-#define KTH_CHAIN_POINT_VALUE_HPP
+#ifndef KTH_DOMAIN_CHAIN_POINT_VALUE_HPP
+#define KTH_DOMAIN_CHAIN_POINT_VALUE_HPP
 
 #include <cstdint>
 #include <vector>
@@ -11,11 +11,10 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
 /// A valued point, does not implement specialized serialization methods.
-class BC_API point_value : public point {
+class KD_API point_value : public point {
 public:
     using list = std::vector<point_value>;
 
@@ -44,14 +43,15 @@ public:
     // Properties (accessors).
     //-------------------------------------------------------------------------
 
-    [[nodiscard]] uint64_t value() const;
+    [[nodiscard]]
+    uint64_t value() const;
+    
     void set_value(uint64_t value);
 
 private:
     uint64_t value_{0};
 };
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
 #endif

@@ -11,13 +11,12 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/wallet/encrypted_keys.hpp>
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 /**
  * Serialization helper to convert between base58 string and bip38 token.
  */
-class BC_API ek_token {
+class KD_API ek_token {
 public:
     /// Constructors.
     ek_token();
@@ -41,14 +40,17 @@ public:
     operator encrypted_token const&() const;
 
     /// Serializer.
-    [[nodiscard]] std::string encoded() const;
+    [[nodiscard]]
+    std::string encoded() const;
 
     /// Accessors.
-    [[nodiscard]] encrypted_token const& token() const;
+    [[nodiscard]]
+    encrypted_token const& token() const;
 
 private:
     /// Factories.
-    static ek_token from_string(std::string const& encoded);
+    static
+    ek_token from_string(std::string const& encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.
@@ -56,7 +58,6 @@ private:
     encrypted_token token_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(prefilled_transaction_tests)
 
@@ -53,7 +54,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__constructor_5__always__equals_params
 BOOST_AUTO_TEST_CASE(prefilled_transaction__from_data__insufficient_bytes__failure) {
     data_chunk const raw{1};
     message::prefilled_transaction instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_1__valid_input__success) {
@@ -66,7 +67,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_1__valid_input__su
             {}});
 
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::prefilled_transaction::factory_from_data(
+    auto const result = create<message::prefilled_transaction>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -84,7 +85,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_2__valid_input__su
 
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    auto const result = message::prefilled_transaction::factory_from_data(
+    auto const result = create<message::prefilled_transaction>(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -103,7 +104,7 @@ BOOST_AUTO_TEST_CASE(prefilled_transaction__factory_from_data_3__valid_input__su
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::prefilled_transaction::factory_from_data(
+    auto const result = create<message::prefilled_transaction>(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

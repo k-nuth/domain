@@ -6,7 +6,8 @@
 #include <boost/test/unit_test.hpp>
 #include <chrono>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(chain_header_tests)
 
@@ -87,7 +88,7 @@ BOOST_AUTO_TEST_CASE(header__from_data__insufficient_bytes__failure) {
 
     chain::header header;
 
-    BOOST_REQUIRE(!header.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(header, data));
     BOOST_REQUIRE(!header.is_valid());
 }
 
@@ -102,7 +103,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input__success) {
 
     auto const data = expected.to_data();
 
-    auto const result = chain::header::factory_from_data(data);
+    auto const result = create<chain::header>(data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -120,7 +121,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success) {
     auto const data = expected.to_data();
     data_source istream(data);
 
-    auto const result = chain::header::factory_from_data(istream);
+    auto const result = create<chain::header>(istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -139,7 +140,7 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success) {
     data_source istream(data);
     istream_reader source(istream);
 
-    auto const result = chain::header::factory_from_data(source);
+    auto const result = create<chain::header>(source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);

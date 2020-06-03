@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_HEADER_MESSAGE_HPP
-#define KTH_MESSAGE_HEADER_MESSAGE_HPP
+#ifndef KTH_DOMAIN_MESSAGE_HEADER_MESSAGE_HPP
+#define KTH_DOMAIN_MESSAGE_HEADER_MESSAGE_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -18,13 +18,12 @@
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API header : public chain::header {
+class KD_API header : public chain::header {
 public:
     using list = std::vector<header>;
     using ptr = std::shared_ptr<header>;
@@ -32,18 +31,8 @@ public:
     using ptr_list = std::vector<ptr>;
     using const_ptr_list = std::vector<const_ptr>;
 
-    static header factory_from_data(uint32_t version, data_chunk const& data);
-    static header factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static header factory_from_data(uint32_t version, R& source) {
-        header instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static header factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     header() = default;
     header(uint32_t version, hash_digest const& previous_block_hash, hash_digest const& merkle, uint32_t timestamp, uint32_t bits, uint32_t nonce);
@@ -53,34 +42,55 @@ public:
 
     header& operator=(chain::header const& x);
 
-    /// This class is move assignable but not copy assignable.
+    /// This class is move assignable but not copy assignable. //TODO(fernando): why?
     header& operator=(header&& x) = default;
     header& operator=(header const& /*x*/) /*= delete*/;
 
-    bool operator==(chain::header const& x) const;
-    bool operator!=(chain::header const& x) const;
-    bool operator==(header const& x) const;
-    bool operator!=(header const& x) const;
+    friend
+    bool operator==(header const& x, header const& y) {
+        return chain::header(x) == chain::header(y);
+    }
 
+    friend
+    bool operator!=(header const& x, header const& y) {
+        return !(x == y);    
+    }
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    friend
+    bool operator==(header const& x, chain::header const& y) {
+        return chain::header(x) == y;
+    }
 
+    friend
+    bool operator!=(header const& x, chain::header const& y) {
+        return !(x == y);    
+    }
+
+    friend
+    bool operator==(chain::header const& x, header const& y) {
+        return x == chain::header(y);
+    }
+
+    friend
+    bool operator!=(chain::header const& x, header const& y) {
+        return !(x == y);    
+    }
+    
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         if ( ! chain::header::from_data(source)) {
             return false;
-}
+        }
 
         // The header message must trail a zero byte (yes, it's stoopid).
         // bitcoin.org/en/developer-reference#headers
         if (version != version::level::canonical && source.read_byte() != 0x00) {
             source.invalidate();
-}
+        }
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
@@ -101,12 +111,16 @@ public:
     size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

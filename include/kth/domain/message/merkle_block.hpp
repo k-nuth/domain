@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_MERKLE_BLOCK_HPP
-#define KTH_MESSAGE_MERKLE_BLOCK_HPP
+#ifndef KTH_DOMAIN_MESSAGE_MERKLE_BLOCK_HPP
+#define KTH_DOMAIN_MESSAGE_MERKLE_BLOCK_HPP
 
 #include <istream>
 #include <memory>
@@ -19,64 +19,55 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API merkle_block {
+class KD_API merkle_block {
 public:
     using list = std::vector<merkle_block>;
     using ptr = std::shared_ptr<merkle_block>;
     using const_ptr = std::shared_ptr<const merkle_block>;
-
-    static merkle_block factory_from_data(uint32_t version, data_chunk const& data);
-    static merkle_block factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static merkle_block factory_from_data(uint32_t version, R& source) {
-        merkle_block instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static merkle_block factory_from_data(uint32_t version, reader& source);
 
     merkle_block() = default;
     merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags);
     merkle_block(chain::header const& header, size_t total_transactions, hash_list&& hashes, data_chunk&& flags);
     merkle_block(chain::block const& block);
 
-    // merkle_block(merkle_block const& x) = default;
-    // merkle_block(merkle_block&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // merkle_block& operator=(merkle_block&& x) = default;
-    // merkle_block& operator=(merkle_block const&) = default;
-
     bool operator==(merkle_block const& x) const;
     bool operator!=(merkle_block const& x) const;
 
-
     chain::header& header();
-    [[nodiscard]] chain::header const& header() const;
+    
+    [[nodiscard]]
+    chain::header const& header() const;
+    
     void set_header(chain::header const& value);
 
-    [[nodiscard]] size_t total_transactions() const;
+    [[nodiscard]]
+    size_t total_transactions() const;
+    
     void set_total_transactions(size_t value);
 
     hash_list& hashes();
-    [[nodiscard]] hash_list const& hashes() const;
+    
+    [[nodiscard]]
+    hash_list const& hashes() const;
+    
     void set_hashes(hash_list const& value);
     void set_hashes(hash_list&& value);
 
     data_chunk& flags();
-    [[nodiscard]] data_chunk const& flags() const;
+    
+    [[nodiscard]]
+    data_chunk const& flags() const;
+    
     void set_flags(data_chunk const& value);
     void set_flags(data_chunk&& value);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
@@ -113,12 +104,13 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         header_.to_data(sink);
 
         auto const total32 = safe_unsigned<uint32_t>(total_transactions_);
@@ -127,21 +119,31 @@ public:
 
         for (auto const& hash : hashes_) {
             sink.write_hash(hash);
-}
+        }
 
         sink.write_variable_little_endian(flags_.size());
         sink.write_bytes(flags_);
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 
 private:
     chain::header header_;
@@ -150,7 +152,6 @@ private:
     data_chunk flags_;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

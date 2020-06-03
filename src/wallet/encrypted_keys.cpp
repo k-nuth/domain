@@ -29,49 +29,56 @@
 #include "parse_encrypted_keys/parse_encrypted_public.hpp"
 #include "parse_encrypted_keys/parse_encrypted_token.hpp"
 
-namespace kth::wallet {
+namespace kth::domain::wallet {
 
 // Alias commonly-used constants for brevity.
 static constexpr auto half = half_hash_size;
 static constexpr auto quarter = quarter_hash_size;
 
 // Ensure that hash sizes are aligned with AES block size.
-static_assert(2 * quarter == bc::aes256_block_size, "oops!");
+static_assert(2 * quarter == kth::aes256_block_size, "oops!");
 
 // address_
 // ----------------------------------------------------------------------------
 
-static hash_digest address_hash(payment_address const& address) {
+static
+hash_digest address_hash(payment_address const& address) {
     return bitcoin_hash(to_chunk(address.encoded()));
 }
 
-static bool address_salt(ek_salt& salt, payment_address const& address) {
+static
+bool address_salt(ek_salt& salt, payment_address const& address) {
     salt = slice<0, ek_salt_size>(address_hash(address));
     return true;
 }
 
-static bool address_salt(ek_salt& salt, ec_compressed const& point, uint8_t version, bool compressed) {
+static
+bool address_salt(ek_salt& salt, ec_compressed const& point, uint8_t version, bool compressed) {
     payment_address address({point, compressed}, version);
     return address ? address_salt(salt, address) : false;
 }
 
-static bool address_salt(ek_salt& salt, ec_secret const& secret, uint8_t version, bool compressed) {
+static
+bool address_salt(ek_salt& salt, ec_secret const& secret, uint8_t version, bool compressed) {
     payment_address address({secret, version, compressed});
     return address ? address_salt(salt, address) : false;
 }
 
-static bool address_validate(const ek_salt& salt,
+static
+bool address_validate(const ek_salt& salt,
                              payment_address const& address) {
     auto const hash = address_hash(address);
     return std::equal(hash.begin(), hash.begin() + salt.size(), salt.begin());
 }
 
-static bool address_validate(const ek_salt& salt, ec_compressed const& point, uint8_t version, bool compressed) {
+static
+bool address_validate(const ek_salt& salt, ec_compressed const& point, uint8_t version, bool compressed) {
     payment_address address({point, compressed}, version);
     return address ? address_validate(salt, address) : false;
 }
 
-static bool address_validate(const ek_salt& salt, ec_secret const& secret, uint8_t version, bool compressed) {
+static
+bool address_validate(const ek_salt& salt, ec_secret const& secret, uint8_t version, bool compressed) {
     payment_address address({secret, version, compressed});
     return address ? address_validate(salt, address) : false;
 }
@@ -79,11 +86,13 @@ static bool address_validate(const ek_salt& salt, ec_secret const& secret, uint8
 // point_
 // ----------------------------------------------------------------------------
 
-static hash_digest point_hash(ec_compressed const& point) {
+static
+hash_digest point_hash(ec_compressed const& point) {
     return slice<1, ec_compressed_size>(point);
 }
 
-static one_byte point_sign(uint8_t byte, hash_digest const& hash) {
+static
+one_byte point_sign(uint8_t byte, hash_digest const& hash) {
     static constexpr uint8_t low_bit_mask = 0x01;
     uint8_t const last_byte = hash.back();
     uint8_t const last_byte_odd_field = last_byte & low_bit_mask;
@@ -91,24 +100,28 @@ static one_byte point_sign(uint8_t byte, hash_digest const& hash) {
     return to_array(sign_byte);
 }
 
-static one_byte point_sign(const one_byte& single, hash_digest const& hash) {
+static
+one_byte point_sign(const one_byte& single, hash_digest const& hash) {
     return point_sign(single.front(), hash);
 }
 
 // scrypt_
 // ----------------------------------------------------------------------------
 
-static hash_digest scrypt_token(data_slice data, data_slice salt) {
+static
+hash_digest scrypt_token(data_slice data, data_slice salt) {
     // Arbitrary scrypt parameters from BIP38.
     return scrypt<hash_size>(data, salt, 16384u, 8u, 8u);
 }
 
-static long_hash scrypt_pair(data_slice data, data_slice salt) {
+static
+long_hash scrypt_pair(data_slice data, data_slice salt) {
     // Arbitrary scrypt parameters from BIP38.
     return scrypt<long_hash_size>(data, salt, 1024u, 1u, 1u);
 }
 
-static long_hash scrypt_private(data_slice data, data_slice salt) {
+static
+long_hash scrypt_private(data_slice data, data_slice salt) {
     // Arbitrary scrypt parameters from BIP38.
     return scrypt<long_hash_size>(data, salt, 16384u, 8u, 8u);
 }
@@ -116,7 +129,8 @@ static long_hash scrypt_private(data_slice data, data_slice salt) {
 // set_flags
 // ----------------------------------------------------------------------------
 
-static one_byte set_flags(bool compressed, bool lot_sequence, bool multiplied) {
+static
+one_byte set_flags(bool compressed, bool lot_sequence, bool multiplied) {
     uint8_t byte = 0;
 
     if (compressed) {
@@ -134,18 +148,21 @@ static one_byte set_flags(bool compressed, bool lot_sequence, bool multiplied) {
     return to_array(byte);
 }
 
-static one_byte set_flags(bool compressed, bool lot_sequence) {
+static
+one_byte set_flags(bool compressed, bool lot_sequence) {
     return set_flags(compressed, lot_sequence, false);
 }
 
-static one_byte set_flags(bool compressed) {
+static
+one_byte set_flags(bool compressed) {
     return set_flags(compressed, false);
 }
 
 // create_key_pair
 // ----------------------------------------------------------------------------
 
-static void create_private_key(encrypted_private& out_private,
+static
+void create_private_key(encrypted_private& out_private,
                                const one_byte& flags,
                                const ek_salt& salt,
                                const ek_entropy& entropy,
@@ -173,7 +190,8 @@ static void create_private_key(encrypted_private& out_private,
                          encrypt2});
 }
 
-static bool create_public_key(encrypted_public& out_public,
+static
+bool create_public_key(encrypted_public& out_public,
                               const one_byte& flags,
                               const ek_salt& salt,
                               const ek_entropy& entropy,
@@ -259,11 +277,13 @@ bool create_key_pair(encrypted_private& out_private, ec_compressed& out_point, e
 // ----------------------------------------------------------------------------
 
 // This call requires an ICU build, the other excluded calls are dependencies.
-static data_chunk normal(std::string const& passphrase) {
+static
+data_chunk normal(std::string const& passphrase) {
     return to_chunk(to_normal_nfc_form(passphrase));
 }
 
-static bool create_token(encrypted_token& out_token,
+static
+bool create_token(encrypted_token& out_token,
                          std::string const& passphrase,
                          data_slice owner_salt,
                          const ek_entropy& owner_entropy,
@@ -338,7 +358,8 @@ bool encrypt(encrypted_private& out_private, ec_secret const& secret, std::strin
 // decrypt private_key
 // ----------------------------------------------------------------------------
 
-static bool decrypt_multiplied(ec_secret& out_secret,
+static
+bool decrypt_multiplied(ec_secret& out_secret,
                                const parse_encrypted_private& parse,
                                std::string const& passphrase) {
     auto secret = scrypt_token(normal(passphrase), parse.owner_salt());
@@ -376,7 +397,8 @@ static bool decrypt_multiplied(ec_secret& out_secret,
     return true;
 }
 
-static bool decrypt_secret(ec_secret& out_secret,
+static
+bool decrypt_secret(ec_secret& out_secret,
                            const parse_encrypted_private& parse,
                            std::string const& passphrase) {
     auto encrypt1 = splice(parse.entropy(), parse.data1());
@@ -459,4 +481,4 @@ bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compresse
 
 #endif  // WITH_ICU
 
-}  // namespace kth
+} // namespace kth

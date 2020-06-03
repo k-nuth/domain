@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(inventory_vector_tests)
 
@@ -95,7 +96,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__constructor_5__always__equals_params) {
 BOOST_AUTO_TEST_CASE(inventory_vector__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{1};
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version::level::minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success) {
@@ -108,7 +109,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success
 
     static auto const version = version::level::minimum;
     auto const data = expected.to_data(version);
-    auto const result = inventory_vector::factory_from_data(version, data);
+    auto const result = create<inventory_vector>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -126,7 +127,7 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_2__valid_input__success
     static auto const version = version::level::minimum;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto const result = inventory_vector::factory_from_data(version, istream);
+    auto const result = create<inventory_vector>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -145,14 +146,14 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_3__valid_input__success
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = inventory_vector::factory_from_data(version, source);
+    auto const result = create<inventory_vector>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
     BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
 }
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
 BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__error__unchanged) {
     static auto const expected = inventory_vector::type_id::error;
     inventory_vector instance{expected, {}};

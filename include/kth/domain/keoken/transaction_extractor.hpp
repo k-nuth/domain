@@ -8,12 +8,11 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace keoken {
+namespace kth::keoken {
 
-bc::data_chunk first_keoken_output(bc::chain::transaction const& tx);
+kth::data_chunk first_keoken_output(kth::domain::chain::transaction const& tx);
 
-}  // namespace keoken
-}  // namespace kth
+} // namespace keoken
+} // namespace kth
 
 #endif  //KTH_KEOKEN_TRANSACTION_EXTRACTOR_HPP_

@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(block_transactions_tests)
 
@@ -87,7 +88,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_bytes__failure)
     data_chunk const raw{0xab, 0xcd};
     message::block_transactions instance{};
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::block_transactions::version_minimum, raw));
 }
 
@@ -120,7 +121,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_transaction_byt
 
     message::block_transactions instance{};
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::block_transactions::version_minimum, raw));
 }
 
@@ -153,14 +154,14 @@ BOOST_AUTO_TEST_CASE(block_transactions__from_data__insufficient_version__failur
         "00"));
 
     message::block_transactions expected;
-    expected.from_data(message::block_transactions::version_minimum, raw);
+    entity_from_data(expected, message::block_transactions::version_minimum, raw);
 
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
     message::block_transactions instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::block_transactions::version_minimum - 1, data));
 }
 
@@ -193,13 +194,13 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_1__valid_input__succe
         "00"));
 
     message::block_transactions expected;
-    expected.from_data(message::block_transactions::version_minimum, raw);
+    entity_from_data(expected, message::block_transactions::version_minimum, raw);
 
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
-    auto const result = message::block_transactions::factory_from_data(
+    auto const result = create<message::block_transactions>(
         message::block_transactions::version_minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -241,14 +242,14 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_2__valid_input__succe
         "00"));
 
     message::block_transactions expected;
-    expected.from_data(message::block_transactions::version_minimum, raw);
+    entity_from_data(expected, message::block_transactions::version_minimum, raw);
 
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
 
     BOOST_REQUIRE(raw == data);
     data_source istream(data);
-    auto result = message::block_transactions::factory_from_data(
+    auto result = create<message::block_transactions>(
         message::block_transactions::version_minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -289,7 +290,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_3__valid_input__succe
         "00"));
 
     message::block_transactions expected;
-    expected.from_data(message::block_transactions::version_minimum, raw);
+    entity_from_data(expected, message::block_transactions::version_minimum, raw);
 
     auto const data = expected.to_data(
         message::block_transactions::version_minimum);
@@ -297,7 +298,7 @@ BOOST_AUTO_TEST_CASE(block_transactions__factory_from_data_3__valid_input__succe
     BOOST_REQUIRE(raw == data);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::block_transactions::factory_from_data(
+    auto const result = create<message::block_transactions>(
         message::block_transactions::version_minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

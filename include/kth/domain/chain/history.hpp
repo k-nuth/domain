@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_HISTORY_HPP
-#define KTH_CHAIN_HISTORY_HPP
+#ifndef KTH_DOMAIN_CHAIN_HISTORY_HPP
+#define KTH_DOMAIN_CHAIN_HISTORY_HPP
 
 #include <cstdint>
 #include <vector>
@@ -13,8 +13,7 @@
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/define.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
 /// Use "kind" for union differentiation.
 enum class point_kind : uint32_t {
@@ -23,7 +22,7 @@ enum class point_kind : uint32_t {
 };
 
 /// This structure models the client-server protocol in v1/v2/v3.
-struct BC_API history_compact {
+struct KD_API history_compact {
     using list = std::vector<history_compact>;
 
     // The type of point (output or spend).
@@ -49,7 +48,7 @@ struct BC_API history_compact {
 /// This structure is used between client and API callers in v3.
 /// This structure models the client-server protocol in v1/v2.
 /// The height values here are 64 bit, but 32 bits on the wire.
-struct BC_API history {
+struct KD_API history {
     using list = std::vector<history>;
 
     /// If there is no output this is null_hash:max.
@@ -71,7 +70,6 @@ struct BC_API history {
     };
 };
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
 #endif

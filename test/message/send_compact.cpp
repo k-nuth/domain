@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(send_compact_tests)
 
@@ -43,7 +44,7 @@ BOOST_AUTO_TEST_CASE(send_compact__constructor_4__always__equals_params) {
 BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_1__valid_input__success) {
     const message::send_compact expected{true, 164};
     auto const data = expected.to_data(message::send_compact::version_minimum);
-    auto const result = message::send_compact::factory_from_data(
+    auto const result = create<message::send_compact>(
         message::send_compact::version_minimum, data);
 
     BOOST_REQUIRE_EQUAL(
@@ -58,7 +59,7 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_2__valid_input__success) {
     const message::send_compact expected{false, 5};
     auto const data = expected.to_data(message::send_compact::version_minimum);
     data_source istream(data);
-    auto const result = message::send_compact::factory_from_data(
+    auto const result = create<message::send_compact>(
         message::send_compact::version_minimum, istream);
 
     BOOST_REQUIRE_EQUAL(
@@ -74,7 +75,7 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(message::send_compact::version_minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::send_compact::factory_from_data(
+    auto const result = create<message::send_compact>(
         message::send_compact::version_minimum, source);
 
     BOOST_REQUIRE_EQUAL(
@@ -88,7 +89,7 @@ BOOST_AUTO_TEST_CASE(send_compact__factory_from_data_3__valid_input__success) {
 BOOST_AUTO_TEST_CASE(send_compact__from_data_1__invalid_mode_byte__failure) {
     data_chunk raw_data{0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
     message::send_compact msg;
-    bool result = msg.from_data(message::send_compact::version_minimum, raw_data);
+    bool result = entity_from_data(msg, message::send_compact::version_minimum, raw_data);
     BOOST_REQUIRE(!result);
 }
 
@@ -96,7 +97,7 @@ BOOST_AUTO_TEST_CASE(send_compact__from_data_1__insufficient_version__failure) {
     const message::send_compact expected{true, 257};
     data_chunk raw_data = expected.to_data(message::send_compact::version_minimum);
     message::send_compact msg;
-    bool result = msg.from_data(message::send_compact::version_minimum - 1, raw_data);
+    bool result = entity_from_data(msg, message::send_compact::version_minimum - 1, raw_data);
     BOOST_REQUIRE(!result);
 }
 

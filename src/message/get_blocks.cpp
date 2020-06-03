@@ -12,30 +12,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const get_blocks::command = "getblocks";
 uint32_t const get_blocks::version_minimum = version::level::minimum;
 uint32_t const get_blocks::version_maximum = version::level::maximum;
-
-get_blocks get_blocks::factory_from_data(uint32_t version, data_chunk const& data) {
-    get_blocks instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-get_blocks get_blocks::factory_from_data(uint32_t version, std::istream& stream) {
-    get_blocks instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
-//get_blocks get_blocks::factory_from_data(uint32_t version, reader& source)
-//{
-//    get_blocks instance;
-//    instance.from_data(version, source);
-//    return instance;
-//}
 
 get_blocks::get_blocks()
     : stop_hash_(null_hash) {
@@ -48,20 +29,6 @@ get_blocks::get_blocks(hash_list const& start, hash_digest const& stop)
 get_blocks::get_blocks(hash_list&& start, hash_digest const& stop)
     : start_hashes_(std::move(start)), stop_hash_(stop) {
 }
-
-// get_blocks::get_blocks(get_blocks const& x)
-//     : get_blocks(x.start_hashes_, x.stop_hash_) {
-// }
-
-// get_blocks::get_blocks(get_blocks&& x) noexcept
-//     : get_blocks(std::move(x.start_hashes_), std::move(x.stop_hash_)) 
-// {}
-
-// get_blocks& get_blocks::operator=(get_blocks&& x) noexcept {
-//     start_hashes_ = std::move(x.start_hashes_);
-//     stop_hash_ = std::move(x.stop_hash_);
-//     return *this;
-// }
 
 bool get_blocks::operator==(get_blocks const& x) const {
     auto result = (start_hashes_.size() == x.start_hashes_.size()) &&
@@ -88,16 +55,6 @@ void get_blocks::reset() {
     stop_hash_.fill(0);
 }
 
-bool get_blocks::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool get_blocks::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk get_blocks::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -115,7 +72,7 @@ void get_blocks::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t get_blocks::serialized_size(uint32_t /*version*/) const {
-    return size_t(36) + message::variable_uint_size(start_hashes_.size()) + hash_size * start_hashes_.size();
+    return size_t(36) + infrastructure::message::variable_uint_size(start_hashes_.size()) + hash_size * start_hashes_.size();
 }
 
 hash_list& get_blocks::start_hashes() {
@@ -146,4 +103,4 @@ void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
 }
 
-}  // namespace kth
+} // namespace kth

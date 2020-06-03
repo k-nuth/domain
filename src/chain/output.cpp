@@ -15,9 +15,9 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-using namespace bc::wallet;
+using namespace kth::domain::wallet;
 
 // This is a consensus critical value that must be set on reset.
 uint64_t const output::not_found = sighash_null_value;
@@ -95,27 +95,15 @@ output::addresses_ptr output::addresses_cache() const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-output output::factory_from_data(data_chunk const& data, bool wire) {
-    output instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool output::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-output output::factory_from_data(std::istream& stream, bool wire) {
-    output instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool output::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool output::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool output::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // // protected
 // void output::reset() {
@@ -218,4 +206,4 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     return addresses;
 }
 
-}  // namespace kth
+} // namespace kth

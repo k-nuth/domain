@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 // TODO(legacy): split out individual functions and standardize test names.
 BOOST_AUTO_TEST_SUITE(stealth_tests)

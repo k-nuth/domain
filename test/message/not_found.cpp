@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(not_found_tests)
 
@@ -100,7 +101,7 @@ BOOST_AUTO_TEST_CASE(not_found__constructor_7__always__equals_params) {
 BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_bytes__failure) {
     static data_chunk const raw{0xab, 0xcd};
     not_found instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version::level::minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure) {
@@ -114,7 +115,7 @@ BOOST_AUTO_TEST_CASE(not_found__from_data__insufficient_version__failure) {
     auto const version = version::level::maximum;
     data_chunk const raw = expected.to_data(version);
     not_found instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(not_found::version_minimum - 1, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, not_found::version_minimum - 1, raw));
     BOOST_REQUIRE_EQUAL(false, instance.is_valid());
 }
 
@@ -128,7 +129,7 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_1__valid_input__success) {
 
     auto const version = version::level::maximum;
     auto const data = expected.to_data(version);
-    auto const result = not_found::factory_from_data(version, data);
+    auto const result = create<not_found>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -146,7 +147,7 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_2__valid_input__success) {
     auto const version = version::level::maximum;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto const result = not_found::factory_from_data(version, istream);
+    auto const result = create<not_found>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -165,7 +166,7 @@ BOOST_AUTO_TEST_CASE(not_found__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = not_found::factory_from_data(version, source);
+    auto const result = create<not_found>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));

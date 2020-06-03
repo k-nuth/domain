@@ -7,8 +7,8 @@
 //        GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef KTH_VERSION_HPP_
-#define KTH_VERSION_HPP_
+#ifndef KTH_DOMAIN_VERSION_HPP
+#define KTH_DOMAIN_VERSION_HPP
 
 /**
  * The semantic version of this repository as: [major].[minor].[patch]
@@ -28,7 +28,7 @@ namespace domain {
 
 char const* version();
 
-}  // namespace domain
-}  // namespace kth
+} // namespace domain
+} // namespace kth
 
-#endif  // KTH_VERSION_HPP_
+#endif // KTH_DOMAIN_VERSION_HPP

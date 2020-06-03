@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_ALERT_FORMATTED_PAYLOAD_HPP
-#define KTH_MESSAGE_ALERT_FORMATTED_PAYLOAD_HPP
+#ifndef KTH_DOMAIN_MESSAGE_ALERT_FORMATTED_PAYLOAD_HPP
+#define KTH_DOMAIN_MESSAGE_ALERT_FORMATTED_PAYLOAD_HPP
 
 #include <istream>
 #include <string>
@@ -16,93 +16,105 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API alert_payload {
+class KD_API alert_payload {
 public:
-    static alert_payload factory_from_data(uint32_t version, data_chunk const& data);
-    static alert_payload factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static alert_payload factory_from_data(uint32_t version, R& source) {
-        alert_payload instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static alert_payload factory_from_data(uint32_t version, reader& source);
-
     alert_payload() = default;
     alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, const std::vector<uint32_t>& set_cancel, uint32_t min_version, uint32_t max_version, const std::vector<std::string>& set_sub_version, uint32_t priority, std::string const& comment, std::string const& status_bar, std::string const& reserved);
     alert_payload(uint32_t version, uint64_t relay_until, uint64_t expiration, uint32_t id, uint32_t cancel, std::vector<uint32_t>&& set_cancel, uint32_t min_version, uint32_t max_version, std::vector<std::string>&& set_sub_version, uint32_t priority, std::string&& comment, std::string&& status_bar, std::string&& reserved);
 
-    // alert_payload(alert_payload const& x) = default;
-    // alert_payload(alert_payload&& x) = default;
-    // /// This class is move assignable but not copy assignable.
-    // alert_payload& operator=(alert_payload&& x) = default;
-    // alert_payload& operator=(alert_payload const&) = default;
-
     bool operator==(alert_payload const& x) const;
     bool operator!=(alert_payload const& x) const;
 
-    [[nodiscard]] uint32_t version() const;
+    [[nodiscard]]
+    uint32_t version() const;
+
     void set_version(uint32_t value);
 
-    [[nodiscard]] uint64_t relay_until() const;
+    [[nodiscard]]
+    uint64_t relay_until() const;
+
     void set_relay_until(uint64_t value);
 
-    [[nodiscard]] uint64_t expiration() const;
+    [[nodiscard]]
+    uint64_t expiration() const;
+
     void set_expiration(uint64_t value);
 
-    [[nodiscard]] uint32_t id() const;
+    [[nodiscard]]
+    uint32_t id() const;
+
     void set_id(uint32_t value);
 
-    [[nodiscard]] uint32_t cancel() const;
+    [[nodiscard]]
+    uint32_t cancel() const;
+
     void set_cancel(uint32_t value);
 
     std::vector<uint32_t>& set_cancel();
-    [[nodiscard]] const std::vector<uint32_t>& set_cancel() const;
+
+    [[nodiscard]]
+    const std::vector<uint32_t>& set_cancel() const;
+
     void set_set_cancel(const std::vector<uint32_t>& value);
     void set_set_cancel(std::vector<uint32_t>&& value);
 
-    [[nodiscard]] uint32_t min_version() const;
+    [[nodiscard]]
+    uint32_t min_version() const;
+
     void set_min_version(uint32_t value);
 
-    [[nodiscard]] uint32_t max_version() const;
+    [[nodiscard]]
+    uint32_t max_version() const;
+
     void set_max_version(uint32_t value);
 
     std::vector<std::string>& set_sub_version();
-    [[nodiscard]] const std::vector<std::string>& set_sub_version() const;
+
+    [[nodiscard]]
+    const std::vector<std::string>& set_sub_version() const;
+
     void set_set_sub_version(const std::vector<std::string>& value);
     void set_set_sub_version(std::vector<std::string>&& value);
 
-    [[nodiscard]] uint32_t priority() const;
+    [[nodiscard]]
+    uint32_t priority() const;
+
     void set_priority(uint32_t value);
 
     std::string& comment();
-    [[nodiscard]] std::string const& comment() const;
+
+    [[nodiscard]]
+    std::string const& comment() const;
+
     void set_comment(std::string const& value);
     void set_comment(std::string&& value);
 
     std::string& status_bar();
-    [[nodiscard]] std::string const& status_bar() const;
+
+    [[nodiscard]]
+    std::string const& status_bar() const;
+
     void set_status_bar(std::string const& value);
     void set_status_bar(std::string&& value);
 
     std::string& reserved();
-    [[nodiscard]] std::string const& reserved() const;
+
+    [[nodiscard]]
+    std::string const& reserved() const;
+
     void set_reserved(std::string const& value);
     void set_reserved(std::string&& value);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         this->version_ = source.read_4_bytes_little_endian();
@@ -136,12 +148,13 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_4_bytes_little_endian(this->version_);
         sink.write_8_bytes_little_endian(relay_until_);
         sink.write_8_bytes_little_endian(expiration_);
@@ -168,12 +181,17 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
 
-    static const ec_uncompressed satoshi_public_key;
+    static
+    const ec_uncompressed satoshi_public_key;
 
 private:
     uint32_t version_{0};
@@ -191,7 +209,6 @@ private:
     std::string reserved_;
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

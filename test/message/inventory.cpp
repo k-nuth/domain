@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(inventory_tests)
 
@@ -101,7 +102,7 @@ BOOST_AUTO_TEST_CASE(inventory__from_data__insufficient_bytes__failure) {
     static auto const version = version::level::minimum;
     static data_chunk const raw{0xab, 0xcd};
     inventory instance;
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(version, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version, raw));
 }
 
 BOOST_AUTO_TEST_CASE(inventory__factory_from_data_1__valid_input__success) {
@@ -114,7 +115,7 @@ BOOST_AUTO_TEST_CASE(inventory__factory_from_data_1__valid_input__success) {
 
     static auto const version = version::level::minimum;
     auto const data = expected.to_data(version);
-    auto const result = inventory::factory_from_data(version, data);
+    auto const result = create<inventory>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -132,7 +133,7 @@ BOOST_AUTO_TEST_CASE(inventory__factory_from_data_2__valid_input__success) {
     static auto const version = version::level::minimum;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto result = inventory::factory_from_data(version, istream);
+    auto result = create<inventory>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -151,7 +152,7 @@ BOOST_AUTO_TEST_CASE(inventory__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = inventory::factory_from_data(version, source);
+    auto const result = create<inventory>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));

@@ -13,14 +13,14 @@
 
 #include "parse_encrypted_key.hpp"
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 // Swap not defined.
 class parse_encrypted_public
     : public parse_encrypted_key<5u> {
 public:
-    static byte_array<prefix_size> prefix_factory(uint8_t address);
+    static
+    byte_array<prefix_size> prefix_factory(uint8_t address);
 
     explicit parse_encrypted_public(encrypted_public const& key);
 
@@ -32,14 +32,16 @@ public:
 private:
     bool verify_magic() const;
 
-    static constexpr uint8_t default_context_ = 0x9a;
-    static const byte_array<magic_size> magic_;
+    static constexpr
+    uint8_t default_context_ = 0x9a;
+   
+    static
+    const byte_array<magic_size> magic_;
 
     const one_byte sign_;
     hash_digest const data_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

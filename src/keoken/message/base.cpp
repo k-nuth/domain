@@ -6,21 +6,17 @@
 
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth {
-namespace keoken {
-namespace message {
+namespace kth::keoken::message {
 namespace base {
 
 size_t serialized_size() {
     return sizeof(uint16_t) + sizeof(uint16_t);
 }
 
-// void to_data(bc::writer& sink, uint16_t version, uint16_t type) {
+// void to_data(kth::writer& sink, uint16_t version, uint16_t type) {
 //     sink.write_2_bytes_big_endian(version);
 //     sink.write_2_bytes_big_endian(type);
 // }
 
-}  // namespace base
-}  // namespace message
-}  // namespace keoken
-}  // namespace kth
+} // namespace base
+} // namespace kth::keoken::message

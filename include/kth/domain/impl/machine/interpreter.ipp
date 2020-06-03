@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_INTERPRETER_IPP
-#define KTH_MACHINE_INTERPRETER_IPP
+#ifndef KTH_DOMAIN_MACHINE_INTERPRETER_IPP
+#define KTH_DOMAIN_MACHINE_INTERPRETER_IPP
 
 #include <cstdint>
 #include <utility>
@@ -14,16 +14,23 @@
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/program.hpp>
+#include <kth/domain/machine/rule_fork.hpp>
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/machine/number.hpp>
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::domain::machine {
 
-static constexpr auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
+// kth::domain::machine::rule_fork
+// using pepe = bip66_rule;
+// using pepe2 = bip66_rule;
+static constexpr auto pepe3 = bip66_rule;
+static constexpr auto pepe4 = rule_fork::bip65_rule;
+
+static constexpr
+auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
 
 // Operations (shared).
 //-----------------------------------------------------------------------------
@@ -697,7 +704,7 @@ interpreter::result interpreter::op_check_sig_verify(program& program) {
     uint8_t sighash;
     ec_signature signature;
     der_signature distinguished;
-    auto bip66 = chain::script::is_enabled(program.forks(), bip66_rule);
+    auto bip66 = chain::script::is_enabled(program.forks(), rule_fork::bip66_rule);
 
 #if ! defined(KTH_CURRENCY_BCH)
     auto bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
@@ -798,7 +805,7 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
     ec_signature signature;
     der_signature distinguished;
     auto public_key = public_keys.begin();
-    auto bip66 = chain::script::is_enabled(program.forks(), bip66_rule);
+    auto bip66 = chain::script::is_enabled(program.forks(), rule_fork::bip66_rule);
 
 #if ! defined(KTH_CURRENCY_BCH)
     auto bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
@@ -1343,7 +1350,6 @@ interpreter::result interpreter::run_op(operation const& op,
     }
 }
 
-}  // namespace machine
-}  // namespace kth
+} // namespace kth::domain::machine
 
 #endif

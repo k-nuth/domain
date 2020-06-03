@@ -13,29 +13,17 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const address::command = "addr";
 uint32_t const address::version_minimum = version::level::minimum;
 uint32_t const address::version_maximum = version::level::maximum;
 
-address address::factory_from_data(uint32_t version, data_chunk const& data) {
-    address instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-address address::factory_from_data(uint32_t version, std::istream& stream) {
-    address instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
-address::address(network_address::list const& addresses)
+address::address(infrastructure::message::network_address::list const& addresses)
     : addresses_(addresses) 
 {}
 
-address::address(network_address::list&& addresses)
+address::address(infrastructure::message::network_address::list&& addresses)
     : addresses_(std::move(addresses)) 
 {}
 
@@ -70,16 +58,6 @@ void address::reset() {
     addresses_.shrink_to_fit();
 }
 
-bool address::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool address::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk address::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -97,24 +75,24 @@ void address::to_data(uint32_t version, data_sink& stream) const {
 }
 
 size_t address::serialized_size(uint32_t version) const {
-    return message::variable_uint_size(addresses_.size()) +
-           (addresses_.size() * network_address::satoshi_fixed_size(version, true));
+    return infrastructure::message::variable_uint_size(addresses_.size()) +
+           (addresses_.size() * infrastructure::message::network_address::satoshi_fixed_size(version, true));
 }
 
-network_address::list& address::addresses() {
+infrastructure::message::network_address::list& address::addresses() {
     return addresses_;
 }
 
-network_address::list const& address::addresses() const {
+infrastructure::message::network_address::list const& address::addresses() const {
     return addresses_;
 }
 
-void address::set_addresses(network_address::list const& value) {
+void address::set_addresses(infrastructure::message::network_address::list const& value) {
     addresses_ = value;
 }
 
-void address::set_addresses(network_address::list&& value) {
+void address::set_addresses(infrastructure::message::network_address::list&& value) {
     addresses_ = std::move(value);
 }
 
-}  // namespace kth
+} // namespace kth

@@ -14,9 +14,9 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
-// using namespace bc::wallet;
+// using namespace kth::domain::wallet;
 
 // This is a consensus critical value that must be set on reset.
 uint64_t const output_basis::not_found = sighash_null_value;
@@ -75,27 +75,15 @@ bool output_basis::operator!=(output_basis const& x) const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-output_basis output_basis::factory_from_data(data_chunk const& data, bool wire) {
-    output_basis instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool output_basis::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-output_basis output_basis::factory_from_data(std::istream& stream, bool wire) {
-    output_basis instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool output_basis::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool output_basis::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool output_basis::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // protected
 void output_basis::reset() {
@@ -166,7 +154,7 @@ void output_basis::set_script(chain::script&& value) {
 //-----------------------------------------------------------------------------
 
 size_t output_basis::signature_operations(bool bip141) const {
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
     bip141 = false;  // No segwit
 #endif
     // Penalize quadratic signature operations (bip141).
@@ -181,6 +169,7 @@ bool output_basis::is_dust(uint64_t minimum_output_value) const {
     return value_ < minimum_output_value && !script_.is_unspendable();
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool output_basis::extract_committed_hash(hash_digest& out) const {
     auto const& ops = script_.operations();
 
@@ -193,5 +182,6 @@ bool output_basis::extract_committed_hash(hash_digest& out) const {
     std::copy_n(start, hash_size, out.begin());
     return true;
 }
+#endif
 
-}  // namespace kth
+} // namespace kth::domain::chain

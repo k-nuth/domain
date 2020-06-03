@@ -22,7 +22,7 @@
 #include <kth/domain/keoken/message/send_tokens.hpp>
 #include <kth/domain/keoken/wallet/create_transaction.hpp>
 
-using namespace bc;
+using namespace kd;
 using namespace kth::keoken::wallet;
 
 #define SEED "fffb587496cc54912bbcef874fa9a61a"
@@ -34,26 +34,26 @@ using namespace kth::keoken::wallet;
 
 TEST_CASE("[keoken__send_token__expected]") {
     std::vector<chain::input_point> outputs_to_spend;
-    bc::hash_digest hash_to_spend;
-    bc::decode_hash(hash_to_spend, "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393");
+    kth::hash_digest hash_to_spend;
+    kth::decode_hash(hash_to_spend, "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393");
     uint32_t const index_to_spend = 1;
     outputs_to_spend.push_back({hash_to_spend, index_to_spend});
     kth::keoken::asset_id_t asset_id = 1;
     kth::keoken::amount_t amount_tokens = 1;
-    auto result_tx = tx_encode_send_token(outputs_to_spend, bc::wallet::payment_address(WALLET), 21647102398, bc::wallet::payment_address(WALLETDESTINY), 20000, asset_id, amount_tokens);
+    auto result_tx = tx_encode_send_token(outputs_to_spend, kth::domain::wallet::payment_address(WALLET), 21647102398, kth::domain::wallet::payment_address(WALLETDESTINY), 20000, asset_id, amount_tokens);
     std::string result = "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff03204e0000000000001976a9147fa36605e302ed00aeca0da8e2743772df11290188acce3b440a050000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac0000000000000000176a0400004b50100000000100000001000000000000000100000000";
     REQUIRE(result == kth::encode_base16(result_tx.second.to_data()));
 }
 
 TEST_CASE("[keoken__create_asset__expected]") {
     std::vector<chain::input_point> outputs_to_spend;
-    bc::hash_digest hash_to_spend;
-    bc::decode_hash(hash_to_spend, "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393");
+    kth::hash_digest hash_to_spend;
+    kth::decode_hash(hash_to_spend, "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393");
     uint32_t const index_to_spend = 1;
     outputs_to_spend.push_back({hash_to_spend, index_to_spend});
     std::string name = "testcoin";
     kth::keoken::amount_t amount_tokens = 1;
-    auto result_tx = tx_encode_create_asset(outputs_to_spend, bc::wallet::payment_address(WALLET), 21647102398, name, amount_tokens);
+    auto result_tx = tx_encode_create_asset(outputs_to_spend, kth::domain::wallet::payment_address(WALLET), 21647102398, name, amount_tokens);
     std::string result = "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff02ee89440a050000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac00000000000000001c6a0400004b50150000000074657374636f696e00000000000000000100000000";
 
     REQUIRE(result == kth::encode_base16(result_tx.second.to_data()));

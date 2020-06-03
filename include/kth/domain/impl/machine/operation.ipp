@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_OPERATION_IPP
-#define KTH_MACHINE_OPERATION_IPP
+#ifndef KTH_DOMAIN_MACHINE_OPERATION_IPP
+#define KTH_DOMAIN_MACHINE_OPERATION_IPP
 
 #include <cstdint>
 
@@ -13,21 +13,9 @@
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+using number = kth::infrastructure::machine::number;
 
-// static constexpr auto invalid_code = opcode::disabled_xor;
-
-// Constructors.
-//-----------------------------------------------------------------------------
-
-// inline 
-// operation::operation()
-//     : code_(invalid_code)
-// {
-//     // The failed-state code must be disabled so it will never pass evaluation.
-//     KTH_ASSERT(is_disabled());
-// }
+namespace kth::domain::machine {
 
 inline 
 operation::operation(data_chunk&& uncoded, bool minimal)
@@ -54,7 +42,7 @@ operation::operation(data_chunk const& uncoded, bool minimal)
 {
     if ( ! valid_) {
         reset();
-}
+    }
 
     // Revert data if opcode_from_data produced a numeric encoding.
     if (minimal && !is_payload(code_)) {
@@ -97,7 +85,8 @@ bool operation::operator!=(operation const& x) const {
 //-----------------------------------------------------------------------------
 
 // TODO(legacy): consolidate with message implementation into common math utility.
-// static size_t variable_uint_size(uint64_t value)
+// static
+// size_t variable_uint_size(uint64_t value)
 // {
 //     if (value < 0xfd)
 //         return 1;
@@ -418,7 +407,6 @@ bool operation::is_nominal_push() const {
     return code_ == nominal_opcode_from_data(data_);
 }
 
-} // namespace machine
-} // namespace kth
+} // namespace kth::domain::machine
 
-#endif
+#endif // KTH_DOMAIN_MACHINE_OPERATION_IPP

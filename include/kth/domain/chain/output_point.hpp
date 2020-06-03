@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_OUTPUT_POINT_HPP
-#define KTH_CHAIN_OUTPUT_POINT_HPP
+#ifndef KTH_DOMAIN_CHAIN_OUTPUT_POINT_HPP
+#define KTH_DOMAIN_CHAIN_OUTPUT_POINT_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -16,10 +16,9 @@
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
-class BC_API output_point : public point {
+class KD_API output_point : public point {
 public:
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     struct validation_type {
@@ -79,22 +78,12 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    static output_point factory_from_data(data_chunk const& data, bool wire = true);
-    static output_point factory_from_data(std::istream& stream, bool wire = true);
-    // static output_point factory_from_data(reader& source, bool wire=true);
-
-    template <typename R, KTH_IS_READER(R)>
-    static output_point factory_from_data(R& source, bool wire = true) {
-        output_point instance;
-        instance.from_data(source, wire);
-        return instance;
-    }
-
     // Validation.
     //-------------------------------------------------------------------------
 
     /// True if cached previous output is mature enough to spend from height.
-    [[nodiscard]] bool is_mature(size_t height) const;
+    [[nodiscard]]
+    bool is_mature(size_t height) const;
 
     // THIS IS FOR LIBRARY USE ONLY, DO NOT CREATE A DEPENDENCY ON IT.
     mutable validation_type validation;
@@ -104,7 +93,6 @@ public:
 //     friend class input;
 };
 
-}  // namespace chain
-}  // namespace kth
+} // namespace kth::domain::chain
 
 #endif

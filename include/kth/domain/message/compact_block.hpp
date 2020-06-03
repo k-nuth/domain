@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_COMPACT_BLOCK_HPP
-#define KTH_MESSAGE_COMPACT_BLOCK_HPP
+#ifndef KTH_DOMAIN_MESSAGE_COMPACT_BLOCK_HPP
+#define KTH_DOMAIN_MESSAGE_COMPACT_BLOCK_HPP
 
 #include <istream>
 
@@ -18,13 +18,12 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API compact_block {
+class KD_API compact_block {
 public:
     using ptr = std::shared_ptr<compact_block>;
     using const_ptr = std::shared_ptr<const compact_block>;
@@ -34,60 +33,49 @@ public:
     using short_id = uint64_t;
     using short_id_list = std::vector<short_id>;
 
-    static compact_block factory_from_data(uint32_t version, data_chunk const& data);
-    static compact_block factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static compact_block factory_from_data(uint32_t version, R& source) {
-        //std::cout << "compact_block::factory_from_data 3\n";
-
-        compact_block instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static compact_block factory_from_data(uint32_t version, reader& source);
-
-    static compact_block factory_from_block(message::block const& blk);
+    static
+    compact_block factory_from_block(message::block const& blk);
 
     compact_block() = default;
     compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions);
     compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
 
-    // compact_block(compact_block const& x) = default;
-    // compact_block(compact_block&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // compact_block& operator=(compact_block&& x) = default;
-    // compact_block& operator=(compact_block const&) = default;
-
     bool operator==(compact_block const& x) const;
     bool operator!=(compact_block const& x) const;
 
-
     chain::header& header();
-    [[nodiscard]] chain::header const& header() const;
+    
+    [[nodiscard]]
+    chain::header const& header() const;
+    
     void set_header(chain::header const& value);
 
-    [[nodiscard]] uint64_t nonce() const;
+    [[nodiscard]]
+    uint64_t nonce() const;
+    
     void set_nonce(uint64_t value);
 
     short_id_list& short_ids();
-    [[nodiscard]] const short_id_list& short_ids() const;
+    
+    [[nodiscard]]
+    const short_id_list& short_ids() const;
+    
     void set_short_ids(const short_id_list& value);
     void set_short_ids(short_id_list&& value);
 
     prefilled_transaction::list& transactions();
-    [[nodiscard]] prefilled_transaction::list const& transactions() const;
+    
+    [[nodiscard]]
+    prefilled_transaction::list const& transactions() const;
+    
     void set_transactions(prefilled_transaction::list const& value);
     void set_transactions(prefilled_transaction::list&& value);
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
-        //std::cout << "compact_block::from_data 3\n";
-
         reset();
 
         if ( ! header_.from_data(source)) {
@@ -104,7 +92,7 @@ public:
             short_ids_.reserve(count);
         }
 
-        //todo:move to function
+        //TODO: move to function
         // Order is required.
         for (size_t id = 0; id < count && source; ++id) {
             uint32_t lsb = source.read_4_bytes_little_endian();
@@ -125,7 +113,7 @@ public:
         // NOTE: Witness flag is controlled by prefilled tx
         // Order is required.
         for (auto& tx : transactions_) {
-            if ( ! tx.from_data(version, source)) {
+            if ( ! entity_from_data(tx, version, source)) {
                 break;
             }
         }
@@ -141,17 +129,15 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t version, reader& source);
-
     bool from_block(message::block const& block);
 
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
     void to_data(uint32_t version, W& sink) const {
-        //std::cout << "compact_block::to_data 3\n";
-
         header_.to_data(sink);
         sink.write_8_bytes_little_endian(nonce_);
         sink.write_variable_little_endian(short_ids_.size());
@@ -169,17 +155,26 @@ public:
         // NOTE: Witness flag is controlled by prefilled tx
         for (auto const& element : transactions_) {
             element.to_data(version, sink);
-}
+        }
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
+    
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+    
+    static
+    uint32_t const version_minimum;
+    
+    static
+    uint32_t const version_maximum;
 
 private:
     chain::header header_;
@@ -193,16 +188,13 @@ void to_data_header_nonce(compact_block const& block, W& sink) {
     block.header().to_data(sink);
     sink.write_8_bytes_little_endian(block.nonce());
 }
-// void to_data_header_nonce(compact_block const& block, writer& sink);
 
-// void to_data_header_nonce(compact_block const& block, std::ostream& stream);
 void to_data_header_nonce(compact_block const& block, data_sink& stream);
 
 data_chunk to_data_header_nonce(compact_block const& block);
 
 hash_digest hash(compact_block const& block);
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

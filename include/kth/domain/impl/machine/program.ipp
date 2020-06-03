@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MACHINE_PROGRAM_IPP
-#define KTH_MACHINE_PROGRAM_IPP
+#ifndef KTH_DOMAIN_MACHINE_PROGRAM_IPP
+#define KTH_DOMAIN_MACHINE_PROGRAM_IPP
 
 #include <algorithm>
 #include <cstddef>
@@ -18,8 +18,9 @@
 #include <kth/infrastructure/utility/assert.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace machine {
+namespace kth::domain::machine {
+
+using script_version = ::kth::infrastructure::machine::script_version;
 
 // Constant registers.
 //-----------------------------------------------------------------------------
@@ -438,7 +439,6 @@ bool program::succeeded() const {
     ////return std::all_of(condition_.begin(), condition_.end(), true);
 }
 
-}  // namespace machine
-}  // namespace kth
+} // namespace kth::domain::machine
 
 #endif

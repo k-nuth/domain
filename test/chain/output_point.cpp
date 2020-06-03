@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 auto const hash1 = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 auto const valid_raw_output_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));
@@ -74,7 +75,7 @@ BOOST_AUTO_TEST_CASE(output_point__begin_end__initialized__begin_not_equal_end) 
 BOOST_AUTO_TEST_CASE(output_point__from_data__insufficient_bytes__failure) {
     static data_chunk const data(10);
     chain::output_point instance;
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -95,7 +96,7 @@ BOOST_AUTO_TEST_CASE(output_point__from_data__roundtrip__success) {
     chain::output_point point;
 
     BOOST_REQUIRE(point != initial);
-    BOOST_REQUIRE(point.from_data(initial.to_data()));
+    BOOST_REQUIRE(entity_from_data(point, initial.to_data()));
     BOOST_REQUIRE(point.is_valid());
     BOOST_REQUIRE(point == initial);
 }
@@ -107,7 +108,7 @@ BOOST_AUTO_TEST_CASE(output_point__factory_from_data_1__roundtrip__success) {
                               0xbb, 0x72, 0x44, 0x5b, 0xf1, 0x34, 0x93, 0xe2, 0xcd, 0x46, 0xc5, 0xc0,
                               0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
 
-    auto point = chain::output_point::factory_from_data(data);
+    auto point = create<chain::output_point>(data);
 
     BOOST_REQUIRE(point.is_valid());
     BOOST_REQUIRE_EQUAL(encode_hash(point.hash()), "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
@@ -125,7 +126,7 @@ BOOST_AUTO_TEST_CASE(output_point__factory_from_data_2__roundtrip__success) {
                               0xc8, 0xdb, 0x1c, 0x15, 0xaf, 0xa0, 0xd5, 0x8e, 0x00, 0x00, 0x00, 0x00}));
 
     data_source istream(data);
-    auto point = chain::output_point::factory_from_data(istream);
+    auto point = create<chain::output_point>(istream);
 
     BOOST_REQUIRE(point.is_valid());
     BOOST_REQUIRE_EQUAL(encode_hash(point.hash()), "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
@@ -144,7 +145,7 @@ BOOST_AUTO_TEST_CASE(output_point__factory_from_data_3__roundtrip__success) {
 
     data_source istream(data);
     istream_reader source(istream);
-    auto point = chain::output_point::factory_from_data(source);
+    auto point = create<chain::output_point>(source);
 
     BOOST_REQUIRE(point.is_valid());
     BOOST_REQUIRE_EQUAL(encode_hash(point.hash()), "8ed5a0af151cdbc8c0c546cde29334f15b4472bba105394a1221a7f088246846");
@@ -201,17 +202,17 @@ BOOST_AUTO_TEST_CASE(output_point__is_mature__immature_non_coinbase_prevout__ret
 
 BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_1__always__matches_equivalent) {
     chain::output_point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     chain::output_point value;
-    BOOST_REQUIRE(value.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(value, valid_raw_output_point));
     instance = std::move(value);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_2__always__matches_equivalent) {
     chain::output_point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);
@@ -219,17 +220,17 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_2__always__matches_equ
 
 BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_3__always__matches_equivalent) {
     chain::point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     chain::point value;
-    BOOST_REQUIRE(value.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(value, valid_raw_output_point));
     instance = std::move(value);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equivalent) {
     chain::point expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output_point));
     chain::output_point instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);
@@ -238,60 +239,60 @@ BOOST_AUTO_TEST_CASE(output_point__operator_assign_equals_4__always__matches_equ
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__duplicates__returns_true) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE(alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_1__differs__returns_false) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__duplicates__returns_true) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE(alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_equals_2__differs__returns_false) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__duplicates__returns_false) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_1__differs__returns_true) {
     chain::output_point alpha;
     chain::output_point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE(alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__duplicates__returns_false) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
-    BOOST_REQUIRE(beta.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output_point));
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(output_point__operator_boolean_not_equals_2__differs__returns_true) {
     chain::output_point alpha;
     chain::point beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_output_point));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output_point));
     BOOST_REQUIRE(alpha != beta);
 }
 

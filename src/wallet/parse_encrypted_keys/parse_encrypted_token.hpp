@@ -14,14 +14,14 @@
 
 #include "parse_encrypted_key.hpp"
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 // Swap not defined.
 class parse_encrypted_token
     : public parse_encrypted_prefix<8u> {
 public:
-    static byte_array<prefix_size> prefix_factory(bool lot_sequence);
+    static
+    byte_array<prefix_size> prefix_factory(bool lot_sequence);
 
     explicit parse_encrypted_token(encrypted_token const& value);
 
@@ -34,16 +34,20 @@ private:
     bool verify_context() const;
     bool verify_magic() const;
 
-    static constexpr uint8_t lot_context_ = 0x51;
-    static constexpr uint8_t default_context_ = 0x53;
-    static const byte_array<magic_size> magic_;
+    static constexpr 
+    uint8_t lot_context_ = 0x51;
+    
+    static constexpr 
+    uint8_t default_context_ = 0x53;
+    
+    static
+    const byte_array<magic_size> magic_;
 
     const ek_entropy entropy_;
     const one_byte sign_;
     hash_digest const data_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #endif

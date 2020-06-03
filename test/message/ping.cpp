@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(ping_tests)
 
@@ -41,13 +42,13 @@ BOOST_AUTO_TEST_CASE(ping__satoshi_fixed_size__bip31_version__8) {
 
 BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__maximum_version_empty_data__invalid) {
     static auto const version = message::version::level::maximum;
-    auto const result = message::ping::factory_from_data(version, data_chunk{});
+    auto const result = create<message::ping>(version, data_chunk{});
     BOOST_REQUIRE(!result.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_empty_data__valid) {
     static auto const version = message::version::level::minimum;
-    auto const result = message::ping::factory_from_data(version, data_chunk{});
+    auto const result = create<message::ping>(version, data_chunk{});
     BOOST_REQUIRE(result.is_valid());
 }
 
@@ -61,7 +62,7 @@ BOOST_AUTO_TEST_CASE(ping__from_data_1__minimum_version__success_zero_nonce) {
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
     message::ping instance;
-    BOOST_REQUIRE(instance.from_data(message::ping::version_minimum, data));
+    BOOST_REQUIRE(entity_from_data(instance, message::ping::version_minimum, data));
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.nonce(), 0u);
 }
@@ -72,7 +73,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_round_trip__zero
 
     static auto const version = message::version::level::minimum;
     auto const data = value.to_data(version);
-    auto const result = message::ping::factory_from_data(version, data);
+    auto const result = create<message::ping>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
 }
@@ -84,7 +85,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__minimum_version_round_trip__zero
     static auto const version = message::version::level::minimum;
     auto const data = value.to_data(version);
     data_source istream(data);
-    auto const result = message::ping::factory_from_data(version, istream);
+    auto const result = create<message::ping>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
 }
@@ -97,7 +98,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__minimum_version_round_trip__zero
     auto const data = value.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::ping::factory_from_data(version, source);
+    auto const result = create<message::ping>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
 }
@@ -112,7 +113,7 @@ BOOST_AUTO_TEST_CASE(ping__from_data_1__maximum_version__success_expected_nonce)
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
     message::ping instance;
-    BOOST_REQUIRE(instance.from_data(message::ping::version_maximum, data));
+    BOOST_REQUIRE(entity_from_data(instance, message::ping::version_maximum, data));
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE(instance == expected);
 }
@@ -123,7 +124,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__bip31_version_round_trip__expect
 
     static auto const version = message::version::level::bip31;
     auto const data = expected.to_data(version);
-    auto const result = message::ping::factory_from_data(version, data);
+    auto const result = create<message::ping>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
 }
@@ -135,7 +136,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__bip31_version_round_trip__expect
     static auto const version = message::version::level::bip31;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto const result = message::ping::factory_from_data(version, istream);
+    auto const result = create<message::ping>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
 }
@@ -148,7 +149,7 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__bip31_version_round_trip__expect
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::ping::factory_from_data(version, source);
+    auto const result = create<message::ping>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
 }

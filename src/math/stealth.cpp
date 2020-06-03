@@ -15,10 +15,11 @@
 #include <kth/infrastructure/utility/endian.hpp>
 #include <utility>
 
-namespace kth {
+namespace kth::domain {
 
-using namespace bc::chain;
-using namespace bc::machine;
+using namespace kth::domain::chain;
+using namespace kth::domain::machine;
+using namespace kth::infrastructure::machine;
 
 bool is_stealth_script(script const& script) {
     if (script.pattern() != script_pattern::null_data) {
@@ -75,7 +76,8 @@ bool create_stealth_data(script& out_null_data, ec_secret& out_secret, binary co
 // Mine a filter into the leftmost bytes of sha256(sha256(output-script)).
 bool create_stealth_script(script& out_null_data, ec_secret const& secret, binary const& filter, data_chunk const& seed) {
     // [ephemeral-public-key-hash:32][pad:0-44][nonce:4]
-    static constexpr size_t max_pad_size = max_null_data_size - hash_size -
+    static constexpr 
+    size_t max_pad_size = max_null_data_size - hash_size -
                                            sizeof(uint32_t);
 
     // Derive our initial nonce and pad from the provided seed.
@@ -199,4 +201,4 @@ bool uncover_stealth(ec_secret& out_stealth,
     return true;
 }
 
-}  // namespace kth
+} // namespace kth::domain

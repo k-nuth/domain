@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::message;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::message;
 
 BOOST_AUTO_TEST_SUITE(headers_tests)
 
@@ -125,7 +126,7 @@ BOOST_AUTO_TEST_CASE(headers__constructor_6__always__equals_params) {
 BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0xcd};
     headers instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(headers::version_minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, headers::version_minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure) {
@@ -139,7 +140,7 @@ BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure) {
 
     data_chunk const data = expected.to_data(headers::version_minimum);
     headers instance{};
-    BOOST_REQUIRE(!instance.from_data(headers::version_minimum - 1, data));
+    BOOST_REQUIRE(!entity_from_data(instance, headers::version_minimum - 1, data));
 }
 
 BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success) {
@@ -153,7 +154,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success) {
 
     static auto const version = headers::version_minimum;
     auto const data = expected.to_data(version);
-    auto const result = headers::factory_from_data(version, data);
+    auto const result = create<headers>(version, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
     BOOST_REQUIRE_EQUAL(result.serialized_size(version), data.size());
@@ -172,7 +173,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_2__valid_input__success) {
     static auto const version = headers::version_minimum;
     auto const data = expected.to_data(version);
     data_source istream(data);
-    auto result = headers::factory_from_data(version, istream);
+    auto result = create<headers>(version, istream);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
@@ -192,7 +193,7 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = headers::factory_from_data(version, source);
+    auto const result = create<headers>(version, source);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(result == expected);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));

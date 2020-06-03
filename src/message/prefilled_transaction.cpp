@@ -12,7 +12,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 #ifdef KTH_CURRENCY_BCH
 constexpr size_t max_index = max_uint32;
@@ -20,29 +20,15 @@ constexpr size_t max_index = max_uint32;
 constexpr size_t max_index = max_uint16;
 #endif
 
-prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, data_chunk const& data) {
-    prefilled_transaction instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-prefilled_transaction prefilled_transaction::factory_from_data(uint32_t version, std::istream& stream) {
-    prefilled_transaction instance;
-    instance.from_data(version, stream);
-    return instance;
-}
-
 prefilled_transaction::prefilled_transaction()
     : index_(max_index) 
 {}
 
-prefilled_transaction::prefilled_transaction(uint64_t index,
-                                             chain::transaction const& tx)
+prefilled_transaction::prefilled_transaction(uint64_t index, chain::transaction const& tx)
     : index_(index), transaction_(tx) {
 }
 
-prefilled_transaction::prefilled_transaction(uint64_t index,
-                                             chain::transaction&& tx)
+prefilled_transaction::prefilled_transaction(uint64_t index, chain::transaction&& tx)
     : index_(index), transaction_(std::move(tx)) {
 }
 
@@ -82,16 +68,6 @@ void prefilled_transaction::reset() {
     transaction_ = chain::transaction{};
 }
 
-bool prefilled_transaction::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool prefilled_transaction::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk prefilled_transaction::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -110,7 +86,7 @@ void prefilled_transaction::to_data(uint32_t version, data_sink& stream) const {
 
 size_t prefilled_transaction::serialized_size(uint32_t /*version*/) const {
     // TODO(kth): serialize size should use witness for ! BCH
-    return message::variable_uint_size(index_) +
+    return infrastructure::message::variable_uint_size(index_) +
            transaction_.serialized_size(/*wire*/ true, witness_default()
 #ifdef KTH_CACHED_RPC_DATA           
                                       , /*unconfirmed*/ false
@@ -142,4 +118,4 @@ void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
 }
 
-}  // namespace kth
+} // namespace kth

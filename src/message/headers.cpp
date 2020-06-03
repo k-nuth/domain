@@ -20,23 +20,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const headers::command = "headers";
 uint32_t const headers::version_minimum = version::level::headers;
 uint32_t const headers::version_maximum = version::level::maximum;
-
-headers headers::factory_from_data(uint32_t version, data_chunk const& data) {
-    headers instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-headers headers::factory_from_data(uint32_t version, std::istream& stream) {
-    headers instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 // Uses headers copy assignment.
 headers::headers(header::list const& values)
@@ -51,19 +39,6 @@ headers::headers(std::initializer_list<header> const& values)
     : elements_(values) {
 }
 
-// headers::headers(headers const& x)
-//     : headers(x.elements_) {
-// }
-
-// headers::headers(headers&& x) noexcept
-//     : headers(std::move(x.elements_)) 
-// {}
-
-// headers& headers::operator=(headers&& x) noexcept {
-//     elements_ = std::move(x.elements_);
-//     return *this;
-// }
-
 bool headers::operator==(headers const& x) const {
     return elements_ == x.elements_;
 }
@@ -72,7 +47,6 @@ bool headers::operator!=(headers const& x) const {
     return !(*this == x);
 }
 
-
 bool headers::is_valid() const {
     return !elements_.empty();
 }
@@ -80,16 +54,6 @@ bool headers::is_valid() const {
 void headers::reset() {
     elements_.clear();
     elements_.shrink_to_fit();
-}
-
-bool headers::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool headers::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
 }
 
 data_chunk headers::to_data(uint32_t version) const {
@@ -148,7 +112,7 @@ void headers::to_inventory(inventory_vector::list& out,
 }
 
 size_t headers::serialized_size(uint32_t version) const {
-    return message::variable_uint_size(elements_.size()) +
+    return infrastructure::message::variable_uint_size(elements_.size()) +
            (elements_.size() * header::satoshi_fixed_size(version));
 }
 
@@ -168,4 +132,4 @@ void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
 }
 
-}  // namespace kth
+} // namespace kth

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_INVENTORY_VECTOR_HPP
-#define KTH_MESSAGE_INVENTORY_VECTOR_HPP
+#ifndef KTH_DOMAIN_MESSAGE_INVENTORY_VECTOR_HPP
+#define KTH_DOMAIN_MESSAGE_INVENTORY_VECTOR_HPP
 
 #include <cstdint>
 #include <istream>
@@ -17,13 +17,12 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API inventory_vector {
+class KD_API inventory_vector {
 public:
     using list = std::vector<inventory_vector>;
 
@@ -39,22 +38,17 @@ public:
         reserved = witness | filtered_block
     };
 
-    static type_id to_type(uint32_t value);
-    static uint32_t to_number(type_id type);
-    static std::string to_string(type_id type);
+    static
+    type_id to_type(uint32_t value);
+    
+    static
+    uint32_t to_number(type_id type);
+    
+    static
+    std::string to_string(type_id type);
 
-    static inventory_vector factory_from_data(uint32_t version, data_chunk const& data);
-    static inventory_vector factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static inventory_vector factory_from_data(uint32_t version, R& source) {
-        inventory_vector instance;
-        instance.from_data(version, source);
-        return instance;
-    }
-
-    //static inventory_vector factory_from_data(uint32_t version, reader& source);
-    static size_t satoshi_fixed_size(uint32_t version);
+    static
+    size_t satoshi_fixed_size(uint32_t version);
 
     inventory_vector();
     inventory_vector(type_id type, hash_digest const& hash);
@@ -69,21 +63,29 @@ public:
     bool operator!=(inventory_vector const& x) const;
 
 
-    [[nodiscard]] type_id type() const;
+    [[nodiscard]]
+    type_id type() const;
+    
     void set_type(type_id value);
 
     hash_digest& hash();
-    [[nodiscard]] hash_digest const& hash() const;
+    
+    [[nodiscard]]
+    hash_digest const& hash() const;
+    
     void set_hash(hash_digest const& value);
 
-    [[nodiscard]] bool is_block_type() const;
-    [[nodiscard]] bool is_transaction_type() const;
+    [[nodiscard]]
+    bool is_block_type() const;
+    
+    [[nodiscard]]
+    bool is_transaction_type() const;
 
-    bool from_data(uint32_t version, data_chunk const& data);
-    bool from_data(uint32_t version, std::istream& stream);
+    // bool from_data(uint32_t version, data_chunk const& data);
+    // bool from_data(uint32_t version, std::istream& stream);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t  /*version*/, R& source) {
+    bool from_data(uint32_t /*version*/, R& source) {
         reset();
 
         auto const raw_type = source.read_4_bytes_little_endian();
@@ -92,39 +94,42 @@ public:
 
         if ( ! source) {
             reset();
-}
+        }
 
         return source;
     }
 
     //bool from_data(uint32_t version, reader& source);
-    [[nodiscard]] data_chunk to_data(uint32_t version) const;
+    [[nodiscard]]
+    data_chunk to_data(uint32_t version) const;
+    
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t  /*version*/, W& sink) const {
+    void to_data(uint32_t /*version*/, W& sink) const {
         auto const raw_type = inventory_vector::to_number(type_);
         sink.write_4_bytes_little_endian(raw_type);
         sink.write_hash(hash_);
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    [[nodiscard]] bool is_valid() const;
+    [[nodiscard]]
+    bool is_valid() const;
+    
     void reset();
 
-#ifndef KTH_CURRENCY_BCH    
+#if defined(KTH_SEGWIT_ENABLED)    
     void to_witness();
 #endif
     
-    [[nodiscard]] size_t serialized_size(uint32_t version) const;
-
+    [[nodiscard]]
+    size_t serialized_size(uint32_t version) const;
 
 private:
     type_id type_{type_id::error};
     hash_digest hash_{null_hash};
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

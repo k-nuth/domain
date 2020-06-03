@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(merkle_block_tests)
 
@@ -113,7 +114,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_data_fails) {
     data_chunk const data{10};
     message::merkle_block instance{};
 
-    BOOST_REQUIRE(!instance.from_data(message::version::level::maximum, data));
+    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::maximum, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -132,7 +133,7 @@ BOOST_AUTO_TEST_CASE(from_data_insufficient_version_fails) {
     auto const data = expected.to_data(message::version::level::maximum);
     message::merkle_block instance{};
 
-    BOOST_REQUIRE(!instance.from_data(message::merkle_block::version_minimum - 1, data));
+    BOOST_REQUIRE(!entity_from_data(instance, message::merkle_block::version_minimum - 1, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -149,7 +150,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_chunk) {
         {0x00}};
 
     auto const data = expected.to_data(message::version::level::maximum);
-    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, data);
+    auto const result = create<message::merkle_block>(message::version::level::maximum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -169,7 +170,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_stream) {
 
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
-    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, istream);
+    auto const result = create<message::merkle_block>(message::version::level::maximum, istream);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
@@ -190,7 +191,7 @@ BOOST_AUTO_TEST_CASE(roundtrip_to_data_factory_from_data_reader) {
     auto const data = expected.to_data(message::version::level::maximum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::merkle_block::factory_from_data(message::version::level::maximum, source);
+    auto const result = create<message::merkle_block>(message::version::level::maximum, source);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);

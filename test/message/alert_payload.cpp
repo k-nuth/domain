@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(alert_payload_tests)
 
@@ -169,7 +170,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__from_data__insufficient_bytes__failure) {
     data_chunk raw{0xab, 0x11};
     message::alert_payload instance;
 
-    BOOST_REQUIRE(!instance.from_data(message::version::level::minimum, raw));
+    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -203,7 +204,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__wiki_sample_test__succe
         "See bitcoin.org/feb20 if you have trouble connecting after 20 February",
         ""};
 
-    auto const result = message::alert_payload::factory_from_data(
+    auto const result = create<message::alert_payload>(
         message::version::level::minimum, raw);
 
     BOOST_REQUIRE(result.is_valid());
@@ -233,7 +234,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__roundtrip__success) {
         "RESERVED?"};
 
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::alert_payload::factory_from_data(
+    auto const result = create<message::alert_payload>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -260,7 +261,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_2__roundtrip__success) {
 
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    auto const result = message::alert_payload::factory_from_data(
+    auto const result = create<message::alert_payload>(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -288,7 +289,7 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_3__roundtrip__success) {
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::alert_payload::factory_from_data(
+    auto const result = create<message::alert_payload>(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

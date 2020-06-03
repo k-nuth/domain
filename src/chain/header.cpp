@@ -15,17 +15,17 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 // Constructors.
 //-----------------------------------------------------------------------------
 
-header::header(header const& x, hash_digest const& hash)
-    : header_basis(x)
-    , validation(x.validation)
-{
-    hash_ = std::make_shared<hash_digest>(hash);
-}
+// header::header(header const& x, hash_digest const& hash)
+//     : header_basis(x)
+//     , validation(x.validation)
+// {
+//     hash_ = std::make_shared<hash_digest>(hash);
+// }
 
 header::header(header const& x)
     : header_basis(x)
@@ -38,53 +38,23 @@ header& header::operator=(header const& x) {
     return *this;
 }
 
-// Operators.
-//-----------------------------------------------------------------------------
-
-// bool header::operator==(header const& x) const {
-//     return (version_ == x.version_) 
-//         && (previous_block_hash_ == x.previous_block_hash_) 
-//         && (merkle_ == x.merkle_) 
-//         && (timestamp_ == x.timestamp_) 
-//         && (bits_ == x.bits_) 
-//         && (nonce_ == x.nonce_);
-// }
-
-// bool header::operator!=(header const& x) const {
-//     return !(*this == x);
-// }
-
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-header header::factory_from_data(data_chunk const& data, bool wire) {
-    header instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool header::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-// static
-header header::factory_from_data(std::istream& stream, bool wire) {
-    header instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool header::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool header::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool header::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // protected
 void header::reset() {
     header_basis::reset();
-    invalidate_cache();
+    invalidate();
 }
 
 // Serialization.
@@ -118,73 +88,32 @@ size_t header::serialized_size(bool wire) const {
 
 void header::set_version(uint32_t value) {
     header_basis::set_version(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_previous_block_hash(hash_digest const& value) {
     header_basis::set_previous_block_hash(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_merkle(hash_digest const& value) {
     header_basis::set_merkle(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_timestamp(uint32_t value) {
     header_basis::set_timestamp(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_bits(uint32_t value) {
     header_basis::set_bits(value);
-    invalidate_cache();
+    invalidate();
 }
 
 void header::set_nonce(uint32_t value) {
     header_basis::set_nonce(value);
-    invalidate_cache();
-}
-
-// Cache.
-//-----------------------------------------------------------------------------
-
-// protected
-void header::invalidate_cache() const {
-    ///////////////////////////////////////////////////////////////////////////
-    // Critical Section
-    mutex_.lock_upgrade();
-
-    if (hash_) {
-        mutex_.unlock_upgrade_and_lock();
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        hash_.reset();
-        //---------------------------------------------------------------------
-        mutex_.unlock_and_lock_upgrade();
-    }
-
-    mutex_.unlock_upgrade();
-    ///////////////////////////////////////////////////////////////////////////
-}
-
-hash_digest header::hash() const {
-    ///////////////////////////////////////////////////////////////////////////
-    // Critical Section
-    mutex_.lock_upgrade();
-
-    if ( ! hash_) {
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        mutex_.unlock_upgrade_and_lock();
-        hash_ = std::make_shared<hash_digest>(bitcoin_hash(to_data()));
-        mutex_.unlock_and_lock_upgrade();
-        //---------------------------------------------------------------------
-    }
-
-    auto const hash = *hash_;
-    mutex_.unlock_upgrade();
-    ///////////////////////////////////////////////////////////////////////////
-
-    return hash;
+    invalidate();
 }
 
 #ifdef KTH_CURRENCY_LTC
@@ -222,4 +151,4 @@ code header::accept(chain_state const& state) const {
     return header_basis::accept(state, hash_pow());
 }
 
-}  // namespace kth
+} // namespace kth::domain::chain

@@ -5,8 +5,9 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::chain;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
 
 data_chunk valid_raw_input = to_chunk(base16_literal(
     "54b755c39207d443fd96a8d12c94446a1c6f66e39c95e894c23418d7501f681b01000"
@@ -25,7 +26,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_1__always__returns_default_initialized) 
 BOOST_AUTO_TEST_CASE(input__constructor_2__valid_input__returns_input_initialized) {
     output_point const previous_output{null_hash, 5434u};
     script script;
-    BOOST_REQUIRE(script.from_data(to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
+    BOOST_REQUIRE(entity_from_data(script, to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
 
     uint32_t sequence = 4568656u;
 
@@ -39,7 +40,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_2__valid_input__returns_input_initialize
 BOOST_AUTO_TEST_CASE(input__constructor_3__valid_input__returns_input_initialized) {
     output_point const previous_output{null_hash, 5434u};
     script script;
-    BOOST_REQUIRE(script.from_data(to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
+    BOOST_REQUIRE(entity_from_data(script, to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1")), false));
 
     uint32_t sequence = 4568656u;
 
@@ -55,7 +56,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_3__valid_input__returns_input_initialize
 
 BOOST_AUTO_TEST_CASE(input__constructor_4__valid_input__returns_input_initialized) {
     input expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
 
     input instance(expected);
     BOOST_REQUIRE(instance.is_valid());
@@ -64,7 +65,7 @@ BOOST_AUTO_TEST_CASE(input__constructor_4__valid_input__returns_input_initialize
 
 BOOST_AUTO_TEST_CASE(input__constructor_5__valid_input__returns_input_initialized) {
     input expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
 
     input instance(std::move(expected));
     BOOST_REQUIRE(instance.is_valid());
@@ -75,7 +76,7 @@ BOOST_AUTO_TEST_CASE(input__from_data__insufficient_data__failure) {
 
     input instance;
 
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -87,11 +88,11 @@ BOOST_AUTO_TEST_CASE(input__from_data__valid_data__success) {
     boost::iostreams::stream<byte_source<std::array<uint8_t, 64>>> stream(source);
 
     input instance;
-    BOOST_REQUIRE(instance.from_data(stream));
+    BOOST_REQUIRE(entity_from_data(instance, stream));
 }
 
 BOOST_AUTO_TEST_CASE(input__factory_from_data_1__valid_input__success) {
-    auto const instance = input::factory_from_data(valid_raw_input);
+    auto const instance = create<input>(valid_raw_input);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_input.size());
 
@@ -103,7 +104,7 @@ BOOST_AUTO_TEST_CASE(input__factory_from_data_1__valid_input__success) {
 
 BOOST_AUTO_TEST_CASE(input__factory_from_data_2__valid_input__success) {
     data_source stream(valid_raw_input);
-    auto instance = input::factory_from_data(stream);
+    auto instance = create<input>(stream);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_input.size());
 
@@ -116,7 +117,7 @@ BOOST_AUTO_TEST_CASE(input__factory_from_data_2__valid_input__success) {
 BOOST_AUTO_TEST_CASE(input__factory_from_data_3__valid_input__success) {
     data_source stream(valid_raw_input);
     istream_reader source(stream);
-    auto instance = input::factory_from_data(source);
+    auto instance = create<input>(source);
     BOOST_REQUIRE(instance.is_valid());
     BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_input.size());
 
@@ -215,7 +216,7 @@ BOOST_AUTO_TEST_CASE(input__is_locked__disabled_time_type_sequence_age_below_min
 BOOST_AUTO_TEST_CASE(input__signature_operations__bip16_inactive__returns_script_sigops) {
     auto const raw_script = to_chunk(base16_literal("02acad"));
     script script;
-    BOOST_REQUIRE(script.from_data(raw_script, true));
+    BOOST_REQUIRE(entity_from_data(script, raw_script, true));
     input instance;
     instance.set_script(script);
     BOOST_REQUIRE_EQUAL(script.sigops(false), instance.signature_operations(false, false));
@@ -224,7 +225,7 @@ BOOST_AUTO_TEST_CASE(input__signature_operations__bip16_inactive__returns_script
 BOOST_AUTO_TEST_CASE(input__signature_operations__bip16_active_cache_empty__returns_script_sigops) {
     auto const raw_script = to_chunk(base16_literal("02acad"));
     script script;
-    BOOST_REQUIRE(script.from_data(raw_script, true));
+    BOOST_REQUIRE(entity_from_data(script, raw_script, true));
     input instance;
     instance.set_script(script);
     BOOST_REQUIRE_EQUAL(script.sigops(false), instance.signature_operations(true, false));
@@ -261,7 +262,7 @@ BOOST_AUTO_TEST_CASE(input__previous_output_setter_2__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(input__script_setter_1__roundtrip__success) {
     script value;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(value.from_data(data, false));
+    BOOST_REQUIRE(entity_from_data(value, data, false));
 
     input instance;
     BOOST_REQUIRE(value != instance.script());
@@ -274,7 +275,7 @@ BOOST_AUTO_TEST_CASE(input__script_setter_1__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(input__script_setter_2__roundtrip__success) {
     script value;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(value.from_data(data, false));
+    BOOST_REQUIRE(entity_from_data(value, data, false));
 
     auto dup_value = value;
     input instance;
@@ -295,15 +296,15 @@ BOOST_AUTO_TEST_CASE(input__sequence__roundtrip__success) {
 
 BOOST_AUTO_TEST_CASE(input__operator_assign_equals_1__always__matches_equivalent) {
     input expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
     input instance;
-    instance = input::factory_from_data(valid_raw_input);
+    instance = create<input>(valid_raw_input);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(input__operator_assign_equals_2__always__matches_equivalent) {
     input expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_input));
     input instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);
@@ -312,30 +313,30 @@ BOOST_AUTO_TEST_CASE(input__operator_assign_equals_2__always__matches_equivalent
 BOOST_AUTO_TEST_CASE(input__operator_boolean_equals__duplicates__returns_true) {
     input alpha;
     input beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_input));
-    BOOST_REQUIRE(beta.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_input));
     BOOST_REQUIRE(alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(input__operator_boolean_equals__differs__returns_false) {
     input alpha;
     input beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
 BOOST_AUTO_TEST_CASE(input__operator_boolean_not_equals__duplicates__returns_false) {
     input alpha;
     input beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_input));
-    BOOST_REQUIRE(beta.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(beta, valid_raw_input));
     BOOST_REQUIRE_EQUAL(false, alpha != beta);
 }
 
 BOOST_AUTO_TEST_CASE(input__operator_boolean_not_equals__differs__returns_true) {
     input alpha;
     input beta;
-    BOOST_REQUIRE(alpha.from_data(valid_raw_input));
+    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_input));
     BOOST_REQUIRE(alpha != beta);
 }
 

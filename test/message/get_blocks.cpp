@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(get_blocks_tests)
 
@@ -78,7 +79,7 @@ BOOST_AUTO_TEST_CASE(get_blocks__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0xcd};
     message::get_blocks instance;
 
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::version::level::minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::version::level::minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(get_blocks__factory_from_data_1__valid_input__success) {
@@ -91,7 +92,7 @@ BOOST_AUTO_TEST_CASE(get_blocks__factory_from_data_1__valid_input__success) {
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     auto const data = expected.to_data(message::version::level::minimum);
-    auto const result = message::get_blocks::factory_from_data(
+    auto const result = create<message::get_blocks>(
         message::version::level::minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
@@ -113,7 +114,7 @@ BOOST_AUTO_TEST_CASE(get_blocks__factory_from_data_2__valid_input__success) {
 
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
-    auto const result = message::get_blocks::factory_from_data(
+    auto const result = create<message::get_blocks>(
         message::version::level::minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -136,7 +137,7 @@ BOOST_AUTO_TEST_CASE(get_blocks__factory_from_data_3__valid_input__success) {
     auto const data = expected.to_data(message::version::level::minimum);
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::get_blocks::factory_from_data(
+    auto const result = create<message::get_blocks>(
         message::version::level::minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

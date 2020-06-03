@@ -16,23 +16,11 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const merkle_block::command = "merkleblock";
 uint32_t const merkle_block::version_minimum = version::level::bip37;
 uint32_t const merkle_block::version_maximum = version::level::maximum;
-
-merkle_block merkle_block::factory_from_data(uint32_t version, data_chunk const& data) {
-    merkle_block instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-merkle_block merkle_block::factory_from_data(uint32_t version, std::istream& stream) {
-    merkle_block instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 merkle_block::merkle_block(chain::header const& header, size_t total_transactions, hash_list const& hashes, data_chunk const& flags)
     : header_(header), total_transactions_(total_transactions), hashes_(hashes), flags_(flags) {
@@ -100,16 +88,6 @@ void merkle_block::reset() {
     flags_.shrink_to_fit();
 }
 
-bool merkle_block::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool merkle_block::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk merkle_block::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -128,8 +106,8 @@ void merkle_block::to_data(uint32_t version, data_sink& stream) const {
 
 size_t merkle_block::serialized_size(uint32_t /*version*/) const {
     return header_.serialized_size() + 4u +
-           message::variable_uint_size(hashes_.size()) + (hash_size * hashes_.size()) +
-           message::variable_uint_size(flags_.size()) + flags_.size();
+           infrastructure::message::variable_uint_size(hashes_.size()) + (hash_size * hashes_.size()) +
+           infrastructure::message::variable_uint_size(flags_.size()) + flags_.size();
 }
 
 chain::header& merkle_block::header() {
@@ -184,4 +162,4 @@ void merkle_block::set_flags(data_chunk&& value) {
     flags_ = std::move(value);
 }
 
-}  // namespace kth
+} // namespace kth

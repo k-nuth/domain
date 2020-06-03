@@ -16,12 +16,15 @@
 #include <boost/throw_exception.hpp>
 
 #include <kth/infrastructure/config/checkpoint.hpp>
-#include <kth/infrastructure/define.hpp>
+
+#include <kth/domain/define.hpp>
+//#include <kth/infrastructure/define.hpp>
+
 #include <kth/infrastructure/unicode/ifstream.hpp>
 
 #include <kth/domain/multi_crypto_support.hpp>
 
-namespace kth {
+namespace kth::domain {
 
 // These are just annoyingly long.
 using variables_map = boost::program_options::variables_map;
@@ -49,7 +52,7 @@ using std::error_code;
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
 template <typename ConcreteParser>
-class BI_API parser {
+class KD_API parser {
 public:
     ConcreteParser& derived() {
         return static_cast<ConcreteParser&>(*this);
@@ -61,14 +64,14 @@ public:
 
     // The error is obtained from boost, which circumvents our localization.
     // English-only hack to patch missing arg name in boost exception message.
-    static 
+    static
     std::string format_invalid_parameter(std::string const& message) {
         std::string clean_message(message);
         boost::replace_all(clean_message, "for option is invalid", "is invalid");
         return "Error: " + clean_message;
     }
 
-    static 
+    static
     bool get_option(variables_map& variables, std::string const& name) {
         // Read settings from the map so we don't require an early notify call.
         auto const& variable = variables[name];
@@ -81,7 +84,7 @@ public:
         return variable.as<bool>();
     }    
 
-    static 
+    static
     path get_config_option(variables_map& variables, std::string const& name) {
         // read config from the map so we don't require an early notify
         auto const& config = variables[name];
@@ -94,12 +97,12 @@ public:
     }
 
     static
-    config::checkpoint::list default_checkpoints(bool easy_blocks, bool retarget) {
-        config::checkpoint::list checkpoints;
+    kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_blocks, bool retarget) {
+        kth::infrastructure::config::checkpoint::list checkpoints;
 
     //TODO(fernando): Set Litecoin checkpoints
 #if defined(KTH_CURRENCY_BCH)
-        if (get_network(easy_blocks, retarget) == config::settings::testnet) {
+        if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::testnet) {
             // BCH Testnet
             checkpoints.reserve(17);
             checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
@@ -163,7 +166,7 @@ public:
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
 
 
-        } else if (get_network(easy_blocks, retarget) == config::settings::mainnet) {
+        } else if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::mainnet) {
             // BCH Mainnet
             checkpoints.reserve(32); //TODO(fernando): check reserve parameter, capacity
             checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
@@ -261,7 +264,7 @@ public:
             checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);
         }
 #elif defined(KTH_CURRENCY_BTC)
-        if (get_network(easy_blocks, retarget) == config::settings::testnet) {
+        if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::testnet) {
             // BTC Testnet
             checkpoints.reserve(15);
             checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
@@ -287,7 +290,7 @@ public:
             checkpoints.emplace_back("000000000000fce208da3e3b8afcc369835926caa44044e9c2f0caa48c8eba0f", 1400000);
             checkpoints.emplace_back("0000000000049a6b07f91975568dc96bb1aec1a24c6bdadb21eb17c9f1b7256f", 1500000);
 
-        } else if (get_network(easy_blocks, retarget) == config::settings::mainnet) {
+        } else if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::mainnet) {
             // BTC Mainnet
             checkpoints.reserve(30);
             checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
@@ -342,17 +345,17 @@ public:
     }
 
     static
-    void fix_checkpoints(bool easy_blocks, bool retarget, config::checkpoint::list& checkpoints) {
+    void fix_checkpoints(bool easy_blocks, bool retarget, kth::infrastructure::config::checkpoint::list& checkpoints) {
         auto const def_checkpoints = default_checkpoints(easy_blocks, retarget);
 
-        auto const it = std::max_element(def_checkpoints.begin(), def_checkpoints.end(), [](checkpoint const& x, checkpoint const& y) {
+        auto const it = std::max_element(def_checkpoints.begin(), def_checkpoints.end(), [](auto const& x, auto const& y) {
             return x.height() < y.height();
         });
 
         if (it != def_checkpoints.end()) {
             auto const max_checkpoint_height = it->height();
 
-            checkpoints.erase(std::remove_if(checkpoints.begin(), checkpoints.end(), [max_checkpoint_height](checkpoint const& x) {
+            checkpoints.erase(std::remove_if(checkpoints.begin(), checkpoints.end(), [max_checkpoint_height](auto const& x) {
                 return x.height() <= max_checkpoint_height;
             }), checkpoints.end());
 
@@ -407,7 +410,7 @@ protected:
         if ( ! config_path.empty()) {
             if (exists(config_path, code)) {
                 auto const& path = config_path.string();
-                bc::ifstream file(path);
+                kth::ifstream file(path);
 
                 if ( ! file.good()) {
                     BOOST_THROW_EXCEPTION(reading_file(path.c_str()));
@@ -437,6 +440,6 @@ protected:
 };
 
 } // namespace config
-} // namespace kth
+} // namespace kth::domain
 
 #endif

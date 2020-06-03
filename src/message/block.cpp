@@ -17,23 +17,11 @@
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const block::command = "block";
 uint32_t const block::version_minimum = version::level::minimum;
 uint32_t const block::version_maximum = version::level::maximum;
-
-block block::factory_from_data(uint32_t version, data_chunk const& data) {
-    block instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-block block::factory_from_data(uint32_t version, std::istream& stream) {
-    block instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 block::block(chain::block&& x)
     : chain::block(std::move(x)) 
@@ -82,21 +70,8 @@ bool block::operator!=(block const& x) const {
     return !(*this == x);
 }
 
-// Witness is always deserialized if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
-bool block::from_data(uint32_t /*version*/, data_chunk const& data) {
-    return chain::block::from_data(data, true);
-}
-
-bool block::from_data(uint32_t /*version*/, std::istream& stream) {
-    return chain::block::from_data(stream, true);
-}
-
-
 // Witness is always serialized if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
+// NOTE: Witness on BCH is dissabled on the chain::block class
 data_chunk block::to_data(uint32_t /*unused*/) const {
     return chain::block::to_data(true);
 }
@@ -106,13 +81,10 @@ void block::to_data(uint32_t /*version*/, data_sink& stream) const {
 }
 
 // Witness size is always counted if present.
-// NOTE: Witness on bch is dissabled on the chain::block class
-
+// NOTE: Witness on BCH is dissabled on the chain::block class
 size_t block::serialized_size(uint32_t /*unused*/) const {
     return chain::block::serialized_size(true);
 }
-
-
 
 // //TODO(fernando): check this family of functions: to_data_header_nonce
 // void to_data_header_nonce(block const& block, uint64_t nonce, writer& sink) {
@@ -142,4 +114,4 @@ hash_digest hash(block const& block, uint64_t nonce) {
     return sha256_hash(to_data_header_nonce(block, nonce));
 }
 
-}  // namespace kth
+} // namespace kth

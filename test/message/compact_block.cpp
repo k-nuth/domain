@@ -5,7 +5,8 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 BOOST_AUTO_TEST_SUITE(compact_block_tests)
 
@@ -147,7 +148,7 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_5__always__equals_params) {
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes__failure) {
     data_chunk const raw{0xab, 0xcd};
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::compact_block::version_minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::compact_block::version_minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transaction__failure) {
@@ -158,7 +159,7 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transactio
         "3434565656565678789a9a02010000000100000000000001000000010000000"));
 
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(message::compact_block::version_minimum, raw));
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::compact_block::version_minimum, raw));
 }
 
 BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure) {
@@ -169,12 +170,12 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure) {
         "3434565656565678789a9a0201000000010000000000000100000001000000000000"));
 
     message::compact_block expected;
-    expected.from_data(message::compact_block::version_minimum, raw);
+    entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, instance.from_data(
+    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
                                    message::compact_block::version_minimum - 1, data));
 }
 
@@ -186,17 +187,15 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_1__valid_input__success) {
         "3434565656565678789a9a0201000000010000000000000100000001000000000000"));
 
     message::compact_block expected;
-    expected.from_data(message::compact_block::version_minimum, raw);
+    entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
-    auto const result = message::compact_block::factory_from_data(
-        message::compact_block::version_minimum, data);
+    auto const result = create<message::compact_block>(message::compact_block::version_minimum, data);
 
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::compact_block::version_minimum));
+    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::compact_block::version_minimum));
     BOOST_REQUIRE_EQUAL(
         expected.serialized_size(message::compact_block::version_minimum),
         result.serialized_size(message::compact_block::version_minimum));
@@ -210,12 +209,12 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_2__valid_input__success) {
         "3434565656565678789a9a0201000000010000000000000100000001000000000000"));
 
     message::compact_block expected;
-    expected.from_data(message::compact_block::version_minimum, raw);
+    entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     data_source istream(data);
-    auto result = message::compact_block::factory_from_data(
+    auto result = create<message::compact_block>(
         message::compact_block::version_minimum, istream);
 
     BOOST_REQUIRE(result.is_valid());
@@ -235,13 +234,13 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_3__valid_input__success) {
         "3434565656565678789a9a0201000000010000000000000100000001000000000000"));
 
     message::compact_block expected;
-    expected.from_data(message::compact_block::version_minimum, raw);
+    entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
     BOOST_REQUIRE(raw == data);
 
     data_source istream(data);
     istream_reader source(istream);
-    auto const result = message::compact_block::factory_from_data(
+    auto const result = create<message::compact_block>(
         message::compact_block::version_minimum, source);
 
     BOOST_REQUIRE(result.is_valid());

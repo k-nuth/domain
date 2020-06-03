@@ -22,12 +22,12 @@
 #include <kth/infrastructure/config/hash256.hpp>
 #include <kth/infrastructure/utility/collection.hpp>
 
-namespace kth {
+namespace kth::domain::config {
 
 using namespace pt;
-using namespace bc::config;
-using namespace bc::machine;
-using namespace bc::wallet;
+using namespace kth::infrastructure::config;
+using namespace kth::domain::machine;
+using namespace kth::domain::wallet;
 
 // property_tree is very odd in that what one might consider a node or element,
 // having a "containing" name cannot be added into another node without
@@ -40,7 +40,7 @@ using namespace bc::wallet;
 
 // headers
 
-ptree property_list(const config::header& header) {
+ptree property_list(config::header const& header) {
     chain::header const& block_header = header;
 
     ptree tree;
@@ -54,13 +54,13 @@ ptree property_list(const config::header& header) {
     return tree;
 }
 
-ptree property_tree(const config::header& header) {
+ptree property_tree(config::header const& header) {
     ptree tree;
     tree.add_child("header", property_list(header));
     return tree;
 }
 
-ptree property_tree(const std::vector<config::header>& headers, bool json) {
+ptree property_tree(std::vector<config::header> const& headers, bool json) {
     ptree tree;
     tree.add_child("headers", property_tree_list("header", headers, json));
     return tree;
@@ -84,7 +84,7 @@ ptree property_list(chain::input const& tx_input) {
     tree.put("script", tx_input.script().to_string(rule_fork::all_rules));
     tree.put("sequence", tx_input.sequence());
 
-#ifndef KTH_CURRENCY_BCH
+#if defined(KTH_SEGWIT_ENABLED)
     if (tx_input.is_segregated()) {
         tree.put("witness", tx_input.witness().to_string());
     }
@@ -258,4 +258,4 @@ ptree property_tree(const settings_list& settings) {
     return tree;
 }
 
-}  // namespace kth
+} // namespace kth::domain::config

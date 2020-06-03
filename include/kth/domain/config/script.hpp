@@ -13,13 +13,12 @@
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-namespace kth {
-namespace config {
+namespace kth::domain::config {
 
 /**
  * Serialization helper to convert between base16/raw script and script_type.
  */
-class BC_API script {
+class KD_API script {
 public:
     script() = default;
 
@@ -57,13 +56,15 @@ public:
      * Serialize the script to bytes according to the wire protocol.
      * @return  The byte serialized copy of the script.
      */
-    [[nodiscard]] bc::data_chunk to_data() const;
+    [[nodiscard]]
+    kth::data_chunk to_data() const;
 
     /**
      * Return a pretty-printed copy of the script.
      * @return  A mnemonic-printed copy of the internal script.
      */
-    [[nodiscard]] std::string to_string() const;
+    [[nodiscard]]
+    std::string to_string() const;
 
     /**
      * Overload cast to internal type.
@@ -96,7 +97,6 @@ private:
     chain::script value_;
 };
 
-}  // namespace config
-}  // namespace kth
+} // namespace kth::domain::config
 
 #endif

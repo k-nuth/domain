@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_MESSAGES_HPP
-#define KTH_MESSAGE_MESSAGES_HPP
+#ifndef KTH_DOMAIN_MESSAGE_MESSAGES_HPP
+#define KTH_DOMAIN_MESSAGE_MESSAGES_HPP
 
 #include <algorithm>
 #include <cstddef>
@@ -96,14 +96,14 @@
 namespace kth {
 
 #define DECLARE_MESSAGE_POINTER_TYPES(type) \
-    typedef message::type::ptr type##_ptr;  \
-    typedef message::type::const_ptr type##_const_ptr
+    using type##_ptr = domain::message::type::ptr;  \
+    using type##_const_ptr = domain::message::type::const_ptr
 
 #define DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES(type)                 \
-    typedef message::type::ptr_list type##_ptr_list;                     \
-    typedef message::type::const_ptr_list type##_const_ptr_list;         \
-    typedef message::type::const_ptr_list_ptr type##_const_ptr_list_ptr; \
-    typedef message::type::const_ptr_list_const_ptr type##_const_ptr_list_const_ptr
+    using type##_ptr_list = domain::message::type::ptr_list;                     \
+    using type##_const_ptr_list = domain::message::type::const_ptr_list;         \
+    using type##_const_ptr_list_ptr = domain::message::type::const_ptr_list_ptr; \
+    using type##_const_ptr_list_const_ptr = domain::message::type::const_ptr_list_const_ptr
 
 // HACK: declare these in bc namespace to reduce length.
 DECLARE_MESSAGE_POINTER_TYPES(address);
@@ -136,7 +136,7 @@ DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES(transaction);
 #undef DECLARE_MESSAGE_POINTER_TYPES
 #undef DECLARE_MESSAGE_POINTER_LIST_POINTER_TYPES
 
-namespace message {
+namespace domain::message {
 
 /// Serialize a message object to the Bitcoin wire protocol encoding.
 template <typename Message>
@@ -176,9 +176,9 @@ data_chunk serialize(uint32_t version, const Message& packet, uint32_t magic) {
     return data;
 }
 
-// BC_API size_t variable_uint_size(uint64_t value);
+// KD_API size_t variable_uint_size(uint64_t value);
 
-}  // namespace message
-}  // namespace kth
+} // namespace domain::message
+} // namespace kth
 
 #endif

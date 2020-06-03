@@ -11,24 +11,12 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::message {
+namespace kth::domain::message {
 
 std::string const version::command = "version";
 //const bounds message::version::version = { level::minimum, level::maximum };
 uint32_t const message::version::version_minimum = level::minimum;
 uint32_t const message::version::version_maximum = level::maximum;
-
-version version::factory_from_data(uint32_t version, data_chunk const& data) {
-    message::version instance;
-    instance.from_data(version, data);
-    return instance;
-}
-
-version version::factory_from_data(uint32_t version, std::istream& stream) {
-    message::version instance;
-    instance.from_data(version, stream);
-    return instance;
-}
 
 version::version(uint32_t value, uint64_t services, uint64_t timestamp, network_address const& address_receiver, network_address const& address_sender, uint64_t nonce, std::string const& user_agent, uint32_t start_height, bool relay)
     : value_(value), services_(services), timestamp_(timestamp), address_receiver_(address_receiver), address_sender_(address_sender), nonce_(nonce), user_agent_(user_agent), start_height_(start_height), relay_(relay) {
@@ -97,16 +85,6 @@ void version::reset() {
     relay_ = false;
 }
 
-bool version::from_data(uint32_t version, data_chunk const& data) {
-    data_source istream(data);
-    return from_data(version, istream);
-}
-
-bool version::from_data(uint32_t version, std::istream& stream) {
-    istream_reader stream_r(stream);
-    return from_data(version, stream_r);
-}
-
 data_chunk version::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
@@ -131,7 +109,7 @@ size_t version::serialized_size(uint32_t version) const {
         address_receiver_.serialized_size(version, false) +
         address_sender_.serialized_size(version, false) +
         sizeof(nonce_) +
-        message::variable_uint_size(user_agent_.size()) + user_agent_.size() +
+        infrastructure::message::variable_uint_size(user_agent_.size()) + user_agent_.size() +
         sizeof(start_height_);
 
     if (value_ >= level::bip37) {
@@ -229,4 +207,4 @@ void version::set_relay(bool relay) {
     relay_ = relay;
 }
 
-}  // namespace kth
+} // namespace kth

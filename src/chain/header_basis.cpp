@@ -16,7 +16,7 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::chain {
+namespace kth::domain::chain {
 
 // Use system clock because we require accurate time of day.
 using wall_clock = std::chrono::system_clock;
@@ -31,40 +31,30 @@ header_basis::header_basis(uint32_t version, hash_digest const& previous_block_h
 // Operators.
 //-----------------------------------------------------------------------------
 
-bool header_basis::operator==(header_basis const& x) const {
-    return (version_ == x.version_) && (previous_block_hash_ == x.previous_block_hash_) && (merkle_ == x.merkle_) && (timestamp_ == x.timestamp_) && (bits_ == x.bits_) && (nonce_ == x.nonce_);
+// friend
+bool operator==(header_basis const& x, header_basis const& y) {
+    return (x.version_ == y.version_) && (x.previous_block_hash_ == y.previous_block_hash_) && 
+           (x.merkle_ == y.merkle_) && (x.timestamp_ == y.timestamp_) && (x.bits_ == y.bits_) && 
+           (x.nonce_ == y.nonce_);
 }
 
-bool header_basis::operator!=(header_basis const& x) const {
-    return !(*this == x);
+//friend
+bool operator!=(header_basis const& x, header_basis const& y) {
+    return !(x == y);
 }
 
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// static
-header_basis header_basis::factory_from_data(data_chunk const& data, bool wire) {
-    header_basis instance;
-    instance.from_data(data, wire);
-    return instance;
-}
+// bool header_basis::from_data(data_chunk const& data, bool wire) {
+//     data_source istream(data);
+//     return from_data(istream, wire);
+// }
 
-// static
-header_basis header_basis::factory_from_data(std::istream& stream, bool wire) {
-    header_basis instance;
-    instance.from_data(stream, wire);
-    return instance;
-}
-
-bool header_basis::from_data(data_chunk const& data, bool wire) {
-    data_source istream(data);
-    return from_data(istream, wire);
-}
-
-bool header_basis::from_data(std::istream& stream, bool wire) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire);
-}
+// bool header_basis::from_data(std::istream& stream, bool wire) {
+//     istream_reader stream_r(stream);
+//     return from_data(stream_r, wire);
+// }
 
 // protected
 void header_basis::reset() {
@@ -102,19 +92,6 @@ data_chunk header_basis::to_data(bool wire) const {
 void header_basis::to_data(data_sink& stream, bool wire) const {
     ostream_writer sink_w(stream);
     to_data(sink_w, wire);
-}
-
-// Size.
-//-----------------------------------------------------------------------------
-
-// static
-size_t header_basis::satoshi_fixed_size() {
-    return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + sizeof(bits_) + sizeof(nonce_);
-}
-
-inline
-size_t header_basis::serialized_size(bool /*wire*/) const {
-    return satoshi_fixed_size();
 }
 
 // Accessors.
@@ -304,4 +281,4 @@ code header_basis::accept(chain_state const& state, hash_digest const& hash) con
 // code header_basis::accept(chain_state const& state) const {
 // }
 
-}  // namespace kth
+} // namespace kth

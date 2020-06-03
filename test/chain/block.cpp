@@ -5,10 +5,12 @@
 #include <kth/domain.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
+using namespace kth;
+using namespace kd;
 
 // Test helper.
-static bool all_valid(chain::transaction::list const& transactions) {
+static
+bool all_valid(chain::transaction::list const& transactions) {
     auto valid = true;
 
     for (auto const& tx : transactions) {
@@ -196,7 +198,7 @@ BOOST_AUTO_TEST_CASE(block__is_valid_merkle_root__valid__returns_true) {
         "ab48788ac00000000"));
 
     chain::block instance;
-    BOOST_REQUIRE(instance.from_data(raw_block));
+    BOOST_REQUIRE(entity_from_data(instance, raw_block));
     BOOST_REQUIRE(instance.is_valid_merkle_root());
 }
 
@@ -205,7 +207,7 @@ BOOST_AUTO_TEST_SUITE(block_serialization_tests)
 BOOST_AUTO_TEST_CASE(block__from_data__insufficient_bytes__failure) {
     data_chunk data(10);
     chain::block instance;
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
@@ -218,33 +220,33 @@ BOOST_AUTO_TEST_CASE(block__from_data__insufficient_transaction_bytes__failure) 
         "0114ffffffff0100f2052a0100000043410437b36a7221bc977dce712728a954"));
 
     chain::block instance;
-    BOOST_REQUIRE(!instance.from_data(data));
+    BOOST_REQUIRE(!entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_valid());
 }
 
 BOOST_AUTO_TEST_CASE(block__genesis__mainnet__valid_structure) {
-    auto const genesis = bc::chain::block::genesis_mainnet();
+    auto const genesis = chain::block::genesis_mainnet();
     BOOST_REQUIRE(genesis.is_valid());
     BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
     BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
 BOOST_AUTO_TEST_CASE(block__genesis__testnet__valid_structure) {
-    auto const genesis = bc::chain::block::genesis_testnet();
+    auto const genesis = chain::block::genesis_testnet();
     BOOST_REQUIRE(genesis.is_valid());
     BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
     BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
 BOOST_AUTO_TEST_CASE(block__genesis__regtest__valid_structure) {
-    auto const genesis = bc::chain::block::genesis_regtest();
+    auto const genesis = chain::block::genesis_regtest();
     BOOST_REQUIRE(genesis.is_valid());
     BOOST_REQUIRE_EQUAL(genesis.transactions().size(), 1u);
     BOOST_REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
 BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success) {
-    auto const genesis = bc::chain::block::genesis_mainnet();
+    auto const genesis = chain::block::genesis_mainnet();
     BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
     BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
 
@@ -253,7 +255,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success) {
     BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
 
     // Reload genesis block.
-    auto const block = chain::block::factory_from_data(raw_block);
+    auto const block = create<chain::block>(raw_block);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -263,7 +265,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_1__genesis_mainnet__success) {
 }
 
 BOOST_AUTO_TEST_CASE(block__factory_from_data_2__genesis_mainnet__success) {
-    auto const genesis = bc::chain::block::genesis_mainnet();
+    auto const genesis = chain::block::genesis_mainnet();
     BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
     BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
 
@@ -273,7 +275,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_2__genesis_mainnet__success) {
 
     // Reload genesis block.
     data_source stream(raw_block);
-    auto const block = chain::block::factory_from_data(stream);
+    auto const block = create<chain::block>(stream);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -283,7 +285,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_2__genesis_mainnet__success) {
 }
 
 BOOST_AUTO_TEST_CASE(block__factory_from_data_3__genesis_mainnet__success) {
-    auto const genesis = bc::chain::block::genesis_mainnet();
+    auto const genesis = chain::block::genesis_mainnet();
     BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
     BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
 
@@ -294,7 +296,7 @@ BOOST_AUTO_TEST_CASE(block__factory_from_data_3__genesis_mainnet__success) {
     // Reload genesis block.
     data_source stream(raw_block);
     istream_reader reader(stream);
-    auto const block = chain::block::factory_from_data(reader);
+    auto const block = create<chain::block>(reader);
 
     BOOST_REQUIRE(block.is_valid());
     BOOST_REQUIRE(genesis.header() == block.header());
@@ -340,7 +342,7 @@ BOOST_AUTO_TEST_CASE(block__generate_merkle_root__block_with_multiple_transactio
         "76a914eb675c349c474bec8dea2d79d12cff6f330ab48788ac00000000"));
 
     chain::block block100k;
-    BOOST_REQUIRE(block100k.from_data(raw));
+    BOOST_REQUIRE(entity_from_data(block100k, raw));
     BOOST_REQUIRE(block100k.is_valid());
 
     auto const serial = block100k.to_data();
@@ -575,9 +577,9 @@ BOOST_AUTO_TEST_CASE(validate_block__is_distinct_tx_set__partialy_distinct_not_a
 #ifdef KTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(validate_block__is_cash_pow_valid__true) {
     uint32_t old_bits = 402736949;
-    const chain::compact bits(old_bits);
+    const domain::chain::compact bits(old_bits);
     uint256_t target(bits);
-    BOOST_REQUIRE_EQUAL(chain::compact(chain::chain_state::difficulty_adjustment_cash(target)).normal(), 402757890);
+    BOOST_REQUIRE_EQUAL(domain::chain::compact(domain::chain::chain_state::difficulty_adjustment_cash(target)).normal(), 402757890);
 }
 #endif  //KTH_CURRENCY_BCH
 

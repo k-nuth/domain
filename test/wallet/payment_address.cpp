@@ -6,9 +6,10 @@
 #include <kth/domain/multi_crypto_support.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace bc;
-using namespace bc::chain;
-using namespace bc::wallet;
+using namespace kth;
+using namespace kd;
+using namespace kth::domain::chain;
+using namespace kth::domain::wallet;
 
 BOOST_AUTO_TEST_SUITE(payment_address_tests)
 
@@ -250,14 +251,14 @@ BOOST_AUTO_TEST_CASE(payment_address__hash__compressed_point__expected) {
 //cashAddr payment_address
 BOOST_AUTO_TEST_CASE(payment_address__cashAddr__mainnet__encode) {
     const payment_address address(ec_public("04278f7bfee4ef625f85279c3a01d57c22e2877a902128b2df85071f9d6c95b290f094f5bd1bff5880d09cc231c774d71ac22d3ab9bdd9dda2e75017b52d893367"),
-                                  kth::wallet::payment_address::mainnet_p2kh);
+                                  kth::domain::wallet::payment_address::mainnet_p2kh);
     BOOST_REQUIRE(address);
     BOOST_REQUIRE_EQUAL(address.encoded_cashaddr(), "bitcoincash:qpzz8n7jp6847yyx8t33matrgcsdx6c0cvmtevrfgz");
 }
 
 BOOST_AUTO_TEST_CASE(payment_address__cashAddr__testnet__encode) {
     const payment_address address(ec_public("04278f7bfee4ef625f85279c3a01d57c22e2877a902128b2df85071f9d6c95b290f094f5bd1bff5880d09cc231c774d71ac22d3ab9bdd9dda2e75017b52d893367"),
-                                  kth::wallet::payment_address::testnet_p2kh);
+                                  kth::domain::wallet::payment_address::testnet_p2kh);
     BOOST_REQUIRE(address);
     BOOST_REQUIRE_EQUAL(address.encoded_cashaddr(), "bchtest:qpzz8n7jp6847yyx8t33matrgcsdx6c0cvleatp707");
 }

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_MESSAGE_NOT_FOUND_HPP
-#define KTH_MESSAGE_NOT_FOUND_HPP
+#ifndef KTH_DOMAIN_MESSAGE_NOT_FOUND_HPP
+#define KTH_DOMAIN_MESSAGE_NOT_FOUND_HPP
 
 #include <initializer_list>
 #include <istream>
@@ -19,26 +19,15 @@
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace message {
+namespace kth::domain::message {
 
-class BC_API not_found : public inventory {
+class KD_API not_found : public inventory {
 public:
     using ptr = std::shared_ptr<not_found>;
     using const_ptr = std::shared_ptr<const not_found>;
-
-    static not_found factory_from_data(uint32_t version, data_chunk const& data);
-    static not_found factory_from_data(uint32_t version, std::istream& stream);
-
-    template <typename R, KTH_IS_READER(R)>
-    static not_found factory_from_data(uint32_t version, R& source) {
-        not_found instance;
-        instance.from_data(version, source);
-        return instance;
-    }
 
     not_found() = default;
     not_found(inventory_vector::list const& values);
@@ -56,12 +45,11 @@ public:
     bool operator!=(not_found const& x) const;
 
 
-    bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    // bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    // bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    {
+    bool from_data(uint32_t version, R& source) {
         if ( ! inventory::from_data(version, source)) {
             return false;
         }
@@ -78,12 +66,17 @@ public:
     }
 
 
-    static std::string const command;
-    static uint32_t const version_minimum;
-    static uint32_t const version_maximum;
+    static
+    std::string const command;
+
+    static
+    uint32_t const version_minimum;
+
+    static
+    uint32_t const version_maximum;
+
 };
 
-}  // namespace message
-}  // namespace kth
+} // namespace kth::domain::message
 
 #endif

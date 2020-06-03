@@ -19,8 +19,7 @@
 // representing an address.... Alt-chain implementers may also change the prefix
 // such that encrypted addresses do not start with "6P".
 
-namespace kth {
-namespace wallet {
+namespace kth::domain::wallet {
 
 template <size_t Size>
 class parse_encrypted_prefix {
@@ -45,8 +44,7 @@ private:
     bool valid_;
 };
 
-}  // namespace wallet
-}  // namespace kth
+} // namespace kth::domain::wallet
 
 #include "parse_encrypted_prefix.ipp"
 

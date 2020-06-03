@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CHAIN_WITNESS_HPP
-#define KTH_CHAIN_WITNESS_HPP
+#ifndef KTH_DOMAIN_CHAIN_WITNESS_HPP
+#define KTH_DOMAIN_CHAIN_WITNESS_HPP
 
 #include <cstddef>
 #include <istream>
@@ -19,21 +19,21 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/common.hpp>
+#include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
-namespace kth {
-namespace chain {
+namespace kth::domain::chain {
 
-#ifdef KTH_CURRENCY_BCH
+#if ! defined(KTH_SEGWIT_ENABLED)
 
 class witness {};
 
 #else
-class BC_API witness {
+
+class KD_API witness {
 public:
     using operation = machine::operation;
-    using iterator = data_stack::const_iterator;
+    using iterator = machine::const_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -54,16 +54,6 @@ public:
     // Deserialization (from witness stack).
     //-------------------------------------------------------------------------
     // Prefixed data assumed valid here though caller may confirm with is_valid.
-
-    static witness factory_from_data(data_chunk const& encoded, bool prefix);
-    static witness factory_from_data(std::istream& stream, bool prefix);
-
-    template <typename R, KTH_IS_READER(R)>
-    static witness factory_from_data(R& source, bool prefix) {
-        witness instance;
-        instance.from_data(source, prefix);
-        return instance;
-    }
 
     /// Deserialization invalidates the iterator.
     bool from_data(data_chunk const& encoded, bool prefix);
@@ -108,8 +98,6 @@ public:
 
         return source;
     }
-
-    //bool from_data(reader& source, bool prefix);
 
     /// The witness deserialized ccording to count and size prefixing.
     bool is_valid() const;
@@ -162,8 +150,11 @@ public:
     // Utilities.
     //-------------------------------------------------------------------------
 
-    static bool is_push_size(data_stack const& stack);
-    static bool is_reserved_pattern(data_stack const& stack);
+    static
+    bool is_push_size(data_stack const& stack);
+    
+    static
+    bool is_reserved_pattern(data_stack const& stack);
 
     bool extract_sigop_script(script& out_script, script const& program_script) const;
     bool extract_embedded_script(script& out_script, data_stack& out_stack, script const& program_script) const;
@@ -180,17 +171,17 @@ public:
     void reset();
 
 private:
-    static size_t serialized_size(data_stack const& stack);
-    static operation::list to_pay_key_hash(data_chunk&& program);
+    static
+    size_t serialized_size(data_stack const& stack);
+    
+    static
+    operation::list to_pay_key_hash(data_chunk&& program);
 
     bool valid_{false};
     data_stack stack_;
 };
 #endif // KTH_CURRENCY_BCH
 
-}  // namespace chain
-}  // namespace kth
-
-//#include <kth/domain/concepts_undef.hpp>
+} // namespace kth::domain::chain
 
 #endif
