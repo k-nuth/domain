@@ -247,17 +247,17 @@ BOOST_AUTO_TEST_CASE(operation__factory_from_data_3__roundtrip__success) {
 
 BOOST_AUTO_TEST_CASE(operation__operator_assign_equals_1__always__matches_equivalent) {
     operation expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_operation));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_operation));
     operation instance;
     operation value;
-    BOOST_REQUIRE(value.from_data(valid_raw_operation));
+    BOOST_REQUIRE(entity_from_data(value, valid_raw_operation));
     instance = std::move(value);
     BOOST_REQUIRE(instance == expected);
 }
 
 BOOST_AUTO_TEST_CASE(operation__operator_assign_equals_2__always__matches_equivalent) {
     operation expected;
-    BOOST_REQUIRE(expected.from_data(valid_raw_operation));
+    BOOST_REQUIRE(entity_from_data(expected, valid_raw_operation));
     operation instance;
     instance = expected;
     BOOST_REQUIRE(instance == expected);

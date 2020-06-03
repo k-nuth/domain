@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(encrypted__encrypt_private__vector_unicode__expected) {
     std::string passphrase(encoded_password.begin(), encoded_password.end());
     auto const expected = "6PRW5o9FLp4gJDDVqJQKJFTpMvdsSGJxMYHtHaQBF3ooa8mwD69bapcDQn";
     auto const secret = base16_literal("64eeab5f9be2a01a8365a579511eb3373c87c40da6d2a25f05bda68fe077b66e");
-    BC_REQUIRE_ENCRYPT(secret, passphrase, version, compression, expected);
+    KD_REQUIRE_ENCRYPT(secret, passphrase, version, compression, expected);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

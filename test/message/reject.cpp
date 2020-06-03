@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_1__valid_input__success) {
         data);
 
     auto const data = expected.to_data(version_maximum);
-    auto const result = message::reject::factory_from_data(version_maximum, data);
+    auto const result = create<message::reject>(version_maximum, data);
     BOOST_REQUIRE(result.is_valid());
     BOOST_REQUIRE(expected == result);
     BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));

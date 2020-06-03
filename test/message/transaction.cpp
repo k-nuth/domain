@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_2_valid_data__succes
 
     data_source stream(raw_tx);
     istream_reader source(stream);
-    auto const tx = transaction::factory_from_data(version::level::minimum, source);
+    auto const tx = create<transaction>(version::level::minimum, source);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE(tx.hash() == tx_hash);
 
