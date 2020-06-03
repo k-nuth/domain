@@ -553,7 +553,6 @@ hash_digest hash(transaction_basis const& tx, bool witness) {
     return hash_non_witness(tx);
 }
 
-
 hash_digest outputs_hash(transaction_basis const& tx) {
     return to_outputs(tx);
 }

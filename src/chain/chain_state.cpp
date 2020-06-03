@@ -1273,69 +1273,6 @@ chain_state::data chain_state::to_header(chain_state const& parent, header const
     return data;
 }
 
-// Constructor (parent to header).
-// This assumes that parent is the state of the header's previous block.
-chain_state::chain_state(chain_state const& parent, header const& header)
-    : data_(to_header(parent, header))
-    , forks_(parent.forks_)
-    , checkpoints_(parent.checkpoints_)
-    , active_(activation(data_, forks_
-#ifdef KTH_CURRENCY_BCH
-        // , parent.magnetic_anomaly_activation_time_
-        // , parent.great_wall_activation_time_
-        // , parent.graviton_activation_time_
-        , parent.phonon_activation_time_
-        , parent.axion_activation_time_
-#endif  //KTH_CURRENCY_BCH
-        ))
-    , median_time_past_(median_time_past(data_, forks_))
-    , work_required_(work_required(data_, forks_))
-#ifdef KTH_CURRENCY_BCH
-    // , magnetic_anomaly_activation_time_(parent.magnetic_anomaly_activation_time_)
-    // , great_wall_activation_time_(parent.great_wall_activation_time_)
-    // , graviton_activation_time_(parent.graviton_activation_time_)
-    , phonon_activation_time_(parent.phonon_activation_time_)
-    , axion_activation_time_(parent.axion_activation_time_)
-#endif  //KTH_CURRENCY_BCH
-{}
-
-// Constructor (from raw data).
-// The allow_collisions hard fork is always activated (not configurable).
-chain_state::chain_state(
-      data&& values
-    , checkpoints const& checkpoints
-    ,  uint32_t forks
-#ifdef KTH_CURRENCY_BCH
-    // , magnetic_anomaly_t magnetic_anomaly_activation_time
-    // , great_wall_t great_wall_activation_time
-    // , graviton_t graviton_activation_time
-    , phonon_t phonon_activation_time
-    , axion_t axion_activation_time
-#endif  //KTH_CURRENCY_BCH
-)
-    : data_(std::move(values))
-    , forks_(forks | rule_fork::allow_collisions)
-    , checkpoints_(checkpoints)
-    , active_(activation(data_, forks_
-#ifdef KTH_CURRENCY_BCH
-        // , magnetic_anomaly_activation_time
-        // , great_wall_activation_time
-        // , graviton_activation_time
-        , phonon_activation_time
-        , axion_activation_time
-#endif  //KTH_CURRENCY_BCH
-        ))
-    , median_time_past_(median_time_past(data_, forks_))
-    , work_required_(work_required(data_, forks_))
-#ifdef KTH_CURRENCY_BCH
-    // , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
-    // , great_wall_activation_time_(great_wall_activation_time)
-    // , graviton_activation_time_(graviton_activation_time)
-    , phonon_activation_time_(phonon_activation_time)
-    , axion_activation_time_(axion_activation_time)
-#endif  //KTH_CURRENCY_BCH
-{}
-
 // Semantic invalidity can also arise from too many/few values in the arrays.
 // The same computations used to specify the ranges could detect such errors.
 // These are the conditions that would cause exception during execution.

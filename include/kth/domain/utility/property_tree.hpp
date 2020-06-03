@@ -190,16 +190,16 @@ KD_API pt::ptree property_list(hash_digest const& hash, size_t height, size_t in
  * @param[in]  index   The tx index.
  * @returns            A new property tree containing the list.
  */
-BC_API pt::ptree property_tree(hash_digest const& hash, size_t height, size_t index);
+KD_API pt::ptree property_tree(hash_digest const& hash, size_t height, size_t index);
 
 /**
  * Create a property tree for the settings command.
  * @param[in]  settings   The list of settings.
  * @returns               A new property tree containing the settings.
  */
-BC_API pt::ptree property_tree(const settings_list& settings);
+KD_API pt::ptree property_tree(const settings_list& settings);
 
-}  // namespace kth
+} // namespace kth::domain
 
 #include <kth/domain/impl/utility/property_tree.ipp>
 

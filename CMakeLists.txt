@@ -905,11 +905,11 @@ set(_kth_domain_headers
     kth/domain/wallet/stealth_address.hpp
     kth/domain/wallet/stealth_receiver.hpp
     kth/domain/wallet/stealth_sender.hpp
-    # kth/domain/wallet/uri.hpp
+
     kth/domain/wallet/uri_reader.hpp
     kth/domain/wallet/transaction_functions.hpp
     kth/domain.hpp
-    )
+  )
 
 foreach (_header ${_kth_domain_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)

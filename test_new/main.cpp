@@ -160,8 +160,8 @@ TEST_CASE("[test_get_keoken_output_empty]") {
 TEST_CASE("[test_get_keoken_output_non_empty]") {
     data_chunk raw_tx = to_chunk(base16_literal("0100000001bd56eab5f51d3d888f72c3e88187dc6cbd0b1abeefbe2348912619301a9e489f000000006b4830450221009a89bf0c34b87154fc4eb3e99a6e044ae21e76e244264645e8de4a747f6989dc02205d350d3113af2ce3cb013f4931c9f4c34d5925d9ffc76e56272befd9f47b521a412102bbfc0ef6f18b7594a930e2dd4e05bb90fbe7be60f58fbc8829f4fda9580af72dffffffff02606b042a010000001976a91456233da90fa320a56359161d02a9eed76b6157c088ac00000000000000001b6a0400004b5014000000014269747072696d0000000000000f424000000000"));
 
-    kth::chain::transaction tx;
-    tx.from_data(raw_tx);
+    kth::domain::chain::transaction tx;
+    entity_from_data(tx, raw_tx);
 
     REQUIRE(tx.is_valid());
     auto ret = first_keoken_output(tx);

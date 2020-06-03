@@ -739,18 +739,57 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     return ec;
 }
 
-// code block_basis::connect() const {
-//     auto const state = validation.state;
-//     return state ? connect(*state) : error::operation_failed;
-// }
-
 code block_basis::connect(chain_state const& state) const {
-    // validation.start_connect = asio::steady_clock::now();
-
     if (state.is_under_checkpoint()) {
         return error::success;
     }
     return connect_transactions(state);
+}
+
+
+
+
+
+// Non-member functions.
+//-----------------------------------------------------------------------------
+
+// With a 32 bit chain the size of the result should not exceed 43 and with a
+// 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
+size_t locator_size(size_t top) {
+    // Set rounding behavior, not consensus-related, thread side effect :<.
+    std::fesetround(FE_UPWARD);
+
+    auto const first_ten_or_top = std::min(size_t(10), top);
+    auto const remaining = top - first_ten_or_top;
+    auto const back_off = remaining == 0 ? 0.0 : remaining == 1 ? 1.0 : std::log2(remaining);
+    auto const rounded_up_log = static_cast<size_t>(std::nearbyint(back_off));
+    return first_ten_or_top + rounded_up_log + size_t(1);
+}
+
+// This algorithm is a network best practice, not a consensus rule.
+// static
+indexes locator_heights(size_t top) {
+    size_t step = 1;
+    indexes heights;
+    auto const reservation = locator_size(top);
+    heights.reserve(reservation);
+
+    // Start at the top of the chain and work backwards to zero.
+    for (auto height = top; height > 0; height = floor_subtract(height, step)) {
+        // Push top 10 indexes first, then back off exponentially.
+        if (heights.size() >= 10) {
+            step <<= 1U;
+        }
+
+        heights.push_back(height);
+    }
+
+    // Push the genesis block index.
+    heights.push_back(0);
+
+    // Validate the reservation computation.
+    KTH_ASSERT(heights.size() <= reservation);
+    return heights;
 }
 
 size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
