@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_4_multiplied__expected) 
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_5_multiplied__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PfLGnQs6VZnrNpmVKfjotbnQuaJK4KZoPFrAjx1JMJUa1Ft8gnf5WxfKd");
-    BC_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
+    KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "c2c8036df268f498099350718c4a3ef3984d2be84618c2650f5171dcc5eb660a");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(!out_is_compressed);
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_5_multiplied__expected) 
 BOOST_AUTO_TEST_CASE(encrypted__decrypt_private__vector_6_multiplied_lot__expected) {
     uint8_t const expected_version = 0x00;
     auto const key = base58_literal("6PgNBNNzDkKdhkT6uJntUXwwzQV8Rr2tZcbkDcuC9DZRsS6AtHts4Ypo1j");
-    BC_REQUIRE_DECRYPT_SECRET(key, "MOLON LABE");
+    KD_REQUIRE_DECRYPT_SECRET(key, "MOLON LABE");
     BOOST_REQUIRE_EQUAL(encode_base16(out_secret), "44ea95afbf138356a05ea32110dfd627232d0f2991ad221187be356f19fa8190");
     BOOST_REQUIRE_EQUAL(out_version, expected_version);
     BOOST_REQUIRE(!out_is_compressed);

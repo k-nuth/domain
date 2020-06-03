@@ -862,12 +862,12 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_p2sh_p2wpkh_tx__valid) {
     data_chunk decoded_tx;
     data_chunk decoded_script;
     BOOST_REQUIRE(decode_base16(decoded_tx, "01000000000101db6b1b20aa0fd7b23880be2ecbd4a98130974cf4748fb66092ac4d3ceb1a5477010000001716001479091972186c449eb1ded22b78e40d009bdf0089feffffff02b8b4eb0b000000001976a914a457b684d7f0d539a46a45bbc043f35b59d0d96388ac0008af2f000000001976a914fd270b1ee6abcaea97fea7ad0402e8bd8ad6d77c88ac02473044022047ac8e878352d3ebbde1c94ce3a10d057c24175747116f8288e5d794d12d482f0220217f36a485cae903c713331d877c1f64677e3622ad4010726870540656fe9dcb012103ad1d8e89212f0b92c74d23bb710c00662ad1470198ac48c43f7d6f93a2a2687392040000"));
-    BOOST_REQUIRE(tx.from_data(decoded_tx, true, true));
+    BOOST_REQUIRE(entity_from_data(tx, decoded_tx, true, true));
     BOOST_REQUIRE_EQUAL(tx.inputs().size(), 1u);
 
     auto& prevout0 = tx.inputs()[0].previous_output().validation.cache;
     BOOST_REQUIRE(decode_base16(decoded_script, "a9144733f37cf4db86fbc2efed2500b4f4e49f31202387"));
-    prevout0.set_script(script::factory_from_data(decoded_script, false));
+    prevout0.set_script(create<script>(decoded_script, false));
     prevout0.set_value(1000000000);
     BOOST_REQUIRE(prevout0.script().is_valid());
 
@@ -893,18 +893,18 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_1_tx__valid) {
     data_chunk decoded_tx;
     data_chunk decoded_script;
     BOOST_REQUIRE(decode_base16(decoded_tx, "01000000000102fe3dc9208094f3ffd12645477b3dc56f60ec4fa8e6f5d67c565d1c6b9216b36e000000004847304402200af4e47c9b9629dbecc21f73af989bdaa911f7e6f6c2e9394588a3aa68f81e9902204f3fcf6ade7e5abb1295b6774c8e0abd94ae62217367096bc02ee5e435b67da201ffffffff0815cf020f013ed6cf91d29f4202e8a58726b1ac6c79da47c23d1bee0a6925f80000000000ffffffff0100f2052a010000001976a914a30741f8145e5acadf23f751864167f32e0963f788ac000347304402200de66acf4527789bfda55fc5459e214fa6083f936b430a762c629656216805ac0220396f550692cd347171cbc1ef1f51e15282e837bb2b30860dc77c8f78bc8501e503473044022027dc95ad6b740fe5129e7e62a75dd00f291a2aeb1200b84b09d9e3789406b6c002201a9ecd315dd6a0e632ab20bbb98948bc0c6fb204f2c286963bb48517a7058e27034721026dccc749adc2a9d0d89497ac511f760f45c47dc5ed9cf352a58ac706453880aeadab210255a9626aebf5e29c0e6538428ba0d1dcf6ca98ffdf086aa8ced5e0d0215ea465ac00000000"));
-    BOOST_REQUIRE(tx.from_data(decoded_tx, true, true));
+    BOOST_REQUIRE(entity_from_data(tx, decoded_tx, true, true));
     BOOST_REQUIRE_EQUAL(tx.inputs().size(), 2u);
 
     auto& prevout0 = tx.inputs()[0].previous_output().validation.cache;
     BOOST_REQUIRE(decode_base16(decoded_script, "21036d5c20fa14fb2f635474c1dc4ef5909d4568e5569b79fc94d3448486e14685f8ac"));
-    prevout0.set_script(script::factory_from_data(decoded_script, false));
+    prevout0.set_script(create<script>(decoded_script, false));
     prevout0.set_value(156250000);
     BOOST_REQUIRE(prevout0.script().is_valid());
 
     auto& prevout1 = tx.inputs()[1].previous_output().validation.cache;
     BOOST_REQUIRE(decode_base16(decoded_script, "00205d1b56b63d714eebe542309525f484b7e9d6f686b3781b6f61ef925d66d6f6a0"));
-    prevout1.set_script(script::factory_from_data(decoded_script, false));
+    prevout1.set_script(create<script>(decoded_script, false));
     prevout1.set_value(4900000000);
     BOOST_REQUIRE(prevout1.script().is_valid());
 

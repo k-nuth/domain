@@ -617,7 +617,7 @@ BOOST_AUTO_TEST_CASE(transaction__outputs_setter_2__roundtrip__success) {
 BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__non_coinbase_tx__returns_false) {
     static auto const data = to_chunk(base16_literal(TX5));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(data));
+    BOOST_REQUIRE(entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_coinbase());
     BOOST_REQUIRE(!instance.is_oversized_coinbase());
 }
@@ -638,7 +638,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_above_max__
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    BOOST_REQUIRE(inputs.back().script().from_data(data_chunk(max_coinbase_size + 10), false));
+    BOOST_REQUIRE(entity_from_data(inputs.back().script(), data_chunk(max_coinbase_size + 10), false));
     BOOST_REQUIRE(instance.is_coinbase());
     BOOST_REQUIRE(inputs.back().script().serialized_size(false) > max_coinbase_size);
     BOOST_REQUIRE(instance.is_oversized_coinbase());

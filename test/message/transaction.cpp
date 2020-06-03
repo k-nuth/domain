@@ -521,8 +521,8 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__duplicates__returns
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(alpha.from_data(transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(beta.from_data(transaction::version_minimum, raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    BOOST_REQUIRE(entity_from_data(beta, transaction::version_minimum, raw_tx));
     BOOST_REQUIRE(alpha == beta);
 }
 
@@ -548,7 +548,7 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__differs__returns_fa
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(alpha.from_data(transaction::version_minimum, raw_tx));
+    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
     BOOST_REQUIRE_EQUAL(false, alpha == beta);
 }
 
