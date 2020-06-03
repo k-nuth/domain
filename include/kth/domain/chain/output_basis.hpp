@@ -96,7 +96,7 @@ public:
     
     void set_value(uint64_t value);
 
-    // Deprecated (unsafe).
+    [[deprecated]] // unsafe
     chain::script& script();
     
     [[nodiscard]]

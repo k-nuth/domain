@@ -118,7 +118,7 @@ public:
 
     void set_version(uint32_t value);
 
-    // Deprecated (unsafe).
+    [[deprecated]] // unsafe
     hash_digest& previous_block_hash();
     
     [[nodiscard]]
@@ -126,7 +126,7 @@ public:
     
     void set_previous_block_hash(hash_digest const& value);
 
-    // Deprecated (unsafe).
+    [[deprecated]] // unsafe
     hash_digest& merkle();
     
     [[nodiscard]]

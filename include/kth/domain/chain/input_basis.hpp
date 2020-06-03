@@ -140,7 +140,7 @@ public:
     void set_previous_output(output_point const& value);
     void set_previous_output(output_point&& value);
 
-    // Deprecated (unsafe).
+    [[deprecated]] // unsafe
     chain::script& script();
     
     [[nodiscard]]
@@ -151,7 +151,7 @@ public:
 
 
 #if defined(KTH_SEGWIT_ENABLED)
-    // Deprecated (unsafe).
+    [[deprecated]] // unsafe
     chain::witness& witness();
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);

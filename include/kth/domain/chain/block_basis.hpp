@@ -129,7 +129,7 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    // deprecated (unsafe)
+    [[deprecated]] // unsafe
     chain::header& header();
 
     [[nodiscard]]
@@ -137,7 +137,7 @@ public:
 
     void set_header(chain::header const& value);
 
-    // deprecated (unsafe)
+    [[deprecated]] // unsafe
     transaction::list& transactions();
 
     [[nodiscard]]
