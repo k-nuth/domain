@@ -976,7 +976,7 @@ BOOST_AUTO_TEST_CASE(transaction__hash__block320670__success) {
     static auto const expected = hash_literal(TX7_HASH);
     static auto const data = to_chunk(base16_literal(TX7));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(data));
+    BOOST_REQUIRE(entity_from_data(instance, data));
     BOOST_REQUIRE(expected == instance.hash());
     BOOST_REQUIRE(data == instance.to_data());
 }

@@ -348,7 +348,7 @@ BOOST_AUTO_TEST_CASE(encrypted__decrypt_public__vector_9__expected) {
     auto const key = base58_literal("cfrm38V5ec4E5RKwBu46Jf5zfaE54nuB1NWHpHSpgX4GQqfzx7fvqm43mBHvr89pPgykDHts9VC");
 
 //TODO(kth): replace the key
-    BC_REQUIRE_DECRYPT_POINT(key, "Libbitcoin BIP38 Test Vector", version);
+    KD_REQUIRE_DECRYPT_POINT(key, "Libbitcoin BIP38 Test Vector", version);
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
     BOOST_REQUIRE_EQUAL(derived_address, "1NjjvGqXDrx1DvrhjYJxzrpyopk1ygHTSJ");
 }
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair)
 
 // TODO(legacy): create compressed vector(s).
 
-#define BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compressed) \
+#define KD_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compressed) \
     ec_compressed out_point;                                         \
     encrypted_private out_private;                                   \
     BOOST_REQUIRE(create_key_pair(out_private, out_point, token, seed, version, compressed))
@@ -384,7 +384,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_8__expected) {
     uint8_t const version = 0x00;
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
     auto const token = base58_literal("passphraseo59BauW85etaRsKpbbTrEa5RRYw6bq5K9yrDf4r4N5fcirPdtDKmfJw9oYNoGM");
-    BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PfPAw5HErFdzMyBvGMwSfSWjKmzgm3jDg7RxQyVCSSBJFZLAZ6hVupmpn");
 
     ec_uncompressed decompressed;
@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9__expected) {
     uint8_t const version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
-    BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PfU2yS6DUHjgH8wmsJRT1rHWXRofmDV5UJ3dypocew56BDcw5TQJXFYfm");
 
     ec_uncompressed decompressed;
@@ -412,7 +412,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9_compressed__expected) 
     uint8_t const version = 0x00;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
-    BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PnQ4ihgH1pxeUWa1SDPZ4xToaTdLtjebd8Qw6KJf8xDCW67ssaAqWuJkw");
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
 }
@@ -423,7 +423,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair__vector_9_compressed_testnet__ex
     uint8_t const version = 111;
     auto const seed = base16_literal("bbeac8b9bb39381520b6873553544b387bcaa19112602230");
     auto const token = base58_literal("passphraseouGLY8yjTZQ5Q2bTo8rtKfdbHz4tme7QuPheRgES8KnT6pX5yxFauYhv3SVPDD");
-    BC_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "8FELCpEDogaLG3WkLhSVpKKravcNDZ7HAQ7jwHApt1Rn4BHqaLAfo9nrRD");
     BOOST_REQUIRE_EQUAL(encode_base16(out_point), "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
 }
@@ -436,7 +436,7 @@ BOOST_AUTO_TEST_SUITE(encrypted__create_key_pair_with_confirmation)
 
 // TODO(legacy): create compressed vector(s).
 
-#define BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compressed) \
+#define KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compressed) \
     ec_compressed out_point;                                                      \
     encrypted_public out_public;                                                  \
     encrypted_private out_private;                                                \
@@ -457,7 +457,7 @@ BOOST_AUTO_TEST_CASE(encrypted__create_key_pair_with_confirmation__vector_8__exp
     uint8_t const version = 0x00;
     auto const seed = base16_literal("d36d8e703d8bd5445044178f69087657fba73d9f3ff211f7");
     auto const token = base58_literal("passphraseo59BauW85etaRsKpbbTrEa5RRYw6bq5K9yrDf4r4N5fcirPdtDKmfJw9oYNoGM");
-    BC_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
+    KD_REQUIRE_CREATE_KEY_PAIR_CONFIRMATION(token, seed, version, compression);
     BOOST_REQUIRE_EQUAL(encode_base58(out_private), "6PfPAw5HErFdzMyBvGMwSfSWjKmzgm3jDg7RxQyVCSSBJFZLAZ6hVupmpn");
     BOOST_REQUIRE_EQUAL(encode_base58(out_public), "cfrm38V5Nm1mn7GxPBAGTXawqXRwE1EbR19GqsvJ9JmF5VKLqi8nETmULpELkQvExCGkTNCH2An");
 
