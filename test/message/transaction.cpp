@@ -360,9 +360,9 @@ BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equi
         "e61e66fe5d88ac00000000"));
 
     chain::transaction expected;
-    BOOST_REQUIRE(expected.from_data(raw_tx));
+    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
     transaction instance;
-    instance = chain::transaction::factory_from_data(raw_tx);
+    instance = create<chain::transaction>(raw_tx);
     BOOST_REQUIRE(instance == expected);
 }
 

@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_SUITE(encrypted__decrypt1)
 
 // TODO(legacy): create compressed+multiplied and altchain/testnet vector(s).
 
-#define BC_REQUIRE_DECRYPT_SECRET(key, passphrase) \
+#define KD_REQUIRE_DECRYPT_SECRET(key, passphrase) \
     ec_secret out_secret;                          \
     uint8_t out_version = 42;                      \
     bool out_is_compressed = true;                 \

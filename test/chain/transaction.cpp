@@ -520,7 +520,7 @@ BOOST_AUTO_TEST_CASE(transaction__factory_data_3__case_1__success) {
 
     data_source stream(raw_tx);
     istream_reader source(stream);
-    chain::transaction tx = chain::transaction::factory_from_data(source);
+    chain::transaction tx = create<chain::transaction>(source);
     BOOST_REQUIRE(tx.is_valid());
     BOOST_REQUIRE_EQUAL(tx.serialized_size(), 225u);
     BOOST_REQUIRE(tx.hash() == tx_hash);
