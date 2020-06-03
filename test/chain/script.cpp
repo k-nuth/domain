@@ -982,18 +982,18 @@ BOOST_AUTO_TEST_CASE(script__native__bip143_native_p2wsh_2_tx__valid) {
 
     // This example shows how SINGLE|ANYONECANPAY does not commit to the input index (swap input indexes).
     BOOST_REQUIRE(decode_base16(decoded_tx, "0100000000010280e68831516392fcd100d186b3c2c7b95c80b53c77e77c35ba03a66b429a2a1b0000000000ffffffffe9b542c5176808107ff1df906f46bb1f2583b16112b95ee5380665ba7fcfc0010000000000ffffffff0280969800000000001976a9146648a8cd4531e1ec47f35916de8e259237294d1e88ac80969800000000001976a914de4b231626ef508c9a74a8517e6783c0546d6b2888ac024730440220032521802a76ad7bf74d0e2c218b72cf0cbc867066e2e53db905ba37f130397e02207709e2188ed7f08f4c952d9d13986da504502b8c3be59617e043552f506c46ff83275163ab68210392972e2eb617b2388771abe27235fd5ac44af8e61693261550447a4c3e39da98ac02483045022100f6a10b8604e6dc910194b79ccfc93e1bc0ec7c03453caaa8987f7d6c3413566002206216229ede9b4d6ec2d325be245c5b508ff0339bf1794078e20bfe0babc7ffe683270063ab68210392972e2eb617b2388771abe27235fd5ac44af8e61693261550447a4c3e39da98ac00000000"));
-    BOOST_REQUIRE(tx.from_data(decoded_tx, true, true));
+    BOOST_REQUIRE(entity_from_data(tx, decoded_tx, true, true));
     BOOST_REQUIRE_EQUAL(tx.inputs().size(), 2u);
 
     auto& prevout2 = tx.inputs()[0].previous_output().validation.cache;
     BOOST_REQUIRE(decode_base16(decoded_script, "0020d9bbfbe56af7c4b7f960a70d7ea107156913d9e5a26b0a71429df5e097ca6537"));
-    prevout2.set_script(script::factory_from_data(decoded_script, false));
+    prevout2.set_script(create<script>(decoded_script, false));
     prevout2.set_value(16777215);
     BOOST_REQUIRE(prevout2.script().is_valid());
 
     auto& prevout3 = tx.inputs()[1].previous_output().validation.cache;
     BOOST_REQUIRE(decode_base16(decoded_script, "0020ba468eea561b26301e4cf69fa34bde4ad60c81e70f059f045ca9a79931004a4d"));
-    prevout3.set_script(script::factory_from_data(decoded_script, false));
+    prevout3.set_script(create<script>(decoded_script, false));
     prevout3.set_value(16777215);
     BOOST_REQUIRE(prevout3.script().is_valid());
 

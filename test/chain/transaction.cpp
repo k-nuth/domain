@@ -660,7 +660,7 @@ BOOST_AUTO_TEST_CASE(transaction__is_oversized_coinbase__script_size_within_boun
 BOOST_AUTO_TEST_CASE(transaction__is_null_non_coinbase__coinbase_tx__returns_false) {
     static auto const data = to_chunk(base16_literal(TX6));
     chain::transaction instance;
-    BOOST_REQUIRE(instance.from_data(data));
+    BOOST_REQUIRE(entity_from_data(instance, data));
     BOOST_REQUIRE(!instance.is_null_non_coinbase());
 }
 
