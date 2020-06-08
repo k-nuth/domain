@@ -42,6 +42,12 @@ size_t weight(size_t serialized_size_true, size_t serialized_size_false) {
 
 using indexes = std::vector<size_t>;
 
+#if defined(KTH_SEGWIT_ENABLED)
+class KD_API block_basis;
+void strip_witness(block_basis& blk);
+bool is_segregated(block_basis const& blk);
+#endif
+
 class KD_API block_basis {
 public:
     using list = std::vector<block_basis>;
@@ -89,7 +95,7 @@ public:
 #if defined(KTH_SEGWIT_ENABLED)
         // TODO(legacy): optimize by having reader skip witness data.
         if ( ! witness_val(witness)) {
-            strip_witness();
+            strip_witness(*this);
         }
 #endif
 
@@ -129,7 +135,7 @@ public:
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
 
-    // deprecated (unsafe)
+    // [[deprecated]] // unsafe
     chain::header& header();
 
     [[nodiscard]]
@@ -137,7 +143,7 @@ public:
 
     void set_header(chain::header const& value);
 
-    // deprecated (unsafe)
+    // [[deprecated]] // unsafe
     transaction::list& transactions();
 
     [[nodiscard]]
@@ -236,11 +242,6 @@ private:
     chain::header header_;
     transaction::list transactions_;
 };
-
-#if defined(KTH_SEGWIT_ENABLED)
-void strip_witness(block_basis& blk);
-bool is_segregated(block_basis const& blk);
-#endif
 
 // Non-member functions.
 //-------------------------------------------------------------------------

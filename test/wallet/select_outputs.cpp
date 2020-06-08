@@ -2,19 +2,17 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-BOOST_AUTO_TEST_SUITE(select_outputs_tests)
+// Start Boost Suite: select outputs tests
 
 // TODO:
-////BOOST_AUTO_TEST_CASE(select_outputs__select__empty_greedy_0__expected)
-////{
-////    BOOST_REQUIRE(true);
-////}
+// TEST_CASE("select outputs  select  empty greedy 0  expected", "[select outputs]") {
+//     REQUIRE(true);
+// }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

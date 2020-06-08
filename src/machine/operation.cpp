@@ -22,12 +22,6 @@
 
 namespace kth::domain::machine {
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// TODO(legacy): optimize for larger data by using a shared byte array.
-//bool operation::from_data(reader& source)
-
 inline bool is_push_token(std::string const& token) {
     return token.size() > 1 && token.front() == '[' && token.back() == ']';
 }

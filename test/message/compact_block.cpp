@@ -2,17 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(compact_block_tests)
+// Start Boost Suite: compact block tests
 
-BOOST_AUTO_TEST_CASE(compact_block__constructor_1__always__invalid) {
+TEST_CASE("compact block  constructor 1  always invalid", "[compact block]") {
     message::compact_block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 uint64_t convert_to_uint64t(std::string const& rawdata) {
@@ -22,7 +21,7 @@ uint64_t convert_to_uint64t(std::string const& rawdata) {
     return value;
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__constructor_2__always__equals_params) {
+TEST_CASE("compact block  constructor 2  always  equals params", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -44,14 +43,14 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_2__always__equals_params) {
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__constructor_3__always__equals_params) {
+TEST_CASE("compact block  constructor 3  always  equals params", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -77,14 +76,14 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_3__always__equals_params) {
     message::compact_block instance(std::move(dup_header), nonce,
                                     std::move(dup_short_ids), std::move(dup_transactions));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__constructor_4__always__equals_params) {
+TEST_CASE("compact block  constructor 4  always  equals params", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -107,15 +106,15 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_4__always__equals_params) {
     const message::compact_block value(header, nonce, short_ids, transactions);
 
     message::compact_block instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__constructor_5__always__equals_params) {
+TEST_CASE("compact block  constructor 5  always  equals params", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -138,20 +137,20 @@ BOOST_AUTO_TEST_CASE(compact_block__constructor_5__always__equals_params) {
     message::compact_block value(header, nonce, short_ids, transactions);
 
     message::compact_block instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes__failure) {
+TEST_CASE("compact block  from data  insufficient bytes  failure", "[compact block]") {
     data_chunk const raw{0xab, 0xcd};
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::compact_block::version_minimum, raw));
+    REQUIRE( ! entity_from_data(instance, message::compact_block::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transaction__failure) {
+TEST_CASE("compact block  from data  insufficient bytes mid transaction  failure", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -159,10 +158,10 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_bytes_mid_transactio
         "3434565656565678789a9a02010000000100000000000001000000010000000"));
 
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::compact_block::version_minimum, raw));
+    REQUIRE( ! entity_from_data(instance, message::compact_block::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure) {
+TEST_CASE("compact block  from data  insufficient version  failure", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -172,14 +171,13 @@ BOOST_AUTO_TEST_CASE(compact_block__from_data__insufficient_version__failure) {
     message::compact_block expected;
     entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
 
     message::compact_block instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
-                                   message::compact_block::version_minimum - 1, data));
+    REQUIRE( ! entity_from_data(instance, message::compact_block::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_1__valid_input__success) {
+TEST_CASE("compact block  factory from data 1  valid input  success", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -189,19 +187,17 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_1__valid_input__success) {
     message::compact_block expected;
     entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
 
     auto const result = create<message::compact_block>(message::compact_block::version_minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::compact_block::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::compact_block::version_minimum),
-        result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(expected.serialized_size(message::compact_block::version_minimum) == result.serialized_size(message::compact_block::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_2__valid_input__success) {
+TEST_CASE("compact block  factory from data 2  valid input  success", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -211,22 +207,19 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_2__valid_input__success) {
     message::compact_block expected;
     entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
 
     data_source istream(data);
     auto result = create<message::compact_block>(
         message::compact_block::version_minimum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::compact_block::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::compact_block::version_minimum),
-        result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(expected.serialized_size(message::compact_block::version_minimum) == result.serialized_size(message::compact_block::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_3__valid_input__success) {
+TEST_CASE("compact block  factory from data 3  valid input  success", "[compact block]") {
     auto const raw = to_chunk(base16_literal(
         "0a0000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d619000000"
         "00003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
@@ -236,23 +229,20 @@ BOOST_AUTO_TEST_CASE(compact_block__factory_from_data_3__valid_input__success) {
     message::compact_block expected;
     entity_from_data(expected, message::compact_block::version_minimum, raw);
     auto const data = expected.to_data(message::compact_block::version_minimum);
-    BOOST_REQUIRE(raw == data);
+    REQUIRE(raw == data);
 
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::compact_block>(
         message::compact_block::version_minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::compact_block::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::compact_block::version_minimum),
-        result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::compact_block::version_minimum));
+    REQUIRE(expected.serialized_size(message::compact_block::version_minimum) == result.serialized_size(message::compact_block::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__header_accessor_1__always__returns_initialized_value) {
+TEST_CASE("compact block  header accessor 1  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -273,10 +263,10 @@ BOOST_AUTO_TEST_CASE(compact_block__header_accessor_1__always__returns_initializ
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(header == instance.header());
+    REQUIRE(header == instance.header());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__header_accessor_2__always__returns_initialized_value) {
+TEST_CASE("compact block  header accessor 2  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -297,10 +287,10 @@ BOOST_AUTO_TEST_CASE(compact_block__header_accessor_2__always__returns_initializ
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     const message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(header == instance.header());
+    REQUIRE(header == instance.header());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__header_setter_1__roundtrip__success) {
+TEST_CASE("compact block  header setter 1  roundtrip  success", "[compact block]") {
     chain::header const value(10u,
                               hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                               hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -309,12 +299,12 @@ BOOST_AUTO_TEST_CASE(compact_block__header_setter_1__roundtrip__success) {
                               68644u);
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.header());
+    REQUIRE(value != instance.header());
     instance.set_header(value);
-    BOOST_REQUIRE(value == instance.header());
+    REQUIRE(value == instance.header());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__header_setter_2__roundtrip__success) {
+TEST_CASE("compact block  header setter 2  roundtrip  success", "[compact block]") {
     chain::header const value(10u,
                               hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                               hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -324,12 +314,12 @@ BOOST_AUTO_TEST_CASE(compact_block__header_setter_2__roundtrip__success) {
     chain::header dup(value);
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.header());
+    REQUIRE(value != instance.header());
     instance.set_header(std::move(dup));
-    BOOST_REQUIRE(value == instance.header());
+    REQUIRE(value == instance.header());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__nonce_accessor__always__returns_initialized_value) {
+TEST_CASE("compact block  nonce accessor  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -350,19 +340,19 @@ BOOST_AUTO_TEST_CASE(compact_block__nonce_accessor__always__returns_initialized_
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(nonce == instance.nonce());
+    REQUIRE(nonce == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__nonce_setter__roundtrip__success) {
+TEST_CASE("compact block  nonce setter  roundtrip  success", "[compact block]") {
     uint64_t value = 123356u;
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.nonce());
+    REQUIRE(value != instance.nonce());
     instance.set_nonce(value);
-    BOOST_REQUIRE(value == instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_1__always__returns_initialized_value) {
+TEST_CASE("compact block  short ids accessor 1  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -383,10 +373,10 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_1__always__returns_initia
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(short_ids == instance.short_ids());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_2__always__returns_initialized_value) {
+TEST_CASE("compact block  short ids accessor 2  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -407,10 +397,10 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_accessor_2__always__returns_initia
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     const message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(short_ids == instance.short_ids());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_1__roundtrip__success) {
+TEST_CASE("compact block  short ids setter 1  roundtrip  success", "[compact block]") {
     const message::compact_block::short_id_list value = {
         convert_to_uint64t("aaaaaaaaaaaa"),
         convert_to_uint64t("bbbbbbbbbbbb"),
@@ -418,12 +408,12 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_1__roundtrip__success) {
         convert_to_uint64t("f0f0f0f0f0f0")};
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.short_ids());
+    REQUIRE(value != instance.short_ids());
     instance.set_short_ids(value);
-    BOOST_REQUIRE(value == instance.short_ids());
+    REQUIRE(value == instance.short_ids());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_2__roundtrip__success) {
+TEST_CASE("compact block  short ids setter 2  roundtrip  success", "[compact block]") {
     const message::compact_block::short_id_list value = {
         convert_to_uint64t("aaaaaaaaaaaa"),
         convert_to_uint64t("bbbbbbbbbbbb"),
@@ -432,12 +422,12 @@ BOOST_AUTO_TEST_CASE(compact_block__short_ids_setter_2__roundtrip__success) {
     message::compact_block::short_id_list dup(value);
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.short_ids());
+    REQUIRE(value != instance.short_ids());
     instance.set_short_ids(std::move(dup));
-    BOOST_REQUIRE(value == instance.short_ids());
+    REQUIRE(value == instance.short_ids());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_1__always__returns_initialized_value) {
+TEST_CASE("compact block  transactions accessor 1  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -458,10 +448,10 @@ BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_1__always__returns_ini
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_2__always__returns_initialized_value) {
+TEST_CASE("compact block  transactions accessor 2  always  returns initialized value", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -482,22 +472,22 @@ BOOST_AUTO_TEST_CASE(compact_block__transactions_accessor_2__always__returns_ini
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     const message::compact_block instance(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__transactions_setter_1__roundtrip__success) {
+TEST_CASE("compact block  transactions setter 1  roundtrip  success", "[compact block]") {
     const message::prefilled_transaction::list value = {
         message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
         message::prefilled_transaction(20, chain::transaction(2, 32, {}, {})),
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.transactions());
+    REQUIRE(value != instance.transactions());
     instance.set_transactions(value);
-    BOOST_REQUIRE(value == instance.transactions());
+    REQUIRE(value == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__transactions_setter_2__roundtrip__success) {
+TEST_CASE("compact block  transactions setter 2  roundtrip  success", "[compact block]") {
     const message::prefilled_transaction::list value = {
         message::prefilled_transaction(10, chain::transaction(1, 48, {}, {})),
         message::prefilled_transaction(20, chain::transaction(2, 32, {}, {})),
@@ -505,12 +495,12 @@ BOOST_AUTO_TEST_CASE(compact_block__transactions_setter_2__roundtrip__success) {
     message::prefilled_transaction::list dup(value);
 
     message::compact_block instance;
-    BOOST_REQUIRE(value != instance.transactions());
+    REQUIRE(value != instance.transactions());
     instance.set_transactions(std::move(dup));
-    BOOST_REQUIRE(value == instance.transactions());
+    REQUIRE(value == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("compact block  operator assign equals  always  matches equivalent", "[compact block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -531,18 +521,18 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_assign_equals__always__matches_equi
         message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))};
 
     message::compact_block value(header, nonce, short_ids, transactions);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::compact_block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(nonce == instance.nonce());
-    BOOST_REQUIRE(short_ids == instance.short_ids());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(short_ids == instance.short_ids());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("compact block  operator boolean equals  duplicates  returns true", "[compact block]") {
     const message::compact_block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -560,10 +550,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_equals__duplicates__returns
          message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))});
 
     message::compact_block instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("compact block  operator boolean equals  differs  returns false", "[compact block]") {
     const message::compact_block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -581,10 +571,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_equals__differs__returns_fa
          message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))});
 
     message::compact_block instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("compact block  operator boolean not equals  duplicates  returns false", "[compact block]") {
     const message::compact_block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -602,10 +592,10 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_not_equals__duplicates__ret
          message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))});
 
     message::compact_block instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("compact block  operator boolean not equals  differs  returns true", "[compact block]") {
     const message::compact_block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -623,7 +613,7 @@ BOOST_AUTO_TEST_CASE(compact_block__operator_boolean_not_equals__differs__return
          message::prefilled_transaction(30, chain::transaction(4, 16, {}, {}))});
 
     message::compact_block instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

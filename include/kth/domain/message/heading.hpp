@@ -110,9 +110,6 @@ public:
     [[nodiscard]]
     message_type type() const;
 
-    bool from_data(data_chunk const& data);
-    bool from_data(std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
         reset();
@@ -128,7 +125,6 @@ public:
         return source;
     }
 
-    //bool from_data(reader& source);
     [[nodiscard]]
     data_chunk to_data() const;
     

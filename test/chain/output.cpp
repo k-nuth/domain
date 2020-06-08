@@ -2,198 +2,197 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
 data_chunk valid_raw_output = to_chunk(base16_literal("20300500000000001976a914905f933de850988603aafeeb2fd7fce61e66fe5d88ac"));
 
-BOOST_AUTO_TEST_SUITE(output_tests)
+// Start Boost Suite: output tests
 
-BOOST_AUTO_TEST_CASE(output__constructor_1__always__returns_default_initialized) {
+TEST_CASE("output  constructor 1  always  returns default initialized", "[output]") {
     chain::output instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output__constructor_2__valid_input__returns_input_initialized) {
+TEST_CASE("output  constructor 2  valid input  returns input initialized", "[output]") {
     uint64_t value = 643u;
     chain::script script;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(entity_from_data(script, data, false));
+    REQUIRE(entity_from_data(script, data, false));
 
     chain::output instance(value, script);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(script == instance.script());
-    BOOST_REQUIRE_EQUAL(value, instance.value());
+    REQUIRE(instance.is_valid());
+    REQUIRE(script == instance.script());
+    REQUIRE(value == instance.value());
 }
 
-BOOST_AUTO_TEST_CASE(output__constructor_3__valid_input__returns_input_initialized) {
+TEST_CASE("output  constructor 3  valid input  returns input initialized", "[output]") {
     uint64_t value = 643u;
     chain::script script;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(entity_from_data(script, data, false));
+    REQUIRE(entity_from_data(script, data, false));
 
     // This must be non-const.
     auto dup_script = script;
 
     chain::output instance(value, std::move(dup_script));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(script == instance.script());
-    BOOST_REQUIRE_EQUAL(value, instance.value());
+    REQUIRE(instance.is_valid());
+    REQUIRE(script == instance.script());
+    REQUIRE(value == instance.value());
 }
 
-BOOST_AUTO_TEST_CASE(output__constructor_4__valid_input__returns_input_initialized) {
+TEST_CASE("output  constructor 4  valid input  returns input initialized", "[output]") {
     chain::output expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
+    REQUIRE(entity_from_data(expected, valid_raw_output));
 
     chain::output instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(output__constructor_5__valid_input__returns_input_initialized) {
+TEST_CASE("output  constructor 5  valid input  returns input initialized", "[output]") {
     // This must be non-const.
     chain::output expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
+    REQUIRE(entity_from_data(expected, valid_raw_output));
 
     chain::output instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output__from_data__insufficient_bytes__failure) {
+TEST_CASE("output  from data  insufficient bytes  failure", "[output]") {
     data_chunk data(2);
 
     chain::output instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, data));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, data));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(output__factory_from_data_1__valid_input_success) {
+TEST_CASE("output  factory from data 1  valid input success", "[output]") {
     auto instance = create<chain::output>(valid_raw_output);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_output.size());
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.serialized_size() == valid_raw_output.size());
 
     // Re-save and compare against original.
     data_chunk resave = instance.to_data();
-    BOOST_REQUIRE_EQUAL(resave.size(), valid_raw_output.size());
-    BOOST_REQUIRE(resave == valid_raw_output);
+    REQUIRE(resave.size() == valid_raw_output.size());
+    REQUIRE(resave == valid_raw_output);
 }
 
-BOOST_AUTO_TEST_CASE(output__factory_from_data_2__valid_input_success) {
+TEST_CASE("output  factory from data 2  valid input success", "[output]") {
     data_source stream(valid_raw_output);
     auto instance = create<chain::output>(stream);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_output.size());
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.serialized_size() == valid_raw_output.size());
 
     // Re-save and compare against original.
     data_chunk resave = instance.to_data();
-    BOOST_REQUIRE_EQUAL(resave.size(), valid_raw_output.size());
-    BOOST_REQUIRE(resave == valid_raw_output);
+    REQUIRE(resave.size() == valid_raw_output.size());
+    REQUIRE(resave == valid_raw_output);
 }
 
-BOOST_AUTO_TEST_CASE(output__factory_from_data_3__valid_input_success) {
+TEST_CASE("output  factory from data 3  valid input success", "[output]") {
     data_source stream(valid_raw_output);
     istream_reader source(stream);
     auto instance = create<chain::output>(source);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.serialized_size(), valid_raw_output.size());
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.serialized_size() == valid_raw_output.size());
 
     // Re-save and compare against original.
     data_chunk resave = instance.to_data();
-    BOOST_REQUIRE_EQUAL(resave.size(), valid_raw_output.size());
-    BOOST_REQUIRE(resave == valid_raw_output);
+    REQUIRE(resave.size() == valid_raw_output.size());
+    REQUIRE(resave == valid_raw_output);
 }
 
-BOOST_AUTO_TEST_CASE(output__signature_operations__always__returns_script_sigops_false) {
+TEST_CASE("output  signature operations  always  returns script sigops false", "[output]") {
     chain::output instance;
-    BOOST_REQUIRE_EQUAL(instance.script().sigops(false), instance.signature_operations(false));
+    REQUIRE(instance.script().sigops(false) == instance.signature_operations(false));
 }
 
-BOOST_AUTO_TEST_CASE(output__value__roundtrip__success) {
+TEST_CASE("output  value  roundtrip  success", "[output]") {
     uint64_t expected = 523542u;
     chain::output instance;
-    BOOST_REQUIRE(expected != instance.value());
+    REQUIRE(expected != instance.value());
     instance.set_value(expected);
-    BOOST_REQUIRE_EQUAL(expected, instance.value());
+    REQUIRE(expected == instance.value());
 }
 
-BOOST_AUTO_TEST_CASE(output__script_setter_1__roundtrip__success) {
+TEST_CASE("output  script setter 1  roundtrip  success", "[output]") {
     chain::script value;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(entity_from_data(value, data, false));
+    REQUIRE(entity_from_data(value, data, false));
 
     chain::output instance;
-    BOOST_REQUIRE(value != instance.script());
+    REQUIRE(value != instance.script());
     instance.set_script(value);
-    BOOST_REQUIRE(value == instance.script());
+    REQUIRE(value == instance.script());
     auto const& restricted = instance;
-    BOOST_REQUIRE(value == instance.script());
+    REQUIRE(value == instance.script());
 }
 
-BOOST_AUTO_TEST_CASE(output__script_setter_2__roundtrip__success) {
+TEST_CASE("output  script setter 2  roundtrip  success", "[output]") {
     chain::script value;
     auto const data = to_chunk(base16_literal("ece424a6bb6ddf4db592c0faed60685047a361b1"));
-    BOOST_REQUIRE(entity_from_data(value, data, false));
+    REQUIRE(entity_from_data(value, data, false));
 
     // This must be non-const.
     auto dup_value = value;
 
     chain::output instance;
-    BOOST_REQUIRE(value != instance.script());
+    REQUIRE(value != instance.script());
     instance.set_script(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.script());
+    REQUIRE(value == instance.script());
     auto const& restricted = instance;
-    BOOST_REQUIRE(value == instance.script());
+    REQUIRE(value == instance.script());
 }
 
-BOOST_AUTO_TEST_CASE(output__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("output  operator assign equals 1  always  matches equivalent", "[output]") {
     chain::output expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
+    REQUIRE(entity_from_data(expected, valid_raw_output));
     chain::output instance;
     instance = create<chain::output>(valid_raw_output);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("output  operator assign equals 2  always  matches equivalent", "[output]") {
     chain::output expected;
-    BOOST_REQUIRE(entity_from_data(expected, valid_raw_output));
+    REQUIRE(entity_from_data(expected, valid_raw_output));
     chain::output instance;
     instance = expected;
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(output__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("output  operator boolean equals  duplicates  returns true", "[output]") {
     chain::output alpha;
     chain::output beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output));
-    BOOST_REQUIRE(alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output));
+    REQUIRE(entity_from_data(beta, valid_raw_output));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("output  operator boolean equals  differs  returns false", "[output]") {
     chain::output alpha;
     chain::output beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output));
-    BOOST_REQUIRE_EQUAL(false, alpha == beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(output__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("output  operator boolean not equals  duplicates  returns false", "[output]") {
     chain::output alpha;
     chain::output beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output));
-    BOOST_REQUIRE(entity_from_data(beta, valid_raw_output));
-    BOOST_REQUIRE_EQUAL(false, alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output));
+    REQUIRE(entity_from_data(beta, valid_raw_output));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(output__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("output  operator boolean not equals  differs  returns true", "[output]") {
     chain::output alpha;
     chain::output beta;
-    BOOST_REQUIRE(entity_from_data(alpha, valid_raw_output));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, valid_raw_output));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

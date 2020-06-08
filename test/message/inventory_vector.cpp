@@ -2,104 +2,103 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(inventory_vector_tests)
+// Start Boost Suite: inventory vector tests
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__error__returns_0) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::error), 0u);
+TEST_CASE("inventory vector  to number  error  returns 0", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::error) == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__transaction__returns_1) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::transaction), 1u);
+TEST_CASE("inventory vector  to number  transaction  returns 1", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::transaction) == 1u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__block__returns_2) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::block), 2u);
+TEST_CASE("inventory vector  to number  block  returns 2", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::block) == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__filtered_block__returns_3) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::filtered_block), 3u);
+TEST_CASE("inventory vector  to number  filtered block  returns 3", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::filtered_block) == 3u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_number__compact_block__returns_4) {
-    BOOST_REQUIRE_EQUAL(inventory_vector::to_number(inventory_vector::type_id::compact_block), 4u);
+TEST_CASE("inventory vector  to number  compact block  returns 4", "[inventory vector]") {
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::compact_block) == 4u);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__0__returns_error) {
-    BOOST_REQUIRE(inventory_vector::type_id::error == inventory_vector::to_type(0));
+TEST_CASE("inventory vector  to type  0  returns error", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::error == inventory_vector::to_type(0));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__1__returns_transaction) {
-    BOOST_REQUIRE(inventory_vector::type_id::transaction == inventory_vector::to_type(1));
+TEST_CASE("inventory vector  to type  1  returns transaction", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::transaction == inventory_vector::to_type(1));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__2__returns_block) {
-    BOOST_REQUIRE(inventory_vector::type_id::block == inventory_vector::to_type(2));
+TEST_CASE("inventory vector  to type  2  returns block", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::block == inventory_vector::to_type(2));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__3__returns_filtered_block) {
-    BOOST_REQUIRE(inventory_vector::type_id::filtered_block == inventory_vector::to_type(3));
+TEST_CASE("inventory vector  to type  3  returns filtered block", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::filtered_block == inventory_vector::to_type(3));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_type__4__returns_compact_block) {
-    BOOST_REQUIRE(inventory_vector::type_id::compact_block == inventory_vector::to_type(4));
+TEST_CASE("inventory vector  to type  4  returns compact block", "[inventory vector]") {
+    REQUIRE(inventory_vector::type_id::compact_block == inventory_vector::to_type(4));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_1__always__invalid) {
+TEST_CASE("inventory vector  constructor 1  always invalid", "[inventory vector]") {
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_2__always__equals_params) {
+TEST_CASE("inventory vector  constructor 2  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance(type, hash);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(type == instance.type());
-    BOOST_REQUIRE(hash == instance.hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(type == instance.type());
+    REQUIRE(hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_3__always__equals_params) {
+TEST_CASE("inventory vector  constructor 3  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance(type, std::move(hash));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_4__always__equals_params) {
+TEST_CASE("inventory vector  constructor 4  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector const expected(type, hash);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     inventory_vector instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__constructor_5__always__equals_params) {
+TEST_CASE("inventory vector  constructor 5  always  equals params", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::block;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector expected(type, hash);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     inventory_vector instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(type == instance.type());
-    BOOST_REQUIRE(hash == instance.hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(type == instance.type());
+    REQUIRE(hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__from_data__insufficient_bytes__failure) {
+TEST_CASE("inventory vector  from data  insufficient bytes  failure", "[inventory vector]") {
     static data_chunk const raw{1};
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, raw));
+    REQUIRE( ! entity_from_data(instance, version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success) {
+TEST_CASE("inventory vector  factory from data 1  valid input  success", "[inventory vector]") {
     static inventory_vector const expected{
         inventory_vector::type_id::error,
         {{0x44, 0x9a, 0x0d, 0x24, 0x9a, 0xd5, 0x39, 0x89,
@@ -110,13 +109,13 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_1__valid_input__success
     static auto const version = version::level::minimum;
     auto const data = expected.to_data(version);
     auto const result = create<inventory_vector>(version, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_2__valid_input__success) {
+TEST_CASE("inventory vector  factory from data 2  valid input  success", "[inventory vector]") {
     static inventory_vector const expected{
         inventory_vector::type_id::transaction,
         {{0x44, 0x9a, 0x0d, 0xee, 0x9a, 0xd5, 0x39, 0xee,
@@ -128,13 +127,13 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_2__valid_input__success
     auto const data = expected.to_data(version);
     data_source istream(data);
     auto const result = create<inventory_vector>(version, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_3__valid_input__success) {
+TEST_CASE("inventory vector  factory from data 3  valid input  success", "[inventory vector]") {
     static inventory_vector const expected{
         inventory_vector::type_id::block,
         {{0x66, 0x9a, 0x0d, 0x24, 0x66, 0xd5, 0x39, 0x89,
@@ -147,199 +146,199 @@ BOOST_AUTO_TEST_CASE(inventory_vector__factory_from_data_3__valid_input__success
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<inventory_vector>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
 #if defined(KTH_SEGWIT_ENABLED)
-BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__error__unchanged) {
+TEST_CASE("inventory vector  to witness  error  unchanged", "[inventory vector]") {
     static auto const expected = inventory_vector::type_id::error;
     inventory_vector instance{expected, {}};
     instance.to_witness();
-    BOOST_REQUIRE(instance.type() == expected);
+    REQUIRE(instance.type() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__filtered_block__unchanged) {
+TEST_CASE("inventory vector  to witness  filtered block  unchanged", "[inventory vector]") {
     static auto const expected = inventory_vector::type_id::filtered_block;
     inventory_vector instance{expected, {}};
     instance.to_witness();
-    BOOST_REQUIRE(instance.type() == expected);
+    REQUIRE(instance.type() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__compact_block__unchanged) {
+TEST_CASE("inventory vector  to witness  compact block  unchanged", "[inventory vector]") {
     static auto const expected = inventory_vector::type_id::compact_block;
     inventory_vector instance{expected, {}};
     instance.to_witness();
-    BOOST_REQUIRE(instance.type() == expected);
+    REQUIRE(instance.type() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__witness_transaction__unchanged) {
+TEST_CASE("inventory vector  to witness  witness transaction  unchanged", "[inventory vector]") {
     static auto const expected = inventory_vector::type_id::witness_transaction;
     inventory_vector instance{expected, {}};
     instance.to_witness();
-    BOOST_REQUIRE(instance.type() == expected);
+    REQUIRE(instance.type() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__witness_block__unchanged) {
+TEST_CASE("inventory vector  to witness  witness block  unchanged", "[inventory vector]") {
     static auto const expected = inventory_vector::type_id::witness_block;
     inventory_vector instance{expected, {}};
     instance.to_witness();
-    BOOST_REQUIRE(instance.type() == expected);
+    REQUIRE(instance.type() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__block__expected) {
+TEST_CASE("inventory vector  to witness  block  expected", "[inventory vector]") {
     inventory_vector instance{inventory_vector::type_id::block, {}};
     instance.to_witness();
-    BOOST_REQUIRE(instance.type() == inventory_vector::type_id::witness_block);
+    REQUIRE(instance.type() == inventory_vector::type_id::witness_block);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__to_witness__transaction__expected) {
+TEST_CASE("inventory vector  to witness  transaction  expected", "[inventory vector]") {
     inventory_vector instance{inventory_vector::type_id::transaction, {}};
     instance.to_witness();
-    BOOST_REQUIRE(instance.type() == inventory_vector::type_id::witness_transaction);
+    REQUIRE(instance.type() == inventory_vector::type_id::witness_transaction);
 }
 #endif // KTH_CURRENCY_BCH
 
-BOOST_AUTO_TEST_CASE(inventory_vector__is_block_type__block__returns_true) {
+TEST_CASE("inventory vector  is block type  block  returns true", "[inventory vector]") {
     inventory_vector instance;
     instance.set_type(inventory_vector::type_id::block);
-    BOOST_REQUIRE(instance.is_block_type());
+    REQUIRE(instance.is_block_type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__is_block_type__compact_block__returns_true) {
+TEST_CASE("inventory vector  is block type  compact block  returns true", "[inventory vector]") {
     inventory_vector instance;
     instance.set_type(inventory_vector::type_id::compact_block);
-    BOOST_REQUIRE(instance.is_block_type());
+    REQUIRE(instance.is_block_type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__is_block_type__filtered_block__returns_true) {
+TEST_CASE("inventory vector  is block type  filtered block  returns true", "[inventory vector]") {
     inventory_vector instance;
     instance.set_type(inventory_vector::type_id::filtered_block);
-    BOOST_REQUIRE(instance.is_block_type());
+    REQUIRE(instance.is_block_type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__is_block_type__non_block_type__returns_false) {
+TEST_CASE("inventory vector  is block type  non block type  returns false", "[inventory vector]") {
     inventory_vector instance;
     instance.set_type(inventory_vector::type_id::transaction);
-    BOOST_REQUIRE_EQUAL(false, instance.is_block_type());
+    REQUIRE( ! instance.is_block_type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__is_transaction_type__transaction__returns_true) {
+TEST_CASE("inventory vector  is transaction type  transaction  returns true", "[inventory vector]") {
     inventory_vector instance;
     instance.set_type(inventory_vector::type_id::transaction);
-    BOOST_REQUIRE(instance.is_transaction_type());
+    REQUIRE(instance.is_transaction_type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__is_transaction_type__non_transaction_type__returns_false) {
+TEST_CASE("inventory vector  is transaction type  non transaction type  returns false", "[inventory vector]") {
     inventory_vector instance;
     instance.set_type(inventory_vector::type_id::block);
-    BOOST_REQUIRE_EQUAL(false, instance.is_transaction_type());
+    REQUIRE( ! instance.is_transaction_type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__type_accessor__always__returns_initialized_value) {
+TEST_CASE("inventory vector  type accessor  always  returns initialized value", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::transaction;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance(type, hash);
-    BOOST_REQUIRE(type == instance.type());
+    REQUIRE(type == instance.type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__type_setter__roundtrip__success) {
+TEST_CASE("inventory vector  type setter  roundtrip  success", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::transaction;
     inventory_vector instance;
-    BOOST_REQUIRE(type != instance.type());
+    REQUIRE(type != instance.type());
     instance.set_type(type);
-    BOOST_REQUIRE(type == instance.type());
+    REQUIRE(type == instance.type());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__hash_accessor__always__returns_initialized_value) {
+TEST_CASE("inventory vector  hash accessor  always  returns initialized value", "[inventory vector]") {
     inventory_vector::type_id type = inventory_vector::type_id::transaction;
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance(type, hash);
-    BOOST_REQUIRE(hash == instance.hash());
+    REQUIRE(hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__hash_setter_1__roundtrip__success) {
+TEST_CASE("inventory vector  hash setter 1  roundtrip  success", "[inventory vector]") {
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance;
-    BOOST_REQUIRE(hash != instance.hash());
+    REQUIRE(hash != instance.hash());
     instance.set_hash(hash);
-    BOOST_REQUIRE(hash == instance.hash());
+    REQUIRE(hash == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__hash_setter_2__roundtrip__success) {
+TEST_CASE("inventory vector  hash setter 2  roundtrip  success", "[inventory vector]") {
     hash_digest duplicate = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     hash_digest hash = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     inventory_vector instance;
-    BOOST_REQUIRE(duplicate != instance.hash());
+    REQUIRE(duplicate != instance.hash());
     instance.set_hash(std::move(hash));
-    BOOST_REQUIRE(duplicate == instance.hash());
+    REQUIRE(duplicate == instance.hash());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("inventory vector  operator assign equals 1  always  matches equivalent", "[inventory vector]") {
     inventory_vector value(
         inventory_vector::type_id::compact_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("inventory vector  operator assign equals 2  always  matches equivalent", "[inventory vector]") {
     inventory_vector value(
         inventory_vector::type_id::compact_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = value;
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("inventory vector  operator boolean equals  duplicates  returns true", "[inventory vector]") {
     inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     inventory_vector instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(inventory_vector__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("inventory vector  operator boolean equals  differs  returns false", "[inventory vector]") {
     inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     inventory_vector instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("inventory vector - reject  operator boolean not equals  duplicates  returns false", "[inventory vector]") {
     inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     inventory_vector instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("inventory vector - reject  operator boolean not equals  differs  returns true", "[inventory vector]") {
     inventory_vector const expected(
         inventory_vector::type_id::filtered_block,
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     inventory_vector instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

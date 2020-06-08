@@ -2,14 +2,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
 // TODO(legacy): split out individual functions and standardize test names.
-BOOST_AUTO_TEST_SUITE(stealth_tests)
+// Start Boost Suite: stealth tests
 
 #define SCAN_PRIVATE "fa63521e333e4b9f6a98a142680d3aef4d8e7f79723ce0043691db55c36bd905"
 #define SCAN_PUBLIC "034ea70b28d607bf3a2493102001cab35689cf2152530bf8bf8a5b594af6ae31d0"
@@ -29,106 +28,106 @@ BOOST_AUTO_TEST_SUITE(stealth_tests)
 // $ bx ec-add 03d5b3853bbee336b551ff999b0b1d656e65a7649037ae0dcb02b3c4ff5f29e5be 4b4974266ee6c8bed9eff2cd1087bbc1101f17bad9c37814f8561b67f550c544 | bx ec-to-address - v 111
 // #define P2PKH_ADDRESS_TESTNET "mwSnRsXSEq3d7LTGqe7AtJYNqhATwHdhMb"
 
-BOOST_AUTO_TEST_CASE(stealth_round_trip) {
+TEST_CASE("stealth round trip", "[stealth]") {
     ec_secret expected_stealth_private;
-    BOOST_REQUIRE(decode_base16(expected_stealth_private, STEALTH_PRIVATE));
+    REQUIRE(decode_base16(expected_stealth_private, STEALTH_PRIVATE));
 
     // Receiver generates a new scan private.
     ec_secret scan_private;
     ec_compressed scan_public;
-    BOOST_REQUIRE(decode_base16(scan_private, SCAN_PRIVATE));
-    BOOST_REQUIRE(secret_to_public(scan_public, scan_private));
-    BOOST_REQUIRE_EQUAL(encode_base16(scan_public), SCAN_PUBLIC);
+    REQUIRE(decode_base16(scan_private, SCAN_PRIVATE));
+    REQUIRE(secret_to_public(scan_public, scan_private));
+    REQUIRE(encode_base16(scan_public) == SCAN_PUBLIC);
 
     // Receiver generates a new spend private.
     ec_secret spend_private;
     ec_compressed spend_public;
-    BOOST_REQUIRE(decode_base16(spend_private, SPEND_PRIVATE));
-    BOOST_REQUIRE(secret_to_public(spend_public, spend_private));
-    BOOST_REQUIRE_EQUAL(encode_base16(spend_public), SPEND_PUBLIC);
+    REQUIRE(decode_base16(spend_private, SPEND_PRIVATE));
+    REQUIRE(secret_to_public(spend_public, spend_private));
+    REQUIRE(encode_base16(spend_public) == SPEND_PUBLIC);
 
     // Sender generates a new ephemeral key.
     ec_secret ephemeral_private;
     ec_compressed ephemeral_public;
-    BOOST_REQUIRE(decode_base16(ephemeral_private, EPHEMERAL_PRIVATE));
-    BOOST_REQUIRE(secret_to_public(ephemeral_public, ephemeral_private));
-    BOOST_REQUIRE_EQUAL(encode_base16(ephemeral_public), EPHEMERAL_PUBLIC);
+    REQUIRE(decode_base16(ephemeral_private, EPHEMERAL_PRIVATE));
+    REQUIRE(secret_to_public(ephemeral_public, ephemeral_private));
+    REQUIRE(encode_base16(ephemeral_public) == EPHEMERAL_PUBLIC);
 
     // Sender derives stealth public, requiring ephemeral private.
     ec_compressed sender_public;
-    BOOST_REQUIRE(uncover_stealth(sender_public, scan_public, ephemeral_private, spend_public));
-    BOOST_REQUIRE_EQUAL(encode_base16(sender_public), STEALTH_PUBLIC);
+    REQUIRE(uncover_stealth(sender_public, scan_public, ephemeral_private, spend_public));
+    REQUIRE(encode_base16(sender_public) == STEALTH_PUBLIC);
 
     // Receiver derives stealth public, requiring scan private.
     ec_compressed receiver_public;
-    BOOST_REQUIRE(uncover_stealth(receiver_public, ephemeral_public, scan_private, spend_public));
-    BOOST_REQUIRE_EQUAL(encode_base16(receiver_public), STEALTH_PUBLIC);
+    REQUIRE(uncover_stealth(receiver_public, ephemeral_public, scan_private, spend_public));
+    REQUIRE(encode_base16(receiver_public) == STEALTH_PUBLIC);
 
     // Only reciever can derive stealth private, as it requires both scan and spend private.
     ec_secret stealth_private;
-    BOOST_REQUIRE(uncover_stealth(stealth_private, ephemeral_public, scan_private, spend_private));
+    REQUIRE(uncover_stealth(stealth_private, ephemeral_public, scan_private, spend_private));
 
     // This shows that both parties have actually generated stealth public.
     ec_compressed stealth_public;
-    BOOST_REQUIRE(secret_to_public(stealth_public, stealth_private));
-    BOOST_REQUIRE_EQUAL(encode_base16(stealth_public), STEALTH_PUBLIC);
+    REQUIRE(secret_to_public(stealth_public, stealth_private));
+    REQUIRE(encode_base16(stealth_public) == STEALTH_PUBLIC);
 
     // Both parties therefore have the ability to generate the p2pkh address.
     // versioning: stealth_address::main corresponds to payment_address::main_p2pkh
     wallet::payment_address address(stealth_public, wallet::payment_address::mainnet_p2kh);
-    BOOST_REQUIRE_EQUAL(address.encoded(), P2PKH_ADDRESS);
+    REQUIRE(address.encoded() == P2PKH_ADDRESS);
 }
 
-BOOST_AUTO_TEST_CASE(verify_string_constructor) {
+TEST_CASE("verify string constructor", "[stealth]") {
     std::string const value = "01100110000";
     binary prefix(value);
-    BOOST_REQUIRE_EQUAL(value.size(), prefix.size());
+    REQUIRE(value.size() == prefix.size());
     for (size_t i = 0; i < value.size(); ++i) {
         auto const comparison = value[i] == '1';
-        BOOST_REQUIRE_EQUAL(prefix[i], comparison);
+       REQUIRE(prefix[i] == comparison);
     }
 }
 
 // Binary as a value on the left, padded with zeros to the y.
-BOOST_AUTO_TEST_CASE(compare_constructor_results) {
+TEST_CASE("compare constructor results", "[stealth]") {
     std::string value = "01100111000";
     binary prefix(value);
     data_chunk blocks{{0x67, 0x00}};
     binary prefix2(value.size(), blocks);
-    BOOST_REQUIRE_EQUAL(prefix, prefix2);
+    REQUIRE(prefix == prefix2);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test1) {
+TEST_CASE("bitfield test1", "[stealth]") {
     binary prefix("01100111001");
     data_chunk raw_bitfield{{0x67, 0x20, 0x00, 0x0}};
-    BOOST_REQUIRE_GE(raw_bitfield.size() * 8, prefix.size());
+    REQUIRE(raw_bitfield.size() * 8 >= prefix.size());
     binary compare(prefix.size(), raw_bitfield);
-    BOOST_REQUIRE_EQUAL(prefix, compare);
+    REQUIRE(prefix == compare);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test2) {
+TEST_CASE("bitfield test2", "[stealth]") {
     data_chunk const blocks{{0x8b, 0xf4, 0x1c, 0x69}};
     const binary prefix(27, blocks);
     data_chunk const raw_bitfield{{0x8b, 0xf4, 0x1c, 0x79}};
-    BOOST_REQUIRE_GE(raw_bitfield.size() * 8, prefix.size());
+    REQUIRE(raw_bitfield.size() * 8 >= prefix.size());
     const binary compare(prefix.size(), raw_bitfield);
-    BOOST_REQUIRE_EQUAL(prefix, compare);
+    REQUIRE(prefix == compare);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test3) {
+TEST_CASE("bitfield test3", "[stealth]") {
     data_chunk const blocks{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary prefix(32, blocks);
     data_chunk const raw_bitfield{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary compare(prefix.size(), raw_bitfield);
-    BOOST_REQUIRE_EQUAL(prefix, compare);
+    REQUIRE(prefix == compare);
 }
 
-BOOST_AUTO_TEST_CASE(bitfield_test4) {
+TEST_CASE("bitfield test4", "[stealth]") {
     data_chunk const blocks{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary prefix(29, blocks);
     data_chunk const raw_bitfield{{0x69, 0x1c, 0xf4, 0x8b}};
     const binary compare(prefix.size(), raw_bitfield);
-    BOOST_REQUIRE_EQUAL(prefix, compare);
+    REQUIRE(prefix == compare);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

@@ -52,10 +52,6 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    bool from_data(data_chunk const& data, bool wire = true);
-
-    bool from_data(std::istream& stream, bool wire = true);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool /*wire = true*/) {
         version_ = source.read_4_bytes_little_endian();
@@ -118,7 +114,7 @@ public:
 
     void set_version(uint32_t value);
 
-    // Deprecated (unsafe).
+    // [[deprecated]] // unsafe
     hash_digest& previous_block_hash();
     
     [[nodiscard]]
@@ -126,7 +122,7 @@ public:
     
     void set_previous_block_hash(hash_digest const& value);
 
-    // Deprecated (unsafe).
+    // [[deprecated]] // unsafe
     hash_digest& merkle();
     
     [[nodiscard]]

@@ -65,11 +65,6 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    // bool from_data(data_chunk const& data, bool wire = true);
-
-    // //TODO(fernando): check what happend when replacing std::istream to data_source
-    // bool from_data(std::istream& stream, bool wire = true);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true) {
         header_basis::from_data(source, wire);

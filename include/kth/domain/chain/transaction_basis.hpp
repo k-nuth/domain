@@ -152,9 +152,6 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    // bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    // bool from_data(std::istream& stream, bool wire = true, bool witness = false);
-
     // Witness is not used by outputs, just for template normalization.
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, bool witness = false) {
@@ -203,7 +200,7 @@ public:
 
 #if defined(KTH_SEGWIT_ENABLED)
         // TODO(legacy): optimize by having reader skip witness data.
-        if ( ! witness_val(witness)) {
+        if ( ! witness) {
             strip_witness();
         }
 #endif
@@ -233,24 +230,10 @@ public:
             // Wire (satoshi protocol) serialization.
             sink.write_4_bytes_little_endian(version_);
 
-//             if (witness_val(witness)) {
-//                 sink.write_byte(witness_val);
-//                 sink.write_byte(witness_val);
-//                 detail::write(sink, inputs_, wire, witness_val(witness));
-//                 detail::write(sink, outputs_, wire, witness_val(witness));
-// #if defined(KTH_SEGWIT_ENABLED)
-//                 detail::write_witnesses(sink, inputs_);
-// #endif
-//             } else {
-//                 detail::write(sink, inputs_, wire, witness_val(witness));
-//                 detail::write(sink, outputs_, wire, witness_val(witness));
-//             }
-
 #if defined(KTH_SEGWIT_ENABLED)
-            if (witness_val(witness)) {
-                sink.write_byte(witness_val);
-                sink.write_byte(witness_val);
-                detail::write_witnesses(sink, inputs_);
+            if (witness) {
+                sink.write_byte(witness_marker);
+                sink.write_byte(witness_flag);
             }
 #endif //defined(KTH_SEGWIT_ENABLED)
 
@@ -258,7 +241,7 @@ public:
             detail::write(sink, outputs_, wire, witness_val(witness));
 
 #if defined(KTH_SEGWIT_ENABLED)
-            if (witness_val(witness)) {
+            if (witness) {
                 detail::write_witnesses(sink, inputs_);
             }
 #endif //defined(KTH_SEGWIT_ENABLED)
@@ -290,7 +273,7 @@ public:
     
     void set_locktime(uint32_t value);
 
-    // Deprecated (unsafe).
+    // [[deprecated]] // unsafe
     ins& inputs();
 
     [[nodiscard]]
@@ -298,8 +281,8 @@ public:
 
     void set_inputs(const ins& value);
     void set_inputs(ins&& value);
-
-    // Deprecated (unsafe).
+    
+    // [[deprecated]] // unsafe
     outs& outputs();
     
     [[nodiscard]]

@@ -13,6 +13,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/message/inventory.hpp>
 #include <kth/domain/message/inventory_vector.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
@@ -36,9 +37,6 @@ public:
 
     bool operator==(get_data const& x) const;
     bool operator!=(get_data const& x) const;
-
-    // bool from_data(uint32_t version, data_chunk const& data); /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    // bool from_data(uint32_t version, std::istream& stream); /*override*/     //TODO(fernando): check if this function is used in a run-time-polymorphic way
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way

@@ -17,10 +17,13 @@
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/header.hpp>
 #include <kth/domain/chain/transaction.hpp>
+
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/asio.hpp>
@@ -76,9 +79,6 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
-
-    // bool from_data(data_chunk const& data, bool witness = false);
-    // bool from_data(std::istream& stream, bool witness = false);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool witness = false) {

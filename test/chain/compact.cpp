@@ -2,13 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
 #include <cstdint>
 
-#include <kth/domain.hpp>
+#include <test_helpers.hpp>
 
-BOOST_AUTO_TEST_SUITE(compact_tests)
+// Start Boost Suite: compact tests
 
 using namespace kth;
 using namespace kd;
@@ -31,168 +29,168 @@ static uint32_t factory(int32_t logical_exponent, bool negative, uint32_t mantis
     return exponent << 24 | (negative ? 1 : 0) << 23 | mantissa;
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__proof_of_work_limit__normalizes_unchanged) {
-    BOOST_REQUIRE_EQUAL(compact(retarget_proof_of_work_limit).normal(), retarget_proof_of_work_limit);
+TEST_CASE("compact  constructor1  proof of work limit  normalizes unchanged", "[compact]") {
+    REQUIRE(compact(retarget_proof_of_work_limit).normal() == retarget_proof_of_work_limit);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__no_retarget_proof_of_work_limit__normalizes_unchanged) {
-    BOOST_REQUIRE_EQUAL(compact(no_retarget_proof_of_work_limit).normal(), no_retarget_proof_of_work_limit);
+TEST_CASE("compact  constructor1  no retarget proof of work limit  normalizes unchanged", "[compact]") {
+    REQUIRE(compact(no_retarget_proof_of_work_limit).normal() == no_retarget_proof_of_work_limit);
 }
 
 // constructor1/normal
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__negative3_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  negative3 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(-3, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-3, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-3, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-3, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, false, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, false, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-3, false, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(-3, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-3, false, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-3, false, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-3, false, 0x7fffff)).normal() == 0x00000000);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__negative2_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  negative2 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(-2, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-2, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-2, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-2, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, false, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, false, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-2, false, 0x7fffff)).normal(), 0x017f0000);
+    REQUIRE(compact(factory(-2, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-2, false, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-2, false, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-2, false, 0x7fffff)).normal() == 0x017f0000);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__negative1_exponent_normalizes_as_expected) {
+TEST_CASE("compact  constructor1  negative1 exponent normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(-1, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-1, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-1, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-1, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, false, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, false, 0xffff)).normal(), 0x0200ff00);  // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(-1, false, 0x7fffff)).normal(), 0x027fff00);
+    REQUIRE(compact(factory(-1, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-1, false, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(-1, false, 0xffff)).normal() == 0x0200ff00);
+    REQUIRE(compact(factory(-1, false, 0x7fffff)).normal() == 0x027fff00);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__zero_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  zero exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(0, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(0, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(0, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(0, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(0, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(0, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(0, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(0, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive
-    BOOST_REQUIRE_EQUAL(compact(factory(0, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(0, false, 0xff)).normal(), 0x0200ff00);    // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(0, false, 0xffff)).normal(), 0x0300ffff);  // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(0, false, 0x7fffff)).normal(), 0x037fffff);
+    REQUIRE(compact(factory(0, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(0, false, 0xff)).normal() == 0x0200ff00);
+    REQUIRE(compact(factory(0, false, 0xffff)).normal() == 0x0300ffff);
+    REQUIRE(compact(factory(0, false, 0x7fffff)).normal() == 0x037fffff);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__positive1_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  positive1 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(1, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(1, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(1, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(1, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(1, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(1, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(1, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(1, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive
-    BOOST_REQUIRE_EQUAL(compact(factory(1, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(1, false, 0xff)).normal(), 0x0300ff00);    // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(1, false, 0xffff)).normal(), 0x0400ffff);  // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(1, false, 0x7fffff)).normal(), 0x047fffff);
+    REQUIRE(compact(factory(1, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(1, false, 0xff)).normal() == 0x0300ff00);
+    REQUIRE(compact(factory(1, false, 0xffff)).normal() == 0x0400ffff);
+    REQUIRE(compact(factory(1, false, 0x7fffff)).normal() == 0x047fffff);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__positive29_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  positive29 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(29, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(29, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(29, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(29, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(29, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(29, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(29, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(29, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive
-    BOOST_REQUIRE_EQUAL(compact(factory(29, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(29, false, 0xff)).normal(), 0x1f00ff00);    // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(29, false, 0xffff)).normal(), 0x2000ffff);  // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(29, false, 0x7fffff)).normal(), 0x207fffff);
+    REQUIRE(compact(factory(29, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(29, false, 0xff)).normal() == 0x1f00ff00);
+    REQUIRE(compact(factory(29, false, 0xffff)).normal() == 0x2000ffff);
+    REQUIRE(compact(factory(29, false, 0x7fffff)).normal() == 0x207fffff);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__positive30_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  positive30 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(30, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(30, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(30, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(30, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(30, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(30, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(30, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(30, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive, overflow above 0xffff
-    BOOST_REQUIRE_EQUAL(compact(factory(30, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(30, false, 0xff)).normal(), 0x2000ff00);      // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(30, false, 0xffff)).normal(), 0x2100ffff);    // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(30, false, 0x7fffff)).normal(), 0x00000000);  // is_overflowed
+    REQUIRE(compact(factory(30, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(30, false, 0xff)).normal() == 0x2000ff00);
+    REQUIRE(compact(factory(30, false, 0xffff)).normal() == 0x2100ffff);
+    REQUIRE(compact(factory(30, false, 0x7fffff)).normal() == 0x00000000);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__positive31_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  positive31 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(31, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(31, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(31, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(31, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(31, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(31, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(31, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(31, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive, overflow above 0xff
-    BOOST_REQUIRE_EQUAL(compact(factory(31, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(31, false, 0xff)).normal(), 0x2100ff00);      // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(31, false, 0xffff)).normal(), 0x00000000);    // is_negated
-    BOOST_REQUIRE_EQUAL(compact(factory(31, false, 0x7fffff)).normal(), 0x00000000);  // is_overflowed
+    REQUIRE(compact(factory(31, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(31, false, 0xff)).normal() == 0x2100ff00);
+    REQUIRE(compact(factory(31, false, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(31, false, 0x7fffff)).normal() == 0x00000000);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__positive32_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  positive32 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(32, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(32, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(32, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(32, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(32, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(32, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(32, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(32, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive, always overflow
-    BOOST_REQUIRE_EQUAL(compact(factory(32, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(32, false, 0xff)).normal(), 0x00000000);      // is_overflowed
-    BOOST_REQUIRE_EQUAL(compact(factory(32, false, 0xffff)).normal(), 0x00000000);    // is_overflowed
-    BOOST_REQUIRE_EQUAL(compact(factory(32, false, 0x7fffff)).normal(), 0x00000000);  // is_overflowed
+    REQUIRE(compact(factory(32, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(32, false, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(32, false, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(32, false, 0x7fffff)).normal() == 0x00000000);
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor1__positive252_exponent__normalizes_as_expected) {
+TEST_CASE("compact  constructor1  positive252 exponent  normalizes as expected", "[compact]") {
     // negative, always zero
-    BOOST_REQUIRE_EQUAL(compact(factory(252, true, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(252, true, 0xff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(252, true, 0xffff)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(252, true, 0x7fffff)).normal(), 0x00000000);
+    REQUIRE(compact(factory(252, true, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(252, true, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(252, true, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(252, true, 0x7fffff)).normal() == 0x00000000);
 
     // positive, always overflow
-    BOOST_REQUIRE_EQUAL(compact(factory(252, false, 0)).normal(), 0x00000000);
-    BOOST_REQUIRE_EQUAL(compact(factory(252, false, 0xff)).normal(), 0x00000000);      // is_overflowed
-    BOOST_REQUIRE_EQUAL(compact(factory(252, false, 0xffff)).normal(), 0x00000000);    // is_overflowed
-    BOOST_REQUIRE_EQUAL(compact(factory(252, false, 0x7fffff)).normal(), 0x00000000);  // is_overflowed
+    REQUIRE(compact(factory(252, false, 0)).normal() == 0x00000000);
+    REQUIRE(compact(factory(252, false, 0xff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(252, false, 0xffff)).normal() == 0x00000000);
+    REQUIRE(compact(factory(252, false, 0x7fffff)).normal() == 0x00000000);
 }
 
 // constructor2/uint256_t
 
-BOOST_AUTO_TEST_CASE(compact__constructor2__zero__round_trips) {
-    BOOST_REQUIRE(uint256_t(0) == compact(uint256_t(0)));
+TEST_CASE("compact  constructor2  zero  round trips", "[compact]") {
+    REQUIRE(uint256_t(0) == compact(uint256_t(0)));
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor2__big_value__round_trips) {
-    BOOST_REQUIRE(uint256_t(42) == compact(uint256_t(42)));
+TEST_CASE("compact  constructor2  big value  round trips", "[compact]") {
+    REQUIRE(uint256_t(42) == compact(uint256_t(42)));
 }
 
-BOOST_AUTO_TEST_CASE(compact__constructor2__hash__round_trips) {
-    BOOST_REQUIRE(to_uint256(primes) == compact(to_uint256(primes)));
+TEST_CASE("compact  constructor2  hash  round trips", "[compact]") {
+    REQUIRE(to_uint256(primes) == compact(to_uint256(primes)));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

@@ -2,18 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
-// #include <kth/domain/wallet/ec_public.hpp>
-#include <kth/domain/wallet/transaction_functions.hpp>
-#include <boost/test/unit_test.hpp>
+// #include <kth/domain/wallet/transaction_functions.hpp>
+#include <test_helpers.hpp>
+#include <kth/infrastructure/wallet/hd_private.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 using namespace kth::infrastructure::wallet;
 
-BOOST_AUTO_TEST_SUITE(transaction_functions_tests)
+// Start Boost Suite: transaction functions tests
 
 #define SEED "fffb587496cc54912bbcef874fa9a61a"
 #define WALLET "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG"
@@ -43,17 +41,17 @@ ec_public secret_to_compressed_public(kth::ec_secret const& secret_key) {
     return public_key;
 }
 
-BOOST_AUTO_TEST_CASE(seed_to_wallet_compressed__test) {
+TEST_CASE("seed to wallet compressed  test", "[transaction functions]") {
     auto secret = create_secret_from_seed(SEED);
     auto pub_key = secret_to_compressed_public(secret);
     // Payment Address
     uint8_t const version = payment_address::testnet_p2kh;  // testnet_p2sh
     payment_address address(pub_key, version);
 
-    BOOST_REQUIRE_EQUAL(address.encoded(), WALLET);
+    REQUIRE(address.encoded() == WALLET);
 }
 
-BOOST_AUTO_TEST_CASE(create_transaction__test) {
+TEST_CASE("create transaction  test", "[transaction functions]") {
     // List of inputs (outputs_to_spend)
     std::vector<chain::input_point> outputs_to_spend;
     kth::hash_digest hash_to_spend;
@@ -67,14 +65,14 @@ BOOST_AUTO_TEST_CASE(create_transaction__test) {
 
     auto result = tx_encode(outputs_to_spend, outputs);
 
-    BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), TX_ENCODE);
+    REQUIRE(result.first == error::error_code_t::success);
+    REQUIRE(kth::encode_base16(result.second.to_data()) == TX_ENCODE);
 }
 
 // TODO(legacy): make test for BTC and LTC signatures
 
 #ifdef KTH_CURRENCY_BCH
-BOOST_AUTO_TEST_CASE(sign_transaction__test) {
+TEST_CASE("sign transaction  test", "[transaction functions]") {
     // Priv key
     auto const private_key = create_secret_from_seed(SEED);
     // Script
@@ -86,7 +84,7 @@ BOOST_AUTO_TEST_CASE(sign_transaction__test) {
     data_chunk raw_data;
     kth::decode_base16(raw_data, TX_ENCODE);
     entity_from_data(tx, raw_data);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(tx.to_data()), TX_ENCODE);
+    REQUIRE(kth::encode_base16(tx.to_data()) == TX_ENCODE);
     // Amount
     uint64_t const amount = 200000000;
     // Index
@@ -94,12 +92,12 @@ BOOST_AUTO_TEST_CASE(sign_transaction__test) {
     // Create signature
     auto const result = input_signature_bch(private_key, output_script, tx, amount, index);
 
-    BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second), SIGNATURE);
+    REQUIRE(result.first == error::error_code_t::success);
+    REQUIRE(kth::encode_base16(result.second) == SIGNATURE);
 }
 #endif
 
-BOOST_AUTO_TEST_CASE(set_signature__test) {
+TEST_CASE("set signature  test", "[transaction functions]") {
     // TX
     chain::transaction tx;
     data_chunk raw_data;
@@ -115,8 +113,8 @@ BOOST_AUTO_TEST_CASE(set_signature__test) {
 
     // SET THE INPUT
     auto const result = input_set(input_script, tx);
-    BOOST_REQUIRE_EQUAL(result.first, error::error_code_t::success);
-    BOOST_REQUIRE_EQUAL(kth::encode_base16(result.second.to_data()), COMPLETE_TX);
+    REQUIRE(result.first == error::error_code_t::success);
+    REQUIRE(kth::encode_base16(result.second.to_data()) == COMPLETE_TX);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

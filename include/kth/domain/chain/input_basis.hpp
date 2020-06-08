@@ -15,7 +15,10 @@
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/chain/witness.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+
 // #include <kth/domain/wallet/payment_address.hpp>
+
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
@@ -57,9 +60,6 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
-
-    // bool from_data(data_chunk const& data, bool wire = true, bool witness = false);
-    // bool from_data(std::istream& stream, bool wire = true, bool witness = false);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool wire = true, KTH_DECL_WITN_ARG) {
@@ -140,7 +140,7 @@ public:
     void set_previous_output(output_point const& value);
     void set_previous_output(output_point&& value);
 
-    // Deprecated (unsafe).
+    // [[deprecated]] // unsafe
     chain::script& script();
     
     [[nodiscard]]
@@ -151,7 +151,7 @@ public:
 
 
 #if defined(KTH_SEGWIT_ENABLED)
-    // Deprecated (unsafe).
+    // [[deprecated]] // unsafe
     chain::witness& witness();
     chain::witness const& witness() const;
     void set_witness(chain::witness const& value);

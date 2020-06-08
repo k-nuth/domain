@@ -2,22 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
+
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(message_transaction_tests)
+// Start Boost Suite: message transaction tests
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_1__always__initialized_invalid) {
+TEST_CASE("message transaction  constructor 1  always  initialized invalid", "[message transaction]") {
     transaction instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_2__always__equals_transaction) {
+TEST_CASE("message transaction  constructor 2  always  equals transaction", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -29,13 +29,13 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_2__always__equals_transaction) {
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     transaction instance(tx);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == tx);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_3__always__equals_param) {
+TEST_CASE("message transaction  constructor 3  always  equals param", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -47,17 +47,17 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_3__always__equals_param) {
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     transaction alpha(tx);
-    BOOST_REQUIRE(alpha.is_valid());
-    BOOST_REQUIRE(alpha == tx);
+    REQUIRE(alpha.is_valid());
+    REQUIRE(alpha == tx);
 
     transaction beta(alpha);
-    BOOST_REQUIRE(beta.is_valid());
-    BOOST_REQUIRE(beta == alpha);
+    REQUIRE(beta.is_valid());
+    REQUIRE(beta == alpha);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_4__always__equals_equivalent_tx) {
+TEST_CASE("message transaction  constructor 4  always  equals equivalent tx", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -69,15 +69,15 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_4__always__equals_equivalent_tx) {
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     auto const inputs = tx.inputs();
     auto const outputs = tx.outputs();
     transaction instance(tx.version(), tx.locktime(), inputs, outputs);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == tx);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_5__always__equals_equivalent_tx) {
+TEST_CASE("message transaction  constructor 5  always  equals equivalent tx", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -89,13 +89,13 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_5__always__equals_equivalent_tx) {
         "00"));
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     transaction instance(create<chain::transaction>(raw_tx));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == tx);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_6__always__equals_equivalent_tx) {
+TEST_CASE("message transaction  constructor 6  always  equals equivalent tx", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "0100000001f08e44a96bfb5ae63eda1a6620adae37ee37ee4777fb0336e1bbbc"
         "4de65310fc010000006a473044022050d8368cacf9bf1b8fb1f7cfd9aff63294"
@@ -110,29 +110,29 @@ BOOST_AUTO_TEST_CASE(transaction__constructor_6__always__equals_equivalent_tx) {
         transaction::version_minimum, raw_tx);
 
     chain::transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, raw_tx));
+    REQUIRE(entity_from_data(tx, raw_tx));
     transaction instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == tx);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__constructor_7__always__equals_equivalent_tx) {
+TEST_CASE("message transaction  constructor 7  always  equals equivalent tx", "[message transaction]") {
     transaction instance(15u, 1234u, chain::input::list{{}, {}}, chain::output::list{{}, {}, {}});
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.version() == 15u);
-    BOOST_REQUIRE(instance.locktime() == 1234u);
-    BOOST_REQUIRE(instance.inputs().size() == 2);
-    BOOST_REQUIRE(instance.outputs().size() == 3);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.version() == 15u);
+    REQUIRE(instance.locktime() == 1234u);
+    REQUIRE(instance.inputs().size() == 2);
+    REQUIRE(instance.outputs().size() == 3);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__insufficient_data__failure) {
+TEST_CASE("message transaction  from data  insufficient data  failure", "[message transaction]") {
     data_chunk data(2);
     transaction instance;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version::level::minimum, data));
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, version::level::minimum, data));
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(transaction__from_data__valid_junk__success) {
+TEST_CASE("message transaction  from data  valid junk  success", "[message transaction]") {
     auto junk = base16_literal(
         "000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0"
         "000000000000005739943a9c29a1955dfae2b3f37de547005bfb9535192e5fb0");
@@ -142,10 +142,10 @@ BOOST_AUTO_TEST_CASE(transaction__from_data__valid_junk__success) {
     boost::iostreams::stream<byte_source<std::array<uint8_t, 64>>> stream(source);
 
     transaction tx;
-    BOOST_REQUIRE(entity_from_data(tx, version::level::minimum, stream));
+    REQUIRE(entity_from_data(tx, version::level::minimum, stream));
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__success) {
+TEST_CASE("message transaction  factory from data 1  case 1 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -157,20 +157,20 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_1_valid_data__succes
         "001976a914d9d78e26df4e4601cf9b26d09c7b280ee764469f88ac80c4600f00"
         "0000001976a9141ee32412020a324b93b1a1acfdfff6ab9ca8fac288ac000000"
         "00"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
+    REQUIRE(raw_tx.size() == 225u);
 
     auto const tx = create<transaction>(version::level::minimum, raw_tx);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), 225u);
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.serialized_size(version::level::minimum) == 225u);
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave = tx.to_data(version::level::minimum);
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_2_valid_data__success) {
+TEST_CASE("message transaction  factory from data 1  case 2 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "8a6d9302fbe24f0ec756a94ecfc837eaffe16c43d1e68c62dfe980d99eea556f");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -191,19 +191,19 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_1__case_2_valid_data__succes
         "ffff02c0e1e400000000001976a914884c09d7e1f6420976c40e040c30b2b622"
         "10c3d488ac20300500000000001976a914905f933de850988603aafeeb2fd7fc"
         "e61e66fe5d88ac00000000"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     auto const tx = create<transaction>(version::level::minimum, raw_tx);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave = tx.to_data(version::level::minimum);
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_1_valid_data__success) {
+TEST_CASE("message transaction  factory from data 2  case 1 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -215,24 +215,24 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_1_valid_data__succes
         "001976a914d9d78e26df4e4601cf9b26d09c7b280ee764469f88ac80c4600f00"
         "0000001976a9141ee32412020a324b93b1a1acfdfff6ab9ca8fac288ac000000"
         "00"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
+    REQUIRE(raw_tx.size() == 225u);
 
     data_source stream(raw_tx);
     auto const tx = create<transaction>(version::level::minimum, stream);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), 225u);
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.serialized_size(version::level::minimum) == 225u);
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave;
     data_sink ostream(resave);
     tx.to_data(version::level::minimum, ostream);
     ostream.flush();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_2_valid_data__success) {
+TEST_CASE("message transaction  factory from data 2  case 2 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "8a6d9302fbe24f0ec756a94ecfc837eaffe16c43d1e68c62dfe980d99eea556f");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -253,23 +253,23 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_2__case_2_valid_data__succes
         "ffff02c0e1e400000000001976a914884c09d7e1f6420976c40e040c30b2b622"
         "10c3d488ac20300500000000001976a914905f933de850988603aafeeb2fd7fc"
         "e61e66fe5d88ac00000000"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     data_source stream(raw_tx);
     auto const tx = create<transaction>(version::level::minimum, stream);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave;
     data_sink ostream(resave);
     tx.to_data(version::level::minimum, ostream);
     ostream.flush();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_1_valid_data__success) {
+TEST_CASE("message transaction  factory from data 3  case 1 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "bf7c3f5a69a78edd81f3eff7e93a37fb2d7da394d48db4d85e7e5353b9b8e270");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -281,26 +281,26 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_1_valid_data__succes
         "001976a914d9d78e26df4e4601cf9b26d09c7b280ee764469f88ac80c4600f00"
         "0000001976a9141ee32412020a324b93b1a1acfdfff6ab9ca8fac288ac000000"
         "00"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 225u);
+    REQUIRE(raw_tx.size() == 225u);
 
     data_source stream(raw_tx);
     istream_reader source(stream);
     auto const tx = create<transaction>(version::level::minimum, source);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), 225u);
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.serialized_size(version::level::minimum) == 225u);
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE_EQUAL(tx.serialized_size(version::level::minimum), raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave;
     data_sink ostream(resave);
     ostream_writer sink(ostream);
     tx.to_data(version::level::minimum, sink);
     ostream.flush();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_2_valid_data__success) {
+TEST_CASE("message transaction  factory from data 3  case 2 valid data  success", "[message transaction]") {
     hash_digest tx_hash = hash_literal(
         "8a6d9302fbe24f0ec756a94ecfc837eaffe16c43d1e68c62dfe980d99eea556f");
     data_chunk raw_tx = to_chunk(base16_literal(
@@ -321,25 +321,25 @@ BOOST_AUTO_TEST_CASE(transaction__factory_from_data_3__case_2_valid_data__succes
         "ffff02c0e1e400000000001976a914884c09d7e1f6420976c40e040c30b2b622"
         "10c3d488ac20300500000000001976a914905f933de850988603aafeeb2fd7fc"
         "e61e66fe5d88ac00000000"));
-    BOOST_REQUIRE_EQUAL(raw_tx.size(), 523u);
+    REQUIRE(raw_tx.size() == 523u);
 
     data_source stream(raw_tx);
     istream_reader source(stream);
     auto const tx = create<transaction>(version::level::minimum, source);
-    BOOST_REQUIRE(tx.is_valid());
-    BOOST_REQUIRE(tx.hash() == tx_hash);
+    REQUIRE(tx.is_valid());
+    REQUIRE(tx.hash() == tx_hash);
 
     // Re-save tx and compare against original.
-    BOOST_REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
+    REQUIRE(tx.serialized_size(version::level::minimum) == raw_tx.size());
     data_chunk resave;
     data_sink ostream(resave);
     ostream_writer sink(ostream);
     tx.to_data(version::level::minimum, sink);
     ostream.flush();
-    BOOST_REQUIRE(resave == raw_tx);
+    REQUIRE(resave == raw_tx);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("message transaction  operator assign equals 1  always  matches equivalent", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -360,13 +360,13 @@ BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_1__always__matches_equi
         "e61e66fe5d88ac00000000"));
 
     chain::transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, raw_tx));
+    REQUIRE(entity_from_data(expected, raw_tx));
     transaction instance;
     instance = create<chain::transaction>(raw_tx);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("message transaction  operator assign equals 2  always  matches equivalent", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -387,13 +387,13 @@ BOOST_AUTO_TEST_CASE(transaction__operator_assign_equals_2__always__matches_equi
         "e61e66fe5d88ac00000000"));
 
     transaction expected;
-    BOOST_REQUIRE(entity_from_data(expected, transaction::version_minimum, raw_tx));
+    REQUIRE(entity_from_data(expected, transaction::version_minimum, raw_tx));
     transaction instance;
     instance = create<transaction>(transaction::version_minimum, raw_tx);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__duplicates__returns_true) {
+TEST_CASE("message transaction  operator boolean equals 1  duplicates  returns true", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -415,12 +415,12 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__duplicates__returns
 
     transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
-    BOOST_REQUIRE(alpha == beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(entity_from_data(beta, raw_tx));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__differs__returns_false) {
+TEST_CASE("message transaction  operator boolean equals 1  differs  returns false", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -442,11 +442,11 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_1__differs__returns_fa
 
     transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE_EQUAL(false, alpha == beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__duplicates__returns_false) {
+TEST_CASE("message transaction  operator boolean not equals 1  duplicates  returns false", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -468,12 +468,12 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__duplicates__ret
 
     transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(entity_from_data(beta, raw_tx));
-    BOOST_REQUIRE_EQUAL(false, alpha != beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(entity_from_data(beta, raw_tx));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__differs__returns_true) {
+TEST_CASE("message transaction  operator boolean not equals 1  differs  returns true", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -495,11 +495,11 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_1__differs__return
 
     transaction alpha;
     chain::transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__duplicates__returns_true) {
+TEST_CASE("message transaction  operator boolean equals 2  duplicates  returns true", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -521,12 +521,12 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__duplicates__returns
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(entity_from_data(beta, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(alpha == beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(entity_from_data(beta, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__differs__returns_false) {
+TEST_CASE("message transaction  operator boolean equals 2  differs  returns false", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -548,11 +548,11 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_equals_2__differs__returns_fa
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE_EQUAL(false, alpha == beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__duplicates__returns_false) {
+TEST_CASE("message transaction  operator boolean not equals 2  duplicates  returns false", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -574,12 +574,12 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__duplicates__ret
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(entity_from_data(beta, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE_EQUAL(false, alpha != beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(entity_from_data(beta, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha == beta);
 }
 
-BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__differs__returns_true) {
+TEST_CASE("message transaction  operator boolean not equals 2  differs  returns true", "[message transaction]") {
     data_chunk raw_tx = to_chunk(base16_literal(
         "010000000364e62ad837f29617bafeae951776e7a6b3019b2da37827921548d1"
         "a5efcf9e5c010000006b48304502204df0dc9b7f61fbb2e4c8b0e09f3426d625"
@@ -601,8 +601,8 @@ BOOST_AUTO_TEST_CASE(transaction__operator_boolean_not_equals_2__differs__return
 
     transaction alpha;
     transaction beta;
-    BOOST_REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
-    BOOST_REQUIRE(alpha != beta);
+    REQUIRE(entity_from_data(alpha, transaction::version_minimum, raw_tx));
+    REQUIRE(alpha != beta);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

@@ -71,9 +71,6 @@ public:
     void set_transactions(prefilled_transaction::list const& value);
     void set_transactions(prefilled_transaction::list&& value);
 
-    // bool from_data(uint32_t version, data_chunk const& data);
-    // bool from_data(uint32_t version, std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t version, R& source) {
         reset();

@@ -2,20 +2,19 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(get_headers_tests)
+// Start Boost Suite: get headers tests
 
-BOOST_AUTO_TEST_CASE(get_headers__constructor_1__always__invalid) {
+TEST_CASE("get headers  constructor 1  always invalid", "[get headers]") {
     message::get_headers instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__constructor_2__always__equals_params) {
+TEST_CASE("get headers  constructor 2  always  equals params", "[get headers]") {
     hash_list starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
@@ -24,12 +23,12 @@ BOOST_AUTO_TEST_CASE(get_headers__constructor_2__always__equals_params) {
     hash_digest stop = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     message::get_headers instance(starts, stop);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__constructor_3__always__equals_params) {
+TEST_CASE("get headers  constructor 3  always  equals params", "[get headers]") {
     hash_list starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
@@ -39,12 +38,12 @@ BOOST_AUTO_TEST_CASE(get_headers__constructor_3__always__equals_params) {
     hash_digest stop = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
 
     message::get_headers instance(std::move(starts_duplicate), std::move(stop));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__constructor_4__always__equals_params) {
+TEST_CASE("get headers  constructor 4  always  equals params", "[get headers]") {
     hash_list starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
@@ -54,13 +53,13 @@ BOOST_AUTO_TEST_CASE(get_headers__constructor_4__always__equals_params) {
 
     const message::get_headers expected(starts, stop);
     message::get_headers instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__constructor_5__always__equals_params) {
+TEST_CASE("get headers  constructor 5  always  equals params", "[get headers]") {
     hash_list starts = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
@@ -70,20 +69,20 @@ BOOST_AUTO_TEST_CASE(get_headers__constructor_5__always__equals_params) {
 
     message::get_headers expected(starts, stop);
     message::get_headers instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(starts == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(starts == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__from_data__insufficient_bytes__failure) {
+TEST_CASE("get headers  from data  insufficient bytes  failure", "[get headers]") {
     data_chunk const raw{0xab, 0xcd};
     message::get_headers instance;
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::get_headers::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__from_data__insufficient_version__failure) {
+TEST_CASE("get headers  from data  insufficient version  failure", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -95,11 +94,11 @@ BOOST_AUTO_TEST_CASE(get_headers__from_data__insufficient_version__failure) {
     auto const data = expected.to_data(message::get_headers::version_minimum);
     message::get_headers instance{};
 
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance, 
                                    message::get_headers::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_1__valid_input__success) {
+TEST_CASE("get headers  factory from data 1  valid input  success", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -112,16 +111,15 @@ BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_1__valid_input__success) {
     auto const result = create<message::get_headers>(
         message::get_headers::version_minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::get_headers::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::get_headers::version_minimum),
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(
+        expected.serialized_size(message::get_headers::version_minimum) ==
         result.serialized_size(message::get_headers::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_2__valid_input__success) {
+TEST_CASE("get headers  factory from data 2  valid input  success", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -135,16 +133,13 @@ BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_2__valid_input__success) {
     auto const result = create<message::get_headers>(
         message::get_headers::version_minimum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::get_headers::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::get_headers::version_minimum),
-        result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(expected.serialized_size(message::get_headers::version_minimum) == result.serialized_size(message::get_headers::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_3__valid_input__success) {
+TEST_CASE("get headers  factory from data 3  valid input  success", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -159,16 +154,13 @@ BOOST_AUTO_TEST_CASE(get_headers__factory_from_data_3__valid_input__success) {
     auto const result = create<message::get_headers>(
         message::get_headers::version_minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(),
-                        result.serialized_size(message::get_headers::version_minimum));
-    BOOST_REQUIRE_EQUAL(
-        expected.serialized_size(message::get_headers::version_minimum),
-        result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::get_headers::version_minimum));
+    REQUIRE(expected.serialized_size(message::get_headers::version_minimum) == result.serialized_size(message::get_headers::version_minimum));
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("get headers  operator assign equals  always  matches equivalent", "[get headers]") {
     hash_list start = {
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -180,18 +172,18 @@ BOOST_AUTO_TEST_CASE(get_headers__operator_assign_equals__always__matches_equiva
 
     message::get_headers value{start, stop};
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::get_headers instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(start == instance.start_hashes());
-    BOOST_REQUIRE(stop == instance.stop_hash());
+    REQUIRE(instance.is_valid());
+    REQUIRE(start == instance.start_hashes());
+    REQUIRE(stop == instance.stop_hash());
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("get headers  operator boolean equals  duplicates  returns true", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -201,10 +193,10 @@ BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_equals__duplicates__returns_t
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     message::get_headers instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("get headers  operator boolean equals  differs  returns false", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -214,10 +206,10 @@ BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_equals__differs__returns_fals
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     message::get_headers instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("get headers  operator boolean not equals  duplicates  returns false", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -227,10 +219,10 @@ BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_not_equals__duplicates__retur
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     message::get_headers instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("get headers  operator boolean not equals  differs  returns true", "[get headers]") {
     const message::get_headers expected{
         {hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
          hash_literal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
@@ -240,7 +232,7 @@ BOOST_AUTO_TEST_CASE(get_headers__operator_boolean_not_equals__differs__returns_
         hash_literal("7777777777777777777777777777777777777777777777777777777777777777")};
 
     message::get_headers instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

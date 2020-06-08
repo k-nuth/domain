@@ -2,46 +2,45 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(pong_tests)
+// Start Boost Suite: pong tests
 
-BOOST_AUTO_TEST_CASE(pong__constructor_1__always__invalid) {
+TEST_CASE("pong  constructor 1  always invalid", "[pong]") {
     message::pong instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(pong__constructor_2__always__equals_params) {
+TEST_CASE("pong  constructor 2  always  equals params", "[pong]") {
     uint64_t nonce = 462434u;
     message::pong instance(nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
+    REQUIRE(instance.is_valid());
+    REQUIRE(nonce == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(pong__constructor_3__always__equals_params) {
+TEST_CASE("pong  constructor 3  always  equals params", "[pong]") {
     message::pong expected(24235u);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     message::pong instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(pong__satoshi_fixed_size__minimum_version__returns_8) {
+TEST_CASE("pong  satoshi fixed size  minimum version  returns 8", "[pong]") {
     auto const size = message::pong::satoshi_fixed_size(message::version::level::minimum);
-    BOOST_REQUIRE_EQUAL(size, 8u);
+    REQUIRE(size == 8u);
 }
 
-BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__minimum_version_empty_data__invalid) {
+TEST_CASE("pong  factory from data 1  minimum version empty data invalid", "[pong]") {
     static auto const version = message::version::level::minimum;
     auto const result = create<message::pong>(version, data_chunk{});
-    BOOST_REQUIRE(!result.is_valid());
+    REQUIRE(!result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__round_trip__expected) {
+TEST_CASE("pong  factory from data 1  round trip  expected", "[pong]") {
     static const message::pong expected{
         4306550u};
 
@@ -49,13 +48,13 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_1__round_trip__expected) {
     auto const data = expected.to_data(version);
     auto const result = create<message::pong>(version, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(pong__factory_from_data_2__round_trip__expected) {
+TEST_CASE("pong  factory from data 2  round trip  expected", "[pong]") {
     static const message::pong expected{
         3100693u};
 
@@ -64,13 +63,13 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_2__round_trip__expected) {
     data_source istream(data);
     auto const result = create<message::pong>(version, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(pong__factory_from_data_3__round_trip__expected) {
+TEST_CASE("pong  factory from data 3  round trip  expected", "[pong]") {
     static const message::pong expected{
         4642675u};
 
@@ -80,57 +79,57 @@ BOOST_AUTO_TEST_CASE(pong__factory_from_data_3__round_trip__expected) {
     istream_reader source(istream);
     auto const result = create<message::pong>(version, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(pong__nonce_accessor__always__returns_initialized_value) {
+TEST_CASE("pong  nonce accessor  always  returns initialized value", "[pong]") {
     uint64_t value = 43564u;
     message::pong instance(value);
-    BOOST_REQUIRE_EQUAL(value, instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(pong__nonce_setter__roundtrip__success) {
+TEST_CASE("pong  nonce setter  roundtrip  success", "[pong]") {
     uint64_t value = 43564u;
     message::pong instance;
-    BOOST_REQUIRE(value != instance.nonce());
+    REQUIRE(value != instance.nonce());
     instance.set_nonce(value);
-    BOOST_REQUIRE_EQUAL(value, instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(pong__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("pong  operator assign equals  always  matches equivalent", "[pong]") {
     message::pong value(356234u);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::pong instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(pong__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("pong  operator boolean equals  duplicates  returns true", "[pong]") {
     const message::pong expected(4543234u);
     message::pong instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(pong__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("pong  operator boolean equals  differs  returns false", "[pong]") {
     const message::pong expected(547553u);
     message::pong instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(pong__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("pong  operator boolean not equals  duplicates  returns false", "[pong]") {
     const message::pong expected(653786u);
     message::pong instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(pong__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("pong  operator boolean not equals  differs  returns true", "[pong]") {
     const message::pong expected(89764u);
     message::pong instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

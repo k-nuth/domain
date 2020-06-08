@@ -8,6 +8,7 @@
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/version.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
 
 #include <kth/domain/chain/block.hpp>
 #include <kth/domain/chain/chain_state.hpp>

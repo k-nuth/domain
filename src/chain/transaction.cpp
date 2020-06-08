@@ -148,40 +148,6 @@ transaction& transaction::operator=(transaction&& x) noexcept {
     return *this;
 }
 
-
-// Operators.
-//-----------------------------------------------------------------------------
-
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-bool transaction::from_data(data_chunk const& data, bool wire, bool witness
-#ifdef KTH_CACHED_RPC_DATA
-    , bool unconfirmed
-#endif
-    ) {
-    data_source istream(data);
-    return from_data(istream, wire, witness_val(witness)
-#ifdef KTH_CACHED_RPC_DATA    
-                    , unconfirmed
-#endif
-                    );
-}
-
-bool transaction::from_data(std::istream& stream, bool wire, bool witness
-#ifdef KTH_CACHED_RPC_DATA
-    , bool unconfirmed
-#endif
-    ) {
-    istream_reader stream_r(stream);
-    return from_data(stream_r, wire, witness_val(witness)
-#ifdef KTH_CACHED_RPC_DATA    
-                    , unconfirmed
-#endif
-
-                    );
-}
-
 // protected
 void transaction::reset() {
     transaction_basis::reset();

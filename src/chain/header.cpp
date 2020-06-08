@@ -38,19 +38,6 @@ header& header::operator=(header const& x) {
     return *this;
 }
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// bool header::from_data(data_chunk const& data, bool wire) {
-//     data_source istream(data);
-//     return from_data(istream, wire);
-// }
-
-// bool header::from_data(std::istream& stream, bool wire) {
-//     istream_reader stream_r(stream);
-//     return from_data(stream_r, wire);
-// }
-
 // protected
 void header::reset() {
     header_basis::reset();
