@@ -2,10 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
-#include <kth/domain.hpp>
 #include <string>
+
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
@@ -25,78 +24,78 @@ static hash_digest const data{
      0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
      0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F}};
 
-BOOST_AUTO_TEST_SUITE(reject_tests)
+// Start Boost Suite: reject tests
 
-BOOST_AUTO_TEST_CASE(reject__factory_from_data__tx_nonstandard_empty_data__valid) {
+TEST_CASE("reject  factory from data  tx nonstandard empty data valid", "[reject]") {
     data_chunk payload;
-    BOOST_REQUIRE(decode_base16(payload, MALFORMED_REJECT));
+    REQUIRE(decode_base16(payload, MALFORMED_REJECT));
     auto const reject = create<message::reject>(version_maximum, payload);
-    BOOST_REQUIRE(reject.is_valid());
+    REQUIRE(reject.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_1__always__invalid) {
+TEST_CASE("reject  constructor 1  always invalid", "[reject]") {
     message::reject instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_2__always__equals_params) {
+TEST_CASE("reject  constructor 2  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(code == instance.code());
-    BOOST_REQUIRE_EQUAL(message, instance.message());
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(code == instance.code());
+    REQUIRE(message == instance.message());
+    REQUIRE(reason == instance.reason());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_3__always__equals_params) {
+TEST_CASE("reject  constructor 3  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "sadfasdgd";
     std::string reason = "jgfghkggfsr";
     hash_digest data = hash_literal("ce8f4b713ffdd2658900845251890f30371856be201cd1f5b3d970f793634333");
     message::reject instance(code, std::move(message), std::move(reason), std::move(data));
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_4__always__equals_params) {
+TEST_CASE("reject  constructor 4  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject expected(code, message, reason, data);
     message::reject instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
-    BOOST_REQUIRE(code == instance.code());
-    BOOST_REQUIRE_EQUAL(message, instance.message());
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
+    REQUIRE(code == instance.code());
+    REQUIRE(message == instance.message());
+    REQUIRE(reason == instance.reason());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__constructor_5__always__equals_params) {
+TEST_CASE("reject  constructor 5  always  equals params", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject expected(code, message, reason, data);
     message::reject instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(code == instance.code());
-    BOOST_REQUIRE_EQUAL(message, instance.message());
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(instance.is_valid());
+    REQUIRE(code == instance.code());
+    REQUIRE(message == instance.message());
+    REQUIRE(reason == instance.reason());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_bytes__failure) {
+TEST_CASE("reject  from data  insufficient bytes  failure", "[reject]") {
     static data_chunk const raw{0xab};
     message::reject instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, version_maximum, raw));
+    REQUIRE( ! entity_from_data(instance, version_maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure) {
+TEST_CASE("reject  from data  insufficient version  failure", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         message::block::command,
@@ -105,10 +104,10 @@ BOOST_AUTO_TEST_CASE(reject__from_data__insufficient_version__failure) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, message::reject::version_minimum - 1, raw));
+    REQUIRE( ! entity_from_data(instance, message::reject::version_minimum - 1, raw));
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_malformed__success) {
+TEST_CASE("reject  from data  code malformed  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::malformed,
         message::block::command,
@@ -117,11 +116,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_malformed__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_invalid__success) {
+TEST_CASE("reject  from data  code invalid  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::invalid,
         message::block::command,
@@ -131,11 +130,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_invalid__success) {
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_obsolete__success) {
+TEST_CASE("reject  from data  code obsolete  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::obsolete,
         message::block::command,
@@ -144,11 +143,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_obsolete__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_duplicate__success) {
+TEST_CASE("reject  from data  code duplicate  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::duplicate,
         message::block::command,
@@ -157,11 +156,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_duplicate__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_nonstandard__success) {
+TEST_CASE("reject  from data  code nonstandard  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::nonstandard,
         message::block::command,
@@ -170,11 +169,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_nonstandard__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_dust__success) {
+TEST_CASE("reject  from data  code dust  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         message::block::command,
@@ -183,11 +182,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_dust__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_insufficient_fee__success) {
+TEST_CASE("reject  from data  code insufficient fee  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::insufficient_fee,
         message::block::command,
@@ -196,11 +195,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_insufficient_fee__success) {
 
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_checkpoint__success) {
+TEST_CASE("reject  from data  code checkpoint  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::checkpoint,
         message::block::command,
@@ -210,11 +209,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_checkpoint__success) {
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__from_data__code_undefined__success) {
+TEST_CASE("reject  from data  code undefined  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::undefined,
         message::block::command,
@@ -224,11 +223,11 @@ BOOST_AUTO_TEST_CASE(reject__from_data__code_undefined__success) {
     data_chunk const raw = expected.to_data(version_maximum);
     message::reject instance{};
 
-    BOOST_REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(entity_from_data(instance, message::reject::version_minimum, raw));
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(reject__factory_from_data_1__valid_input__success) {
+TEST_CASE("reject  factory from data 1  valid input  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         message::block::command,
@@ -237,13 +236,13 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_1__valid_input__success) {
 
     auto const data = expected.to_data(version_maximum);
     auto const result = create<message::reject>(version_maximum, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version_maximum));
+    REQUIRE(expected.serialized_size(version_maximum) == result.serialized_size(version_maximum));
 }
 
-BOOST_AUTO_TEST_CASE(reject__factory_from_data_2__valid_input__success) {
+TEST_CASE("reject  factory from data 2  valid input  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::insufficient_fee,
         message::block::command,
@@ -253,13 +252,13 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_2__valid_input__success) {
     auto const data = expected.to_data(version_maximum);
     data_source istream(data);
     auto const result = create<message::reject>(version_maximum, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version_maximum));
+    REQUIRE(expected.serialized_size(version_maximum) == result.serialized_size(version_maximum));
 }
 
-BOOST_AUTO_TEST_CASE(reject__factory_from_data_3__valid_input__success) {
+TEST_CASE("reject  factory from data 3  valid input  success", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::duplicate,
         message::transaction::command,
@@ -270,154 +269,154 @@ BOOST_AUTO_TEST_CASE(reject__factory_from_data_3__valid_input__success) {
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::reject>(version_maximum, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version_maximum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version_maximum), result.serialized_size(version_maximum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version_maximum));
+    REQUIRE(expected.serialized_size(version_maximum) == result.serialized_size(version_maximum));
 }
 
-BOOST_AUTO_TEST_CASE(reject__code_accessor__always__returns_initialized_value) {
+TEST_CASE("reject  code accessor  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(code == instance.code());
+    REQUIRE(code == instance.code());
 }
 
-BOOST_AUTO_TEST_CASE(reject__code_setter__roundtrip__success) {
+TEST_CASE("reject  code setter  roundtrip  success", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance;
-    BOOST_REQUIRE(code != instance.code());
+    REQUIRE(code != instance.code());
     instance.set_code(code);
-    BOOST_REQUIRE(code == instance.code());
+    REQUIRE(code == instance.code());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_accessor_1__always__returns_initialized_value) {
+TEST_CASE("reject  message accessor 1  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(message, instance.message());
+    REQUIRE(message == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_accessor_2__always__returns_initialized_value) {
+TEST_CASE("reject  message accessor 2  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(message, instance.message());
+    REQUIRE(message == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_setter_1__roundtrip__success) {
+TEST_CASE("reject  message setter 1  roundtrip  success", "[reject]") {
     std::string message = "Alpha Beta";
     message::reject instance;
-    BOOST_REQUIRE(message != instance.message());
+    REQUIRE(message != instance.message());
     instance.set_message(message);
-    BOOST_REQUIRE_EQUAL(message, instance.message());
+    REQUIRE(message == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__message_setter_2__roundtrip__success) {
+TEST_CASE("reject  message setter 2  roundtrip  success", "[reject]") {
     std::string duplicate = "Gamma";
     std::string message = "Gamma";
     message::reject instance;
-    BOOST_REQUIRE(duplicate != instance.message());
+    REQUIRE(duplicate != instance.message());
     instance.set_message(std::move(message));
-    BOOST_REQUIRE_EQUAL(duplicate, instance.message());
+    REQUIRE(duplicate == instance.message());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_accessor_1__always__returns_initialized_value) {
+TEST_CASE("reject  reason accessor 1  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
+    REQUIRE(reason == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_accessor_2__always__returns_initialized_value) {
+TEST_CASE("reject  reason accessor 2  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
+    REQUIRE(reason == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_setter_1__roundtrip__success) {
+TEST_CASE("reject  reason setter 1  roundtrip  success", "[reject]") {
     std::string reason = "Alpha Beta";
     message::reject instance;
-    BOOST_REQUIRE(reason != instance.reason());
+    REQUIRE(reason != instance.reason());
     instance.set_reason(reason);
-    BOOST_REQUIRE_EQUAL(reason, instance.reason());
+    REQUIRE(reason == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__reason_setter_2__roundtrip__success) {
+TEST_CASE("reject  reason setter 2  roundtrip  success", "[reject]") {
     std::string duplicate = "Gamma";
     std::string reason = "Gamma";
     message::reject instance;
-    BOOST_REQUIRE(duplicate != instance.reason());
+    REQUIRE(duplicate != instance.reason());
     instance.set_reason(std::move(reason));
-    BOOST_REQUIRE_EQUAL(duplicate, instance.reason());
+    REQUIRE(duplicate == instance.reason());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_accessor_1__always__returns_initialized_value) {
+TEST_CASE("reject  data accessor 1  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_accessor_2__always__returns_initialized_value) {
+TEST_CASE("reject  data accessor 2  always  returns initialized value", "[reject]") {
     auto code = message::reject::reason_code::nonstandard;
     std::string message = "Alpha Beta";
     std::string reason = "Gamma Delta";
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     const message::reject instance(code, message, reason, data);
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_setter_1__roundtrip__success) {
+TEST_CASE("reject  data setter 1  roundtrip  success", "[reject]") {
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance;
-    BOOST_REQUIRE(data != instance.data());
+    REQUIRE(data != instance.data());
     instance.set_data(data);
-    BOOST_REQUIRE(data == instance.data());
+    REQUIRE(data == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__data_setter_2__roundtrip__success) {
+TEST_CASE("reject  data setter 2  roundtrip  success", "[reject]") {
     hash_digest duplicate = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     hash_digest data = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     message::reject instance;
-    BOOST_REQUIRE(duplicate != instance.data());
+    REQUIRE(duplicate != instance.data());
     instance.set_data(std::move(data));
-    BOOST_REQUIRE(duplicate == instance.data());
+    REQUIRE(duplicate == instance.data());
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("reject  operator assign equals  always  matches equivalent", "[reject]") {
     message::reject value(
         message::reject::reason_code::dust,
         "My Message",
         "My Reason",
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::reject instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("reject  operator boolean equals  duplicates  returns true", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         "My Message",
@@ -425,10 +424,10 @@ BOOST_AUTO_TEST_CASE(reject__operator_boolean_equals__duplicates__returns_true) 
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     message::reject instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("reject  operator boolean equals  differs  returns false", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         "My Message",
@@ -436,10 +435,10 @@ BOOST_AUTO_TEST_CASE(reject__operator_boolean_equals__differs__returns_false) {
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     message::reject instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("reject - reject  operator boolean not equals  duplicates  returns false", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         "My Message",
@@ -447,10 +446,10 @@ BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__duplicates__returns_fa
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     message::reject instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("reject - reject  operator boolean not equals  differs  returns true", "[reject]") {
     const message::reject expected(
         message::reject::reason_code::dust,
         "My Message",
@@ -458,7 +457,7 @@ BOOST_AUTO_TEST_CASE(reject__operator_boolean_not_equals__differs__returns_true)
         hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
     message::reject instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

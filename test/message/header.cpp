@@ -2,20 +2,19 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(message_header_tests)
+// Start Boost Suite: message header tests
 
-BOOST_AUTO_TEST_CASE(header__constructor_1__always__initialized_invalid) {
+TEST_CASE("message header constructor 1  always initialized invalid", "[message header]") {
     message::header instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_2__always__equals_params) {
+TEST_CASE("message header  constructor 2  always  equals params", "[message header]") {
     uint32_t version = 10u;
     hash_digest previous = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     hash_digest merkle = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
@@ -24,16 +23,16 @@ BOOST_AUTO_TEST_CASE(header__constructor_2__always__equals_params) {
     uint32_t nonce = 68644u;
 
     message::header instance(version, previous, merkle, timestamp, bits, nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(timestamp, instance.timestamp());
-    BOOST_REQUIRE_EQUAL(bits, instance.bits());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
-    BOOST_REQUIRE(previous == instance.previous_block_hash());
-    BOOST_REQUIRE(merkle == instance.merkle());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(timestamp == instance.timestamp());
+    REQUIRE(bits == instance.bits());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(previous == instance.previous_block_hash());
+    REQUIRE(merkle == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_3__always__equals_params) {
+TEST_CASE("message header  constructor 3  always  equals params", "[message header]") {
     uint32_t version = 10u;
     hash_digest previous = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     hash_digest merkle = hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
@@ -42,16 +41,16 @@ BOOST_AUTO_TEST_CASE(header__constructor_3__always__equals_params) {
     uint32_t nonce = 68644u;
 
     message::header instance(version, std::move(previous), std::move(merkle), timestamp, bits, nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(timestamp, instance.timestamp());
-    BOOST_REQUIRE_EQUAL(bits, instance.bits());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
-    BOOST_REQUIRE(previous == instance.previous_block_hash());
-    BOOST_REQUIRE(merkle == instance.merkle());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(timestamp == instance.timestamp());
+    REQUIRE(bits == instance.bits());
+    REQUIRE(nonce == instance.nonce());
+    REQUIRE(previous == instance.previous_block_hash());
+    REQUIRE(merkle == instance.merkle());
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_4__always__equals_params) {
+TEST_CASE("message header  constructor 4  always  equals params", "[message header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -61,11 +60,11 @@ BOOST_AUTO_TEST_CASE(header__constructor_4__always__equals_params) {
         1234u);
 
     message::header instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_5__always__equals_params) {
+TEST_CASE("message header  constructor 5  always  equals params", "[message header]") {
     chain::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -75,11 +74,11 @@ BOOST_AUTO_TEST_CASE(header__constructor_5__always__equals_params) {
         123u);
 
     message::header instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_6__always__equals_params) {
+TEST_CASE("message header  constructor 6  always  equals params", "[message header]") {
     const message::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -89,11 +88,11 @@ BOOST_AUTO_TEST_CASE(header__constructor_6__always__equals_params) {
         68644u);
 
     message::header instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__constructor_7__always__equals_params) {
+TEST_CASE("message header  constructor 7  always  equals params", "[message header]") {
     message::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -103,18 +102,18 @@ BOOST_AUTO_TEST_CASE(header__constructor_7__always__equals_params) {
         68644u);
 
     message::header instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__from_data__insufficient_bytes__failure) {
+TEST_CASE("message header  from data  insufficient bytes  failure", "[message header]") {
     data_chunk data(10);
     message::header header;
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(header, message::header::version_maximum, data));
-    BOOST_REQUIRE_EQUAL(false, header.is_valid());
+    REQUIRE( ! entity_from_data(header, message::header::version_maximum, data));
+    REQUIRE( ! header.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input_canonical_version__no_transaction_count) {
+TEST_CASE("message header  factory from data 1  valid input canonical version  no transaction count", "[message header]") {
     auto const version = message::version::level::canonical;
     message::header expected{
         10u,
@@ -128,13 +127,13 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input_canonical_version_
 
     auto const result = create<message::header>(version, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), chain::header::satoshi_fixed_size());
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == chain::header::satoshi_fixed_size());
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input__success) {
+TEST_CASE("message header  factory from data 1  valid input  success", "[message header]") {
     auto const version = message::header::version_minimum;
     message::header expected{
         10u,
@@ -148,13 +147,13 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_1__valid_input__success) {
 
     auto const result = create<message::header>(version, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success) {
+TEST_CASE("message header  factory from data 2  valid input  success", "[message header]") {
     auto const version = message::header::version_minimum;
     message::header expected{
         10u,
@@ -169,13 +168,13 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_2__valid_input__success) {
 
     auto const result = create<message::header>(version, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success) {
+TEST_CASE("message header  factory from data 3  valid input  success", "[message header]") {
     auto const version = message::header::version_minimum;
     message::header expected{
         10u,
@@ -191,13 +190,13 @@ BOOST_AUTO_TEST_CASE(header__factory_from_data_3__valid_input__success) {
 
     auto const result = create<message::header>(version, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version), result.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("message header  operator assign equals 1  always  matches equivalent", "[message header]") {
     chain::header value(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -206,17 +205,17 @@ BOOST_AUTO_TEST_CASE(header__operator_assign_equals_1__always__matches_equivalen
         6523454u,
         68644u);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::header instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("message header  operator assign equals 2  always  matches equivalent", "[message header]") {
     message::header value(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -225,17 +224,17 @@ BOOST_AUTO_TEST_CASE(header__operator_assign_equals_2__always__matches_equivalen
         6523454u,
         68644u);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::header instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__duplicates__returns_true) {
+TEST_CASE("message header  operator boolean equals 1  duplicates  returns true", "[message header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -245,10 +244,10 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__duplicates__returns_true
         3565u);
 
     message::header instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__differs__returns_false) {
+TEST_CASE("message header  operator boolean equals 1  differs  returns false", "[message header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -258,10 +257,10 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_1__differs__returns_false) 
         4453u);
 
     message::header instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_1__duplicates__returns_false) {
+TEST_CASE("message header  operator boolean not equals 1  duplicates  returns false", "[message header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -271,10 +270,10 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_1__duplicates__returns_
         2345u);
 
     message::header instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_1__differs__returns_true) {
+TEST_CASE("message header  operator boolean not equals 1  differs  returns true", "[message header]") {
     chain::header const expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -284,10 +283,10 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_1__differs__returns_tru
         47476u);
 
     message::header instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_2__duplicates__returns_true) {
+TEST_CASE("message header  operator boolean equals 2  duplicates  returns true", "[message header]") {
     const message::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -297,10 +296,10 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_2__duplicates__returns_true
         68644u);
 
     message::header instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_2__differs__returns_false) {
+TEST_CASE("message header  operator boolean equals 2  differs  returns false", "[message header]") {
     const message::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -310,10 +309,10 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_equals_2__differs__returns_false) 
         68644u);
 
     message::header instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_2__duplicates__returns_false) {
+TEST_CASE("message header  operator boolean not equals 2  duplicates  returns false", "[message header]") {
     const message::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -323,10 +322,10 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_2__duplicates__returns_
         68644u);
 
     message::header instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_2__differs__returns_true) {
+TEST_CASE("message header  operator boolean not equals 2  differs  returns true", "[message header]") {
     const message::header expected(
         10u,
         hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -336,7 +335,7 @@ BOOST_AUTO_TEST_CASE(header__operator_boolean_not_equals_2__differs__returns_tru
         68644u);
 
     message::header instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

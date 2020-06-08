@@ -558,6 +558,8 @@ if (${CURRENCY} STREQUAL "LTC")
   target_include_directories(kth-domain SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
 endif()
 
+
+
 if (NOT NO_CONAN_AT_ALL)
   target_link_libraries(kth-domain PUBLIC ${CONAN_LIBS})
 else()
@@ -617,18 +619,22 @@ if (WITH_TESTS OR WITH_TESTS_NEW)
   enable_testing()
 endif()
 
+
 # local: test/kth_domain_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
 
   add_executable(kth_domain_test
         test/chain/block.cpp
+        test/chain/compact.cpp
         test/chain/header.cpp
         test/chain/input.cpp
         test/chain/output.cpp
         test/chain/output_point.cpp
         test/chain/point.cpp
         test/chain/point_iterator.cpp
+        test/chain/point_value.cpp
+        test/chain/points_value.cpp
         test/chain/satoshi_words.cpp
         test/chain/script.cpp
         test/chain/transaction.cpp
@@ -656,17 +662,20 @@ if (WITH_TESTS)
         test/message/get_blocks.cpp
         test/message/get_data.cpp
         test/message/get_headers.cpp
+        test/message/header.cpp
         test/message/headers.cpp
         test/message/heading.cpp
         test/message/inventory.cpp
         test/message/inventory_vector.cpp
         test/message/memory_pool.cpp
         test/message/merkle_block.cpp
+        test/message/messages.cpp
         test/message/not_found.cpp
         test/message/ping.cpp
         test/message/pong.cpp
         test/message/prefilled_transaction.cpp
         test/message/reject.cpp
+        test/message/send_compact.cpp
         test/message/send_headers.cpp
         test/message/transaction.cpp
         test/message/verack.cpp
@@ -678,88 +687,103 @@ if (WITH_TESTS)
         test/wallet/encrypted_keys.cpp
         test/wallet/message.cpp
         test/wallet/payment_address.cpp
+        test/wallet/select_outputs.cpp
         test/wallet/stealth_address.cpp
+        test/wallet/stealth_receiver.cpp
+        test/wallet/stealth_sender.cpp
         test/wallet/uri_reader.cpp
-        test/wallet/transaction_functions.cpp
+
+        #TODO(fernando): to include 
+        # test/wallet/transaction_functions.cpp
     )
+
+    target_include_directories(kth_domain_test PUBLIC
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
 
     target_link_libraries(kth_domain_test PUBLIC kth-domain)
 
-_group_sources(kth_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
-
-# TODO(fernando): check if there are new tests in Makefile (no Cmake)
-  _add_tests(kth_domain_test
-    address_tests
-    alert_payload_tests
-    alert_tests
-    # binary_tests
-    bitcoin_uri_tests
-    chain_block_tests
-    message_block_tests
-    block_transactions_tests
-    # collection_tests
-    compact_block_tests
-    # data_tests
-    ec_private_tests
-    # ec_public_tests # no test cases
-    encrypted_tests
-    # endian_tests
-    fee_filter_tests
-    filter_add_tests
-    filter_clear_tests
-    filter_load_tests
-    get_address_tests
-    get_block_transactions_tests
-    get_blocks_tests
-    get_data_tests
-    get_headers_tests
-    # hash_number_tests
-    chain_header_tests
-    headers_tests
-    heading_tests
-    input_tests
-    inventory_tests
-    inventory_vector_tests
-    memory_pool_tests
-    merkle_block_tests
-    message_tests
-    # network_address_tests
-    not_found_tests
-    output_tests
-    payment_address_tests
-    ping_tests
-    point_tests
-    pong_tests
-    prefilled_transaction_tests
-    # pseudo_random_tests
-    reject_tests
-    # script_number_tests
-    script_tests
-    # send_compact_blocks_tests
-    send_headers_tests
-    # serializer_tests
-    stealth_address_tests
-    stealth_tests
-    # stream_tests
-    # thread_tests
-    chain_transaction_tests
-    message_transaction_tests
-    # unicode_istream_tests
-    # unicode_ostream_tests
-    # unicode_tests
-    uri_reader_tests
-    verack_tests
-    version_tests
-    transaction_functions_tests
-  )
-
-  if (WITH_PNG)
-    _add_tests(kth_domain_test png_tests)
+  if (WITH_TESTS OR WITH_TESTS_NEW)
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(kth_domain_test)
   endif()
+  
 
-  if (WITH_QRENCODE)
-    _add_tests(kth_domain_test qrcode_tests)
-  endif()
+  # _group_sources(kth_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
+
+  # # TODO(fernando): check if there are new tests in Makefile (no Cmake)
+  # _add_tests(kth_domain_test
+  #   address_tests
+  #   alert_payload_tests
+  #   alert_tests
+  #   # binary_tests
+  #   bitcoin_uri_tests
+  #   chain_block_tests
+  #   message_block_tests
+  #   block_transactions_tests
+  #   # collection_tests
+  #   compact_block_tests
+  #   # data_tests
+  #   ec_private_tests
+  #   # ec_public_tests # no test cases
+  #   encrypted_tests
+  #   # endian_tests
+  #   fee_filter_tests
+  #   filter_add_tests
+  #   filter_clear_tests
+  #   filter_load_tests
+  #   get_address_tests
+  #   get_block_transactions_tests
+  #   get_blocks_tests
+  #   get_data_tests
+  #   get_headers_tests
+  #   # hash_number_tests
+  #   chain_header_tests
+  #   headers_tests
+  #   heading_tests
+  #   input_tests
+  #   inventory_tests
+  #   inventory_vector_tests
+  #   memory_pool_tests
+  #   merkle_block_tests
+  #   message_tests
+  #   # network_address_tests
+  #   not_found_tests
+  #   output_tests
+  #   payment_address_tests
+  #   ping_tests
+  #   point_tests
+  #   pong_tests
+  #   prefilled_transaction_tests
+  #   # pseudo_random_tests
+  #   reject_tests
+  #   # script_number_tests
+  #   script_tests
+  #   # send_compact_blocks_tests
+  #   send_headers_tests
+  #   # serializer_tests
+  #   stealth_address_tests
+  #   stealth_tests
+  #   # stream_tests
+  #   # thread_tests
+  #   chain_transaction_tests
+  #   message_transaction_tests
+  #   # unicode_istream_tests
+  #   # unicode_ostream_tests
+  #   # unicode_tests
+  #   uri_reader_tests
+  #   verack_tests
+  #   version_tests
+  #   transaction_functions_tests
+  # )
+
+  # if (WITH_PNG)
+  #   _add_tests(kth_domain_test png_tests)
+  # endif()
+
+  # if (WITH_QRENCODE)
+  #   _add_tests(kth_domain_test qrcode_tests)
+  # endif()
 endif()
 
 if (WITH_TESTS_NEW)

@@ -2,21 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(headers_tests)
+// Start Boost Suite: headers tests
 
-BOOST_AUTO_TEST_CASE(headers__constructor_1__always__initialized_invalid) {
+TEST_CASE("headers  constructor 1  always  initialized invalid", "[headers]") {
     headers instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_2__always__equals_params) {
+TEST_CASE("headers  constructor 2  always  equals params", "[headers]") {
     header::list const expected{
         header(
             10u,
@@ -34,11 +33,11 @@ BOOST_AUTO_TEST_CASE(headers__constructor_2__always__equals_params) {
             34564u)};
 
     headers instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.elements() == expected);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.elements() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_3__always__equals_params) {
+TEST_CASE("headers  constructor 3  always  equals params", "[headers]") {
     header::list const expected{
         header(
             10u,
@@ -56,11 +55,11 @@ BOOST_AUTO_TEST_CASE(headers__constructor_3__always__equals_params) {
             34564u)};
 
     headers instance(std::move(expected));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.elements().size(), 2u);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.elements().size() == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_4__always__equals_params) {
+TEST_CASE("headers  constructor 4  always  equals params", "[headers]") {
     headers instance(
         {header(
              10u,
@@ -77,11 +76,11 @@ BOOST_AUTO_TEST_CASE(headers__constructor_4__always__equals_params) {
              4356344u,
              34564u)});
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.elements().size(), 2u);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.elements().size() == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_5__always__equals_params) {
+TEST_CASE("headers  constructor 5  always  equals params", "[headers]") {
     headers const expected(
         {header(
              10u,
@@ -99,10 +98,10 @@ BOOST_AUTO_TEST_CASE(headers__constructor_5__always__equals_params) {
              34564u)});
 
     headers instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__constructor_6__always__equals_params) {
+TEST_CASE("headers  constructor 6  always  equals params", "[headers]") {
     headers expected(
         {header(
              10u,
@@ -120,16 +119,16 @@ BOOST_AUTO_TEST_CASE(headers__constructor_6__always__equals_params) {
              34564u)});
 
     headers instance(std::move(expected));
-    BOOST_REQUIRE_EQUAL(instance.elements().size(), 2u);
+    REQUIRE(instance.elements().size() == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_bytes__failure) {
+TEST_CASE("headers  from data  insufficient bytes  failure", "[headers]") {
     data_chunk const raw{0xab, 0xcd};
     headers instance{};
-    BOOST_REQUIRE_EQUAL(false, entity_from_data(instance, headers::version_minimum, raw));
+    REQUIRE( ! entity_from_data(instance, headers::version_minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure) {
+TEST_CASE("headers  from data  insufficient version  failure", "[headers]") {
     static headers const expected{
         {10,
          hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -140,10 +139,10 @@ BOOST_AUTO_TEST_CASE(headers__from_data__insufficient_version__failure) {
 
     data_chunk const data = expected.to_data(headers::version_minimum);
     headers instance{};
-    BOOST_REQUIRE(!entity_from_data(instance, headers::version_minimum - 1, data));
+    REQUIRE(!entity_from_data(instance, headers::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success) {
+TEST_CASE("headers  factory from data 1  valid input  success", "[headers]") {
     static headers const expected{
         {10,
          hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -155,13 +154,13 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_1__valid_input__success) {
     static auto const version = headers::version_minimum;
     auto const data = expected.to_data(version);
     auto const result = create<headers>(version, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
-    BOOST_REQUIRE_EQUAL(result.serialized_size(version), data.size());
-    BOOST_REQUIRE_EQUAL(result.serialized_size(version), expected.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
+    REQUIRE(result.serialized_size(version) == data.size());
+    REQUIRE(result.serialized_size(version) == expected.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(headers__factory_from_data_2__valid_input__success) {
+TEST_CASE("headers  factory from data 2  valid input  success", "[headers]") {
     static headers const expected{
         {15,
          hash_literal("00acadae0019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -174,13 +173,13 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_2__valid_input__success) {
     auto const data = expected.to_data(version);
     data_source istream(data);
     auto result = create<headers>(version, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(result.serialized_size(version), expected.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(result.serialized_size(version) == expected.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success) {
+TEST_CASE("headers  factory from data 3  valid input  success", "[headers]") {
     static headers const expected{
         {7,
          hash_literal("1234123412341234123412341234123412341234123412341234123412341234"),
@@ -194,13 +193,13 @@ BOOST_AUTO_TEST_CASE(headers__factory_from_data_3__valid_input__success) {
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<headers>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(version));
-    BOOST_REQUIRE_EQUAL(result.serialized_size(version), expected.serialized_size(version));
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
+    REQUIRE(data.size() == result.serialized_size(version));
+    REQUIRE(result.serialized_size(version) == expected.serialized_size(version));
 }
 
-BOOST_AUTO_TEST_CASE(headers__elements_accessor_1__always__returns_initialized_value) {
+TEST_CASE("headers  elements accessor 1  always  returns initialized value", "[headers]") {
     header::list const expected{
         header(
             10u,
@@ -218,10 +217,10 @@ BOOST_AUTO_TEST_CASE(headers__elements_accessor_1__always__returns_initialized_v
             34564u)};
 
     message::headers instance(expected);
-    BOOST_REQUIRE(instance.elements() == expected);
+    REQUIRE(instance.elements() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__elements_accessor_2__always__returns_initialized_value) {
+TEST_CASE("headers  elements accessor 2  always  returns initialized value", "[headers]") {
     header::list const expected{
         header(
             10u,
@@ -239,10 +238,10 @@ BOOST_AUTO_TEST_CASE(headers__elements_accessor_2__always__returns_initialized_v
             34564u)};
 
     const message::headers instance(expected);
-    BOOST_REQUIRE(instance.elements() == expected);
+    REQUIRE(instance.elements() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__command_setter_1__roundtrip__success) {
+TEST_CASE("headers  command setter 1  roundtrip  success", "[headers]") {
     header::list const expected{
         header(
             10u,
@@ -260,12 +259,12 @@ BOOST_AUTO_TEST_CASE(headers__command_setter_1__roundtrip__success) {
             34564u)};
 
     message::headers instance;
-    BOOST_REQUIRE(instance.elements() != expected);
+    REQUIRE(instance.elements() != expected);
     instance.set_elements(expected);
-    BOOST_REQUIRE(instance.elements() == expected);
+    REQUIRE(instance.elements() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__command_setter_2__roundtrip__success) {
+TEST_CASE("headers  command setter 2  roundtrip  success", "[headers]") {
     header::list values{
         header(
             10u,
@@ -283,12 +282,12 @@ BOOST_AUTO_TEST_CASE(headers__command_setter_2__roundtrip__success) {
             34564u)};
 
     message::headers instance;
-    BOOST_REQUIRE(instance.elements().empty());
+    REQUIRE(instance.elements().empty());
     instance.set_elements(std::move(values));
-    BOOST_REQUIRE_EQUAL(instance.elements().size(), 2u);
+    REQUIRE(instance.elements().size() == 2u);
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("headers  operator assign equals  always  matches equivalent", "[headers]") {
     message::headers value(
         {header{
              1u,
@@ -312,14 +311,14 @@ BOOST_AUTO_TEST_CASE(headers__operator_assign_equals__always__matches_equivalent
              300u,
              3000u}});
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::headers instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("headers  operator boolean equals  duplicates  returns true", "[headers]") {
     const message::headers expected(
         {header{
              1u,
@@ -344,10 +343,10 @@ BOOST_AUTO_TEST_CASE(headers__operator_boolean_equals__duplicates__returns_true)
              3000u}});
 
     message::headers instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("headers  operator boolean equals  differs  returns false", "[headers]") {
     const message::headers expected(
         {header{
              1u,
@@ -372,10 +371,10 @@ BOOST_AUTO_TEST_CASE(headers__operator_boolean_equals__differs__returns_false) {
              3000u}});
 
     message::headers instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("headers  operator boolean not equals  duplicates  returns false", "[headers]") {
     const message::headers expected(
         {header{
              1u,
@@ -400,10 +399,10 @@ BOOST_AUTO_TEST_CASE(headers__operator_boolean_not_equals__duplicates__returns_f
              3000u}});
 
     message::headers instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("headers  operator boolean not equals  differs  returns true", "[headers]") {
     const message::headers expected(
         {header{
              1u,
@@ -428,18 +427,18 @@ BOOST_AUTO_TEST_CASE(headers__operator_boolean_not_equals__differs__returns_true
              3000u}});
 
     message::headers instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_hashes__empty__returns_empty_list) {
+TEST_CASE("headers  to hashes  empty  returns empty list", "[headers]") {
     message::headers instance;
     hash_list result;
     instance.to_hashes(result);
-    BOOST_REQUIRE(result.empty());
+    REQUIRE(result.empty());
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_hashes__non_empty__returns_header_hash_list) {
-    const hash_list expected{
+TEST_CASE("headers  to hashes  non empty  returns header hash list", "[headers]") {
+    hash_list const expected{
         hash_literal("108127a4f5955a546b78807166d8cb9cd3eee1ed530c14d51095bc798685f4d6"),
         hash_literal("37ec64a548b6419769b152d70efc4c356f74c7fda567711d98cac3c55c34a890"),
         hash_literal("d9bbb4b47ca45ec8477cba125262b07b17daae944b54d1780e0a6373d2eed879")};
@@ -469,18 +468,18 @@ BOOST_AUTO_TEST_CASE(headers__to_hashes__non_empty__returns_header_hash_list) {
 
     hash_list result;
     instance.to_hashes(result);
-    BOOST_REQUIRE_EQUAL(result.size(), expected.size());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.size() == expected.size());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_inventory__empty__returns_empty_list) {
+TEST_CASE("headers  to inventory  empty  returns empty list", "[headers]") {
     message::headers instance;
     inventory_vector::list result;
     instance.to_inventory(result, inventory_vector::type_id::block);
-    BOOST_REQUIRE_EQUAL(0, result.size());
+    REQUIRE(0 == result.size());
 }
 
-BOOST_AUTO_TEST_CASE(headers__to_inventory__non_empty__returns_header_hash_inventory_list) {
+TEST_CASE("headers  to inventory  non empty  returns header hash inventory list", "[headers]") {
     inventory_vector::list const expected{
         inventory_vector(inventory_vector::type_id::block, hash_literal("108127a4f5955a546b78807166d8cb9cd3eee1ed530c14d51095bc798685f4d6")),
         inventory_vector(inventory_vector::type_id::block, hash_literal("37ec64a548b6419769b152d70efc4c356f74c7fda567711d98cac3c55c34a890")),
@@ -511,17 +510,17 @@ BOOST_AUTO_TEST_CASE(headers__to_inventory__non_empty__returns_header_hash_inven
 
     inventory_vector::list result;
     instance.to_inventory(result, inventory_vector::type_id::block);
-    BOOST_REQUIRE_EQUAL(result.size(), expected.size());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.size() == expected.size());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(headers__is_sequential__empty__true) {
+TEST_CASE("headers  is sequential  empty  true", "[headers]") {
     static headers const instance;
-    BOOST_REQUIRE(instance.elements().empty());
-    BOOST_REQUIRE(instance.is_sequential());
+    REQUIRE(instance.elements().empty());
+    REQUIRE(instance.is_sequential());
 }
 
-BOOST_AUTO_TEST_CASE(headers__is_sequential__single__true) {
+TEST_CASE("headers  is sequential  single  true", "[headers]") {
     static header const first{
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
@@ -531,10 +530,10 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__single__true) {
         1000u};
 
     headers const instance({first});
-    BOOST_REQUIRE(instance.is_sequential());
+    REQUIRE(instance.is_sequential());
 }
 
-BOOST_AUTO_TEST_CASE(headers__is_sequential__sequential__true) {
+TEST_CASE("headers  is sequential  sequential  true", "[headers]") {
     static header const first{
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
@@ -560,10 +559,10 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__sequential__true) {
         3000u};
 
     headers const instance({first, second, third});
-    BOOST_REQUIRE(instance.is_sequential());
+    REQUIRE(instance.is_sequential());
 }
 
-BOOST_AUTO_TEST_CASE(headers__is_sequential__disordered__false) {
+TEST_CASE("headers  is sequential  disordered  false", "[headers]") {
     static header const first{
         1u,
         hash_literal("f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"),
@@ -589,7 +588,7 @@ BOOST_AUTO_TEST_CASE(headers__is_sequential__disordered__false) {
         3000u};
 
     headers const instance({first, second, third});
-    BOOST_REQUIRE(!instance.is_sequential());
+    REQUIRE(!instance.is_sequential());
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

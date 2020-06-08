@@ -80,42 +80,6 @@ output::addresses_ptr output::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
-// Operators.
-//-----------------------------------------------------------------------------
-
-
-// bool output::operator==(output const& x) const {
-//     return (value_ == x.value_) && (script_ == x.script_);
-// }
-
-// bool output::operator!=(output const& x) const {
-//     return !(*this == x);
-// }
-
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// bool output::from_data(data_chunk const& data, bool wire) {
-//     data_source istream(data);
-//     return from_data(istream, wire);
-// }
-
-// bool output::from_data(std::istream& stream, bool wire) {
-//     istream_reader stream_r(stream);
-//     return from_data(stream_r, wire);
-// }
-
-// // protected
-// void output::reset() {
-//     value_ = output::not_found;
-//     script_.reset();
-// }
-
-// Empty scripts are valid, validation relies on not_found only.
-// bool output::is_valid() const {
-//     return value_ != output::not_found;
-// }
-
 // Serialization.
 //-----------------------------------------------------------------------------
 

@@ -2,20 +2,19 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(alert_payload_tests)
+// Start Boost Suite: alert payload tests
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_1__always__invalid) {
+TEST_CASE("alert payload  constructor 1  always invalid", "[alert payload]") {
     message::alert_payload instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_2__always__equals_params) {
+TEST_CASE("alert payload  constructor 2  always  equals params", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -34,23 +33,23 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_2__always__equals_params) {
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_3__always__equals_params) {
+TEST_CASE("alert payload  constructor 3  always  equals params", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -76,23 +75,23 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_3__always__equals_params) {
                                     std::move(dup_set_sub_version), priority, std::move(dup_comment),
                                     std::move(dup_status_bar), std::move(dup_reserved));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_4__always__equals_params) {
+TEST_CASE("alert payload  constructor 4  always  equals params", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -113,23 +112,23 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_4__always__equals_params) {
 
     message::alert_payload instance(value);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__constructor_5__always__equals_params) {
+TEST_CASE("alert payload  constructor 5  always  equals params", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -150,31 +149,31 @@ BOOST_AUTO_TEST_CASE(alert_payload__constructor_5__always__equals_params) {
 
     message::alert_payload instance(std::move(value));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__from_data__insufficient_bytes__failure) {
+TEST_CASE("alert payload  from data  insufficient bytes  failure", "[alert payload]") {
     data_chunk raw{0xab, 0x11};
     message::alert_payload instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__wiki_sample_test__success) {
+TEST_CASE("alert payload  factory from data 1  wiki sample test  success", "[alert payload]") {
     data_chunk const raw{
         0x01, 0x00, 0x00, 0x00, 0x37, 0x66, 0x40, 0x4f, 0x00, 0x00,
         0x00, 0x00, 0xb3, 0x05, 0x43, 0x4f, 0x00, 0x00, 0x00, 0x00,
@@ -207,17 +206,17 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__wiki_sample_test__succe
     auto const result = create<message::alert_payload>(
         message::version::level::minimum, raw);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(raw.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(raw.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(result == expected);
 
     auto const data = expected.to_data(message::version::level::minimum);
 
-    BOOST_REQUIRE_EQUAL(raw.size(), data.size());
-    BOOST_REQUIRE_EQUAL(data.size(), expected.serialized_size(message::version::level::minimum));
+    REQUIRE(raw.size() == data.size());
+    REQUIRE(data.size() == expected.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__roundtrip__success) {
+TEST_CASE("alert payload  factory from data 1  roundtrip  success", "[alert payload]") {
     message::alert_payload expected{
         5,
         105169,
@@ -237,13 +236,13 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_1__roundtrip__success) {
     auto const result = create<message::alert_payload>(
         message::version::level::minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_2__roundtrip__success) {
+TEST_CASE("alert payload  factory from data 2  roundtrip  success", "[alert payload]") {
     message::alert_payload expected{
         5,
         105169,
@@ -264,13 +263,13 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_2__roundtrip__success) {
     auto const result = create<message::alert_payload>(
         message::version::level::minimum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_3__roundtrip__success) {
+TEST_CASE("alert payload  factory from data 3  roundtrip  success", "[alert payload]") {
     const message::alert_payload expected{
         5,
         105169,
@@ -292,53 +291,53 @@ BOOST_AUTO_TEST_CASE(alert_payload__factory_from_data_3__roundtrip__success) {
     auto const result = create<message::alert_payload>(
         message::version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
-    BOOST_REQUIRE_EQUAL(data.size(), result.serialized_size(message::version::level::minimum));
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(message::version::level::minimum), result.serialized_size(message::version::level::minimum));
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
+    REQUIRE(data.size() == result.serialized_size(message::version::level::minimum));
+    REQUIRE(expected.serialized_size(message::version::level::minimum) == result.serialized_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__version__roundtrip__success) {
+TEST_CASE("alert payload  version  roundtrip  success", "[alert payload]") {
     uint32_t value = 1234u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.version() != value);
+    REQUIRE(instance.version() != value);
     instance.set_version(value);
-    BOOST_REQUIRE_EQUAL(value, instance.version());
+    REQUIRE(value == instance.version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__relay_until__roundtrip__success) {
+TEST_CASE("alert payload  relay until  roundtrip  success", "[alert payload]") {
     uint64_t value = 5121234u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.relay_until() != value);
+    REQUIRE(instance.relay_until() != value);
     instance.set_relay_until(value);
-    BOOST_REQUIRE_EQUAL(value, instance.relay_until());
+    REQUIRE(value == instance.relay_until());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__expiration__roundtrip__success) {
+TEST_CASE("alert payload  expiration  roundtrip  success", "[alert payload]") {
     uint64_t value = 5121234u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.expiration() != value);
+    REQUIRE(instance.expiration() != value);
     instance.set_expiration(value);
-    BOOST_REQUIRE_EQUAL(value, instance.expiration());
+    REQUIRE(value == instance.expiration());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__id__roundtrip__success) {
+TEST_CASE("alert payload  id  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.id() != value);
+    REQUIRE(instance.id() != value);
     instance.set_id(value);
-    BOOST_REQUIRE_EQUAL(value, instance.id());
+    REQUIRE(value == instance.id());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__cancel__roundtrip__success) {
+TEST_CASE("alert payload  cancel  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.cancel() != value);
+    REQUIRE(instance.cancel() != value);
     instance.set_cancel(value);
-    BOOST_REQUIRE_EQUAL(value, instance.cancel());
+    REQUIRE(value == instance.cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  set cancel accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -357,11 +356,11 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_1__always__returns_initi
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(instance.is_valid());
+    REQUIRE(set_cancel == instance.set_cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_2__always__returns_initialized) {
+TEST_CASE("alert payload  set cancel accessor 2  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -380,44 +379,44 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_accessor_2__always__returns_initi
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(instance.is_valid());
+    REQUIRE(set_cancel == instance.set_cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  set cancel setter 1  roundtrip  success", "[alert payload]") {
     const std::vector<uint32_t> value = {68215u, 34542u, 4756u};
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_cancel() != value);
+    REQUIRE(instance.set_cancel() != value);
     instance.set_set_cancel(value);
-    BOOST_REQUIRE(value == instance.set_cancel());
+    REQUIRE(value == instance.set_cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_cancel_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  set cancel setter 2  roundtrip  success", "[alert payload]") {
     const std::vector<uint32_t> value = {68215u, 34542u, 4756u};
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_cancel() != value);
+    REQUIRE(instance.set_cancel() != value);
     instance.set_set_cancel(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.set_cancel());
+    REQUIRE(value == instance.set_cancel());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__min_version__roundtrip__success) {
+TEST_CASE("alert payload  min version  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.min_version() != value);
+    REQUIRE(instance.min_version() != value);
     instance.set_min_version(value);
-    BOOST_REQUIRE_EQUAL(value, instance.min_version());
+    REQUIRE(value == instance.min_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__max_version__roundtrip__success) {
+TEST_CASE("alert payload  max version  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.max_version() != value);
+    REQUIRE(instance.max_version() != value);
     instance.set_max_version(value);
-    BOOST_REQUIRE_EQUAL(value, instance.max_version());
+    REQUIRE(value == instance.max_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  set sub version accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -436,11 +435,11 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_1__always__returns_
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(instance.is_valid());
+    REQUIRE(set_sub_version == instance.set_sub_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_2__always__returns_initialized) {
+TEST_CASE("alert payload  set sub version accessor 2  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -459,36 +458,36 @@ BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_accessor_2__always__returns_
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(instance.is_valid());
+    REQUIRE(set_sub_version == instance.set_sub_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  set sub version setter 1  roundtrip  success", "[alert payload]") {
     const std::vector<std::string> value = {"asdfa", "sgfdf", "Tryertsd"};
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_sub_version() != value);
+    REQUIRE(instance.set_sub_version() != value);
     instance.set_set_sub_version(value);
-    BOOST_REQUIRE(value == instance.set_sub_version());
+    REQUIRE(value == instance.set_sub_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__set_sub_version_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  set sub version setter 2  roundtrip  success", "[alert payload]") {
     const std::vector<std::string> value = {"asdfa", "sgfdf", "Tryertsd"};
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.set_sub_version() != value);
+    REQUIRE(instance.set_sub_version() != value);
     instance.set_set_sub_version(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.set_sub_version());
+    REQUIRE(value == instance.set_sub_version());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__priority__roundtrip__success) {
+TEST_CASE("alert payload  priority  roundtrip  success", "[alert payload]") {
     uint32_t value = 68215u;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.priority() != value);
+    REQUIRE(instance.priority() != value);
     instance.set_priority(value);
-    BOOST_REQUIRE_EQUAL(value, instance.priority());
+    REQUIRE(value == instance.priority());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  comment accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -507,11 +506,11 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_1__always__returns_initiali
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
+    REQUIRE(instance.is_valid());
+    REQUIRE(comment == instance.comment());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_2__always__returns_initialized) {
+TEST_CASE("alert payload  comment accessor 2  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -530,28 +529,28 @@ BOOST_AUTO_TEST_CASE(alert_payload__comment_accessor_2__always__returns_initiali
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
+    REQUIRE(instance.is_valid());
+    REQUIRE(comment == instance.comment());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  comment setter 1  roundtrip  success", "[alert payload]") {
     std::string const value = "asdfa";
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.comment() != value);
+    REQUIRE(instance.comment() != value);
     instance.set_comment(value);
-    BOOST_REQUIRE(value == instance.comment());
+    REQUIRE(value == instance.comment());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__comment_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  comment setter 2  roundtrip  success", "[alert payload]") {
     std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.comment() != value);
+    REQUIRE(instance.comment() != value);
     instance.set_comment(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.comment());
+    REQUIRE(value == instance.comment());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  status bar accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -570,11 +569,11 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_1__always__returns_initi
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
+    REQUIRE(instance.is_valid());
+    REQUIRE(status_bar == instance.status_bar());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_2__always__returns_initialized) {
+TEST_CASE("alert payload  status bar accessor 2  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -593,28 +592,28 @@ BOOST_AUTO_TEST_CASE(alert_payload__status_bar_accessor_2__always__returns_initi
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
+    REQUIRE(instance.is_valid());
+    REQUIRE(status_bar == instance.status_bar());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__status_bar_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  status bar setter 1  roundtrip  success", "[alert payload]") {
     std::string const value = "asdfa";
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.status_bar() != value);
+    REQUIRE(instance.status_bar() != value);
     instance.set_status_bar(value);
-    BOOST_REQUIRE(value == instance.status_bar());
+    REQUIRE(value == instance.status_bar());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__status_bar_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  status bar setter 2  roundtrip  success", "[alert payload]") {
     std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.status_bar() != value);
+    REQUIRE(instance.status_bar() != value);
     instance.set_status_bar(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.status_bar());
+    REQUIRE(value == instance.status_bar());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_1__always__returns_initialized) {
+TEST_CASE("alert payload  reserved accessor 1  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -633,11 +632,11 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_1__always__returns_initial
                                     cancel, set_cancel, min_version, max_version, set_sub_version,
                                     priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_2__always__returns_initialized) {
+TEST_CASE("alert payload  reserved accessor 2  always  returns initialized", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -656,28 +655,28 @@ BOOST_AUTO_TEST_CASE(alert_payload__reserved_accessor_2__always__returns_initial
                                           cancel, set_cancel, min_version, max_version, set_sub_version,
                                           priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_1__roundtrip__success) {
+TEST_CASE("alert payload  reserved setter 1  roundtrip  success", "[alert payload]") {
     std::string const value = "asdfa";
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.reserved() != value);
+    REQUIRE(instance.reserved() != value);
     instance.set_reserved(value);
-    BOOST_REQUIRE(value == instance.reserved());
+    REQUIRE(value == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__reserved_setter_2__roundtrip__success) {
+TEST_CASE("alert payload  reserved setter 2  roundtrip  success", "[alert payload]") {
     std::string const value = "Tryertsd";
     auto dup_value = value;
     message::alert_payload instance;
-    BOOST_REQUIRE(instance.reserved() != value);
+    REQUIRE(instance.reserved() != value);
     instance.set_reserved(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.reserved());
+    REQUIRE(value == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("alert payload  operator assign equals  always  matches equivalent", "[alert payload]") {
     uint32_t const version = 3452u;
     uint64_t const relay_until = 64556u;
     uint64_t const expiration = 78545u;
@@ -696,62 +695,62 @@ BOOST_AUTO_TEST_CASE(alert_payload__operator_assign_equals__always__matches_equi
                                  cancel, set_cancel, min_version, max_version, set_sub_version,
                                  priority, comment, status_bar, reserved);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::alert_payload instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(version, instance.version());
-    BOOST_REQUIRE_EQUAL(relay_until, instance.relay_until());
-    BOOST_REQUIRE_EQUAL(expiration, instance.expiration());
-    BOOST_REQUIRE_EQUAL(id, instance.id());
-    BOOST_REQUIRE_EQUAL(cancel, instance.cancel());
-    BOOST_REQUIRE(set_cancel == instance.set_cancel());
-    BOOST_REQUIRE_EQUAL(min_version, instance.min_version());
-    BOOST_REQUIRE_EQUAL(max_version, instance.max_version());
-    BOOST_REQUIRE(set_sub_version == instance.set_sub_version());
-    BOOST_REQUIRE_EQUAL(priority, instance.priority());
-    BOOST_REQUIRE_EQUAL(comment, instance.comment());
-    BOOST_REQUIRE_EQUAL(status_bar, instance.status_bar());
-    BOOST_REQUIRE_EQUAL(reserved, instance.reserved());
+    REQUIRE(instance.is_valid());
+    REQUIRE(version == instance.version());
+    REQUIRE(relay_until == instance.relay_until());
+    REQUIRE(expiration == instance.expiration());
+    REQUIRE(id == instance.id());
+    REQUIRE(cancel == instance.cancel());
+    REQUIRE(set_cancel == instance.set_cancel());
+    REQUIRE(min_version == instance.min_version());
+    REQUIRE(max_version == instance.max_version());
+    REQUIRE(set_sub_version == instance.set_sub_version());
+    REQUIRE(priority == instance.priority());
+    REQUIRE(comment == instance.comment());
+    REQUIRE(status_bar == instance.status_bar());
+    REQUIRE(reserved == instance.reserved());
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("alert payload  operator boolean equals  duplicates  returns true", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("alert payload  operator boolean equals  differs  returns false", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("alert payload  operator boolean not equals  duplicates  returns false", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(alert_payload__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("alert payload  operator boolean not equals  differs  returns true", "[alert payload]") {
     const message::alert_payload expected(3452u, 64556u, 78545u, 43547u,
                                           546562345u, {2345u, 346754u, 234u, 4356u}, 4644u, 89876u,
                                           {"foo", "bar", "baz"}, 34323u, "asfgsddsa", "fgjdfhjg", "utyurtevc");
 
     message::alert_payload instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

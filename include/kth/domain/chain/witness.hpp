@@ -11,7 +11,10 @@
 
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+
 #include <kth/domain/machine/operation.hpp>
+
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -33,7 +36,7 @@ class witness {};
 class KD_API witness {
 public:
     using operation = machine::operation;
-    using iterator = machine::const_iterator;
+    using iterator = data_stack::const_iterator;
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -56,9 +59,6 @@ public:
     // Prefixed data assumed valid here though caller may confirm with is_valid.
 
     /// Deserialization invalidates the iterator.
-    bool from_data(data_chunk const& encoded, bool prefix);
-    bool from_data(std::istream& stream, bool prefix);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
         reset();

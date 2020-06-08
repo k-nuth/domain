@@ -2,19 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/test/unit_test.hpp>
-
 #include <optional>
 
-#include <kth/domain.hpp>
-
-// #include <boost/utility/in_place_factory.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-BOOST_AUTO_TEST_SUITE(uri_reader_tests)
+// Start Boost Suite: uri reader tests
 
 // Test helper that relies on bitcoin_uri.
 static
@@ -87,172 +83,172 @@ private:
     bool authority_;
 };
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__typical_uri__test) {
+TEST_CASE("uri reader  parse  typical uri  test", "[uri reader]") {
     auto const uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD?amount=0.1");
-    BOOST_REQUIRE(uri);
-    BOOST_REQUIRE_EQUAL(uri.payment().encoded(), "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
-    BOOST_REQUIRE_EQUAL(uri.amount(), 10000000u);
-    BOOST_REQUIRE(uri.label().empty());
-    BOOST_REQUIRE(uri.message().empty());
-    BOOST_REQUIRE(uri.r().empty());
+    REQUIRE(uri);
+    REQUIRE(uri.payment().encoded() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    REQUIRE(uri.amount() == 10000000u);
+    REQUIRE(uri.label().empty());
+    REQUIRE(uri.message().empty());
+    REQUIRE(uri.r().empty());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__positive_scheme__test) {
-    BOOST_REQUIRE(parse("bitcoin:"));
-    BOOST_REQUIRE(parse("Bitcoin:"));
-    BOOST_REQUIRE(parse("bitcOin:"));
-    BOOST_REQUIRE(parse("BITCOIN:"));
+TEST_CASE("uri reader  parse  positive scheme  test", "[uri reader]") {
+    REQUIRE(parse("bitcoin:"));
+    REQUIRE(parse("Bitcoin:"));
+    REQUIRE(parse("bitcOin:"));
+    REQUIRE(parse("BITCOIN:"));
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_scheme__test) {
-    BOOST_REQUIRE(!parse("bitcorn:"));
+TEST_CASE("uri reader  parse  negative scheme  test", "[uri reader]") {
+    REQUIRE(!parse("bitcorn:"));
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__positive_empty_name_parameter__test) {
-    BOOST_REQUIRE(parse("bitcoin:?"));
-    BOOST_REQUIRE(parse("bitcoin:?&"));
-    BOOST_REQUIRE(parse("bitcoin:?=y"));
-    BOOST_REQUIRE(parse("bitcoin:?="));
+TEST_CASE("uri reader  parse  positive empty name parameter  test", "[uri reader]") {
+    REQUIRE(parse("bitcoin:?"));
+    REQUIRE(parse("bitcoin:?&"));
+    REQUIRE(parse("bitcoin:?=y"));
+    REQUIRE(parse("bitcoin:?="));
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__positive_unknown_optional_parameter__test) {
-    BOOST_REQUIRE(parse("bitcoin:?x=y"));
-    BOOST_REQUIRE(parse("bitcoin:?x="));
-    BOOST_REQUIRE(parse("bitcoin:?x"));
+TEST_CASE("uri reader  parse  positive unknown optional parameter  test", "[uri reader]") {
+    REQUIRE(parse("bitcoin:?x=y"));
+    REQUIRE(parse("bitcoin:?x="));
+    REQUIRE(parse("bitcoin:?x"));
 
     auto const uri = parse("bitcoin:?ignore=true");
-    BOOST_REQUIRE(uri);
-    BOOST_REQUIRE(uri.address().empty());
-    BOOST_REQUIRE_EQUAL(uri.amount(), 0);
-    BOOST_REQUIRE(uri.label().empty());
-    BOOST_REQUIRE(uri.message().empty());
-    BOOST_REQUIRE(uri.r().empty());
-    BOOST_REQUIRE(uri.parameter("ignore").empty());
+    REQUIRE(uri);
+    REQUIRE(uri.address().empty());
+    REQUIRE(uri.amount() == 0);
+    REQUIRE(uri.label().empty());
+    REQUIRE(uri.message().empty());
+    REQUIRE(uri.r().empty());
+    REQUIRE(uri.parameter("ignore").empty());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_unknown_required_parameter__test) {
+TEST_CASE("uri reader  parse  negative unknown required parameter  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?req-ignore=false");
-    BOOST_REQUIRE(!uri);
+    REQUIRE(!uri);
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__address__test) {
+TEST_CASE("uri reader  parse  address  test", "[uri reader]") {
     auto const uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
-    BOOST_REQUIRE(uri);
-    BOOST_REQUIRE_EQUAL(uri.payment().encoded(), "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
-    BOOST_REQUIRE_EQUAL(uri.amount(), 0);
-    BOOST_REQUIRE(uri.label().empty());
-    BOOST_REQUIRE(uri.message().empty());
-    BOOST_REQUIRE(uri.r().empty());
+    REQUIRE(uri);
+    REQUIRE(uri.payment().encoded() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    REQUIRE(uri.amount() == 0);
+    REQUIRE(uri.label().empty());
+    REQUIRE(uri.message().empty());
+    REQUIRE(uri.r().empty());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__uri_encoded_address__test) {
+TEST_CASE("uri reader  parse  uri encoded address  test", "[uri reader]") {
     auto const uri = parse("bitcoin:%3113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
-    BOOST_REQUIRE(uri);
-    BOOST_REQUIRE_EQUAL(uri.payment().encoded(), "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    REQUIRE(uri);
+    REQUIRE(uri.payment().encoded() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_address__test) {
-    BOOST_REQUIRE(!parse("bitcoin:&"));
-    BOOST_REQUIRE(!parse("bitcoin:19l88"));
-    BOOST_REQUIRE(!parse("bitcoin:19z88"));
+TEST_CASE("uri reader  parse  negative address  test", "[uri reader]") {
+    REQUIRE(!parse("bitcoin:&"));
+    REQUIRE(!parse("bitcoin:19l88"));
+    REQUIRE(!parse("bitcoin:19z88"));
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__amount_only__test) {
+TEST_CASE("uri reader  parse  amount only  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?amount=4.2");
-    BOOST_REQUIRE(uri);
-    BOOST_REQUIRE(!uri.payment());
-    BOOST_REQUIRE_EQUAL(uri.amount(), 420000000u);
-    BOOST_REQUIRE(uri.label().empty());
-    BOOST_REQUIRE(uri.message().empty());
-    BOOST_REQUIRE(uri.r().empty());
+    REQUIRE(uri);
+    REQUIRE(!uri.payment());
+    REQUIRE(uri.amount() == 420000000u);
+    REQUIRE(uri.label().empty());
+    REQUIRE(uri.message().empty());
+    REQUIRE(uri.r().empty());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__minimal_amount__test) {
+TEST_CASE("uri reader  parse  minimal amount  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?amount=.");
-    BOOST_REQUIRE(uri);
-    BOOST_REQUIRE_EQUAL(uri.amount(), 0);
+    REQUIRE(uri);
+    REQUIRE(uri.amount() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__invalid_amount__test) {
-    BOOST_REQUIRE(!parse("bitcoin:amount=4.2.1"));
-    BOOST_REQUIRE(!parse("bitcoin:amount=bob"));
+TEST_CASE("uri reader  parse  invalid amount  test", "[uri reader]") {
+    REQUIRE(!parse("bitcoin:amount=4.2.1"));
+    REQUIRE(!parse("bitcoin:amount=bob"));
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__label_only__test) {
+TEST_CASE("uri reader  parse  label only  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?label=test");
-    BOOST_REQUIRE(uri);
-    BOOST_REQUIRE(!uri.payment());
-    BOOST_REQUIRE_EQUAL(uri.amount(), 0);
-    BOOST_REQUIRE_EQUAL(uri.label(), "test");
-    BOOST_REQUIRE(uri.message().empty());
-    BOOST_REQUIRE(uri.r().empty());
+    REQUIRE(uri);
+    REQUIRE(!uri.payment());
+    REQUIRE(uri.amount() == 0);
+    REQUIRE(uri.label() == "test");
+    REQUIRE(uri.message().empty());
+    REQUIRE(uri.r().empty());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__reserved_symbol_with_lowercase_percent__test) {
+TEST_CASE("uri reader  parse  reserved symbol with lowercase percent  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?label=%26%3d%6b");
-    BOOST_REQUIRE_EQUAL(uri.label(), "&=k");
+    REQUIRE(uri.label() == "&=k");
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_percent_encoding__test) {
-    BOOST_REQUIRE(!parse("bitcoin:label=%3"));
-    BOOST_REQUIRE(!parse("bitcoin:label=%3G"));
+TEST_CASE("uri reader  parse  negative percent encoding  test", "[uri reader]") {
+    REQUIRE(!parse("bitcoin:label=%3"));
+    REQUIRE(!parse("bitcoin:label=%3G"));
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__encoded_multibyte_utf8__test) {
+TEST_CASE("uri reader  parse  encoded multibyte utf8  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?label=%E3%83%95");
-    BOOST_REQUIRE_EQUAL(uri.label(), "フ");
+    REQUIRE(uri.label() == "フ");
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__non_strict_encoded_multibyte_utf8_with_unencoded_label_space__test) {
+TEST_CASE("uri reader  parse  non strict encoded multibyte utf8 with unencoded label space  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?label=Some テスト", false);
-    BOOST_REQUIRE_EQUAL(uri.label(), "Some テスト");
+    REQUIRE(uri.label() == "Some テスト");
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__negative_strict_encoded_multibyte_utf8_with_unencoded_label_space__test) {
-    BOOST_REQUIRE(!parse("bitcoin:?label=Some テスト", true));
+TEST_CASE("uri reader  parse  negative strict encoded multibyte utf8 with unencoded label space  test", "[uri reader]") {
+    REQUIRE(!parse("bitcoin:?label=Some テスト", true));
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__message_only__test) {
+TEST_CASE("uri reader  parse  message only  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?message=Hi%20Alice");
-    BOOST_REQUIRE(!uri.payment());
-    BOOST_REQUIRE_EQUAL(uri.amount(), 0);
-    BOOST_REQUIRE(uri.label().empty());
-    BOOST_REQUIRE_EQUAL(uri.message(), "Hi Alice");
-    BOOST_REQUIRE(uri.r().empty());
+    REQUIRE(!uri.payment());
+    REQUIRE(uri.amount() == 0);
+    REQUIRE(uri.label().empty());
+    REQUIRE(uri.message() == "Hi Alice");
+    REQUIRE(uri.r().empty());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__payment_protocol_only__test) {
+TEST_CASE("uri reader  parse  payment protocol only  test", "[uri reader]") {
     auto const uri = parse("bitcoin:?r=http://www.example.com?purchase%3Dshoes");
-    BOOST_REQUIRE(!uri.payment());
-    BOOST_REQUIRE_EQUAL(uri.amount(), 0);
-    BOOST_REQUIRE(uri.label().empty());
-    BOOST_REQUIRE(uri.message().empty());
-    BOOST_REQUIRE_EQUAL(uri.r(), "http://www.example.com?purchase=shoes");
+    REQUIRE(!uri.payment());
+    REQUIRE(uri.amount() == 0);
+    REQUIRE(uri.label().empty());
+    REQUIRE(uri.message().empty());
+    REQUIRE(uri.r() == "http://www.example.com?purchase=shoes");
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_optional_parameter_type__test) {
+TEST_CASE("uri reader  parse  custom reader optional parameter type  test", "[uri reader]") {
     auto const custom = uri_reader::parse<custom_reader>("foo:part/abc?myparam1=1&myparam2=2#myfrag");
-    BOOST_REQUIRE(custom.is_valid());
-    BOOST_REQUIRE_EQUAL(custom.myscheme, "foo");
-    BOOST_REQUIRE_EQUAL(custom.mypath, "part/abc");
-    BOOST_REQUIRE(custom.myfragment);
-    BOOST_REQUIRE_EQUAL(custom.myfragment.value(), "myfrag");
-    BOOST_REQUIRE(custom.myparam1);
-    BOOST_REQUIRE_EQUAL(custom.myparam1.value(), "1");
-    BOOST_REQUIRE(custom.myparam2);
-    BOOST_REQUIRE_EQUAL(custom.myparam2.value(), "2");
+    REQUIRE(custom.is_valid());
+    REQUIRE(custom.myscheme == "foo");
+    REQUIRE(custom.mypath == "part/abc");
+    REQUIRE(custom.myfragment);
+    REQUIRE(custom.myfragment.value() == "myfrag");
+    REQUIRE(custom.myparam1);
+    REQUIRE(custom.myparam1.value() == "1");
+    REQUIRE(custom.myparam2);
+    REQUIRE(custom.myparam2.value() == "2");
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_unsupported_component__invalid) {
-    BOOST_REQUIRE(!uri_reader::parse<custom_reader>("foo://bar:42/part/abc?myparam1=1&myparam2=2#myfrag").is_valid());
+TEST_CASE("uri reader  parse  custom reader unsupported component invalid", "[uri reader]") {
+    REQUIRE(!uri_reader::parse<custom_reader>("foo://bar:42/part/abc?myparam1=1&myparam2=2#myfrag").is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_strict__test) {
-    BOOST_REQUIRE(!uri_reader::parse<custom_reader>("foo:?unknown=fail-when-strict").is_valid());
+TEST_CASE("uri reader  parse  custom reader strict  test", "[uri reader]") {
+    REQUIRE(!uri_reader::parse<custom_reader>("foo:?unknown=fail-when-strict").is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(uri_reader__parse__custom_reader_not_strict__test) {
-    BOOST_REQUIRE(uri_reader::parse<custom_reader>("foo:?unknown=not-fail-when-not-strict", false).is_valid());
+TEST_CASE("uri reader  parse  custom reader not strict  test", "[uri reader]") {
+    REQUIRE(uri_reader::parse<custom_reader>("foo:?unknown=not-fail-when-not-strict", false).is_valid());
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

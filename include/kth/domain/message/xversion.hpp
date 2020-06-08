@@ -171,9 +171,6 @@ public:
     
     void set_relay(bool relay);
 
-    bool from_data(uint32_t xversion, data_chunk const& data);
-    bool from_data(uint32_t xversion, std::istream& stream);
-
     template <typename R, KTH_IS_READER(R)>
     bool from_data(uint32_t xversion, R& source) {
         reset();
@@ -211,7 +208,6 @@ public:
         return source;
     }
 
-    //bool from_data(uint32_t xversion, reader& source);
     [[nodiscard]]
     data_chunk to_data(uint32_t xversion) const;
     

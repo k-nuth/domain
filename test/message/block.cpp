@@ -2,22 +2,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <kth/infrastructure.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
+
+#include <kth/infrastructure/utility/ostream_writer.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(message_block_tests)
+// Start Boost Suite: message block tests
 
-BOOST_AUTO_TEST_CASE(block__constructor_1__always__invalid) {
+TEST_CASE("block  constructor 1  always invalid", "[message block]") {
     block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params) {
+TEST_CASE("block  constructor 2  always  equals params", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -31,12 +31,12 @@ BOOST_AUTO_TEST_CASE(block__constructor_2__always__equals_params) {
         chain::transaction(4, 16, {}, {})};
 
     block instance(header, transactions);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_3__always__equals_params) {
+TEST_CASE("block  constructor 3  always  equals params", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -52,12 +52,12 @@ BOOST_AUTO_TEST_CASE(block__constructor_3__always__equals_params) {
     chain::header dup_header(header);
     chain::transaction::list dup_transactions = transactions;
     block instance(std::move(dup_header), std::move(dup_transactions));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_4__always__equals_params) {
+TEST_CASE("block  constructor 4  always  equals params", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -72,13 +72,13 @@ BOOST_AUTO_TEST_CASE(block__constructor_4__always__equals_params) {
 
     chain::block value(header, transactions);
     block instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == value);
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == value);
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_5__always__equals_params) {
+TEST_CASE("block  constructor 5  always  equals params", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -93,12 +93,12 @@ BOOST_AUTO_TEST_CASE(block__constructor_5__always__equals_params) {
 
     chain::block value(header, transactions);
     block instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_6__always__equals_params) {
+TEST_CASE("block  constructor 6  always  equals params", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -113,13 +113,13 @@ BOOST_AUTO_TEST_CASE(block__constructor_6__always__equals_params) {
 
     block value(header, transactions);
     block instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__constructor_7__always__equals_params) {
+TEST_CASE("block  constructor 7  always  equals params", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -134,91 +134,91 @@ BOOST_AUTO_TEST_CASE(block__constructor_7__always__equals_params) {
 
     block value(header, transactions);
     block instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(header == instance.header());
-    BOOST_REQUIRE(transactions == instance.transactions());
+    REQUIRE(instance.is_valid());
+    REQUIRE(header == instance.header());
+    REQUIRE(transactions == instance.transactions());
 }
 
-BOOST_AUTO_TEST_CASE(block__factory_data_1__genesis_mainnet__success) {
+TEST_CASE("block  factory data 1  genesis mainnet  success", "[message block]") {
     auto const genesis = chain::block::genesis_mainnet();
-    BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
-    BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
+    REQUIRE(genesis.serialized_size() == 285u);
+    REQUIRE(genesis.header().serialized_size() == 80u);
 
     // Save genesis block.
     auto raw_block = genesis.to_data();
-    BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
+    REQUIRE(raw_block.size() == 285u);
 
     // Reload genesis block.
     auto const block = create<message::block>(version::level::minimum, raw_block);
 
-    BOOST_REQUIRE(block.is_valid());
-    BOOST_REQUIRE(genesis.header() == block.header());
+    REQUIRE(block.is_valid());
+    REQUIRE(genesis.header() == block.header());
 
     // Verify merkle root from transactions.
-    BOOST_REQUIRE(block.generate_merkle_root() == genesis.header().merkle());
+    REQUIRE(block.generate_merkle_root() == genesis.header().merkle());
 
     auto raw_reserialization = block.to_data(version::level::minimum);
-    BOOST_REQUIRE(raw_reserialization == raw_block);
-    BOOST_REQUIRE_EQUAL(raw_reserialization.size(), block.serialized_size(version::level::minimum));
+    REQUIRE(raw_reserialization == raw_block);
+    REQUIRE(raw_reserialization.size() == block.serialized_size(version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(block__factory_data_2__genesis_mainnet__success) {
+TEST_CASE("block  factory data 2  genesis mainnet  success", "[message block]") {
     auto const genesis = chain::block::genesis_mainnet();
-    BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
-    BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
+    REQUIRE(genesis.serialized_size() == 285u);
+    REQUIRE(genesis.header().serialized_size() == 80u);
 
     // Save genesis block.
     auto raw_block = genesis.to_data();
-    BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
+    REQUIRE(raw_block.size() == 285u);
 
     // Reload genesis block.
     data_source stream(raw_block);
     auto const block = create<message::block>(version::level::minimum, stream);
 
-    BOOST_REQUIRE(block.is_valid());
-    BOOST_REQUIRE(genesis.header() == block.header());
+    REQUIRE(block.is_valid());
+    REQUIRE(genesis.header() == block.header());
 
     // Verify merkle root from transactions.
-    BOOST_REQUIRE(block.generate_merkle_root() == genesis.header().merkle());
+    REQUIRE(block.generate_merkle_root() == genesis.header().merkle());
 
     data_chunk raw_reserialization;
     data_sink sink(raw_reserialization);
     block.to_data(version::level::minimum, sink);
     sink.flush();
-    BOOST_REQUIRE(raw_reserialization == raw_block);
-    BOOST_REQUIRE_EQUAL(raw_reserialization.size(), block.serialized_size(version::level::minimum));
+    REQUIRE(raw_reserialization == raw_block);
+    REQUIRE(raw_reserialization.size() == block.serialized_size(version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(block__factory_data_3__genesis_mainnet__success) {
+TEST_CASE("block  factory data 3  genesis mainnet  success", "[message block]") {
     auto const genesis = chain::block::genesis_mainnet();
-    BOOST_REQUIRE_EQUAL(genesis.serialized_size(), 285u);
-    BOOST_REQUIRE_EQUAL(genesis.header().serialized_size(), 80u);
+    REQUIRE(genesis.serialized_size() == 285u);
+    REQUIRE(genesis.header().serialized_size() == 80u);
 
     // Save genesis block.
     auto raw_block = genesis.to_data();
-    BOOST_REQUIRE_EQUAL(raw_block.size(), 285u);
+    REQUIRE(raw_block.size() == 285u);
 
     // Reload genesis block.
     data_source stream(raw_block);
     istream_reader reader(stream);
     auto const block = create<message::block>(version::level::minimum + 1, reader);
 
-    BOOST_REQUIRE(block.is_valid());
-    BOOST_REQUIRE(genesis.header() == block.header());
+    REQUIRE(block.is_valid());
+    REQUIRE(genesis.header() == block.header());
 
     // Verify merkle root from transactions.
-    BOOST_REQUIRE(block.generate_merkle_root() == genesis.header().merkle());
+    REQUIRE(block.generate_merkle_root() == genesis.header().merkle());
 
     data_chunk raw_reserialization;
     data_sink sink(raw_reserialization);
     ostream_writer writer(sink);
     block.to_data(version::level::minimum, writer);
     sink.flush();
-    BOOST_REQUIRE(raw_reserialization == raw_block);
-    BOOST_REQUIRE_EQUAL(raw_reserialization.size(), block.serialized_size(version::level::minimum));
+    REQUIRE(raw_reserialization == raw_block);
+    REQUIRE(raw_reserialization.size() == block.serialized_size(version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_assign_equals_1__always__matches_equivalent) {
+TEST_CASE("block  operator assign equals 1  always  matches equivalent", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -232,18 +232,18 @@ BOOST_AUTO_TEST_CASE(block__operator_assign_equals_1__always__matches_equivalent
         chain::transaction(4, 16, {}, {})};
 
     chain::block value(header, transactions);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.header() == header);
-    BOOST_REQUIRE(instance.transactions() == transactions);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.header() == header);
+    REQUIRE(instance.transactions() == transactions);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_assign_equals_2__always__matches_equivalent) {
+TEST_CASE("block  operator assign equals 2  always  matches equivalent", "[message block]") {
     chain::header const header(10u,
                                hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
                                hash_literal("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
@@ -258,18 +258,18 @@ BOOST_AUTO_TEST_CASE(block__operator_assign_equals_2__always__matches_equivalent
 
     message::block value(header, transactions);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     message::block instance;
-    BOOST_REQUIRE_EQUAL(false, instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance.header() == header);
-    BOOST_REQUIRE(instance.transactions() == transactions);
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.header() == header);
+    REQUIRE(instance.transactions() == transactions);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_1__duplicates__returns_true) {
+TEST_CASE("block  operator boolean equals 1  duplicates  returns true", "[message block]") {
     const chain::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -282,10 +282,10 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_1__duplicates__returns_true)
          chain::transaction(4, 16, {}, {})});
 
     message::block instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_1__differs__returns_false) {
+TEST_CASE("block  operator boolean equals 1  differs  returns false", "[message block]") {
     const chain::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -298,10 +298,10 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_1__differs__returns_false) {
          chain::transaction(4, 16, {}, {})});
 
     message::block instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_1__duplicates__returns_false) {
+TEST_CASE("block  operator boolean not equals 1  duplicates  returns false", "[message block]") {
     const chain::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -314,10 +314,10 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_1__duplicates__returns_f
          chain::transaction(4, 16, {}, {})});
 
     message::block instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_1__differs__returns_true) {
+TEST_CASE("block  operator boolean not equals 1  differs  returns true", "[message block]") {
     const chain::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -330,10 +330,10 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_1__differs__returns_true
          chain::transaction(4, 16, {}, {})});
 
     chain::block instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_2__duplicates__returns_true) {
+TEST_CASE("block  operator boolean equals 2  duplicates  returns true", "[message block]") {
     const message::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -346,10 +346,10 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_2__duplicates__returns_true)
          chain::transaction(4, 16, {}, {})});
 
     message::block instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_2__differs__returns_false) {
+TEST_CASE("block  operator boolean equals 2  differs  returns false", "[message block]") {
     const message::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -362,10 +362,10 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_equals_2__differs__returns_false) {
          chain::transaction(4, 16, {}, {})});
 
     message::block instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_2__duplicates__returns_false) {
+TEST_CASE("block  operator boolean not equals 2  duplicates  returns false", "[message block]") {
     const message::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -378,10 +378,10 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_2__duplicates__returns_f
          chain::transaction(4, 16, {}, {})});
 
     message::block instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_2__differs__returns_true) {
+TEST_CASE("block  operator boolean not equals 2  differs  returns true", "[message block]") {
     const message::block expected(
         chain::header(10u,
                       hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"),
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE(block__operator_boolean_not_equals_2__differs__returns_true
          chain::transaction(4, 16, {}, {})});
 
     message::block instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

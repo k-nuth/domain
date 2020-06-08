@@ -791,15 +791,17 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
         return error::op_check_multisig_verify7;
     }
 
+    //*************************************************************************
+    // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147 
+    //            in BTC. bip147 is disabled in BCH.
+    //*************************************************************************
+    if ( ! program.pop().empty() 
 #if ! defined(KTH_CURRENCY_BCH)
-    //*************************************************************************
-    // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147.
-    //*************************************************************************
-    if ( ! program.pop().empty() && chain::script::is_enabled(program.forks(),
-                                                            rule_fork::bip147_rule)) {
+        && chain::script::is_enabled(program.forks(), rule_fork::bip147_rule)
+#endif
+    ) {
         return error::op_check_multisig_verify8;
     }
-#endif
 
     uint8_t sighash;
     ec_signature signature;
@@ -828,12 +830,12 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
         // BIP62: An empty endorsement is not considered lax encoding.
         if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement))) {
             return error::invalid_signature_encoding;
-    }
+        }
 
         // Parse DER signature into an EC signature.
         if ( ! parse_signature(signature, distinguished, bip66)) {
             return bip66 ? error::invalid_signature_lax_encoding : error::invalid_signature_encoding;
-    }
+        }
 
         // Version condition preserves independence of bip141 and bip143.
         auto version = bip143 ? program.version() : script_version::unversioned;

@@ -25,6 +25,7 @@
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
 #include <kth/infrastructure/config/checkpoint.hpp>
 #include <kth/infrastructure/error.hpp>
@@ -299,9 +300,9 @@ hash_digest block_basis::hash() const {
 #if defined(KTH_SEGWIT_ENABLED)
 // Clear witness from all inputs (does not change default transaction hash).
 void strip_witness(block_basis& blk) {
-    std::for_each(blk.transactions().begin(), blk.transactions().end(), [](transaction& tx) {
+    for (auto&& tx : blk.transactions()) {
         tx.strip_witness();
-    });
+    };
 }
 #endif
 
@@ -746,10 +747,6 @@ code block_basis::connect(chain_state const& state) const {
     return connect_transactions(state);
 }
 
-
-
-
-
 // Non-member functions.
 //-----------------------------------------------------------------------------
 
@@ -802,19 +799,16 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
     return std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool is_segregated(block_basis const& blk) {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    (void)blk;
-    return false;
-#else
     auto const segregated = [](transaction const& tx) {
         return tx.is_segregated();
     };
 
     // If no block tx has witness data the commitment is optional (bip141).
     return std::any_of(blk.transactions().begin(), blk.transactions().end(), segregated);
-#endif // KTH_CURRENCY_BCH
 }
+#endif // defined(KTH_SEGWIT_ENABLED)
 
 // Full block serialization is always canonical encoding.
 size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {

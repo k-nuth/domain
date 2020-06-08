@@ -43,19 +43,6 @@ bool operator!=(header_basis const& x, header_basis const& y) {
     return !(x == y);
 }
 
-// Deserialization.
-//-----------------------------------------------------------------------------
-
-// bool header_basis::from_data(data_chunk const& data, bool wire) {
-//     data_source istream(data);
-//     return from_data(istream, wire);
-// }
-
-// bool header_basis::from_data(std::istream& stream, bool wire) {
-//     istream_reader stream_r(stream);
-//     return from_data(stream_r, wire);
-// }
-
 // protected
 void header_basis::reset() {
     version_ = 0;

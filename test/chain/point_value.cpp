@@ -2,150 +2,148 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
-
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::chain;
 
-BOOST_AUTO_TEST_SUITE(point_value_tests)
+// Start Boost Suite: point value tests
 
 static auto const hash1 = hash_literal(
     "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 
-BOOST_AUTO_TEST_CASE(point_value__default_constructor__always__zero_value) {
+TEST_CASE("point value  default constructor  always  zero value", "[point value]") {
     static point_value const instance;
-    BOOST_REQUIRE(instance.hash() == null_hash);
-    BOOST_REQUIRE_EQUAL(instance.index(), 0u);
-    BOOST_REQUIRE_EQUAL(instance.value(), 0u);
+    REQUIRE(instance.hash() == null_hash);
+    REQUIRE(instance.index() == 0u);
+    REQUIRE(instance.value() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__move_constructor__always__expected) {
+TEST_CASE("point value  move constructor  always  expected", "[point value]") {
     point_value other{{hash1, 42}, 34};
-    point_value const instance(std::move(x));
-    BOOST_REQUIRE(instance.hash() == hash1);
-    BOOST_REQUIRE_EQUAL(instance.index(), 42u);
-    BOOST_REQUIRE_EQUAL(instance.value(), 34u);
+    point_value const instance(std::move(other));
+    REQUIRE(instance.hash() == hash1);
+    REQUIRE(instance.index() == 42u);
+    REQUIRE(instance.value() == 34u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__copy_constructor__always__expected) {
+TEST_CASE("point value  copy constructor  always  expected", "[point value]") {
     static point_value const other{{hash1, 42}, 34};
-    point_value const instance(x);
-    BOOST_REQUIRE(instance.hash() == hash1);
-    BOOST_REQUIRE_EQUAL(instance.index(), 42u);
-    BOOST_REQUIRE_EQUAL(instance.value(), 34u);
+    point_value const instance(other);
+    REQUIRE(instance.hash() == hash1);
+    REQUIRE(instance.index() == 42u);
+    REQUIRE(instance.value() == 34u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__constructor4__always__expected) {
+TEST_CASE("point value  constructor4  always  expected", "[point value]") {
     point foo{hash1, 42};
     static point_value const instance(std::move(foo), 34);
-    BOOST_REQUIRE(instance.hash() == hash1);
-    BOOST_REQUIRE_EQUAL(instance.index(), 42u);
-    BOOST_REQUIRE_EQUAL(instance.value(), 34u);
+    REQUIRE(instance.hash() == hash1);
+    REQUIRE(instance.index() == 42u);
+    REQUIRE(instance.value() == 34u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__constructor5__always__expected) {
+TEST_CASE("point value  constructor5  always  expected", "[point value]") {
     static point const foo{hash1, 42};
     static point_value const instance(foo, 34);
-    BOOST_REQUIRE(instance.hash() == hash1);
-    BOOST_REQUIRE_EQUAL(instance.index(), 42u);
-    BOOST_REQUIRE_EQUAL(instance.value(), 34u);
+    REQUIRE(instance.hash() == hash1);
+    REQUIRE(instance.index() == 42u);
+    REQUIRE(instance.value() == 34u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__move_assign__always__expected) {
+TEST_CASE("point value  move assign  always  expected", "[point value]") {
     point_value other{{hash1, 42}, 34};
-    auto const instance = std::move(x);
-    BOOST_REQUIRE(instance.hash() == hash1);
-    BOOST_REQUIRE_EQUAL(instance.index(), 42u);
-    BOOST_REQUIRE_EQUAL(instance.value(), 34u);
+    auto const instance = std::move(other);
+    REQUIRE(instance.hash() == hash1);
+    REQUIRE(instance.index() == 42u);
+    REQUIRE(instance.value() == 34u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__copy_assign__always__expected) {
+TEST_CASE("point value  copy assign  always  expected", "[point value]") {
     static point_value const other{{hash1, 42}, 34};
     auto const instance = other;
-    BOOST_REQUIRE(instance.hash() == hash1);
-    BOOST_REQUIRE_EQUAL(instance.index(), 42u);
-    BOOST_REQUIRE_EQUAL(instance.value(), 34u);
+    REQUIRE(instance.hash() == hash1);
+    REQUIRE(instance.index() == 42u);
+    REQUIRE(instance.value() == 34u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__swap__always__expected_reversal) {
+TEST_CASE("point value  swap  always  expected reversal", "[point value]") {
     point_value instance1{{hash1, 42}, 34};
     point_value instance2{{null_hash, 43}, 35};
 
     // Must be unqualified (no std namespace).
     swap(instance1, instance2);
 
-    BOOST_CHECK(instance2.hash() == hash1);
-    BOOST_CHECK_EQUAL(instance2.index(), 42u);
-    BOOST_CHECK_EQUAL(instance2.value(), 34u);
+    CHECK(instance2.hash() == hash1);
+    CHECK(instance2.index() == 42u);
+    CHECK(instance2.value() == 34u);
 
-    BOOST_CHECK(instance1.hash() == null_hash);
-    BOOST_CHECK_EQUAL(instance1.index(), 43u);
-    BOOST_CHECK_EQUAL(instance1.value(), 35u);
+    CHECK(instance1.hash() == null_hash);
+    CHECK(instance1.index() == 43u);
+    CHECK(instance1.value() == 35u);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__equality__same__true) {
+TEST_CASE("point value  equality  same  true", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 42}, 34};
-    BOOST_REQUIRE(instance1 == instance2);
+    REQUIRE(instance1 == instance2);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__equality__different_by_hash__false) {
+TEST_CASE("point value  equality  different by hash  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{null_hash, 43}, 34};
-    BOOST_REQUIRE(!(instance1 == instance2));
+    REQUIRE(!(instance1 == instance2));
 }
 
-BOOST_AUTO_TEST_CASE(point_value__equality__different_by_index__false) {
+TEST_CASE("point value  equality  different by index  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 43}, 34};
-    BOOST_REQUIRE(!(instance1 == instance2));
+    REQUIRE(!(instance1 == instance2));
 }
 
-BOOST_AUTO_TEST_CASE(point_value__equality__different_by_value__false) {
+TEST_CASE("point value  equality  different by value  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 42}, 35};
-    BOOST_REQUIRE(!(instance1 == instance2));
+    REQUIRE(!(instance1 == instance2));
 }
 
-BOOST_AUTO_TEST_CASE(point_value__inequality__same__false) {
+TEST_CASE("point value  inequality  same  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 42}, 34};
-    BOOST_REQUIRE(!(instance1 != instance2));
+    REQUIRE(!(instance1 != instance2));
 }
 
-BOOST_AUTO_TEST_CASE(point_value__inequality__different_by_hash__true) {
+TEST_CASE("point value  inequality  different by hash  true", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{null_hash, 43}, 34};
-    BOOST_REQUIRE(instance1 != instance2);
+    REQUIRE(instance1 != instance2);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__inequality__different_by_index__true) {
+TEST_CASE("point value  inequality  different by index  true", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 43}, 34};
-    BOOST_REQUIRE(instance1 != instance2);
+    REQUIRE(instance1 != instance2);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__inequality__different_by_value__true) {
+TEST_CASE("point value  inequality  different by value  true", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 42}, 35};
-    BOOST_REQUIRE(instance1 != instance2);
+    REQUIRE(instance1 != instance2);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__set_value__42__42) {
+TEST_CASE("point value  set value  42  42", "[point value]") {
     static auto const expected = 42u;
     point_value instance;
     instance.set_value(expected);
-    BOOST_REQUIRE_EQUAL(instance.value(), expected);
+    REQUIRE(instance.value() == expected);
 }
 
-BOOST_AUTO_TEST_CASE(point_value__set_value__zeroize__zero) {
+TEST_CASE("point value  set value  zeroize  zero", "[point value]") {
     point_value instance;
     instance.set_value(42);
     instance.set_value(0);
-    BOOST_REQUIRE_EQUAL(instance.value(), 0u);
+    REQUIRE(instance.value() == 0u);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

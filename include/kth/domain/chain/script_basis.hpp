@@ -14,9 +14,11 @@
 
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
-#include <kth/domain/machine/operation.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
 
+#include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
+
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/machine/script_pattern.hpp>
 #include <kth/infrastructure/machine/script_version.hpp>
@@ -68,11 +70,7 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-
-    // /// Deserialization invalidates the iterator.
-    // bool from_data(data_chunk const& encoded, bool prefix);
-    // bool from_data(std::istream& stream, bool prefix);
-
+    /// Deserialization invalidates the iterator.
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool prefix) {
         reset();

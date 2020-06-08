@@ -11,6 +11,7 @@
 #include <boost/program_options.hpp>
 
 #include <kth/domain/chain/transaction.hpp>
+#include <kth/domain/common.hpp>
 #include <kth/infrastructure/config/base16.hpp>
 
 namespace kth::domain::config {
@@ -42,7 +43,7 @@ std::istream& operator>>(std::istream& input, transaction& argument) {
     std::string hexcode;
     input >> hexcode;
 
-    if ( ! argument.value_.from_data(base16(hexcode))) {
+    if ( ! entity_from_data(argument.value_, base16(hexcode))) {
         BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
     }
 

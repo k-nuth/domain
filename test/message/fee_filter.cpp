@@ -2,138 +2,137 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-BOOST_AUTO_TEST_SUITE(fee_filter_tests)
+// Start Boost Suite: fee filter tests
 
-BOOST_AUTO_TEST_CASE(fee_filter__constructor_1__always__invalid) {
+TEST_CASE("fee filter  constructor 1  always invalid", "[fee filter]") {
     const fee_filter instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__constructor_2__always__equals_params) {
+TEST_CASE("fee filter  constructor 2  always  equals params", "[fee filter]") {
     uint64_t const value = 6434u;
     const fee_filter instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(value, instance.minimum_fee());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance.minimum_fee());
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__constructor_3__always__equals_params) {
+TEST_CASE("fee filter  constructor 3  always  equals params", "[fee filter]") {
     uint64_t const fee = 6434u;
     const fee_filter value(fee);
     const fee_filter instance(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(fee, instance.minimum_fee());
-    BOOST_REQUIRE(value == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(fee == instance.minimum_fee());
+    REQUIRE(value == instance);
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__constructor_4__always__equals_params) {
+TEST_CASE("fee filter  constructor 4  always  equals params", "[fee filter]") {
     uint64_t const fee = 6434u;
     const fee_filter value(fee);
     const fee_filter instance(std::move(value));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(fee, instance.minimum_fee());
+    REQUIRE(instance.is_valid());
+    REQUIRE(fee == instance.minimum_fee());
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__from_data__insufficient_bytes_failure) {
+TEST_CASE("fee filter  from data  insufficient bytes failure", "[fee filter]") {
     data_chunk const raw = {0xab, 0x11};
     fee_filter instance;
-    BOOST_REQUIRE(!entity_from_data(instance, version::level::maximum, raw));
+    REQUIRE(!entity_from_data(instance, version::level::maximum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__from_data__insufficient_version_failure) {
+TEST_CASE("fee filter  from data  insufficient version failure", "[fee filter]") {
     const fee_filter expected{1};
     auto const data = expected.to_data(fee_filter::version_maximum);
     fee_filter instance;
-    BOOST_REQUIRE(!entity_from_data(instance, filter_add::version_minimum - 1, data));
+    REQUIRE(!entity_from_data(instance, filter_add::version_minimum - 1, data));
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__factory_from_data_1__roundtrip__success) {
+TEST_CASE("fee filter  factory from data 1  roundtrip  success", "[fee filter]") {
     const fee_filter expected{123};
     auto const data = expected.to_data(fee_filter::version_maximum);
     auto const result = create<fee_filter>(fee_filter::version_maximum, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 
     auto const size = result.serialized_size(version::level::maximum);
-    BOOST_REQUIRE_EQUAL(data.size(), size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::maximum), size);
+    REQUIRE(data.size() == size);
+    REQUIRE(expected.serialized_size(version::level::maximum) == size);
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__factory_from_data_2__roundtrip__success) {
+TEST_CASE("fee filter  factory from data 2  roundtrip  success", "[fee filter]") {
     const fee_filter expected{325};
     auto const data = expected.to_data(fee_filter::version_maximum);
     data_source istream(data);
     auto const result = create<fee_filter>(fee_filter::version_maximum, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 
     auto const size = result.serialized_size(version::level::maximum);
-    BOOST_REQUIRE_EQUAL(data.size(), size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::maximum), size);
+    REQUIRE(data.size() == size);
+    REQUIRE(expected.serialized_size(version::level::maximum) == size);
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__factory_from_data_3__roundtrip__success) {
+TEST_CASE("fee filter  factory from data 3  roundtrip  success", "[fee filter]") {
     const fee_filter expected{58246};
     auto const data = expected.to_data(fee_filter::version_maximum);
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<fee_filter>(fee_filter::version_maximum, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(expected == result);
+    REQUIRE(result.is_valid());
+    REQUIRE(expected == result);
 
     auto const size = result.serialized_size(version::level::maximum);
-    BOOST_REQUIRE_EQUAL(data.size(), size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::maximum), size);
+    REQUIRE(data.size() == size);
+    REQUIRE(expected.serialized_size(version::level::maximum) == size);
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__minimum_fee__roundtrip__success) {
+TEST_CASE("fee filter  minimum fee  roundtrip  success", "[fee filter]") {
     uint64_t const value = 42134u;
     fee_filter instance;
-    BOOST_REQUIRE_NE(instance.minimum_fee(), value);
+    REQUIRE(instance.minimum_fee() != value);
 
     instance.set_minimum_fee(value);
-    BOOST_REQUIRE_EQUAL(value, instance.minimum_fee());
+    REQUIRE(value == instance.minimum_fee());
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("fee filter  operator assign equals  always  matches equivalent", "[fee filter]") {
     fee_filter value(2453u);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     fee_filter instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("fee filter  operator boolean equals  duplicates  returns true", "[fee filter]") {
     const fee_filter expected(2453u);
     fee_filter instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("fee filter  operator boolean equals  differs  returns false", "[fee filter]") {
     const fee_filter expected(2453u);
     fee_filter instance;
-    BOOST_REQUIRE(!(instance == expected));
+    REQUIRE(!(instance == expected));
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("fee filter  operator boolean not equals  duplicates  returns false", "[fee filter]") {
     const fee_filter expected(2453u);
     fee_filter instance(expected);
-    BOOST_REQUIRE(!(instance != expected));
+    REQUIRE(!(instance != expected));
 }
 
-BOOST_AUTO_TEST_CASE(fee_filter__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("fee filter  operator boolean not equals  differs  returns true", "[fee filter]") {
     const fee_filter expected(2453u);
     fee_filter instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

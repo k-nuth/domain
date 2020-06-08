@@ -20,8 +20,11 @@
 #include <kth/domain/chain/transaction_basis.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
+
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
@@ -159,18 +162,6 @@ public:
 
     // Deserialization.
     //-----------------------------------------------------------------------------
-
-    bool from_data(data_chunk const& data, bool wire = true, bool witness = false
-#ifdef KTH_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                    );
-
-    bool from_data(std::istream& stream, bool wire = true, bool witness = false
-#ifdef KTH_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                    );
 
     // Witness is not used by outputs, just for template normalization.
     template <typename R, KTH_IS_READER(R)>

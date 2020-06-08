@@ -14,7 +14,10 @@
 
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/multi_crypto_settings.hpp>
+
 // #include <kth/domain/wallet/payment_address.hpp>
+
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
@@ -50,9 +53,6 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
-
-    // bool from_data(data_chunk const& data, bool wire = true);
-    // bool from_data(std::istream& stream, bool wire = true);
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, bool /*wire*/ = true, bool /*witness*/ = false) {
@@ -96,7 +96,7 @@ public:
     
     void set_value(uint64_t value);
 
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     chain::script& script();
     
     [[nodiscard]]

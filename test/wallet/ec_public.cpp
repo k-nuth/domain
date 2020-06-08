@@ -2,17 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-BOOST_AUTO_TEST_SUITE(ec_public_tests)
+// Start Boost Suite: ec public tests
 
-////BOOST_AUTO_TEST_CASE(ec_public__todo)
-////{
-////}
+// TEST_CASE("ec public  todo", "[None]") {
+//}
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

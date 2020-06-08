@@ -2,83 +2,80 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
 
-BOOST_AUTO_TEST_SUITE(ping_tests)
+// Start Boost Suite: ping tests
 
-BOOST_AUTO_TEST_CASE(ping__constructor_1__always__invalid) {
+TEST_CASE("ping  constructor 1  always invalid", "[ping]") {
     message::ping instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__constructor_2__always__equals_params) {
+TEST_CASE("ping  constructor 2  always  equals params", "[ping]") {
     uint64_t nonce = 462434u;
     message::ping instance(nonce);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(nonce, instance.nonce());
+    REQUIRE(instance.is_valid());
+    REQUIRE(nonce == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(ping__constructor_3__always__equals_params) {
+TEST_CASE("ping  constructor 3  always  equals params", "[ping]") {
     message::ping expected(24235u);
-    BOOST_REQUIRE(expected.is_valid());
+    REQUIRE(expected.is_valid());
     message::ping instance(expected);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(expected == instance);
+    REQUIRE(instance.is_valid());
+    REQUIRE(expected == instance);
 }
 
-BOOST_AUTO_TEST_CASE(ping__satoshi_fixed_size__minimum_version__zero) {
-    BOOST_REQUIRE_EQUAL(0u,
-                        message::ping::satoshi_fixed_size(message::version::level::minimum));
+TEST_CASE("ping  satoshi fixed size  minimum version  zero", "[ping]") {
+    REQUIRE(0u == message::ping::satoshi_fixed_size(message::version::level::minimum));
 }
 
-BOOST_AUTO_TEST_CASE(ping__satoshi_fixed_size__bip31_version__8) {
-    BOOST_REQUIRE_EQUAL(8u,
-                        message::ping::satoshi_fixed_size(message::version::level::bip31));
+TEST_CASE("ping  satoshi fixed size  bip31 version  8", "[ping]") {
+    REQUIRE(8u == message::ping::satoshi_fixed_size(message::version::level::bip31));
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__maximum_version_empty_data__invalid) {
+TEST_CASE("ping  factory from data 1  maximum version empty data invalid", "[ping]") {
     static auto const version = message::version::level::maximum;
     auto const result = create<message::ping>(version, data_chunk{});
-    BOOST_REQUIRE(!result.is_valid());
+    REQUIRE(!result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_empty_data__valid) {
+TEST_CASE("ping  factory from data 1  minimum version empty data valid", "[ping]") {
     static auto const version = message::version::level::minimum;
     auto const result = create<message::ping>(version, data_chunk{});
-    BOOST_REQUIRE(result.is_valid());
+    REQUIRE(result.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__from_data_1__minimum_version__success_zero_nonce) {
+TEST_CASE("ping  from data 1  minimum version  success zero nonce", "[ping]") {
     static const message::ping value{
         213153u};
 
     // This serializes the nonce.
     auto const data = value.to_data(message::version::level::bip31);
-    BOOST_REQUIRE_EQUAL(data.size(), 8u);
+    REQUIRE(data.size() == 8u);
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
     message::ping instance;
-    BOOST_REQUIRE(entity_from_data(instance, message::ping::version_minimum, data));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE_EQUAL(instance.nonce(), 0u);
+    REQUIRE(entity_from_data(instance, message::ping::version_minimum, data));
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance.nonce() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__minimum_version_round_trip__zero_nonce) {
+TEST_CASE("ping  factory from data 1  minimum version round trip  zero nonce", "[ping]") {
     static const message::ping value{
         16545612u};
 
     static auto const version = message::version::level::minimum;
     auto const data = value.to_data(version);
     auto const result = create<message::ping>(version, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
+    REQUIRE(result.is_valid());
+    REQUIRE(result.nonce() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__minimum_version_round_trip__zero_nonce) {
+TEST_CASE("ping  factory from data 2  minimum version round trip  zero nonce", "[ping]") {
     const message::ping value{
         5087222u};
 
@@ -86,11 +83,11 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__minimum_version_round_trip__zero
     auto const data = value.to_data(version);
     data_source istream(data);
     auto const result = create<message::ping>(version, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
+    REQUIRE(result.is_valid());
+    REQUIRE(result.nonce() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__minimum_version_round_trip__zero_nonce) {
+TEST_CASE("ping  factory from data 3  minimum version round trip  zero nonce", "[ping]") {
     static const message::ping value{
         6456147u};
 
@@ -99,37 +96,37 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__minimum_version_round_trip__zero
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::ping>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE_EQUAL(result.nonce(), 0u);
+    REQUIRE(result.is_valid());
+    REQUIRE(result.nonce() == 0u);
 }
 
-BOOST_AUTO_TEST_CASE(ping__from_data_1__maximum_version__success_expected_nonce) {
+TEST_CASE("ping  from data 1  maximum version  success expected nonce", "[ping]") {
     static const message::ping expected{
         213153u};
 
     // This serializes the nonce.
     auto const data = expected.to_data(message::version::level::bip31);
-    BOOST_REQUIRE_EQUAL(data.size(), 8u);
+    REQUIRE(data.size() == 8u);
 
     // This leaves the nonce on the wire but otherwise succeeds with a zero nonce.
     message::ping instance;
-    BOOST_REQUIRE(entity_from_data(instance, message::ping::version_maximum, data));
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(entity_from_data(instance, message::ping::version_maximum, data));
+    REQUIRE(instance.is_valid());
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_1__bip31_version_round_trip__expected_nonce) {
+TEST_CASE("ping  factory from data 1  bip31 version round trip  expected nonce", "[ping]") {
     static const message::ping expected{
         16545612u};
 
     static auto const version = message::version::level::bip31;
     auto const data = expected.to_data(version);
     auto const result = create<message::ping>(version, data);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__bip31_version_round_trip__expected_nonce) {
+TEST_CASE("ping  factory from data 2  bip31 version round trip  expected nonce", "[ping]") {
     const message::ping expected{
         5087222u};
 
@@ -137,11 +134,11 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_2__bip31_version_round_trip__expect
     auto const data = expected.to_data(version);
     data_source istream(data);
     auto const result = create<message::ping>(version, istream);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__bip31_version_round_trip__expected_nonce) {
+TEST_CASE("ping  factory from data 3  bip31 version round trip  expected nonce", "[ping]") {
     static const message::ping expected{
         6456147u};
 
@@ -150,55 +147,55 @@ BOOST_AUTO_TEST_CASE(ping__factory_from_data_3__bip31_version_round_trip__expect
     data_source istream(data);
     istream_reader source(istream);
     auto const result = create<message::ping>(version, source);
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(result == expected);
+    REQUIRE(result.is_valid());
+    REQUIRE(result == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__nonce_accessor__always__returns_initialized_value) {
+TEST_CASE("ping  nonce accessor  always  returns initialized value", "[ping]") {
     uint64_t value = 43564u;
     message::ping instance(value);
-    BOOST_REQUIRE_EQUAL(value, instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(ping__nonce_setter__roundtrip__success) {
+TEST_CASE("ping  nonce setter  roundtrip  success", "[ping]") {
     uint64_t value = 43564u;
     message::ping instance;
-    BOOST_REQUIRE(value != instance.nonce());
+    REQUIRE(value != instance.nonce());
     instance.set_nonce(value);
-    BOOST_REQUIRE_EQUAL(value, instance.nonce());
+    REQUIRE(value == instance.nonce());
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("ping  operator assign equals  always  matches equivalent", "[ping]") {
     message::ping value(356234u);
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
     message::ping instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
+    REQUIRE(instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("ping  operator boolean equals  duplicates  returns true", "[ping]") {
     const message::ping expected(4543234u);
     message::ping instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("ping  operator boolean equals  differs  returns false", "[ping]") {
     const message::ping expected(547553u);
     message::ping instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("ping  operator boolean not equals  duplicates  returns false", "[ping]") {
     const message::ping expected(653786u);
     message::ping instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(ping__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("ping  operator boolean not equals  differs  returns true", "[ping]") {
     const message::ping expected(89764u);
     message::ping instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite

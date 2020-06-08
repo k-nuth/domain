@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <kth/domain.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 using namespace kth;
 using namespace kd;
@@ -22,14 +21,14 @@ bool equal(address const& x, address const& y) {
     return same;
 }
 
-BOOST_AUTO_TEST_SUITE(address_tests)
+// Start Boost Suite: address tests
 
-BOOST_AUTO_TEST_CASE(address__constructor_1__always__invalid) {
+TEST_CASE("address  constructor 1  always invalid", "[address]") {
     address instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
+TEST_CASE("address  constructor 2  always  equals params", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
@@ -49,11 +48,11 @@ BOOST_AUTO_TEST_CASE(address__constructor_2__always__equals_params) {
 
     address instance(addresses);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
+TEST_CASE("address  constructor 3  always  equals params", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
@@ -75,11 +74,11 @@ BOOST_AUTO_TEST_CASE(address__constructor_3__always__equals_params) {
 
     address instance(std::move(dup_addresses));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
+TEST_CASE("address  constructor 4  always  equals params", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
@@ -100,12 +99,12 @@ BOOST_AUTO_TEST_CASE(address__constructor_4__always__equals_params) {
     address value(addresses);
     address instance(value);
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(value == instance);
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(value == instance);
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params) {
+TEST_CASE("address  constructor 5  always  equals params", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
@@ -126,18 +125,18 @@ BOOST_AUTO_TEST_CASE(address__constructor_5__always__equals_params) {
     address value(addresses);
     address instance(std::move(value));
 
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__from_data__insufficient_bytes__failure) {
+TEST_CASE("address  from data  insufficient bytes  failure", "[address]") {
     data_chunk const raw{0xab};
     address instance;
 
-    BOOST_REQUIRE(!entity_from_data(instance, version::level::minimum, raw));
+    REQUIRE(!entity_from_data(instance, version::level::minimum, raw));
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success) {
+TEST_CASE("address  factory from data 1  roundtrip  success", "[address]") {
     address const expected(
         {{734678u,
           5357534u,
@@ -147,14 +146,14 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_1__roundtrip__success) {
     auto const data = expected.to_data(version::level::minimum);
     auto const result = create<address>(version::level::minimum, data);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(equal(expected, result));
+    REQUIRE(result.is_valid());
+    REQUIRE(equal(expected, result));
     auto const serialized_size = result.serialized_size(version::level::minimum);
-    BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
+    REQUIRE(data.size() == serialized_size);
+    REQUIRE(expected.serialized_size(version::level::minimum) == serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
+TEST_CASE("address  factory from data 2  roundtrip  success", "[address]") {
     address const expected(
         {{734678u,
           5357534u,
@@ -165,14 +164,14 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_2__roundtrip__success) {
     data_source istream(data);
     auto const result = create<address>(version::level::minimum, istream);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(equal(expected, result));
+    REQUIRE(result.is_valid());
+    REQUIRE(equal(expected, result));
     auto const serialized_size = result.serialized_size(version::level::minimum);
-    BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
+    REQUIRE(data.size() == serialized_size);
+    REQUIRE(expected.serialized_size(version::level::minimum) == serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
+TEST_CASE("address  factory from data 3  roundtrip  success", "[address]") {
     address const expected(
         {{734678u,
           5357534u,
@@ -184,14 +183,14 @@ BOOST_AUTO_TEST_CASE(address__factory_from_data_3__roundtrip__success) {
     istream_reader source(istream);
     auto const result = create<address>(version::level::minimum, source);
 
-    BOOST_REQUIRE(result.is_valid());
-    BOOST_REQUIRE(equal(expected, result));
+    REQUIRE(result.is_valid());
+    REQUIRE(equal(expected, result));
     auto const serialized_size = result.serialized_size(version::level::minimum);
-    BOOST_REQUIRE_EQUAL(data.size(), serialized_size);
-    BOOST_REQUIRE_EQUAL(expected.serialized_size(version::level::minimum), serialized_size);
+    REQUIRE(data.size() == serialized_size);
+    REQUIRE(expected.serialized_size(version::level::minimum) == serialized_size);
 }
 
-BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
+TEST_CASE("address  addresses setter 1  roundtrip  success", "[address]") {
     infrastructure::message::network_address::list const value{
         network_address(
             734678u,
@@ -210,12 +209,12 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_1__roundtrip__success) {
             159u)};
 
     address instance;
-    BOOST_REQUIRE(instance.addresses() != value);
+    REQUIRE(instance.addresses() != value);
     instance.set_addresses(value);
-    BOOST_REQUIRE(value == instance.addresses());
+    REQUIRE(value == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
+TEST_CASE("address  addresses setter 2  roundtrip  success", "[address]") {
     infrastructure::message::network_address::list const value{
         network_address(
             734678u,
@@ -235,12 +234,12 @@ BOOST_AUTO_TEST_CASE(address__addresses_setter_2__roundtrip__success) {
 
     auto dup_value = value;
     address instance;
-    BOOST_REQUIRE(instance.addresses() != value);
+    REQUIRE(instance.addresses() != value);
     instance.set_addresses(std::move(dup_value));
-    BOOST_REQUIRE(value == instance.addresses());
+    REQUIRE(value == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent) {
+TEST_CASE("address  operator assign equals  always  matches equivalent", "[address]") {
     infrastructure::message::network_address::list const addresses{
         network_address(
             734678u,
@@ -260,17 +259,17 @@ BOOST_AUTO_TEST_CASE(address__operator_assign_equals__always__matches_equivalent
 
     address value(addresses);
 
-    BOOST_REQUIRE(value.is_valid());
+    REQUIRE(value.is_valid());
 
     address instance;
-    BOOST_REQUIRE(!instance.is_valid());
+    REQUIRE(!instance.is_valid());
 
     instance = std::move(value);
-    BOOST_REQUIRE(instance.is_valid());
-    BOOST_REQUIRE(addresses == instance.addresses());
+    REQUIRE(instance.is_valid());
+    REQUIRE(addresses == instance.addresses());
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__duplicates__returns_true) {
+TEST_CASE("address  operator boolean equals  duplicates  returns true", "[address]") {
     address const expected(
         {network_address(
              734678u,
@@ -289,10 +288,10 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__duplicates__returns_true)
              159u)});
 
     address instance(expected);
-    BOOST_REQUIRE(instance == expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__differs__returns_false) {
+TEST_CASE("address  operator boolean equals  differs  returns false", "[address]") {
     address const expected(
         {network_address(
              734678u,
@@ -311,10 +310,10 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_equals__differs__returns_false) {
              159u)});
 
     address instance;
-    BOOST_REQUIRE_EQUAL(false, instance == expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_false) {
+TEST_CASE("address  operator boolean not equals  duplicates  returns false", "[address]") {
     address const expected(
         {network_address(
              734678u,
@@ -333,10 +332,10 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__duplicates__returns_f
              159u)});
 
     address instance(expected);
-    BOOST_REQUIRE_EQUAL(false, instance != expected);
+    REQUIRE(instance == expected);
 }
 
-BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__differs__returns_true) {
+TEST_CASE("address  operator boolean not equals  differs  returns true", "[address]") {
     address const expected(
         {network_address(
              734678u,
@@ -355,7 +354,7 @@ BOOST_AUTO_TEST_CASE(address__operator_boolean_not_equals__differs__returns_true
              159u)});
 
     address instance;
-    BOOST_REQUIRE(instance != expected);
+    REQUIRE(instance != expected);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
