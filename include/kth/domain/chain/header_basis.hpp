@@ -122,7 +122,7 @@ public:
     
     void set_previous_block_hash(hash_digest const& value);
 
-    [[deprecated]] // unsafe
+    // [[deprecated]] // unsafe
     hash_digest& merkle();
     
     [[nodiscard]]
