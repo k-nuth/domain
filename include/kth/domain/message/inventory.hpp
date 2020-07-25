@@ -66,7 +66,7 @@ public:
 
         // Order is required.
         for (auto& inventory : inventories_) {
-            if ( ! inventory.from_data(version, source)) {
+            if ( ! inventory.from_data(source, version)) {
                 break;
             }
         }

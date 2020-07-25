@@ -46,7 +46,7 @@ public:
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, uint32_t version) {
-        if ( ! inventory::from_data(version, source)) {
+        if ( ! inventory::from_data(source, version)) {
             return false;
         }
 

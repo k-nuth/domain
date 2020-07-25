@@ -38,7 +38,7 @@ bool entity_from_data(T& x, data_chunk const& data, U&&... u) {
 template <typename T, typename R, KTH_IS_READER(R), typename... U>
 inline
 bool entity_from_data(T& x, uint32_t version, R& source, U&&... u) {
-    return x.from_data(version, source, std::forward<U>(u)...);
+    return x.from_data(source, version, std::forward<U>(u)...);
 }
 
 template <typename T, typename... U>

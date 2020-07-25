@@ -48,7 +48,7 @@ public:
     void set_nonce(uint64_t value);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t /*version*/, R& source) {
+    bool from_data(R& source, uint32_t /*version*/) {
         reset();
 
         valid_ = true;

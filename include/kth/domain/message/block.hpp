@@ -58,7 +58,7 @@ public:
     // Witness is always deserialized if present.
     // NOTE: Witness on BCH is dissabled on the chain::block class
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t /*version*/, R& source) {
+    bool from_data(R& source, uint32_t /*version*/) {
         return chain::block::from_data(source, true);
     }
 

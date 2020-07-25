@@ -69,7 +69,7 @@ public:
 
         // Order is required.
         for (auto& element : elements_) {
-            if ( ! element.from_data(version, source)) {
+            if ( ! element.from_data(source, version)) {
                 break;
             }
         }

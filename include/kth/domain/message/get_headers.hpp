@@ -39,7 +39,7 @@ public:
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, uint32_t version) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-        if ( ! get_blocks::from_data(version, source)) {
+        if ( ! get_blocks::from_data(source, version)) {
             return false;
         }
 

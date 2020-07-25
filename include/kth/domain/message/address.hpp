@@ -65,7 +65,7 @@ public:
         }
 
         for (auto& address : addresses_) {
-            if ( ! address.from_data(version, source, true)) {
+            if ( ! address.from_data(source, version, true)) {
                 break;
             }
         }
