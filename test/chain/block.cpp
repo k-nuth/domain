@@ -574,7 +574,7 @@ TEST_CASE("validate block  is distinct tx set  partialy distinct not adjacent by
 }
 
 #ifdef KTH_CURRENCY_BCH
-TEST_CASE("validate block  is cash pow valid  true", "[block is distinct transaction set]") {
+TEST_CASE("validate block is cash pow valid true", "[block is distinct transaction set]") {
     uint32_t old_bits = 402736949;
     const domain::chain::compact bits(old_bits);
     uint256_t target(bits);
