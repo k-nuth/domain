@@ -39,7 +39,7 @@ public:
     bool operator!=(get_data const& x) const;
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    bool from_data(R& source, uint32_t version) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
         if ( ! inventory::from_data(version, source)) {
             return false;
         }
