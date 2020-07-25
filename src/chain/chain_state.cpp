@@ -927,9 +927,9 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     }
 
 #ifdef KTH_CURRENCY_BCH
-    if (is_daa_asert_enabled(values.height, forks)) {
-        return asert_difficulty_adjustment(values);
-    }
+    // if (is_daa_asert_enabled(values.height, forks)) {
+    //     return asert_difficulty_adjustment(values);
+    // }
 
     if (is_daa_cw144_enabled(values.height, forks)) {
         return cw144_difficulty_adjustment(values);
