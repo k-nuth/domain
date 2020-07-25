@@ -61,7 +61,6 @@ option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE proper
 # Implement --with-tests and declare WITH_TESTS.
 #------------------------------------------------------------------------------
 option(WITH_TESTS "Compile with unit tests." ON)
-option(WITH_TESTS_NEW "Compile with unit tests." OFF)
 
 # Implement --with-examples and declare WITH_EXAMPLES.
 #------------------------------------------------------------------------------
@@ -615,7 +614,7 @@ _group_sources(kth-domain "${CMAKE_CURRENT_LIST_DIR}")
 # Tests
 #==============================================================================
 
-if (WITH_TESTS OR WITH_TESTS_NEW)
+if (WITH_TESTS)
   enable_testing()
 endif()
 
@@ -702,7 +701,7 @@ if (WITH_TESTS)
 
     target_link_libraries(kth_domain_test PUBLIC kth-domain)
 
-  if (WITH_TESTS OR WITH_TESTS_NEW)
+  if (WITH_TESTS)
     include(CTest)
     include(Catch)
     catch_discover_tests(kth_domain_test)

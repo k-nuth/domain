@@ -83,6 +83,16 @@ chain_state chain_state::from_top(chain_state const& top) {
     );
 }
 
+// static
+std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
+    return std::make_shared<chain_state>(to_pool(top), top.forks_, top.checkpoints_
+#ifdef KTH_CURRENCY_BCH
+        , top.phonon_activation_time_
+        , top.axion_activation_time_
+#endif  //KTH_CURRENCY_BCH
+    );
+}
+
 // Constructor (tx pool to block).
 // This assumes that the pool state is the same height as the block.
 
@@ -96,12 +106,32 @@ chain_state chain_state::from_pool(chain_state const& pool, block const& block) 
     );
 }
 
+// static
+std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool, block const& block) {
+    return std::make_shared<chain_state>(to_block(pool, block), pool.forks_, pool.checkpoints_
+#ifdef KTH_CURRENCY_BCH
+        , pool.phonon_activation_time_
+        , pool.axion_activation_time_
+#endif  //KTH_CURRENCY_BCH
+    );
+}
+
 // Constructor (parent to header).
 // This assumes that parent is the state of the header's previous block.
 
 //static
 chain_state chain_state::from_parent(chain_state const& parent, header const& header) {
     return chain_state(to_header(parent, header), parent.forks_, parent.checkpoints_
+#ifdef KTH_CURRENCY_BCH
+        , parent.phonon_activation_time_
+        , parent.axion_activation_time_
+#endif
+    );
+}
+
+//static
+std::shared_ptr<chain_state> chain_state::from_parent_ptr(chain_state const& parent, header const& header) {
+    return std::make_shared<chain_state>(to_header(parent, header), parent.forks_, parent.checkpoints_
 #ifdef KTH_CURRENCY_BCH
         , parent.phonon_activation_time_
         , parent.axion_activation_time_
@@ -239,8 +269,8 @@ uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
 }
 
 // inline constexpr
-// bool is_bch_daa_enabled(uint32_t median_time_past) {
-//     return (median_time_past >= bch_daa_activation_time);
+// bool is_bch_daa_cw144_enabled(uint32_t median_time_past) {
+//     return (median_time_past >= bch_daa_cw144_activation_time);
 // }
 
 //static
@@ -421,7 +451,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     //     result.forks |= (rule_fork::cash_verify_flags_script_enable_sighash_forkid & forks);
     // }
 
-    // if (is_daa_enabled(values.height, forks)) {
+    // if (is_daa_cw144_enabled(values.height, forks)) {
     //     result.forks |= (rule_fork::cash_low_s_rule & forks);
     // }
 
@@ -459,17 +489,16 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_uahf & forks);
     }
 
-    if (is_daa_enabled(values.height, forks)) {
+    if (is_daa_cw144_enabled(values.height, forks)) {
         // result.forks |= (rule_fork::cash_low_s_rule & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_LOW_S & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_NULLFAIL & forks);
-        result.forks |= (rule_fork::bch_daa & forks);
+        result.forks |= (rule_fork::bch_daa_cw144 & forks);
     }
 
     if (is_monolith_enabled(values.height, forks)) {
         result.forks |= (rule_fork::bch_monolith & forks);
     }
-
 
     if (is_magnetic_anomaly_enabled(values.height, forks)) {
         // result.forks |= (rule_fork::cash_checkdatasig & forks);
@@ -612,7 +641,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 //         return 0; // Note(kth): regtest activate at block 0
 //     }
 
-//     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
+//     auto const activation_height = testnet ? testnet_daa_cw144_active_checkpoint.height() : mainnet_daa_cw144_active_checkpoint.height();
 
 //     //TODO(fernando): > or >= ??
 //     return height > activation_height ? activation_height : map::unrequested;
@@ -633,7 +662,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 //     return height >= activation_height;
 // }
 
-// inline bool chain_state::is_daa_enabled(size_t height, uint32_t forks) {
+// inline bool chain_state::is_daa_cw144_enabled(size_t height, uint32_t forks) {
 //     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
 //     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
 //     auto const mainnet = retarget && !testnet;
@@ -642,7 +671,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 //         return true; // Note(kth): regtest activate at block 0
 //     }
 
-//     auto const activation_height = testnet ? testnet_daa_active_checkpoint.height() : mainnet_daa_active_checkpoint.height();
+//     auto const activation_height = testnet ? testnet_daa_cw144_active_checkpoint.height() : mainnet_daa_cw144_active_checkpoint.height();
 
 //     //TODO(fernando): > or >= ??
 //     return height > activation_height;
@@ -674,10 +703,10 @@ bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
 
 //2017-November-13 hard fork
 inline 
-bool chain_state::is_daa_enabled(size_t height, uint32_t forks) {
+bool chain_state::is_daa_cw144_enabled(size_t height, uint32_t forks) {
     return is_rule_enabled(height, forks, 
-        mainnet_daa_active_checkpoint.height(), 
-        testnet_daa_active_checkpoint.height());
+        mainnet_daa_cw144_active_checkpoint.height(), 
+        testnet_daa_cw144_active_checkpoint.height());
 }
 
 //2018-May hard fork
@@ -744,14 +773,12 @@ bool chain_state::is_graviton_enabled(size_t height, uint32_t forks) {
 
 typename chain_state::timestamps::const_iterator timestamps_position(chain_state::timestamps const& times, bool tip) {
 #ifdef KTH_CURRENCY_BCH
-    if (tip) {
-        if (times.size() >= bitcoin_cash_offset_tip) {
-            return times.begin() + bitcoin_cash_offset_tip;
-        }
-    } else {
-        if (times.size() >= bitcoin_cash_offset_tip_minus_6) {
-            return times.begin() + bitcoin_cash_offset_tip_minus_6;
-        }
+    if (tip && times.size() >= bitcoin_cash_offset_tip) {
+        return times.begin() + bitcoin_cash_offset_tip;
+    }
+
+    if ( ! tip && times.size() >= bitcoin_cash_offset_tip_minus_6) {
+        return times.begin() + bitcoin_cash_offset_tip_minus_6;
     }
 #endif  //KTH_CURRENCY_BCH
 
@@ -818,8 +845,8 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 
 #ifdef KTH_CURRENCY_BCH
 
-// DAA, New algorithm: 2017-Nov-13 Hard fork
-uint32_t chain_state::cash_difficulty_adjustment(data const& values) {
+// DAA/cw-144: 2017-Nov-13 Hard fork
+uint32_t chain_state::cw144_difficulty_adjustment(data const& values) {
     // precondition: values.timestamp.size() >= 147
 
     using std::make_pair;
@@ -885,13 +912,13 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
 
 #ifdef KTH_CURRENCY_BCH
     //TODO(fernando): could it be improved?
-    // bool const daa_active = is_bch_daa_enabled(last_time_span);
-    bool const daa_active = is_daa_enabled(values.height, forks);
+    // bool const daa_active = is_bch_daa_cw144_enabled(last_time_span);
+    bool const daa_active = is_daa_cw144_enabled(values.height, forks);
 #else
     bool const daa_active = false;
 #endif  //KTH_CURRENCY_BCH
 
-    if (is_retarget_height(values.height) && !(daa_active)) {
+    if (is_retarget_height(values.height) && ! daa_active) {
         return work_required_retarget(values);
     }
 
@@ -899,25 +926,17 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
         return easy_work_required(values, daa_active);
     }
 
-    // #ifdef KTH_CURRENCY_BCH
-    //     if (values.height >= bch_activation_height) {
-    //         if ( ! daa_active) {
-    //             auto six_time_span = median_time_past(values, 0, false);
-    //             // precondition: last_time_span >= six_time_span
-    //             if ((last_time_span - six_time_span) > (12 * 3600)) {
-    //                 return work_required_adjust_cash(values);
-    //             }
-    //         } else {
-    //             return cash_difficulty_adjustment(values);
-    // 	    }
-    //     }
-    // #endif //KTH_CURRENCY_BCH
-
 #ifdef KTH_CURRENCY_BCH
+    // if (is_daa_asert_enabled(values.height, forks)) {
+    //     return asert_difficulty_adjustment(values);
+    // }
+
+    if (is_daa_cw144_enabled(values.height, forks)) {
+        return cw144_difficulty_adjustment(values);
+    }
+
+    //EDA
     if (is_uahf_enabled(values.height, forks)) {
-        if (is_daa_enabled(values.height, forks)) {
-            return cash_difficulty_adjustment(values);
-        }
         auto six_time_span = median_time_past(values, 0, false);
         // precondition: last_time_span >= six_time_span
         //TODO(fernando): resolve hardcoded values
@@ -1012,7 +1031,7 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
     //TODO(fernando): could it be improved?
     if (daa_active) {
 #ifdef KTH_CURRENCY_BCH
-        return cash_difficulty_adjustment(values);
+        return cw144_difficulty_adjustment(values);
 #else
 //Note: Could not happend: DAA and not BCH
 #endif  //KTH_CURRENCY_BCH

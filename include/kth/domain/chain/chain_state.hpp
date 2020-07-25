@@ -122,7 +122,6 @@ public:
     );
 
     // Named constructors
-
     static
     chain_state from_top(chain_state const& top);
 
@@ -132,13 +131,20 @@ public:
     static
     chain_state from_parent(chain_state const& parent, header const& header);
 
+    static
+    std::shared_ptr<chain_state> from_top_ptr(chain_state const& top);
+
+    static
+    std::shared_ptr<chain_state> from_pool_ptr(chain_state const& pool, block const& block);
+
+    static
+    std::shared_ptr<chain_state> from_parent_ptr(chain_state const& parent, header const& header);
 
 
     //TODO(fernando): if I delete the copy the Linter complains  
     // // non-copyable and non-movable class
     // chain_state(chain_state const&) = delete;               //NOLINT
     // chain_state& operator=(chain_state const&) = delete;    //NOLINT
-
 
     // /// Create pool state from top chain top block state.
     // chain_state(chain_state const& top);
@@ -148,8 +154,6 @@ public:
 
     // /// Create header state from header pool chain state of previous height.
     // chain_state(chain_state const& parent, chain::header const& header);
-
-
 
     /// Checkpoints must be ordered by height with greatest at back.
     static
@@ -307,7 +311,7 @@ private:
     bool is_uahf_enabled(size_t height, uint32_t forks);
     
     static
-    bool is_daa_enabled(size_t height, uint32_t forks);
+    bool is_daa_cw144_enabled(size_t height, uint32_t forks);
     
     static
     bool is_monolith_enabled(size_t height, uint32_t forks);
@@ -353,7 +357,7 @@ private:
 
 #ifdef KTH_CURRENCY_BCH
     static
-    uint32_t cash_difficulty_adjustment(data const& values);
+    uint32_t cw144_difficulty_adjustment(data const& values);
     
     static
     uint32_t work_required_adjust_cash(data const& values);
