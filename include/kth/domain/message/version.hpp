@@ -177,7 +177,7 @@ public:
     void set_relay(bool relay);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         reset();
 
         value_ = source.read_4_bytes_little_endian();

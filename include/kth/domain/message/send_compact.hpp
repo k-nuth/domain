@@ -53,7 +53,7 @@ public:
     void set_version(uint64_t version);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         reset();
 
         auto const mode = source.read_byte();

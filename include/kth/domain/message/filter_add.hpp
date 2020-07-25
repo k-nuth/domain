@@ -49,7 +49,7 @@ public:
     void set_data(data_chunk&& value);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         reset();
 
         auto const size = source.read_size_little_endian();
