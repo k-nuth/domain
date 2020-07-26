@@ -45,8 +45,8 @@ public:
     bool operator!=(not_found const& x) const;
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
-        if ( ! inventory::from_data(version, source)) {
+    bool from_data(R& source, uint32_t version) {
+        if ( ! inventory::from_data(source, version)) {
             return false;
         }
 

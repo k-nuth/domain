@@ -77,7 +77,7 @@ public:
     }
     
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         if ( ! chain::header::from_data(source)) {
             return false;
         }

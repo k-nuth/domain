@@ -106,7 +106,7 @@ public:
     void set_data(hash_digest const& value);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         reset();
 
         message_ = source.read_string();

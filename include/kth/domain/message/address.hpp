@@ -52,7 +52,7 @@ public:
     void set_addresses(infrastructure::message::network_address::list&& value);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         reset();
 
         auto const count = source.read_size_little_endian();
@@ -65,7 +65,7 @@ public:
         }
 
         for (auto& address : addresses_) {
-            if ( ! address.from_data(version, source, true)) {
+            if ( ! address.from_data(source, version, true)) {
                 break;
             }
         }

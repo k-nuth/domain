@@ -38,8 +38,8 @@ public:
     bool operator!=(get_headers const& x) const;
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-        if ( ! get_blocks::from_data(version, source)) {
+    bool from_data(R& source, uint32_t version) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+        if ( ! get_blocks::from_data(source, version)) {
             return false;
         }
 

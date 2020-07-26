@@ -111,7 +111,7 @@ public:
     void set_reserved(std::string&& value);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t /*version*/, R& source) {
+    bool from_data(R& source, uint32_t /*version*/) {
         reset();
 
         this->version_ = source.read_4_bytes_little_endian();

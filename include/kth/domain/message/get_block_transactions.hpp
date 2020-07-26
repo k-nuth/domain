@@ -50,7 +50,7 @@ public:
     void set_indexes(std::vector<uint64_t>&& values);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t /*version*/, R& source) {
+    bool from_data(R& source, uint32_t /*version*/) {
         reset();
 
         block_hash_ = source.read_hash();

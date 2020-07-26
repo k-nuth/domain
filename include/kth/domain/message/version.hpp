@@ -177,14 +177,14 @@ public:
     void set_relay(bool relay);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         reset();
 
         value_ = source.read_4_bytes_little_endian();
         services_ = source.read_8_bytes_little_endian();
         timestamp_ = source.read_8_bytes_little_endian();
-        address_receiver_.from_data(version, source, false);
-        address_sender_.from_data(version, source, false);
+        address_receiver_.from_data(source, version, false);
+        address_sender_.from_data(source, version, false);
         nonce_ = source.read_8_bytes_little_endian();
         user_agent_ = source.read_string();
         start_height_ = source.read_4_bytes_little_endian();

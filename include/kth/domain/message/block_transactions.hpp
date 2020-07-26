@@ -56,8 +56,8 @@ public:
     void set_transactions(chain::transaction::list&& x);
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
-        //std::cout << "bool block_transactions::from_data(uint32_t version, R& source) \n";
+    bool from_data(R& source, uint32_t version) {
+        //std::cout << "bool block_transactions::from_data(R& source, uint32_t version) \n";
         reset();
 
         block_hash_ = source.read_hash();

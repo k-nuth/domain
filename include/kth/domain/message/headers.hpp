@@ -55,7 +55,7 @@ public:
     void to_inventory(inventory_vector::list& out, inventory::type_id type) const;
 
     template <typename R, KTH_IS_READER(R)>
-    bool from_data(uint32_t version, R& source) {
+    bool from_data(R& source, uint32_t version) {
         reset();
 
         auto const count = source.read_size_little_endian();
@@ -69,7 +69,7 @@ public:
 
         // Order is required.
         for (auto& element : elements_) {
-            if ( ! element.from_data(version, source)) {
+            if ( ! element.from_data(source, version)) {
                 break;
             }
         }
