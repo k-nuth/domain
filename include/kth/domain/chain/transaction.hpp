@@ -76,7 +76,7 @@ namespace kth::domain::chain {
 //     std::for_each(puts.begin(), puts.end(), serialize);
 // }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if ! defined(KTH_CURRENCY_BCH)
 // // Input list must be pre-populated as it determines witness count.
 // template <typename R, KTH_IS_READER(R)>
 // inline void read_witnesses(R& source, input::list& inputs) {

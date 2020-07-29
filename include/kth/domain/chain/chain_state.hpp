@@ -112,7 +112,8 @@ public:
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+                , uint64_t daa_half_life
                 // , magnetic_anomaly_t magnetic_anomaly_activation_time
                 // , great_wall_t great_wall_activation_time
                 // , graviton_t graviton_activation_time
@@ -178,7 +179,10 @@ public:
     [[nodiscard]]
     uint32_t work_required() const;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+    [[nodiscard]]
+    uint64_t daa_half_life() const;
+
     // [[nodiscard]]
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
     
@@ -214,14 +218,14 @@ public:
     static
     bool is_retarget_height(size_t height);  //Need to be public, for Litecoin
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     static
     uint256_t difficulty_adjustment_cash(uint256_t const& target);
 #endif  //KTH_CURRENCY_BCH
 
     uint32_t get_next_work_required(uint32_t time_now);
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     static
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
@@ -255,7 +259,8 @@ protected:
 
     static
     activations activation(data const& values, uint32_t forks
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+            , uint64_t daa_half_life
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
             // , great_wall_t great_wall_activation_time
             // , graviton_t graviton_activation_time
@@ -306,7 +311,7 @@ private:
     bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
     
     // ------------------------------------------------------------------------
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     static
     bool is_uahf_enabled(size_t height, uint32_t forks);
     
@@ -352,10 +357,10 @@ private:
     // static
     // bool is_retarget_height(size_t height);
 
-    // easy blocks
-    //TODO(kth):
+#if defined(KTH_CURRENCY_BCH)
+    static
+    uint32_t aserti3_2d_difficulty_adjustment(data const& values);
 
-#ifdef KTH_CURRENCY_BCH
     static
     uint32_t cw144_difficulty_adjustment(data const& values);
     
@@ -363,6 +368,7 @@ private:
     uint32_t work_required_adjust_cash(data const& values);
 #endif  //KTH_CURRENCY_BCH
 
+    // easy blocks
     static
     uint32_t work_required_easy(data const& values);
     
@@ -397,7 +403,9 @@ private:
     uint32_t const work_required_;
 
 //TODO(fernando): inherit BCH data and functions for a specific BCH class
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+    uint64_t const daa_half_life_;
+
     // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
     // great_wall_t const great_wall_activation_time_;
     // graviton_t const graviton_activation_time_;

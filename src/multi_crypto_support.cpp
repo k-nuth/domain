@@ -16,7 +16,7 @@ namespace {
 // static config::currency currency_ = config::currency::none;
 // static infrastructure::config::settings network_ = kth::infrastructure::config::settings::none;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 // static   //Note(kth): static is redundant in a anonymous namespace
 std::string cashaddr_prefix_ = "bitcoincash";
 #endif  // KTH_CURRENCY_BCH
@@ -110,7 +110,7 @@ infrastructure::config::settings get_network(bool easy_blocks, bool retarget) {
     return easy_blocks ? kth::infrastructure::config::settings::testnet : kth::infrastructure::config::settings::mainnet;
 }
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 std::string cashaddr_prefix() {
     return cashaddr_prefix_;
 }

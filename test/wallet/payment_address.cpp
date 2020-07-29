@@ -246,7 +246,7 @@ TEST_CASE("payment address  hash  compressed point  expected", "[payment address
     REQUIRE(encode_base16(address.hash()) == COMPRESSED_HASH);
 }
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 //cashAddr payment_address
 TEST_CASE("payment address  cashAddr  mainnet  encode", "[payment address]") {
     const payment_address address(ec_public("04278f7bfee4ef625f85279c3a01d57c22e2877a902128b2df85071f9d6c95b290f094f5bd1bff5880d09cc231c774d71ac22d3ab9bdd9dda2e75017b52d893367"),

@@ -44,7 +44,7 @@ config::currency get_currency();
 infrastructure::config::settings get_network(uint32_t identifier);
 infrastructure::config::settings get_network(bool easy_blocks, bool retarget);
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 std::string cashaddr_prefix();
 void set_cashaddr_prefix(std::string const& x);
 #endif  //KTH_CURRENCY_BCH

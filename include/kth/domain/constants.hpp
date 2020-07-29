@@ -72,7 +72,7 @@ constexpr size_t max_coinbase_size = 100;
 
 constexpr size_t median_time_past_interval = 11;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 constexpr size_t bitcoin_cash_retarget_blocks = 6;
 //constexpr size_t chain_state_timestamp_count = median_time_past_interval + bitcoin_cash_retarget_blocks;
 
@@ -119,7 +119,7 @@ constexpr uint32_t work_limit(bool retarget = true) {
 constexpr size_t max_sigops_factor = 50;
 
 // constexpr size_t max_block_sigops = max_block_size / max_sigops_factor;
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 constexpr size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
 constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 #else
@@ -128,7 +128,7 @@ constexpr size_t max_block_sigops = max_block_size / max_sigops_factor;
 
 constexpr inline 
 size_t get_max_block_size() noexcept {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return max_block_size_new;
 #else
     return max_block_size;
@@ -136,7 +136,7 @@ size_t get_max_block_size() noexcept {
 }
 
 constexpr inline size_t get_max_block_sigops() {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return max_block_sigops_new;
 #else
     return max_block_sigops;
@@ -147,7 +147,7 @@ constexpr size_t one_million_bytes_block = 1000000;
 constexpr size_t coinbase_reserved_size = 20000;
 constexpr size_t sigops_per_million_bytes = 20000;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 constexpr size_t max_tx_sigchecks = 3000;
 constexpr size_t block_maxbytes_maxsigchecks_ratio = 141;
 constexpr size_t max_block_sigchecks = get_max_block_size() / block_maxbytes_maxsigchecks_ratio;
@@ -213,7 +213,7 @@ constexpr uint32_t bip9_version_base = 0x20000000;
 // enum class magnetic_anomaly_t : uint64_t {};
 // enum class great_wall_t : uint64_t {};
 // enum class graviton_t : uint64_t {};
-enum class phonon_t : uint64_t {};
+// enum class phonon_t : uint64_t {};
 enum class axion_t : uint64_t {};
 enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
@@ -408,7 +408,7 @@ const infrastructure::config::checkpoint regtest_bip9_bit1_active_checkpoint{
 
 
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 
 //2017-August-01 hard fork
 static
@@ -540,7 +540,7 @@ constexpr size_t max_witness_program = 40;
 
 constexpr inline
 size_t get_max_block_weight() noexcept {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return get_max_block_size(); 
 #else
     return max_block_weight;

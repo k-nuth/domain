@@ -363,28 +363,9 @@ public:
         }
     } 
 
-    // /// Load command line options (named).
-    // virtual 
-    // options_metadata load_options() = 0;
-
-    // /// Load command line arguments (positional).
-    // virtual 
-    // arguments_metadata load_arguments() = 0;
-
-    // /// Load environment variable settings.
-    // virtual 
-    // options_metadata load_environment() = 0;
-
-    // /// Load configuration file settings.
-    // virtual 
-    // options_metadata load_settings() = 0;
-
 protected:
     // virtual
     void load_command_variables(variables_map& variables, int argc, char const* argv[]) {
-        // auto const options = load_options();
-        // auto const arguments = load_arguments();
-
         auto const options = derived().load_options();
         auto const arguments = derived().load_arguments();
 
@@ -393,16 +374,12 @@ protected:
         store(command_parser.run(), variables);
     }
 
-    // virtual
-    // int load_configuration_variables(variables_map& variables, std::string const& option_name);
     load_error load_configuration_variables(variables_map& variables, std::string const& option_name) {
         auto const config_path = get_config_option(variables, option_name);
         return load_configuration_variables_path(variables, config_path);
     }
 
-    // virtual
     load_error load_configuration_variables_path(variables_map& variables, path const& config_path) {
-        // auto const config_settings = load_settings();
         auto const config_settings = derived().load_settings();
 
         // If the existence test errors out we pretend there's no file :/.
@@ -432,7 +409,6 @@ protected:
 
     // virtual
     void load_environment_variables(variables_map& variables, std::string const& prefix) {
-        // auto const& environment_variables = load_environment();
         auto const& environment_variables = derived().load_environment();
         auto const environment = parse_environment(environment_variables, prefix);
         store(environment, variables);

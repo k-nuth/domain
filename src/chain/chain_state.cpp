@@ -36,7 +36,8 @@ using namespace boost::adaptors;
 
 // The allow_collisions hard fork is always activated (not configurable).
 chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+    , uint64_t daa_half_life
     // , magnetic_anomaly_t magnetic_anomaly_activation_time
     // , great_wall_t great_wall_activation_time
     // , graviton_t graviton_activation_time
@@ -48,7 +49,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     , forks_(forks | rule_fork::allow_collisions)
     , checkpoints_(checkpoints)
     , active_(activation(data_, forks_
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
         // , magnetic_anomaly_activation_time
         // , great_wall_activation_time
         // , graviton_activation_time
@@ -58,7 +59,8 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         ))
     , median_time_past_(median_time_past(data_, forks_))
     , work_required_(work_required(data_, forks_))
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+    , daa_half_life_(daa_half_life)
     // , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
     // , great_wall_activation_time_(great_wall_activation_time)
     // , graviton_activation_time_(graviton_activation_time)
@@ -76,7 +78,8 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 // static
 chain_state chain_state::from_top(chain_state const& top) {
     return chain_state(to_pool(top), top.forks_, top.checkpoints_
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+        , top.daa_half_life_
         // , top.phonon_activation_time_
         , top.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
@@ -86,7 +89,8 @@ chain_state chain_state::from_top(chain_state const& top) {
 // static
 std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
     return std::make_shared<chain_state>(to_pool(top), top.forks_, top.checkpoints_
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+        , top.daa_half_life_
         // , top.phonon_activation_time_
         , top.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
@@ -99,7 +103,8 @@ std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
 // static
 chain_state chain_state::from_pool(chain_state const& pool, block const& block) {
     return chain_state(to_block(pool, block), pool.forks_, pool.checkpoints_
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+        , poll.daa_half_life_
         // , pool.phonon_activation_time_
         , pool.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
@@ -109,7 +114,8 @@ chain_state chain_state::from_pool(chain_state const& pool, block const& block) 
 // static
 std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool, block const& block) {
     return std::make_shared<chain_state>(to_block(pool, block), pool.forks_, pool.checkpoints_
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+        , pool.daa_half_life_
         // , pool.phonon_activation_time_
         , pool.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
@@ -122,7 +128,8 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
 //static
 chain_state chain_state::from_parent(chain_state const& parent, header const& header) {
     return chain_state(to_header(parent, header), parent.forks_, parent.checkpoints_
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+        , parent.daa_half_life_
         // , parent.phonon_activation_time_
         , parent.axion_activation_time_
 #endif
@@ -132,7 +139,8 @@ chain_state chain_state::from_parent(chain_state const& parent, header const& he
 //static
 std::shared_ptr<chain_state> chain_state::from_parent_ptr(chain_state const& parent, header const& header) {
     return std::make_shared<chain_state>(to_header(parent, header), parent.forks_, parent.checkpoints_
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+        , parent.daa_half_life_
         // , parent.phonon_activation_time_
         , parent.axion_activation_time_
 #endif
@@ -263,15 +271,10 @@ uint32_t bits_high(chain_state::data const& values) {
     return values.bits.ordered.back();
 }
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
     return target + (target >> 2);
 }
-
-// inline constexpr
-// bool is_bch_daa_cw144_enabled(uint32_t median_time_past) {
-//     return (median_time_past >= bch_daa_cw144_activation_time);
-// }
 
 //static
 inline 
@@ -330,7 +333,8 @@ bool chain_state::is_axion_enabled() const {
 //-----------------------------------------------------------------------------
 
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+        , uint64_t daa_half_life
         // , magnetic_anomaly_t magnetic_anomaly_activation_time
         // , great_wall_t great_wall_activation_time
         // , graviton_t graviton_activation_time
@@ -445,42 +449,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.minimum_version = first_version;
     }
 
-#ifdef KTH_CURRENCY_BCH
-    // if (is_uahf_enabled(values.height, forks)) {
-    //     result.forks |= (rule_fork::cash_verify_flags_script_enable_sighash_forkid & forks);
-    // }
-
-    // if (is_daa_cw144_enabled(values.height, forks)) {
-    //     result.forks |= (rule_fork::cash_low_s_rule & forks);
-    // }
-
-    // //Note(kth): the Bitcoin-ABC Consensus rules no longer uses this flag.
-    // // if (is_monolith_enabled(values.height, forks)) {
-    // //     result.forks |= (rule_fork::cash_monolith_opcodes & forks);
-    // // }
-
-    // // if (is_mtp_activated(mtp, to_underlying(magnetic_anomaly_activation_time))) {
-    // if (is_magnetic_anomaly_enabled(values.height, forks)) {
-    //     result.forks |= (rule_fork::cash_checkdatasig & forks);
-    // }
-
-    // // if (is_mtp_activated(mtp, to_underlying(great_wall_activation_time))) {
-    // if (is_great_wall_enabled(values.height, forks)) {
-    //     result.forks |= (rule_fork::cash_schnorr & forks);
-    //     result.forks |= (rule_fork::cash_segwit_recovery & forks);
-    // }
-
-    // // if (is_mtp_activated(mtp, to_underlying(graviton_activation_time))) {
-    // if (is_graviton_enabled(values.height, forks)) {
-    //     //TODO(fernando): 2019-Nov rules
-    // }
-
-    // auto mtp = median_time_past(values, 0);
-    // if (is_mtp_activated(mtp, to_underlying(phonon_activation_time))) {
-    //     //Note(Fernando): Move this to the next fork rules
-    //     result.forks |= (rule_fork::cash_replay_protection & forks);
-    // }
-
+#if defined(KTH_CURRENCY_BCH)
     if (is_uahf_enabled(values.height, forks)) {
         // result.forks |= (rule_fork::cash_verify_flags_script_enable_sighash_forkid & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_STRICTENC & forks);
@@ -555,7 +524,7 @@ size_t chain_state::bits_count(size_t height, uint32_t forks) {
     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     auto const easy_work = testnet && retarget && !is_retarget_height(height);
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return easy_work ? std::min(height, retargeting_interval) : std::min(height, chain_state_timestamp_count);
 #else
     return easy_work ? std::min(height, retargeting_interval) : 1;
@@ -574,7 +543,7 @@ size_t chain_state::version_count(size_t height, uint32_t forks) {
 }
 
 size_t chain_state::timestamp_count(size_t height, uint32_t /*unused*/) {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return std::min(height, chain_state_timestamp_count);  //TODO(kth): check what happens with Bitcoin Legacy...?
 #else
     return std::min(height, median_time_past_interval);
@@ -614,7 +583,7 @@ size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks) {
 }
 
 size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return map::unrequested;
 #endif
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
@@ -628,62 +597,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 // median_time_past
 //-----------------------------------------------------------------------------
 
-#ifdef KTH_CURRENCY_BCH
-
-// inline size_t chain_state::uahf_height(size_t height, uint32_t forks) {
-//     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-
-//     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
-
-//     return height >= activation_height ? activation_height : map::unrequested;
-// }
-
-// inline size_t chain_state::daa_height(size_t height, uint32_t forks) {
-//     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-//     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-//     auto const mainnet = retarget && !testnet;
-
-//     if ( ! mainnet && ! testnet) {
-//         return 0; // Note(kth): regtest activate at block 0
-//     }
-
-//     auto const activation_height = testnet ? testnet_daa_cw144_active_checkpoint.height() : mainnet_daa_cw144_active_checkpoint.height();
-
-//     //TODO(fernando): > or >= ??
-//     return height > activation_height ? activation_height : map::unrequested;
-// }
-
-
-// inline bool chain_state::is_uahf_enabled(size_t height, uint32_t forks) {
-//     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-//     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-//     auto const mainnet = retarget && !testnet;
-
-//     if ( ! mainnet && ! testnet) {
-//         return true;  // Note(kth): regtest activate at block 0
-//     }
-
-//     auto const activation_height = testnet ? testnet_uahf_active_checkpoint.height() : mainnet_uahf_active_checkpoint.height();
-
-//     return height >= activation_height;
-// }
-
-// inline bool chain_state::is_daa_cw144_enabled(size_t height, uint32_t forks) {
-//     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-//     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-//     auto const mainnet = retarget && !testnet;
-
-//     if ( ! mainnet && ! testnet) {
-//         return true; // Note(kth): regtest activate at block 0
-//     }
-
-//     auto const activation_height = testnet ? testnet_daa_cw144_active_checkpoint.height() : mainnet_daa_cw144_active_checkpoint.height();
-
-//     //TODO(fernando): > or >= ??
-//     return height > activation_height;
-// }
-
-
+#if defined(KTH_CURRENCY_BCH)
 inline 
 bool chain_state::is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
@@ -777,7 +691,7 @@ bool chain_state::is_phonon_enabled(size_t height, uint32_t forks) {
 #endif // KTH_CURRENCY_BCH
 
 typename chain_state::timestamps::const_iterator timestamps_position(chain_state::timestamps const& times, bool tip) {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     if (tip && times.size() >= bitcoin_cash_offset_tip) {
         return times.begin() + bitcoin_cash_offset_tip;
     }
@@ -848,7 +762,11 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 
 // ------------------------------------------------------------------------------------------------------------
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+
+// DAA/aserti3-2d: 2020-Nov-15 Hard fork
+uint32_t chain_state::aserti3_2d_difficulty_adjustment(data const& values) {
+}
 
 // DAA/cw-144: 2017-Nov-13 Hard fork
 uint32_t chain_state::cw144_difficulty_adjustment(data const& values) {
@@ -915,26 +833,26 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
 
     auto last_time_span = median_time_past(values, 0, true);
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     //TODO(fernando): could it be improved?
-    // bool const daa_active = is_bch_daa_cw144_enabled(last_time_span);
-    bool const daa_active = is_daa_cw144_enabled(values.height, forks);
+    // bool const daa_cw144_active = is_bch_daa_cw144_enabled(last_time_span);
+    bool const daa_cw144_active = is_daa_cw144_enabled(values.height, forks);
 #else
-    bool const daa_active = false;
+    bool const daa_cw144_active = false;
 #endif  //KTH_CURRENCY_BCH
 
-    if (is_retarget_height(values.height) && ! daa_active) {
+    if (is_retarget_height(values.height) && ! daa_cw144_active) {
         return work_required_retarget(values);
     }
 
     if (script::is_enabled(forks, rule_fork::easy_blocks)) {
-        return easy_work_required(values, daa_active);
+        return easy_work_required(values, daa_cw144_active);
     }
 
-#ifdef KTH_CURRENCY_BCH
-    // if (is_daa_asert_enabled(values.height, forks)) {
-    //     return asert_difficulty_adjustment(values);
-    // }
+#if defined(KTH_CURRENCY_BCH)
+    if (is_axion_enabled()) {
+        return aserti3_2d_difficulty_adjustment(values);
+    }
 
     if (is_daa_cw144_enabled(values.height, forks)) {
         return cw144_difficulty_adjustment(values);
@@ -954,7 +872,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     return bits_high(values);
 }
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 uint32_t chain_state::work_required_adjust_cash(data const& values) {
     const compact bits(bits_high(values));
     uint256_t target(bits);
@@ -1022,7 +940,7 @@ uint32_t chain_state::retarget_timespan(data const& values) {
     return range_constrain(timespan, min_timespan, max_timespan);
 }
 
-uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
+uint32_t chain_state::easy_work_required(data const& values, bool daa_cw144_active) {
     KTH_ASSERT(values.height != 0);
 
     // If the time limit has passed allow a minimum difficulty block.
@@ -1034,8 +952,8 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_active) {
     auto& bits = values.bits.ordered;
 
     //TODO(fernando): could it be improved?
-    if (daa_active) {
-#ifdef KTH_CURRENCY_BCH
+    if (daa_cw144_active) {
+#if defined(KTH_CURRENCY_BCH)
         return cw144_difficulty_adjustment(values);
 #else
 //Note: Could not happend: DAA and not BCH
@@ -1248,7 +1166,7 @@ chain_state::data chain_state::to_block(chain_state const& pool, block const& bl
         data.bip9_bit0_hash = data.hash;
     }
 
-#ifndef KTH_CURRENCY_BCH
+#if ! defined(KTH_CURRENCY_BCH)
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet)) {
         data.bip9_bit1_hash = data.hash;
@@ -1287,7 +1205,7 @@ chain_state::data chain_state::to_header(chain_state const& parent, header const
         data.bip9_bit0_hash = data.hash;
     }
 
-#ifndef KTH_CURRENCY_BCH
+#if ! defined(KTH_CURRENCY_BCH)
     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
     if (bip9_bit1_active(data.height, mainnet, testnet)) {
         data.bip9_bit1_hash = data.hash;
@@ -1327,7 +1245,11 @@ uint32_t chain_state::work_required() const {
     return work_required_;
 }
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
+uint64_t chain_state::daa_half_life() const {
+    return daa_half_life_;
+}
+
 // uint64_t chain_state::monolith_activation_time() const {
 //     return monolith_activation_time_;
 // }

@@ -560,7 +560,7 @@ hash_digest script::generate_version_0_signature_hash(transaction const& tx,
     auto const sighash = to_sighash_enum(sighash_type);
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
 
     //Note(kth: Not used for the moment:

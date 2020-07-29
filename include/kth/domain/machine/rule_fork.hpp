@@ -45,7 +45,7 @@ enum rule_fork : uint32_t {
     /// Use median time past for locktime (soft fork, feature).
     bip113_rule = 1U << 10,
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     bch_uahf = 1U << 11,                //2017-Aug Hardfork - Bitcoin Cash UAHF (1501590000)
     bch_daa_cw144  = 1U << 12,          //2017-Nov Hardfork - DAA/cw-144 - (1510600000)
     bch_monolith = 1U << 13,            //2018-May Hardfork - monolith - (1526400000)
