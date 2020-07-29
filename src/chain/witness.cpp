@@ -175,12 +175,12 @@ size_t witness::size() const {
 }
 
 data_chunk const& witness::front() const {
-    KTH_ASSERT(!stack_.empty());
+    KTH_ASSERT( ! stack_.empty());
     return stack_.front();
 }
 
 data_chunk const& witness::back() const {
-    KTH_ASSERT(!stack_.empty());
+    KTH_ASSERT( ! stack_.empty());
     return stack_.back();
 }
 

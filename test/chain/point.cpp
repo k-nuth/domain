@@ -13,7 +13,7 @@ auto const valid_raw_point = to_chunk(base16_literal("000000000019d6689c085ae165
 
 TEST_CASE("point  constructor 1  always  returns default initialized", "[point]") {
     chain::point instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("point  constructor 2  valid input  returns input initialized", "[point]") {
@@ -69,8 +69,8 @@ TEST_CASE("point  from data  insufficient bytes  failure", "[point]") {
     data_chunk data(10);
     chain::point instance;
 
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("point  from data  roundtrip  success", "[point]") {

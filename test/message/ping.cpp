@@ -11,7 +11,7 @@ using namespace kd;
 
 TEST_CASE("ping  constructor 1  always invalid", "[ping]") {
     message::ping instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("ping  constructor 2  always  equals params", "[ping]") {
@@ -40,7 +40,7 @@ TEST_CASE("ping  satoshi fixed size  bip31 version  8", "[ping]") {
 TEST_CASE("ping  factory from data 1  maximum version empty data invalid", "[ping]") {
     static auto const version = message::version::level::maximum;
     auto const result = create<message::ping>(version, data_chunk{});
-    REQUIRE(!result.is_valid());
+    REQUIRE( ! result.is_valid());
 }
 
 TEST_CASE("ping  factory from data 1  minimum version empty data valid", "[ping]") {
@@ -169,7 +169,7 @@ TEST_CASE("ping  operator assign equals  always  matches equivalent", "[ping]") 
     message::ping value(356234u);
     REQUIRE(value.is_valid());
     message::ping instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     instance = std::move(value);
     REQUIRE(instance.is_valid());
 }

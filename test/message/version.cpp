@@ -522,7 +522,7 @@ TEST_CASE("version  address receiver accessor  always  returns initialized value
 //    };
 //
 //    message::version instance;
-//    REQUIRE(!instance.address_receiver().is_valid());
+//    REQUIRE( ! instance.address_receiver().is_valid());
 //    instance.address_receiver(expected);
 //    const message::network_address result = instance.address_receiver();
 //    REQUIRE(result == expected);
@@ -531,7 +531,7 @@ TEST_CASE("version  address receiver accessor  always  returns initialized value
 
 TEST_CASE("version  address receiver setter 2  roundtrip  success", "[version]") {
     message::version instance;
-    REQUIRE(!instance.address_receiver().is_valid());
+    REQUIRE( ! instance.address_receiver().is_valid());
     instance.set_address_receiver(message::network_address{
         734678u,
         5357534u,
@@ -585,7 +585,7 @@ TEST_CASE("version  address sender accessor  always  returns initialized value",
 //    };
 //
 //    message::version instance;
-//    REQUIRE(!instance.address_sender().is_valid());
+//    REQUIRE( ! instance.address_sender().is_valid());
 //    instance.address_sender(expected);
 //    const message::network_address result = instance.address_sender();
 //    REQUIRE(result == expected);
@@ -594,7 +594,7 @@ TEST_CASE("version  address sender accessor  always  returns initialized value",
 
 TEST_CASE("version  address sender setter 2  roundtrip  success", "[version]") {
     message::version instance;
-    REQUIRE(!instance.address_sender().is_valid());
+    REQUIRE( ! instance.address_sender().is_valid());
     instance.set_address_sender(message::network_address{
         46324u,
         1515u,

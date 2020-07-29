@@ -78,7 +78,7 @@ TEST_CASE("send compact  from data 1  invalid mode byte  failure", "[send compac
     data_chunk raw_data{0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
     message::send_compact msg;
     bool result = entity_from_data(msg, message::send_compact::version_minimum, raw_data);
-    REQUIRE(!result);
+    REQUIRE( ! result);
 }
 
 TEST_CASE("send compact  from data 1  insufficient version  failure", "[send compact]") {
@@ -86,7 +86,7 @@ TEST_CASE("send compact  from data 1  insufficient version  failure", "[send com
     data_chunk raw_data = expected.to_data(message::send_compact::version_minimum);
     message::send_compact msg;
     bool result = entity_from_data(msg, message::send_compact::version_minimum - 1, raw_data);
-    REQUIRE(!result);
+    REQUIRE( ! result);
 }
 
 TEST_CASE("send compact  high bandwidth mode accessor  always  returns initialized value", "[send compact]") {

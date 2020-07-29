@@ -59,13 +59,13 @@ using namespace kth::domain::wallet;
 
 TEST_CASE("payment address  construct  default invalid", "[payment address]") {
     const payment_address address;
-    REQUIRE(!address);
+    REQUIRE( ! address);
     REQUIRE(address.encoded() == UNINITIALIZED_ADDRESS);
 }
 
 TEST_CASE("payment address  construct  string invalid invalid", "[payment address]") {
     const payment_address address("bogus");
-    REQUIRE(!address);
+    REQUIRE( ! address);
     REQUIRE(address.encoded() == UNINITIALIZED_ADDRESS);
 }
 

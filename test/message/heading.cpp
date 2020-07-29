@@ -84,7 +84,7 @@ TEST_CASE("heading  from data  insufficient bytes  failure", "[heading]") {
         0xab, 0xcd};
 
     heading instance;
-    REQUIRE(!entity_from_data(instance, raw));
+    REQUIRE( ! entity_from_data(instance, raw));
 }
 
 TEST_CASE("heading  factory from data 1  valid input  success", "[heading]") {

@@ -16,7 +16,7 @@ using namespace kth::domain::wallet;
 // ----------------------------------------------------------------------------
 
 TEST_CASE("bitcoin uri  construct  uninitialized  false", "[bitcoin uri]") {
-    REQUIRE(!bitcoin_uri());
+    REQUIRE( ! bitcoin_uri());
 }
 
 TEST_CASE("bitcoin uri  construct  initialized  true", "[bitcoin uri]") {
@@ -28,23 +28,23 @@ TEST_CASE("bitcoin uri  construct  scheme mixed case  normalized", "[bitcoin uri
 }
 
 TEST_CASE("bitcoin uri  construct  invalid scheme  false", "[bitcoin uri]") {
-    REQUIRE(!bitcoin_uri("fedcoin:"));
+    REQUIRE( ! bitcoin_uri("fedcoin:"));
 }
 
 TEST_CASE("bitcoin uri  construct  payment address only  false", "[bitcoin uri]") {
-    REQUIRE(!bitcoin_uri("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD"));
+    REQUIRE( ! bitcoin_uri("113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD"));
 }
 
 TEST_CASE("bitcoin uri  construct  stealth address only  false", "[bitcoin uri]") {
-    REQUIRE(!bitcoin_uri("hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i"));
+    REQUIRE( ! bitcoin_uri("hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i"));
 }
 
 TEST_CASE("bitcoin uri  construct  fragment  false", "[bitcoin uri]") {
-    REQUIRE(!bitcoin_uri("bitcoin:#satoshi"));
+    REQUIRE( ! bitcoin_uri("bitcoin:#satoshi"));
 }
 
 TEST_CASE("bitcoin uri  construct  strict  test", "[bitcoin uri]") {
-    REQUIRE(!bitcoin_uri("bitcoin:?label=Some テスト"));
+    REQUIRE( ! bitcoin_uri("bitcoin:?label=Some テスト"));
 }
 
 TEST_CASE("bitcoin uri  construct  not strict  test", "[bitcoin uri]") {
@@ -104,7 +104,7 @@ TEST_CASE("bitcoin uri  set path  reset path  false", "[bitcoin uri]") {
     uri.set_address(stealth_address("hfFGUXFPKkQ5M6LC6aEUKMsURdhw93bUdYdacEtBA8XttLv7evZkira2i"));
 
     // The set_path will not reset a path. This is necessary to catch failures in non-strict parsing.
-    REQUIRE(!uri.set_path(expected_payment));
+    REQUIRE( ! uri.set_path(expected_payment));
 }
 
 TEST_CASE("bitcoin uri  set amount  reset amount  latter amount", "[bitcoin uri]") {

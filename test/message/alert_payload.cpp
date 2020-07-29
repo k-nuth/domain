@@ -11,7 +11,7 @@ using namespace kd;
 
 TEST_CASE("alert payload  constructor 1  always invalid", "[alert payload]") {
     message::alert_payload instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("alert payload  constructor 2  always  equals params", "[alert payload]") {
@@ -169,8 +169,8 @@ TEST_CASE("alert payload  from data  insufficient bytes  failure", "[alert paylo
     data_chunk raw{0xab, 0x11};
     message::alert_payload instance;
 
-    REQUIRE(!entity_from_data(instance, message::version::level::minimum, raw));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, message::version::level::minimum, raw));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("alert payload  factory from data 1  wiki sample test  success", "[alert payload]") {
@@ -698,7 +698,7 @@ TEST_CASE("alert payload  operator assign equals  always  matches equivalent", "
     REQUIRE(value.is_valid());
 
     message::alert_payload instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
     REQUIRE(instance.is_valid());

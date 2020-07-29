@@ -11,7 +11,7 @@ using namespace kd;
 
 TEST_CASE("chain transaction  constructor 1  always  returns default initialized", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 #define TX0_INPUTS                                                     \
@@ -243,7 +243,7 @@ TEST_CASE("chain transaction  constructor 7  valid input  returns input initiali
 
 TEST_CASE("chain transaction  is coinbase  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_coinbase());
+    REQUIRE( ! instance.is_coinbase());
 }
 
 TEST_CASE("chain transaction  is coinbase  one null input  returns true", "[chain transaction]") {
@@ -261,7 +261,7 @@ TEST_CASE("chain transaction  is coinbase  one non null input  returns false", "
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    REQUIRE(!instance.is_coinbase());
+    REQUIRE( ! instance.is_coinbase());
 }
 
 TEST_CASE("chain transaction  is coinbase  two inputs first null  returns false", "[chain transaction]") {
@@ -271,12 +271,12 @@ TEST_CASE("chain transaction  is coinbase  two inputs first null  returns false"
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    REQUIRE(!instance.is_coinbase());
+    REQUIRE( ! instance.is_coinbase());
 }
 
 TEST_CASE("chain transaction  is null non coinbase  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE( ! instance.is_null_non_coinbase());
 }
 
 TEST_CASE("chain transaction  is null non coinbase  one null input  returns false", "[chain transaction]") {
@@ -285,7 +285,7 @@ TEST_CASE("chain transaction  is null non coinbase  one null input  returns fals
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE( ! instance.is_null_non_coinbase());
 }
 
 TEST_CASE("chain transaction  is null non coinbase  one non null input  returns false", "[chain transaction]") {
@@ -294,7 +294,7 @@ TEST_CASE("chain transaction  is null non coinbase  one non null input  returns 
 
     chain::transaction instance;
     instance.set_inputs(inputs);
-    REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE( ! instance.is_null_non_coinbase());
 }
 
 TEST_CASE("chain transaction  is null non coinbase  two inputs first null  returns true", "[chain transaction]") {
@@ -337,7 +337,7 @@ TEST_CASE("chain transaction  is final  locktime input not final  returns false"
     chain::input input;
     input.set_sequence(1);
     chain::transaction instance(0, 101, {input}, {});
-    REQUIRE(!instance.is_final(height, time));
+    REQUIRE( ! instance.is_final(height, time));
 }
 
 TEST_CASE("chain transaction  is final  locktime inputs final  returns true", "[chain transaction]") {
@@ -352,20 +352,20 @@ TEST_CASE("chain transaction  is final  locktime inputs final  returns true", "[
 TEST_CASE("chain transaction  is locked  version 1 empty  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_version(1);
-    REQUIRE(!instance.is_locked(0, 0));
+    REQUIRE( ! instance.is_locked(0, 0));
 }
 
 TEST_CASE("chain transaction  is locked  version 2 empty  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_version(2);
-    REQUIRE(!instance.is_locked(0, 0));
+    REQUIRE( ! instance.is_locked(0, 0));
 }
 
 TEST_CASE("chain transaction  is locked  version 1 one of two locked locked  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_inputs({{{}, {}, 1}, {{}, {}, 0}});
     instance.set_version(1);
-    REQUIRE(!instance.is_locked(0, 0));
+    REQUIRE( ! instance.is_locked(0, 0));
 }
 
 TEST_CASE("chain transaction  is locked  version 4 one of two locked  returns true", "[chain transaction]") {
@@ -378,14 +378,14 @@ TEST_CASE("chain transaction  is locked  version 4 one of two locked  returns tr
 TEST_CASE("chain transaction  is locktime conflict  locktime zero  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.set_locktime(0);
-    REQUIRE(!instance.is_locktime_conflict());
+    REQUIRE( ! instance.is_locktime_conflict());
 }
 
 TEST_CASE("chain transaction  is locktime conflict  input sequence not maximum  returns false", "[chain transaction]") {
     chain::input input;
     input.set_sequence(1);
     chain::transaction instance(0, 2143u, {input}, {});
-    REQUIRE(!instance.is_locktime_conflict());
+    REQUIRE( ! instance.is_locktime_conflict());
 }
 
 TEST_CASE("chain transaction  is locktime conflict  no inputs  returns true", "[chain transaction]") {
@@ -409,22 +409,22 @@ TEST_CASE("chain transaction  from data  insufficient version bytes  failure", "
 
     chain::transaction instance;
 
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("chain transaction  from data  insufficient input bytes  failure", "[chain transaction]") {
     data_chunk data = to_chunk(base16_literal("0000000103"));
     chain::transaction instance;
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("chain transaction  from data  insufficient output bytes  failure", "[chain transaction]") {
     data_chunk data = to_chunk(base16_literal("000000010003"));
     chain::transaction instance;
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 // TODO(legacy): update test for v4 store serialization (input with witness).
@@ -438,13 +438,13 @@ TEST_CASE("chain transaction  from data  insufficient output bytes  failure", "[
 ////    REQUIRE(entity_from_data(wire_tx, wire_stream, wire));
 ////    REQUIRE(data_wire == wire_tx.to_data(wire));
 ////
-////    auto const get_store_text = encode_base16(wire_tx.to_data(!wire));
+////    auto const get_store_text = encode_base16(wire_tx.to_data( ! wire));
 ////
 ////    auto const data_store = to_chunk(base16_literal(TX3_STORE_SERIALIZED_V3));
 ////    data_source store_stream(data_store);
 ////    chain::transaction store_tx;
 ////    REQUIRE(entity_from_data(store_tx, store_stream, !wire));
-////    REQUIRE(data_store == store_tx.to_data(!wire));
+////    REQUIRE(data_store == store_tx.to_data( ! wire));
 ////    REQUIRE(wire_tx == store_tx);
 ////}
 
@@ -617,8 +617,8 @@ TEST_CASE("chain transaction  is oversized coinbase  non coinbase tx  returns fa
     static auto const data = to_chunk(base16_literal(TX5));
     chain::transaction instance;
     REQUIRE(entity_from_data(instance, data));
-    REQUIRE(!instance.is_coinbase());
-    REQUIRE(!instance.is_oversized_coinbase());
+    REQUIRE( ! instance.is_coinbase());
+    REQUIRE( ! instance.is_oversized_coinbase());
 }
 
 TEST_CASE("chain transaction  is oversized coinbase  script size below min  returns true", "[chain transaction]") {
@@ -653,20 +653,20 @@ TEST_CASE("chain transaction  is oversized coinbase  script size within bounds  
     REQUIRE(instance.is_coinbase());
     REQUIRE(inputs.back().script().serialized_size(false) >= min_coinbase_size);
     REQUIRE(inputs.back().script().serialized_size(false) <= max_coinbase_size);
-    REQUIRE(!instance.is_oversized_coinbase());
+    REQUIRE( ! instance.is_oversized_coinbase());
 }
 
 TEST_CASE("chain transaction  is null non coinbase  coinbase tx  returns false", "[chain transaction]") {
     static auto const data = to_chunk(base16_literal(TX6));
     chain::transaction instance;
     REQUIRE(entity_from_data(instance, data));
-    REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE( ! instance.is_null_non_coinbase());
 }
 
 TEST_CASE("chain transaction  is null non coinbase  no null input prevout  returns false", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_coinbase());
-    REQUIRE(!instance.is_null_non_coinbase());
+    REQUIRE( ! instance.is_coinbase());
+    REQUIRE( ! instance.is_null_non_coinbase());
 }
 
 TEST_CASE("chain transaction  is null non coinbase  null input prevout  returns true", "[chain transaction]") {
@@ -676,7 +676,7 @@ TEST_CASE("chain transaction  is null non coinbase  null input prevout  returns 
     inputs.emplace_back();
     inputs.back().previous_output().set_index(chain::point::null_index);
     inputs.back().previous_output().set_hash(null_hash);
-    REQUIRE(!instance.is_coinbase());
+    REQUIRE( ! instance.is_coinbase());
     REQUIRE(instance.inputs().back().previous_output().is_null());
     REQUIRE(instance.is_null_non_coinbase());
 }
@@ -731,7 +731,7 @@ TEST_CASE("chain transaction  fees  nonempty  returns outputs minus inputs", "[c
 
 TEST_CASE("chain transaction  is overspent  output does not exceed input  returns false", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_overspent());
+    REQUIRE( ! instance.is_overspent());
 }
 
 TEST_CASE("chain transaction  is overspent  output exceeds input  returns true", "[chain transaction]") {
@@ -754,7 +754,7 @@ TEST_CASE("chain transaction  signature operations single input output uninitial
 
 TEST_CASE("chain transaction  is missing previous outputs  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_missing_previous_outputs());
+    REQUIRE( ! instance.is_missing_previous_outputs());
 }
 
 TEST_CASE("chain transaction  is missing previous outputs  inputs without cache value  returns true", "[chain transaction]") {
@@ -767,7 +767,7 @@ TEST_CASE("chain transaction  is missing previous outputs  inputs with cache val
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().validation.cache.set_value(123u);
-    REQUIRE(!instance.is_missing_previous_outputs());
+    REQUIRE( ! instance.is_missing_previous_outputs());
 }
 
 ////TEST_CASE("chain transaction  missing previous outputs  empty inputs  returns empty", "[None]")
@@ -795,22 +795,22 @@ TEST_CASE("chain transaction  is missing previous outputs  inputs with cache val
 
 TEST_CASE("chain transaction  is double spend  empty inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_double_spend(false));
-    REQUIRE(!instance.is_double_spend(true));
+    REQUIRE( ! instance.is_double_spend(false));
+    REQUIRE( ! instance.is_double_spend(true));
 }
 
 TEST_CASE("chain transaction  is double spend  unspent inputs  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
-    REQUIRE(!instance.is_double_spend(false));
-    REQUIRE(!instance.is_double_spend(true));
+    REQUIRE( ! instance.is_double_spend(false));
+    REQUIRE( ! instance.is_double_spend(true));
 }
 
 TEST_CASE("chain transaction  is double spend  include unconfirmed false with unconfirmed  returns false", "[chain transaction]") {
     chain::transaction instance;
     instance.inputs().emplace_back();
     instance.inputs().back().previous_output().validation.spent = true;
-    REQUIRE(!instance.is_double_spend(false));
+    REQUIRE( ! instance.is_double_spend(false));
 }
 
 TEST_CASE("chain transaction  is double spend  include unconfirmed false with confirmed  returns true", "[chain transaction]") {
@@ -830,7 +830,7 @@ TEST_CASE("chain transaction  is double spend  include unconfirmed true with unc
 
 TEST_CASE("chain transaction  is dusty  no outputs zero  returns false", "[chain transaction]") {
     chain::transaction instance;
-    REQUIRE(!instance.is_dusty(0));
+    REQUIRE( ! instance.is_dusty(0));
 }
 
 TEST_CASE("chain transaction  is dusty  two outputs limit above both  returns true", "[chain transaction]") {
@@ -844,7 +844,7 @@ TEST_CASE("chain transaction  is dusty  two outputs limit below both  returns fa
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
     REQUIRE(entity_from_data(instance, raw_tx));
-    REQUIRE(!instance.is_dusty(257999999));
+    REQUIRE( ! instance.is_dusty(257999999));
 }
 
 TEST_CASE("chain transaction  is dusty  two outputs limit at upper  returns true", "[chain transaction]") {
@@ -858,7 +858,7 @@ TEST_CASE("chain transaction  is dusty  two outputs limit at lower  returns fals
     static auto const raw_tx = to_chunk(base16_literal(TX1));
     chain::transaction instance;
     REQUIRE(entity_from_data(instance, raw_tx));
-    REQUIRE(!instance.is_dusty(258000000));
+    REQUIRE( ! instance.is_dusty(258000000));
 }
 
 TEST_CASE("chain transaction  is dusty  two outputs limit between both  returns true", "[chain transaction]") {
@@ -879,7 +879,7 @@ TEST_CASE("chain transaction  is mature  mature coinbase prevout  returns true",
     chain::transaction instance;
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.coinbase = true;
-    REQUIRE(!instance.inputs().back().previous_output().is_null());
+    REQUIRE( ! instance.inputs().back().previous_output().is_null());
     REQUIRE(instance.is_mature(453));
 }
 
@@ -888,8 +888,8 @@ TEST_CASE("chain transaction  is mature  premature coinbase prevout  returns fal
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.height = 20;
     instance.inputs().back().previous_output().validation.coinbase = true;
-    REQUIRE(!instance.inputs().back().previous_output().is_null());
-    REQUIRE(!instance.is_mature(50));
+    REQUIRE( ! instance.inputs().back().previous_output().is_null());
+    REQUIRE( ! instance.is_mature(50));
 }
 
 TEST_CASE("chain transaction  is mature  premature coinbase prevout null input  returns true", "[chain transaction]") {
@@ -905,7 +905,7 @@ TEST_CASE("chain transaction  is mature  mature non coinbase prevout  returns tr
     chain::transaction instance;
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.coinbase = false;
-    REQUIRE(!instance.inputs().back().previous_output().is_null());
+    REQUIRE( ! instance.inputs().back().previous_output().is_null());
     REQUIRE(instance.is_mature(453));
 }
 
@@ -914,7 +914,7 @@ TEST_CASE("chain transaction  is mature  premature non coinbase prevout  returns
     instance.inputs().emplace_back(chain::output_point{hash1, 42}, chain::script{}, 0);
     instance.inputs().back().previous_output().validation.height = 20;
     instance.inputs().back().previous_output().validation.coinbase = false;
-    REQUIRE(!instance.inputs().back().previous_output().is_null());
+    REQUIRE( ! instance.inputs().back().previous_output().is_null());
     REQUIRE(instance.is_mature(50));
 }
 
@@ -950,7 +950,7 @@ TEST_CASE("chain transaction  operator boolean equals  differs  returns false", 
     chain::transaction alpha;
     chain::transaction beta;
     REQUIRE(entity_from_data(alpha, raw_tx));
-    REQUIRE(!(alpha == beta));
+    REQUIRE( ! (alpha == beta));
 }
 
 TEST_CASE("chain transaction  operator boolean not equals  duplicates  returns false", "[chain transaction]") {
@@ -959,7 +959,7 @@ TEST_CASE("chain transaction  operator boolean not equals  duplicates  returns f
     chain::transaction beta;
     REQUIRE(entity_from_data(alpha, raw_tx));
     REQUIRE(entity_from_data(beta, raw_tx));
-    REQUIRE(!(alpha != beta));
+    REQUIRE( ! (alpha != beta));
 }
 
 TEST_CASE("chain transaction  operator boolean not equals  differs  returns true", "[chain transaction]") {

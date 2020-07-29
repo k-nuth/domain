@@ -21,7 +21,7 @@ TEST_CASE("point iterator  operator bool  not at end  returns true", "[point ite
 TEST_CASE("point iterator  operator bool at end  returns false", "[point iterator]") {
     point value;
     point_iterator instance(value, static_cast<unsigned>(value.serialized_size(false)));
-    REQUIRE(!instance);
+    REQUIRE( ! instance);
 }
 
 TEST_CASE("point iterator  operator asterisk  initialized point  matches source", "[point iterator]") {
@@ -34,7 +34,7 @@ TEST_CASE("point iterator  operator asterisk  initialized point  matches source"
        REQUIRE(valid_raw_point_iterator_source[i] == (*instance));
     }
 
-    REQUIRE(!instance);
+    REQUIRE( ! instance);
     REQUIRE(0u == (*instance));
 }
 
@@ -49,7 +49,7 @@ TEST_CASE("point iterator  operator arrow  initialized point  matches source", "
        REQUIRE(valid_raw_point_iterator_source[i] == instance.operator->());
     }
 
-    REQUIRE(!instance);
+    REQUIRE( ! instance);
     REQUIRE(0u == instance.operator->());
 }
 

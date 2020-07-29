@@ -14,7 +14,7 @@ auto const valid_raw_output_point = to_chunk(base16_literal("000000000019d6689c0
 
 TEST_CASE("output point  constructor 1  always  returns default initialized", "[output point]") {
     const chain::point instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("output point  constructor 2  valid input  returns input initialized", "[output point]") {
@@ -74,8 +74,8 @@ TEST_CASE("output point  begin end  initialized  begin not equal end", "[output 
 TEST_CASE("output point  from data  insufficient bytes  failure", "[output point]") {
     static data_chunk const data(10);
     chain::output_point instance;
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("output point  from data  roundtrip  success", "[output point]") {
@@ -159,7 +159,7 @@ TEST_CASE("output point  is mature  mature coinbase prevout  returns true", "[ou
     chain::output_point instance(hash1, 42);
     instance.validation.height = 50u;
     instance.validation.coinbase = true;
-    REQUIRE(!instance.is_null());
+    REQUIRE( ! instance.is_null());
     REQUIRE(instance.is_mature(target_height));
 }
 
@@ -168,8 +168,8 @@ TEST_CASE("output point  is mature  immature coinbase prevout  returns false", "
     chain::output_point instance(hash1, 42);
     instance.validation.height = 100u;
     instance.validation.coinbase = true;
-    REQUIRE(!instance.is_null());
-    REQUIRE(!instance.is_mature(target_height));
+    REQUIRE( ! instance.is_null());
+    REQUIRE( ! instance.is_mature(target_height));
 }
 
 TEST_CASE("output point  is mature  immature coinbase prevout null input  returns true", "[output point]") {
@@ -186,7 +186,7 @@ TEST_CASE("output point  is mature  mature non coinbase prevout  returns true", 
     chain::output_point instance(hash1, 42);
     instance.validation.height = 50u;
     instance.validation.coinbase = false;
-    REQUIRE(!instance.is_null());
+    REQUIRE( ! instance.is_null());
     REQUIRE(instance.is_mature(target_height));
 }
 
@@ -195,7 +195,7 @@ TEST_CASE("output point  is mature  immature non coinbase prevout  returns true"
     chain::output_point instance(hash1, 42);
     instance.validation.height = 100u;
     instance.validation.coinbase = false;
-    REQUIRE(!instance.is_null());
+    REQUIRE( ! instance.is_null());
     REQUIRE(instance.is_mature(target_height));
 }
 

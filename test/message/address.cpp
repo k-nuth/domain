@@ -25,7 +25,7 @@ bool equal(address const& x, address const& y) {
 
 TEST_CASE("address  constructor 1  always invalid", "[address]") {
     address instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("address  constructor 2  always  equals params", "[address]") {
@@ -133,7 +133,7 @@ TEST_CASE("address  from data  insufficient bytes  failure", "[address]") {
     data_chunk const raw{0xab};
     address instance;
 
-    REQUIRE(!entity_from_data(instance, version::level::minimum, raw));
+    REQUIRE( ! entity_from_data(instance, version::level::minimum, raw));
 }
 
 TEST_CASE("address  factory from data 1  roundtrip  success", "[address]") {
@@ -262,7 +262,7 @@ TEST_CASE("address  operator assign equals  always  matches equivalent", "[addre
     REQUIRE(value.is_valid());
 
     address instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
     REQUIRE(instance.is_valid());

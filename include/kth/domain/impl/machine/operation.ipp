@@ -21,7 +21,7 @@ inline
 operation::operation(data_chunk&& uncoded, bool minimal)
     : code_(opcode_from_data(uncoded, minimal))
     , data_(std::move(uncoded))
-    , valid_(!is_oversized())
+    , valid_( ! is_oversized())
 {
     if ( ! valid_) {
         reset();
@@ -38,7 +38,7 @@ inline
 operation::operation(data_chunk const& uncoded, bool minimal)
     : code_(opcode_from_data(uncoded, minimal))
     , data_(uncoded)
-    , valid_(!is_oversized())
+    , valid_( ! is_oversized())
 {
     if ( ! valid_) {
         reset();

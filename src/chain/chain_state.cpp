@@ -40,7 +40,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , magnetic_anomaly_t magnetic_anomaly_activation_time
     // , great_wall_t great_wall_activation_time
     // , graviton_t graviton_activation_time
-    , phonon_t phonon_activation_time
+    // , phonon_t phonon_activation_time
     , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
@@ -52,7 +52,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , magnetic_anomaly_activation_time
         // , great_wall_activation_time
         // , graviton_activation_time
-        , phonon_activation_time
+        // , phonon_activation_time
         , axion_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
@@ -62,7 +62,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
     // , great_wall_activation_time_(great_wall_activation_time)
     // , graviton_activation_time_(graviton_activation_time)
-    , phonon_activation_time_(phonon_activation_time)
+    // , phonon_activation_time_(phonon_activation_time)
     , axion_activation_time_(axion_activation_time)
 #endif  //KTH_CURRENCY_BCH
 {}
@@ -77,7 +77,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 chain_state chain_state::from_top(chain_state const& top) {
     return chain_state(to_pool(top), top.forks_, top.checkpoints_
 #ifdef KTH_CURRENCY_BCH
-        , top.phonon_activation_time_
+        // , top.phonon_activation_time_
         , top.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
@@ -87,7 +87,7 @@ chain_state chain_state::from_top(chain_state const& top) {
 std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
     return std::make_shared<chain_state>(to_pool(top), top.forks_, top.checkpoints_
 #ifdef KTH_CURRENCY_BCH
-        , top.phonon_activation_time_
+        // , top.phonon_activation_time_
         , top.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
@@ -100,7 +100,7 @@ std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
 chain_state chain_state::from_pool(chain_state const& pool, block const& block) {
     return chain_state(to_block(pool, block), pool.forks_, pool.checkpoints_
 #ifdef KTH_CURRENCY_BCH
-        , pool.phonon_activation_time_
+        // , pool.phonon_activation_time_
         , pool.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
@@ -110,7 +110,7 @@ chain_state chain_state::from_pool(chain_state const& pool, block const& block) 
 std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool, block const& block) {
     return std::make_shared<chain_state>(to_block(pool, block), pool.forks_, pool.checkpoints_
 #ifdef KTH_CURRENCY_BCH
-        , pool.phonon_activation_time_
+        // , pool.phonon_activation_time_
         , pool.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
@@ -123,7 +123,7 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
 chain_state chain_state::from_parent(chain_state const& parent, header const& header) {
     return chain_state(to_header(parent, header), parent.forks_, parent.checkpoints_
 #ifdef KTH_CURRENCY_BCH
-        , parent.phonon_activation_time_
+        // , parent.phonon_activation_time_
         , parent.axion_activation_time_
 #endif
     );
@@ -133,7 +133,7 @@ chain_state chain_state::from_parent(chain_state const& parent, header const& he
 std::shared_ptr<chain_state> chain_state::from_parent_ptr(chain_state const& parent, header const& header) {
     return std::make_shared<chain_state>(to_header(parent, header), parent.forks_, parent.checkpoints_
 #ifdef KTH_CURRENCY_BCH
-        , parent.phonon_activation_time_
+        // , parent.phonon_activation_time_
         , parent.axion_activation_time_
 #endif
     );
@@ -305,17 +305,16 @@ bool chain_state::is_graviton_enabled() const {
 
 //static
 bool chain_state::is_phonon_enabled() const {
-    //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(phonon_activation_time()));
-    // return is_phonon_enabled(height(), enabled_forks());
+    // return is_mtp_activated(median_time_past(), to_underlying(phonon_activation_time()));
+    return is_phonon_enabled(height(), enabled_forks());
 }
 
-// 2020-Nov
-// //static
-// bool chain_state::is_axion_enabled() const {
-//    //TODO(fernando): this was activated, change to the other method
-//     return is_mtp_activated(median_time_past(), axion_activation_time());
-// }
+//static
+bool chain_state::is_axion_enabled() const {
+   //TODO(fernando): this was activated, change to the other method
+    return is_mtp_activated(median_time_past(), to_underlying(axion_activation_time()));
+    // return is_axion_enabled(height(), enabled_forks());
+}
 
 // 2021-May
 // //static
@@ -335,7 +334,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , magnetic_anomaly_t magnetic_anomaly_activation_time
         // , great_wall_t great_wall_activation_time
         // , graviton_t graviton_activation_time
-        , phonon_t phonon_activation_time
+        // , phonon_t phonon_activation_time
         , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
@@ -522,21 +521,28 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_graviton & forks);
     }
 
-    auto mtp = median_time_past(values, 0);
-
-    if (is_mtp_activated(mtp, to_underlying(phonon_activation_time))) {
-        //Note(Fernando): Move this to the next fork rules
+    if (is_phonon_enabled(values.height, forks)) {
     //     flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
     //     flags |= SCRIPT_REPORT_SIGCHECKS;
     //     flags |= SCRIPT_ZERO_SIGOPS;
         result.forks |= (rule_fork::bch_phonon & forks);
     }
 
+    auto mtp = median_time_past(values, 0);
+
+    // if (is_mtp_activated(mtp, to_underlying(phonon_activation_time))) {
+    //     //Note(Fernando): Move this to the next fork rules
+    // //     flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
+    // //     flags |= SCRIPT_REPORT_SIGCHECKS;
+    // //     flags |= SCRIPT_ZERO_SIGOPS;
+    //     result.forks |= (rule_fork::bch_phonon & forks);
+    // }
 
     if (is_mtp_activated(mtp, to_underlying(axion_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
     //     flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
-        result.forks |= (rule_fork::bch_replay_protection & forks);
+        result.forks |= (rule_fork::bch_axion & forks);
+        // result.forks |= (rule_fork::bch_replay_protection & forks);
     }
 
 #endif  //KTH_CURRENCY_BCH
@@ -742,13 +748,12 @@ bool chain_state::is_graviton_enabled(size_t height, uint32_t forks) {
 }
 
 //2020-May hard fork
-// Complete after the hard fork
-// inline 
-// bool chain_state::is_phonon_enabled(size_t height, uint32_t forks) {
-//     return is_rule_enabled(height, forks, 
-//         mainnet_phonon_active_checkpoint.height(), 
-//         testnet_phonon_active_checkpoint.height());
-// }
+inline 
+bool chain_state::is_phonon_enabled(size_t height, uint32_t forks) {
+    return is_rule_enabled(height, forks, 
+        mainnet_phonon_active_checkpoint.height(), 
+        testnet_phonon_active_checkpoint.height());
+}
 
 
 //2020-Nov hard fork
@@ -993,7 +998,7 @@ uint32_t chain_state::work_required_retarget(data const& values) {
 
 #else   //KTH_CURRENCY_LTC
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
-    KTH_ASSERT_MSG(!bits.is_overflowed(), "previous block has bad bits");
+    KTH_ASSERT_MSG( ! bits.is_overflowed(), "previous block has bad bits");
 
     uint256_t target(bits);
     target *= retarget_timespan(values);
@@ -1339,9 +1344,9 @@ uint32_t chain_state::work_required() const {
 //     return graviton_activation_time_;
 // }
 
-phonon_t chain_state::phonon_activation_time() const {
-    return phonon_activation_time_;
-}
+// phonon_t chain_state::phonon_activation_time() const {
+//     return phonon_activation_time_;
+// }
 
 axion_t chain_state::axion_activation_time() const {
     return axion_activation_time_;

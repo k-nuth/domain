@@ -58,16 +58,16 @@ TEST_CASE("message  magic to recovery id  uncompressed  expected", "[message  re
     bool out_compressed = true;
     uint8_t out_recovery_id = 0xff;
     REQUIRE(magic_to_recovery_id(out_recovery_id, out_compressed, 0x1b));
-    REQUIRE(!out_compressed);
+    REQUIRE( ! out_compressed);
     REQUIRE(out_recovery_id == 0u);
     REQUIRE(magic_to_recovery_id(out_recovery_id, out_compressed, 0x1c));
-    REQUIRE(!out_compressed);
+    REQUIRE( ! out_compressed);
     REQUIRE(out_recovery_id == 1u);
     REQUIRE(magic_to_recovery_id(out_recovery_id, out_compressed, 0x1d));
-    REQUIRE(!out_compressed);
+    REQUIRE( ! out_compressed);
     REQUIRE(out_recovery_id == 2u);
     REQUIRE(magic_to_recovery_id(out_recovery_id, out_compressed, 0x1e));
-    REQUIRE(!out_compressed);
+    REQUIRE( ! out_compressed);
     REQUIRE(out_recovery_id == 3u);
 }
 
@@ -90,21 +90,21 @@ TEST_CASE("message  magic to recovery id  compressed  expected", "[message  reco
 
 TEST_CASE("message  recovery id to magic  uncompressed invalid  false", "[message  recovery magic]") {
     uint8_t out_magic;
-    REQUIRE(!recovery_id_to_magic(out_magic, 4, false));
-    REQUIRE(!recovery_id_to_magic(out_magic, max_uint8, false));
+    REQUIRE( ! recovery_id_to_magic(out_magic, 4, false));
+    REQUIRE( ! recovery_id_to_magic(out_magic, max_uint8, false));
 }
 
 TEST_CASE("message  recovery id to magic  compressed invalid  false", "[message  recovery magic]") {
     uint8_t out_magic;
-    REQUIRE(!recovery_id_to_magic(out_magic, 4, true));
-    REQUIRE(!recovery_id_to_magic(out_magic, max_uint8, true));
+    REQUIRE( ! recovery_id_to_magic(out_magic, 4, true));
+    REQUIRE( ! recovery_id_to_magic(out_magic, max_uint8, true));
 }
 
 TEST_CASE("message  magic to recovery id  invalid  false", "[message  recovery magic]") {
     bool out_compressed;
     uint8_t out_recovery_id;
-    REQUIRE(!magic_to_recovery_id(out_recovery_id, out_compressed, 0));
-    REQUIRE(!magic_to_recovery_id(out_recovery_id, out_compressed, max_uint8));
+    REQUIRE( ! magic_to_recovery_id(out_recovery_id, out_compressed, 0));
+    REQUIRE( ! magic_to_recovery_id(out_recovery_id, out_compressed, max_uint8));
 }
 
 // End Boost Suite
@@ -209,7 +209,7 @@ TEST_CASE("message  verify message  electrum incorrect address  false", "[messag
     // Address of the uncompressed public key of the message signer (incorrect).
     const payment_address address("1Em1SX7qQq1pTmByqLRafhL1ypx2V786tP");
     auto const message = to_chunk(std::string("Nakomoto"));
-    REQUIRE(!verify_message(message, address, signature));
+    REQUIRE( ! verify_message(message, address, signature));
 }
 
 // End Boost Suite

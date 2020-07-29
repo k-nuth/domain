@@ -53,9 +53,9 @@ enum rule_fork : uint32_t {
     bch_great_wall = 1U << 15,          //2019-May Hardfork - great_wall - (1557921600)
     bch_graviton = 1U << 16,            //2019-Nov Hardfork - graviton - (1573819200)
     bch_phonon = 1U << 17,              //2020-May Hardfork - phonon - (1589544000)
-    // bch_axion = 1U << 18,            //2020-Nov Hardfork - axion - (1605441600)
+    bch_axion = 1U << 18,               //2020-Nov Hardfork - axion - (1605441600)
     // bch_unnamed = 1U << 19,          //2021-May Hardfork - unnamed - (9999999999)
-    bch_replay_protection = 1U << 18,
+    // bch_replay_protection = 1U << 18,
 #else 
     // Just for segwit coins
     /// Segregated witness consensus layer (soft fork, feature).

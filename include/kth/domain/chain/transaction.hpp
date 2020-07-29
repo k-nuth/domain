@@ -174,7 +174,7 @@ public:
         transaction_basis::from_data(source, wire, witness);
 
 #ifdef KTH_CACHED_RPC_DATA
-        if (! wire && unconfirmed) {
+        if ( !  wire && unconfirmed) {
             auto const sigops = source.read_4_bytes_little_endian();
             cached_sigops_ = static_cast<uint32_t>(sigops);
             auto const fees = source.read_8_bytes_little_endian();

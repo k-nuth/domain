@@ -13,7 +13,7 @@ using namespace kd;
 
 TEST_CASE("chain header constructor 1 always initialized invalid", "[chain header]") {
     chain::header instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("chain header  constructor 2  always  equals params", "[chain header]") {
@@ -88,8 +88,8 @@ TEST_CASE("chain header  from data  insufficient bytes  failure", "[chain header
 
     chain::header header;
 
-    REQUIRE(!entity_from_data(header, data));
-    REQUIRE(!header.is_valid());
+    REQUIRE( ! entity_from_data(header, data));
+    REQUIRE( ! header.is_valid());
 }
 
 TEST_CASE("chain header  factory from data 1  valid input  success", "[chain header]") {
@@ -336,7 +336,7 @@ TEST_CASE("chain header  is valid timestamp  timestamp greater than 2 hours from
     auto const duration = std::chrono::hours(3);
     auto const future = std::chrono::system_clock::to_time_t(now + duration);
     instance.set_timestamp(static_cast<uint32_t>(future));
-    REQUIRE(!instance.is_valid_timestamp());
+    REQUIRE( ! instance.is_valid_timestamp());
 }
 
 TEST_CASE("chain header  proof1  genesis mainnet  expected", "[chain header]") {
@@ -346,13 +346,13 @@ TEST_CASE("chain header  proof1  genesis mainnet  expected", "[chain header]") {
 TEST_CASE("chain header  is valid proof of work  bits exceeds maximum  returns false", "[chain header]") {
     chain::header instance;
     instance.set_bits(retarget_proof_of_work_limit + 1);
-    REQUIRE(!instance.is_valid_proof_of_work());
+    REQUIRE( ! instance.is_valid_proof_of_work());
 }
 
 TEST_CASE("chain header  is valid proof of work  retarget bits exceeds maximum  returns false", "[chain header]") {
     chain::header instance;
     instance.set_bits(no_retarget_proof_of_work_limit + 1);
-    REQUIRE(!instance.is_valid_proof_of_work(false));
+    REQUIRE( ! instance.is_valid_proof_of_work(false));
 }
 
 TEST_CASE("chain header  is valid proof of work  hash greater bits  returns false", "[chain header]") {
@@ -364,7 +364,7 @@ TEST_CASE("chain header  is valid proof of work  hash greater bits  returns fals
         0u,
         34564u);
 
-    REQUIRE(!instance.is_valid_proof_of_work());
+    REQUIRE( ! instance.is_valid_proof_of_work());
 }
 
 TEST_CASE("chain header  is valid proof of work  hash less than bits  returns true", "[chain header]") {
@@ -392,7 +392,7 @@ TEST_CASE("chain header  operator assign equals  always  matches equivalent", "[
     REQUIRE(value.is_valid());
 
     chain::header instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
     REQUIRE(instance.is_valid());

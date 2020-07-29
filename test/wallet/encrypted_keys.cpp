@@ -43,7 +43,7 @@ TEST_CASE("encrypted  create token lot  lot overlow  false", "[encrypted  create
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     encrypted_token out_token;
-    REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
+    REQUIRE( ! create_token(out_token, passphrase, salt, lot, sequence));
 }
 
 TEST_CASE("encrypted  create token lot  sequence overlow  false", "[encrypted  create token lot]") {
@@ -52,7 +52,7 @@ TEST_CASE("encrypted  create token lot  sequence overlow  false", "[encrypted  c
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     encrypted_token out_token;
-    REQUIRE(!create_token(out_token, passphrase, salt, lot, sequence));
+    REQUIRE( ! create_token(out_token, passphrase, salt, lot, sequence));
 }
 
 TEST_CASE("encrypted  create token lot  defaults  expected", "[encrypted  create token lot]") {
@@ -203,7 +203,7 @@ TEST_CASE("encrypted  decrypt private  vector 0  expected", "[encrypted  decrypt
     KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
     REQUIRE(encode_base16(out_secret) == "cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
@@ -213,7 +213,7 @@ TEST_CASE("encrypted  decrypt private  vector 1  expected", "[encrypted  decrypt
     KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
     REQUIRE(encode_base16(out_secret) == "09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#compression-no-ec-multiply
@@ -243,7 +243,7 @@ TEST_CASE("encrypted  decrypt private  vector 4 multiplied  expected", "[encrypt
     KD_REQUIRE_DECRYPT_SECRET(key, "TestingOneTwoThree");
     REQUIRE(encode_base16(out_secret) == "a43a940577f4e97f5c4d39eb14ff083a98187c64ea7c99ef7ce460833959a519");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#no-compression-no-ec-multiply
@@ -253,7 +253,7 @@ TEST_CASE("encrypted  decrypt private  vector 5 multiplied  expected", "[encrypt
     KD_REQUIRE_DECRYPT_SECRET(key, "Satoshi");
     REQUIRE(encode_base16(out_secret) == "c2c8036df268f498099350718c4a3ef3984d2be84618c2650f5171dcc5eb660a");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
@@ -263,7 +263,7 @@ TEST_CASE("encrypted  decrypt private  vector 6 multiplied lot  expected", "[enc
     KD_REQUIRE_DECRYPT_SECRET(key, "MOLON LABE");
     REQUIRE(encode_base16(out_secret) == "44ea95afbf138356a05ea32110dfd627232d0f2991ad221187be356f19fa8190");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
@@ -273,7 +273,7 @@ TEST_CASE("encrypted  decrypt private  vector 7 multiplied lot  expected", "[enc
     KD_REQUIRE_DECRYPT_SECRET(key, "ΜΟΛΩΝ ΛΑΒΕ");
     REQUIRE(encode_base16(out_secret) == "ca2759aa4adb0f96c414f36abeb8db59342985be9fa50faac228c8e7d90e3006");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
@@ -283,7 +283,7 @@ TEST_CASE("encrypted  decrypt private  vector 8 multiplied  expected", "[encrypt
     KD_REQUIRE_DECRYPT_SECRET(key, "kth test");
     REQUIRE(encode_base16(out_secret) == "fb4bfb0bfe151d524b0b11983b9f826d6a0bc7f7bdc480864a1b557ff0c59eb4");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
@@ -294,7 +294,7 @@ TEST_CASE("encrypted  decrypt private  vector 9 multiplied  expected", "[encrypt
     KD_REQUIRE_DECRYPT_SECRET(key, "Libbitcoin BIP38 Test Vector");
     REQUIRE(encode_base16(out_secret) == "97c745cc980e5a070e12d0bff3f539b70748aadb406045fc1b42d4ded559a564");
     REQUIRE(out_version == expected_version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
 }
 
 // End Boost Suite
@@ -311,7 +311,7 @@ TEST_CASE("encrypted  decrypt private  vector 9 multiplied  expected", "[encrypt
     bool out_is_compressed = true;                                                      \
     REQUIRE(decrypt(out_point, out_version, out_is_compressed, key, passphrase));
     REQUIRE(out_version == version);
-    REQUIRE(!out_is_compressed);
+    REQUIRE( ! out_is_compressed);
     auto const derived_address = payment_address({out_point, out_is_compressed}, out_version).encoded()
 
 // github.com/bitcoin/bips/blob/master/bip-0038.mediawiki#ec-multiply-no-compression-lotsequence-numbers
@@ -374,7 +374,7 @@ TEST_CASE("encrypted  create key pair  bad checksum  false", "[encrypted  create
     auto const token = base58_literal("passphraseo59BauW85etaRsKpbbTrEa5RRYw6bq5K9yrDf4r4N5fcirPdtDKmfJw9oYNoGN");
     ec_compressed out_point;
     encrypted_private out_private;
-    REQUIRE(!create_key_pair(out_private, out_point, token, seed, version, compression));
+    REQUIRE( ! create_key_pair(out_private, out_point, token, seed, version, compression));
 }
 
 // generated and verified using bit2factor.com, no lot/sequence
@@ -447,7 +447,7 @@ TEST_CASE("encrypted  create key pair with confirmation  bad checksum  false", "
     ec_compressed out_point;
     encrypted_public out_public;
     encrypted_private out_private;
-    REQUIRE(!create_key_pair(out_private, out_public, out_point, token, seed, 0, false));
+    REQUIRE( ! create_key_pair(out_private, out_public, out_point, token, seed, 0, false));
 }
 
 // generated and verified using bit2factor.com, no lot/sequence

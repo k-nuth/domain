@@ -13,7 +13,7 @@ data_chunk valid_raw_output = to_chunk(base16_literal("20300500000000001976a9149
 
 TEST_CASE("output  constructor 1  always  returns default initialized", "[output]") {
     chain::output instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("output  constructor 2  valid input  returns input initialized", "[output]") {
@@ -67,8 +67,8 @@ TEST_CASE("output  from data  insufficient bytes  failure", "[output]") {
 
     chain::output instance;
 
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("output  factory from data 1  valid input success", "[output]") {

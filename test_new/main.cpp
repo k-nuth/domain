@@ -80,7 +80,7 @@ TEST_CASE("[test_read_null_terminated_string] 3") {
     kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 3);
-    REQUIRE(!bool(ret));
+    REQUIRE( ! bool(ret));
 }
 
 TEST_CASE("[test_read_null_terminated_string] 4") {
@@ -89,7 +89,7 @@ TEST_CASE("[test_read_null_terminated_string] 4") {
     kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 2);
-    REQUIRE(!bool(ret));
+    REQUIRE( ! bool(ret));
 }
 
 TEST_CASE("[test_read_null_terminated_string] 5") {
@@ -98,7 +98,7 @@ TEST_CASE("[test_read_null_terminated_string] 5") {
     kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 1);
-    REQUIRE(!bool(ret));
+    REQUIRE( ! bool(ret));
 }
 
 TEST_CASE("[test_read_null_terminated_string] 6") {
@@ -107,7 +107,7 @@ TEST_CASE("[test_read_null_terminated_string] 6") {
     kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 0);
-    REQUIRE(!bool(ret));
+    REQUIRE( ! bool(ret));
 }
 
 TEST_CASE("[test_read_null_terminated_string] 7") {
@@ -116,7 +116,7 @@ TEST_CASE("[test_read_null_terminated_string] 7") {
     kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 0);
-    REQUIRE(!bool(ret));
+    REQUIRE( ! bool(ret));
 }
 
 TEST_CASE("[test_read_null_terminated_string] 8") {
@@ -135,7 +135,7 @@ TEST_CASE("[test_read_null_terminated_string] 9") {
     kth::istream_reader source(ds);
 
     auto ret = read_null_terminated_string(source, 1);
-    REQUIRE(!bool(ret));
+    REQUIRE( ! bool(ret));
 }
 
 TEST_CASE("[test_get_keoken_output_empty]") {
@@ -165,7 +165,7 @@ TEST_CASE("[test_get_keoken_output_non_empty]") {
 
     REQUIRE(tx.is_valid());
     auto ret = first_keoken_output(tx);
-    REQUIRE(!ret.empty());
+    REQUIRE( ! ret.empty());
 }
 
 TEST_CASE("[test_get_keoken_output_create_asset_valid]") {
@@ -176,7 +176,7 @@ TEST_CASE("[test_get_keoken_output_create_asset_valid]") {
 
     REQUIRE(tx.is_valid());
     auto ret = first_keoken_output(tx);
-    REQUIRE(!ret.empty());
+    REQUIRE( ! ret.empty());
 
     data_source ds(ret);
     istream_reader source(ds);
@@ -203,7 +203,7 @@ TEST_CASE("[test_get_keoken_output_send_tokens_valid]") {
 
     REQUIRE(tx.is_valid());
     auto ret = first_keoken_output(tx);
-    REQUIRE(!ret.empty());
+    REQUIRE( ! ret.empty());
 
     data_source ds(ret);
     istream_reader source(ds);

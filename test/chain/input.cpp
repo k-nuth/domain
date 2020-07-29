@@ -19,7 +19,7 @@ data_chunk valid_raw_input = to_chunk(base16_literal(
 
 TEST_CASE("input  constructor 1  always  returns default initialized", "[input]") {
     input instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("input  constructor 2  valid input  returns input initialized", "[input]") {
@@ -75,8 +75,8 @@ TEST_CASE("input  from data  insufficient data  failure", "[input]") {
 
     input instance;
 
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("input  from data  valid data  success", "[input]") {
@@ -133,7 +133,7 @@ TEST_CASE("input  is final  max input sequence  true", "[input]") {
 
 TEST_CASE("input  is final  sequence zero  false", "[input]") {
     input const instance({}, {}, 0);
-    REQUIRE(!instance.is_final());
+    REQUIRE( ! instance.is_final());
 }
 
 TEST_CASE("input  is locked  enabled block type sequence age equals minimum  false", "[input]") {
@@ -142,7 +142,7 @@ TEST_CASE("input  is locked  enabled block type sequence age equals minimum  fal
     input instance({}, {}, sequence_enabled_block_type_minimum);
     auto& prevout = instance.previous_output().validation;
     prevout.height = 42;
-    REQUIRE(!instance.is_locked(prevout.height + age, 0));
+    REQUIRE( ! instance.is_locked(prevout.height + age, 0));
 }
 
 TEST_CASE("input  is locked  enabled block type sequence age above minimum  false", "[input]") {
@@ -151,7 +151,7 @@ TEST_CASE("input  is locked  enabled block type sequence age above minimum  fals
     input instance({}, {}, sequence_enabled_block_type_minimum);
     auto& prevout = instance.previous_output().validation;
     prevout.height = 42;
-    REQUIRE(!instance.is_locked(prevout.height + age, 0));
+    REQUIRE( ! instance.is_locked(prevout.height + age, 0));
 }
 
 TEST_CASE("input  is locked  enabled block type sequence age below minimum  true", "[input]") {
@@ -169,7 +169,7 @@ TEST_CASE("input  is locked  disabled block type sequence age below minimum  fal
     input instance({}, {}, sequence_disabled_block_type_minimum);
     auto& prevout = instance.previous_output().validation;
     prevout.height = 42;
-    REQUIRE(!instance.is_locked(prevout.height + age, 0));
+    REQUIRE( ! instance.is_locked(prevout.height + age, 0));
 }
 
 TEST_CASE("input  is locked  enabled time type sequence age equals minimum  false", "[input]") {
@@ -179,7 +179,7 @@ TEST_CASE("input  is locked  enabled time type sequence age equals minimum  fals
     input instance({}, {}, sequence_enabled_time_type_minimum);
     auto& prevout = instance.previous_output().validation;
     prevout.median_time_past = 42;
-    REQUIRE(!instance.is_locked(0, prevout.median_time_past + age_seconds));
+    REQUIRE( ! instance.is_locked(0, prevout.median_time_past + age_seconds));
 }
 
 TEST_CASE("input  is locked  enabled time type sequence age above minimum  false", "[input]") {
@@ -189,7 +189,7 @@ TEST_CASE("input  is locked  enabled time type sequence age above minimum  false
     input instance({}, {}, sequence_enabled_time_type_minimum);
     auto& prevout = instance.previous_output().validation;
     prevout.median_time_past = 42;
-    REQUIRE(!instance.is_locked(0, prevout.median_time_past + age_seconds));
+    REQUIRE( ! instance.is_locked(0, prevout.median_time_past + age_seconds));
 }
 
 TEST_CASE("input  is locked  enabled time type sequence age below minimum  true", "[input]") {
@@ -209,7 +209,7 @@ TEST_CASE("input  is locked  disabled time type sequence age below minimum  fals
     input instance({}, {}, sequence_disabled_time_type_minimum);
     auto& prevout = instance.previous_output().validation;
     prevout.median_time_past = 42;
-    REQUIRE(!instance.is_locked(0, prevout.median_time_past + age_seconds));
+    REQUIRE( ! instance.is_locked(0, prevout.median_time_past + age_seconds));
 }
 
 TEST_CASE("input  signature operations  bip16 inactive  returns script sigops", "[input]") {

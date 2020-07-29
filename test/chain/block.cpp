@@ -67,7 +67,7 @@ TEST_CASE("block locator heights positive backoff returns top plus log offset to
 
 TEST_CASE("block constructor 1 always invalid", "[chain block]") {
     chain::block instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("block constructor 2 always equals params", "[chain block]") {
@@ -168,7 +168,7 @@ TEST_CASE("block  is valid merkle root  uninitialized  returns true", "[chain bl
 TEST_CASE("block  is valid merkle root  non empty tx invalid block  returns false", "[chain block]") {
     chain::block instance;
     instance.set_transactions(chain::transaction::list{chain::transaction{}});
-    REQUIRE(!instance.is_valid_merkle_root());
+    REQUIRE( ! instance.is_valid_merkle_root());
 }
 
 TEST_CASE("block  is valid merkle root  valid  returns true", "[chain block]") {
@@ -206,8 +206,8 @@ TEST_CASE("block  is valid merkle root  valid  returns true", "[chain block]") {
 TEST_CASE("block  from data  insufficient bytes  failure", "[block serialization]") {
     data_chunk data(10);
     chain::block instance;
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("block  from data  insufficient transaction bytes  failure", "[block serialization]") {
@@ -219,8 +219,8 @@ TEST_CASE("block  from data  insufficient transaction bytes  failure", "[block s
         "0114ffffffff0100f2052a0100000043410437b36a7221bc977dce712728a954"));
 
     chain::block instance;
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("block  genesis  mainnet  valid structure", "[block serialization]") {
@@ -463,7 +463,7 @@ TEST_CASE("block  operator assign equals  always  matches equivalent", "[block g
 
     REQUIRE(value.is_valid());
     chain::block instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     instance = std::move(value);
     REQUIRE(instance.is_valid());
     REQUIRE(header == instance.header());
@@ -499,7 +499,7 @@ TEST_CASE("block  operator boolean equals  differs  returns false", "[block gene
          chain::transaction(4, 16, {}, {})});
 
     chain::block instance;
-    REQUIRE(!(instance == expected));
+    REQUIRE( ! (instance == expected));
 }
 
 TEST_CASE("block  operator boolean not equals  duplicates  returns false", "[block generate merkle root]") {
@@ -515,7 +515,7 @@ TEST_CASE("block  operator boolean not equals  duplicates  returns false", "[blo
          chain::transaction(4, 16, {}, {})});
 
     chain::block instance(expected);
-    REQUIRE(!(instance != expected));
+    REQUIRE( ! (instance != expected));
 }
 
 TEST_CASE("block  operator boolean not equals  differs  returns true", "[block generate merkle root]") {
@@ -552,7 +552,7 @@ TEST_CASE("validate block  is distinct tx set  single  true", "[block is distinc
 TEST_CASE("validate block  is distinct tx set  duplicate  false", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {1, 0, {}, {}}});
-    REQUIRE(!value.is_distinct_transaction_set());
+    REQUIRE( ! value.is_distinct_transaction_set());
 }
 
 TEST_CASE("validate block  is distinct tx set  distinct by version  true", "[block is distinct transaction set]") {
@@ -564,13 +564,13 @@ TEST_CASE("validate block  is distinct tx set  distinct by version  true", "[blo
 TEST_CASE("validate block  is distinct tx set  partialy distinct by version  false", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {2, 0, {}, {}}, {2, 0, {}, {}}});
-    REQUIRE(!value.is_distinct_transaction_set());
+    REQUIRE( ! value.is_distinct_transaction_set());
 }
 
 TEST_CASE("validate block  is distinct tx set  partialy distinct not adjacent by version  false", "[block is distinct transaction set]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {2, 0, {}, {}}, {1, 0, {}, {}}});
-    REQUIRE(!value.is_distinct_transaction_set());
+    REQUIRE( ! value.is_distinct_transaction_set());
 }
 
 #ifdef KTH_CURRENCY_BCH
@@ -588,13 +588,13 @@ TEST_CASE("validate block is cash pow valid true", "[block is distinct transacti
 
 TEST_CASE("block  is forward reference  no transactions  false", "[block is forward reference]") {
     chain::block value;
-    REQUIRE(!value.is_forward_reference());
+    REQUIRE( ! value.is_forward_reference());
 }
 
 TEST_CASE("block  is forward reference  multiple empty transactions  false", "[block is forward reference]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {2, 0, {}, {}}});
-    REQUIRE(!value.is_forward_reference());
+    REQUIRE( ! value.is_forward_reference());
 }
 
 TEST_CASE("block  is forward reference  backward reference  false", "[block is forward reference]") {
@@ -602,20 +602,20 @@ TEST_CASE("block  is forward reference  backward reference  false", "[block is f
     chain::transaction before{2, 0, {}, {}};
     chain::transaction after{1, 0, {{{before.hash(), 0}, {}, 0}}, {}};
     value.set_transactions({before, after});
-    REQUIRE(!value.is_forward_reference());
+    REQUIRE( ! value.is_forward_reference());
 }
 
 TEST_CASE("block  is forward reference  duplicate transactions  false", "[block is forward reference]") {
     chain::block value;
     value.set_transactions({{1, 0, {}, {}}, {1, 0, {}, {}}});
-    REQUIRE(!value.is_forward_reference());
+    REQUIRE( ! value.is_forward_reference());
 }
 
 TEST_CASE("block  is forward reference  coinbase and multiple empty transactions  false", "[block is forward reference]") {
     chain::block value;
     chain::transaction coinbase{1, 0, {{{null_hash, chain::point::null_index}, {}, 0}}, {}};
     value.set_transactions({coinbase, {2, 0, {}, {}}, {3, 0, {}, {}}});
-    REQUIRE(!value.is_forward_reference());
+    REQUIRE( ! value.is_forward_reference());
 }
 
 TEST_CASE("block  is forward reference  forward reference  true", "[block is forward reference]") {

@@ -147,7 +147,14 @@ constexpr size_t one_million_bytes_block = 1000000;
 constexpr size_t coinbase_reserved_size = 20000;
 constexpr size_t sigops_per_million_bytes = 20000;
 
-constexpr inline size_t get_allowed_sigops(size_t block_size) {
+#ifdef KTH_CURRENCY_BCH
+constexpr size_t max_tx_sigchecks = 3000;
+constexpr size_t block_maxbytes_maxsigchecks_ratio = 141;
+constexpr size_t max_block_sigchecks = get_max_block_size() / block_maxbytes_maxsigchecks_ratio;
+#endif
+
+constexpr inline 
+size_t get_allowed_sigops(size_t block_size) {
     return (1 + ((block_size - 1) / one_million_bytes_block)) * sigops_per_million_bytes;
 }
 
@@ -216,7 +223,7 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 // constexpr magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November-15 hard fork
 // constexpr great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15      hard fork
 // constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
-constexpr phonon_t           bch_phonon_activation_time{1589544000};                //2020-May-15      hard fork
+// constexpr phonon_t           bch_phonon_activation_time{1589544000};                //2020-May-15      hard fork
 constexpr axion_t            bch_axion_activation_time{1605441600};                 //2020-Nov-15      hard fork
 
 // inline constexpr

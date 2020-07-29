@@ -12,7 +12,7 @@ using namespace kth::domain::message;
 
 TEST_CASE("fee filter  constructor 1  always invalid", "[fee filter]") {
     const fee_filter instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("fee filter  constructor 2  always  equals params", "[fee filter]") {
@@ -42,14 +42,14 @@ TEST_CASE("fee filter  constructor 4  always  equals params", "[fee filter]") {
 TEST_CASE("fee filter  from data  insufficient bytes failure", "[fee filter]") {
     data_chunk const raw = {0xab, 0x11};
     fee_filter instance;
-    REQUIRE(!entity_from_data(instance, version::level::maximum, raw));
+    REQUIRE( ! entity_from_data(instance, version::level::maximum, raw));
 }
 
 TEST_CASE("fee filter  from data  insufficient version failure", "[fee filter]") {
     const fee_filter expected{1};
     auto const data = expected.to_data(fee_filter::version_maximum);
     fee_filter instance;
-    REQUIRE(!entity_from_data(instance, filter_add::version_minimum - 1, data));
+    REQUIRE( ! entity_from_data(instance, filter_add::version_minimum - 1, data));
 }
 
 TEST_CASE("fee filter  factory from data 1  roundtrip  success", "[fee filter]") {
@@ -105,7 +105,7 @@ TEST_CASE("fee filter  operator assign equals  always  matches equivalent", "[fe
     REQUIRE(value.is_valid());
 
     fee_filter instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
     REQUIRE(instance.is_valid());
@@ -120,13 +120,13 @@ TEST_CASE("fee filter  operator boolean equals  duplicates  returns true", "[fee
 TEST_CASE("fee filter  operator boolean equals  differs  returns false", "[fee filter]") {
     const fee_filter expected(2453u);
     fee_filter instance;
-    REQUIRE(!(instance == expected));
+    REQUIRE( ! (instance == expected));
 }
 
 TEST_CASE("fee filter  operator boolean not equals  duplicates  returns false", "[fee filter]") {
     const fee_filter expected(2453u);
     fee_filter instance(expected);
-    REQUIRE(!(instance != expected));
+    REQUIRE( ! (instance != expected));
 }
 
 TEST_CASE("fee filter  operator boolean not equals  differs  returns true", "[fee filter]") {

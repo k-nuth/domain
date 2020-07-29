@@ -116,7 +116,7 @@ public:
                 // , magnetic_anomaly_t magnetic_anomaly_activation_time
                 // , great_wall_t great_wall_activation_time
                 // , graviton_t graviton_activation_time
-                , phonon_t phonon_activation_time
+                // , phonon_t phonon_activation_time
                 , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
@@ -188,8 +188,8 @@ public:
     // [[nodiscard]]
     // graviton_t graviton_activation_time() const;
     
-    [[nodiscard]]
-    phonon_t phonon_activation_time() const;
+    // [[nodiscard]]
+    // phonon_t phonon_activation_time() const;
 
     [[nodiscard]]
     axion_t axion_activation_time() const;
@@ -259,7 +259,7 @@ protected:
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
             // , great_wall_t great_wall_activation_time
             // , graviton_t graviton_activation_time
-            , phonon_t phonon_activation_time
+            // , phonon_t phonon_activation_time
             , axion_t axion_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
@@ -325,8 +325,8 @@ private:
     static
     bool is_graviton_enabled(size_t height, uint32_t forks);
     
-    // static
-    // bool is_phonon_enabled(size_t height, uint32_t forks);
+    static
+    bool is_phonon_enabled(size_t height, uint32_t forks);
 
     // static
     // bool is_axion_enabled(size_t height, uint32_t forks);
@@ -401,7 +401,7 @@ private:
     // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
     // great_wall_t const great_wall_activation_time_;
     // graviton_t const graviton_activation_time_;
-    phonon_t const phonon_activation_time_;
+    // phonon_t const phonon_activation_time_;
     axion_t const axion_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };

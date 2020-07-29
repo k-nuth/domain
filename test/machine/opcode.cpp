@@ -595,25 +595,25 @@ TEST_CASE("opcode  opcode to hexadecimal  reserved 255  0xff", "[None]")
 TEST_CASE("opcode  opcode from hexadecimal  empty  false", "[None]")
 {
     opcode out_code;
-    REQUIRE(!opcode_from_hexadecimal(out_code, ""));
+    REQUIRE( ! opcode_from_hexadecimal(out_code, ""));
 }
 
 TEST_CASE("opcode  opcode from hexadecimal  bogus  false", "[None]")
 {
     opcode out_code;
-    REQUIRE(!opcode_from_hexadecimal(out_code, "bogus"));
+    REQUIRE( ! opcode_from_hexadecimal(out_code, "bogus"));
 }
 
 TEST_CASE("opcode  opcode from hexadecimal  9 bits  false", "[None]")
 {
     opcode out_code;
-    REQUIRE(!opcode_from_hexadecimal(out_code, "0x"));
+    REQUIRE( ! opcode_from_hexadecimal(out_code, "0x"));
 }
 
 TEST_CASE("opcode  opcode from hexadecimal  8 bits  false", "[None]")
 {
     opcode out_code;
-    REQUIRE(!opcode_from_hexadecimal(out_code, "0xf"));
+    REQUIRE( ! opcode_from_hexadecimal(out_code, "0xf"));
 }
 
 TEST_CASE("opcode  opcode from hexadecimal  16 bits  expected", "[None]")
@@ -626,13 +626,13 @@ TEST_CASE("opcode  opcode from hexadecimal  16 bits  expected", "[None]")
 TEST_CASE("opcode  opcode from hexadecimal  24 bits  false", "[None]")
 {
     opcode out_code;
-    REQUIRE(!opcode_from_hexadecimal(out_code, "0xffe"));
+    REQUIRE( ! opcode_from_hexadecimal(out_code, "0xffe"));
 }
 
 TEST_CASE("opcode  opcode from hexadecimal  48 bits  false", "[None]")
 {
     opcode out_code;
-    REQUIRE(!opcode_from_hexadecimal(out_code, "0xffee"));
+    REQUIRE( ! opcode_from_hexadecimal(out_code, "0xffee"));
 }
 
 TEST_CASE("opcode  opcode from hexadecimal  upper case  expected", "[None]")
@@ -666,7 +666,7 @@ TEST_CASE("opcode  opcode from hexadecimal  alphanumeric  expected", "[None]")
 TEST_CASE("opcode  opcode from hexadecimal  upper case prefix  false", "[None]")
 {
     opcode out_code;
-    REQUIRE(!opcode_from_hexadecimal(out_code, "0X4f"));
+    REQUIRE( ! opcode_from_hexadecimal(out_code, "0X4f"));
 }
 
 // End Boost Suite

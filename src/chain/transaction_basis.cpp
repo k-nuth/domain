@@ -438,9 +438,6 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
 
     auto const revert_bip30 = state.is_enabled(kth::domain::machine::rule_fork::allow_collisions);
 
-    // bip141 discounts segwit sigops by increasing limit and legacy weight.
-    auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
-
     if (transaction_pool && state.is_under_checkpoint()) {
         return error::premature_validation;
         // A segregated tx should appear empty if bip141 is not enabled.
@@ -497,11 +494,19 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
         // This recomputes sigops to include p2sh from prevouts if bip16 is true.
     }
 
-    if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
-        return error::transaction_embedded_sigop_limit;
-        // This causes second serialized_size(true, false) computation (uncached).
-        // TODO(legacy): reduce by header, txcount and smallest coinbase size for height.
+#if defined(KTH_CURRENCY_BCH)
+    if ( ! state.is_phonon_enabled()) {
+#endif
+        // bip141 discounts segwit sigops by increasing limit and legacy weight.
+        auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
+        if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
+            return error::transaction_embedded_sigop_limit;
+            // This causes second serialized_size(true, false) computation (uncached).
+            // TODO(legacy): reduce by header, txcount and smallest coinbase size for height.
+        }
+#if defined(KTH_CURRENCY_BCH)
     }
+#endif
 
     if (transaction_pool && bip141 && weight() > max_block_weight) {
         return error::transaction_weight_limit;
