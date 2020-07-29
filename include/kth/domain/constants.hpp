@@ -183,8 +183,6 @@ constexpr uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60;
 constexpr uint32_t timestamp_future_seconds = 2 * 60 * 60;  //TODO(kth): New on v3.3.0 merge (September 2017), see how this affects Litecoin
 constexpr uint32_t easy_spacing_factor = 2;
 
-// constexpr uint32_t easy_spacing_seconds = 20 * 60;
-// constexpr uint32_t retarget_height = easy_spacing_factor * target_spacing_seconds;
 constexpr uint32_t easy_spacing_seconds = easy_spacing_factor * target_spacing_seconds;
 
 // The upper and lower bounds for the retargeting timespan.

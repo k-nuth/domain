@@ -23,7 +23,7 @@ TEST_CASE("merkle block  constructor 2  always  equals params", "[merkle block]"
         6523454,
         68644);
 
-    const size_t count = 1234u;
+    size_t const count = 1234u;
 
     hash_list const hashes{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),
@@ -91,7 +91,7 @@ TEST_CASE("merkle block  constructor 5  always  equals params", "[merkle block]"
         6523454,
         68644);
 
-    const size_t count = 654576u;
+    size_t const count = 654576u;
 
     hash_list const hashes{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),

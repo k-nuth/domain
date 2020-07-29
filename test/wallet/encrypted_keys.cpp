@@ -38,8 +38,8 @@ TEST_CASE("encrypted  fixture  unicode passphrase  matches encrypted test vector
     REQUIRE(create_token(out_token, passphrase, bytes, lot, sequence))
 
 TEST_CASE("encrypted  create token lot  lot overlow  false", "[encrypted  create token lot]") {
-    const size_t lot = 1048575 + 1;
-    const size_t sequence = 0;
+    size_t const lot = 1048575 + 1;
+    size_t const sequence = 0;
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     encrypted_token out_token;
@@ -47,8 +47,8 @@ TEST_CASE("encrypted  create token lot  lot overlow  false", "[encrypted  create
 }
 
 TEST_CASE("encrypted  create token lot  sequence overlow  false", "[encrypted  create token lot]") {
-    const size_t lot = 0;
-    const size_t sequence = 4095 + 1;
+    size_t const lot = 0;
+    size_t const sequence = 4095 + 1;
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     encrypted_token out_token;
@@ -56,8 +56,8 @@ TEST_CASE("encrypted  create token lot  sequence overlow  false", "[encrypted  c
 }
 
 TEST_CASE("encrypted  create token lot  defaults  expected", "[encrypted  create token lot]") {
-    const size_t lot = 0;
-    const size_t sequence = 0;
+    size_t const lot = 0;
+    size_t const sequence = 0;
     auto const passphrase = "";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
@@ -65,8 +65,8 @@ TEST_CASE("encrypted  create token lot  defaults  expected", "[encrypted  create
 }
 
 TEST_CASE("encrypted  create token lot  passphrase  expected", "[encrypted  create token lot]") {
-    const size_t lot = 0;
-    const size_t sequence = 0;
+    size_t const lot = 0;
+    size_t const sequence = 0;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
@@ -74,8 +74,8 @@ TEST_CASE("encrypted  create token lot  passphrase  expected", "[encrypted  crea
 }
 
 TEST_CASE("encrypted  create token lot  passphrase lot max  expected", "[encrypted  create token lot]") {
-    const size_t lot = 1048575;
-    const size_t sequence = 0;
+    size_t const lot = 1048575;
+    size_t const sequence = 0;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
@@ -83,8 +83,8 @@ TEST_CASE("encrypted  create token lot  passphrase lot max  expected", "[encrypt
 }
 
 TEST_CASE("encrypted  create token lot  passphrase sequence max  expected", "[encrypted  create token lot]") {
-    const size_t lot = 0;
-    const size_t sequence = 4095;
+    size_t const lot = 0;
+    size_t const sequence = 4095;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);
@@ -92,8 +92,8 @@ TEST_CASE("encrypted  create token lot  passphrase sequence max  expected", "[en
 }
 
 TEST_CASE("encrypted  create token lot  passphrase lot sequence  expected", "[encrypted  create token lot]") {
-    const size_t lot = 42;
-    const size_t sequence = 42;
+    size_t const lot = 42;
+    size_t const sequence = 42;
     auto const passphrase = "passphrase";
     auto const salt = base16_literal("baadf00d");
     KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, salt, lot, sequence);

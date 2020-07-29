@@ -308,7 +308,7 @@ TEST_CASE("chain transaction  is null non coinbase  two inputs first null  retur
 }
 
 TEST_CASE("chain transaction  is final  locktime zero  returns true", "[chain transaction]") {
-    static const size_t height = 100;
+    static size_t const height = 100;
     static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(0);
@@ -316,7 +316,7 @@ TEST_CASE("chain transaction  is final  locktime zero  returns true", "[chain tr
 }
 
 TEST_CASE("chain transaction  is final  locktime less block time greater threshold  returns true", "[chain transaction]") {
-    static const size_t height = locktime_threshold + 100;
+    static size_t const height = locktime_threshold + 100;
     static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(locktime_threshold + 50);
@@ -324,7 +324,7 @@ TEST_CASE("chain transaction  is final  locktime less block time greater thresho
 }
 
 TEST_CASE("chain transaction  is final  locktime less block height less threshold returns true", "[chain transaction]") {
-    static const size_t height = 100;
+    static size_t const height = 100;
     static uint32_t const time = 100;
     chain::transaction instance;
     instance.set_locktime(50);
@@ -332,7 +332,7 @@ TEST_CASE("chain transaction  is final  locktime less block height less threshol
 }
 
 TEST_CASE("chain transaction  is final  locktime input not final  returns false", "[chain transaction]") {
-    static const size_t height = 100;
+    static size_t const height = 100;
     static uint32_t const time = 100;
     chain::input input;
     input.set_sequence(1);
@@ -341,7 +341,7 @@ TEST_CASE("chain transaction  is final  locktime input not final  returns false"
 }
 
 TEST_CASE("chain transaction  is final  locktime inputs final  returns true", "[chain transaction]") {
-    static const size_t height = 100;
+    static size_t const height = 100;
     static uint32_t const time = 100;
     chain::input input;
     input.set_sequence(max_input_sequence);

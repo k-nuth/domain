@@ -795,7 +795,7 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
     };
 
     auto const& txs = blk.transactions();
-    const size_t offset = with_coinbase ? 0 : 1;
+    size_t const offset = with_coinbase ? 0 : 1;
     return std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
 }
 

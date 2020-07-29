@@ -58,7 +58,11 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_, forks_))
-    , work_required_(work_required(data_, forks_))
+    , work_required_(work_required(data_, forks_
+#if defined(KTH_CURRENCY_BCH)
+                                    , axion_activation_time
+#endif
+    ))
 #if defined(KTH_CURRENCY_BCH)
     , daa_half_life_(daa_half_life)
     // , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
@@ -104,7 +108,7 @@ std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
 chain_state chain_state::from_pool(chain_state const& pool, block const& block) {
     return chain_state(to_block(pool, block), pool.forks_, pool.checkpoints_
 #if defined(KTH_CURRENCY_BCH)
-        , poll.daa_half_life_
+        , pool.daa_half_life_
         // , pool.phonon_activation_time_
         , pool.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
@@ -334,7 +338,6 @@ bool chain_state::is_axion_enabled() const {
 
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
-        , uint64_t daa_half_life
         // , magnetic_anomaly_t magnetic_anomaly_activation_time
         // , great_wall_t great_wall_activation_time
         // , graviton_t graviton_activation_time
@@ -764,9 +767,200 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 
 #if defined(KTH_CURRENCY_BCH)
 
+
+// // ASERT calculation function.
+// // Clamps to powLimit.
+// arith_uint256 CalculateASERT(const arith_uint256 refTarget,
+//                              const int64_t nPowTargetSpacing,
+//                              const int64_t nTimeDiff,
+//                              const int64_t nHeightDiff,
+//                              const arith_uint256 powLimit,
+//                              const int64_t nHalfLife) noexcept {
+
+//     // Input target must never be zero nor exceed powLimit.
+//     assert (refTarget > 0 && refTarget <= powLimit);
+
+//     // Height diff should NOT be negative.
+//     assert(nHeightDiff >= 0);
+
+//     // This algorithm uses fixed-point math. The lowest rbits bits are after
+//     // the radix, and represent the "decimal" (or binary) portion of the value
+//     constexpr uint8_t rbits = 16;
+//     static_assert(rbits > 0, "");
+
+//     arith_uint256 nextTarget = refTarget;
+//     // It will be helpful when reading what follows, to remember that
+//     // nextTarget is adapted from reference block target value.
+
+//     // Ultimately, we want to approximate the following ASERT formula, using only integer (fixed-point) math:
+//     //     new_target = old_target * 2^((blocks_time - IDEAL_BLOCK_TIME*(height_diff)) / nHalfLife)
+
+//     // First, we'll calculate the exponent:
+//     assert( llabs(nTimeDiff - nPowTargetSpacing * nHeightDiff) < (1ll<<(63-rbits)) );
+//     int64_t exponent = ((nTimeDiff - nPowTargetSpacing * nHeightDiff) << rbits) / nHalfLife;
+
+//     // Next, we use the 2^x = 2 * 2^(x-1) identity to shift our exponent into the [0, 1) interval.
+//     // The truncated exponent tells us how many shifts we need to do
+//     // Note1: This needs to be a right shift. Right shift rounds downward (floored division),
+//     //        whereas integer division in C++ rounds towards zero (truncated division).
+//     // Note2: This algorithm uses arithmetic shifts of negative numbers. This
+//     //        is unpecified but very common behavior for C++ compilers before
+//     //        C++20, and standard with C++20. We must check this behavior e.g.
+//     //        using static_assert.
+//     static_assert(int64_t(-1) >> 1 == int64_t(-1),
+//                   "ASERT algorithm needs arithmetic shift support");
+
+//     const int64_t shifts = exponent >> rbits;
+
+//     if (shifts < 0) {
+//         nextTarget = nextTarget >> -shifts;
+//     } else {
+//         nextTarget = nextTarget << shifts;
+//     }
+//     // Remove everything but the decimal part from the exponent since we've
+//     // accounted for that through shifting.
+//     exponent -= (shifts << rbits);
+//     // What is left then should now be in the fixed point range [0, 1).
+//     assert(exponent >= 0 && exponent < 65536);
+
+//     // Check for overflow and underflow from shifting nextTarget. Since it's a uint, both could result in a
+//     // value of 0, so we'll need to clamp it if so. We can figure out which happened by looking at shifts's sign.
+//     if (nextTarget == 0 || nextTarget > powLimit) {
+//         if (shifts < 0) {
+//             return arith_uint256(1);
+//         } else {
+//             return powLimit;
+//         }
+//     }
+
+//     // Now we compute an approximated target * 2^(exponent)
+
+//     // 2^x ~= (1 + 0.695502049*x + 0.2262698*x**2 + 0.0782318*x**3) for 0 <= x < 1
+//     // Error versus actual 2^x is less than 0.013%.
+//     uint64_t factor = (195766423245049ull*exponent +
+//                        971821376*exponent*exponent +
+//                        5127*exponent*exponent*exponent + (1ull<<47))>>(rbits*3);
+//     nextTarget += (nextTarget * factor) >> rbits;
+
+//     // The last operation was strictly increasing, so it could have exceeded powLimit. Check and clamp again.
+//     if (nextTarget > powLimit) {
+//         return powLimit;
+//     }
+
+//     return nextTarget;
+// }
+
+
+// pindexPrev->nHeight                                  -> values.height;
+// pindexPrev->nTime
+// pindexReferenceBlock->nHeight
+// pindexReferenceBlock->GetBlockHeader().nTime
+// pindexReferenceBlock->nBits
+// params.powLimit
+// params.nPowTargetSpacing
+// params.nDAAHalfLife
+
+// /**
+//  * Compute the next required proof of work using an absolutely scheduled
+//  * exponentially weighted target (ASERT).
+//  *
+//  * With ASERT, we define an ideal schedule for block issuance (e.g. 1 block every 600 seconds), and we calculate the
+//  * difficulty based on how far the most recent block's timestamp is ahead of or behind that schedule.
+//  * We set our targets (difficulty) exponentially. For every [nHalfLife] seconds ahead of or behind schedule we get, we
+//  * double or halve the difficulty.
+//  */
+// uint32_t GetNextASERTWorkRequired(const CBlockIndex *pindexPrev,
+//                                   const CBlockHeader *pblock,
+//                                   const Consensus::Params &params,
+//                                   const CBlockIndex *pindexReferenceBlock) noexcept {
+//     // This cannot handle the genesis block and early blocks in general.
+//     assert(pindexPrev != nullptr);
+
+//     // Reference block is the block on which all ASERT scheduling calculations are based.
+//     // It too must exist.
+//     assert(pindexReferenceBlock != nullptr);
+
+//     // We make no further assumptions other than the height of the prev block must be >= that of the reference block.
+//     assert(pindexPrev->nHeight >= pindexReferenceBlock->nHeight);
+
+//     // Special difficulty rule for testnet
+//     // If the new block's timestamp is more than 2* 10 minutes then allow
+//     // mining of a min-difficulty block.
+//     if (params.fPowAllowMinDifficultyBlocks &&
+//         (pblock->GetBlockTime() >
+//          pindexPrev->GetBlockTime() + 2 * params.nPowTargetSpacing)) {
+//         return UintToArith256(params.powLimit).GetCompact();
+//     }
+
+//     const int64_t nTimeDiff = int64_t(pindexPrev->nTime) - int64_t(pindexReferenceBlock->GetBlockHeader().nTime);
+//     const int64_t nHeightDiff = pindexPrev->nHeight - pindexReferenceBlock->nHeight;
+
+//     const arith_uint256 refBlockTarget = arith_uint256().SetCompact(pindexReferenceBlock->nBits);
+
+//     static const arith_uint256 powLimit = UintToArith256(params.powLimit);
+
+//     // Do the actual target adaptation calculation in separate
+//     // CalculateASERT() function
+//     arith_uint256 nextTarget = CalculateASERT(refBlockTarget,
+//                                               params.nPowTargetSpacing,
+//                                               nTimeDiff,
+//                                               nHeightDiff,
+//                                               powLimit,
+//                                               params.nDAAHalfLife);
+
+//     // CalculateASERT() already clamps to powLimit.
+//     return nextTarget.GetCompact();
+// }
+
+
+
 // DAA/aserti3-2d: 2020-Nov-15 Hard fork
 uint32_t chain_state::aserti3_2d_difficulty_adjustment(data const& values) {
 }
+
+
+
+// uint32_t GetNextCashWorkRequired(const CBlockIndex *pindexPrev,
+//                                  const CBlockHeader *pblock,
+//                                  const Consensus::Params &params) {
+//     // This cannot handle the genesis block and early blocks in general.
+//     assert(pindexPrev);
+
+//     // Special difficulty rule for testnet:
+//     // If the new block's timestamp is more than 2* 10 minutes then allow
+//     // mining of a min-difficulty block.
+//     if (params.fPowAllowMinDifficultyBlocks &&
+//         (pblock->GetBlockTime() >
+//          pindexPrev->GetBlockTime() + 2 * params.nPowTargetSpacing)) {
+//         return UintToArith256(params.powLimit).GetCompact();
+//     }
+
+//     // Compute the difficulty based on the full adjustment interval.
+//     const uint32_t nHeight = pindexPrev->nHeight;
+//     assert(nHeight >= params.DifficultyAdjustmentInterval());
+
+//     // Get the last suitable block of the difficulty interval.
+//     const CBlockIndex *pindexLast = GetSuitableBlock(pindexPrev);
+//     assert(pindexLast);
+
+//     // Get the first suitable block of the difficulty interval.
+//     uint32_t nHeightFirst = nHeight - 144;
+//     const CBlockIndex *pindexFirst =
+//         GetSuitableBlock(pindexPrev->GetAncestor(nHeightFirst));
+//     assert(pindexFirst);
+
+//     // Compute the target based on time and work done during the interval.
+//     const arith_uint256 nextTarget =
+//         ComputeTarget(pindexFirst, pindexLast, params);
+
+//     const arith_uint256 powLimit = UintToArith256(params.powLimit);
+//     if (nextTarget > powLimit) {
+//         return powLimit.GetCompact();
+//     }
+
+//     return nextTarget.GetCompact();
+// }
+
 
 // DAA/cw-144: 2017-Nov-13 Hard fork
 uint32_t chain_state::cw144_difficulty_adjustment(data const& values) {
@@ -820,7 +1014,11 @@ uint32_t chain_state::cw144_difficulty_adjustment(data const& values) {
 // work_required
 //-----------------------------------------------------------------------------
 
-uint32_t chain_state::work_required(data const& values, uint32_t forks) {
+uint32_t chain_state::work_required(data const& values, uint32_t forks
+#if defined(KTH_CURRENCY_BCH)
+                                    , axion_t axion_activation_time
+#endif
+) {
     // Invalid parameter via public interface, test is_valid for results.
     if (values.height == 0) {
         return {};
@@ -831,14 +1029,14 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
         return bits_high(values);
     }
 
-    auto last_time_span = median_time_past(values, 0, true);
-
 #if defined(KTH_CURRENCY_BCH)
     //TODO(fernando): could it be improved?
-    // bool const daa_cw144_active = is_bch_daa_cw144_enabled(last_time_span);
     bool const daa_cw144_active = is_daa_cw144_enabled(values.height, forks);
+    auto const last_time_span = median_time_past(values, 0, true);
+    bool const daa_asert_active = is_mtp_activated(last_time_span, to_underlying(axion_activation_time));
 #else
     bool const daa_cw144_active = false;
+    bool const daa_asert_active = false;
 #endif  //KTH_CURRENCY_BCH
 
     if (is_retarget_height(values.height) && ! daa_cw144_active) {
@@ -846,21 +1044,21 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks) {
     }
 
     if (script::is_enabled(forks, rule_fork::easy_blocks)) {
-        return easy_work_required(values, daa_cw144_active);
+        return easy_work_required(values, daa_cw144_active, daa_asert_active);
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    if (is_axion_enabled()) {
+    if (daa_asert_active) {
         return aserti3_2d_difficulty_adjustment(values);
     }
 
-    if (is_daa_cw144_enabled(values.height, forks)) {
+    if (daa_cw144_active) {
         return cw144_difficulty_adjustment(values);
     }
 
     //EDA
     if (is_uahf_enabled(values.height, forks)) {
-        auto six_time_span = median_time_past(values, 0, false);
+        auto const six_time_span = median_time_past(values, 0, false);
         // precondition: last_time_span >= six_time_span
         //TODO(fernando): resolve hardcoded values
         if ((last_time_span - six_time_span) > (12 * 3600)) {
@@ -940,7 +1138,7 @@ uint32_t chain_state::retarget_timespan(data const& values) {
     return range_constrain(timespan, min_timespan, max_timespan);
 }
 
-uint32_t chain_state::easy_work_required(data const& values, bool daa_cw144_active) {
+uint32_t chain_state::easy_work_required(data const& values, bool daa_cw144_active, bool daa_asert_active) {
     KTH_ASSERT(values.height != 0);
 
     // If the time limit has passed allow a minimum difficulty block.
@@ -948,17 +1146,26 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_cw144_acti
         return retarget_proof_of_work_limit;
     }
 
-    auto height = values.height;
-    auto& bits = values.bits.ordered;
+    //TODO(fernando): could it be improved?
+    if (daa_asert_active) {
+#if defined(KTH_CURRENCY_BCH)
+        return aserti3_2d_difficulty_adjustment(values);
+#else
+//Note: Could not happend: DAA/asert and not BCH
+#endif  //KTH_CURRENCY_BCH
+    }
 
     //TODO(fernando): could it be improved?
     if (daa_cw144_active) {
 #if defined(KTH_CURRENCY_BCH)
         return cw144_difficulty_adjustment(values);
 #else
-//Note: Could not happend: DAA and not BCH
+//Note: Could not happend: DAA/cw144 and not BCH
 #endif  //KTH_CURRENCY_BCH
     }
+
+    auto height = values.height;
+    auto& bits = values.bits.ordered;
 
     // Reverse iterate the ordered-by-height list of header bits.
     for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit) {
@@ -1296,9 +1503,13 @@ bool chain_state::is_under_checkpoint() const {
 //-----------------------------------------------------------------------------
 
 uint32_t chain_state::get_next_work_required(uint32_t time_now) {
-    auto values = this->data_;
+    auto values = data_;
     values.timestamp.self = time_now;
-    return work_required(values, this->enabled_forks());
+    return work_required(values, enabled_forks()
+#if defined(KTH_CURRENCY_BCH)
+                            , axion_activation_time()
+#endif
+    );
 }
 
 } // namespace kth

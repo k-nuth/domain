@@ -39,7 +39,7 @@ public:
     struct map {
         // This sentinel indicates that the value was not requested.
         static
-        const size_t unrequested = max_size_t;
+        size_t const unrequested = max_size_t;
 
         /// [block - 1, floor(block - 2016, 0)] mainnet: 1, testnet: 2016|0
         range bits;
@@ -107,6 +107,14 @@ public:
             uint32_t retarget;
             timestamps ordered;
         } timestamp;
+
+#if defined(KTH_CURRENCY_BCH)        
+        struct {
+            size_t height;
+            uint32_t timestamp;
+            uint32_t bits;
+        } assert_reference_block_info;
+#endif
     };
 
     /// Checkpoints must be ordered by height with greatest at back.
@@ -260,7 +268,6 @@ protected:
     static
     activations activation(data const& values, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
-            , uint64_t daa_half_life
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
             // , great_wall_t great_wall_activation_time
             // , graviton_t graviton_activation_time
@@ -272,11 +279,12 @@ protected:
     static
     uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
 
-    // static
-    // uint32_t work_required(data const& values, uint32_t forks, bool bitcoin_cash = false);
-
     static
-    uint32_t work_required(data const& values, uint32_t forks);
+    uint32_t work_required(data const& values, uint32_t forks
+#if defined(KTH_CURRENCY_BCH)
+                            , axion_t axion_activation_time
+#endif
+    );
 
 private:
     static
@@ -379,7 +387,7 @@ private:
     bool is_retarget_or_non_limit(size_t height, uint32_t bits);
 
     static
-    uint32_t easy_work_required(data const& values, bool daa_active);
+    uint32_t easy_work_required(data const& values, bool daa_cw144_active, bool daa_asert_active);
     
     static
     uint32_t easy_time_limit(chain_state::data const& values);

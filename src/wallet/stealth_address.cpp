@@ -45,8 +45,8 @@ static_assert(binary::bits_per_block == byte_bits,
 
 uint8_t const stealth_address::mainnet_p2kh = 0x2a;
 uint8_t const stealth_address::reuse_key_flag = 1U << 0U;
-const size_t stealth_address::min_filter_bits = 1 * byte_bits;
-const size_t stealth_address::max_filter_bits = sizeof(uint32_t) * byte_bits;
+size_t const stealth_address::min_filter_bits = 1 * byte_bits;
+size_t const stealth_address::max_filter_bits = sizeof(uint32_t) * byte_bits;
 
 stealth_address::stealth_address()
     : scan_key_(null_compressed_point) 
