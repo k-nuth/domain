@@ -916,6 +916,7 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 
 // DAA/aserti3-2d: 2020-Nov-15 Hard fork
 uint32_t chain_state::aserti3_2d_difficulty_adjustment(data const& values) {
+    return 0;
 }
 
 
