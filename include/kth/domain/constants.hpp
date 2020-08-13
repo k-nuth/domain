@@ -40,6 +40,9 @@ static_assert(CHAR_BIT == 8, "8-bit bytes assumed");
 // http://eel.is/c++draft/cstdint#syn
 static_assert(std::is_same<uint8_t, unsigned char>::value);
 
+// Assumption: We assume two's complement of signed number representation.
+static_assert(-1 == ~0, "two's complement signed number representation assumed");
+
 // Consensus sentinels.
 //-----------------------------------------------------------------------------
 
@@ -470,6 +473,16 @@ const infrastructure::config::checkpoint mainnet_phonon_active_checkpoint{
 static
 const infrastructure::config::checkpoint testnet_phonon_active_checkpoint{
     "0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461};
+
+
+//2020-Nov hard fork, ASERT Anchor block lock up
+//Will be removed once Axion(2020-Nov) update is activated
+static
+const infrastructure::config::checkpoint mainnet_asert_anchor_lock_up_checkpoint{
+    "000000000000000001db4b04393d3cc8da269bb6650011f666bfc17bafcebebf", 648000};
+static
+const infrastructure::config::checkpoint testnet_asert_anchor_lock_up_checkpoint{
+    "0000000000146da9eea6f299ca19ccb81371aa2e9490db229d610e74c4790e08", 1400000};
 
 //2020-Nov hard fork
 // Complete after the hard fork
