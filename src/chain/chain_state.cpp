@@ -305,7 +305,6 @@ uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
     return target + (target >> 2);
 }
 
-inline 
 bool chain_state::is_mtp_activated(uint32_t median_time_past, uint32_t activation_time) {
     return (median_time_past >= activation_time);
 }
