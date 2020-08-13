@@ -75,7 +75,7 @@ class KnuthDomainConan(KnuthConanFile):
         return self.options.currency == "BCH" and self.options.get_safe("keoken")
 
     def requirements(self):
-        self.requires("algorithm/0.1.213@tao/stable")
+        self.requires("algorithm/0.1.220@tao/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
         self.requires("infrastructure/0.X@%s/%s" % (self.user, self.channel))
         # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
