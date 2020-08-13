@@ -107,21 +107,22 @@ public:
             uint32_t retarget;
             timestamps ordered;
         } timestamp;
+    };
 
 #if defined(KTH_CURRENCY_BCH)        
-        struct {
-            size_t height;
-            uint32_t timestamp;
-            uint32_t bits;
-        } assert_reference_block_info;
-#endif
+    struct assert_anchor_block_info_t {
+        size_t height;
+        uint32_t prev_timestamp;
+        uint32_t bits;
     };
+#endif
 
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
 #if defined(KTH_CURRENCY_BCH)
-                , uint64_t daa_half_life
+                , assert_anchor_block_info_t const& assert_anchor_block_info
+                , uint32_t asert_half_life
                 // , magnetic_anomaly_t magnetic_anomaly_activation_time
                 // , great_wall_t great_wall_activation_time
                 // , graviton_t graviton_activation_time
@@ -131,38 +132,29 @@ public:
     );
 
     // Named constructors
-    static
-    chain_state from_top(chain_state const& top);
+    // static
+    // chain_state from_top(chain_state const& top);
 
-    static
-    chain_state from_pool(chain_state const& pool, block const& block);
+    // static
+    // chain_state from_pool(chain_state const& pool, block const& block);
 
-    static
-    chain_state from_parent(chain_state const& parent, header const& header);
+    // static
+    // chain_state from_parent(chain_state const& parent, header const& header);
 
-    static
-    std::shared_ptr<chain_state> from_top_ptr(chain_state const& top);
+    // static
+    // std::shared_ptr<chain_state> from_top_ptr(chain_state const& top);
 
     static
     std::shared_ptr<chain_state> from_pool_ptr(chain_state const& pool, block const& block);
 
-    static
-    std::shared_ptr<chain_state> from_parent_ptr(chain_state const& parent, header const& header);
+    // static
+    // std::shared_ptr<chain_state> from_parent_ptr(chain_state const& parent, header const& header);
 
 
     //TODO(fernando): if I delete the copy the Linter complains  
     // // non-copyable and non-movable class
     // chain_state(chain_state const&) = delete;               //NOLINT
     // chain_state& operator=(chain_state const&) = delete;    //NOLINT
-
-    // /// Create pool state from top chain top block state.
-    // chain_state(chain_state const& top);
-
-    // /// Create block state from tx pool chain state of same height.
-    // chain_state(chain_state const& pool, const chain::block& block);
-
-    // /// Create header state from header pool chain state of previous height.
-    // chain_state(chain_state const& parent, chain::header const& header);
 
     /// Checkpoints must be ordered by height with greatest at back.
     static
@@ -189,7 +181,10 @@ public:
 
 #if defined(KTH_CURRENCY_BCH)
     [[nodiscard]]
-    uint64_t daa_half_life() const;
+    assert_anchor_block_info_t assert_anchor_block_info() const;
+
+    [[nodiscard]]
+    uint32_t asert_half_life() const;
 
     // [[nodiscard]]
     // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
@@ -256,6 +251,9 @@ public:
     bool is_axion_enabled() const;
 #endif  //KTH_CURRENCY_BCH
 
+    static
+    uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
+
 protected:
     struct activations {
         // The forks that are active at this height.
@@ -277,16 +275,17 @@ protected:
     );
 
     static
-    uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
-
-    static
     uint32_t work_required(data const& values, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                             , axion_t axion_activation_time
+                            , assert_anchor_block_info_t const& assert_anchor_block_info
+                            , uint32_t asert_half_life
 #endif
     );
 
 private:
+    void adjust_assert_anchor_block_info();
+
     static
     size_t bits_count(size_t height, uint32_t forks);
     
@@ -346,14 +345,14 @@ private:
 #endif // KTH_CURRENCY_BCH
     // ------------------------------------------------------------------------
 
-    static
-    data to_pool(chain_state const& top);
+    // static
+    // data to_pool(chain_state const& top);
     
     static
     data to_block(chain_state const& pool, block const& block);
     
-    static
-    data to_header(chain_state const& parent, header const& header);
+    // static
+    // data to_header(chain_state const& parent, header const& header);
 
     static
     uint32_t work_required_retarget(data const& values);
@@ -367,10 +366,10 @@ private:
 
 #if defined(KTH_CURRENCY_BCH)
     static
-    uint32_t aserti3_2d_difficulty_adjustment(data const& values);
+    uint32_t daa_aserti3_2d(data const& values, assert_anchor_block_info_t const& assert_anchor_block_info, uint32_t half_life);
 
     static
-    uint32_t cw144_difficulty_adjustment(data const& values);
+    uint32_t daa_cw144(data const& values);
     
     static
     uint32_t work_required_adjust_cash(data const& values);
@@ -387,7 +386,14 @@ private:
     bool is_retarget_or_non_limit(size_t height, uint32_t bits);
 
     static
-    uint32_t easy_work_required(data const& values, bool daa_cw144_active, bool daa_asert_active);
+    uint32_t easy_work_required(data const& values
+#if defined(KTH_CURRENCY_BCH)
+                            , bool daa_cw144_active
+                            , bool daa_asert_active
+                            , assert_anchor_block_info_t const& assert_anchor_block_info
+                            , uint32_t asert_half_life
+#endif
+    );
     
     static
     uint32_t easy_time_limit(chain_state::data const& values);
@@ -398,6 +404,8 @@ private:
     // This is retained as an optimization for other constructions.
     // A similar height clone can be partially computed, reducing query cost.
     data const data_;
+    //TODO(fernando): make it immutable
+    assert_anchor_block_info_t assert_anchor_block_info_;
 
     // Configured forks are saved for state transitions.
     uint32_t const forks_;
@@ -412,7 +420,7 @@ private:
 
 //TODO(fernando): inherit BCH data and functions for a specific BCH class
 #if defined(KTH_CURRENCY_BCH)
-    uint64_t const daa_half_life_;
+    uint32_t const asert_half_life_;
 
     // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
     // great_wall_t const great_wall_activation_time_;

@@ -13,6 +13,11 @@
 #include <kth/domain/chain/block.hpp>
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/chain/compact.hpp>
+
+#if defined(KTH_CURRENCY_BCH)
+#include <kth/domain/chain/daa/aserti3_2d.hpp>
+#endif
+
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
@@ -37,7 +42,8 @@ using namespace boost::adaptors;
 // The allow_collisions hard fork is always activated (not configurable).
 chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
 #if defined(KTH_CURRENCY_BCH)
-    , uint64_t daa_half_life
+    , assert_anchor_block_info_t const& assert_anchor_block_info
+    , uint32_t asert_half_life
     // , magnetic_anomaly_t magnetic_anomaly_activation_time
     // , great_wall_t great_wall_activation_time
     // , graviton_t graviton_activation_time
@@ -46,6 +52,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 #endif  //KTH_CURRENCY_BCH
 )
     : data_(std::move(values))
+#if defined(KTH_CURRENCY_BCH)
+    , assert_anchor_block_info_(assert_anchor_block_info)
+#endif
     , forks_(forks | rule_fork::allow_collisions)
     , checkpoints_(checkpoints)
     , active_(activation(data_, forks_
@@ -60,18 +69,33 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     , median_time_past_(median_time_past(data_, forks_))
     , work_required_(work_required(data_, forks_
 #if defined(KTH_CURRENCY_BCH)
-                                    , axion_activation_time
+            , axion_activation_time, assert_anchor_block_info_, asert_half_life
 #endif
     ))
 #if defined(KTH_CURRENCY_BCH)
-    , daa_half_life_(daa_half_life)
+    , asert_half_life_(asert_half_life)
     // , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
     // , great_wall_activation_time_(great_wall_activation_time)
     // , graviton_activation_time_(graviton_activation_time)
     // , phonon_activation_time_(phonon_activation_time)
     , axion_activation_time_(axion_activation_time)
 #endif  //KTH_CURRENCY_BCH
-{}
+{
+#if defined(KTH_CURRENCY_BCH)
+    adjust_assert_anchor_block_info();
+#endif
+}
+
+#if defined(KTH_CURRENCY_BCH)
+//Note(fernando): remove once Axion is activated
+void chain_state::adjust_assert_anchor_block_info() {
+    if (is_phonon_enabled() && ! is_axion_enabled()) {
+        assert_anchor_block_info_.height = data_.height;
+        assert_anchor_block_info_.bits = data_.bits.self;
+        assert_anchor_block_info_.prev_timestamp = data_.timestamp.ordered.back();
+    }
+}
+#endif
 
 // Named constructors.
 //-----------------------------------------------------------------------------
@@ -79,47 +103,48 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 // Constructor (top to pool).
 // This generates a state for the pool above the presumed top block state.
 
-// static
-chain_state chain_state::from_top(chain_state const& top) {
-    return chain_state(to_pool(top), top.forks_, top.checkpoints_
-#if defined(KTH_CURRENCY_BCH)
-        , top.daa_half_life_
-        // , top.phonon_activation_time_
-        , top.axion_activation_time_
-#endif  //KTH_CURRENCY_BCH
-    );
-}
+// // static
+// chain_state chain_state::from_top(chain_state const& top) {
+//     return chain_state(to_pool(top), top.forks_, top.checkpoints_
+// #if defined(KTH_CURRENCY_BCH)
+//         , top.asert_half_life_
+//         // , top.phonon_activation_time_
+//         , top.axion_activation_time_
+// #endif  //KTH_CURRENCY_BCH
+//     );
+// }
 
-// static
-std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
-    return std::make_shared<chain_state>(to_pool(top), top.forks_, top.checkpoints_
-#if defined(KTH_CURRENCY_BCH)
-        , top.daa_half_life_
-        // , top.phonon_activation_time_
-        , top.axion_activation_time_
-#endif  //KTH_CURRENCY_BCH
-    );
-}
+// // static
+// std::shared_ptr<chain_state> chain_state::from_top_ptr(chain_state const& top) {
+//     return std::make_shared<chain_state>(to_pool(top), top.forks_, top.checkpoints_
+// #if defined(KTH_CURRENCY_BCH)
+//         , top.asert_half_life_
+//         // , top.phonon_activation_time_
+//         , top.axion_activation_time_
+// #endif  //KTH_CURRENCY_BCH
+//     );
+// }
 
 // Constructor (tx pool to block).
 // This assumes that the pool state is the same height as the block.
 
-// static
-chain_state chain_state::from_pool(chain_state const& pool, block const& block) {
-    return chain_state(to_block(pool, block), pool.forks_, pool.checkpoints_
-#if defined(KTH_CURRENCY_BCH)
-        , pool.daa_half_life_
-        // , pool.phonon_activation_time_
-        , pool.axion_activation_time_
-#endif  //KTH_CURRENCY_BCH
-    );
-}
+// // static
+// chain_state chain_state::from_pool(chain_state const& pool, block const& block) {
+//     return chain_state(to_block(pool, block), pool.forks_, pool.checkpoints_
+// #if defined(KTH_CURRENCY_BCH)
+//         , pool.asert_half_life_
+//         // , pool.phonon_activation_time_
+//         , pool.axion_activation_time_
+// #endif  //KTH_CURRENCY_BCH
+//     );
+// }
 
 // static
 std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool, block const& block) {
     return std::make_shared<chain_state>(to_block(pool, block), pool.forks_, pool.checkpoints_
 #if defined(KTH_CURRENCY_BCH)
-        , pool.daa_half_life_
+        , pool.assert_anchor_block_info_
+        , pool.asert_half_life_
         // , pool.phonon_activation_time_
         , pool.axion_activation_time_
 #endif  //KTH_CURRENCY_BCH
@@ -129,27 +154,27 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
 // Constructor (parent to header).
 // This assumes that parent is the state of the header's previous block.
 
-//static
-chain_state chain_state::from_parent(chain_state const& parent, header const& header) {
-    return chain_state(to_header(parent, header), parent.forks_, parent.checkpoints_
-#if defined(KTH_CURRENCY_BCH)
-        , parent.daa_half_life_
-        // , parent.phonon_activation_time_
-        , parent.axion_activation_time_
-#endif
-    );
-}
+// //static
+// chain_state chain_state::from_parent(chain_state const& parent, header const& header) {
+//     return chain_state(to_header(parent, header), parent.forks_, parent.checkpoints_
+// #if defined(KTH_CURRENCY_BCH)
+//         , parent.asert_half_life_
+//         // , parent.phonon_activation_time_
+//         , parent.axion_activation_time_
+// #endif
+//     );
+// }
 
-//static
-std::shared_ptr<chain_state> chain_state::from_parent_ptr(chain_state const& parent, header const& header) {
-    return std::make_shared<chain_state>(to_header(parent, header), parent.forks_, parent.checkpoints_
-#if defined(KTH_CURRENCY_BCH)
-        , parent.daa_half_life_
-        // , parent.phonon_activation_time_
-        , parent.axion_activation_time_
-#endif
-    );
-}
+// //static
+// std::shared_ptr<chain_state> chain_state::from_parent_ptr(chain_state const& parent, header const& header) {
+//     return std::make_shared<chain_state>(to_header(parent, header), parent.forks_, parent.checkpoints_
+// #if defined(KTH_CURRENCY_BCH)
+//         , parent.asert_half_life_
+//         // , parent.phonon_activation_time_
+//         , parent.axion_activation_time_
+// #endif
+//     );
+// }
 
 // Inlines.
 //-----------------------------------------------------------------------------
@@ -280,43 +305,36 @@ uint256_t chain_state::difficulty_adjustment_cash(uint256_t const& target) {
     return target + (target >> 2);
 }
 
-//static
 inline 
 bool chain_state::is_mtp_activated(uint32_t median_time_past, uint32_t activation_time) {
     return (median_time_past >= activation_time);
 }
 
-//static
 bool chain_state::is_monolith_enabled() const {
 //     return is_mtp_activated(median_time_past(), monolith_activation_time());
     return is_monolith_enabled(height(), enabled_forks());
 }
 
-//static
 bool chain_state::is_magnetic_anomaly_enabled() const {
     // return is_mtp_activated(median_time_past(), magnetic_anomaly_activation_time());
     return is_magnetic_anomaly_enabled(height(), enabled_forks());
 }
 
-//static
 bool chain_state::is_great_wall_enabled() const {
     // return is_mtp_activated(median_time_past(), great_wall_activation_time());
     return is_great_wall_enabled(height(), enabled_forks());
 }
 
-//static
 bool chain_state::is_graviton_enabled() const {
     // return is_mtp_activated(median_time_past(), graviton_activation_time());
     return is_graviton_enabled(height(), enabled_forks());
 }
 
-//static
 bool chain_state::is_phonon_enabled() const {
     // return is_mtp_activated(median_time_past(), to_underlying(phonon_activation_time()));
     return is_phonon_enabled(height(), enabled_forks());
 }
 
-//static
 bool chain_state::is_axion_enabled() const {
    //TODO(fernando): this was activated, change to the other method
     return is_mtp_activated(median_time_past(), to_underlying(axion_activation_time()));
@@ -719,11 +737,12 @@ std::vector<typename chain_state::timestamps::value_type> timestamps_subset(chai
     return subset;
 }
 
-uint32_t chain_state::median_time_past(data const& values, uint32_t /*unused*/, bool tip /*= true*/) {
+uint32_t chain_state::median_time_past(data const& values, uint32_t /*forks*/, bool tip /*= true*/) {
     // Create a copy for the in-place sort.
     auto subset = timestamps_subset(values.timestamp.ordered, tip);
 
     // Sort the times by value to obtain the median.
+    // Note(fernando): no need to stable sorting, because we are dealing with just integers.
     std::sort(subset.begin(), subset.end());
 
     // Consensus defines median time using modulo 2 element selection.
@@ -767,90 +786,6 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 
 #if defined(KTH_CURRENCY_BCH)
 
-
-// // ASERT calculation function.
-// // Clamps to powLimit.
-// arith_uint256 CalculateASERT(const arith_uint256 refTarget,
-//                              const int64_t nPowTargetSpacing,
-//                              const int64_t nTimeDiff,
-//                              const int64_t nHeightDiff,
-//                              const arith_uint256 powLimit,
-//                              const int64_t nHalfLife) noexcept {
-
-//     // Input target must never be zero nor exceed powLimit.
-//     assert (refTarget > 0 && refTarget <= powLimit);
-
-//     // Height diff should NOT be negative.
-//     assert(nHeightDiff >= 0);
-
-//     // This algorithm uses fixed-point math. The lowest rbits bits are after
-//     // the radix, and represent the "decimal" (or binary) portion of the value
-//     constexpr uint8_t rbits = 16;
-//     static_assert(rbits > 0, "");
-
-//     arith_uint256 nextTarget = refTarget;
-//     // It will be helpful when reading what follows, to remember that
-//     // nextTarget is adapted from reference block target value.
-
-//     // Ultimately, we want to approximate the following ASERT formula, using only integer (fixed-point) math:
-//     //     new_target = old_target * 2^((blocks_time - IDEAL_BLOCK_TIME*(height_diff)) / nHalfLife)
-
-//     // First, we'll calculate the exponent:
-//     assert( llabs(nTimeDiff - nPowTargetSpacing * nHeightDiff) < (1ll<<(63-rbits)) );
-//     int64_t exponent = ((nTimeDiff - nPowTargetSpacing * nHeightDiff) << rbits) / nHalfLife;
-
-//     // Next, we use the 2^x = 2 * 2^(x-1) identity to shift our exponent into the [0, 1) interval.
-//     // The truncated exponent tells us how many shifts we need to do
-//     // Note1: This needs to be a right shift. Right shift rounds downward (floored division),
-//     //        whereas integer division in C++ rounds towards zero (truncated division).
-//     // Note2: This algorithm uses arithmetic shifts of negative numbers. This
-//     //        is unpecified but very common behavior for C++ compilers before
-//     //        C++20, and standard with C++20. We must check this behavior e.g.
-//     //        using static_assert.
-//     static_assert(int64_t(-1) >> 1 == int64_t(-1),
-//                   "ASERT algorithm needs arithmetic shift support");
-
-//     const int64_t shifts = exponent >> rbits;
-
-//     if (shifts < 0) {
-//         nextTarget = nextTarget >> -shifts;
-//     } else {
-//         nextTarget = nextTarget << shifts;
-//     }
-//     // Remove everything but the decimal part from the exponent since we've
-//     // accounted for that through shifting.
-//     exponent -= (shifts << rbits);
-//     // What is left then should now be in the fixed point range [0, 1).
-//     assert(exponent >= 0 && exponent < 65536);
-
-//     // Check for overflow and underflow from shifting nextTarget. Since it's a uint, both could result in a
-//     // value of 0, so we'll need to clamp it if so. We can figure out which happened by looking at shifts's sign.
-//     if (nextTarget == 0 || nextTarget > powLimit) {
-//         if (shifts < 0) {
-//             return arith_uint256(1);
-//         } else {
-//             return powLimit;
-//         }
-//     }
-
-//     // Now we compute an approximated target * 2^(exponent)
-
-//     // 2^x ~= (1 + 0.695502049*x + 0.2262698*x**2 + 0.0782318*x**3) for 0 <= x < 1
-//     // Error versus actual 2^x is less than 0.013%.
-//     uint64_t factor = (195766423245049ull*exponent +
-//                        971821376*exponent*exponent +
-//                        5127*exponent*exponent*exponent + (1ull<<47))>>(rbits*3);
-//     nextTarget += (nextTarget * factor) >> rbits;
-
-//     // The last operation was strictly increasing, so it could have exceeded powLimit. Check and clamp again.
-//     if (nextTarget > powLimit) {
-//         return powLimit;
-//     }
-
-//     return nextTarget;
-// }
-
-
 // pindexPrev->nHeight                                  -> values.height;
 // pindexPrev->nTime
 // pindexReferenceBlock->nHeight
@@ -859,6 +794,29 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 // params.powLimit
 // params.nPowTargetSpacing
 // params.nDAAHalfLife
+
+
+
+// DAA/aserti3-2d: 2020-Nov-15 Hard fork
+uint32_t chain_state::daa_aserti3_2d(data const& values, assert_anchor_block_info_t const& assert_anchor_block_info, uint32_t half_life) {
+    //TODO(fernando): pre and postconditions!
+
+    static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
+
+    // auto const time_diff = values.timestamp.self - assert_anchor_block_info.prev_timestamp;
+    // auto const height_diff = values.height - assert_anchor_block_info.height + 1;
+    // auto const time_diff = 1597096747 - assert_anchor_block_info.prev_timestamp;
+    // auto const height_diff = 1400614 - assert_anchor_block_info.height + 1;
+
+    auto const time_diff = timestamp_high(values) - assert_anchor_block_info.prev_timestamp;
+    auto const height_diff = values.height - assert_anchor_block_info.height;
+
+    uint256_t const anchor_target(compact{assert_anchor_block_info.bits});
+
+    auto next_target = daa::aserti3_2d(anchor_target, target_spacing_seconds, time_diff, height_diff, pow_limit, half_life);
+    return compact(next_target).normal();
+}
+
 
 // /**
 //  * Compute the next required proof of work using an absolutely scheduled
@@ -872,16 +830,18 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 // uint32_t GetNextASERTWorkRequired(const CBlockIndex *pindexPrev,
 //                                   const CBlockHeader *pblock,
 //                                   const Consensus::Params &params,
-//                                   const CBlockIndex *pindexReferenceBlock) noexcept {
+//                                   const CBlockIndex *pindexAnchorBlock) noexcept {
 //     // This cannot handle the genesis block and early blocks in general.
 //     assert(pindexPrev != nullptr);
 
-//     // Reference block is the block on which all ASERT scheduling calculations are based.
-//     // It too must exist.
-//     assert(pindexReferenceBlock != nullptr);
+//     // Anchor block is the block on which all ASERT scheduling calculations are based.
+//     // It too must exist, and it must have a valid parent.
+//     assert(pindexAnchorBlock != nullptr);
 
-//     // We make no further assumptions other than the height of the prev block must be >= that of the reference block.
-//     assert(pindexPrev->nHeight >= pindexReferenceBlock->nHeight);
+//     // We make no further assumptions other than the height of the prev block must be >= that of the anchor block.
+//     assert(pindexPrev->nHeight >= pindexAnchorBlock->nHeight);
+
+//     const arith_uint256 powLimit = UintToArith256(params.powLimit);
 
 //     // Special difficulty rule for testnet
 //     // If the new block's timestamp is more than 2* 10 minutes then allow
@@ -892,13 +852,20 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 //         return UintToArith256(params.powLimit).GetCompact();
 //     }
 
-//     const int64_t nTimeDiff = int64_t(pindexPrev->nTime) - int64_t(pindexReferenceBlock->GetBlockHeader().nTime);
-//     const int64_t nHeightDiff = pindexPrev->nHeight - pindexReferenceBlock->nHeight;
-
-//     const arith_uint256 refBlockTarget = arith_uint256().SetCompact(pindexReferenceBlock->nBits);
-
-//     static const arith_uint256 powLimit = UintToArith256(params.powLimit);
-
+//     // For nTimeDiff calculation, the timestamp of the parent to the anchor block is used,
+//     // as per the absolute formulation of ASERT.
+//     // This is somewhat counterintuitive since it is referred to as the anchor timestamp, but
+//     // as per the formula the timestamp of block M-1 must be used if the anchor is M.
+//     assert(pindexPrev->pprev != nullptr);
+//     // Note: time difference is to parent of anchor block (or to anchor block itself iff anchor is genesis).
+//     //       (according to absolute formulation of ASERT)
+//     const auto anchorTime = pindexAnchorBlock->pprev
+//                                     ? pindexAnchorBlock->pprev->GetBlockTime()
+//                                     : pindexAnchorBlock->GetBlockTime();
+//     const int64_t nTimeDiff = pindexPrev->GetBlockTime() - anchorTime;
+//     // Height difference is from current block to anchor block
+//     const int64_t nHeightDiff = pindexPrev->nHeight - pindexAnchorBlock->nHeight;
+//     const arith_uint256 refBlockTarget = arith_uint256().SetCompact(pindexAnchorBlock->nBits);
 //     // Do the actual target adaptation calculation in separate
 //     // CalculateASERT() function
 //     arith_uint256 nextTarget = CalculateASERT(refBlockTarget,
@@ -906,19 +873,11 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 //                                               nTimeDiff,
 //                                               nHeightDiff,
 //                                               powLimit,
-//                                               params.nDAAHalfLife);
+//                                               params.nASERTHalfLife);
 
 //     // CalculateASERT() already clamps to powLimit.
 //     return nextTarget.GetCompact();
 // }
-
-
-
-// DAA/aserti3-2d: 2020-Nov-15 Hard fork
-uint32_t chain_state::aserti3_2d_difficulty_adjustment(data const& values) {
-    return 0;
-}
-
 
 
 // uint32_t GetNextCashWorkRequired(const CBlockIndex *pindexPrev,
@@ -964,7 +923,7 @@ uint32_t chain_state::aserti3_2d_difficulty_adjustment(data const& values) {
 
 
 // DAA/cw-144: 2017-Nov-13 Hard fork
-uint32_t chain_state::cw144_difficulty_adjustment(data const& values) {
+uint32_t chain_state::daa_cw144(data const& values) {
     // precondition: values.timestamp.size() >= 147
 
     using std::make_pair;
@@ -1001,14 +960,14 @@ uint32_t chain_state::cw144_difficulty_adjustment(data const& values) {
     }
 
     work /= actual_timespan;
-    auto nextTarget = (-1 * work) / work;  //Compute target result
+    auto next_target = (-1 * work) / work;  //Compute target result
     uint256_t pow_limit(compact{retarget_proof_of_work_limit});
 
-    if (nextTarget.compare(pow_limit) == 1) {
+    if (next_target.compare(pow_limit) == 1) {
         return retarget_proof_of_work_limit;
     }
 
-    return compact(nextTarget).normal();
+    return compact(next_target).normal();
 }
 #endif  //KTH_CURRENCY_BCH
 
@@ -1018,6 +977,8 @@ uint32_t chain_state::cw144_difficulty_adjustment(data const& values) {
 uint32_t chain_state::work_required(data const& values, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                                     , axion_t axion_activation_time
+                                    , assert_anchor_block_info_t const& assert_anchor_block_info
+                                    , uint32_t asert_half_life
 #endif
 ) {
     // Invalid parameter via public interface, test is_valid for results.
@@ -1037,7 +998,6 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks
     bool const daa_asert_active = is_mtp_activated(last_time_span, to_underlying(axion_activation_time));
 #else
     bool const daa_cw144_active = false;
-    bool const daa_asert_active = false;
 #endif  //KTH_CURRENCY_BCH
 
     if (is_retarget_height(values.height) && ! daa_cw144_active) {
@@ -1045,16 +1005,20 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks
     }
 
     if (script::is_enabled(forks, rule_fork::easy_blocks)) {
-        return easy_work_required(values, daa_cw144_active, daa_asert_active);
+#if defined(KTH_CURRENCY_BCH)
+        return easy_work_required(values, daa_cw144_active, daa_asert_active, assert_anchor_block_info, asert_half_life);
+#else
+        return easy_work_required(values);
+#endif
     }
 
 #if defined(KTH_CURRENCY_BCH)
     if (daa_asert_active) {
-        return aserti3_2d_difficulty_adjustment(values);
+        return daa_aserti3_2d(values, assert_anchor_block_info, asert_half_life);
     }
 
     if (daa_cw144_active) {
-        return cw144_difficulty_adjustment(values);
+        return daa_cw144(values);
     }
 
     //EDA
@@ -1073,7 +1037,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks
 
 #if defined(KTH_CURRENCY_BCH)
 uint32_t chain_state::work_required_adjust_cash(data const& values) {
-    const compact bits(bits_high(values));
+    compact const bits(bits_high(values));
     uint256_t target(bits);
     target = difficulty_adjustment_cash(target);  //target += (target >> 2);
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
@@ -1083,7 +1047,7 @@ uint32_t chain_state::work_required_adjust_cash(data const& values) {
 
 // [CalculateNextWorkRequired]
 uint32_t chain_state::work_required_retarget(data const& values) {
-    const compact bits(bits_high(values));
+    compact const bits(bits_high(values));
 
 #ifdef KTH_CURRENCY_LTC
     uint256_t target(bits);
@@ -1139,7 +1103,15 @@ uint32_t chain_state::retarget_timespan(data const& values) {
     return range_constrain(timespan, min_timespan, max_timespan);
 }
 
-uint32_t chain_state::easy_work_required(data const& values, bool daa_cw144_active, bool daa_asert_active) {
+//static
+uint32_t chain_state::easy_work_required(data const& values
+#if defined(KTH_CURRENCY_BCH)
+                            , bool daa_cw144_active
+                            , bool daa_asert_active
+                            , assert_anchor_block_info_t const& assert_anchor_block_info
+                            , uint32_t asert_half_life
+#endif
+) {
     KTH_ASSERT(values.height != 0);
 
     // If the time limit has passed allow a minimum difficulty block.
@@ -1147,23 +1119,14 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_cw144_acti
         return retarget_proof_of_work_limit;
     }
 
-    //TODO(fernando): could it be improved?
+#if defined(KTH_CURRENCY_BCH)
     if (daa_asert_active) {
-#if defined(KTH_CURRENCY_BCH)
-        return aserti3_2d_difficulty_adjustment(values);
-#else
-//Note: Could not happend: DAA/asert and not BCH
-#endif  //KTH_CURRENCY_BCH
+        return daa_aserti3_2d(values, assert_anchor_block_info, asert_half_life);
     }
-
-    //TODO(fernando): could it be improved?
     if (daa_cw144_active) {
-#if defined(KTH_CURRENCY_BCH)
-        return cw144_difficulty_adjustment(values);
-#else
-//Note: Could not happend: DAA/cw144 and not BCH
-#endif  //KTH_CURRENCY_BCH
+        return daa_cw144(values);
     }
+#endif
 
     auto height = values.height;
     auto& bits = values.bits.ordered;
@@ -1181,6 +1144,7 @@ uint32_t chain_state::easy_work_required(data const& values, bool daa_cw144_acti
     return retarget_proof_of_work_limit;
 }
 
+//static
 uint32_t chain_state::easy_time_limit(chain_state::data const& values) {
     int64_t const high = timestamp_high(values);
     int64_t const spacing = easy_spacing_seconds;
@@ -1193,6 +1157,7 @@ uint32_t chain_state::easy_time_limit(chain_state::data const& values) {
 }
 
 // A retarget height, or a block that does not have proof_of_work_limit bits.
+//static
 bool chain_state::is_retarget_or_non_limit(size_t height, uint32_t bits) {
     // Zero is a retarget height, ensuring termination before height underflow.
     // This is guaranteed, just asserting here to document the safeguard.
@@ -1283,66 +1248,66 @@ uint32_t chain_state::signal_version(uint32_t forks) {
     return first_version;
 }
 
-// This is promotion from a preceding height to the next.
-chain_state::data chain_state::to_pool(chain_state const& top) {
-    // Alias configured forks.
-    auto const forks = top.forks_;
+// // This is promotion from a preceding height to the next.
+// chain_state::data chain_state::to_pool(chain_state const& top) {
+//     // Alias configured forks.
+//     auto const forks = top.forks_;
 
-    // Retargeting is only activated via configuration.
-    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+//     // Retargeting is only activated via configuration.
+//     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
 
-    // Copy data from presumed previous-height block state.
-    auto data = top.data_;
+//     // Copy data from presumed previous-height block state.
+//     auto data = top.data_;
 
-    // If this overflows height is zero and result is handled as invalid.
-    auto const height = data.height + 1u;
+//     // If this overflows height is zero and result is handled as invalid.
+//     auto const height = data.height + 1u;
 
-    // Enqueue previous block values to collections.
-    data.bits.ordered.push_back(data.bits.self);
-    data.version.ordered.push_back(data.version.self);
-    data.timestamp.ordered.push_back(data.timestamp.self);
+//     // Enqueue previous block values to collections.
+//     data.bits.ordered.push_back(data.bits.self);
+//     data.version.ordered.push_back(data.version.self);
+//     data.timestamp.ordered.push_back(data.timestamp.self);
 
-    // If bits collection overflows, dequeue oldest member.
-    if (data.bits.ordered.size() > bits_count(height, forks)) {
-        data.bits.ordered.pop_front();
-    }
+//     // If bits collection overflows, dequeue oldest member.
+//     if (data.bits.ordered.size() > bits_count(height, forks)) {
+//         data.bits.ordered.pop_front();
+//     }
 
-    // If version collection overflows, dequeue oldest member.
-    if (data.version.ordered.size() > version_count(height, forks)) {
-        data.version.ordered.pop_front();
-    }
+//     // If version collection overflows, dequeue oldest member.
+//     if (data.version.ordered.size() > version_count(height, forks)) {
+//         data.version.ordered.pop_front();
+//     }
 
-    // If timestamp collection overflows, dequeue oldest member.
-    if (data.timestamp.ordered.size() > timestamp_count(height, forks)) {
-        data.timestamp.ordered.pop_front();
-    }
+//     // If timestamp collection overflows, dequeue oldest member.
+//     if (data.timestamp.ordered.size() > timestamp_count(height, forks)) {
+//         data.timestamp.ordered.pop_front();
+//     }
 
-    // regtest does not perform retargeting.
-    // If promoting from retarget height, move that timestamp into retarget.
-    if (retarget && is_retarget_height(height - 1u)) {
-        // The first block after a retarget saves the "retarget block" timestamp for future validations
-#ifdef KTH_CURRENCY_LTC
-        // LTC retarget function is like BTC/BCH but uses the index -1.
-        // data.timestamps.orderder.back() = current block timestamp = data.timestamp.self (this is used for BTC)
-        // data.timestamps.orderder.at(size-2) = retarget block timestamp
-        data.timestamp.retarget = data.timestamp.ordered.at(data.timestamp.ordered.size() - 2);
-#else
-        data.timestamp.retarget = data.timestamp.self;
-#endif
-    }
+//     // regtest does not perform retargeting.
+//     // If promoting from retarget height, move that timestamp into retarget.
+//     if (retarget && is_retarget_height(height - 1u)) {
+//         // The first block after a retarget saves the "retarget block" timestamp for future validations
+// #ifdef KTH_CURRENCY_LTC
+//         // LTC retarget function is like BTC/BCH but uses the index -1.
+//         // data.timestamps.orderder.back() = current block timestamp = data.timestamp.self (this is used for BTC)
+//         // data.timestamps.orderder.at(size-2) = retarget block timestamp
+//         data.timestamp.retarget = data.timestamp.ordered.at(data.timestamp.ordered.size() - 2);
+// #else
+//         data.timestamp.retarget = data.timestamp.self;
+// #endif
+//     }
 
-    // Replace previous block state with tx pool chain state for next height.
-    // Only height and version used by tx pool, others promotable or unused.
-    // Preserve data.allow_collisions_hash promotion.
-    // Preserve data.bip9_bit0_hash promotion.
-    // Preserve data.bip9_bit1_hash promotion.
-    data.height = height;
-    data.hash = null_hash;
-    data.bits.self = work_limit(retarget);
-    data.version.self = signal_version(forks);
-    data.timestamp.self = max_uint32;
-    return data;
-}
+//     // Replace previous block state with tx pool chain state for next height.
+//     // Only height and version used by tx pool, others promotable or unused.
+//     // Preserve data.allow_collisions_hash promotion.
+//     // Preserve data.bip9_bit0_hash promotion.
+//     // Preserve data.bip9_bit1_hash promotion.
+//     data.height = height;
+//     data.hash = null_hash;
+//     data.bits.self = work_limit(retarget);
+//     data.version.self = signal_version(forks);
+//     data.timestamp.self = max_uint32;
+//     return data;
+// }
 
 chain_state::data chain_state::to_block(chain_state const& pool, block const& block) {
     // Alias configured forks.
@@ -1384,44 +1349,44 @@ chain_state::data chain_state::to_block(chain_state const& pool, block const& bl
     return data;
 }
 
-chain_state::data chain_state::to_header(chain_state const& parent, header const& header) {
-    // Alias configured forks.
-    auto const forks = parent.forks_;
+// chain_state::data chain_state::to_header(chain_state const& parent, header const& header) {
+//     // Alias configured forks.
+//     auto const forks = parent.forks_;
 
-    // Retargeting and testnet are only activated via configuration.
-    auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-    auto const mainnet = retarget && !testnet;
+//     // Retargeting and testnet are only activated via configuration.
+//     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
+//     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
+//     auto const mainnet = retarget && !testnet;
 
-    // Copy and promote data from presumed parent-height header/block state.
-    auto data = to_pool(parent);
+//     // Copy and promote data from presumed parent-height header/block state.
+//     auto data = to_pool(parent);
 
-    // Replace the pool (empty) current block state with given header state.
-    // Preserve data.timestamp.retarget promotion.
-    data.hash = header.hash();
-    data.bits.self = header.bits();
-    data.version.self = header.version();
-    data.timestamp.self = header.timestamp();
+//     // Replace the pool (empty) current block state with given header state.
+//     // Preserve data.timestamp.retarget promotion.
+//     data.hash = header.hash();
+//     data.bits.self = header.bits();
+//     data.version.self = header.version();
+//     data.timestamp.self = header.timestamp();
 
-    // Cache hash of bip34 height block, otherwise use preceding state.
-    if (allow_collisions(data.height, mainnet, testnet)) {
-        data.allow_collisions_hash = data.hash;
-    }
+//     // Cache hash of bip34 height block, otherwise use preceding state.
+//     if (allow_collisions(data.height, mainnet, testnet)) {
+//         data.allow_collisions_hash = data.hash;
+//     }
 
-    // Cache hash of bip9 bit0 height block, otherwise use preceding state.
-    if (bip9_bit0_active(data.height, mainnet, testnet)) {
-        data.bip9_bit0_hash = data.hash;
-    }
+//     // Cache hash of bip9 bit0 height block, otherwise use preceding state.
+//     if (bip9_bit0_active(data.height, mainnet, testnet)) {
+//         data.bip9_bit0_hash = data.hash;
+//     }
 
-#if ! defined(KTH_CURRENCY_BCH)
-    // Cache hash of bip9 bit1 height block, otherwise use preceding state.
-    if (bip9_bit1_active(data.height, mainnet, testnet)) {
-        data.bip9_bit1_hash = data.hash;
-    }
-#endif
+// #if ! defined(KTH_CURRENCY_BCH)
+//     // Cache hash of bip9 bit1 height block, otherwise use preceding state.
+//     if (bip9_bit1_active(data.height, mainnet, testnet)) {
+//         data.bip9_bit1_hash = data.hash;
+//     }
+// #endif
 
-    return data;
-}
+//     return data;
+// }
 
 // Semantic invalidity can also arise from too many/few values in the arrays.
 // The same computations used to specify the ranges could detect such errors.
@@ -1454,8 +1419,12 @@ uint32_t chain_state::work_required() const {
 }
 
 #if defined(KTH_CURRENCY_BCH)
-uint64_t chain_state::daa_half_life() const {
-    return daa_half_life_;
+chain_state::assert_anchor_block_info_t chain_state::assert_anchor_block_info() const {
+    return assert_anchor_block_info_;
+}
+
+uint32_t chain_state::asert_half_life() const {
+    return asert_half_life_;
 }
 
 // uint64_t chain_state::monolith_activation_time() const {
@@ -1509,6 +1478,8 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     return work_required(values, enabled_forks()
 #if defined(KTH_CURRENCY_BCH)
                             , axion_activation_time()
+                            , assert_anchor_block_info_
+                            , asert_half_life()
 #endif
     );
 }
