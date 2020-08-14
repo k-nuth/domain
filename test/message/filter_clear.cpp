@@ -15,8 +15,8 @@ TEST_CASE("filter clear - from data insufficient version failure", "[filter clea
     auto const raw = expected.to_data(version::level::maximum);
     filter_clear instance{};
 
-    REQUIRE(!entity_from_data(instance, filter_clear::version_minimum - 1, raw));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, filter_clear::version_minimum - 1, raw));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("filter clear - roundtrip to data factory from data chunk", "[filter clear]") {

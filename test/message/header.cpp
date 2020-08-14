@@ -208,7 +208,7 @@ TEST_CASE("message header  operator assign equals 1  always  matches equivalent"
     REQUIRE(value.is_valid());
 
     message::header instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
     REQUIRE(instance.is_valid());
@@ -227,7 +227,7 @@ TEST_CASE("message header  operator assign equals 2  always  matches equivalent"
     REQUIRE(value.is_valid());
 
     message::header instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
     REQUIRE(instance.is_valid());

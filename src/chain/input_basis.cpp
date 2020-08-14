@@ -253,7 +253,7 @@ size_t input_basis::signature_operations(bool bip16, bool bip141) const {
 #endif
     
     auto const& prevout = previous_output_.validation.cache.script();
-    ////KTH_ASSERT_MSG(!bip141 || bip16, "bip141 implies bip16");
+    ////KTH_ASSERT_MSG( ! bip141 || bip16, "bip141 implies bip16");
 
     // Penalize quadratic signature operations (bip141).
     auto const sigops_factor = bip141 ? fast_sigops_factor : 1U;

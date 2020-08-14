@@ -44,7 +44,7 @@ public:
     static
     uint8_t const testnet_p2sh;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     static
     std::string const cashaddr_prefix_mainnet;
     
@@ -88,7 +88,7 @@ public:
     [[nodiscard]]
     std::string encoded() const;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     [[nodiscard]]
     std::string encoded_cashaddr() const;
 #endif  //KTH_CURRENCY_BCH
@@ -123,7 +123,7 @@ private:
     static
     payment_address from_string(std::string const& address);
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     static
     payment_address from_string_cashaddr(std::string const& address);
 #endif  //KTH_CURRENCY_BCH

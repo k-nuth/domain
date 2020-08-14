@@ -93,25 +93,25 @@ TEST_CASE("point value  equality  same  true", "[point value]") {
 TEST_CASE("point value  equality  different by hash  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{null_hash, 43}, 34};
-    REQUIRE(!(instance1 == instance2));
+    REQUIRE( ! (instance1 == instance2));
 }
 
 TEST_CASE("point value  equality  different by index  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 43}, 34};
-    REQUIRE(!(instance1 == instance2));
+    REQUIRE( ! (instance1 == instance2));
 }
 
 TEST_CASE("point value  equality  different by value  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 42}, 35};
-    REQUIRE(!(instance1 == instance2));
+    REQUIRE( ! (instance1 == instance2));
 }
 
 TEST_CASE("point value  inequality  same  false", "[point value]") {
     static point_value const instance1{{hash1, 42}, 34};
     static point_value const instance2{{hash1, 42}, 34};
-    REQUIRE(!(instance1 != instance2));
+    REQUIRE( ! (instance1 != instance2));
 }
 
 TEST_CASE("point value  inequality  different by hash  true", "[point value]") {

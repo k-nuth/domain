@@ -25,7 +25,7 @@ TEST_CASE("ec private  compressed wif  compressed  test", "[ec private]") {
 }
 
 TEST_CASE("ec private  uncompressed wif  not compressed  test", "[ec private]") {
-    REQUIRE(!ec_private(WIF_UNCOMPRESSED).compressed());
+    REQUIRE( ! ec_private(WIF_UNCOMPRESSED).compressed());
 }
 
 TEST_CASE("ec private  encode wif  compressed  test", "[ec private]") {
@@ -47,7 +47,7 @@ TEST_CASE("ec private  decode wif  uncompressed  test", "[ec private]") {
     ec_private secret(WIF_UNCOMPRESSED);
     REQUIRE(encode_base16(secret.secret()) == SECRET);
     REQUIRE(secret.version() == 0x8000);
-    REQUIRE(!secret.compressed());
+    REQUIRE( ! secret.compressed());
 }
 
 // End Boost Suite

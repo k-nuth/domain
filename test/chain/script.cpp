@@ -244,12 +244,12 @@ TEST_CASE("script empty  empty operations  true", "[script]") {
 
 TEST_CASE("script empty  non empty  false", "[script]") {
     script instance(script::to_null_data_pattern(data_chunk{42u}));
-    REQUIRE(!instance.empty());
+    REQUIRE( ! instance.empty());
 }
 
 TEST_CASE("script clear  non empty  empty", "[script]") {
     script instance(script::to_null_data_pattern(data_chunk{42u}));
-    REQUIRE(!instance.empty());
+    REQUIRE( ! instance.empty());
 
     instance.clear();
     REQUIRE(instance.empty());

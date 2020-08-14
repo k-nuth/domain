@@ -1015,7 +1015,7 @@ namespace detail {
         bool res = op_macro(lhs, rhs);                                                             \
         if(m_at & assertType::is_false)                                                            \
             res = !res;                                                                            \
-        if(!res || doctest::getContextOptions()->success)                                          \
+        if( ! res || doctest::getContextOptions()->success)                                          \
             return Result(res, stringifyBinaryExpr(lhs, op_str, rhs));                             \
         return Result(res);                                                                        \
     }
@@ -1148,14 +1148,14 @@ namespace detail {
             if(m_at & assertType::is_false) //!OCLINT bitwise operator in conditional
                 res = !res;
 
-            if(!res || getContextOptions()->success)
+            if( ! res || getContextOptions()->success)
                 return Result(res, toString(lhs));
             return Result(res);
         }
 
         // clang-format off
         DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(==, " == ", DOCTEST_CMP_EQ) //!OCLINT bitwise operator in conditional
-        DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(!=, " != ", DOCTEST_CMP_NE) //!OCLINT bitwise operator in conditional
+        DOCTEST_DO_BINARY_EXPRESSION_COMPARISON( ! =, " != ", DOCTEST_CMP_NE) //!OCLINT bitwise operator in conditional
         DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(>,  " >  ", DOCTEST_CMP_GT) //!OCLINT bitwise operator in conditional
         DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(<,  " <  ", DOCTEST_CMP_LT) //!OCLINT bitwise operator in conditional
         DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(>=, " >= ", DOCTEST_CMP_GE) //!OCLINT bitwise operator in conditional
@@ -1360,7 +1360,7 @@ namespace detail {
 
 #define DOCTEST_FAST_ASSERT_OUT_OF_TESTS(decomp)                                                   \
     do {                                                                                           \
-        if(!is_running_in_test) {                                                                  \
+        if( ! is_running_in_test) {                                                                  \
             if(failed) {                                                                           \
                 ResultBuilder rb(at, file, line, expr);                                            \
                 rb.m_failed = failed;                                                              \
@@ -1937,7 +1937,7 @@ int registerReporter(const char* name, int priority, IReporter& r);
                 static bool                       inited = false;                                  \
                 DOCTEST_MSVC_SUPPRESS_WARNING_POP                                                  \
                 DOCTEST_CLANG_SUPPRESS_WARNING_POP                                                 \
-                if(!inited) {                                                                      \
+                if( ! inited) {                                                                      \
                     data* decorators;                                                              \
                     inited = true;                                                                 \
                 }                                                                                  \
@@ -2047,7 +2047,7 @@ constexpr T to_lvalue = x;
 
 #define DOCTEST_ASSERT_THROWS(expr, assert_type)                                                   \
     do {                                                                                           \
-        if(!doctest::getContextOptions()->no_throw) {                                              \
+        if( ! doctest::getContextOptions()->no_throw) {                                              \
             doctest::detail::ResultBuilder _DOCTEST_RB(doctest::assertType::assert_type, __FILE__, \
                                                        __LINE__, #expr);                           \
             try {                                                                                  \
@@ -2059,7 +2059,7 @@ constexpr T to_lvalue = x;
 
 #define DOCTEST_ASSERT_THROWS_AS(expr, assert_type, ...)                                           \
     do {                                                                                           \
-        if(!doctest::getContextOptions()->no_throw) {                                              \
+        if( ! doctest::getContextOptions()->no_throw) {                                              \
             doctest::detail::ResultBuilder _DOCTEST_RB(doctest::assertType::assert_type, __FILE__, \
                                                        __LINE__, #expr, #__VA_ARGS__);             \
             try {                                                                                  \
@@ -2074,7 +2074,7 @@ constexpr T to_lvalue = x;
 
 #define DOCTEST_ASSERT_NOTHROW(expr, assert_type)                                                  \
     do {                                                                                           \
-        if(!doctest::getContextOptions()->no_throw) {                                              \
+        if( ! doctest::getContextOptions()->no_throw) {                                              \
             doctest::detail::ResultBuilder _DOCTEST_RB(doctest::assertType::assert_type, __FILE__, \
                                                        __LINE__, #expr);                           \
             try {                                                                                  \
@@ -2878,7 +2878,7 @@ String::String() {
 }
 
 String::~String() {
-    if(!isOnStack())
+    if( ! isOnStack())
         delete[] data.ptr;
 }
 
@@ -2900,7 +2900,7 @@ String::String(const String& other) { copy(other); }
 
 String& String::operator=(const String& other) {
     if(this != &other) {
-        if(!isOnStack())
+        if( ! isOnStack())
             delete[] data.ptr;
 
         copy(other);
@@ -2968,7 +2968,7 @@ String::String(String&& other) {
 
 String& String::operator=(String&& other) {
     if(this != &other) {
-        if(!isOnStack())
+        if( ! isOnStack())
             delete[] data.ptr;
         memcpy(buf, other.buf, len);
         other.buf[0] = '\0';
@@ -3401,7 +3401,7 @@ namespace {
 
         while(*str) {
             if(*wild == '*') {
-                if(!*++wild) {
+                if( ! *++wild) {
                     return 1;
                 }
                 mp = wild;
@@ -3448,7 +3448,7 @@ namespace {
 
     UInt64 getCurrentTicks() {
         static UInt64 hz = 0, hzo = 0;
-        if(!hz) {
+        if( ! hz) {
             QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&hz));
             QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&hzo));
         }
@@ -3496,7 +3496,7 @@ namespace detail {
 
         // check subcase filters
         if(s->subcasesCurrentLevel < s->subcase_filter_levels) {
-            if(!matchesAny(m_signature.m_name, s->filters[6], true, s->case_sensitive))
+            if( ! matchesAny(m_signature.m_name, s->filters[6], true, s->case_sensitive))
                 return;
             if(matchesAny(m_signature.m_name, s->filters[7], false, s->case_sensitive))
                 return;
@@ -3670,7 +3670,7 @@ namespace {
     bool   g_attrsInitted = false;
 
     int colors_init() {
-        if(!g_attrsInitted) {
+        if( ! g_attrsInitted) {
             g_stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
             g_attrsInitted = true;
             CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
@@ -4196,7 +4196,7 @@ namespace detail {
         bool const isWarn = m_severity & assertType::is_warn;
 
         // warn is just a message in this context so we dont treat it as an assert
-        if(!isWarn) {
+        if( ! isWarn) {
             addAssert(m_severity);
             addFailedAssert(m_severity);
         }
@@ -4412,7 +4412,7 @@ namespace {
         }
 
         void log_assert(const AssertData& rb) override {
-            if(!rb.m_failed && !opt->success)
+            if( ! rb.m_failed && !opt->success)
                 return;
 
             std::lock_guard<std::mutex> lock(g_mutex);
@@ -4420,7 +4420,7 @@ namespace {
             logTestStart();
 
             file_line_to_stream(rb.m_file, rb.m_line, " ");
-            successOrFailColoredStringToStream(!rb.m_failed, rb.m_at);
+            successOrFailColoredStringToStream( ! rb.m_failed, rb.m_at);
             if((rb.m_at & assertType::is_throws_as) == 0) //!OCLINT bitwise operator in conditional
                 s << Color::Cyan << assertString(rb.m_at) << "( " << rb.m_expr << " ) "
                   << Color::None;
@@ -4440,7 +4440,7 @@ namespace {
                   << rb.m_exception << "\n";
             } else {
                 s << (rb.m_threw ? "THREW exception: " :
-                                   (!rb.m_failed ? "is correct!\n" : "is NOT correct!\n"));
+                                   ( ! rb.m_failed ? "is correct!\n" : "is NOT correct!\n"));
                 if(rb.m_threw)
                     s << rb.m_exception << "\n";
                 else
@@ -4725,7 +4725,7 @@ namespace {
     bool parseIntOption(int argc, const char* const* argv, const char* pattern, optionType type,
                         int& res) {
         String parsedValue;
-        if(!parseOption(argc, argv, pattern, parsedValue))
+        if( ! parseOption(argc, argv, pattern, parsedValue))
             return false;
 
         if(type == 0) {
@@ -4963,7 +4963,7 @@ int Context::run() {
     p->numTestCases = testArray.size();
 
     // sort the collected records
-    if(!testArray.empty()) {
+    if( ! testArray.empty()) {
         if(p->order_by.compare("file", true) == 0) {
             std::qsort(&testArray[0], testArray.size(), sizeof(TestCase*), fileOrderComparator);
         } else if(p->order_by.compare("suite", true) == 0) {
@@ -4995,7 +4995,7 @@ int Context::run() {
 
     bool query_mode = p->count || p->list_test_cases || p->list_test_suites;
 
-    if(!query_mode)
+    if( ! query_mode)
         DOCTEST_ITERATE_THROUGH_REPORTERS(test_run_start, *g_cs);
 
     // invoke the registered functions if they match the filter criteria (or just count them)
@@ -5006,20 +5006,20 @@ int Context::run() {
         if(tc.m_skip && !p->no_skip)
             skip_me = true;
 
-        if(!matchesAny(tc.m_file, p->filters[0], true, p->case_sensitive))
+        if( ! matchesAny(tc.m_file, p->filters[0], true, p->case_sensitive))
             skip_me = true;
         if(matchesAny(tc.m_file, p->filters[1], false, p->case_sensitive))
             skip_me = true;
-        if(!matchesAny(tc.m_test_suite, p->filters[2], true, p->case_sensitive))
+        if( ! matchesAny(tc.m_test_suite, p->filters[2], true, p->case_sensitive))
             skip_me = true;
         if(matchesAny(tc.m_test_suite, p->filters[3], false, p->case_sensitive))
             skip_me = true;
-        if(!matchesAny(tc.m_name, p->filters[4], true, p->case_sensitive))
+        if( ! matchesAny(tc.m_name, p->filters[4], true, p->case_sensitive))
             skip_me = true;
         if(matchesAny(tc.m_name, p->filters[5], false, p->case_sensitive))
             skip_me = true;
 
-        if(!skip_me)
+        if( ! skip_me)
             p->numTestCasesPassingFilters++;
 
         // skip the test if it is not in the execution range
@@ -5028,7 +5028,7 @@ int Context::run() {
             skip_me = true;
 
         if(skip_me) {
-            if(!query_mode)
+            if( ! query_mode)
                 DOCTEST_ITERATE_THROUGH_REPORTERS(test_case_skipped, tc);
             continue;
         }
@@ -5165,7 +5165,7 @@ int Context::run() {
         }
     }
 
-    if(!query_mode)
+    if( ! query_mode)
         DOCTEST_ITERATE_THROUGH_REPORTERS(test_run_end, *g_cs);
     else
         g_con_rep.output_query_results();

@@ -140,6 +140,8 @@ public:
             checkpoints.emplace_back("00000000000001fae0095cd4bea16f1ce8ab63f3f660a03c6d8171485f484b24", 1267996); //time: 1542301205 - Nov 15, 2018 05:00:05 PM
             checkpoints.emplace_back("00000000000002773f8970352e4a3368a1ce6ef91eb606b64389b36fdbf1bd56", 1267997); //time: 1542302023 - Nov 15, 2018 05:13:43 PM
 
+            checkpoints.emplace_back("000000002a7a59c4f88a049fa5e405e67cd689d75a1f330cbf26286cf0ec1d8f", 1300000);
+
             //2019-May Hardfork - great_wall - (1557921600)
             checkpoints.emplace_back("00000000000001a749d7aa418c582a0e234ebc15643bf23a4f3107fa55120388", 1303884);  //time: 1557923125 - May 15, 2019 12:25:25 PM
             checkpoints.emplace_back("00000000000000479138892ef0e4fa478ccc938fb94df862ef5bde7e8dee23d3", 1303885);  //time: 1557923294 - May 15, 2019 12:28:14 PM
@@ -154,6 +156,9 @@ public:
             checkpoints.emplace_back("0000000070f33c64cb94629680fbc57d17bea354a73e693affcb366d023db324", 1378460);  //time: 1589550734 - May 15, 2020 01:52:14 PM
             checkpoints.emplace_back("0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461);  //time: 1589552066 - May 15, 2020 02:14:26 PM
             checkpoints.emplace_back("0000000066174e2e09129967402035d200341ccb44bbe4dd1b31997296457deb", 1378462);  //time: 1589553287 - May 15, 2020 02:34:47 PM
+
+            //Checkpoint added to find ASERT Anchor block
+            checkpoints.emplace_back("0000000000146da9eea6f299ca19ccb81371aa2e9490db229d610e74c4790e08", 1400000);
 
             // //2020-Nov Hardfork - axion - (1605441600)
             // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
@@ -245,6 +250,10 @@ public:
             checkpoints.emplace_back("000000000000000003302c47d01e78f1c86aa3b0e96b066761a5059bc8f5781a", 635258);  //time: 1589547409 - May 15, 2020 12:56:49 PM
             checkpoints.emplace_back("00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259);  //time: 1589547811 - May 15, 2020 01:03:31 PM
             checkpoints.emplace_back("0000000000000000021007984d36d32c49a249b216297694dfb9756f095aa645", 635260);  //time: 1589548077 - May 15, 2020 01:07:57 PM
+
+            //Checkpoint added to find ASERT Anchor block
+            checkpoints.emplace_back("000000000000000001db4b04393d3cc8da269bb6650011f666bfc17bafcebebf", 648000);
+            
 
             // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
 
@@ -363,28 +372,9 @@ public:
         }
     } 
 
-    // /// Load command line options (named).
-    // virtual 
-    // options_metadata load_options() = 0;
-
-    // /// Load command line arguments (positional).
-    // virtual 
-    // arguments_metadata load_arguments() = 0;
-
-    // /// Load environment variable settings.
-    // virtual 
-    // options_metadata load_environment() = 0;
-
-    // /// Load configuration file settings.
-    // virtual 
-    // options_metadata load_settings() = 0;
-
 protected:
     // virtual
     void load_command_variables(variables_map& variables, int argc, char const* argv[]) {
-        // auto const options = load_options();
-        // auto const arguments = load_arguments();
-
         auto const options = derived().load_options();
         auto const arguments = derived().load_arguments();
 
@@ -393,16 +383,12 @@ protected:
         store(command_parser.run(), variables);
     }
 
-    // virtual
-    // int load_configuration_variables(variables_map& variables, std::string const& option_name);
     load_error load_configuration_variables(variables_map& variables, std::string const& option_name) {
         auto const config_path = get_config_option(variables, option_name);
         return load_configuration_variables_path(variables, config_path);
     }
 
-    // virtual
     load_error load_configuration_variables_path(variables_map& variables, path const& config_path) {
-        // auto const config_settings = load_settings();
         auto const config_settings = derived().load_settings();
 
         // If the existence test errors out we pretend there's no file :/.
@@ -432,7 +418,6 @@ protected:
 
     // virtual
     void load_environment_variables(variables_map& variables, std::string const& prefix) {
-        // auto const& environment_variables = load_environment();
         auto const& environment_variables = derived().load_environment();
         auto const environment = parse_environment(environment_variables, prefix);
         store(environment, variables);

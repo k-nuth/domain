@@ -76,7 +76,7 @@ namespace kth::domain::chain {
 //     std::for_each(puts.begin(), puts.end(), serialize);
 // }
 
-// #ifndef KTH_CURRENCY_BCH
+// #if ! defined(KTH_CURRENCY_BCH)
 // // Input list must be pre-populated as it determines witness count.
 // template <typename R, KTH_IS_READER(R)>
 // inline void read_witnesses(R& source, input::list& inputs) {
@@ -174,7 +174,7 @@ public:
         transaction_basis::from_data(source, wire, witness);
 
 #ifdef KTH_CACHED_RPC_DATA
-        if (! wire && unconfirmed) {
+        if ( !  wire && unconfirmed) {
             auto const sigops = source.read_4_bytes_little_endian();
             cached_sigops_ = static_cast<uint32_t>(sigops);
             auto const fees = source.read_8_bytes_little_endian();

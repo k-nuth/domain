@@ -15,7 +15,7 @@ data_chunk valid_raw_operation = to_chunk(base16_literal("0900ff11ee22bb33aa44")
 TEST_CASE("operation  constructor 1  always  returns default initialized", "[operation]") {
     operation instance;
 
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     REQUIRE(instance.data().empty());
     REQUIRE(instance.code() == opcode::disabled_xor);
 }
@@ -58,8 +58,8 @@ TEST_CASE("operation  from data  insufficient bytes  failure", "[operation]") {
     data_chunk const data;
     operation instance;
 
-    REQUIRE(!entity_from_data(instance, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("operation  from data  roundtrip push size 0  success", "[operation]") {
@@ -482,12 +482,12 @@ TEST_CASE("operation  from string  push 0  push size 0", "[operation]") {
 
 TEST_CASE("operation  from string  push 1  false", "[operation]") {
     operation value;
-    REQUIRE(!value.from_string("push_1"));
+    REQUIRE( ! value.from_string("push_1"));
 }
 
 TEST_CASE("operation  from string  push 75  false", "[operation]") {
     operation value;
-    REQUIRE(!value.from_string("push_75"));
+    REQUIRE( ! value.from_string("push_75"));
 }
 
 TEST_CASE("operation  from string  push one  push one size empty", "[operation]") {
@@ -576,12 +576,12 @@ TEST_CASE("operation  from string  4 0x112233  push four size", "[operation]") {
 
 TEST_CASE("operation  from string  5 0x112233  false", "[operation]") {
     operation value;
-    REQUIRE(!value.from_string("[5.112233]"));
+    REQUIRE( ! value.from_string("[5.112233]"));
 }
 
 TEST_CASE("operation  from string  empty 0x112233  false", "[operation]") {
     operation value;
-    REQUIRE(!value.from_string("[.112233]"));
+    REQUIRE( ! value.from_string("[.112233]"));
 }
 
 TEST_CASE("operation  from string  nop2  nop2 checklocktimeverify", "[operation]") {

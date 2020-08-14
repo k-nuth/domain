@@ -20,13 +20,13 @@
 #include <kth/infrastructure/math/elliptic_curve.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 #include <kth/infrastructure/wallet/cashaddr.hpp>
 #endif  //KTH_CURRENCY_BCH
 
 using namespace kth::infrastructure::machine;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 using namespace kth::infrastructure::wallet;
 #endif  //KTH_CURRENCY_BCH
 
@@ -42,7 +42,7 @@ uint8_t const payment_address::mainnet_p2sh = 0x05;
 uint8_t const payment_address::testnet_p2kh = 0x6f;
 uint8_t const payment_address::testnet_p2sh = 0xc4;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 std::string const payment_address::cashaddr_prefix_mainnet = "bitcoincash";
 std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
 #endif
@@ -101,7 +101,7 @@ bool payment_address::is_address(data_slice decoded) {
 // ----------------------------------------------------------------------------
 
 //TODO(fernando): move BCH cashaddr to another place
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 
 template <unsigned int frombits, unsigned int tobits, bool pad, typename O, typename I>
 bool convert_bits(O& out, I it, I end) {
@@ -218,7 +218,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
     if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
         return from_string_cashaddr(address);
 #else
         return {};
@@ -282,7 +282,7 @@ std::string payment_address::encoded() const {
     return encode_base58(wrap(version_, hash_));
 }
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 
 // Convert the data part to a 5 bit representation.
 template <typename T>

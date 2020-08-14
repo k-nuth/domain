@@ -263,7 +263,7 @@ data_chunk const& script_basis::bytes() const {
 inline 
 hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
-    KTH_ASSERT(!tx.is_coinbase());
+    KTH_ASSERT( ! tx.is_coinbase());
 
     auto serialized = tx.to_data(true, false);
     extend_data(serialized, to_little_endian(sighash_type));
@@ -515,7 +515,7 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
     auto const sighash = to_sighash_enum(sighash_type);
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
 
     //Note(kth: Not used for the moment:
@@ -535,10 +535,10 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
     sink_w.write_little_endian(tx.version());
 
     // 2. inpoints hash (32-byte hash).
-    sink_w.write_hash(!any ? tx.inpoints_hash() : null_hash);
+    sink_w.write_hash( ! any ? tx.inpoints_hash() : null_hash);
 
     // 3. sequences hash (32-byte hash).
-    sink_w.write_hash(!any && all ? tx.sequences_hash() : null_hash);
+    sink_w.write_hash( ! any && all ? tx.sequences_hash() : null_hash);
 
     // 4. outpoint (32-byte hash + 4-byte little endian).
     input.previous_output().to_data(sink_w);
@@ -1004,7 +1004,7 @@ void script_basis::find_and_delete(data_stack const& endorsements) {
 // // The criteria below are not be comprehensive but are fast to evaluate.
 // bool script_basis::is_unspendable() const {
 //     // The first operations access must be method-based to guarantee the cache.
-//     return (!operations().empty() && operations_[0].code() == opcode::return_) || serialized_size(false) > max_script_size;
+//     return ( ! operations().empty() && operations_[0].code() == opcode::return_) || serialized_size(false) > max_script_size;
 // }
 
 // Validation.

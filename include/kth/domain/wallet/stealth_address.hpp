@@ -31,11 +31,11 @@ public:
 
     /// This is advisory in nature and likely to be enforced by a server.
     static
-    const size_t min_filter_bits;
+    size_t const min_filter_bits;
 
     /// This is the protocol limit to the size of a stealth prefix filter.
     static
-    const size_t max_filter_bits;
+    size_t const max_filter_bits;
 
     /// Constructors.
     stealth_address();

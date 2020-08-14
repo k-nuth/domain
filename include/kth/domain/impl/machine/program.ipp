@@ -163,7 +163,7 @@ void program::push_copy(value_type const& item) {
 
 // This must be guarded.
 inline data_chunk program::pop() {
-    KTH_ASSERT(!empty());
+    KTH_ASSERT( ! empty());
     auto const value = primary_.back();
     primary_.pop_back();
     return value;
@@ -299,7 +299,7 @@ bool program::empty() const {
 // This must be guarded (intended for interpreter internal use).
 inline 
 bool program::stack_true(bool clean) const {
-    KTH_ASSERT(!empty());
+    KTH_ASSERT( ! empty());
     return stack_to_bool(clean);
 }
 
@@ -384,7 +384,7 @@ void program::push_alternate(value_type&& value) {
 // This must be guarded.
 inline 
 program::value_type program::pop_alternate() {
-    KTH_ASSERT(!alternate_.empty());
+    KTH_ASSERT( ! alternate_.empty());
     auto const value = alternate_.back();
     alternate_.pop_back();
     return value;
@@ -402,7 +402,7 @@ void program::open(bool value) {
 // This must be guarded.
 inline 
 void program::negate() {
-    KTH_ASSERT(!closed());
+    KTH_ASSERT( ! closed());
 
     auto const value = condition_.back();
     negative_count_ += (value ? 1 : -1);
@@ -415,7 +415,7 @@ void program::negate() {
 // This must be guarded.
 inline 
 void program::close() {
-    KTH_ASSERT(!closed());
+    KTH_ASSERT( ! closed());
 
     auto const value = condition_.back();
     negative_count_ += (value ? 0 : -1);

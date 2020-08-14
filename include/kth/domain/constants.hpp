@@ -40,6 +40,9 @@ static_assert(CHAR_BIT == 8, "8-bit bytes assumed");
 // http://eel.is/c++draft/cstdint#syn
 static_assert(std::is_same<uint8_t, unsigned char>::value);
 
+// Assumption: We assume two's complement of signed number representation.
+static_assert(-1 == ~0, "two's complement signed number representation assumed");
+
 // Consensus sentinels.
 //-----------------------------------------------------------------------------
 
@@ -72,7 +75,7 @@ constexpr size_t max_coinbase_size = 100;
 
 constexpr size_t median_time_past_interval = 11;
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 constexpr size_t bitcoin_cash_retarget_blocks = 6;
 //constexpr size_t chain_state_timestamp_count = median_time_past_interval + bitcoin_cash_retarget_blocks;
 
@@ -119,7 +122,7 @@ constexpr uint32_t work_limit(bool retarget = true) {
 constexpr size_t max_sigops_factor = 50;
 
 // constexpr size_t max_block_sigops = max_block_size / max_sigops_factor;
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 constexpr size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
 constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 #else
@@ -128,7 +131,7 @@ constexpr size_t max_block_sigops = max_block_size / max_sigops_factor;
 
 constexpr inline 
 size_t get_max_block_size() noexcept {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return max_block_size_new;
 #else
     return max_block_size;
@@ -136,7 +139,7 @@ size_t get_max_block_size() noexcept {
 }
 
 constexpr inline size_t get_max_block_sigops() {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return max_block_sigops_new;
 #else
     return max_block_sigops;
@@ -147,7 +150,14 @@ constexpr size_t one_million_bytes_block = 1000000;
 constexpr size_t coinbase_reserved_size = 20000;
 constexpr size_t sigops_per_million_bytes = 20000;
 
-constexpr inline size_t get_allowed_sigops(size_t block_size) {
+#if defined(KTH_CURRENCY_BCH)
+constexpr size_t max_tx_sigchecks = 3000;
+constexpr size_t block_maxbytes_maxsigchecks_ratio = 141;
+constexpr size_t max_block_sigchecks = get_max_block_size() / block_maxbytes_maxsigchecks_ratio;
+#endif
+
+constexpr inline 
+size_t get_allowed_sigops(size_t block_size) {
     return (1 + ((block_size - 1) / one_million_bytes_block)) * sigops_per_million_bytes;
 }
 
@@ -176,8 +186,6 @@ constexpr uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 60;
 constexpr uint32_t timestamp_future_seconds = 2 * 60 * 60;  //TODO(kth): New on v3.3.0 merge (September 2017), see how this affects Litecoin
 constexpr uint32_t easy_spacing_factor = 2;
 
-// constexpr uint32_t easy_spacing_seconds = 20 * 60;
-// constexpr uint32_t retarget_height = easy_spacing_factor * target_spacing_seconds;
 constexpr uint32_t easy_spacing_seconds = easy_spacing_factor * target_spacing_seconds;
 
 // The upper and lower bounds for the retargeting timespan.
@@ -206,7 +214,7 @@ constexpr uint32_t bip9_version_base = 0x20000000;
 // enum class magnetic_anomaly_t : uint64_t {};
 // enum class great_wall_t : uint64_t {};
 // enum class graviton_t : uint64_t {};
-enum class phonon_t : uint64_t {};
+// enum class phonon_t : uint64_t {};
 enum class axion_t : uint64_t {};
 enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
@@ -216,7 +224,7 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 // constexpr magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November-15 hard fork
 // constexpr great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15      hard fork
 // constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
-constexpr phonon_t           bch_phonon_activation_time{1589544000};                //2020-May-15      hard fork
+// constexpr phonon_t           bch_phonon_activation_time{1589544000};                //2020-May-15      hard fork
 constexpr axion_t            bch_axion_activation_time{1605441600};                 //2020-Nov-15      hard fork
 
 // inline constexpr
@@ -401,7 +409,7 @@ const infrastructure::config::checkpoint regtest_bip9_bit1_active_checkpoint{
 
 
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 
 //2017-August-01 hard fork
 static
@@ -465,6 +473,16 @@ const infrastructure::config::checkpoint mainnet_phonon_active_checkpoint{
 static
 const infrastructure::config::checkpoint testnet_phonon_active_checkpoint{
     "0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461};
+
+
+//2020-Nov hard fork, ASERT Anchor block lock up
+//Will be removed once Axion(2020-Nov) update is activated
+static
+const infrastructure::config::checkpoint mainnet_asert_anchor_lock_up_checkpoint{
+    "000000000000000001db4b04393d3cc8da269bb6650011f666bfc17bafcebebf", 648000};
+static
+const infrastructure::config::checkpoint testnet_asert_anchor_lock_up_checkpoint{
+    "0000000000146da9eea6f299ca19ccb81371aa2e9490db229d610e74c4790e08", 1400000};
 
 //2020-Nov hard fork
 // Complete after the hard fork
@@ -533,7 +551,7 @@ constexpr size_t max_witness_program = 40;
 
 constexpr inline
 size_t get_max_block_weight() noexcept {
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     return get_max_block_size(); 
 #else
     return max_block_weight;

@@ -52,8 +52,8 @@ TEST_CASE("from data reader version prior bip130 failure", "[send headers]") {
     message::send_headers instance{};
     auto const result = entity_from_data(instance, message::version::level::bip130 - 1, source);
 
-    REQUIRE(!result);
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! result);
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("from data reader version at least bip130 success", "[send headers]") {

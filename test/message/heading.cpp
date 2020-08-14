@@ -84,7 +84,7 @@ TEST_CASE("heading  from data  insufficient bytes  failure", "[heading]") {
         0xab, 0xcd};
 
     heading instance;
-    REQUIRE(!entity_from_data(instance, raw));
+    REQUIRE( ! entity_from_data(instance, raw));
 }
 
 TEST_CASE("heading  factory from data 1  valid input  success", "[heading]") {
@@ -304,7 +304,7 @@ TEST_CASE("heading  maximum size  always  matches satoshi fixed size", "[heading
 // TODO(kth): This test is broken for networks bigger than 4Mbs
 //TEST_CASE("heading  maximum payload size  non witness  matches expected", "[None]")
 //{
-//    static const size_t expected = 3u + (sizeof(uint32_t) + hash_size) * 50000u;
+//    static size_t const expected = 3u + (sizeof(uint32_t) + hash_size) * 50000u;
 //    REQUIRE(expected == heading::maximum_payload_size(0u, false));
 //}
 

@@ -71,7 +71,7 @@ TEST_CASE("create transaction  test", "[transaction functions]") {
 
 // TODO(legacy): make test for BTC and LTC signatures
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 TEST_CASE("sign transaction  test", "[transaction functions]") {
     // Priv key
     auto const private_key = create_secret_from_seed(SEED);

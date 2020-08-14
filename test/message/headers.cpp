@@ -12,7 +12,7 @@ using namespace kth::domain::message;
 
 TEST_CASE("headers  constructor 1  always  initialized invalid", "[headers]") {
     headers instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("headers  constructor 2  always  equals params", "[headers]") {
@@ -139,7 +139,7 @@ TEST_CASE("headers  from data  insufficient version  failure", "[headers]") {
 
     data_chunk const data = expected.to_data(headers::version_minimum);
     headers instance{};
-    REQUIRE(!entity_from_data(instance, headers::version_minimum - 1, data));
+    REQUIRE( ! entity_from_data(instance, headers::version_minimum - 1, data));
 }
 
 TEST_CASE("headers  factory from data 1  valid input  success", "[headers]") {
@@ -313,7 +313,7 @@ TEST_CASE("headers  operator assign equals  always  matches equivalent", "[heade
 
     REQUIRE(value.is_valid());
     message::headers instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
     instance = std::move(value);
     REQUIRE(instance.is_valid());
 }
@@ -588,7 +588,7 @@ TEST_CASE("headers  is sequential  disordered  false", "[headers]") {
         3000u};
 
     headers const instance({first, second, third});
-    REQUIRE(!instance.is_sequential());
+    REQUIRE( ! instance.is_sequential());
 }
 
 // End Boost Suite

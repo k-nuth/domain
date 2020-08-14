@@ -234,7 +234,7 @@ size_t transaction::serialized_size(bool wire, bool witness
     // Must be both witness and wire encoding for bip144 serialization.
     return transaction_basis::serialized_size(wire, witness)
 #ifdef KTH_CACHED_RPC_DATA         
-         + ((!wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t) : 0)
+         + (( ! wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t) : 0)
 #endif
          ;
 }

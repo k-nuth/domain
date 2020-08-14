@@ -11,7 +11,7 @@ using namespace kd;
 
 TEST_CASE("merkle block  constructor 1  always invalid", "[merkle block]") {
     const message::merkle_block instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("merkle block  constructor 2  always  equals params", "[merkle block]") {
@@ -23,7 +23,7 @@ TEST_CASE("merkle block  constructor 2  always  equals params", "[merkle block]"
         6523454,
         68644);
 
-    const size_t count = 1234u;
+    size_t const count = 1234u;
 
     hash_list const hashes{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),
@@ -91,7 +91,7 @@ TEST_CASE("merkle block  constructor 5  always  equals params", "[merkle block]"
         6523454,
         68644);
 
-    const size_t count = 654576u;
+    size_t const count = 654576u;
 
     hash_list const hashes{
         hash_literal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffff"),
@@ -113,8 +113,8 @@ TEST_CASE("from data insufficient data fails", "[merkle block]") {
     data_chunk const data{10};
     message::merkle_block instance{};
 
-    REQUIRE(!entity_from_data(instance, message::version::level::maximum, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, message::version::level::maximum, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("from data insufficient version fails", "[merkle block]") {
@@ -132,8 +132,8 @@ TEST_CASE("from data insufficient version fails", "[merkle block]") {
     auto const data = expected.to_data(message::version::level::maximum);
     message::merkle_block instance{};
 
-    REQUIRE(!entity_from_data(instance, message::merkle_block::version_minimum - 1, data));
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! entity_from_data(instance, message::merkle_block::version_minimum - 1, data));
+    REQUIRE( ! instance.is_valid());
 }
 
 TEST_CASE("merkle block - roundtrip to data factory from data chunk", "[merkle block]") {
@@ -257,7 +257,7 @@ TEST_CASE("merkle block  header setter 1  roundtrip  success", "[merkle block]")
 
 TEST_CASE("merkle block  header setter 2  roundtrip  success", "[merkle block]") {
     message::merkle_block instance;
-    REQUIRE(!instance.header().is_valid());
+    REQUIRE( ! instance.header().is_valid());
     instance.set_header(
         chain::header{
             10,
@@ -336,7 +336,7 @@ TEST_CASE("merkle block  hashes setter 2  roundtrip  success", "[merkle block]")
         hash_literal("ccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd"),
     });
 
-    REQUIRE(!instance.hashes().empty());
+    REQUIRE( ! instance.hashes().empty());
 }
 
 TEST_CASE("merkle block  flags accessor 1  always  returns initialized value", "[merkle block]") {
@@ -395,7 +395,7 @@ TEST_CASE("merkle block  flags setter 2  roundtrip  success", "[merkle block]") 
     message::merkle_block instance;
     REQUIRE(instance.flags().empty());
     instance.set_flags(data_chunk{0xae, 0x56, 0x0f});
-    REQUIRE(!instance.flags().empty());
+    REQUIRE( ! instance.flags().empty());
 }
 
 TEST_CASE("merkle block  operator assign equals  always  matches equivalent", "[merkle block]") {
@@ -418,7 +418,7 @@ TEST_CASE("merkle block  operator assign equals  always  matches equivalent", "[
     REQUIRE(value.is_valid());
 
     message::merkle_block instance;
-    REQUIRE(!instance.is_valid());
+    REQUIRE( ! instance.is_valid());
 
     instance = std::move(value);
     REQUIRE(instance.is_valid());
@@ -463,7 +463,7 @@ TEST_CASE("merkle block  operator boolean equals  differs  returns false", "[mer
         {0xae, 0x56, 0x0f});
 
     message::merkle_block instance;
-    REQUIRE(!(instance == expected));
+    REQUIRE( ! (instance == expected));
 }
 
 TEST_CASE("merkle block  operator boolean not equals  duplicates  returns false", "[merkle block]") {
@@ -484,7 +484,7 @@ TEST_CASE("merkle block  operator boolean not equals  duplicates  returns false"
         {0xae, 0x56, 0x0f});
 
     message::merkle_block instance(expected);
-    REQUIRE(!(instance != expected));
+    REQUIRE( ! (instance != expected));
 }
 
 TEST_CASE("merkle block  operator boolean not equals  differs  returns true", "[merkle block]") {

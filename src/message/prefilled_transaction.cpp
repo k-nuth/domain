@@ -14,7 +14,7 @@
 
 namespace kth::domain::message {
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 constexpr size_t max_index = max_uint32;
 #else
 constexpr size_t max_index = max_uint16;

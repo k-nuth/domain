@@ -29,7 +29,7 @@ public:
     uint16_t const type = 0;
     
     static
-    const size_t max_name_size = 32u + 1u;  //32 real chars plus null-terminated
+    size_t const max_name_size = 32u + 1u;  //32 real chars plus null-terminated
 
     // Constructors.
     //-------------------------------------------------------------------------

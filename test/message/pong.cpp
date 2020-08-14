@@ -37,7 +37,7 @@ TEST_CASE("pong  satoshi fixed size  minimum version  returns 8", "[pong]") {
 TEST_CASE("pong  factory from data 1  minimum version empty data invalid", "[pong]") {
     static auto const version = message::version::level::minimum;
     auto const result = create<message::pong>(version, data_chunk{});
-    REQUIRE(!result.is_valid());
+    REQUIRE( ! result.is_valid());
 }
 
 TEST_CASE("pong  factory from data 1  round trip  expected", "[pong]") {

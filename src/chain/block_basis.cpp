@@ -648,7 +648,6 @@ code block_basis::check(size_t serialized_size_false) const {
 code block_basis::accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions) const {
     // validation.start_accept = asio::steady_clock::now();
 
-    code ec;
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
@@ -658,12 +657,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     auto const bip141 = state.is_enabled(rule_fork::bip141_rule);
 #endif
 
-    auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
-    auto const block_time = bip113 ? state.median_time_past() : header_.timestamp();
-
-    // size_t allowed_sigops = get_allowed_sigops(serialized_size());
-    size_t allowed_sigops = get_allowed_sigops(serialized_size);
-
+    code ec;
     if ((ec = header_.accept(state))) {
         return ec;
     }
@@ -712,6 +706,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     }
 
     // TODO(legacy): relates median time past to tx.locktime (pool cache min tx.time).
+    auto const block_time = bip113 ? state.median_time_past() : header_.timestamp();
     if ( ! is_final(state.height(), block_time)) {
         return error::block_non_final;
     }
@@ -719,19 +714,24 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 #if defined(KTH_SEGWIT_ENABLED)
     // TODO(legacy): relates height to tx.hash(true) (pool cache).
     // NOTE: for BCH bit141 is set as false
-    if (bip141 && !is_valid_witness_commitment()) {
+    if (bip141 && ! is_valid_witness_commitment()) {
         return error::invalid_witness_commitment;
     }
 #endif //defined(KTH_SEGWIT_ENABLED)
 
-
-    // TODO(legacy): determine if performance benefit is worth excluding sigops here.
-    // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).
-    // This recomputes sigops to include p2sh from prevouts.
-
-    if (transactions && (signature_operations(bip16, bip141) > allowed_sigops)) {
-        return error::block_embedded_sigop_limit;
+#if defined(KTH_CURRENCY_BCH)
+    if ( ! state.is_phonon_enabled()) {
+#endif
+        // TODO(legacy): determine if performance benefit is worth excluding sigops here.
+        // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).
+        // This recomputes sigops to include p2sh from prevouts.
+        size_t const allowed_sigops = get_allowed_sigops(serialized_size);
+        if (transactions && (signature_operations(bip16, bip141) > allowed_sigops)) {
+            return error::block_embedded_sigop_limit;
+        }
+#if defined(KTH_CURRENCY_BCH)
     }
+#endif
 
     if (transactions) {
         return accept_transactions(state);
@@ -795,7 +795,7 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
     };
 
     auto const& txs = blk.transactions();
-    const size_t offset = with_coinbase ? 0 : 1;
+    size_t const offset = with_coinbase ? 0 : 1;
     return std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
 }
 

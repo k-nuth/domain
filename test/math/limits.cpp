@@ -48,9 +48,9 @@ TEST_CASE("limits  cast subtract  uint32 to int64 maximum minus maximum  returns
     REQUIRE(cast_subtract<int64_t>(max_uint32, max_uint32) == expected);
 }
 
-static const size_t minimum = 0;
-static const size_t maximum = max_size_t;
-static const size_t half = maximum / 2;
+static size_t const minimum = 0;
+static size_t const maximum = max_size_t;
+static size_t const half = maximum / 2;
 
 // ceiling_add
 //-----------------------------------------------------------------------------
@@ -350,19 +350,19 @@ TEST_CASE("limits  safe to unsigned  min int64 to uint32  throws range", "[limit
 //-----------------------------------------------------------------------------
 
 TEST_CASE("limits  range constrain  over  max", "[limits]") {
-    const size_t expected = 10;
+    size_t const expected = 10;
     auto const result = range_constrain(size_t(42), size_t(1), expected);
     REQUIRE(result == expected);
 }
 
 TEST_CASE("limits  range constrain  under  min", "[limits]") {
-    const size_t expected = 50;
+    size_t const expected = 50;
     auto const result = range_constrain(size_t(42), expected, size_t(100));
     REQUIRE(result == expected);
 }
 
 TEST_CASE("limits  range constrain  internal  unchanged", "[limits]") {
-    const size_t expected = 42;
+    size_t const expected = 42;
     auto const result = range_constrain(expected, size_t(10), size_t(100));
     REQUIRE(result == expected);
 }
