@@ -500,13 +500,13 @@ bool transaction::is_overspent() const {
 // Returns max_size_t in case of overflow.
 size_t transaction::signature_operations() const {
     auto const state = validation.state;
-    auto const bip16_enabled = state->is_enabled(kth::domain::machine::rule_fork::bip16_rule);
+    auto const bip16 = state ? state->is_enabled(kth::domain::machine::rule_fork::bip16_rule) : true;
 #if ! defined(KTH_SEGWIT_ENABLED)
-    auto const bip141_enabled = false;
+    auto const bip141 = false;
 #else
-    auto const bip141_enabled = state->is_enabled(kth::domain::machine::rule_fork::bip141_rule);
+    auto const bip141 = state ? state->is_enabled(kth::domain::machine::rule_fork::bip141_rule) : false;
 #endif
-    return state ? transaction_basis::signature_operations(bip16_enabled, bip141_enabled) : max_size_t;
+    return transaction_basis::signature_operations(bip16, bip141);
 }
 
 size_t transaction::weight() const {
