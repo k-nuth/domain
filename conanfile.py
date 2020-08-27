@@ -81,7 +81,7 @@ class KnuthDomainConan(KnuthConanFile):
         # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.12.2@")
+            self.requires("catch2/2.13.0@")
 
         # if self.options.with_png:
         #     self.requires("libpng/1.6.34@kth/stable")
