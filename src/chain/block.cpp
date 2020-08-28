@@ -394,13 +394,13 @@ void block::strip_witness() {
 // Returns max_size_t in case of overflow or unpopulated chain state.
 size_t block::signature_operations() const {
     auto const state = validation.state;
-    auto const bip16 = state->is_enabled(rule_fork::bip16_rule);
+    auto const bip16 = state ? state->is_enabled(rule_fork::bip16_rule) : true;
 #if ! defined(KTH_SEGWIT_ENABLED)
-    auto const bip141 = false;  // No segwit
+    auto const bip141 = false;
 #else
-    auto const bip141 = state->is_enabled(rule_fork::bip141_rule);
+    auto const bip141 = state ? state->is_enabled(rule_fork::bip141_rule) : false;
 #endif
-    return state ? block_basis::signature_operations(bip16, bip141) : max_size_t;
+    return block_basis::signature_operations(bip16, bip141);
 }
 
 size_t block::total_inputs(bool with_coinbase) const {
