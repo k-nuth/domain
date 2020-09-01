@@ -49,16 +49,14 @@ using boost::program_options::command_line_parser;
 using boost::program_options::reading_file;
 using std::error_code;
 
-
-// static
+inline
 kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_blocks, bool retarget) {
     kth::infrastructure::config::checkpoint::list checkpoints;
 
 //TODO(fernando): Set Litecoin checkpoints
 #if defined(KTH_CURRENCY_BCH)
     if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::testnet) {
-        // BCH Testnet
-        checkpoints.reserve(17);
+        checkpoints.reserve(35);
         checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
         checkpoints.emplace_back("00000000009e2958c15ff9290d571bf9459e93b19765c6801ddeccadbb160a1e", 100000);
         checkpoints.emplace_back("0000000000287bffd321963ef05feab753ebe274e1d78b2fd4e2bfe9ad3aa6f2", 200000);
@@ -126,8 +124,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
 
 
     } else if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::mainnet) {
-        // BCH Mainnet
-        checkpoints.reserve(32); //TODO(fernando): check reserve parameter, capacity
+        checkpoints.reserve(57);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
         checkpoints.emplace_back("0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d", 11111);
         checkpoints.emplace_back("000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6", 33333);
@@ -138,6 +135,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         checkpoints.emplace_back("000000000000774a7f8a7a12dc906ddb9e17e75d684f15e00f8767f9e8f36553", 118000);
         checkpoints.emplace_back("00000000000005b12ffd4cd315cd34ffd4a594f430ac814c91184a0d42d2b0fe", 134444);
         checkpoints.emplace_back("000000000000033b512028abb90e1626d8b346fd0ed598ac0a3c371138dce2bd", 140700);
+
         checkpoints.emplace_back("000000000000099e61ea72015e79632f216fe6cb33d7899acb35b75c8303b763", 168000);
         checkpoints.emplace_back("000000000000059f452a5f7340de6682a977387c17010ff6e6c3bd83ca8b1317", 193000);
         checkpoints.emplace_back("000000000000048b95347e83192f69cf0366076336c639f9b7228e9ba171342e", 210000);
@@ -148,6 +146,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         checkpoints.emplace_back("00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983", 295000);
         checkpoints.emplace_back("000000000000000082ccf8f1557c5d40b21edabb18d2d691cfbf87118bac7254", 300000);
         checkpoints.emplace_back("00000000000000000409695bce21828b31a7143fa35fcab64670dd337a71425d", 325000);
+
         checkpoints.emplace_back("0000000000000000053cf64f0400bb38e0c4b3872c38795ddde27acb40a112bb", 350000);
         checkpoints.emplace_back("000000000000000009733ff8f11fbb9575af7412df3fae97f382376709c965dc", 375000);
         checkpoints.emplace_back("000000000000000004ec466ce4732fe6f1ed1cddc2ed4b328fff5224276e3f6f", 400000);
@@ -207,7 +206,6 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
 
         //Checkpoint added to find ASERT Anchor block
         checkpoints.emplace_back("000000000000000001db4b04393d3cc8da269bb6650011f666bfc17bafcebebf", 648000);
-        
 
         // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
 
@@ -228,8 +226,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
     }
 #elif defined(KTH_CURRENCY_BTC)
     if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::testnet) {
-        // BTC Testnet
-        checkpoints.reserve(15);
+        checkpoints.reserve(19);
         checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
         checkpoints.emplace_back("00000000009e2958c15ff9290d571bf9459e93b19765c6801ddeccadbb160a1e", 100000);
         checkpoints.emplace_back("0000000000287bffd321963ef05feab753ebe274e1d78b2fd4e2bfe9ad3aa6f2", 200000);
@@ -255,7 +252,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
 
     } else if (get_network(easy_blocks, retarget) == kth::infrastructure::config::settings::mainnet) {
         // BTC Mainnet
-        checkpoints.reserve(30);
+        checkpoints.reserve(36);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
         checkpoints.emplace_back("0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d", 11111);
         checkpoints.emplace_back("000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6", 33333);
