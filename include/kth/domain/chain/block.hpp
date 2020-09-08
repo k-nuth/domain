@@ -134,13 +134,13 @@ public:
     using block_basis::signature_operations;
 
     size_t total_inputs(bool with_coinbase = true) const;
-    size_t weight() const;
 
 #if defined(KTH_SEGWIT_ENABLED)
+    size_t weight() const;
     bool is_segregated() const;
 #endif
 
-    code check() const;
+    code check(size_t max_block_size) const;
     code accept(bool transactions = true) const;
     code accept(chain_state const& state, bool transactions = true) const;
     code connect() const;
@@ -149,9 +149,7 @@ public:
     mutable validation_t validation{};
 
 private:
-
     // These share a mutex as they are not expected to contend.
-
 #if defined(KTH_SEGWIT_ENABLED)
     mutable std::optional<bool> segregated_;
 #endif

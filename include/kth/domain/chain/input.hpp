@@ -17,7 +17,6 @@
 #include <kth/domain/chain/witness.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/multi_crypto_settings.hpp>
-
 #include <kth/domain/wallet/payment_address.hpp>
 
 #include <kth/infrastructure/math/hash.hpp>
@@ -38,13 +37,7 @@ public:
 
     // Constructors.
     //-------------------------------------------------------------------------
-
     input() = default;
-    // input(output_point const& previous_output, chain::script const& script, uint32_t sequence);
-    // input(output_point&& previous_output, chain::script&& script, uint32_t sequence);
-    // input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence);
-    // input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence);
-
     using input_basis::input_basis; // inherit constructors from input_basis
 
     input(input const& x);
@@ -54,7 +47,6 @@ public:
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
-
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
@@ -68,20 +60,6 @@ public:
 
     /// The payment addresses extracted from this input as a standard script.
     wallet::payment_address::list addresses() const;
-
-    // Utilities.
-    //-------------------------------------------------------------------------
-
-    // Validation.
-    //-------------------------------------------------------------------------
-
-    // bool is_final() const;
-    // bool is_segregated() const;
-    // bool is_locked(size_t block_height, uint32_t median_time_past) const;
-    // size_t signature_operations(bool bip16, bool bip141) const;
-    // bool extract_reserved_hash(hash_digest& out) const;
-    // bool extract_embedded_script(chain::script& out) const;
-    // bool extract_witness_script(chain::script& out, chain::script const& prevout) const;
 
 // protected:
     void reset();

@@ -118,10 +118,15 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
 
-        // //2021-May Hardfork - unnamed - (9999999999)
+        // //2021-May Hardfork - tachyon - (1621080000)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+
+        // //2021-Nov Hardfork - unnamed - (9999999999)
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
     } else if (network == kth::infrastructure::config::settings::mainnet) {
         checkpoints.reserve(57);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
@@ -213,10 +218,15 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
 
-        // //2021-May Hardfork - unnamed - (9999999999)
+        // //2021-May Hardfork - tachyon - (1621080000)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+
+        // //2021-Nov Hardfork - unnamed - (9999999999)
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
 
     } else {
         // BCH Regtest

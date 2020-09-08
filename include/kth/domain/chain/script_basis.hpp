@@ -56,11 +56,6 @@ public:
     script_basis(data_chunk const& encoded, bool prefix);
     script_basis(data_chunk&& encoded, bool prefix);
 
-    // script_basis(script_basis const& x) = default;
-    // script_basis(script_basis&& x) = default;
-    // script_basis& operator=(script_basis const& x) = default;
-    // script_basis& operator=(script_basis&& x) = default;
-
     // Operators.
     //-------------------------------------------------------------------------
 
@@ -81,7 +76,7 @@ public:
 
             // The max_script_size constant limits evaluation, but not all scripts
             // evaluate, so use max_block_size to guard memory allocation here.
-            if (size > get_max_block_size()) {
+            if (size > get_max_block_size_network_independent()) {
                 source.invalidate();
             } else {
                 bytes_ = source.read_bytes(size);
@@ -136,41 +131,8 @@ public:
     data_chunk const& bytes() const;
     // operation::list const& operations() const;
 
-
-    // Signing.
-    //-------------------------------------------------------------------------
-
-    // static
-    // hash_digest generate_signature_hash(transaction const& tx,
-    //                                            uint32_t input_index,
-    //                                            script_basis const& script_code,
-    //                                            uint8_t sighash_type,
-    //                                            script_version version = script_version::unversioned,
-    //                                            uint64_t value = max_uint64);
-
-    // static
-    // bool check_signature(ec_signature const& signature,
-    //                             uint8_t sighash_type,
-    //                             data_chunk const& public_key,
-    //                             script_basis const& script_code,
-    //                             transaction const& tx,
-    //                             uint32_t input_index,
-    //                             script_version version = script_version::unversioned,
-    //                             uint64_t value = max_uint64);
-
-    // static
-    // bool create_endorsement(endorsement& out, ec_secret const& secret, script_basis const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
-
     // Utilities (static).
     //-------------------------------------------------------------------------
-
-    /// Transaction helpers.
-    // static
-    // hash_digest to_outputs(transaction const& tx);
-    // static
-    // hash_digest to_inpoints(transaction const& tx);
-    // static
-    // hash_digest to_sequences(transaction const& tx);
 
     /// Determine if the fork is enabled in the active forks set.
     static
@@ -279,12 +241,6 @@ public:
     
     [[nodiscard]]
     bool is_unspendable() const;
-
-
-
-
-
-
 
     void reset();
 

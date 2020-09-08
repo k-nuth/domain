@@ -428,18 +428,12 @@ size_t block::total_inputs(bool with_coinbase) const {
     return value;
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 size_t block::weight() const {
     return chain::weight(serialized_size(true), serialized_size(false));
-    // // Block weight is 3 * Base size * + 1 * Total size (bip141).
-    // return base_size_contribution * serialized_size(false) +
-    //        total_size_contribution * serialized_size(true);
 }
 
-#if defined(KTH_SEGWIT_ENABLED)
 bool block::is_segregated() const {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    return false;
-#else
     bool value;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -463,7 +457,6 @@ bool block::is_segregated() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return value;
-#endif // KTH_CURRENCY_BCH
 }
 #endif // defined(KTH_SEGWIT_ENABLED)
 
@@ -472,9 +465,9 @@ bool block::is_segregated() const {
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code block::check() const {
+code block::check(size_t max_block_size) const {
     validation.start_check = asio::steady_clock::now();
-    return block_basis::check(serialized_size(false));
+    return block_basis::check(serialized_size(false), max_block_size);
 }
 
 code block::accept(bool transactions) const {
@@ -485,7 +478,12 @@ code block::accept(bool transactions) const {
 // These checks assume that prevout caching is completed on all tx.inputs.
 code block::accept(chain_state const& state, bool transactions) const {
     validation.start_accept = asio::steady_clock::now();
+
+#if defined(KTH_SEGWIT_ENABLED)
     return block_basis::accept(state, serialized_size(), weight(), transactions);
+#else
+    return block_basis::accept(state, serialized_size(), transactions);
+#endif      
 }
 
 code block::connect() const {

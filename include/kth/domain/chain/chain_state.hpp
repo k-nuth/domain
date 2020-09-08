@@ -65,11 +65,13 @@ public:
         /// mainnet: 227931, testnet: 21111 (or map::unrequested)
         size_t allow_collisions_height;
 
+#if ! defined(KTH_CURRENCY_BCH)
         /// mainnet: 419328, testnet: 770112 (or map::unrequested)
         size_t bip9_bit0_height;
 
         /// mainnet: 481824, testnet: 834624 (or map::unrequested)
         size_t bip9_bit1_height;
+#endif
     };
 
     /// Values used to populate chain state at the target height.
@@ -83,11 +85,13 @@ public:
         /// Hash of the allow_collisions block or null_hash if unrequested.
         hash_digest allow_collisions_hash;
 
+#if ! defined(KTH_CURRENCY_BCH)
         /// Hash of the bip9_bit0 block or null_hash if unrequested.
         hash_digest bip9_bit0_hash;
 
         /// Hash of the bip9_bit1 block or null_hash if unrequested.
         hash_digest bip9_bit1_hash;
+#endif
 
         /// Values must be ordered by height with high (block - 1) last.
         struct {
@@ -120,6 +124,7 @@ public:
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
+                , infrastructure::config::settings network
 #if defined(KTH_CURRENCY_BCH)
                 , assert_anchor_block_info_t const& assert_anchor_block_info
                 , uint32_t asert_half_life
@@ -128,42 +133,26 @@ public:
                 // , graviton_t graviton_activation_time
                 // , phonon_t phonon_activation_time
                 , axion_t axion_activation_time
+                , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
+
     // Named constructors
-    // static
-    // chain_state from_top(chain_state const& top);
-
-    // static
-    // chain_state from_pool(chain_state const& pool, block const& block);
-
-    // static
-    // chain_state from_parent(chain_state const& parent, header const& header);
-
-    // static
-    // std::shared_ptr<chain_state> from_top_ptr(chain_state const& top);
-
     static
     std::shared_ptr<chain_state> from_pool_ptr(chain_state const& pool, block const& block);
 
-    // static
-    // std::shared_ptr<chain_state> from_parent_ptr(chain_state const& parent, header const& header);
-
-
-    //TODO(fernando): if I delete the copy the Linter complains  
-    // // non-copyable and non-movable class
-    // chain_state(chain_state const&) = delete;               //NOLINT
-    // chain_state& operator=(chain_state const&) = delete;    //NOLINT
-
     /// Checkpoints must be ordered by height with greatest at back.
     static
-    map get_map(size_t height, checkpoints const& checkpoints, uint32_t forks);
+    map get_map(size_t height, checkpoints const& checkpoints, uint32_t forks, infrastructure::config::settings network);
 
     static
     uint32_t signal_version(uint32_t forks);
 
     /// Properties.
+    [[nodiscard]]
+    kth::infrastructure::config::settings network() const;
+
     [[nodiscard]]
     size_t height() const;
 
@@ -200,6 +189,9 @@ public:
 
     [[nodiscard]]
     axion_t axion_activation_time() const;
+
+    [[nodiscard]]
+    tachyon_t tachyon_activation_time() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
@@ -249,6 +241,9 @@ public:
 
     [[nodiscard]]
     bool is_axion_enabled() const;
+
+    [[nodiscard]]
+    bool is_tachyon_enabled() const;
 #endif  //KTH_CURRENCY_BCH
 
     static
@@ -265,12 +260,14 @@ protected:
 
     static
     activations activation(data const& values, uint32_t forks
+            , infrastructure::config::settings network
 #if defined(KTH_CURRENCY_BCH)
             // , magnetic_anomaly_t magnetic_anomaly_activation_time
             // , great_wall_t great_wall_activation_time
             // , graviton_t graviton_activation_time
             // , phonon_t phonon_activation_time
             , axion_t axion_activation_time
+            , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -278,6 +275,7 @@ protected:
     uint32_t work_required(data const& values, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                             , axion_t axion_activation_time
+                            , tachyon_t tachyon_activation_time
                             , assert_anchor_block_info_t const& assert_anchor_block_info
                             , uint32_t asert_half_life
 #endif
@@ -290,7 +288,7 @@ private:
     size_t bits_count(size_t height, uint32_t forks);
     
     static
-    size_t version_count(size_t height, uint32_t forks);
+    size_t version_count(size_t height, uint32_t forks, kth::infrastructure::config::settings network);
 
     static
     size_t timestamp_count(size_t height, uint32_t forks);
@@ -302,17 +300,13 @@ private:
     static
     size_t collision_height(size_t height, uint32_t forks);
 
+#if ! defined(KTH_CURRENCY_BCH)
     static
     size_t bip9_bit0_height(size_t height, uint32_t forks);
 
     static
     size_t bip9_bit1_height(size_t height, uint32_t forks);
-
-    // static
-    // size_t uahf_height(size_t height, uint32_t forks);
-
-    // static
-    // size_t daa_height(size_t height, uint32_t forks);
+#endif
 
     static
     bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
@@ -342,17 +336,14 @@ private:
 
     // static
     // bool is_axion_enabled(size_t height, uint32_t forks);
+
+    // static
+    // bool is_tachyon_enabled(size_t height, uint32_t forks);
 #endif // KTH_CURRENCY_BCH
     // ------------------------------------------------------------------------
 
-    // static
-    // data to_pool(chain_state const& top);
-    
     static
     data to_block(chain_state const& pool, block const& block);
-    
-    // static
-    // data to_header(chain_state const& parent, header const& header);
 
     static
     uint32_t work_required_retarget(data const& values);
@@ -412,6 +403,7 @@ private:
 
     // Checkpoints do not affect the data that is collected or promoted.
     infrastructure::config::checkpoint::list const& checkpoints_;
+    infrastructure::config::settings network_;
 
     // These are computed on construct from sample and checkpoints.
     activations const active_;
@@ -427,6 +419,7 @@ private:
     // graviton_t const graviton_activation_time_;
     // phonon_t const phonon_activation_time_;
     axion_t const axion_activation_time_;
+    tachyon_t const tachyon_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };
 

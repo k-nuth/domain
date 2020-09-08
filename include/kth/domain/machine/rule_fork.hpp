@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DOMAIN_MACHINE_RULE_FORK_HPP
-#define KTH_DOMAIN_MACHINE_RULE_FORK_HPP
+#ifndef KTH_DOMAIN_MACHINE_RULE_FORK_HPP_
+#define KTH_DOMAIN_MACHINE_RULE_FORK_HPP_
 
 #include <cstdint>
 
@@ -54,8 +54,8 @@ enum rule_fork : uint32_t {
     bch_graviton = 1U << 16,            //2019-Nov Hardfork - graviton - (1573819200)
     bch_phonon = 1U << 17,              //2020-May Hardfork - phonon - (1589544000)
     bch_axion = 1U << 18,               //2020-Nov Hardfork - axion - (1605441600)
-    // bch_unnamed = 1U << 19,          //2021-May Hardfork - unnamed - (9999999999)
-    // bch_replay_protection = 1U << 18,
+    bch_tachyon = 1U << 19,             //2021-May Hardfork - tachyon - (1621080000)
+    // bch_unnamed = 1U << 20,          //2021-Nov Hardfork - unnamed - (9999999999)
 #else 
     // Just for segwit coins
     /// Segregated witness consensus layer (soft fork, feature).
@@ -81,14 +81,14 @@ enum rule_fork : uint32_t {
         rule_fork::bip65_rule |
         rule_fork::bip66_rule,
 
+
+#if ! defined(KTH_CURRENCY_BCH)
     /// Rules that use BIP9 bit zero first time activation.
     bip9_bit0_group =
         rule_fork::bip68_rule |
         rule_fork::bip112_rule |
         rule_fork::bip113_rule,
 
-
-#if ! defined(KTH_CURRENCY_BCH)
     /// Rules that use BIP9 bit one first time activation.
     bip9_bit1_group =
         rule_fork::bip141_rule |
@@ -102,4 +102,4 @@ enum rule_fork : uint32_t {
 
 } // namespace kth::domain::machine
 
-#endif // KTH_DOMAIN_MACHINE_RULE_FORK_HPP
+#endif // KTH_DOMAIN_MACHINE_RULE_FORK_HPP_

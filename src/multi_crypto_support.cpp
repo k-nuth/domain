@@ -69,36 +69,33 @@ config::currency get_currency() {
 infrastructure::config::settings get_network(uint32_t identifier) {
 #ifdef KTH_CURRENCY_LTC
     switch (identifier) {
-        case netmagic::ltc_mainnet:
-            return kth::infrastructure::config::settings::mainnet;
         case netmagic::ltc_testnet:
             return kth::infrastructure::config::settings::testnet;
         case netmagic::ltc_regtest:
             return kth::infrastructure::config::settings::regtest;
         default:
-            return kth::infrastructure::config::settings::none;
+        case netmagic::ltc_mainnet:
+            return kth::infrastructure::config::settings::mainnet;
     }
 #elif defined(KTH_CURRENCY_BCH)
     switch (identifier) {
-        case netmagic::bch_mainnet:
-            return kth::infrastructure::config::settings::mainnet;
         case netmagic::bch_testnet:
             return kth::infrastructure::config::settings::testnet;
         case netmagic::bch_regtest:
             return kth::infrastructure::config::settings::regtest;
         default:
-            return kth::infrastructure::config::settings::none;
+        case netmagic::bch_mainnet:
+            return kth::infrastructure::config::settings::mainnet;
     }
 #else
     switch (identifier) {
-        case netmagic::btc_mainnet:
-            return kth::infrastructure::config::settings::mainnet;
         case netmagic::btc_testnet:
             return kth::infrastructure::config::settings::testnet;
         case netmagic::btc_regtest:
             return kth::infrastructure::config::settings::regtest;
         default:
-            return kth::infrastructure::config::settings::none;
+        case netmagic::btc_mainnet:
+            return kth::infrastructure::config::settings::mainnet;
     }
 #endif  //KTH_CURRENCY_LTC
 }

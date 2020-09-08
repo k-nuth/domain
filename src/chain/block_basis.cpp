@@ -575,7 +575,7 @@ code block_basis::connect_transactions(chain_state const& state) const {
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code block_basis::check(size_t serialized_size_false) const {
+code block_basis::check(size_t serialized_size_false, size_t max_block_size) const {
     code ec;
 
     if ((ec = header_.check())) {
@@ -584,8 +584,7 @@ code block_basis::check(size_t serialized_size_false) const {
         // TODO(legacy): relates to total of tx.size(false) (pool cache). -> no witness size
     }
 
-    // if (serialized_size(false) > get_max_block_size()) {
-    if (serialized_size_false > get_max_block_size()) {
+    if (serialized_size_false > max_block_size) {
         return error::block_size_limit;
     }
 
@@ -616,11 +615,8 @@ code block_basis::check(size_t serialized_size_false) const {
     ////    return error::internal_duplicate;
 
     // TODO(legacy): determinable from tx pool graph.
-
-
     if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
-
         // TODO(legacy): relates height to tx.hash(false) (pool cache).
     }
 
@@ -639,18 +635,19 @@ code block_basis::check(size_t serialized_size_false) const {
     return check_transactions();
 }
 
-// code block_basis::accept(bool transactions) const {
-//     auto const state = validation.state;
-//     return state ? accept(*state, transactions) : error::operation_failed;
-// }
-
 // These checks assume that prevout caching is completed on all tx.inputs.
+
+#if defined(KTH_SEGWIT_ENABLED)
 code block_basis::accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions) const {
+#else
+code block_basis::accept(chain_state const& state, size_t serialized_size, bool transactions) const {
+#endif    
     // validation.start_accept = asio::steady_clock::now();
 
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
+
 #if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
 #else
@@ -664,7 +661,6 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
 #if defined(KTH_CURRENCY_BCH)
     //Note(kth): In Bitcoin Cash, block size check is now dependent on the Blockchain state.
-    // if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old) {
     if ( ! state.is_monolith_enabled() && serialized_size > max_block_size_old) {
         return error::block_size_limit;
     }
@@ -689,12 +685,13 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     }
 #endif
 
+
+#if defined(KTH_SEGWIT_ENABLED)
     // TODO(legacy): relates height to total of tx.size(true) (pool cache).
-    // NOTE: for BCH bit141 is set as false
-    // if (bip141 && weight() > max_block_weight) {
     if (bip141 && weight > max_block_weight) {
         return error::block_weight_limit;
     }
+#endif
 
     if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;

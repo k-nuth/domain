@@ -509,11 +509,11 @@ size_t transaction::signature_operations() const {
     return transaction_basis::signature_operations(bip16, bip141);
 }
 
-size_t transaction::weight() const {
-    // Block weight is 3 * Base size * + 1 * Total size (bip141).
-    return base_size_contribution * serialized_size(true, false) +
-           total_size_contribution * serialized_size(true, true);
-}
+// size_t transaction::weight() const {
+//     // Block weight is 3 * Base size * + 1 * Total size (bip141).
+//     return base_size_contribution * serialized_size(true, false) +
+//            total_size_contribution * serialized_size(true, true);
+// }
 
 bool transaction::is_segregated() const {
 #if ! defined(KTH_SEGWIT_ENABLED)

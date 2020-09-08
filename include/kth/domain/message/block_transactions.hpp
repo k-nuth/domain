@@ -57,14 +57,13 @@ public:
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, uint32_t version) {
-        //std::cout << "bool block_transactions::from_data(R& source, uint32_t version) \n";
         reset();
 
         block_hash_ = source.read_hash();
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size()) {
+        if (count > get_max_block_size_network_independent()) {
             source.invalidate();
         } else {
             transactions_.resize(count);

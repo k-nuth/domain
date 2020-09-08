@@ -248,20 +248,19 @@ bool input_basis::is_locked(size_t block_height, uint32_t median_time_past) cons
 // This requires that previous outputs have been populated.
 // This cannot overflow because each total is limited by max ops.
 size_t input_basis::signature_operations(bool bip16, bool bip141) const {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    bip141 = false;  // No segwit
-#endif
-    
     auto const& prevout = previous_output_.validation.cache.script();
-    ////KTH_ASSERT_MSG( ! bip141 || bip16, "bip141 implies bip16");
 
+#if defined(KTH_SEGWIT_ENABLED)
     // Penalize quadratic signature operations (bip141).
-    auto const sigops_factor = bip141 ? fast_sigops_factor : 1U;
+    size_t const sigops_factor = bip141 ? fast_sigops_factor : 1U;
+#else
+    size_t const sigops_factor = 1U;
+#endif
 
     // Count heavy sigops in the input script.
     auto sigops = script_.sigops(false) * sigops_factor;
 
-#if ! defined(KTH_CURRENCY_BCH)
+#if defined(KTH_SEGWIT_ENABLED)
     chain::script witness;
     if (bip141 && witness_.extract_sigop_script(witness, prevout)) {
         // Add sigops in the witness (bip141).
