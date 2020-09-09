@@ -1,6 +1,6 @@
 Date            Knuth name          BCHN name            Timestamp
 ==================================================================
-2018-May-15     Pythagoras          Monolith            1526400000  
+2018-May-15     pythagoras          Monolith            1526400000  
 2018-Nov-15     Euclid              Magnetic Anomaly    1542300000  
 2019-May-15     Pisano              Great Wall          1557921600  
 2019-Nov-15     Mersenne            Graviton            1573819200  

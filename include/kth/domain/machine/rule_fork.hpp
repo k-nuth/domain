@@ -48,7 +48,7 @@ enum rule_fork : uint32_t {
 #if defined(KTH_CURRENCY_BCH)
     bch_uahf = 1U << 11,                //2017-Aug Hardfork - Bitcoin Cash UAHF (1501590000)
     bch_daa_cw144  = 1U << 12,          //2017-Nov Hardfork - DAA/cw-144 - (1510600000)
-    bch_monolith = 1U << 13,            //2018-May Hardfork - monolith - (1526400000)
+    bch_pythagoras = 1U << 13,            //2018-May Hardfork - pythagoras - (1526400000)
     bch_magnetic_anomaly = 1U << 14,    //2018-Nov Hardfork - magnetic_anomaly - (1542300000)
     bch_great_wall = 1U << 15,          //2019-May Hardfork - great_wall - (1557921600)
     bch_graviton = 1U << 16,            //2019-Nov Hardfork - graviton - (1573819200)

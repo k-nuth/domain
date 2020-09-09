@@ -213,7 +213,7 @@
 
 // #if defined(KTH_CURRENCY_BCH)
 
-// // enum class monolith_t : uint64_t {};
+// // enum class pythagoras_t : uint64_t {};
 // // enum class magnetic_anomaly_t : uint64_t {};
 // // enum class great_wall_t : uint64_t {};
 // // enum class graviton_t : uint64_t {};
@@ -223,7 +223,7 @@
 
 // // constexpr size_t             bch_activation_height = 478559 //478558;            //2017-August-01   hard fork
 // // constexpr uint32_t           bch_daa_cw144_activation_time = 1510600000;               //2017-November-13 hard fork
-// // constexpr uint32_t           bch_monolith_activation_time = 1526400000;          //2018-May-15      hard fork
+// // constexpr uint32_t           bch_pythagoras_activation_time = 1526400000;          //2018-May-15      hard fork
 // // constexpr magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-November-15 hard fork
 // // constexpr great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15      hard fork
 // // constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
@@ -435,11 +435,11 @@
 
 // //2018-May hard fork
 // static
-// const infrastructure::config::checkpoint mainnet_monolith_active_checkpoint{
+// const infrastructure::config::checkpoint mainnet_pythagoras_active_checkpoint{
 //     "0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530359};
 
 // static
-// const infrastructure::config::checkpoint testnet_monolith_active_checkpoint{
+// const infrastructure::config::checkpoint testnet_pythagoras_active_checkpoint{
 //     "0000000000327972b8470c11755adf8f4319796bafae01f5a6650490b98a17db", 1233078};
 
 // //2018-November hard fork

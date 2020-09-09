@@ -83,10 +83,10 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
 
         checkpoints.emplace_back("00000000d91bdbb5394bcf457c0f0b7a7e43eb978e2d881b6c2a4c2756abc558", 1200000);
 
-        //2018-May Hardfork - monolith - (1526400000)
+        //2018-May Hardfork - pythagoras - (1526400000)
         checkpoints.emplace_back("00000000001e844212a0d7db21b5cca7cb3ceca7815a4a3f6c6a9e4de4d95049", 1233077); //time: 1526412819 - May 15, 2018 07:33:39 PM
         checkpoints.emplace_back("0000000000327972b8470c11755adf8f4319796bafae01f5a6650490b98a17db", 1233078); //time: 1526414036 - May 15, 2018 07:53:56 PM
-        //TODO(fernando): we need the third checkpoint for monolith HF
+        //TODO(fernando): we need the third checkpoint for pythagoras HF
 
         //2018-Nov Hardfork - magnetic_anomaly - (1542300000)
         checkpoints.emplace_back("000000000000014335e0f831a0703f57d3146d0913676ae26958c3a0ea46f210", 1267995); //time: 1542300711 - Nov 15, 2018 04:51:51 PM
@@ -176,7 +176,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
 
         checkpoints.emplace_back("0000000000000000001b09302aa6a8dc65b7542dd195866907dd4e4ccba30d58", 515000);
 
-        //2018-May Hardfork - monolith - (1526400000)
+        //2018-May Hardfork - pythagoras - (1526400000)
         checkpoints.emplace_back("00000000000000000031687b7320832e5035abe8e3f81fb71517fc541765de83", 530358);  //time: 1526408267 - May 15, 2018 06:17:47 PM
         checkpoints.emplace_back("0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530359);  //time: 1526410186 - May 15, 2018 06:49:46 PM
         checkpoints.emplace_back("00000000000000000195edc6e094ae1db6a274f1188127390a74a727db9a2717", 530360);  //time: 1526410326 - May 15, 2018 06:52:06 PM

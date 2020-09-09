@@ -661,7 +661,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
 
 #if defined(KTH_CURRENCY_BCH)
     //Note(kth): In Bitcoin Cash, block size check is now dependent on the Blockchain state.
-    if ( ! state.is_monolith_enabled() && serialized_size > max_block_size_old) {
+    if ( ! state.is_pythagoras_enabled() && serialized_size > max_block_size_old) {
         return error::block_size_limit;
     }
 #endif

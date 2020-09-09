@@ -225,7 +225,7 @@ public:
     bool is_mtp_activated(uint32_t median_time_past, uint32_t activation_time);
 
     [[nodiscard]]
-    bool is_monolith_enabled() const;
+    bool is_pythagoras_enabled() const;
 
     [[nodiscard]]
     bool is_magnetic_anomaly_enabled() const;
@@ -320,7 +320,7 @@ private:
     bool is_daa_cw144_enabled(size_t height, uint32_t forks);
     
     static
-    bool is_monolith_enabled(size_t height, uint32_t forks);
+    bool is_pythagoras_enabled(size_t height, uint32_t forks);
     
     static
     bool is_magnetic_anomaly_enabled(size_t height, uint32_t forks);

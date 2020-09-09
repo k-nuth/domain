@@ -276,8 +276,8 @@ bool chain_state::is_mtp_activated(uint32_t median_time_past, uint32_t activatio
     return (median_time_past >= activation_time);
 }
 
-bool chain_state::is_monolith_enabled() const {
-    return is_monolith_enabled(height(), enabled_forks());
+bool chain_state::is_pythagoras_enabled() const {
+    return is_pythagoras_enabled(height(), enabled_forks());
 }
 
 bool chain_state::is_magnetic_anomaly_enabled() const {
@@ -452,8 +452,8 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_daa_cw144 & forks);
     }
 
-    if (is_monolith_enabled(values.height, forks)) {
-        result.forks |= (rule_fork::bch_monolith & forks);
+    if (is_pythagoras_enabled(values.height, forks)) {
+        result.forks |= (rule_fork::bch_pythagoras & forks);
     }
 
     if (is_magnetic_anomaly_enabled(values.height, forks)) {
@@ -624,10 +624,10 @@ bool chain_state::is_daa_cw144_enabled(size_t height, uint32_t forks) {
 
 //2018-May hard fork
 inline 
-bool chain_state::is_monolith_enabled(size_t height, uint32_t forks) {
+bool chain_state::is_pythagoras_enabled(size_t height, uint32_t forks) {
     return is_rule_enabled(height, forks, 
-        mainnet_monolith_active_checkpoint.height(), 
-        testnet_monolith_active_checkpoint.height());
+        mainnet_pythagoras_active_checkpoint.height(), 
+        testnet_pythagoras_active_checkpoint.height());
 }
 
 //2018-Nov hard fork
@@ -1312,8 +1312,8 @@ uint32_t chain_state::asert_half_life() const {
     return asert_half_life_;
 }
 
-// uint64_t chain_state::monolith_activation_time() const {
-//     return monolith_activation_time_;
+// uint64_t chain_state::pythagoras_activation_time() const {
+//     return pythagoras_activation_time_;
 // }
 
 // magnetic_anomaly_t chain_state::magnetic_anomaly_activation_time() const {

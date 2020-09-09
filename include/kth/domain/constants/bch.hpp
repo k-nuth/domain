@@ -41,7 +41,7 @@ const infrastructure::config::checkpoint testnet4_bip34_active_checkpoint{
     "0000000000000000000000000000000000000000000000000000000000000000", 0}; //TODO(fernando): testnet4
 
 
-// enum class monolith_t : uint64_t {};
+// enum class pythagoras_t : uint64_t {};
 // enum class magnetic_anomaly_t : uint64_t {};
 // enum class great_wall_t : uint64_t {};
 // enum class graviton_t : uint64_t {};
@@ -52,7 +52,7 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
 // constexpr size_t             bch_activation_height = 478559 //478558;            //2017-Aug-01 HF
 // constexpr uint32_t           bch_daa_cw144_activation_time = 1510600000;         //2017-Nov-13 HF
-// constexpr uint32_t           bch_monolith_activation_time = 1526400000;          //2018-May-15 HF
+// constexpr uint32_t           bch_pythagoras_activation_time = 1526400000;          //2018-May-15 HF
 // constexpr magnetic_anomaly_t bch_magnetic_anomaly_activation_time = 1542300000;  //2018-Nov-15 HF
 // constexpr great_wall_t       bch_great_wall_activation_time = 1557921600;        //2019-May-15 HF
 // constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15 HF
@@ -84,13 +84,13 @@ const infrastructure::config::checkpoint testnet4_daa_cw144_active_checkpoint{
 
 //2018-May hard fork
 static
-const infrastructure::config::checkpoint mainnet_monolith_active_checkpoint{
+const infrastructure::config::checkpoint mainnet_pythagoras_active_checkpoint{
     "0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530359};
 static
-const infrastructure::config::checkpoint testnet_monolith_active_checkpoint{
+const infrastructure::config::checkpoint testnet_pythagoras_active_checkpoint{
     "0000000000327972b8470c11755adf8f4319796bafae01f5a6650490b98a17db", 1233078};
 static
-const infrastructure::config::checkpoint testnet4_monolith_active_checkpoint{
+const infrastructure::config::checkpoint testnet4_pythagoras_active_checkpoint{
     "0000000000000000000000000000000000000000000000000000000000000000", 0}; //TODO(fernando): testnet4
 
 //2018-November hard fork
