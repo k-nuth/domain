@@ -717,7 +717,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
 #endif //defined(KTH_SEGWIT_ENABLED)
 
 #if defined(KTH_CURRENCY_BCH)
-    if ( ! state.is_phonon_enabled()) {
+    if ( ! state.is_fermat_enabled()) {
 #endif
         // TODO(legacy): determine if performance benefit is worth excluding sigops here.
         // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).

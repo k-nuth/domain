@@ -498,7 +498,7 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    if ( ! state.is_phonon_enabled()) {
+    if ( ! state.is_fermat_enabled()) {
 #endif
 
 #if defined(KTH_SEGWIT_ENABLED)

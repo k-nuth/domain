@@ -131,7 +131,7 @@ public:
                 // , euclid_t euclid_activation_time
                 // , pisano_t pisano_activation_time
                 // , mersenne_t mersenne_activation_time
-                // , phonon_t phonon_activation_time
+                // , fermat_t fermat_activation_time
                 , axion_t axion_activation_time
                 , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
@@ -185,7 +185,7 @@ public:
     // mersenne_t mersenne_activation_time() const;
     
     // [[nodiscard]]
-    // phonon_t phonon_activation_time() const;
+    // fermat_t fermat_activation_time() const;
 
     [[nodiscard]]
     axion_t axion_activation_time() const;
@@ -237,7 +237,7 @@ public:
     bool is_mersenne_enabled() const;
 
     [[nodiscard]]
-    bool is_phonon_enabled() const;
+    bool is_fermat_enabled() const;
 
     [[nodiscard]]
     bool is_axion_enabled() const;
@@ -265,7 +265,7 @@ protected:
             // , euclid_t euclid_activation_time
             // , pisano_t pisano_activation_time
             // , mersenne_t mersenne_activation_time
-            // , phonon_t phonon_activation_time
+            // , fermat_t fermat_activation_time
             , axion_t axion_activation_time
             , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
@@ -332,7 +332,7 @@ private:
     bool is_mersenne_enabled(size_t height, uint32_t forks);
     
     static
-    bool is_phonon_enabled(size_t height, uint32_t forks);
+    bool is_fermat_enabled(size_t height, uint32_t forks);
 
     // static
     // bool is_axion_enabled(size_t height, uint32_t forks);
@@ -417,7 +417,7 @@ private:
     // euclid_t const euclid_activation_time_;
     // pisano_t const pisano_activation_time_;
     // mersenne_t const mersenne_activation_time_;
-    // phonon_t const phonon_activation_time_;
+    // fermat_t const fermat_activation_time_;
     axion_t const axion_activation_time_;
     tachyon_t const tachyon_activation_time_;
 #endif  //KTH_CURRENCY_BCH

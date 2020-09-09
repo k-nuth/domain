@@ -48,7 +48,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , euclid_t euclid_activation_time
     // , pisano_t pisano_activation_time
     // , mersenne_t mersenne_activation_time
-    // , phonon_t phonon_activation_time
+    // , fermat_t fermat_activation_time
     , axion_t axion_activation_time
     , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
@@ -65,7 +65,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , euclid_activation_time
         // , pisano_activation_time
         // , mersenne_activation_time
-        // , phonon_activation_time
+        // , fermat_activation_time
         , axion_activation_time
         , tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
@@ -85,7 +85,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , euclid_activation_time_(euclid_activation_time)
     // , pisano_activation_time_(pisano_activation_time)
     // , mersenne_activation_time_(mersenne_activation_time)
-    // , phonon_activation_time_(phonon_activation_time)
+    // , fermat_activation_time_(fermat_activation_time)
     , axion_activation_time_(axion_activation_time)
     , tachyon_activation_time_(tachyon_activation_time)
 #endif  //KTH_CURRENCY_BCH
@@ -114,7 +114,7 @@ domain::config::settings chain_state::network() const {
 #if defined(KTH_CURRENCY_BCH)
 //Note(fernando): remove once Axion is activated
 void chain_state::adjust_assert_anchor_block_info() {
-    if (is_phonon_enabled() && ! is_axion_enabled()) {
+    if (is_fermat_enabled() && ! is_axion_enabled()) {
         assert_anchor_block_info_.height = data_.height;
         assert_anchor_block_info_.bits = data_.bits.self;
         assert_anchor_block_info_.prev_timestamp = data_.timestamp.ordered.back();
@@ -132,7 +132,7 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
 #if defined(KTH_CURRENCY_BCH)
         , pool.assert_anchor_block_info_
         , pool.asert_half_life_
-        // , pool.phonon_activation_time_
+        // , pool.fermat_activation_time_
         , pool.axion_activation_time_
         , pool.tachyon_activation_time_
 #endif  //KTH_CURRENCY_BCH
@@ -292,8 +292,8 @@ bool chain_state::is_mersenne_enabled() const {
     return is_mersenne_enabled(height(), enabled_forks());
 }
 
-bool chain_state::is_phonon_enabled() const {
-    return is_phonon_enabled(height(), enabled_forks());
+bool chain_state::is_fermat_enabled() const {
+    return is_fermat_enabled(height(), enabled_forks());
 }
 
 bool chain_state::is_axion_enabled() const {
@@ -328,7 +328,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , euclid_t euclid_activation_time
         // , pisano_t pisano_activation_time
         // , mersenne_t mersenne_activation_time
-        // , phonon_t phonon_activation_time
+        // , fermat_t fermat_activation_time
         , axion_t axion_activation_time
         , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
@@ -478,21 +478,21 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_mersenne & forks);
     }
 
-    if (is_phonon_enabled(values.height, forks)) {
+    if (is_fermat_enabled(values.height, forks)) {
     //     flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
     //     flags |= SCRIPT_REPORT_SIGCHECKS;
     //     flags |= SCRIPT_ZERO_SIGOPS;
-        result.forks |= (rule_fork::bch_phonon & forks);
+        result.forks |= (rule_fork::bch_fermat & forks);
     }
 
     auto mtp = median_time_past(values, 0);
 
-    // if (is_mtp_activated(mtp, to_underlying(phonon_activation_time))) {
+    // if (is_mtp_activated(mtp, to_underlying(fermat_activation_time))) {
     //     //Note(Fernando): Move this to the next fork rules
     // //     flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
     // //     flags |= SCRIPT_REPORT_SIGCHECKS;
     // //     flags |= SCRIPT_ZERO_SIGOPS;
-    //     result.forks |= (rule_fork::bch_phonon & forks);
+    //     result.forks |= (rule_fork::bch_fermat & forks);
     // }
 
     if (is_mtp_activated(mtp, to_underlying(axion_activation_time))) {
@@ -656,10 +656,10 @@ bool chain_state::is_mersenne_enabled(size_t height, uint32_t forks) {
 
 //2020-May hard fork
 inline 
-bool chain_state::is_phonon_enabled(size_t height, uint32_t forks) {
+bool chain_state::is_fermat_enabled(size_t height, uint32_t forks) {
     return is_rule_enabled(height, forks, 
-        mainnet_phonon_active_checkpoint.height(), 
-        testnet_phonon_active_checkpoint.height());
+        mainnet_fermat_active_checkpoint.height(), 
+        testnet_fermat_active_checkpoint.height());
 }
 
 //2020-Nov hard fork
@@ -1328,8 +1328,8 @@ uint32_t chain_state::asert_half_life() const {
 //     return mersenne_activation_time_;
 // }
 
-// phonon_t chain_state::phonon_activation_time() const {
-//     return phonon_activation_time_;
+// fermat_t chain_state::fermat_activation_time() const {
+//     return fermat_activation_time_;
 // }
 
 axion_t chain_state::axion_activation_time() const {
