@@ -218,7 +218,7 @@
 // // enum class pisano_t : uint64_t {};
 // // enum class mersenne_t : uint64_t {};
 // // enum class fermat_t : uint64_t {};
-// enum class axion_t : uint64_t {};
+// enum class euler_t : uint64_t {};
 // enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
 // // constexpr size_t             bch_activation_height = 478559 //478558;            //2017-August-01   hard fork
@@ -228,7 +228,7 @@
 // // constexpr pisano_t       bch_pisano_activation_time = 1557921600;        //2019-May-15      hard fork
 // // constexpr mersenne_t         bch_mersenne_activation_time = 1573819200;          //2019-Nov-15      hard fork
 // // constexpr fermat_t           bch_fermat_activation_time{1589544000};                //2020-May-15      hard fork
-// constexpr axion_t            bch_axion_activation_time{1605441600};                 //2020-Nov-15      hard fork
+// constexpr euler_t            bch_euler_activation_time{1605441600};                 //2020-Nov-15      hard fork
 
 // // inline constexpr
 // // bool is_uahf_enabled(const Config &config, int nHeight) {
@@ -480,7 +480,7 @@
 
 
 // //2020-Nov hard fork, ASERT Anchor block lock up
-// //Will be removed once Axion(2020-Nov) update is activated
+// //Will be removed once Euler(2020-Nov) update is activated
 // static
 // const infrastructure::config::checkpoint mainnet_asert_anchor_lock_up_checkpoint{
 //     "000000000000000001db4b04393d3cc8da269bb6650011f666bfc17bafcebebf", 648000};

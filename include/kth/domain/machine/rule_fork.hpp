@@ -53,7 +53,7 @@ enum rule_fork : uint32_t {
     bch_pisano = 1U << 15,          //2019-May Hardfork - pisano - (1557921600)
     bch_mersenne = 1U << 16,            //2019-Nov Hardfork - mersenne - (1573819200)
     bch_fermat = 1U << 17,              //2020-May Hardfork - fermat - (1589544000)
-    bch_axion = 1U << 18,               //2020-Nov Hardfork - axion - (1605441600)
+    bch_euler = 1U << 18,               //2020-Nov Hardfork - euler - (1605441600)
     bch_tachyon = 1U << 19,             //2021-May Hardfork - tachyon - (1621080000)
     // bch_unnamed = 1U << 20,          //2021-Nov Hardfork - unnamed - (9999999999)
 #else 

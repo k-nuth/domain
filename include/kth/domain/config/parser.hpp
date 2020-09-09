@@ -113,7 +113,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         //Checkpoint added to find ASERT Anchor block
         checkpoints.emplace_back("0000000000146da9eea6f299ca19ccb81371aa2e9490db229d610e74c4790e08", 1400000);
 
-        // //2020-Nov Hardfork - axion - (1605441600)
+        // //2020-Nov Hardfork - euler - (1605441600)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
@@ -217,7 +217,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
 
         // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
 
-        // //2020-Nov Hardfork - axion - (1605441600)
+        // //2020-Nov Hardfork - euler - (1605441600)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX

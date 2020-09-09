@@ -49,7 +49,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , pisano_t pisano_activation_time
     // , mersenne_t mersenne_activation_time
     // , fermat_t fermat_activation_time
-    , axion_t axion_activation_time
+    , euler_t euler_activation_time
     , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
@@ -66,14 +66,14 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , pisano_activation_time
         // , mersenne_activation_time
         // , fermat_activation_time
-        , axion_activation_time
+        , euler_activation_time
         , tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_, forks_))
     , work_required_(work_required(data_, forks_
 #if defined(KTH_CURRENCY_BCH)
-            , axion_activation_time
+            , euler_activation_time
             , tachyon_activation_time
             , assert_anchor_block_info_
             , asert_half_life
@@ -86,7 +86,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , pisano_activation_time_(pisano_activation_time)
     // , mersenne_activation_time_(mersenne_activation_time)
     // , fermat_activation_time_(fermat_activation_time)
-    , axion_activation_time_(axion_activation_time)
+    , euler_activation_time_(euler_activation_time)
     , tachyon_activation_time_(tachyon_activation_time)
 #endif  //KTH_CURRENCY_BCH
 {
@@ -112,9 +112,9 @@ domain::config::settings chain_state::network() const {
 
 
 #if defined(KTH_CURRENCY_BCH)
-//Note(fernando): remove once Axion is activated
+//Note(fernando): remove once Euler is activated
 void chain_state::adjust_assert_anchor_block_info() {
-    if (is_fermat_enabled() && ! is_axion_enabled()) {
+    if (is_fermat_enabled() && ! is_euler_enabled()) {
         assert_anchor_block_info_.height = data_.height;
         assert_anchor_block_info_.bits = data_.bits.self;
         assert_anchor_block_info_.prev_timestamp = data_.timestamp.ordered.back();
@@ -133,7 +133,7 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
         , pool.assert_anchor_block_info_
         , pool.asert_half_life_
         // , pool.fermat_activation_time_
-        , pool.axion_activation_time_
+        , pool.euler_activation_time_
         , pool.tachyon_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
@@ -296,10 +296,10 @@ bool chain_state::is_fermat_enabled() const {
     return is_fermat_enabled(height(), enabled_forks());
 }
 
-bool chain_state::is_axion_enabled() const {
+bool chain_state::is_euler_enabled() const {
    //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(axion_activation_time()));
-    // return is_axion_enabled(height(), enabled_forks());
+    return is_mtp_activated(median_time_past(), to_underlying(euler_activation_time()));
+    // return is_euler_enabled(height(), enabled_forks());
 }
 
 bool chain_state::is_tachyon_enabled() const {
@@ -329,7 +329,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , pisano_t pisano_activation_time
         // , mersenne_t mersenne_activation_time
         // , fermat_t fermat_activation_time
-        , axion_t axion_activation_time
+        , euler_t euler_activation_time
         , tachyon_t tachyon_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
@@ -495,8 +495,8 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     //     result.forks |= (rule_fork::bch_fermat & forks);
     // }
 
-    if (is_mtp_activated(mtp, to_underlying(axion_activation_time))) {
-        result.forks |= (rule_fork::bch_axion & forks);
+    if (is_mtp_activated(mtp, to_underlying(euler_activation_time))) {
+        result.forks |= (rule_fork::bch_euler & forks);
     }
 
     if (is_mtp_activated(mtp, to_underlying(tachyon_activation_time))) {
@@ -665,10 +665,10 @@ bool chain_state::is_fermat_enabled(size_t height, uint32_t forks) {
 //2020-Nov hard fork
 // Complete after the hard fork
 // inline 
-// bool chain_state::is_axion_enabled(size_t height, uint32_t forks) {
+// bool chain_state::is_euler_enabled(size_t height, uint32_t forks) {
 //     return is_rule_enabled(height, forks, 
-//         mainnet_axion_active_checkpoint.height(), 
-//         testnet_axion_active_checkpoint.height());
+//         mainnet_euler_active_checkpoint.height(), 
+//         testnet_euler_active_checkpoint.height());
 // }
 
 //2021-May hard fork
@@ -956,7 +956,7 @@ uint32_t chain_state::daa_cw144(data const& values) {
 
 uint32_t chain_state::work_required(data const& values, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
-                                    , axion_t axion_activation_time
+                                    , euler_t euler_activation_time
                                     , tachyon_t tachyon_activation_time
                                     , assert_anchor_block_info_t const& assert_anchor_block_info
                                     , uint32_t asert_half_life
@@ -976,7 +976,7 @@ uint32_t chain_state::work_required(data const& values, uint32_t forks
     //TODO(fernando): could it be improved?
     bool const daa_cw144_active = is_daa_cw144_enabled(values.height, forks);
     auto const last_time_span = median_time_past(values, 0, true);
-    bool const daa_asert_active = is_mtp_activated(last_time_span, to_underlying(axion_activation_time));
+    bool const daa_asert_active = is_mtp_activated(last_time_span, to_underlying(euler_activation_time));
 #else
     bool const daa_cw144_active = false;
 #endif  //KTH_CURRENCY_BCH
@@ -1332,8 +1332,8 @@ uint32_t chain_state::asert_half_life() const {
 //     return fermat_activation_time_;
 // }
 
-axion_t chain_state::axion_activation_time() const {
-    return axion_activation_time_;
+euler_t chain_state::euler_activation_time() const {
+    return euler_activation_time_;
 }
 
 tachyon_t chain_state::tachyon_activation_time() const {
@@ -1366,7 +1366,7 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     values.timestamp.self = time_now;
     return work_required(values, enabled_forks()
 #if defined(KTH_CURRENCY_BCH)
-                            , axion_activation_time()
+                            , euler_activation_time()
                             , tachyon_activation_time()
                             , assert_anchor_block_info_
                             , asert_half_life()
