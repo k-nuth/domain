@@ -572,8 +572,8 @@ code transaction::connect_input(chain_state const& state, size_t input_index) co
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code transaction::check(bool transaction_pool, bool retarget) const {
-    return transaction_basis::check(total_output_value(), transaction_pool, retarget);
+code transaction::check(size_t max_block_size, bool transaction_pool, bool retarget /* = true */) const {
+    return transaction_basis::check(total_output_value(), max_block_size, transaction_pool, retarget);
 }
 
 code transaction::accept(bool transaction_pool) const {

@@ -541,10 +541,10 @@ bool block_basis::is_valid_witness_commitment() const {
 #endif // KTH_SEGWIT_ENABLED
 
 
-code block_basis::check_transactions() const {
+code block_basis::check_transactions(size_t max_block_size) const {
     code ec;
     for (auto const& tx : transactions_) {
-        if ((ec = tx.check(false))) {
+        if ((ec = tx.check(max_block_size, false))) {
             return ec;
         }
     }
@@ -632,7 +632,7 @@ code block_basis::check(size_t serialized_size_false, size_t max_block_size) con
         ////    return error::block_legacy_sigop_limit;
     }
 
-    return check_transactions();
+    return check_transactions(max_block_size);
 }
 
 // These checks assume that prevout caching is completed on all tx.inputs.

@@ -218,7 +218,7 @@ public:
     code check(size_t serialized_size_false, size_t max_block_size) const;
     
     [[nodiscard]]
-    code check_transactions() const;
+    code check_transactions(size_t max_block_size) const;
         
     [[nodiscard]]
 #if defined(KTH_SEGWIT_ENABLED)
