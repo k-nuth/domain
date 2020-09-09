@@ -130,7 +130,7 @@ public:
                 , uint32_t asert_half_life
                 // , euclid_t euclid_activation_time
                 // , pisano_t pisano_activation_time
-                // , graviton_t graviton_activation_time
+                // , mersenne_t mersenne_activation_time
                 // , phonon_t phonon_activation_time
                 , axion_t axion_activation_time
                 , tachyon_t tachyon_activation_time
@@ -182,7 +182,7 @@ public:
     // pisano_t pisano_activation_time() const;
 
     // [[nodiscard]]
-    // graviton_t graviton_activation_time() const;
+    // mersenne_t mersenne_activation_time() const;
     
     // [[nodiscard]]
     // phonon_t phonon_activation_time() const;
@@ -234,7 +234,7 @@ public:
     bool is_pisano_enabled() const;
 
     [[nodiscard]]
-    bool is_graviton_enabled() const;
+    bool is_mersenne_enabled() const;
 
     [[nodiscard]]
     bool is_phonon_enabled() const;
@@ -264,7 +264,7 @@ protected:
 #if defined(KTH_CURRENCY_BCH)
             // , euclid_t euclid_activation_time
             // , pisano_t pisano_activation_time
-            // , graviton_t graviton_activation_time
+            // , mersenne_t mersenne_activation_time
             // , phonon_t phonon_activation_time
             , axion_t axion_activation_time
             , tachyon_t tachyon_activation_time
@@ -329,7 +329,7 @@ private:
     bool is_pisano_enabled(size_t height, uint32_t forks);
 
     static
-    bool is_graviton_enabled(size_t height, uint32_t forks);
+    bool is_mersenne_enabled(size_t height, uint32_t forks);
     
     static
     bool is_phonon_enabled(size_t height, uint32_t forks);
@@ -416,7 +416,7 @@ private:
 
     // euclid_t const euclid_activation_time_;
     // pisano_t const pisano_activation_time_;
-    // graviton_t const graviton_activation_time_;
+    // mersenne_t const mersenne_activation_time_;
     // phonon_t const phonon_activation_time_;
     axion_t const axion_activation_time_;
     tachyon_t const tachyon_activation_time_;

@@ -47,7 +47,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     , uint32_t asert_half_life
     // , euclid_t euclid_activation_time
     // , pisano_t pisano_activation_time
-    // , graviton_t graviton_activation_time
+    // , mersenne_t mersenne_activation_time
     // , phonon_t phonon_activation_time
     , axion_t axion_activation_time
     , tachyon_t tachyon_activation_time
@@ -64,7 +64,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 #if defined(KTH_CURRENCY_BCH)
         // , euclid_activation_time
         // , pisano_activation_time
-        // , graviton_activation_time
+        // , mersenne_activation_time
         // , phonon_activation_time
         , axion_activation_time
         , tachyon_activation_time
@@ -84,7 +84,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     , asert_half_life_(asert_half_life)
     // , euclid_activation_time_(euclid_activation_time)
     // , pisano_activation_time_(pisano_activation_time)
-    // , graviton_activation_time_(graviton_activation_time)
+    // , mersenne_activation_time_(mersenne_activation_time)
     // , phonon_activation_time_(phonon_activation_time)
     , axion_activation_time_(axion_activation_time)
     , tachyon_activation_time_(tachyon_activation_time)
@@ -288,8 +288,8 @@ bool chain_state::is_pisano_enabled() const {
     return is_pisano_enabled(height(), enabled_forks());
 }
 
-bool chain_state::is_graviton_enabled() const {
-    return is_graviton_enabled(height(), enabled_forks());
+bool chain_state::is_mersenne_enabled() const {
+    return is_mersenne_enabled(height(), enabled_forks());
 }
 
 bool chain_state::is_phonon_enabled() const {
@@ -327,7 +327,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
 #if defined(KTH_CURRENCY_BCH)
         // , euclid_t euclid_activation_time
         // , pisano_t pisano_activation_time
-        // , graviton_t graviton_activation_time
+        // , mersenne_t mersenne_activation_time
         // , phonon_t phonon_activation_time
         , axion_t axion_activation_time
         , tachyon_t tachyon_activation_time
@@ -472,10 +472,10 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_pisano & forks);
     }
 
-    if (is_graviton_enabled(values.height, forks)) {
+    if (is_mersenne_enabled(values.height, forks)) {
         // result.forks |= (rule_fork::SCRIPT_ENABLE_SCHNORR_MULTISIG & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_MINIMALDATA & forks);
-        result.forks |= (rule_fork::bch_graviton & forks);
+        result.forks |= (rule_fork::bch_mersenne & forks);
     }
 
     if (is_phonon_enabled(values.height, forks)) {
@@ -648,10 +648,10 @@ bool chain_state::is_pisano_enabled(size_t height, uint32_t forks) {
 
 //2019-Nov hard fork
 inline 
-bool chain_state::is_graviton_enabled(size_t height, uint32_t forks) {
+bool chain_state::is_mersenne_enabled(size_t height, uint32_t forks) {
     return is_rule_enabled(height, forks, 
-        mainnet_graviton_active_checkpoint.height(), 
-        testnet_graviton_active_checkpoint.height());
+        mainnet_mersenne_active_checkpoint.height(), 
+        testnet_mersenne_active_checkpoint.height());
 }
 
 //2020-May hard fork
@@ -1324,8 +1324,8 @@ uint32_t chain_state::asert_half_life() const {
 //     return pisano_activation_time_;
 // }
 
-// graviton_t chain_state::graviton_activation_time() const {
-//     return graviton_activation_time_;
+// mersenne_t chain_state::mersenne_activation_time() const {
+//     return mersenne_activation_time_;
 // }
 
 // phonon_t chain_state::phonon_activation_time() const {

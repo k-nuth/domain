@@ -51,7 +51,7 @@ enum rule_fork : uint32_t {
     bch_pythagoras = 1U << 13,            //2018-May Hardfork - pythagoras - (1526400000)
     bch_euclid = 1U << 14,    //2018-Nov Hardfork - euclid - (1542300000)
     bch_pisano = 1U << 15,          //2019-May Hardfork - pisano - (1557921600)
-    bch_graviton = 1U << 16,            //2019-Nov Hardfork - graviton - (1573819200)
+    bch_mersenne = 1U << 16,            //2019-Nov Hardfork - mersenne - (1573819200)
     bch_phonon = 1U << 17,              //2020-May Hardfork - phonon - (1589544000)
     bch_axion = 1U << 18,               //2020-Nov Hardfork - axion - (1605441600)
     bch_tachyon = 1U << 19,             //2021-May Hardfork - tachyon - (1621080000)

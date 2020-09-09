@@ -100,7 +100,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         checkpoints.emplace_back("00000000000000479138892ef0e4fa478ccc938fb94df862ef5bde7e8dee23d3", 1303885);  //time: 1557923294 - May 15, 2019 12:28:14 PM
         checkpoints.emplace_back("000000000000003a3fb0ca1611035346a803e0344d6bb2eb4f5ea75f4dc2291c", 1303886);  //time: 1557923747 - May 15, 2019 12:35:47 PM
 
-        //2019-Nov Hardfork - graviton - (1573819200)
+        //2019-Nov Hardfork - mersenne - (1573819200)
         checkpoints.emplace_back("00000000c678f67ea16d5bf803f68ce42991839d13849f77332d6f586f62d421", 1341711);  //time: 1573826257 - Nov 15, 2019 01:57:37 PM
         checkpoints.emplace_back("00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712);  //time: 1573827462 - Nov 15, 2019 02:17:42 PM
         checkpoints.emplace_back("000000000ce59bbc9a046429e608395a1666bcf11f28692909dd88ac7348fbeb", 1341713);  //time: 1573828667 - Nov 15, 2019 02:37:47 PM
@@ -199,7 +199,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         checkpoints.emplace_back("000000000000000001eb9b2786e6200beb37a20a4959a86c2b52adca2b23597b", 590000);
         checkpoints.emplace_back("00000000000000000041048ecef77d6b9ccb4012c0c1012e72b6737220d3f910", 605000);
 
-        //2019-Nov Hardfork - graviton - (1573819200)
+        //2019-Nov Hardfork - mersenne - (1573819200)
         checkpoints.emplace_back("0000000000000000026f7ec9e79be2f5bb839f29ebcf734066d4bb9a13f6ea83", 609135);  //time: 1573823716 - Nov 15, 2019 01:15:16 PM
         checkpoints.emplace_back("000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136);  //time: 1573825449 - Nov 15, 2019 01:44:09 PM
         checkpoints.emplace_back("00000000000000000074d2ba7b47eb241ee6aca95daf71cea539b32c660e2350", 609137);  //time: 1573826122 - Nov 15, 2019 01:55:22 PM

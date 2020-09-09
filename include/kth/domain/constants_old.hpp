@@ -216,7 +216,7 @@
 // // enum class pythagoras_t : uint64_t {};
 // // enum class euclid_t : uint64_t {};
 // // enum class pisano_t : uint64_t {};
-// // enum class graviton_t : uint64_t {};
+// // enum class mersenne_t : uint64_t {};
 // // enum class phonon_t : uint64_t {};
 // enum class axion_t : uint64_t {};
 // enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
@@ -226,7 +226,7 @@
 // // constexpr uint32_t           bch_pythagoras_activation_time = 1526400000;          //2018-May-15      hard fork
 // // constexpr euclid_t bch_euclid_activation_time = 1542300000;  //2018-November-15 hard fork
 // // constexpr pisano_t       bch_pisano_activation_time = 1557921600;        //2019-May-15      hard fork
-// // constexpr graviton_t         bch_graviton_activation_time = 1573819200;          //2019-Nov-15      hard fork
+// // constexpr mersenne_t         bch_mersenne_activation_time = 1573819200;          //2019-Nov-15      hard fork
 // // constexpr phonon_t           bch_phonon_activation_time{1589544000};                //2020-May-15      hard fork
 // constexpr axion_t            bch_axion_activation_time{1605441600};                 //2020-Nov-15      hard fork
 
@@ -462,11 +462,11 @@
 
 // //2019-Nov hard fork
 // static
-// const infrastructure::config::checkpoint mainnet_graviton_active_checkpoint{
+// const infrastructure::config::checkpoint mainnet_mersenne_active_checkpoint{
 //     "000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136};
 
 // static
-// const infrastructure::config::checkpoint testnet_graviton_active_checkpoint{
+// const infrastructure::config::checkpoint testnet_mersenne_active_checkpoint{
 //     "00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712};
 
 // //2020-May hard fork
