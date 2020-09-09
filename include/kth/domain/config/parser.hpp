@@ -50,10 +50,9 @@ using boost::program_options::reading_file;
 using std::error_code;
 
 inline
-kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t identifier) {
+kth::infrastructure::config::checkpoint::list default_checkpoints(config::network network) {
     kth::infrastructure::config::checkpoint::list checkpoints;
 
-    auto network = get_network(identifier);
 //TODO(fernando): Set Litecoin checkpoints
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet) {
@@ -367,7 +366,7 @@ public:
 
     static
     void fix_checkpoints(uint32_t identifier, kth::infrastructure::config::checkpoint::list& checkpoints) {
-        auto const def_checkpoints = default_checkpoints(identifier);
+        auto const def_checkpoints = default_checkpoints(get_network(identifier));
 
         auto const it = std::max_element(def_checkpoints.begin(), def_checkpoints.end(), [](auto const& x, auto const& y) {
             return x.height() < y.height();
