@@ -5,6 +5,8 @@
 #ifndef KTH_DOMAIN_CONFIG_NETWORK_HPP_
 #define KTH_DOMAIN_CONFIG_NETWORK_HPP_
 
+#include <string>
+
 namespace kth::domain::config {
 
 // For configuration network initialization in other libraries.
