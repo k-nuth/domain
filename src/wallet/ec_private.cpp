@@ -21,7 +21,7 @@
 namespace kth::domain::wallet {
 
 uint8_t const ec_private::compressed_sentinel = 0x01;
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
 uint8_t const ec_private::mainnet_wif = 0xb0;
 uint8_t const ec_private::mainnet_p2kh = 0x30;
 #else   //KTH_CURRENCY_LTC

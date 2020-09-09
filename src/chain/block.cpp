@@ -46,7 +46,7 @@ namespace kth::domain::chain {
 using namespace kth::domain::machine;
 using namespace boost::adaptors;
 
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
 //Litecoin mainnet genesis block
 static
 std::string const encoded_mainnet_genesis_block =

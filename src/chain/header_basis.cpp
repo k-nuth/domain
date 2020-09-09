@@ -147,7 +147,7 @@ hash_digest hash(header_basis const& header) {
     return bitcoin_hash(header.to_data());
 }
 
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
 hash_digest litecoin_proof_of_work_hash(header_basis const& header) {
     return litecoin_hash(header.to_data());
 }
@@ -215,7 +215,7 @@ bool header_basis::is_valid_proof_of_work(hash_digest const& hash, bool retarget
 
 // bool header_basis::is_valid_proof_of_work(bool retarget) const {
 
-// #ifdef KTH_CURRENCY_LTC
+// #if defined(KTH_CURRENCY_LTC)
 //     return to_uint256(litecoin_proof_of_work_hash(*this)) <= target;
 // #else
 //     return to_uint256(hash(*this)) <= target;

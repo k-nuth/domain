@@ -54,12 +54,6 @@ constexpr size_t regtest_bip65_freeze = 1351;
 constexpr size_t regtest_bip66_freeze = 1251;
 constexpr size_t regtest_bip34_freeze = 0;
 
-// Testnet4 frozen activation heights (frozen_activations).
-constexpr size_t testnet4_bip65_freeze = 3;
-constexpr size_t testnet4_bip66_freeze = 4;
-constexpr size_t testnet4_bip34_freeze = 2;
-
-
 // Block 514 is the first testnet block after date-based activation.
 // Block 166832 is the first mainnet block after date-based activation.
 constexpr uint32_t bip16_activation_time = 0x4f3af580;
@@ -83,21 +77,13 @@ const infrastructure::config::checkpoint mainnet_bip30_exception_checkpoint2{
 static
 const infrastructure::config::checkpoint mainnet_bip34_active_checkpoint{
     "000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8", 227931};
-
 static
 const infrastructure::config::checkpoint testnet_bip34_active_checkpoint{
     "0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8", 21111};
-
 static
 const infrastructure::config::checkpoint regtest_bip34_active_checkpoint{
     // Since bip90 assumes a historical bip34 activation block, use genesis.
     "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f", 0};
-
-//TODO(fernando): testnet4
-static
-const infrastructure::config::checkpoint testnet4_bip34_active_checkpoint{
-    "0000000000000000000000000000000000000000000000000000000000000000", 0};
-
 
 
 constexpr uint64_t retarget_subsidy_interval = 210000;

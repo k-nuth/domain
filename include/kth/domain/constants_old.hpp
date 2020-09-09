@@ -102,7 +102,7 @@
 // constexpr size_t coinbase_maturity = 100;
 // constexpr size_t locktime_threshold = 500000000;
 
-// #ifdef KTH_CURRENCY_LTC
+// #if defined(KTH_CURRENCY_LTC)
 // //0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 // constexpr uint32_t retarget_proof_of_work_limit = 0x1e0fffff;
 // constexpr uint32_t no_retarget_proof_of_work_limit = 0x207fffff;  // TODO(kth): merge version3. check the no_retarget value for LTC
@@ -178,7 +178,7 @@
 
 // constexpr uint32_t retargeting_factor = 4;
 
-// #ifdef KTH_CURRENCY_LTC
+// #if defined(KTH_CURRENCY_LTC)
 // constexpr uint32_t target_spacing_seconds = 10 * 15;
 // constexpr uint32_t target_timespan_seconds = 2 * 7 * 24 * 60 * 15;
 // #else   //KTH_CURRENCY_LTC
@@ -237,7 +237,7 @@
 
 // #endif  //KTH_CURRENCY_BCH
 
-// #ifdef KTH_CURRENCY_LTC
+// #if defined(KTH_CURRENCY_LTC)
 
 // // Mainnet activation parameters (bip34-style activations).
 // constexpr size_t mainnet_active = 750;
@@ -359,7 +359,7 @@
 
 // #endif  //KTH_CURRENCY_LTC
 
-// #ifdef KTH_CURRENCY_LTC
+// #if defined(KTH_CURRENCY_LTC)
 
 // // These cannot be reactivated in a future branch due to window expiration.
 // static
@@ -590,7 +590,7 @@
 //     return bitcoin_to_satoshi(initial_block_subsidy_bitcoin);
 // }
 
-// #ifdef KTH_CURRENCY_LTC
+// #if defined(KTH_CURRENCY_LTC)
 // // constexpr uint64_t reward_interval = 840000;
 // constexpr uint64_t retarget_subsidy_interval = 840000;
 // constexpr uint64_t no_retarget_subsidy_interval = 150;  // TODO(legacy): merge version3. check the no_retarget (regtest) value for LTC

@@ -23,8 +23,15 @@
 namespace kth {
 
 #if defined(KTH_CURRENCY_BCH)
-constexpr size_t max_block_sigchecks = get_max_block_size(kth::infrastructure::config::settings::mainnet) / block_maxbytes_maxsigchecks_ratio;
-constexpr size_t max_block_sigchecks_testnet4 = get_max_block_size(kth::infrastructure::config::settings::testnet4) / block_maxbytes_maxsigchecks_ratio;
+constexpr size_t internal_max_block_sigchecks = get_max_block_size(domain::config::settings::mainnet) / block_maxbytes_maxsigchecks_ratio;
+constexpr size_t internal_max_block_sigchecks_testnet4 = get_max_block_size(domain::config::settings::testnet4) / block_maxbytes_maxsigchecks_ratio;
+
+constexpr inline 
+size_t get_max_block_sigchecks(domain::config::settings network) noexcept {
+    if (network == domain::config::settings::testnet4) return internal_max_block_sigchecks_testnet4;
+    return internal_max_block_sigchecks;
+}
+
 #endif
 
 } // namespace kth

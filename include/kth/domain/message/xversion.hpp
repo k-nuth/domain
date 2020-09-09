@@ -72,7 +72,7 @@ public:
         no_blocks_start = 32000,
 
     // This preceded the BIP system.
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
         headers = 70002,
 #else
         headers = 31800,

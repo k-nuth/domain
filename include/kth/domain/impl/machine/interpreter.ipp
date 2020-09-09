@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DOMAIN_MACHINE_INTERPRETER_IPP
-#define KTH_DOMAIN_MACHINE_INTERPRETER_IPP
+#ifndef KTH_DOMAIN_MACHINE_INTERPRETER_IPP_
+#define KTH_DOMAIN_MACHINE_INTERPRETER_IPP_
 
 #include <cstdint>
 #include <utility>
@@ -22,12 +22,6 @@
 #include <kth/infrastructure/utility/data.hpp>
 
 namespace kth::domain::machine {
-
-// kth::domain::machine::rule_fork
-// using pepe = bip66_rule;
-// using pepe2 = bip66_rule;
-static constexpr auto pepe3 = bip66_rule;
-static constexpr auto pepe4 = rule_fork::bip65_rule;
 
 static constexpr
 auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
@@ -57,8 +51,7 @@ interpreter::result interpreter::op_push_number(program& program, uint8_t value)
 }
 
 inline
-interpreter::result interpreter::op_push_size(program& program,
-                                                     operation const& op) {
+interpreter::result interpreter::op_push_size(program& program, operation const& op) {
     if (op.data().size() > op_75) {
         return error::op_push_size;
     }
@@ -68,9 +61,7 @@ interpreter::result interpreter::op_push_size(program& program,
 }
 
 inline
-interpreter::result interpreter::op_push_data(program& program,
-                                                     data_chunk const& data,
-                                                     uint32_t size_limit) {
+interpreter::result interpreter::op_push_data(program& program, data_chunk const& data, uint32_t size_limit) {
     if (data.size() > size_limit) {
         return error::op_push_data;
     }
@@ -1354,4 +1345,4 @@ interpreter::result interpreter::run_op(operation const& op,
 
 } // namespace kth::domain::machine
 
-#endif
+#endif // KTH_DOMAIN_MACHINE_INTERPRETER_IPP_
