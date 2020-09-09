@@ -32,6 +32,7 @@
 #include <kth/domain/chain/witness.hpp>
 #endif
 
+#include <kth/domain/config/network.hpp>
 #include <kth/domain/config/parser.hpp>
 
 #include <kth/domain/machine/interpreter.hpp>

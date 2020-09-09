@@ -41,7 +41,7 @@ using namespace boost::adaptors;
 
 // The allow_collisions hard fork is always activated (not configurable).
 chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
-    , domain::config::settings network
+    , domain::config::network network
 #if defined(KTH_CURRENCY_BCH)
     , assert_anchor_block_info_t const& assert_anchor_block_info
     , uint32_t asert_half_life
@@ -95,21 +95,13 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 #endif
 }
 
-domain::config::settings chain_state::network() const {
-    // auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    // auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-    // auto const mainnet = retarget && !testnet;
-
+domain::config::network chain_state::network() const {
     // Retargeting and testnet are only activated via configuration.
     // auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
     // auto const retarget = script::is_enabled(forks, rule_fork::retarget);
     // auto const mainnet = retarget && !testnet;
-
-
     return network_;
 }
-
-
 
 #if defined(KTH_CURRENCY_BCH)
 //Note(fernando): remove once Euler is activated
@@ -143,34 +135,34 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
 //-----------------------------------------------------------------------------
 
 inline 
-size_t version_sample_size(domain::config::settings network) {
-    return network == domain::config::settings::mainnet ? mainnet_sample : testnet_sample;
+size_t version_sample_size(domain::config::network network) {
+    return network == domain::config::network::mainnet ? mainnet_sample : testnet_sample;
 }
 
 inline 
-bool is_active(size_t count, domain::config::settings network) {
-    return count >= (network == domain::config::settings::mainnet ? mainnet_active : testnet_active);
+bool is_active(size_t count, domain::config::network network) {
+    return count >= (network == domain::config::network::mainnet ? mainnet_active : testnet_active);
 }
 
 inline 
-bool is_enforced(size_t count, domain::config::settings network) {
-    return count >= (network == domain::config::settings::mainnet ? mainnet_enforce : testnet_enforce);
+bool is_enforced(size_t count, domain::config::network network) {
+    return count >= (network == domain::config::network::mainnet ? mainnet_enforce : testnet_enforce);
 }
 
 inline 
-bool is_bip16_exception(infrastructure::config::checkpoint const& check, domain::config::settings network) {
-    return network == domain::config::settings::mainnet && check == mainnet_bip16_exception_checkpoint;
+bool is_bip16_exception(infrastructure::config::checkpoint const& check, domain::config::network network) {
+    return network == domain::config::network::mainnet && check == mainnet_bip16_exception_checkpoint;
 }
 
 inline 
-bool is_bip30_exception(infrastructure::config::checkpoint const& check, domain::config::settings network) {
-    return network == domain::config::settings::mainnet &&
+bool is_bip30_exception(infrastructure::config::checkpoint const& check, domain::config::network network) {
+    return network == domain::config::network::mainnet &&
            ((check == mainnet_bip30_exception_checkpoint1) ||
             (check == mainnet_bip30_exception_checkpoint2));
 }
 
 inline 
-bool allow_collisions(hash_digest const& hash, domain::config::settings network) {
+bool allow_collisions(hash_digest const& hash, domain::config::network network) {
     return hash == network_map(network, mainnet_bip34_active_checkpoint.hash()
                                         , testnet_bip34_active_checkpoint.hash()
                                         , regtest_bip34_active_checkpoint.hash()
@@ -181,7 +173,7 @@ bool allow_collisions(hash_digest const& hash, domain::config::settings network)
 }
 
 inline 
-bool allow_collisions(size_t height, domain::config::settings network) {
+bool allow_collisions(size_t height, domain::config::network network) {
     return height == network_map(network, mainnet_bip34_active_checkpoint.height()
                                           , testnet_bip34_active_checkpoint.height()
                                           , regtest_bip34_active_checkpoint.height()
@@ -193,28 +185,28 @@ bool allow_collisions(size_t height, domain::config::settings network) {
 
 #if ! defined(KTH_CURRENCY_BCH)
 inline 
-bool bip9_bit0_active(hash_digest const& hash, domain::config::settings network) {
+bool bip9_bit0_active(hash_digest const& hash, domain::config::network network) {
     return hash == network_map(network, mainnet_bip9_bit0_active_checkpoint.hash(), 
                                         testnet_bip9_bit0_active_checkpoint.hash(), 
                                         regtest_bip9_bit0_active_checkpoint.hash());
 }
 
 inline 
-bool bip9_bit0_active(size_t height, domain::config::settings network) {
+bool bip9_bit0_active(size_t height, domain::config::network network) {
     return height == network_map(network, mainnet_bip9_bit0_active_checkpoint.height(), 
                                           testnet_bip9_bit0_active_checkpoint.height(), 
                                           regtest_bip9_bit0_active_checkpoint.height());
 }
 
 inline 
-bool bip9_bit1_active(hash_digest const& hash, domain::config::settings network) {
+bool bip9_bit1_active(hash_digest const& hash, domain::config::network network) {
     return hash == network_map(network, mainnet_bip9_bit1_active_checkpoint.hash(), 
                                         testnet_bip9_bit1_active_checkpoint.hash(), 
                                         regtest_bip9_bit1_active_checkpoint.hash());
 }
 
 inline 
-bool bip9_bit1_active(size_t height, domain::config::settings network) {
+bool bip9_bit1_active(size_t height, domain::config::network network) {
     return height == network_map(network, mainnet_bip9_bit1_active_checkpoint.height(), 
                                           testnet_bip9_bit1_active_checkpoint.height(), 
                                           regtest_bip9_bit1_active_checkpoint.height());
@@ -222,7 +214,7 @@ bool bip9_bit1_active(size_t height, domain::config::settings network) {
 #endif
 
 inline 
-bool bip34(size_t height, bool frozen, domain::config::settings network) {
+bool bip34(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
            height == network_map(network, mainnet_bip34_freeze
                                           , testnet_bip34_freeze 
@@ -234,7 +226,7 @@ bool bip34(size_t height, bool frozen, domain::config::settings network) {
 }
 
 inline 
-bool bip66(size_t height, bool frozen, domain::config::settings network) {
+bool bip66(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
            height == network_map(network, mainnet_bip66_freeze
                                           , testnet_bip66_freeze
@@ -246,7 +238,7 @@ bool bip66(size_t height, bool frozen, domain::config::settings network) {
 }
 
 inline 
-bool bip65(size_t height, bool frozen, domain::config::settings network) {
+bool bip65(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
            height == network_map(network, mainnet_bip65_freeze
                                           , testnet_bip65_freeze
@@ -323,7 +315,7 @@ bool chain_state::is_gauss_enabled() const {
 
 // static
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
-        , domain::config::settings network
+        , domain::config::network network
 #if defined(KTH_CURRENCY_BCH)
         // , euclid_t euclid_activation_time
         // , pisano_t pisano_activation_time
@@ -523,7 +515,7 @@ size_t chain_state::bits_count(size_t height, uint32_t forks) {
 }
 
 // static
-size_t chain_state::version_count(size_t height, uint32_t forks, domain::config::settings network) {
+size_t chain_state::version_count(size_t height, uint32_t forks, domain::config::network network) {
     if (  script::is_enabled(forks, rule_fork::bip90_rule) || 
         ! script::is_enabled(forks, rule_fork::bip34_activations)) {
         return 0;
@@ -1161,7 +1153,7 @@ size_t chain_state::retarget_distance(size_t height) {
 //-----------------------------------------------------------------------------
 
 // static
-chain_state::map chain_state::get_map(size_t height, checkpoints const& /*checkpoints*/, uint32_t forks, domain::config::settings network) {
+chain_state::map chain_state::get_map(size_t height, checkpoints const& /*checkpoints*/, uint32_t forks, domain::config::network network) {
     if (height == 0) {
         return {};
     }

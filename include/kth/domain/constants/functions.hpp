@@ -25,9 +25,9 @@ constexpr uint32_t work_limit(bool retarget = true) noexcept {
 }
 
 constexpr inline 
-size_t get_max_block_size(domain::config::settings network) noexcept {
+size_t get_max_block_size(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
-    if (network == domain::config::settings::testnet4) return max_block_size_testnet4;
+    if (network == domain::config::network::testnet4) return max_block_size_testnet4;
     return max_block_size_new;
 #else
     return max_block_size;
@@ -44,9 +44,9 @@ size_t get_max_block_size_network_independent() noexcept {
 }
 
 constexpr inline 
-size_t get_max_block_sigops(domain::config::settings network) noexcept {
+size_t get_max_block_sigops(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
-    if (network == domain::config::settings::testnet4) return max_block_sigops_testnet4;
+    if (network == domain::config::network::testnet4) return max_block_sigops_testnet4;
     return max_block_sigops_new;
 #else
     return max_block_sigops;
@@ -90,7 +90,7 @@ uint64_t max_money(bool retarget = true) noexcept {
 
 template <typename... Ts>
 constexpr inline
-auto&& network_map(domain::config::settings network, Ts&&... args) noexcept {
+auto&& network_map(domain::config::network network, Ts&&... args) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     static_assert(sizeof...(Ts) == 4, "this function requires 4 values");
 #else
@@ -99,18 +99,18 @@ auto&& network_map(domain::config::settings network, Ts&&... args) noexcept {
 
     auto const values = std::make_tuple(args...);
     switch (network) {
-        case domain::config::settings::testnet:
+        case domain::config::network::testnet:
             return std::forward<std::tuple_element_t<1, decltype(values)>>(std::get<1>(values));
-        case domain::config::settings::regtest:
+        case domain::config::network::regtest:
             return std::forward<std::tuple_element_t<2, decltype(values)>>(std::get<2>(values));
 
 #if defined(KTH_CURRENCY_BCH)
-        case domain::config::settings::testnet4:
+        case domain::config::network::testnet4:
             return std::forward<std::tuple_element_t<3, decltype(values)>>(std::get<3>(values));
 #endif
 
         default:
-        case domain::config::settings::mainnet:
+        case domain::config::network::mainnet:
             return std::forward<std::tuple_element_t<0, decltype(values)>>(std::get<0>(values));
     }
 }

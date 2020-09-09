@@ -7,7 +7,7 @@
 
 #include <string>
 
-#include <kth/domain/config/settings.hpp>
+#include <kth/domain/config/network.hpp>
 
 namespace kth {
 
@@ -39,7 +39,7 @@ enum class currency {
 } // namespace config
 
 config::currency get_currency();
-domain::config::settings get_network(uint32_t identifier);
+domain::config::network get_network(uint32_t identifier);
 
 #if defined(KTH_CURRENCY_BCH)
 std::string cashaddr_prefix();

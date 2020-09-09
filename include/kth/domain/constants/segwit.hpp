@@ -8,7 +8,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <kth/domain/config/settings.hpp>
+#include <kth/domain/config/network.hpp>
 
 namespace kth {
 
@@ -19,9 +19,9 @@ constexpr size_t min_witness_program = 2;
 constexpr size_t max_witness_program = 40;
 
 constexpr size_t fast_sigops_factor = 4;
-constexpr size_t max_fast_sigops = fast_sigops_factor * get_max_block_sigops(domain::config::settings::mainnet);
+constexpr size_t max_fast_sigops = fast_sigops_factor * get_max_block_sigops(domain::config::network::mainnet);
 constexpr size_t light_weight_factor = 4;
-constexpr size_t max_block_weight = light_weight_factor * get_max_block_size(domain::config::settings::mainnet);
+constexpr size_t max_block_weight = light_weight_factor * get_max_block_size(domain::config::network::mainnet);
 constexpr size_t base_size_contribution = 3;
 constexpr size_t total_size_contribution = 1;
 

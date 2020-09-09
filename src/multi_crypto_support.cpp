@@ -30,38 +30,38 @@ config::currency get_currency() {
 #endif
 }
 
-domain::config::settings get_network(uint32_t identifier) {
+domain::config::network get_network(uint32_t identifier) {
 #if defined(KTH_CURRENCY_LTC)
     switch (identifier) {
         case netmagic::ltc_testnet:
-            return domain::config::settings::testnet;
+            return domain::config::network::testnet;
         case netmagic::ltc_regtest:
-            return domain::config::settings::regtest;
+            return domain::config::network::regtest;
         default:
         case netmagic::ltc_mainnet:
-            return domain::config::settings::mainnet;
+            return domain::config::network::mainnet;
     }
 #elif defined(KTH_CURRENCY_BCH)
     switch (identifier) {
         case netmagic::bch_testnet:
-            return domain::config::settings::testnet;
+            return domain::config::network::testnet;
         case netmagic::bch_regtest:
-            return domain::config::settings::regtest;
+            return domain::config::network::regtest;
         case netmagic::bch_testnet4:
-            return domain::config::settings::testnet4;
+            return domain::config::network::testnet4;
         default:
         case netmagic::bch_mainnet:
-            return domain::config::settings::mainnet;
+            return domain::config::network::mainnet;
     }
 #else
     switch (identifier) {
         case netmagic::btc_testnet:
-            return domain::config::settings::testnet;
+            return domain::config::network::testnet;
         case netmagic::btc_regtest:
-            return domain::config::settings::regtest;
+            return domain::config::network::regtest;
         default:
         case netmagic::btc_mainnet:
-            return domain::config::settings::mainnet;
+            return domain::config::network::mainnet;
     }
 #endif
 }

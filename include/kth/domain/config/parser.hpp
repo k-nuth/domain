@@ -56,7 +56,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
     auto network = get_network(identifier);
 //TODO(fernando): Set Litecoin checkpoints
 #if defined(KTH_CURRENCY_BCH)
-    if (network == domain::config::settings::testnet) {
+    if (network == domain::config::network::testnet) {
         checkpoints.reserve(35);
         checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
         checkpoints.emplace_back("00000000009e2958c15ff9290d571bf9459e93b19765c6801ddeccadbb160a1e", 100000);
@@ -128,10 +128,10 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
 
-    } else if (network == domain::config::settings::testnet4) {
+    } else if (network == domain::config::network::testnet4) {
         checkpoints.reserve(1);
         checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
-    } else if (network == domain::config::settings::mainnet) {
+    } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(57);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
         checkpoints.emplace_back("0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d", 11111);
@@ -238,7 +238,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);
     }
 #elif defined(KTH_CURRENCY_BTC)
-    if (network == domain::config::settings::testnet) {
+    if (network == domain::config::network::testnet) {
         checkpoints.reserve(19);
         checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
         checkpoints.emplace_back("00000000009e2958c15ff9290d571bf9459e93b19765c6801ddeccadbb160a1e", 100000);
@@ -263,7 +263,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         checkpoints.emplace_back("000000000000fce208da3e3b8afcc369835926caa44044e9c2f0caa48c8eba0f", 1400000);
         checkpoints.emplace_back("0000000000049a6b07f91975568dc96bb1aec1a24c6bdadb21eb17c9f1b7256f", 1500000);
 
-    } else if (network == domain::config::settings::mainnet) {
+    } else if (network == domain::config::network::mainnet) {
         // BTC Mainnet
         checkpoints.reserve(36);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);

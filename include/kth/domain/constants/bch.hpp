@@ -10,7 +10,7 @@
 
 #include <kth/infrastructure/config/checkpoint.hpp>
 
-#include <kth/domain/config/settings.hpp>
+#include <kth/domain/config/network.hpp>
 #include <kth/domain/constants/bch_btc.hpp>
 #include <kth/domain/constants/common.hpp>
 

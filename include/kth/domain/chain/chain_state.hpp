@@ -124,7 +124,7 @@ public:
     /// Checkpoints must be ordered by height with greatest at back.
     /// Forks and checkpoints must match those provided for map creation.
     chain_state(data&& values, uint32_t forks, checkpoints const& checkpoints
-                , domain::config::settings network
+                , domain::config::network network
 #if defined(KTH_CURRENCY_BCH)
                 , assert_anchor_block_info_t const& assert_anchor_block_info
                 , uint32_t asert_half_life
@@ -144,14 +144,14 @@ public:
 
     /// Checkpoints must be ordered by height with greatest at back.
     static
-    map get_map(size_t height, checkpoints const& checkpoints, uint32_t forks, domain::config::settings network);
+    map get_map(size_t height, checkpoints const& checkpoints, uint32_t forks, domain::config::network network);
 
     static
     uint32_t signal_version(uint32_t forks);
 
     /// Properties.
     [[nodiscard]]
-    domain::config::settings network() const;
+    domain::config::network network() const;
 
     [[nodiscard]]
     size_t height() const;
@@ -260,7 +260,7 @@ protected:
 
     static
     activations activation(data const& values, uint32_t forks
-            , domain::config::settings network
+            , domain::config::network network
 #if defined(KTH_CURRENCY_BCH)
             // , euclid_t euclid_activation_time
             // , pisano_t pisano_activation_time
@@ -288,7 +288,7 @@ private:
     size_t bits_count(size_t height, uint32_t forks);
     
     static
-    size_t version_count(size_t height, uint32_t forks, domain::config::settings network);
+    size_t version_count(size_t height, uint32_t forks, domain::config::network network);
 
     static
     size_t timestamp_count(size_t height, uint32_t forks);
@@ -403,7 +403,7 @@ private:
 
     // Checkpoints do not affect the data that is collected or promoted.
     infrastructure::config::checkpoint::list const& checkpoints_;
-    domain::config::settings network_;
+    domain::config::network network_;
 
     // These are computed on construct from sample and checkpoints.
     activations const active_;
