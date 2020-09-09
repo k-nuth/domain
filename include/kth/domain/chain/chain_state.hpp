@@ -128,7 +128,7 @@ public:
 #if defined(KTH_CURRENCY_BCH)
                 , assert_anchor_block_info_t const& assert_anchor_block_info
                 , uint32_t asert_half_life
-                // , magnetic_anomaly_t magnetic_anomaly_activation_time
+                // , euclid_t euclid_activation_time
                 // , great_wall_t great_wall_activation_time
                 // , graviton_t graviton_activation_time
                 // , phonon_t phonon_activation_time
@@ -176,7 +176,7 @@ public:
     uint32_t asert_half_life() const;
 
     // [[nodiscard]]
-    // magnetic_anomaly_t magnetic_anomaly_activation_time() const;
+    // euclid_t euclid_activation_time() const;
     
     // [[nodiscard]]
     // great_wall_t great_wall_activation_time() const;
@@ -228,7 +228,7 @@ public:
     bool is_pythagoras_enabled() const;
 
     [[nodiscard]]
-    bool is_magnetic_anomaly_enabled() const;
+    bool is_euclid_enabled() const;
 
     [[nodiscard]]
     bool is_great_wall_enabled() const;
@@ -262,7 +262,7 @@ protected:
     activations activation(data const& values, uint32_t forks
             , domain::config::settings network
 #if defined(KTH_CURRENCY_BCH)
-            // , magnetic_anomaly_t magnetic_anomaly_activation_time
+            // , euclid_t euclid_activation_time
             // , great_wall_t great_wall_activation_time
             // , graviton_t graviton_activation_time
             // , phonon_t phonon_activation_time
@@ -323,7 +323,7 @@ private:
     bool is_pythagoras_enabled(size_t height, uint32_t forks);
     
     static
-    bool is_magnetic_anomaly_enabled(size_t height, uint32_t forks);
+    bool is_euclid_enabled(size_t height, uint32_t forks);
     
     static
     bool is_great_wall_enabled(size_t height, uint32_t forks);
@@ -414,7 +414,7 @@ private:
 #if defined(KTH_CURRENCY_BCH)
     uint32_t const asert_half_life_;
 
-    // magnetic_anomaly_t const magnetic_anomaly_activation_time_;
+    // euclid_t const euclid_activation_time_;
     // great_wall_t const great_wall_activation_time_;
     // graviton_t const graviton_activation_time_;
     // phonon_t const phonon_activation_time_;

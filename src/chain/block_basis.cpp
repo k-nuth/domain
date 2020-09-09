@@ -674,7 +674,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
     //Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
     //               and for BitcoinCash (BCH) before 2018-Nov-15.
 
-    if (state.is_magnetic_anomaly_enabled()) {
+    if (state.is_euclid_enabled()) {
         if ( ! is_canonical_ordered()) {
             return error::non_canonical_ordered;
         }

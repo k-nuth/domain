@@ -45,7 +45,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 #if defined(KTH_CURRENCY_BCH)
     , assert_anchor_block_info_t const& assert_anchor_block_info
     , uint32_t asert_half_life
-    // , magnetic_anomaly_t magnetic_anomaly_activation_time
+    // , euclid_t euclid_activation_time
     // , great_wall_t great_wall_activation_time
     // , graviton_t graviton_activation_time
     // , phonon_t phonon_activation_time
@@ -62,7 +62,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     , network_(network)
     , active_(activation(data_, forks_, network_
 #if defined(KTH_CURRENCY_BCH)
-        // , magnetic_anomaly_activation_time
+        // , euclid_activation_time
         // , great_wall_activation_time
         // , graviton_activation_time
         // , phonon_activation_time
@@ -82,7 +82,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     ))
 #if defined(KTH_CURRENCY_BCH)
     , asert_half_life_(asert_half_life)
-    // , magnetic_anomaly_activation_time_(magnetic_anomaly_activation_time)
+    // , euclid_activation_time_(euclid_activation_time)
     // , great_wall_activation_time_(great_wall_activation_time)
     // , graviton_activation_time_(graviton_activation_time)
     // , phonon_activation_time_(phonon_activation_time)
@@ -280,8 +280,8 @@ bool chain_state::is_pythagoras_enabled() const {
     return is_pythagoras_enabled(height(), enabled_forks());
 }
 
-bool chain_state::is_magnetic_anomaly_enabled() const {
-    return is_magnetic_anomaly_enabled(height(), enabled_forks());
+bool chain_state::is_euclid_enabled() const {
+    return is_euclid_enabled(height(), enabled_forks());
 }
 
 bool chain_state::is_great_wall_enabled() const {
@@ -325,7 +325,7 @@ bool chain_state::is_tachyon_enabled() const {
 chain_state::activations chain_state::activation(data const& values, uint32_t forks
         , domain::config::settings network
 #if defined(KTH_CURRENCY_BCH)
-        // , magnetic_anomaly_t magnetic_anomaly_activation_time
+        // , euclid_t euclid_activation_time
         // , great_wall_t great_wall_activation_time
         // , graviton_t graviton_activation_time
         // , phonon_t phonon_activation_time
@@ -456,12 +456,12 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_pythagoras & forks);
     }
 
-    if (is_magnetic_anomaly_enabled(values.height, forks)) {
+    if (is_euclid_enabled(values.height, forks)) {
         // result.forks |= (rule_fork::cash_checkdatasig & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_CHECKDATASIG_SIGOPS & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_SIGPUSHONLY & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_CLEANSTACK & forks);
-        result.forks |= (rule_fork::bch_magnetic_anomaly & forks);
+        result.forks |= (rule_fork::bch_euclid & forks);
     }
 
     if (is_great_wall_enabled(values.height, forks)) {
@@ -632,10 +632,10 @@ bool chain_state::is_pythagoras_enabled(size_t height, uint32_t forks) {
 
 //2018-Nov hard fork
 inline 
-bool chain_state::is_magnetic_anomaly_enabled(size_t height, uint32_t forks) {
+bool chain_state::is_euclid_enabled(size_t height, uint32_t forks) {
     return is_rule_enabled(height, forks, 
-        mainnet_magnetic_anomaly_active_checkpoint.height(), 
-        testnet_magnetic_anomaly_active_checkpoint.height());
+        mainnet_euclid_active_checkpoint.height(), 
+        testnet_euclid_active_checkpoint.height());
 }
 
 //2019-May hard fork
@@ -1316,8 +1316,8 @@ uint32_t chain_state::asert_half_life() const {
 //     return pythagoras_activation_time_;
 // }
 
-// magnetic_anomaly_t chain_state::magnetic_anomaly_activation_time() const {
-//     return magnetic_anomaly_activation_time_;
+// euclid_t chain_state::euclid_activation_time() const {
+//     return euclid_activation_time_;
 // }
 
 // great_wall_t chain_state::great_wall_activation_time() const {
