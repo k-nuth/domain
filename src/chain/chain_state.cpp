@@ -50,7 +50,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , mersenne_t mersenne_activation_time
     // , fermat_t fermat_activation_time
     , euler_t euler_activation_time
-    , tachyon_t tachyon_activation_time
+    , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
     : data_(std::move(values))
@@ -67,14 +67,14 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , mersenne_activation_time
         // , fermat_activation_time
         , euler_activation_time
-        , tachyon_activation_time
+        , gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_, forks_))
     , work_required_(work_required(data_, forks_
 #if defined(KTH_CURRENCY_BCH)
             , euler_activation_time
-            , tachyon_activation_time
+            , gauss_activation_time
             , assert_anchor_block_info_
             , asert_half_life
             
@@ -87,7 +87,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , mersenne_activation_time_(mersenne_activation_time)
     // , fermat_activation_time_(fermat_activation_time)
     , euler_activation_time_(euler_activation_time)
-    , tachyon_activation_time_(tachyon_activation_time)
+    , gauss_activation_time_(gauss_activation_time)
 #endif  //KTH_CURRENCY_BCH
 {
 #if defined(KTH_CURRENCY_BCH)
@@ -134,7 +134,7 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
         , pool.asert_half_life_
         // , pool.fermat_activation_time_
         , pool.euler_activation_time_
-        , pool.tachyon_activation_time_
+        , pool.gauss_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
 }
@@ -302,10 +302,10 @@ bool chain_state::is_euler_enabled() const {
     // return is_euler_enabled(height(), enabled_forks());
 }
 
-bool chain_state::is_tachyon_enabled() const {
+bool chain_state::is_gauss_enabled() const {
    //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(tachyon_activation_time()));
-    // return is_tachyon_enabled(height(), enabled_forks());
+    return is_mtp_activated(median_time_past(), to_underlying(gauss_activation_time()));
+    // return is_gauss_enabled(height(), enabled_forks());
 }
 
 // 2021-Nov
@@ -330,7 +330,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , mersenne_t mersenne_activation_time
         // , fermat_t fermat_activation_time
         , euler_t euler_activation_time
-        , tachyon_t tachyon_activation_time
+        , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
@@ -499,10 +499,10 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_euler & forks);
     }
 
-    if (is_mtp_activated(mtp, to_underlying(tachyon_activation_time))) {
+    if (is_mtp_activated(mtp, to_underlying(gauss_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
     //     flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
-        result.forks |= (rule_fork::bch_tachyon & forks);
+        result.forks |= (rule_fork::bch_gauss & forks);
         // result.forks |= (rule_fork::bch_replay_protection & forks);
     }
 #endif  //KTH_CURRENCY_BCH
@@ -674,10 +674,10 @@ bool chain_state::is_fermat_enabled(size_t height, uint32_t forks) {
 //2021-May hard fork
 // Complete after the hard fork
 // inline 
-// bool chain_state::is_tachyon_enabled(size_t height, uint32_t forks) {
+// bool chain_state::is_gauss_enabled(size_t height, uint32_t forks) {
 //     return is_rule_enabled(height, forks, 
-//         mainnet_tachyon_active_checkpoint.height(), 
-//         testnet_tachyon_active_checkpoint.height());
+//         mainnet_gauss_active_checkpoint.height(), 
+//         testnet_gauss_active_checkpoint.height());
 // }
 
 //2021-Nov hard fork
@@ -957,7 +957,7 @@ uint32_t chain_state::daa_cw144(data const& values) {
 uint32_t chain_state::work_required(data const& values, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                                     , euler_t euler_activation_time
-                                    , tachyon_t tachyon_activation_time
+                                    , gauss_t gauss_activation_time
                                     , assert_anchor_block_info_t const& assert_anchor_block_info
                                     , uint32_t asert_half_life
 #endif
@@ -1336,8 +1336,8 @@ euler_t chain_state::euler_activation_time() const {
     return euler_activation_time_;
 }
 
-tachyon_t chain_state::tachyon_activation_time() const {
-    return tachyon_activation_time_;
+gauss_t chain_state::gauss_activation_time() const {
+    return gauss_activation_time_;
 }
 
 #endif  //KTH_CURRENCY_BCH
@@ -1367,7 +1367,7 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     return work_required(values, enabled_forks()
 #if defined(KTH_CURRENCY_BCH)
                             , euler_activation_time()
-                            , tachyon_activation_time()
+                            , gauss_activation_time()
                             , assert_anchor_block_info_
                             , asert_half_life()
 #endif

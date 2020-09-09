@@ -118,7 +118,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
 
-        // //2021-May Hardfork - tachyon - (1621080000)
+        // //2021-May Hardfork - gauss - (1621080000)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
@@ -222,7 +222,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(uint32_t ident
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
 
-        // //2021-May Hardfork - tachyon - (1621080000)
+        // //2021-May Hardfork - gauss - (1621080000)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
