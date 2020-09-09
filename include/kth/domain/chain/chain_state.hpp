@@ -129,7 +129,7 @@ public:
                 , assert_anchor_block_info_t const& assert_anchor_block_info
                 , uint32_t asert_half_life
                 // , euclid_t euclid_activation_time
-                // , great_wall_t great_wall_activation_time
+                // , pisano_t pisano_activation_time
                 // , graviton_t graviton_activation_time
                 // , phonon_t phonon_activation_time
                 , axion_t axion_activation_time
@@ -179,7 +179,7 @@ public:
     // euclid_t euclid_activation_time() const;
     
     // [[nodiscard]]
-    // great_wall_t great_wall_activation_time() const;
+    // pisano_t pisano_activation_time() const;
 
     // [[nodiscard]]
     // graviton_t graviton_activation_time() const;
@@ -231,7 +231,7 @@ public:
     bool is_euclid_enabled() const;
 
     [[nodiscard]]
-    bool is_great_wall_enabled() const;
+    bool is_pisano_enabled() const;
 
     [[nodiscard]]
     bool is_graviton_enabled() const;
@@ -263,7 +263,7 @@ protected:
             , domain::config::settings network
 #if defined(KTH_CURRENCY_BCH)
             // , euclid_t euclid_activation_time
-            // , great_wall_t great_wall_activation_time
+            // , pisano_t pisano_activation_time
             // , graviton_t graviton_activation_time
             // , phonon_t phonon_activation_time
             , axion_t axion_activation_time
@@ -326,7 +326,7 @@ private:
     bool is_euclid_enabled(size_t height, uint32_t forks);
     
     static
-    bool is_great_wall_enabled(size_t height, uint32_t forks);
+    bool is_pisano_enabled(size_t height, uint32_t forks);
 
     static
     bool is_graviton_enabled(size_t height, uint32_t forks);
@@ -415,7 +415,7 @@ private:
     uint32_t const asert_half_life_;
 
     // euclid_t const euclid_activation_time_;
-    // great_wall_t const great_wall_activation_time_;
+    // pisano_t const pisano_activation_time_;
     // graviton_t const graviton_activation_time_;
     // phonon_t const phonon_activation_time_;
     axion_t const axion_activation_time_;
