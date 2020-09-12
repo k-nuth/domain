@@ -247,7 +247,7 @@ public:
 #endif  //KTH_CURRENCY_BCH
 
     static
-    uint32_t median_time_past(data const& values, uint32_t forks, bool tip = true);
+    uint32_t median_time_past(data const& values, size_t last_n = median_time_past_interval);
 
 protected:
     struct activations {
@@ -272,7 +272,7 @@ protected:
     );
 
     static
-    uint32_t work_required(data const& values, uint32_t forks
+    uint32_t work_required(data const& values, config::network network, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                             , euler_t euler_activation_time
                             , gauss_t gauss_activation_time
@@ -298,7 +298,7 @@ private:
     size_t retarget_height(size_t height, uint32_t forks);
 
     static
-    size_t collision_height(size_t height, uint32_t forks);
+    size_t collision_height(size_t height, config::network network);
 
 #if ! defined(KTH_CURRENCY_BCH)
     static
@@ -308,37 +308,44 @@ private:
     size_t bip9_bit1_height(size_t height, uint32_t forks);
 #endif
 
+    // static
+    // bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
     static
-    bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
-    
+    bool is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
+#if defined(KTH_CURRENCY_BCH)
+        , size_t testnet4_height
+#endif
+        );
+
+
     // ------------------------------------------------------------------------
 #if defined(KTH_CURRENCY_BCH)
     static
-    bool is_uahf_enabled(size_t height, uint32_t forks);
+    bool is_uahf_enabled(size_t height, config::network network);
     
     static
-    bool is_daa_cw144_enabled(size_t height, uint32_t forks);
+    bool is_daa_cw144_enabled(size_t height, config::network network);
     
     static
-    bool is_pythagoras_enabled(size_t height, uint32_t forks);
+    bool is_pythagoras_enabled(size_t height, config::network network);
     
     static
-    bool is_euclid_enabled(size_t height, uint32_t forks);
+    bool is_euclid_enabled(size_t height, config::network network);
     
     static
-    bool is_pisano_enabled(size_t height, uint32_t forks);
+    bool is_pisano_enabled(size_t height, config::network network);
 
     static
-    bool is_mersenne_enabled(size_t height, uint32_t forks);
+    bool is_mersenne_enabled(size_t height, config::network network);
     
     static
-    bool is_fermat_enabled(size_t height, uint32_t forks);
-
-    // static
-    // bool is_euler_enabled(size_t height, uint32_t forks);
+    bool is_fermat_enabled(size_t height, config::network network);
 
     // static
-    // bool is_gauss_enabled(size_t height, uint32_t forks);
+    // bool is_euler_enabled(size_t height, config::network network);
+
+    // static
+    // bool is_gauss_enabled(size_t height, config::network network);
 #endif // KTH_CURRENCY_BCH
     // ------------------------------------------------------------------------
 

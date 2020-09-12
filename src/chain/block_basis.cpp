@@ -46,116 +46,6 @@ namespace kth::domain::chain {
 using namespace kth::domain::machine;
 using namespace boost::adaptors;
 
-#if defined(KTH_CURRENCY_LTC)
-//Litecoin mainnet genesis block
-static
-std::string const encoded_mainnet_genesis_block =
-    "01000000"                                                                                                                                          //version
-    "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
-    "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le *
-    "b9aa8e4e"                                                                                                                                          //timestamp le *
-    "f0ff0f1e"                                                                                                                                          //bits =
-    "cd513f7c"                                                                                                                                          //nonce X
-    "01"                                                                                                                                                //nro txs
-    "01000000"                                                                                                                                          //version
-    "01"                                                                                                                                                // inputs
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"                                                                          //prev output
-    "48"                                                                                                                                                //script length
-    "04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536"  //scriptsig
-    "ffffffff"                                                                                                                                          //sequence
-    "01"                                                                                                                                                //outputs
-    "00f2052a01000000"                                                                                                                                  //50 btc
-    "43"                                                                                                                                                //pk_script length
-    "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
-    "00000000";     //NOLINT                                                                                                                            //locktime
-
-//Litecoin testnet genesis block
-static
-std::string const encoded_testnet_genesis_block =
-    "01000000"                                                                                                                                          //version
-    "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
-    "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le
-    "f60ba158"                                                                                                                                          //timestamp le
-    "f0ff0f1e"                                                                                                                                          //bits
-    "e1790400"                                                                                                                                          //nonce
-    "01"                                                                                                                                                //nro txs
-    "01000000"                                                                                                                                          //version
-    "01"                                                                                                                                                // inputs
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"                                                                          //prev output
-    "48"                                                                                                                                                //script length
-    "04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536"  //scriptsig
-    "ffffffff"                                                                                                                                          //sequence
-    "01"                                                                                                                                                //outputs
-    "00f2052a01000000"                                                                                                                                  //50 btc
-    "43"                                                                                                                                                //pk_script length
-    "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
-    "00000000";           //NOLINT                                                                                                                      //locktime
-#else  //KTH_CURRENCY_LTC
-
-static
-std::string const encoded_mainnet_genesis_block =
-    "01000000"
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
-    "29ab5f49"
-    "ffff001d"
-    "1dac2b7c"
-    "01"
-    "01000000"
-    "01"
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"
-    "4d"
-    "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73"
-    "ffffffff"
-    "01"
-    "00f2052a01000000"
-    "43"
-    "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000"; //NOLINT
-
-static
-std::string const encoded_testnet_genesis_block =
-    "01000000"
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
-    "dae5494d"
-    "ffff001d"
-    "1aa4ae18"
-    "01"
-    "01000000"
-    "01"
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"
-    "4d"
-    "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73"
-    "ffffffff"
-    "01"
-    "00f2052a01000000"
-    "43"
-    "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000"; //NOLINT
-#endif  //KTH_CURRENCY_LTC
-
-static
-std::string const encoded_regtest_genesis_block =
-    "01000000"
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
-    "dae5494d"
-    "ffff7f20"
-    "02000000"
-    "01"
-    "01000000"
-    "01"
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"
-    "4d"
-    "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73"
-    "ffffffff"
-    "01"
-    "00f2052a01000000"
-    "43"
-    "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000";  //NOLINT
-
 // Constructors.
 //-----------------------------------------------------------------------------
 
@@ -170,28 +60,6 @@ block_basis::block_basis(chain::header const& header, transaction::list&& transa
     : header_(header)
     , transactions_(std::move(transactions))
 {}
-
-// block_basis::block_basis(block_basis const& x)
-//     : header_(x.header_)
-//     , transactions_(x.transactions_)
-// {}
-
-// block_basis::block_basis(block_basis&& x) noexcept
-//     : header_(x.header_)
-//     , transactions_(std::move(x.transactions_))
-// {}
-
-// block_basis& block_basis::operator=(block_basis const& x) {
-//     header_ = x.header_;
-//     transactions_ = x.transactions_;
-//     return *this;
-// }
-
-// block_basis& block_basis::operator=(block_basis&& x) noexcept {
-//     header_ = x.header_;
-//     transactions_ = std::move(x.transactions_);
-//     return *this;
-// }
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -292,7 +160,6 @@ void block_basis::set_transactions(transaction::list&& value) {
 hash_digest block_basis::hash() const {
     return header_.hash();
 }
-
 
 // Utilities.
 //-----------------------------------------------------------------------------
@@ -684,7 +551,6 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
         }
     }
 #endif
-
 
 #if defined(KTH_SEGWIT_ENABLED)
     // TODO(legacy): relates height to total of tx.size(true) (pool cache).

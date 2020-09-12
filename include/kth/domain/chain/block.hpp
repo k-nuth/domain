@@ -114,7 +114,12 @@ public:
     
     static
     block genesis_regtest();
-    
+
+#if defined(KTH_CURRENCY_BCH)
+    static
+    block genesis_testnet4();
+#endif
+
     static
     size_t locator_size(size_t top);
     

@@ -110,7 +110,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("0000000066174e2e09129967402035d200341ccb44bbe4dd1b31997296457deb", 1378462);  //time: 1589553287 - May 15, 2020 02:34:47 PM
 
         //Checkpoint added to find ASERT Anchor block
-        checkpoints.emplace_back("0000000000146da9eea6f299ca19ccb81371aa2e9490db229d610e74c4790e08", 1400000);
+        checkpoints.emplace_back("0000000000069a8d053a2f34739137cd86722bde2516f03759d9349a0c04fd2e", 1408990);
 
         // //2020-Nov Hardfork - euler - (1605441600)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
@@ -212,7 +212,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("0000000000000000021007984d36d32c49a249b216297694dfb9756f095aa645", 635260);  //time: 1589548077 - May 15, 2020 01:07:57 PM
 
         //Checkpoint added to find ASERT Anchor block
-        checkpoints.emplace_back("000000000000000001db4b04393d3cc8da269bb6650011f666bfc17bafcebebf", 648000);
+        checkpoints.emplace_back("000000000000000001655f282a3684de3e422290dca55a7ff84753871073c37e", 652500);
 
         // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
 
