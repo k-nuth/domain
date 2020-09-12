@@ -286,11 +286,13 @@ size_t transaction_basis::signature_operations(bool bip16, bool bip141) const {
            std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, out);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 size_t transaction_basis::weight() const {
     // Block weight is 3 * Base size * + 1 * Total size (bip141).
     return base_size_contribution * serialized_size(true, false) +
            total_size_contribution * serialized_size(true, true);
 }
+#endif
 
 bool transaction_basis::is_missing_previous_outputs() const {
     auto const missing = [](input const& input) {
@@ -382,7 +384,7 @@ bool transaction_basis::is_mature(size_t height) const {
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code transaction_basis::check(uint64_t total_output_value, bool transaction_pool, bool retarget) const {
+code transaction_basis::check(uint64_t total_output_value, size_t max_block_size, bool transaction_pool, bool retarget) const {
     if (inputs_.empty() || outputs_.empty()) {
         return error::empty_transaction;
     }
@@ -409,7 +411,7 @@ code transaction_basis::check(uint64_t total_output_value, bool transaction_pool
         // TODO(legacy): reduce by header, txcount and smallest coinbase size for height.
     }
 
-    if (transaction_pool && serialized_size(true, false) >= get_max_block_size()) {
+    if (transaction_pool && serialized_size(true, false) >= max_block_size) {
         return error::transaction_size_limit;
 
         // We cannot know if bip16/bip141 is enabled here so we do not check it.
@@ -429,6 +431,7 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     auto const bip16 = state.is_enabled(kth::domain::machine::rule_fork::bip16_rule);
     auto const bip30 = state.is_enabled(kth::domain::machine::rule_fork::bip30_rule);
     auto const bip68 = state.is_enabled(kth::domain::machine::rule_fork::bip68_rule);
+    auto const network = state.network();
 
 #if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
@@ -440,16 +443,16 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
 
     if (transaction_pool && state.is_under_checkpoint()) {
         return error::premature_validation;
-        // A segregated tx should appear empty if bip141 is not enabled.
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    if (state.is_magnetic_anomaly_enabled() && serialized_size(true, false) < min_transaction_size) {
+    if (state.is_euclid_enabled() && serialized_size(true, false) < min_transaction_size) {
         return error::transaction_size_limit;
     }
 #endif
 
 #if defined(KTH_SEGWIT_ENABLED)
+    // A segregated tx should appear empty if bip141 is not enabled.
     if ( ! bip141 && is_segregated) {
         return error::empty_transaction;
     }
@@ -495,10 +498,16 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    if ( ! state.is_phonon_enabled()) {
+    if ( ! state.is_fermat_enabled()) {
 #endif
+
+#if defined(KTH_SEGWIT_ENABLED)
         // bip141 discounts segwit sigops by increasing limit and legacy weight.
-        auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops();
+        auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops(network);
+#else
+        auto const max_sigops = get_max_block_sigops(network);
+#endif
+
         if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
             return error::transaction_embedded_sigop_limit;
             // This causes second serialized_size(true, false) computation (uncached).
@@ -508,9 +517,12 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     }
 #endif
 
+
+#if defined(KTH_SEGWIT_ENABLED)
     if (transaction_pool && bip141 && weight() > max_block_weight) {
         return error::transaction_weight_limit;
     }
+#endif
 
     return error::success;
 }

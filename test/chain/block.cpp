@@ -223,26 +223,35 @@ TEST_CASE("block  from data  insufficient transaction bytes  failure", "[block s
     REQUIRE( ! instance.is_valid());
 }
 
-TEST_CASE("block  genesis  mainnet  valid structure", "[block serialization]") {
+TEST_CASE("block genesis mainnet valid structure", "[block serialization]") {
     auto const genesis = chain::block::genesis_mainnet();
     REQUIRE(genesis.is_valid());
     REQUIRE(genesis.transactions().size() == 1u);
     REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
-TEST_CASE("block  genesis  testnet  valid structure", "[block serialization]") {
+TEST_CASE("block genesis testnet valid structure", "[block serialization]") {
     auto const genesis = chain::block::genesis_testnet();
     REQUIRE(genesis.is_valid());
     REQUIRE(genesis.transactions().size() == 1u);
     REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
 
-TEST_CASE("block  genesis  regtest  valid structure", "[block serialization]") {
+TEST_CASE("block genesis regtest valid structure", "[block serialization]") {
     auto const genesis = chain::block::genesis_regtest();
     REQUIRE(genesis.is_valid());
     REQUIRE(genesis.transactions().size() == 1u);
     REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
+
+#if defined(KTH_CURRENCY_BCH)
+TEST_CASE("block genesis testnet4 valid structure", "[block serialization]") {
+    auto const genesis = chain::block::genesis_testnet4();
+    REQUIRE(genesis.is_valid());
+    REQUIRE(genesis.transactions().size() == 1u);
+    REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
+}
+#endif
 
 TEST_CASE("block  factory from data 1  genesis mainnet  success", "[block serialization]") {
     auto const genesis = chain::block::genesis_mainnet();

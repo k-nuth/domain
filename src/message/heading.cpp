@@ -40,7 +40,11 @@ size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness) {
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */
 
+#if defined(KTH_SEGWIT_ENABLED)
     return witness_val(witness) ? max_block_weight : max_payload_size;
+#else
+    return max_payload_size;
+#endif
 }
 
 size_t heading::satoshi_fixed_size() {

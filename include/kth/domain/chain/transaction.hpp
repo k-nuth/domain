@@ -39,67 +39,6 @@
 
 namespace kth::domain::chain {
 
-// namespace detail {
-// // Read a length-prefixed collection of inputs or outputs from the source.
-// template <class Source, class Put>
-// bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
-//     auto result = true;
-//     auto const count = source.read_size_little_endian();
-
-//     // Guard against potential for arbitary memory allocation.
-//     if (count > get_max_block_size()) {
-//         source.invalidate();
-//     } else {
-//         puts.resize(count);
-//     }
-
-//     auto const deserialize = [&](Put& put) {
-//         result = result && put.from_data(source, wire, witness_val(witness));
-// #ifndef NDBEUG
-//         put.script().operations();
-// #endif
-//     };
-
-//     std::for_each(puts.begin(), puts.end(), deserialize);
-//     return result;
-// }
-
-// // Write a length-prefixed collection of inputs or outputs to the sink.
-// template <class Sink, class Put>
-// void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
-//     sink.write_variable_little_endian(puts.size());
-
-//     auto const serialize = [&](const Put& put) {
-//         put.to_data(sink, wire, witness_val(witness));
-//     };
-
-//     std::for_each(puts.begin(), puts.end(), serialize);
-// }
-
-// #if ! defined(KTH_CURRENCY_BCH)
-// // Input list must be pre-populated as it determines witness count.
-// template <typename R, KTH_IS_READER(R)>
-// inline void read_witnesses(R& source, input::list& inputs) {
-//     auto const deserialize = [&](input& input) {
-//         input.witness().from_data(source, true);
-//     };
-
-//     std::for_each(inputs.begin(), inputs.end(), deserialize);
-// }
-
-// // Witness count is not written as it is inferred from input count.
-// template <typename W>
-// inline void write_witnesses(W& sink, input::list const& inputs) {
-//     auto const serialize = [&sink](input const& input) {
-//         input.witness().to_data(sink, true);
-//     };
-
-//     std::for_each(inputs.begin(), inputs.end(), serialize);
-// }
-// #endif // not defined KTH_CURRENCY_BCH
-
-// } // namespace detail
-
 class KD_API transaction : public transaction_basis {
 public:
     using ins = input::list;
@@ -276,15 +215,13 @@ public:
     uint64_t total_input_value() const;
     uint64_t total_output_value() const;
     size_t signature_operations() const;
-    // size_t signature_operations(bool bip16, bool bip141) const;
-    size_t weight() const;
 
     bool is_overspent() const;
     bool is_segregated() const;
 
     using transaction_basis::accept;
 
-    code check(bool transaction_pool, bool retarget = true) const;
+    code check(size_t max_block_size, bool transaction_pool, bool retarget = true) const;
     code accept(bool transaction_pool = true) const;
     code accept(chain_state const& state, bool transaction_pool = true) const;
     code connect() const;

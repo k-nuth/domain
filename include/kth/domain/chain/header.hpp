@@ -111,7 +111,7 @@ public:
     // hash_digest hash() const;
     hash_digest hash_pow() const;
 
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
     hash_digest litecoin_proof_of_work_hash() const;
 #endif  //KTH_CURRENCY_LTC
 

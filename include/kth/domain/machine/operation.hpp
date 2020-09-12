@@ -45,11 +45,6 @@ public:
     operation(data_chunk const& uncoded, bool minimal = true);
     operation(opcode code);
 
-    // operation(operation const& x) = default;
-    // operation(operation&& x) = default;
-    // operation& operator=(operation const& x) = default;
-    // operation& operator=(operation&& x) = default;
-
     // Operators.
     //-------------------------------------------------------------------------
 
@@ -70,7 +65,7 @@ public:
         // The max_script_size and max_push_data_size constants limit
         // evaluation, but not all scripts evaluate, so use max_block_size
         // to guard memory allocation here.
-        if (size > get_max_block_size()) {  //TODO(kth): max_block_size changed to get_max_block_size (check space for BCH)
+        if (size > get_max_block_size_network_independent()) {
             source.invalidate();
         } else {
             data_ = source.read_bytes(size);
@@ -118,8 +113,6 @@ public:
 
         sink.write_bytes(data_);
     }
-
-    //void to_data(writer& sink) const;
 
     [[nodiscard]]
     std::string to_string(uint32_t active_forks) const;

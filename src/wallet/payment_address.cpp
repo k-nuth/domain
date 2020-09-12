@@ -32,7 +32,7 @@ using namespace kth::infrastructure::wallet;
 
 namespace kth::domain::wallet {
 
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
 uint8_t const payment_address::mainnet_p2kh = 0x30;
 #else
 uint8_t const payment_address::mainnet_p2kh = 0x00;

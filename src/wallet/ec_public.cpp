@@ -21,7 +21,7 @@ namespace kth::domain::wallet {
 uint8_t const ec_public::compressed_even = 0x02;
 uint8_t const ec_public::compressed_odd = 0x03;
 uint8_t const ec_public::uncompressed = 0x04;
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
 uint8_t const ec_public::mainnet_p2kh = 0x30;
 #else
 uint8_t const ec_public::mainnet_p2kh = 0x00;

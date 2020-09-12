@@ -103,7 +103,7 @@ void header::set_nonce(uint32_t value) {
     invalidate();
 }
 
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
 hash_digest header::litecoin_proof_of_work_hash() const {
     return litecoin_hash(to_data());
 }
@@ -111,7 +111,7 @@ hash_digest header::litecoin_proof_of_work_hash() const {
 
 inline
 hash_digest header::hash_pow() const {
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
     return litecoin_proof_of_work_hash();
 #else
     return hash();

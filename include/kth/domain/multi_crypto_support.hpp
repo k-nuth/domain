@@ -7,28 +7,30 @@
 
 #include <string>
 
-#include <kth/infrastructure/config/settings.hpp>
+#include <kth/domain/config/network.hpp>
 
 namespace kth {
 
 namespace netmagic {
-constexpr uint32_t btc_mainnet = 0xd9b4bef9U;
-constexpr uint32_t btc_testnet = 0x0709110bU;
-constexpr uint32_t btc_regtest = 0xdab5bffaU;
-
+#if defined(KTH_CURRENCY_LTC)
 constexpr uint32_t ltc_mainnet = 0xdbb6c0fbU;
 constexpr uint32_t ltc_testnet = 0xf1c8d2fdU;
 constexpr uint32_t ltc_regtest = 0xdab5bffaU;
-
-constexpr uint32_t bch_mainnet = 0xe8f3e1e3U;
-constexpr uint32_t bch_testnet = 0xf4f3e5f4U;
-constexpr uint32_t bch_regtest = 0xfabfb5daU;
+#elif defined(KTH_CURRENCY_BCH)
+constexpr uint32_t bch_mainnet  = 0xe8f3e1e3U;
+constexpr uint32_t bch_testnet  = 0xf4f3e5f4U;
+constexpr uint32_t bch_regtest  = 0xfabfb5daU;
+constexpr uint32_t bch_testnet4 = 0xafdab7e2U;
+#else
+constexpr uint32_t btc_mainnet = 0xd9b4bef9U;
+constexpr uint32_t btc_testnet = 0x0709110bU;
+constexpr uint32_t btc_regtest = 0xdab5bffaU;
+#endif
 } // namespace netmagic
 
 namespace config {
 
 enum class currency {
-    none,
     bitcoin,
     bitcoin_cash,
     litecoin
@@ -37,12 +39,7 @@ enum class currency {
 } // namespace config
 
 config::currency get_currency();
-
-// void set_network(infrastructure::config::settings x);
-// void set_network(uint32_t identifier);
-// infrastructure::config::settings get_network();
-infrastructure::config::settings get_network(uint32_t identifier);
-infrastructure::config::settings get_network(bool easy_blocks, bool retarget);
+domain::config::network get_network(uint32_t identifier);
 
 #if defined(KTH_CURRENCY_BCH)
 std::string cashaddr_prefix();

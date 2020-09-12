@@ -277,9 +277,7 @@ bool witness::extract_sigop_script(script& out_script,
 }
 
 // Extract P2WPKH or P2WSH script as indicated by program script.
-bool witness::extract_embedded_script(script& out_script,
-                                      data_stack& out_stack,
-                                      script const& program_script) const {
+bool witness::extract_embedded_script(script& out_script, data_stack& out_stack, script const& program_script) const {
     switch (program_script.version()) {
         // The v0 program size must be either 20 or 32 bytes (bip141).
         case script_version::zero: {

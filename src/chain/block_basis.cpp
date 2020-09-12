@@ -46,116 +46,6 @@ namespace kth::domain::chain {
 using namespace kth::domain::machine;
 using namespace boost::adaptors;
 
-#ifdef KTH_CURRENCY_LTC
-//Litecoin mainnet genesis block
-static
-std::string const encoded_mainnet_genesis_block =
-    "01000000"                                                                                                                                          //version
-    "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
-    "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le *
-    "b9aa8e4e"                                                                                                                                          //timestamp le *
-    "f0ff0f1e"                                                                                                                                          //bits =
-    "cd513f7c"                                                                                                                                          //nonce X
-    "01"                                                                                                                                                //nro txs
-    "01000000"                                                                                                                                          //version
-    "01"                                                                                                                                                // inputs
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"                                                                          //prev output
-    "48"                                                                                                                                                //script length
-    "04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536"  //scriptsig
-    "ffffffff"                                                                                                                                          //sequence
-    "01"                                                                                                                                                //outputs
-    "00f2052a01000000"                                                                                                                                  //50 btc
-    "43"                                                                                                                                                //pk_script length
-    "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
-    "00000000";     //NOLINT                                                                                                                            //locktime
-
-//Litecoin testnet genesis block
-static
-std::string const encoded_testnet_genesis_block =
-    "01000000"                                                                                                                                          //version
-    "0000000000000000000000000000000000000000000000000000000000000000"                                                                                  //prev hash
-    "d9ced4ed1130f7b7faad9be25323ffafa33232a17c3edf6cfd97bee6bafbdd97"                                                                                  //merkle root le
-    "f60ba158"                                                                                                                                          //timestamp le
-    "f0ff0f1e"                                                                                                                                          //bits
-    "e1790400"                                                                                                                                          //nonce
-    "01"                                                                                                                                                //nro txs
-    "01000000"                                                                                                                                          //version
-    "01"                                                                                                                                                // inputs
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"                                                                          //prev output
-    "48"                                                                                                                                                //script length
-    "04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536"  //scriptsig
-    "ffffffff"                                                                                                                                          //sequence
-    "01"                                                                                                                                                //outputs
-    "00f2052a01000000"                                                                                                                                  //50 btc
-    "43"                                                                                                                                                //pk_script length
-    "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac"            //pk_script
-    "00000000";           //NOLINT                                                                                                                      //locktime
-#else  //KTH_CURRENCY_LTC
-
-static
-std::string const encoded_mainnet_genesis_block =
-    "01000000"
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
-    "29ab5f49"
-    "ffff001d"
-    "1dac2b7c"
-    "01"
-    "01000000"
-    "01"
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"
-    "4d"
-    "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73"
-    "ffffffff"
-    "01"
-    "00f2052a01000000"
-    "43"
-    "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000"; //NOLINT
-
-static
-std::string const encoded_testnet_genesis_block =
-    "01000000"
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
-    "dae5494d"
-    "ffff001d"
-    "1aa4ae18"
-    "01"
-    "01000000"
-    "01"
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"
-    "4d"
-    "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73"
-    "ffffffff"
-    "01"
-    "00f2052a01000000"
-    "43"
-    "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000"; //NOLINT
-#endif  //KTH_CURRENCY_LTC
-
-static
-std::string const encoded_regtest_genesis_block =
-    "01000000"
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    "3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"
-    "dae5494d"
-    "ffff7f20"
-    "02000000"
-    "01"
-    "01000000"
-    "01"
-    "0000000000000000000000000000000000000000000000000000000000000000ffffffff"
-    "4d"
-    "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73"
-    "ffffffff"
-    "01"
-    "00f2052a01000000"
-    "43"
-    "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac"
-    "00000000";  //NOLINT
-
 // Constructors.
 //-----------------------------------------------------------------------------
 
@@ -170,28 +60,6 @@ block_basis::block_basis(chain::header const& header, transaction::list&& transa
     : header_(header)
     , transactions_(std::move(transactions))
 {}
-
-// block_basis::block_basis(block_basis const& x)
-//     : header_(x.header_)
-//     , transactions_(x.transactions_)
-// {}
-
-// block_basis::block_basis(block_basis&& x) noexcept
-//     : header_(x.header_)
-//     , transactions_(std::move(x.transactions_))
-// {}
-
-// block_basis& block_basis::operator=(block_basis const& x) {
-//     header_ = x.header_;
-//     transactions_ = x.transactions_;
-//     return *this;
-// }
-
-// block_basis& block_basis::operator=(block_basis&& x) noexcept {
-//     header_ = x.header_;
-//     transactions_ = std::move(x.transactions_);
-//     return *this;
-// }
 
 // Operators.
 //-----------------------------------------------------------------------------
@@ -292,7 +160,6 @@ void block_basis::set_transactions(transaction::list&& value) {
 hash_digest block_basis::hash() const {
     return header_.hash();
 }
-
 
 // Utilities.
 //-----------------------------------------------------------------------------
@@ -541,10 +408,10 @@ bool block_basis::is_valid_witness_commitment() const {
 #endif // KTH_SEGWIT_ENABLED
 
 
-code block_basis::check_transactions() const {
+code block_basis::check_transactions(size_t max_block_size) const {
     code ec;
     for (auto const& tx : transactions_) {
-        if ((ec = tx.check(false))) {
+        if ((ec = tx.check(max_block_size, false))) {
             return ec;
         }
     }
@@ -575,7 +442,7 @@ code block_basis::connect_transactions(chain_state const& state) const {
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code block_basis::check(size_t serialized_size_false) const {
+code block_basis::check(size_t serialized_size_false, size_t max_block_size) const {
     code ec;
 
     if ((ec = header_.check())) {
@@ -584,8 +451,7 @@ code block_basis::check(size_t serialized_size_false) const {
         // TODO(legacy): relates to total of tx.size(false) (pool cache). -> no witness size
     }
 
-    // if (serialized_size(false) > get_max_block_size()) {
-    if (serialized_size_false > get_max_block_size()) {
+    if (serialized_size_false > max_block_size) {
         return error::block_size_limit;
     }
 
@@ -616,11 +482,8 @@ code block_basis::check(size_t serialized_size_false) const {
     ////    return error::internal_duplicate;
 
     // TODO(legacy): determinable from tx pool graph.
-
-
     if (is_internal_double_spend()) {
         return error::block_internal_double_spend;
-
         // TODO(legacy): relates height to tx.hash(false) (pool cache).
     }
 
@@ -636,21 +499,22 @@ code block_basis::check(size_t serialized_size_false) const {
         ////    return error::block_legacy_sigop_limit;
     }
 
-    return check_transactions();
+    return check_transactions(max_block_size);
 }
 
-// code block_basis::accept(bool transactions) const {
-//     auto const state = validation.state;
-//     return state ? accept(*state, transactions) : error::operation_failed;
-// }
-
 // These checks assume that prevout caching is completed on all tx.inputs.
+
+#if defined(KTH_SEGWIT_ENABLED)
 code block_basis::accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions) const {
+#else
+code block_basis::accept(chain_state const& state, size_t serialized_size, bool transactions) const {
+#endif    
     // validation.start_accept = asio::steady_clock::now();
 
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
+
 #if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
 #else
@@ -664,8 +528,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 
 #if defined(KTH_CURRENCY_BCH)
     //Note(kth): In Bitcoin Cash, block size check is now dependent on the Blockchain state.
-    // if ( ! state.is_monolith_enabled() && serialized_size() > max_block_size_old) {
-    if ( ! state.is_monolith_enabled() && serialized_size > max_block_size_old) {
+    if ( ! state.is_pythagoras_enabled() && serialized_size > max_block_size_old) {
         return error::block_size_limit;
     }
 #endif
@@ -678,7 +541,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     //Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
     //               and for BitcoinCash (BCH) before 2018-Nov-15.
 
-    if (state.is_magnetic_anomaly_enabled()) {
+    if (state.is_euclid_enabled()) {
         if ( ! is_canonical_ordered()) {
             return error::non_canonical_ordered;
         }
@@ -689,12 +552,12 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
     }
 #endif
 
+#if defined(KTH_SEGWIT_ENABLED)
     // TODO(legacy): relates height to total of tx.size(true) (pool cache).
-    // NOTE: for BCH bit141 is set as false
-    // if (bip141 && weight() > max_block_weight) {
     if (bip141 && weight > max_block_weight) {
         return error::block_weight_limit;
     }
+#endif
 
     if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;
@@ -720,7 +583,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, size_
 #endif //defined(KTH_SEGWIT_ENABLED)
 
 #if defined(KTH_CURRENCY_BCH)
-    if ( ! state.is_phonon_enabled()) {
+    if ( ! state.is_fermat_enabled()) {
 #endif
         // TODO(legacy): determine if performance benefit is worth excluding sigops here.
         // TODO(legacy): relates block limit to total of tx.sigops (pool cache tx.sigops).

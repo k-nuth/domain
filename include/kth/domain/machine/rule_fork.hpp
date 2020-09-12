@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DOMAIN_MACHINE_RULE_FORK_HPP
-#define KTH_DOMAIN_MACHINE_RULE_FORK_HPP
+#ifndef KTH_DOMAIN_MACHINE_RULE_FORK_HPP_
+#define KTH_DOMAIN_MACHINE_RULE_FORK_HPP_
 
 #include <cstdint>
 
@@ -48,14 +48,14 @@ enum rule_fork : uint32_t {
 #if defined(KTH_CURRENCY_BCH)
     bch_uahf = 1U << 11,                //2017-Aug Hardfork - Bitcoin Cash UAHF (1501590000)
     bch_daa_cw144  = 1U << 12,          //2017-Nov Hardfork - DAA/cw-144 - (1510600000)
-    bch_monolith = 1U << 13,            //2018-May Hardfork - monolith - (1526400000)
-    bch_magnetic_anomaly = 1U << 14,    //2018-Nov Hardfork - magnetic_anomaly - (1542300000)
-    bch_great_wall = 1U << 15,          //2019-May Hardfork - great_wall - (1557921600)
-    bch_graviton = 1U << 16,            //2019-Nov Hardfork - graviton - (1573819200)
-    bch_phonon = 1U << 17,              //2020-May Hardfork - phonon - (1589544000)
-    bch_axion = 1U << 18,               //2020-Nov Hardfork - axion - (1605441600)
-    // bch_unnamed = 1U << 19,          //2021-May Hardfork - unnamed - (9999999999)
-    // bch_replay_protection = 1U << 18,
+    bch_pythagoras = 1U << 13,            //2018-May Hardfork - pythagoras - (1526400000)
+    bch_euclid = 1U << 14,    //2018-Nov Hardfork - euclid - (1542300000)
+    bch_pisano = 1U << 15,          //2019-May Hardfork - pisano - (1557921600)
+    bch_mersenne = 1U << 16,            //2019-Nov Hardfork - mersenne - (1573819200)
+    bch_fermat = 1U << 17,              //2020-May Hardfork - fermat - (1589544000)
+    bch_euler = 1U << 18,               //2020-Nov Hardfork - euler - (1605441600)
+    bch_gauss = 1U << 19,             //2021-May Hardfork - gauss - (1621080000)
+    // bch_unnamed = 1U << 20,          //2021-Nov Hardfork - unnamed - (9999999999)
 #else 
     // Just for segwit coins
     /// Segregated witness consensus layer (soft fork, feature).
@@ -81,14 +81,14 @@ enum rule_fork : uint32_t {
         rule_fork::bip65_rule |
         rule_fork::bip66_rule,
 
+
+#if ! defined(KTH_CURRENCY_BCH)
     /// Rules that use BIP9 bit zero first time activation.
     bip9_bit0_group =
         rule_fork::bip68_rule |
         rule_fork::bip112_rule |
         rule_fork::bip113_rule,
 
-
-#if ! defined(KTH_CURRENCY_BCH)
     /// Rules that use BIP9 bit one first time activation.
     bip9_bit1_group =
         rule_fork::bip141_rule |
@@ -102,4 +102,4 @@ enum rule_fork : uint32_t {
 
 } // namespace kth::domain::machine
 
-#endif // KTH_DOMAIN_MACHINE_RULE_FORK_HPP
+#endif // KTH_DOMAIN_MACHINE_RULE_FORK_HPP_

@@ -44,7 +44,7 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
     auto const count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size()) {
+    if (count > get_max_block_size_network_independent()) {
         source.invalidate();
     } else {
         puts.resize(count);
@@ -291,11 +291,6 @@ public:
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
-    // hash_digest outputs_hash() const;
-    // hash_digest inpoints_hash() const;
-    // hash_digest sequences_hash() const;
-    // hash_digest hash(bool witness = false) const;
-
     // Utilities.
     //-------------------------------------------------------------------------
 
@@ -321,17 +316,17 @@ public:
     
     [[nodiscard]]
     uint64_t total_input_value() const;
-    
-    // uint64_t total_output_value() const;
-    
+        
     [[nodiscard]]
     size_t signature_operations() const;
     
     [[nodiscard]]
     size_t signature_operations(bool bip16, bool bip141) const;
     
+#if defined(KTH_SEGWIT_ENABLED)
     [[nodiscard]]
     size_t weight() const;
+#endif
 
     [[nodiscard]]
     bool is_coinbase() const;
@@ -344,8 +339,6 @@ public:
 
     [[nodiscard]]
     bool is_mature(size_t height) const;
-
-    // bool is_overspent() const;
 
     [[nodiscard]]
     bool is_internal_double_spend() const;
@@ -368,20 +361,12 @@ public:
     [[nodiscard]]
     bool is_locktime_conflict() const;
 
-    // bool is_segregated() const;
-
     [[nodiscard]]
-    code check(uint64_t total_output_value, bool transaction_pool = true, bool retarget = true) const;
-    
-    // code accept(bool transaction_pool = true) const;
-    
+    code check(uint64_t total_output_value, size_t max_block_size, bool transaction_pool = true, bool retarget = true) const;
+       
     [[nodiscard]]
     code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
-
-    // code connect() const;
-    // code connect(chain_state const& state) const;
-    // code connect_input(chain_state const& state, size_t input_index) const;
-
+    
     [[nodiscard]]
     bool is_standard() const;
 

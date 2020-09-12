@@ -34,15 +34,15 @@
 
 namespace kth::domain::chain {
 
-constexpr
+using indexes = std::vector<size_t>;
+
+#if defined(KTH_SEGWIT_ENABLED)
+constexpr inline
 size_t weight(size_t serialized_size_true, size_t serialized_size_false) {
     // Block weight is 3 * Base size * + 1 * Total size (bip141).
     return base_size_contribution * serialized_size_false + total_size_contribution * serialized_size_true;
 }
 
-using indexes = std::vector<size_t>;
-
-#if defined(KTH_SEGWIT_ENABLED)
 class KD_API block_basis;
 void strip_witness(block_basis& blk);
 bool is_segregated(block_basis const& blk);
@@ -79,7 +79,7 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size()) {
+        if (count > get_max_block_size_network_independent()) {
             source.invalidate();
         } else {
             transactions_.resize(count);
@@ -215,14 +215,18 @@ public:
     bool is_valid_merkle_root() const;
     
     [[nodiscard]]
-    code check(size_t serialized_size_false) const;
+    code check(size_t serialized_size_false, size_t max_block_size) const;
     
     [[nodiscard]]
-    code check_transactions() const;
+    code check_transactions(size_t max_block_size) const;
         
     [[nodiscard]]
+#if defined(KTH_SEGWIT_ENABLED)
     code accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions = true) const;
-    
+#else
+    code accept(chain_state const& state, size_t serialized_size, bool transactions = true) const;
+#endif   
+
     [[nodiscard]]
     code accept_transactions(chain_state const& state) const;
         

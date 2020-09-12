@@ -78,7 +78,7 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size()) {
+        if (count > get_max_block_size_network_independent()) {
             source.invalidate();
         } else {
             hashes_.reserve(count);

@@ -50,13 +50,12 @@ using boost::program_options::reading_file;
 using std::error_code;
 
 inline
-kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_blocks, bool retarget) {
+kth::infrastructure::config::checkpoint::list default_checkpoints(config::network network) {
     kth::infrastructure::config::checkpoint::list checkpoints;
 
-    auto network = get_network(easy_blocks, retarget);
 //TODO(fernando): Set Litecoin checkpoints
 #if defined(KTH_CURRENCY_BCH)
-    if (network == kth::infrastructure::config::settings::testnet) {
+    if (network == domain::config::network::testnet) {
         checkpoints.reserve(35);
         checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
         checkpoints.emplace_back("00000000009e2958c15ff9290d571bf9459e93b19765c6801ddeccadbb160a1e", 100000);
@@ -83,46 +82,55 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
 
         checkpoints.emplace_back("00000000d91bdbb5394bcf457c0f0b7a7e43eb978e2d881b6c2a4c2756abc558", 1200000);
 
-        //2018-May Hardfork - monolith - (1526400000)
+        //2018-May Hardfork - pythagoras - (1526400000)
         checkpoints.emplace_back("00000000001e844212a0d7db21b5cca7cb3ceca7815a4a3f6c6a9e4de4d95049", 1233077); //time: 1526412819 - May 15, 2018 07:33:39 PM
         checkpoints.emplace_back("0000000000327972b8470c11755adf8f4319796bafae01f5a6650490b98a17db", 1233078); //time: 1526414036 - May 15, 2018 07:53:56 PM
-        //TODO(fernando): we need the third checkpoint for monolith HF
+        //TODO(fernando): we need the third checkpoint for pythagoras HF
 
-        //2018-Nov Hardfork - magnetic_anomaly - (1542300000)
+        //2018-Nov Hardfork - euclid - (1542300000)
         checkpoints.emplace_back("000000000000014335e0f831a0703f57d3146d0913676ae26958c3a0ea46f210", 1267995); //time: 1542300711 - Nov 15, 2018 04:51:51 PM
         checkpoints.emplace_back("00000000000001fae0095cd4bea16f1ce8ab63f3f660a03c6d8171485f484b24", 1267996); //time: 1542301205 - Nov 15, 2018 05:00:05 PM
         checkpoints.emplace_back("00000000000002773f8970352e4a3368a1ce6ef91eb606b64389b36fdbf1bd56", 1267997); //time: 1542302023 - Nov 15, 2018 05:13:43 PM
 
         checkpoints.emplace_back("000000002a7a59c4f88a049fa5e405e67cd689d75a1f330cbf26286cf0ec1d8f", 1300000);
 
-        //2019-May Hardfork - great_wall - (1557921600)
+        //2019-May Hardfork - pisano - (1557921600)
         checkpoints.emplace_back("00000000000001a749d7aa418c582a0e234ebc15643bf23a4f3107fa55120388", 1303884);  //time: 1557923125 - May 15, 2019 12:25:25 PM
         checkpoints.emplace_back("00000000000000479138892ef0e4fa478ccc938fb94df862ef5bde7e8dee23d3", 1303885);  //time: 1557923294 - May 15, 2019 12:28:14 PM
         checkpoints.emplace_back("000000000000003a3fb0ca1611035346a803e0344d6bb2eb4f5ea75f4dc2291c", 1303886);  //time: 1557923747 - May 15, 2019 12:35:47 PM
 
-        //2019-Nov Hardfork - graviton - (1573819200)
+        //2019-Nov Hardfork - mersenne - (1573819200)
         checkpoints.emplace_back("00000000c678f67ea16d5bf803f68ce42991839d13849f77332d6f586f62d421", 1341711);  //time: 1573826257 - Nov 15, 2019 01:57:37 PM
         checkpoints.emplace_back("00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712);  //time: 1573827462 - Nov 15, 2019 02:17:42 PM
         checkpoints.emplace_back("000000000ce59bbc9a046429e608395a1666bcf11f28692909dd88ac7348fbeb", 1341713);  //time: 1573828667 - Nov 15, 2019 02:37:47 PM
 
-        //2020-May Hardfork - phonon - (1589544000)
+        //2020-May Hardfork - fermat - (1589544000)
         checkpoints.emplace_back("0000000070f33c64cb94629680fbc57d17bea354a73e693affcb366d023db324", 1378460);  //time: 1589550734 - May 15, 2020 01:52:14 PM
         checkpoints.emplace_back("0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461);  //time: 1589552066 - May 15, 2020 02:14:26 PM
         checkpoints.emplace_back("0000000066174e2e09129967402035d200341ccb44bbe4dd1b31997296457deb", 1378462);  //time: 1589553287 - May 15, 2020 02:34:47 PM
 
         //Checkpoint added to find ASERT Anchor block
-        checkpoints.emplace_back("0000000000146da9eea6f299ca19ccb81371aa2e9490db229d610e74c4790e08", 1400000);
+        checkpoints.emplace_back("0000000000069a8d053a2f34739137cd86722bde2516f03759d9349a0c04fd2e", 1408990);
 
-        // //2020-Nov Hardfork - axion - (1605441600)
+        // //2020-Nov Hardfork - euler - (1605441600)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
 
-        // //2021-May Hardfork - unnamed - (9999999999)
+        // //2021-May Hardfork - gauss - (1621080000)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
-    } else if (network == kth::infrastructure::config::settings::mainnet) {
+
+        // //2021-Nov Hardfork - unnamed - (9999999999)
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+
+    } else if (network == domain::config::network::testnet4) {
+        checkpoints.reserve(1);
+        checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
+    } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(57);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
         checkpoints.emplace_back("0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d", 11111);
@@ -167,14 +175,14 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
 
         checkpoints.emplace_back("0000000000000000001b09302aa6a8dc65b7542dd195866907dd4e4ccba30d58", 515000);
 
-        //2018-May Hardfork - monolith - (1526400000)
+        //2018-May Hardfork - pythagoras - (1526400000)
         checkpoints.emplace_back("00000000000000000031687b7320832e5035abe8e3f81fb71517fc541765de83", 530358);  //time: 1526408267 - May 15, 2018 06:17:47 PM
         checkpoints.emplace_back("0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530359);  //time: 1526410186 - May 15, 2018 06:49:46 PM
         checkpoints.emplace_back("00000000000000000195edc6e094ae1db6a274f1188127390a74a727db9a2717", 530360);  //time: 1526410326 - May 15, 2018 06:52:06 PM
 
         checkpoints.emplace_back("000000000000000000fc66aae55a178fec2ba2f2bc86eb6c6f632b5bc2b40af1", 545000);
 
-        //2018-Nov Hardfork - magnetic_anomaly - (1542300000)
+        //2018-Nov Hardfork - euclid - (1542300000)
         checkpoints.emplace_back("00000000000000000102d94fde9bd0807a2cc7582fe85dd6349b73ce4e8d9322", 556766);  //time: 1542304321 - Nov 15, 2018 05:52:01 PM
         checkpoints.emplace_back("0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c", 556767);  //time: 1542304936 - Nov 15, 2018 06:02:16 PM
         checkpoints.emplace_back("00000000000000000147bffd44b0aaf485f57ce8607efb0b277d038d5008db39", 556768);  //time: 1542305143 - Nov 15, 2018 06:05:43 PM
@@ -182,7 +190,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         checkpoints.emplace_back("0000000000000000039f4e03a756eaa5deb89ef9fa0d565a25473d5deb5e7b0d", 560000);
         checkpoints.emplace_back("000000000000000003428b04e49a9a303afbedefe2ac9094d44dd127d7366a97", 575000);
 
-        //2019-May Hardfork - great_wall - (1557921600)
+        //2019-May Hardfork - pisano - (1557921600)
         checkpoints.emplace_back("0000000000000000018596bdfd350a9fbc7297a62a3f510b74565d992d63d2ef", 582679);  //time: 1557922634 - May 15, 2019 12:17:14 PM
         checkpoints.emplace_back("000000000000000001b4b8e36aec7d4f9671a47872cb9a74dc16ca398c7dcc18", 582680);  //time: 1557922919 - May 15, 2019 12:21:59 PM
         checkpoints.emplace_back("0000000000000000029efaae169e8e666fb9915df2ff723c9267f14ff51b8857", 582681);  //time: 1557923007 - May 15, 2019 12:23:27 PM
@@ -190,7 +198,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         checkpoints.emplace_back("000000000000000001eb9b2786e6200beb37a20a4959a86c2b52adca2b23597b", 590000);
         checkpoints.emplace_back("00000000000000000041048ecef77d6b9ccb4012c0c1012e72b6737220d3f910", 605000);
 
-        //2019-Nov Hardfork - graviton - (1573819200)
+        //2019-Nov Hardfork - mersenne - (1573819200)
         checkpoints.emplace_back("0000000000000000026f7ec9e79be2f5bb839f29ebcf734066d4bb9a13f6ea83", 609135);  //time: 1573823716 - Nov 15, 2019 01:15:16 PM
         checkpoints.emplace_back("000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136);  //time: 1573825449 - Nov 15, 2019 01:44:09 PM
         checkpoints.emplace_back("00000000000000000074d2ba7b47eb241ee6aca95daf71cea539b32c660e2350", 609137);  //time: 1573826122 - Nov 15, 2019 01:55:22 PM
@@ -198,25 +206,30 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         checkpoints.emplace_back("00000000000000000177593a9861113e263bd9fb7679d6783ab88829b147662a", 620000);
         checkpoints.emplace_back("000000000000000001c885feaa06e225ee51c37c98a293ab779e01912a99a620", 635000);
 
-        //2020-May Hardfork - phonon - (1589544000)
+        //2020-May Hardfork - fermat - (1589544000)
         checkpoints.emplace_back("000000000000000003302c47d01e78f1c86aa3b0e96b066761a5059bc8f5781a", 635258);  //time: 1589547409 - May 15, 2020 12:56:49 PM
         checkpoints.emplace_back("00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259);  //time: 1589547811 - May 15, 2020 01:03:31 PM
         checkpoints.emplace_back("0000000000000000021007984d36d32c49a249b216297694dfb9756f095aa645", 635260);  //time: 1589548077 - May 15, 2020 01:07:57 PM
 
         //Checkpoint added to find ASERT Anchor block
-        checkpoints.emplace_back("000000000000000001db4b04393d3cc8da269bb6650011f666bfc17bafcebebf", 648000);
+        checkpoints.emplace_back("000000000000000001655f282a3684de3e422290dca55a7ff84753871073c37e", 652500);
 
         // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
 
-        // //2020-Nov Hardfork - axion - (1605441600)
+        // //2020-Nov Hardfork - euler - (1605441600)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
 
-        // //2021-May Hardfork - unnamed - (9999999999)
+        // //2021-May Hardfork - gauss - (1621080000)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+
+        // //2021-Nov Hardfork - unnamed - (9999999999)
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
 
     } else {
         // BCH Regtest
@@ -224,7 +237,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         checkpoints.emplace_back("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206", 0);
     }
 #elif defined(KTH_CURRENCY_BTC)
-    if (network == kth::infrastructure::config::settings::testnet) {
+    if (network == domain::config::network::testnet) {
         checkpoints.reserve(19);
         checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
         checkpoints.emplace_back("00000000009e2958c15ff9290d571bf9459e93b19765c6801ddeccadbb160a1e", 100000);
@@ -249,7 +262,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(bool easy_bloc
         checkpoints.emplace_back("000000000000fce208da3e3b8afcc369835926caa44044e9c2f0caa48c8eba0f", 1400000);
         checkpoints.emplace_back("0000000000049a6b07f91975568dc96bb1aec1a24c6bdadb21eb17c9f1b7256f", 1500000);
 
-    } else if (network == kth::infrastructure::config::settings::mainnet) {
+    } else if (network == domain::config::network::mainnet) {
         // BTC Mainnet
         checkpoints.reserve(36);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
@@ -352,8 +365,8 @@ public:
     }
 
     static
-    void fix_checkpoints(bool easy_blocks, bool retarget, kth::infrastructure::config::checkpoint::list& checkpoints) {
-        auto const def_checkpoints = default_checkpoints(easy_blocks, retarget);
+    void fix_checkpoints(uint32_t identifier, kth::infrastructure::config::checkpoint::list& checkpoints) {
+        auto const def_checkpoints = default_checkpoints(get_network(identifier));
 
         auto const it = std::max_element(def_checkpoints.begin(), def_checkpoints.end(), [](auto const& x, auto const& y) {
             return x.height() < y.height();

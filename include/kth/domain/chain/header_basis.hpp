@@ -173,7 +173,7 @@ private:
 
 hash_digest hash(header_basis const& header);
 
-#ifdef KTH_CURRENCY_LTC
+#if defined(KTH_CURRENCY_LTC)
 hash_digest litecoin_proof_of_work_hash(header_basis const& header);
 #endif  //KTH_CURRENCY_LTC
 

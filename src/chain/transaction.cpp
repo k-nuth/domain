@@ -509,11 +509,11 @@ size_t transaction::signature_operations() const {
     return transaction_basis::signature_operations(bip16, bip141);
 }
 
-size_t transaction::weight() const {
-    // Block weight is 3 * Base size * + 1 * Total size (bip141).
-    return base_size_contribution * serialized_size(true, false) +
-           total_size_contribution * serialized_size(true, true);
-}
+// size_t transaction::weight() const {
+//     // Block weight is 3 * Base size * + 1 * Total size (bip141).
+//     return base_size_contribution * serialized_size(true, false) +
+//            total_size_contribution * serialized_size(true, true);
+// }
 
 bool transaction::is_segregated() const {
 #if ! defined(KTH_SEGWIT_ENABLED)
@@ -572,8 +572,8 @@ code transaction::connect_input(chain_state const& state, size_t input_index) co
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code transaction::check(bool transaction_pool, bool retarget) const {
-    return transaction_basis::check(total_output_value(), transaction_pool, retarget);
+code transaction::check(size_t max_block_size, bool transaction_pool, bool retarget /* = true */) const {
+    return transaction_basis::check(total_output_value(), max_block_size, transaction_pool, retarget);
 }
 
 code transaction::accept(bool transaction_pool) const {

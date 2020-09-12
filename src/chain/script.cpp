@@ -702,7 +702,17 @@ bool script::is_relaxed_push(operation::list const& ops) {
 // the size byte overflows. However satoshi actually requires nominal encoding.
 //*****************************************************************************
 bool script::is_coinbase_pattern(operation::list const& ops, size_t height) {
-    return !ops.empty() && ops[0].is_nominal_push() && ops[0].data() == number(height).data();
+    if (ops.empty()) return false;
+
+    //Note(kth): Bitcoin core and derivatives do not follow the BIP34 specification.
+    //  https://github.com/bitcoin/bitcoin/pull/14633
+    if (height <= 16) {
+        static constexpr auto op_1 = static_cast<uint8_t>(opcode::push_positive_1);
+        auto const op_0 = static_cast<uint8_t>(ops[0].code());        
+        return height == op_0 - op_1 + 1;
+    }
+
+    return ops[0].is_nominal_push() && ops[0].data() == number(height).data();
 }
 
 //*****************************************************************************
