@@ -1089,7 +1089,6 @@ uint32_t chain_state::work_required(data const& values, config::network network,
     if (is_uahf_enabled(values.height, network)) {
         auto const six_time_span = median_time_past(values, bch_daa_eda_blocks);
         // precondition: last_time_span >= six_time_span
-        //TODO(fernando): resolve hardcoded values
         if ((last_time_span - six_time_span) > (12 * 3600)) {
             return work_required_adjust_cash(values);
         }
