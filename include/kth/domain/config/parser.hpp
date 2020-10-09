@@ -130,6 +130,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
     } else if (network == domain::config::network::testnet4) {
         checkpoints.reserve(1);
         checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
+        checkpoints.emplace_back("000000009f092d074574a216faec682040a853c4f079c33dfd2c3ef1fd8108c4", 5000);
     } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(57);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
