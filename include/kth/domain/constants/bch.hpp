@@ -19,7 +19,7 @@ namespace kth {
 // Blocks used to calculate the next difficulty
 constexpr size_t bch_daa_cw_144_retarget_algorithm = 147;
 constexpr size_t chain_state_timestamp_count = bch_daa_cw_144_retarget_algorithm;
-constexpr size_t bch_daa_eda_blocks = 6;
+constexpr size_t bch_daa_eda_blocks = 6 + 11;
 constexpr size_t max_block_size_old = 8000000;   //eight million bytes
 constexpr size_t max_block_size_new = 32000000;  //thirty two million bytes
 constexpr size_t max_block_size_testnet4 = 1200000;   //1.2 million bytes
