@@ -747,30 +747,6 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
 
 #endif // KTH_CURRENCY_BCH
 
-// auto timestamps_position(chain_state::timestamps const& times
-// #if defined(KTH_CURRENCY_BCH)
-// , bool daa_eda_active, bool daa_cw144_active
-// #endif
-// ) {
-// #if defined(KTH_CURRENCY_BCH)
-//     // For DAA CW-144
-//     if (daa_cw144_active && times.size() >= bch_offset_tip) {             // 147 - 11 = 136
-//         return times.begin() + bch_offset_tip;
-//     }
-
-//     // For EDA
-//     if (daa_eda_active && times.size() >= bch_offset_tip_minus_6) { // 147 - 11 - 6 = 130
-//         return times.begin() + bch_offset_tip_minus_6;
-//     }
-// #endif  //KTH_CURRENCY_BCH
-
-//     if (times.size() > 11) {
-//         return times.begin() + (times.size() - 11);
-//     }
-
-//     return times.begin();
-// }
-
 auto timestamps_position(chain_state::timestamps const& times, size_t last_n = median_time_past_interval) {
     if (times.size() > last_n) {
         return times.begin() + (times.size() - last_n);
@@ -837,27 +813,11 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 
 #if defined(KTH_CURRENCY_BCH)
 
-// pindexPrev->nHeight                                  -> values.height;
-// pindexPrev->nTime
-// pindexReferenceBlock->nHeight
-// pindexReferenceBlock->GetBlockHeader().nTime
-// pindexReferenceBlock->nBits
-// params.powLimit
-// params.nPowTargetSpacing
-// params.nDAAHalfLife
-
-
-
 // DAA/aserti3-2d: 2020-Nov-15 Hard fork
 uint32_t chain_state::daa_aserti3_2d(data const& values, assert_anchor_block_info_t const& assert_anchor_block_info, uint32_t half_life) {
     //TODO(fernando): pre and postconditions!
 
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
-
-    // auto const time_diff = values.timestamp.self - assert_anchor_block_info.prev_timestamp;
-    // auto const height_diff = values.height - assert_anchor_block_info.height + 1;
-    // auto const time_diff = 1597096747 - assert_anchor_block_info.prev_timestamp;
-    // auto const height_diff = 1400614 - assert_anchor_block_info.height + 1;
 
     auto const time_diff = timestamp_high(values) - assert_anchor_block_info.prev_timestamp;
     auto const height_diff = values.height - assert_anchor_block_info.height;
@@ -867,111 +827,6 @@ uint32_t chain_state::daa_aserti3_2d(data const& values, assert_anchor_block_inf
     auto next_target = daa::aserti3_2d(anchor_target, target_spacing_seconds, time_diff, height_diff, pow_limit, half_life);
     return compact(next_target).normal();
 }
-
-
-// /**
-//  * Compute the next required proof of work using an absolutely scheduled
-//  * exponentially weighted target (ASERT).
-//  *
-//  * With ASERT, we define an ideal schedule for block issuance (e.g. 1 block every 600 seconds), and we calculate the
-//  * difficulty based on how far the most recent block's timestamp is ahead of or behind that schedule.
-//  * We set our targets (difficulty) exponentially. For every [nHalfLife] seconds ahead of or behind schedule we get, we
-//  * double or halve the difficulty.
-//  */
-// uint32_t GetNextASERTWorkRequired(const CBlockIndex *pindexPrev,
-//                                   const CBlockHeader *pblock,
-//                                   const Consensus::Params &params,
-//                                   const CBlockIndex *pindexAnchorBlock) noexcept {
-//     // This cannot handle the genesis block and early blocks in general.
-//     assert(pindexPrev != nullptr);
-
-//     // Anchor block is the block on which all ASERT scheduling calculations are based.
-//     // It too must exist, and it must have a valid parent.
-//     assert(pindexAnchorBlock != nullptr);
-
-//     // We make no further assumptions other than the height of the prev block must be >= that of the anchor block.
-//     assert(pindexPrev->nHeight >= pindexAnchorBlock->nHeight);
-
-//     const arith_uint256 powLimit = UintToArith256(params.powLimit);
-
-//     // Special difficulty rule for testnet
-//     // If the new block's timestamp is more than 2* 10 minutes then allow
-//     // mining of a min-difficulty block.
-//     if (params.fPowAllowMinDifficultyBlocks &&
-//         (pblock->GetBlockTime() >
-//          pindexPrev->GetBlockTime() + 2 * params.nPowTargetSpacing)) {
-//         return UintToArith256(params.powLimit).GetCompact();
-//     }
-
-//     // For nTimeDiff calculation, the timestamp of the parent to the anchor block is used,
-//     // as per the absolute formulation of ASERT.
-//     // This is somewhat counterintuitive since it is referred to as the anchor timestamp, but
-//     // as per the formula the timestamp of block M-1 must be used if the anchor is M.
-//     assert(pindexPrev->pprev != nullptr);
-//     // Note: time difference is to parent of anchor block (or to anchor block itself iff anchor is genesis).
-//     //       (according to absolute formulation of ASERT)
-//     const auto anchorTime = pindexAnchorBlock->pprev
-//                                     ? pindexAnchorBlock->pprev->GetBlockTime()
-//                                     : pindexAnchorBlock->GetBlockTime();
-//     const int64_t nTimeDiff = pindexPrev->GetBlockTime() - anchorTime;
-//     // Height difference is from current block to anchor block
-//     const int64_t nHeightDiff = pindexPrev->nHeight - pindexAnchorBlock->nHeight;
-//     const arith_uint256 refBlockTarget = arith_uint256().SetCompact(pindexAnchorBlock->nBits);
-//     // Do the actual target adaptation calculation in separate
-//     // CalculateASERT() function
-//     arith_uint256 nextTarget = CalculateASERT(refBlockTarget,
-//                                               params.nPowTargetSpacing,
-//                                               nTimeDiff,
-//                                               nHeightDiff,
-//                                               powLimit,
-//                                               params.nASERTHalfLife);
-
-//     // CalculateASERT() already clamps to powLimit.
-//     return nextTarget.GetCompact();
-// }
-
-
-// uint32_t GetNextCashWorkRequired(const CBlockIndex *pindexPrev,
-//                                  const CBlockHeader *pblock,
-//                                  const Consensus::Params &params) {
-//     // This cannot handle the genesis block and early blocks in general.
-//     assert(pindexPrev);
-
-//     // Special difficulty rule for testnet:
-//     // If the new block's timestamp is more than 2* 10 minutes then allow
-//     // mining of a min-difficulty block.
-//     if (params.fPowAllowMinDifficultyBlocks &&
-//         (pblock->GetBlockTime() >
-//          pindexPrev->GetBlockTime() + 2 * params.nPowTargetSpacing)) {
-//         return UintToArith256(params.powLimit).GetCompact();
-//     }
-
-//     // Compute the difficulty based on the full adjustment interval.
-//     const uint32_t nHeight = pindexPrev->nHeight;
-//     assert(nHeight >= params.DifficultyAdjustmentInterval());
-
-//     // Get the last suitable block of the difficulty interval.
-//     const CBlockIndex *pindexLast = GetSuitableBlock(pindexPrev);
-//     assert(pindexLast);
-
-//     // Get the first suitable block of the difficulty interval.
-//     uint32_t nHeightFirst = nHeight - 144;
-//     const CBlockIndex *pindexFirst =
-//         GetSuitableBlock(pindexPrev->GetAncestor(nHeightFirst));
-//     assert(pindexFirst);
-
-//     // Compute the target based on time and work done during the interval.
-//     const arith_uint256 nextTarget =
-//         ComputeTarget(pindexFirst, pindexLast, params);
-
-//     const arith_uint256 powLimit = UintToArith256(params.powLimit);
-//     if (nextTarget > powLimit) {
-//         return powLimit.GetCompact();
-//     }
-
-//     return nextTarget.GetCompact();
-// }
-
 
 // DAA/cw-144: 2017-Nov-13 Hard fork
 uint32_t chain_state::daa_cw144(data const& values) {
@@ -1306,12 +1161,6 @@ uint32_t chain_state::signal_version(uint32_t forks) {
 chain_state::data chain_state::to_block(chain_state const& pool, block const& block) {
     // Alias configured forks.
     auto const forks = pool.forks_;
-
-    // Retargeting and testnet are only activated via configuration.
-    // auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    // auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-    // auto const mainnet = retarget && !testnet;
-
     // Copy data from presumed same-height pool state.
     auto data = pool.data_;
 
