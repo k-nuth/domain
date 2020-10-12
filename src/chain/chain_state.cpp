@@ -140,18 +140,14 @@ size_t version_sample_size(domain::config::network network) {
 
 inline 
 bool is_active(size_t count, domain::config::network network) {
-    // return count >= (network == domain::config::network::mainnet ? mainnet_active : testnet_active);
-
-    auto const active = network_map(network
-                                        , mainnet_active
-                                        , testnet_active
-                                        , size_t(0)
+    return network_relation(network, std::greater_equal<>{}, count
+                            , mainnet_active
+                            , testnet_active
+                            , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
-                                        , size_t(0)
+                            , size_t(0)
 #endif
-                                        );
-
-    return count >= active;
+                            );
 }
 
 inline 
@@ -173,93 +169,99 @@ bool is_bip30_exception(infrastructure::config::checkpoint const& check, domain:
 
 inline 
 bool allow_collisions(hash_digest const& hash, domain::config::network network) {
-    auto const col = network_map(network, mainnet_bip34_active_checkpoint.hash()
-                                        , testnet_bip34_active_checkpoint.hash()
-                                        , regtest_bip34_active_checkpoint.hash()
+    return network_relation(network, std::equal_to<>{}, hash
+                                , mainnet_bip34_active_checkpoint.hash()
+                                , testnet_bip34_active_checkpoint.hash()
+                                , regtest_bip34_active_checkpoint.hash()
 #if defined(KTH_CURRENCY_BCH)
-                                        , testnet4_bip34_active_checkpoint.hash()
+                                , testnet4_bip34_active_checkpoint.hash()
 #endif
-                                        );
-    return hash == col;
+                                );
 }
 
 inline 
 bool allow_collisions(size_t height, domain::config::network network) {
-    auto const col = network_map(network
-                                , mainnet_bip34_active_checkpoint.height()
-                                , testnet_bip34_active_checkpoint.height()
-                                , regtest_bip34_active_checkpoint.height()
+    return network_relation(network, std::equal_to<>{}, height
+                            , mainnet_bip34_active_checkpoint.height()
+                            , testnet_bip34_active_checkpoint.height()
+                            , regtest_bip34_active_checkpoint.height()
 #if defined(KTH_CURRENCY_BCH)
-                                , testnet4_bip34_active_checkpoint.height()
+                            , testnet4_bip34_active_checkpoint.height()
 #endif
-                                );
-    return height == col;
+                            );
 }
 
 #if ! defined(KTH_CURRENCY_BCH)
 inline 
 bool bip9_bit0_active(hash_digest const& hash, domain::config::network network) {
-    return hash == network_map(network, mainnet_bip9_bit0_active_checkpoint.hash(), 
-                                        testnet_bip9_bit0_active_checkpoint.hash(), 
-                                        regtest_bip9_bit0_active_checkpoint.hash());
+    return network_relation(network, std::equal_to<>{}, hash,
+                            mainnet_bip9_bit0_active_checkpoint.hash(), 
+                            testnet_bip9_bit0_active_checkpoint.hash(), 
+                            regtest_bip9_bit0_active_checkpoint.hash());
 }
 
 inline 
 bool bip9_bit0_active(size_t height, domain::config::network network) {
-    return height == network_map(network, mainnet_bip9_bit0_active_checkpoint.height(), 
-                                          testnet_bip9_bit0_active_checkpoint.height(), 
-                                          regtest_bip9_bit0_active_checkpoint.height());
+    return network_relation(network, std::equal_to<>{}, height,
+                            mainnet_bip9_bit0_active_checkpoint.height(), 
+                            testnet_bip9_bit0_active_checkpoint.height(), 
+                            regtest_bip9_bit0_active_checkpoint.height());
 }
 
 inline 
 bool bip9_bit1_active(hash_digest const& hash, domain::config::network network) {
-    return hash == network_map(network, mainnet_bip9_bit1_active_checkpoint.hash(), 
-                                        testnet_bip9_bit1_active_checkpoint.hash(), 
-                                        regtest_bip9_bit1_active_checkpoint.hash());
+    return network_relation(network, std::equal_to<>{}, hash,
+                            mainnet_bip9_bit1_active_checkpoint.hash(), 
+                            testnet_bip9_bit1_active_checkpoint.hash(), 
+                            regtest_bip9_bit1_active_checkpoint.hash());
 }
 
 inline 
 bool bip9_bit1_active(size_t height, domain::config::network network) {
-    return height == network_map(network, mainnet_bip9_bit1_active_checkpoint.height(), 
-                                          testnet_bip9_bit1_active_checkpoint.height(), 
-                                          regtest_bip9_bit1_active_checkpoint.height());
+    return network_relation(network, std::equal_to<>{}, height,
+                            mainnet_bip9_bit1_active_checkpoint.height(), 
+                            testnet_bip9_bit1_active_checkpoint.height(), 
+                            regtest_bip9_bit1_active_checkpoint.height());
 }
 #endif
 
 inline 
 bool bip34(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
-           height >= network_map(network, mainnet_bip34_freeze
-                                          , testnet_bip34_freeze 
-                                          , regtest_bip34_freeze
+           network_relation(network, std::greater_equal<>{}, height
+                            , mainnet_bip34_freeze
+                            , testnet_bip34_freeze 
+                            , regtest_bip34_freeze
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_bip34_freeze
+                            , testnet4_bip34_freeze
 #endif
-                                          );
+                            );
 }
 
 inline 
 bool bip66(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
-           height >= network_map(network, mainnet_bip66_freeze
-                                          , testnet_bip66_freeze
-                                          , regtest_bip66_freeze
+           network_relation(network, std::greater_equal<>{}, height
+                            , mainnet_bip66_freeze
+                            , testnet_bip66_freeze
+                            , regtest_bip66_freeze
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_bip66_freeze
+                            , testnet4_bip66_freeze
 #endif                                          
-                                          );
+                            );
 }
 
 inline 
 bool bip65(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
-           height >= network_map(network, mainnet_bip65_freeze
-                                          , testnet_bip65_freeze
-                                          , regtest_bip65_freeze
+           network_relation(network, std::greater_equal<>{}, height
+                            , mainnet_bip65_freeze
+                            , testnet_bip65_freeze
+                            , regtest_bip65_freeze
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_bip65_freeze
+                            , testnet4_bip65_freeze
 #endif
-                                          );
+                            );
 }
 
 inline 
@@ -554,8 +556,8 @@ size_t chain_state::retarget_height(size_t height, uint32_t forks) {
     // If not retarget height get most recent so that it may be promoted.
     return height - (is_retarget_height(height) ? retargeting_interval : retarget_distance(height));
 }
-size_t chain_state::collision_height(size_t height, config::network network) {
 
+size_t chain_state::collision_height(size_t height, config::network network) {
     auto const bip34_height = network_map(network
                                         , mainnet_bip34_active_checkpoint.height()
                                         , testnet_bip34_active_checkpoint.height()
@@ -598,21 +600,6 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 
 #if defined(KTH_CURRENCY_BCH)
 
-// inline 
-// bool chain_state::is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height) {
-//     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-//     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-//     // auto const mainnet = retarget && !testnet;
-
-//     // if ( ! mainnet && ! testnet) {
-//     if ( ! retarget && ! testnet) {
-//         return true;  // Note(kth): regtest activate at block 0
-//     }
-
-//     auto const activation_height = testnet ? testnet_height : mainnet_height;
-//     return height > activation_height;
-// }
-
 inline 
 bool chain_state::is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
@@ -622,27 +609,29 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 
     if (network == config::network::regtest) return true;
 
-    auto const activation_height = network_map(network, mainnet_height
-                                          , testnet_height
-                                          , size_t(0)
+    return network_relation(network, std::greater<>{}, height
+                            , mainnet_height
+                            , testnet_height
+                            , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_height
+                            , testnet4_height
 #endif
-                                          );
-    return height > activation_height;
+                            );
 }
 
 
 //2017-August-01 hard fork
 inline 
 bool chain_state::is_uahf_enabled(size_t height, config::network network) {
-    return is_rule_enabled(height, network
+    auto res = is_rule_enabled(height, network
         , mainnet_uahf_activation_height
         , testnet_uahf_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_uahf_activation_height
 #endif
         );
+
+    return res;
 }
 
 //2017-November-13 hard fork
