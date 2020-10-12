@@ -31,9 +31,9 @@ constexpr size_t max_tx_sigchecks = 3000;
 constexpr size_t block_maxbytes_maxsigchecks_ratio = 141;
 
 // Testnet4 frozen activation heights (frozen_activations).
-constexpr size_t testnet4_bip65_freeze = 3; //TODO(fernando): testnet4
-constexpr size_t testnet4_bip66_freeze = 4; //TODO(fernando): testnet4
-constexpr size_t testnet4_bip34_freeze = 2; //TODO(fernando): testnet4
+constexpr size_t testnet4_bip65_freeze = 3;
+constexpr size_t testnet4_bip66_freeze = 4;
+constexpr size_t testnet4_bip34_freeze = 2;
 
 static
 const infrastructure::config::checkpoint testnet4_bip34_active_checkpoint {

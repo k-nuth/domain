@@ -140,18 +140,14 @@ size_t version_sample_size(domain::config::network network) {
 
 inline 
 bool is_active(size_t count, domain::config::network network) {
-    // return count >= (network == domain::config::network::mainnet ? mainnet_active : testnet_active);
-
-    auto const active = network_map(network
-                                        , mainnet_active
-                                        , testnet_active
-                                        , size_t(0)
+    return network_relation(network, std::greater_equal<>{}, count
+                            , mainnet_active
+                            , testnet_active
+                            , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
-                                        , size_t(0)
+                            , size_t(0)
 #endif
-                                        );
-
-    return count >= active;
+                            );
 }
 
 inline 
@@ -173,93 +169,99 @@ bool is_bip30_exception(infrastructure::config::checkpoint const& check, domain:
 
 inline 
 bool allow_collisions(hash_digest const& hash, domain::config::network network) {
-    auto const col = network_map(network, mainnet_bip34_active_checkpoint.hash()
-                                        , testnet_bip34_active_checkpoint.hash()
-                                        , regtest_bip34_active_checkpoint.hash()
+    return network_relation(network, std::equal_to<>{}, hash
+                                , mainnet_bip34_active_checkpoint.hash()
+                                , testnet_bip34_active_checkpoint.hash()
+                                , regtest_bip34_active_checkpoint.hash()
 #if defined(KTH_CURRENCY_BCH)
-                                        , testnet4_bip34_active_checkpoint.hash()
+                                , testnet4_bip34_active_checkpoint.hash()
 #endif
-                                        );
-    return hash == col;
+                                );
 }
 
 inline 
 bool allow_collisions(size_t height, domain::config::network network) {
-    auto const col = network_map(network
-                                , mainnet_bip34_active_checkpoint.height()
-                                , testnet_bip34_active_checkpoint.height()
-                                , regtest_bip34_active_checkpoint.height()
+    return network_relation(network, std::equal_to<>{}, height
+                            , mainnet_bip34_active_checkpoint.height()
+                            , testnet_bip34_active_checkpoint.height()
+                            , regtest_bip34_active_checkpoint.height()
 #if defined(KTH_CURRENCY_BCH)
-                                , testnet4_bip34_active_checkpoint.height()
+                            , testnet4_bip34_active_checkpoint.height()
 #endif
-                                );
-    return height == col;
+                            );
 }
 
 #if ! defined(KTH_CURRENCY_BCH)
 inline 
 bool bip9_bit0_active(hash_digest const& hash, domain::config::network network) {
-    return hash == network_map(network, mainnet_bip9_bit0_active_checkpoint.hash(), 
-                                        testnet_bip9_bit0_active_checkpoint.hash(), 
-                                        regtest_bip9_bit0_active_checkpoint.hash());
+    return network_relation(network, std::equal_to<>{}, hash,
+                            mainnet_bip9_bit0_active_checkpoint.hash(), 
+                            testnet_bip9_bit0_active_checkpoint.hash(), 
+                            regtest_bip9_bit0_active_checkpoint.hash());
 }
 
 inline 
 bool bip9_bit0_active(size_t height, domain::config::network network) {
-    return height == network_map(network, mainnet_bip9_bit0_active_checkpoint.height(), 
-                                          testnet_bip9_bit0_active_checkpoint.height(), 
-                                          regtest_bip9_bit0_active_checkpoint.height());
+    return network_relation(network, std::equal_to<>{}, height,
+                            mainnet_bip9_bit0_active_checkpoint.height(), 
+                            testnet_bip9_bit0_active_checkpoint.height(), 
+                            regtest_bip9_bit0_active_checkpoint.height());
 }
 
 inline 
 bool bip9_bit1_active(hash_digest const& hash, domain::config::network network) {
-    return hash == network_map(network, mainnet_bip9_bit1_active_checkpoint.hash(), 
-                                        testnet_bip9_bit1_active_checkpoint.hash(), 
-                                        regtest_bip9_bit1_active_checkpoint.hash());
+    return network_relation(network, std::equal_to<>{}, hash,
+                            mainnet_bip9_bit1_active_checkpoint.hash(), 
+                            testnet_bip9_bit1_active_checkpoint.hash(), 
+                            regtest_bip9_bit1_active_checkpoint.hash());
 }
 
 inline 
 bool bip9_bit1_active(size_t height, domain::config::network network) {
-    return height == network_map(network, mainnet_bip9_bit1_active_checkpoint.height(), 
-                                          testnet_bip9_bit1_active_checkpoint.height(), 
-                                          regtest_bip9_bit1_active_checkpoint.height());
+    return network_relation(network, std::equal_to<>{}, height,
+                            mainnet_bip9_bit1_active_checkpoint.height(), 
+                            testnet_bip9_bit1_active_checkpoint.height(), 
+                            regtest_bip9_bit1_active_checkpoint.height());
 }
 #endif
 
 inline 
 bool bip34(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
-           height >= network_map(network, mainnet_bip34_freeze
-                                          , testnet_bip34_freeze 
-                                          , regtest_bip34_freeze
+           network_relation(network, std::greater_equal<>{}, height
+                            , mainnet_bip34_freeze
+                            , testnet_bip34_freeze 
+                            , regtest_bip34_freeze
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_bip34_freeze
+                            , testnet4_bip34_freeze
 #endif
-                                          );
+                            );
 }
 
 inline 
 bool bip66(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
-           height >= network_map(network, mainnet_bip66_freeze
-                                          , testnet_bip66_freeze
-                                          , regtest_bip66_freeze
+           network_relation(network, std::greater_equal<>{}, height
+                            , mainnet_bip66_freeze
+                            , testnet_bip66_freeze
+                            , regtest_bip66_freeze
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_bip66_freeze
+                            , testnet4_bip66_freeze
 #endif                                          
-                                          );
+                            );
 }
 
 inline 
 bool bip65(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
-           height >= network_map(network, mainnet_bip65_freeze
-                                          , testnet_bip65_freeze
-                                          , regtest_bip65_freeze
+           network_relation(network, std::greater_equal<>{}, height
+                            , mainnet_bip65_freeze
+                            , testnet_bip65_freeze
+                            , regtest_bip65_freeze
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_bip65_freeze
+                            , testnet4_bip65_freeze
 #endif
-                                          );
+                            );
 }
 
 inline 
@@ -554,8 +556,8 @@ size_t chain_state::retarget_height(size_t height, uint32_t forks) {
     // If not retarget height get most recent so that it may be promoted.
     return height - (is_retarget_height(height) ? retargeting_interval : retarget_distance(height));
 }
-size_t chain_state::collision_height(size_t height, config::network network) {
 
+size_t chain_state::collision_height(size_t height, config::network network) {
     auto const bip34_height = network_map(network
                                         , mainnet_bip34_active_checkpoint.height()
                                         , testnet_bip34_active_checkpoint.height()
@@ -598,21 +600,6 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 
 #if defined(KTH_CURRENCY_BCH)
 
-// inline 
-// bool chain_state::is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height) {
-//     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-//     auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-//     // auto const mainnet = retarget && !testnet;
-
-//     // if ( ! mainnet && ! testnet) {
-//     if ( ! retarget && ! testnet) {
-//         return true;  // Note(kth): regtest activate at block 0
-//     }
-
-//     auto const activation_height = testnet ? testnet_height : mainnet_height;
-//     return height > activation_height;
-// }
-
 inline 
 bool chain_state::is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
@@ -622,27 +609,29 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 
     if (network == config::network::regtest) return true;
 
-    auto const activation_height = network_map(network, mainnet_height
-                                          , testnet_height
-                                          , size_t(0)
+    return network_relation(network, std::greater<>{}, height
+                            , mainnet_height
+                            , testnet_height
+                            , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
-                                          , testnet4_height
+                            , testnet4_height
 #endif
-                                          );
-    return height > activation_height;
+                            );
 }
 
 
 //2017-August-01 hard fork
 inline 
 bool chain_state::is_uahf_enabled(size_t height, config::network network) {
-    return is_rule_enabled(height, network
+    auto res = is_rule_enabled(height, network
         , mainnet_uahf_activation_height
         , testnet_uahf_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_uahf_activation_height
 #endif
         );
+
+    return res;
 }
 
 //2017-November-13 hard fork
@@ -758,30 +747,6 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
 
 #endif // KTH_CURRENCY_BCH
 
-// auto timestamps_position(chain_state::timestamps const& times
-// #if defined(KTH_CURRENCY_BCH)
-// , bool daa_eda_active, bool daa_cw144_active
-// #endif
-// ) {
-// #if defined(KTH_CURRENCY_BCH)
-//     // For DAA CW-144
-//     if (daa_cw144_active && times.size() >= bch_offset_tip) {             // 147 - 11 = 136
-//         return times.begin() + bch_offset_tip;
-//     }
-
-//     // For EDA
-//     if (daa_eda_active && times.size() >= bch_offset_tip_minus_6) { // 147 - 11 - 6 = 130
-//         return times.begin() + bch_offset_tip_minus_6;
-//     }
-// #endif  //KTH_CURRENCY_BCH
-
-//     if (times.size() > 11) {
-//         return times.begin() + (times.size() - 11);
-//     }
-
-//     return times.begin();
-// }
-
 auto timestamps_position(chain_state::timestamps const& times, size_t last_n = median_time_past_interval) {
     if (times.size() > last_n) {
         return times.begin() + (times.size() - last_n);
@@ -848,27 +813,11 @@ auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
 
 #if defined(KTH_CURRENCY_BCH)
 
-// pindexPrev->nHeight                                  -> values.height;
-// pindexPrev->nTime
-// pindexReferenceBlock->nHeight
-// pindexReferenceBlock->GetBlockHeader().nTime
-// pindexReferenceBlock->nBits
-// params.powLimit
-// params.nPowTargetSpacing
-// params.nDAAHalfLife
-
-
-
 // DAA/aserti3-2d: 2020-Nov-15 Hard fork
 uint32_t chain_state::daa_aserti3_2d(data const& values, assert_anchor_block_info_t const& assert_anchor_block_info, uint32_t half_life) {
     //TODO(fernando): pre and postconditions!
 
     static uint256_t const pow_limit(compact{retarget_proof_of_work_limit});
-
-    // auto const time_diff = values.timestamp.self - assert_anchor_block_info.prev_timestamp;
-    // auto const height_diff = values.height - assert_anchor_block_info.height + 1;
-    // auto const time_diff = 1597096747 - assert_anchor_block_info.prev_timestamp;
-    // auto const height_diff = 1400614 - assert_anchor_block_info.height + 1;
 
     auto const time_diff = timestamp_high(values) - assert_anchor_block_info.prev_timestamp;
     auto const height_diff = values.height - assert_anchor_block_info.height;
@@ -878,111 +827,6 @@ uint32_t chain_state::daa_aserti3_2d(data const& values, assert_anchor_block_inf
     auto next_target = daa::aserti3_2d(anchor_target, target_spacing_seconds, time_diff, height_diff, pow_limit, half_life);
     return compact(next_target).normal();
 }
-
-
-// /**
-//  * Compute the next required proof of work using an absolutely scheduled
-//  * exponentially weighted target (ASERT).
-//  *
-//  * With ASERT, we define an ideal schedule for block issuance (e.g. 1 block every 600 seconds), and we calculate the
-//  * difficulty based on how far the most recent block's timestamp is ahead of or behind that schedule.
-//  * We set our targets (difficulty) exponentially. For every [nHalfLife] seconds ahead of or behind schedule we get, we
-//  * double or halve the difficulty.
-//  */
-// uint32_t GetNextASERTWorkRequired(const CBlockIndex *pindexPrev,
-//                                   const CBlockHeader *pblock,
-//                                   const Consensus::Params &params,
-//                                   const CBlockIndex *pindexAnchorBlock) noexcept {
-//     // This cannot handle the genesis block and early blocks in general.
-//     assert(pindexPrev != nullptr);
-
-//     // Anchor block is the block on which all ASERT scheduling calculations are based.
-//     // It too must exist, and it must have a valid parent.
-//     assert(pindexAnchorBlock != nullptr);
-
-//     // We make no further assumptions other than the height of the prev block must be >= that of the anchor block.
-//     assert(pindexPrev->nHeight >= pindexAnchorBlock->nHeight);
-
-//     const arith_uint256 powLimit = UintToArith256(params.powLimit);
-
-//     // Special difficulty rule for testnet
-//     // If the new block's timestamp is more than 2* 10 minutes then allow
-//     // mining of a min-difficulty block.
-//     if (params.fPowAllowMinDifficultyBlocks &&
-//         (pblock->GetBlockTime() >
-//          pindexPrev->GetBlockTime() + 2 * params.nPowTargetSpacing)) {
-//         return UintToArith256(params.powLimit).GetCompact();
-//     }
-
-//     // For nTimeDiff calculation, the timestamp of the parent to the anchor block is used,
-//     // as per the absolute formulation of ASERT.
-//     // This is somewhat counterintuitive since it is referred to as the anchor timestamp, but
-//     // as per the formula the timestamp of block M-1 must be used if the anchor is M.
-//     assert(pindexPrev->pprev != nullptr);
-//     // Note: time difference is to parent of anchor block (or to anchor block itself iff anchor is genesis).
-//     //       (according to absolute formulation of ASERT)
-//     const auto anchorTime = pindexAnchorBlock->pprev
-//                                     ? pindexAnchorBlock->pprev->GetBlockTime()
-//                                     : pindexAnchorBlock->GetBlockTime();
-//     const int64_t nTimeDiff = pindexPrev->GetBlockTime() - anchorTime;
-//     // Height difference is from current block to anchor block
-//     const int64_t nHeightDiff = pindexPrev->nHeight - pindexAnchorBlock->nHeight;
-//     const arith_uint256 refBlockTarget = arith_uint256().SetCompact(pindexAnchorBlock->nBits);
-//     // Do the actual target adaptation calculation in separate
-//     // CalculateASERT() function
-//     arith_uint256 nextTarget = CalculateASERT(refBlockTarget,
-//                                               params.nPowTargetSpacing,
-//                                               nTimeDiff,
-//                                               nHeightDiff,
-//                                               powLimit,
-//                                               params.nASERTHalfLife);
-
-//     // CalculateASERT() already clamps to powLimit.
-//     return nextTarget.GetCompact();
-// }
-
-
-// uint32_t GetNextCashWorkRequired(const CBlockIndex *pindexPrev,
-//                                  const CBlockHeader *pblock,
-//                                  const Consensus::Params &params) {
-//     // This cannot handle the genesis block and early blocks in general.
-//     assert(pindexPrev);
-
-//     // Special difficulty rule for testnet:
-//     // If the new block's timestamp is more than 2* 10 minutes then allow
-//     // mining of a min-difficulty block.
-//     if (params.fPowAllowMinDifficultyBlocks &&
-//         (pblock->GetBlockTime() >
-//          pindexPrev->GetBlockTime() + 2 * params.nPowTargetSpacing)) {
-//         return UintToArith256(params.powLimit).GetCompact();
-//     }
-
-//     // Compute the difficulty based on the full adjustment interval.
-//     const uint32_t nHeight = pindexPrev->nHeight;
-//     assert(nHeight >= params.DifficultyAdjustmentInterval());
-
-//     // Get the last suitable block of the difficulty interval.
-//     const CBlockIndex *pindexLast = GetSuitableBlock(pindexPrev);
-//     assert(pindexLast);
-
-//     // Get the first suitable block of the difficulty interval.
-//     uint32_t nHeightFirst = nHeight - 144;
-//     const CBlockIndex *pindexFirst =
-//         GetSuitableBlock(pindexPrev->GetAncestor(nHeightFirst));
-//     assert(pindexFirst);
-
-//     // Compute the target based on time and work done during the interval.
-//     const arith_uint256 nextTarget =
-//         ComputeTarget(pindexFirst, pindexLast, params);
-
-//     const arith_uint256 powLimit = UintToArith256(params.powLimit);
-//     if (nextTarget > powLimit) {
-//         return powLimit.GetCompact();
-//     }
-
-//     return nextTarget.GetCompact();
-// }
-
 
 // DAA/cw-144: 2017-Nov-13 Hard fork
 uint32_t chain_state::daa_cw144(data const& values) {
@@ -1317,12 +1161,6 @@ uint32_t chain_state::signal_version(uint32_t forks) {
 chain_state::data chain_state::to_block(chain_state const& pool, block const& block) {
     // Alias configured forks.
     auto const forks = pool.forks_;
-
-    // Retargeting and testnet are only activated via configuration.
-    // auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    // auto const retarget = script::is_enabled(forks, rule_fork::retarget);
-    // auto const mainnet = retarget && !testnet;
-
     // Copy data from presumed same-height pool state.
     auto data = pool.data_;
 

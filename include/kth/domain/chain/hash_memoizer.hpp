@@ -5,42 +5,13 @@
 #ifndef KTH_DOMAIN_CHAIN_HASH_MEMOIZER_HPP
 #define KTH_DOMAIN_CHAIN_HASH_MEMOIZER_HPP
 
-// #include <cstddef>
-// #include <cstdint>
-// #include <istream>
-// #include <memory>
-// #include <string>
-// #include <vector>
-
-// #include <kth/domain/chain/chain_state.hpp>
-// #include <kth/domain/chain/header_basis.hpp>
-// #include <kth/domain/define.hpp>
-// #include <kth/infrastructure/error.hpp>
-// #include <kth/infrastructure/math/hash.hpp>
-// #include <kth/infrastructure/utility/container_sink.hpp>
-// #include <kth/infrastructure/utility/container_source.hpp>
-// #include <kth/infrastructure/utility/data.hpp>
-// #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/thread.hpp>
-// #include <kth/infrastructure/utility/writer.hpp>
-
-// #include <kth/domain/utils.hpp>
-// #include <kth/domain/concepts.hpp>
 
 namespace kth::domain::chain {
 
 template <typename T>
 class hash_memoizer {
 public:
-
-    // header() = default;
-    // header(header const& x, hash_digest const& hash);
-
-    // /// This class is copy constructible and copy assignable.
-    // // Note(kth): Cannot be defaulted because the std::mutex data member.
-    // header(header const& x);
-    // header& operator=(header const& x);
-
     hash_digest hash() const {
         ///////////////////////////////////////////////////////////////////////////
         // Critical Section
@@ -53,11 +24,9 @@ public:
             mutex_.unlock_and_lock_upgrade();
             //---------------------------------------------------------------------
         }
-
         auto const hash = *hash_;
         mutex_.unlock_upgrade();
         ///////////////////////////////////////////////////////////////////////////
-
         return hash;
     }    
 

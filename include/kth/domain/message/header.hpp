@@ -104,7 +104,7 @@ public:
 
         if (version != version::level::canonical) {
             sink.write_variable_little_endian(0);
-}
+        }
     }
 
     void reset();

@@ -87,31 +87,46 @@ uint64_t max_money(bool retarget = true) noexcept {
     return recursive_money * subsidy_interval(retarget);
 }
 
-
-template <typename... Ts>
 constexpr inline
-auto&& network_map(domain::config::network network, Ts&&... args) noexcept {
+size_t network_map(domain::config::network network, size_t mainnet, size_t testnet, size_t regtest
 #if defined(KTH_CURRENCY_BCH)
-    static_assert(sizeof...(Ts) == 4, "this function requires 4 values");
-#else
-    static_assert(sizeof...(Ts) == 3, "this function requires 3 values");
+, size_t testnet4
 #endif
-
-    auto const values = std::make_tuple(args...);
+) noexcept {
     switch (network) {
         case domain::config::network::testnet:
-            return std::forward<std::tuple_element_t<1, decltype(values)>>(std::get<1>(values));
+            return testnet;
         case domain::config::network::regtest:
-            return std::forward<std::tuple_element_t<2, decltype(values)>>(std::get<2>(values));
-
+            return regtest;
 #if defined(KTH_CURRENCY_BCH)
         case domain::config::network::testnet4:
-            return std::forward<std::tuple_element_t<3, decltype(values)>>(std::get<3>(values));
+            return testnet4;
 #endif
-
         default:
         case domain::config::network::mainnet:
-            return std::forward<std::tuple_element_t<0, decltype(values)>>(std::get<0>(values));
+            return mainnet;
+    }
+}
+
+template <typename T, typename R>
+constexpr inline
+bool network_relation(domain::config::network network, R r, T const& value, T const& mainnet, T const& testnet, T const& regtest
+#if defined(KTH_CURRENCY_BCH)
+, T const& testnet4
+#endif
+) noexcept {
+    switch (network) {
+        case domain::config::network::testnet:
+            return r(value, testnet);
+        case domain::config::network::regtest:
+            return r(value, regtest);
+#if defined(KTH_CURRENCY_BCH)
+        case domain::config::network::testnet4:
+            return r(value, testnet4);
+#endif
+        default:
+        case domain::config::network::mainnet:
+            return r(value, mainnet);
     }
 }
 
