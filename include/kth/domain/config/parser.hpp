@@ -44,7 +44,7 @@ enum class load_error {
 // using namespace boost::program_options;
 // using namespace boost::system;
 
-using std::filesystem::path;
+using kth::path;
 using boost::program_options::command_line_parser;
 using boost::program_options::reading_file;
 using std::error_code;
