@@ -11,17 +11,14 @@
 #include <string>
 
 #include <boost/algorithm/string.hpp>
-// #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <boost/throw_exception.hpp>
 
 #include <kth/infrastructure/config/checkpoint.hpp>
-
-#include <kth/domain/define.hpp>
-//#include <kth/infrastructure/define.hpp>
-
+#include <kth/infrastructure/path.hpp>
 #include <kth/infrastructure/unicode/ifstream.hpp>
 
+#include <kth/domain/define.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
 
 namespace kth::domain {
