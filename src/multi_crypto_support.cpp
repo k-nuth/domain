@@ -49,6 +49,8 @@ domain::config::network get_network(uint32_t identifier) {
             return domain::config::network::regtest;
         case netmagic::bch_testnet4:
             return domain::config::network::testnet4;
+        case netmagic::bch_scalenet:
+            return domain::config::network::scalenet;
         default:
         case netmagic::bch_mainnet:
             return domain::config::network::mainnet;
