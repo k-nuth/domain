@@ -29,6 +29,8 @@ std::string name(network net) {
 #if defined(KTH_CURRENCY_BCH)
         case network::testnet4:
             return "Testnet4";
+        case network::scalenet:
+            return "Scalenet";
 #endif
         default:
         case network::mainnet:
