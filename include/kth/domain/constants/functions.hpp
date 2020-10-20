@@ -28,6 +28,7 @@ constexpr inline
 size_t get_max_block_size(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet4) return max_block_size_testnet4;
+    if (network == domain::config::network::scalenet) return max_block_size_scalenet;
     return max_block_size_new;
 #else
     return max_block_size;
@@ -47,6 +48,7 @@ constexpr inline
 size_t get_max_block_sigops(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet4) return max_block_sigops_testnet4;
+    if (network == domain::config::network::scalenet) return max_block_sigops_scalenet;
     return max_block_sigops_new;
 #else
     return max_block_sigops;
@@ -91,6 +93,7 @@ constexpr inline
 size_t network_map(domain::config::network network, size_t mainnet, size_t testnet, size_t regtest
 #if defined(KTH_CURRENCY_BCH)
 , size_t testnet4
+, size_t scalenet
 #endif
 ) noexcept {
     switch (network) {
@@ -101,6 +104,8 @@ size_t network_map(domain::config::network network, size_t mainnet, size_t testn
 #if defined(KTH_CURRENCY_BCH)
         case domain::config::network::testnet4:
             return testnet4;
+        case domain::config::network::scalenet:
+            return scalenet;
 #endif
         default:
         case domain::config::network::mainnet:
@@ -113,6 +118,7 @@ constexpr inline
 bool network_relation(domain::config::network network, R r, T const& value, T const& mainnet, T const& testnet, T const& regtest
 #if defined(KTH_CURRENCY_BCH)
 , T const& testnet4
+, T const& scalenet
 #endif
 ) noexcept {
     switch (network) {
@@ -123,6 +129,8 @@ bool network_relation(domain::config::network network, R r, T const& value, T co
 #if defined(KTH_CURRENCY_BCH)
         case domain::config::network::testnet4:
             return r(value, testnet4);
+        case domain::config::network::scalenet:
+            return r(value, scalenet);
 #endif
         default:
         case domain::config::network::mainnet:
