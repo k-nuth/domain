@@ -146,6 +146,7 @@ bool is_active(size_t count, domain::config::network network) {
                             , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
                             , size_t(0)
+                            , size_t(0)
 #endif
                             );
 }
