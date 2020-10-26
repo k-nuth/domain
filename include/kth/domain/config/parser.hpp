@@ -129,9 +129,9 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
         checkpoints.emplace_back("000000009f092d074574a216faec682040a853c4f079c33dfd2c3ef1fd8108c4", 5000);
     } else if (network == domain::config::network::scalenet) {
-        checkpoints.reserve(1);
-        //TODO(fernando): scalenet
+        checkpoints.reserve(2);
         checkpoints.emplace_back("00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52", 0);
+        checkpoints.emplace_back("0000000042d7fc947b3d2a5adcbc5ae787a287d266182b57e9e3911ba9ab818e", 1);
     } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(57);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
