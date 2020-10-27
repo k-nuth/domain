@@ -32,7 +32,7 @@ public:
     // Older libstdc++ does not allow erase with const iterator.
     // This is a bug that requires we up the minimum compiler version.
     // So presently stack_iterator is a non-const iterator.
-    ////typedef data_stack::const_iterator stack_iterator;
+    ////using stack_iterator = data_stack::const_iterator;
     // using stack_iterator = data_stack::iterator;
     using stack_iterator = data_stack::const_iterator;
     using stack_mutable_iterator = data_stack::iterator;

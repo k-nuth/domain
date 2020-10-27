@@ -21,6 +21,7 @@ constexpr uint32_t bch_mainnet  = 0xe8f3e1e3U;
 constexpr uint32_t bch_testnet  = 0xf4f3e5f4U;
 constexpr uint32_t bch_regtest  = 0xfabfb5daU;
 constexpr uint32_t bch_testnet4 = 0xafdab7e2U;
+constexpr uint32_t bch_scalenet = 0xa2e1afc3U;
 #else
 constexpr uint32_t btc_mainnet = 0xd9b4bef9U;
 constexpr uint32_t btc_testnet = 0x0709110bU;

@@ -708,7 +708,8 @@ bool script::is_coinbase_pattern(operation::list const& ops, size_t height) {
     //  https://github.com/bitcoin/bitcoin/pull/14633
     if (height <= 16) {
         static constexpr auto op_1 = static_cast<uint8_t>(opcode::push_positive_1);
-        auto const op_0 = static_cast<uint8_t>(ops[0].code());        
+        auto const op_0 = static_cast<uint8_t>(ops[0].code());
+        if (op_0 < op_1) return false;
         return height == op_0 - op_1 + 1;
     }
 

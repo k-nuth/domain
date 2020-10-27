@@ -314,6 +314,7 @@ private:
     bool is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
         , size_t testnet4_height
+        , size_t scalenet_height
 #endif
         );
 

@@ -146,6 +146,7 @@ bool is_active(size_t count, domain::config::network network) {
                             , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
                             , size_t(0)
+                            , size_t(0)
 #endif
                             );
 }
@@ -175,6 +176,7 @@ bool allow_collisions(hash_digest const& hash, domain::config::network network) 
                                 , regtest_bip34_active_checkpoint.hash()
 #if defined(KTH_CURRENCY_BCH)
                                 , testnet4_bip34_active_checkpoint.hash()
+                                , scalenet_bip34_active_checkpoint.hash()
 #endif
                                 );
 }
@@ -187,6 +189,7 @@ bool allow_collisions(size_t height, domain::config::network network) {
                             , regtest_bip34_active_checkpoint.height()
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip34_active_checkpoint.height()
+                            , scalenet_bip34_active_checkpoint.height()
 #endif
                             );
 }
@@ -234,6 +237,7 @@ bool bip34(size_t height, bool frozen, domain::config::network network) {
                             , regtest_bip34_freeze
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip34_freeze
+                            , scalenet_bip34_freeze
 #endif
                             );
 }
@@ -247,6 +251,7 @@ bool bip66(size_t height, bool frozen, domain::config::network network) {
                             , regtest_bip66_freeze
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip66_freeze
+                            , scalenet_bip66_freeze
 #endif                                          
                             );
 }
@@ -260,6 +265,7 @@ bool bip65(size_t height, bool frozen, domain::config::network network) {
                             , regtest_bip65_freeze
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip65_freeze
+                            , scalenet_bip65_freeze
 #endif
                             );
 }
@@ -564,6 +570,7 @@ size_t chain_state::collision_height(size_t height, config::network network) {
                                         , regtest_bip34_active_checkpoint.height()
 #if defined(KTH_CURRENCY_BCH)
                                         , testnet4_bip34_active_checkpoint.height()
+                                        , scalenet_bip34_active_checkpoint.height()
 #endif
                                         );
 
@@ -604,6 +611,7 @@ inline
 bool chain_state::is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
                                     , size_t testnet4_height
+                                    , size_t scalenet_height
 #endif
 ) {
 
@@ -615,6 +623,7 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
                             , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_height
+                            , scalenet_height
 #endif
                             );
 }
@@ -628,6 +637,7 @@ bool chain_state::is_uahf_enabled(size_t height, config::network network) {
         , testnet_uahf_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_uahf_activation_height
+        , scalenet_uahf_activation_height
 #endif
         );
 
@@ -642,6 +652,7 @@ bool chain_state::is_daa_cw144_enabled(size_t height, config::network network) {
         , testnet_daa_cw144_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_daa_cw144_activation_height
+        , scalenet_daa_cw144_activation_height
 #endif
         );
 }
@@ -654,6 +665,7 @@ bool chain_state::is_pythagoras_enabled(size_t height, config::network network) 
         , testnet_pythagoras_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_pythagoras_activation_height
+        , scalenet_pythagoras_activation_height
 #endif
         );
 }
@@ -666,6 +678,7 @@ bool chain_state::is_euclid_enabled(size_t height, config::network network) {
         , testnet_euclid_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_euclid_activation_height
+        , scalenet_euclid_activation_height
 #endif
         );
 }
@@ -678,6 +691,7 @@ bool chain_state::is_pisano_enabled(size_t height, config::network network) {
         , testnet_pisano_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_pisano_activation_height
+        , scalenet_pisano_activation_height
 #endif
         );
 }
@@ -690,6 +704,7 @@ bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
         , testnet_mersenne_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_mersenne_activation_height
+        , scalenet_mersenne_activation_height
 #endif
         );
 }
@@ -702,6 +717,7 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
         , testnet_fermat_activation_height
 #if defined(KTH_CURRENCY_BCH)
         , testnet4_fermat_activation_height
+        , scalenet_fermat_activation_height
 #endif
         );
 }
@@ -715,6 +731,7 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
 //         , testnet_euler_activation_height
 // #if defined(KTH_CURRENCY_BCH)
 //         , testnet4_euler_activation_height
+//         , scalenet_euler_activation_height
 // #endif
 //      );
 // }
@@ -728,6 +745,7 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
 //         , testnet_gauss_activation_height
 // #if defined(KTH_CURRENCY_BCH)
 //         , testnet4_gauss_activation_height
+//         , scalenet_gauss_activation_height
 // #endif
 //      );
 // }
@@ -741,6 +759,7 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
 //         , testnet_unnamed_activation_height
 // #if defined(KTH_CURRENCY_BCH)
 //         , testnet4_unnamed_activation_height
+//         , scalenet_unnamed_activation_height
 // #endif
 //      );
 // }

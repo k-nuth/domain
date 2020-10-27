@@ -28,8 +28,8 @@ public:
     using ptr = std::shared_ptr<compact_block>;
     using const_ptr = std::shared_ptr<const compact_block>;
 
-    //typedef mini_hash short_id;
-    //typedef mini_hash_list short_id_list;
+    //using short_id = mini_hash;
+    //using short_id_list = mini_hash_list;
     using short_id = uint64_t;
     using short_id_list = std::vector<short_id>;
 

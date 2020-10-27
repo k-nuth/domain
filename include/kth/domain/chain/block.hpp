@@ -118,6 +118,9 @@ public:
 #if defined(KTH_CURRENCY_BCH)
     static
     block genesis_testnet4();
+
+    static
+    block genesis_scalenet();
 #endif
 
     static

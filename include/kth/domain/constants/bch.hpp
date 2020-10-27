@@ -22,11 +22,13 @@ constexpr size_t chain_state_timestamp_count = bch_daa_cw_144_retarget_algorithm
 constexpr size_t bch_daa_eda_blocks = 6 + 11;
 constexpr size_t max_block_size_old = 8000000;   //eight million bytes
 constexpr size_t max_block_size_new = 32000000;  //thirty two million bytes
-constexpr size_t max_block_size_testnet4 = 1200000;   //1.2 million bytes
+constexpr size_t max_block_size_testnet4 = 2000000;   //2 million bytes
+constexpr size_t max_block_size_scalenet = 256000000;   //256 million bytes
 constexpr size_t min_transaction_size = 100;   //one hundred bytes
 constexpr size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
 constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 constexpr size_t max_block_sigops_testnet4 = max_block_size_testnet4 / max_sigops_factor;
+constexpr size_t max_block_sigops_scalenet = max_block_size_scalenet / max_sigops_factor;
 constexpr size_t max_tx_sigchecks = 3000;
 constexpr size_t block_maxbytes_maxsigchecks_ratio = 141;
 
@@ -35,9 +37,19 @@ constexpr size_t testnet4_bip65_freeze = 3;
 constexpr size_t testnet4_bip66_freeze = 4;
 constexpr size_t testnet4_bip34_freeze = 2;
 
+// Scalenet frozen activation heights (frozen_activations).
+constexpr size_t scalenet_bip65_freeze = 3;
+constexpr size_t scalenet_bip66_freeze = 4;
+constexpr size_t scalenet_bip34_freeze = 2;
+
+
 static
 const infrastructure::config::checkpoint testnet4_bip34_active_checkpoint {
     "00000000b0c65b1e03baace7d5c093db0d6aac224df01484985ffd5e86a1a20c", 2};
+
+static
+const infrastructure::config::checkpoint scalenet_bip34_active_checkpoint {
+    "00000000c8c35eaac40e0089a83bf5c5d9ecf831601f98c21ed4a7cb511a07d8", 2};
 
 // enum class pythagoras_t : uint64_t {};
 // enum class euclid_t : uint64_t {};
@@ -63,42 +75,50 @@ constexpr gauss_t     bch_gauss_activation_time{1621080000};            // 2021-
 constexpr size_t mainnet_uahf_activation_height = 478558;
 constexpr size_t testnet_uahf_activation_height = 1155876;
 constexpr size_t testnet4_uahf_activation_height = 6;
+constexpr size_t scalenet_uahf_activation_height = 6;
 
 //2017-November-13 hard fork
 constexpr size_t mainnet_daa_cw144_activation_height = 504031;
 constexpr size_t testnet_daa_cw144_activation_height = 1188697;
 constexpr size_t testnet4_daa_cw144_activation_height = 3000;
+constexpr size_t scalenet_daa_cw144_activation_height = 3000;
 
 //2018-May hard fork
 constexpr size_t mainnet_pythagoras_activation_height = 530359;
 constexpr size_t testnet_pythagoras_activation_height = 1233078;
 constexpr size_t testnet4_pythagoras_activation_height = 0;  //TODO(fernando): testnet4
+constexpr size_t scalenet_pythagoras_activation_height = 0;  //TODO(fernando): scalenet
 
 //2018-November hard fork
 constexpr size_t mainnet_euclid_activation_height = 556767;
 constexpr size_t testnet_euclid_activation_height = 1267996;
 constexpr size_t testnet4_euclid_activation_height = 4000;
+constexpr size_t scalenet_euclid_activation_height = 4000;
 
 //2019-May hard fork
 constexpr size_t mainnet_pisano_activation_height = 582680;
 constexpr size_t testnet_pisano_activation_height = 1303885;
 constexpr size_t testnet4_pisano_activation_height = 0; //TODO(fernando): testnet4
+constexpr size_t scalenet_pisano_activation_height = 0; //TODO(fernando): scalenet
 
 //2019-Nov hard fork
 constexpr size_t mainnet_mersenne_activation_height = 609136;
 constexpr size_t testnet_mersenne_activation_height = 1341712;
 constexpr size_t testnet4_mersenne_activation_height = 5000;
+constexpr size_t scalenet_mersenne_activation_height = 5000;
 
 //2020-May hard fork
 constexpr size_t mainnet_fermat_activation_height = 635259;
 constexpr size_t testnet_fermat_activation_height = 1378461;
-constexpr size_t testnet4_fermat_activation_height = 6000;
+constexpr size_t testnet4_fermat_activation_height = 0;         //Note: https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blame/master/src/chainparams.cpp#L594
+constexpr size_t scalenet_fermat_activation_height = 0;         //Note: https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blame/master/src/chainparams.cpp#L594
 
 //2020-Nov hard fork, ASERT Anchor block lock up
 //Will be removed once Euler(2020-Nov) update is activated
 constexpr size_t mainnet_asert_anchor_lock_up_height = 652500;  // 000000000000000001655f282a3684de3e422290dca55a7ff84753871073c37e
 constexpr size_t testnet_asert_anchor_lock_up_height = 1408990; // 0000000000069a8d053a2f34739137cd86722bde2516f03759d9349a0c04fd2e
 constexpr size_t testnet4_asert_anchor_lock_up_height = 0;      // Genesis: 000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b
+constexpr size_t scalenet_asert_anchor_lock_up_height = 0;      // Genesis: 00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52
 
 //2020-Nov hard fork
 // Complete after the hard fork

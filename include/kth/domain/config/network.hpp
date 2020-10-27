@@ -12,10 +12,11 @@ namespace kth::domain::config {
 // For configuration network initialization in other libraries.
 enum class network {
      mainnet
-    ,testnet
-    ,regtest
+    , testnet
+    , regtest
 #if defined(KTH_CURRENCY_BCH)
-    ,testnet4
+    , testnet4
+    , scalenet
 #endif
 };
 
@@ -29,6 +30,8 @@ std::string name(network net) {
 #if defined(KTH_CURRENCY_BCH)
         case network::testnet4:
             return "Testnet4";
+        case network::scalenet:
+            return "Scalenet";
 #endif
         default:
         case network::mainnet:
