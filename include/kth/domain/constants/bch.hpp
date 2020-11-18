@@ -69,7 +69,7 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 // constexpr pisano_t   bch_pisano_activation_time = 1557921600;        // 2019-May-15 HF
 // constexpr mersenne_t bch_mersenne_activation_time = 1573819200;      // 2019-Nov-15 HF
 // constexpr fermat_t   bch_fermat_activation_time{1589544000};         // 2020-May-15 HF
-constexpr euler_t     bch_euler_activation_time{1605441600};            // 2020-Nov-15 HF
+// constexpr euler_t     bch_euler_activation_time{1605441600};         // 2020-Nov-15 HF
 constexpr gauss_t     bch_gauss_activation_time{1621080000};            // 2021-May-15 HF
 
 //2017-August-01 hard fork
@@ -115,15 +115,35 @@ constexpr size_t testnet_fermat_activation_height = 1378461;
 constexpr size_t testnet4_fermat_activation_height = 0;         //Note: https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blame/master/src/chainparams.cpp#L594
 constexpr size_t scalenet_fermat_activation_height = 0;         //Note: https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blame/master/src/chainparams.cpp#L594
 
-//2020-Nov hard fork, ASERT Anchor block lock up
-//Will be removed once Euler(2020-Nov) update is activated
-constexpr size_t mainnet_asert_anchor_lock_up_height = 652500;  // 000000000000000001655f282a3684de3e422290dca55a7ff84753871073c37e
-constexpr size_t testnet_asert_anchor_lock_up_height = 1408990; // 0000000000069a8d053a2f34739137cd86722bde2516f03759d9349a0c04fd2e
-constexpr size_t testnet4_asert_anchor_lock_up_height = 0;      // Genesis: 000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b
-constexpr size_t scalenet_asert_anchor_lock_up_height = 0;      // Genesis: 00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52
+// //2020-Nov hard fork, ASERT Anchor block lock up
+// //Will be removed once Euler(2020-Nov) update is activated
+// constexpr size_t mainnet_asert_anchor_lock_up_height = 652500;  // 000000000000000001655f282a3684de3e422290dca55a7ff84753871073c37e
+// constexpr size_t testnet_asert_anchor_lock_up_height = 1408990; // 0000000000069a8d053a2f34739137cd86722bde2516f03759d9349a0c04fd2e
+// constexpr size_t testnet4_asert_anchor_lock_up_height = 0;      // Genesis: 000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b
+// constexpr size_t scalenet_asert_anchor_lock_up_height = 0;      // Genesis: 00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52
+
+//2020-Nov hard fork, ASERT Anchor/Reference block 
+constexpr size_t mainnet_asert_anchor_block_height = 661647;        // 00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f
+constexpr uint32_t mainnet_asert_anchor_block_bits = 0x1804dafe;
+constexpr size_t mainnet_asert_anchor_block_ancestor_time = 1605447844;
+
+constexpr size_t testnet_asert_anchor_block_height = 1421481;       // 00000000062c7f32591d883c99fc89ebe74a83287c0f2b7ffeef72e62217d40b
+constexpr uint32_t testnet_asert_anchor_block_bits = 0x1d00ffff;
+constexpr size_t testnet_asert_anchor_block_ancestor_time = 1605445400;
+
+constexpr size_t testnet4_asert_anchor_block_height = 16844;        // 00000000602570ee2b66c1d3f75d404c234f8aacdcc784da97e65838a2daf0fc
+constexpr uint32_t testnet4_asert_anchor_block_bits = 0x1d00ffff;
+constexpr size_t testnet4_asert_anchor_block_ancestor_time = 1605451779;
+
+constexpr size_t scalenet_asert_anchor_block_height = 16868;        // 000000008b6a607a3a731ae1df816bb828450bec67fea5e8dbcf837ed711b99a
+constexpr uint32_t scalenet_asert_anchor_block_bits = 0x1d00ffff;
+constexpr size_t scalenet_asert_anchor_block_ancestor_time = 1605448590;
 
 //2020-Nov hard fork
-// Complete after the hard fork
+constexpr size_t mainnet_euler_activation_height = 661648;
+constexpr size_t testnet_euler_activation_height = 1421482;
+constexpr size_t testnet4_euler_activation_height = 16845;
+constexpr size_t scalenet_euler_activation_height = 16869;
 
 } // namespace kth
 

@@ -53,7 +53,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
 //TODO(fernando): Set Litecoin checkpoints
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet) {
-        checkpoints.reserve(35);
+        checkpoints.reserve(38);
         checkpoints.emplace_back("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 0);
         checkpoints.emplace_back("00000000009e2958c15ff9290d571bf9459e93b19765c6801ddeccadbb160a1e", 100000);
         checkpoints.emplace_back("0000000000287bffd321963ef05feab753ebe274e1d78b2fd4e2bfe9ad3aa6f2", 200000);
@@ -97,43 +97,58 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("000000000000003a3fb0ca1611035346a803e0344d6bb2eb4f5ea75f4dc2291c", 1303886);  //time: 1557923747 - May 15, 2019 12:35:47 PM
 
         //2019-Nov Hardfork - mersenne - (1573819200)
-        checkpoints.emplace_back("00000000c678f67ea16d5bf803f68ce42991839d13849f77332d6f586f62d421", 1341711);  //time: 1573826257 - Nov 15, 2019 01:57:37 PM
-        checkpoints.emplace_back("00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712);  //time: 1573827462 - Nov 15, 2019 02:17:42 PM
-        checkpoints.emplace_back("000000000ce59bbc9a046429e608395a1666bcf11f28692909dd88ac7348fbeb", 1341713);  //time: 1573828667 - Nov 15, 2019 02:37:47 PM
+        checkpoints.emplace_back("00000000c678f67ea16d5bf803f68ce42991839d13849f77332d6f586f62d421", 1341711);  //mediantime: 1573820238 - Nov 15, 2019 ??:??:?? PM
+        checkpoints.emplace_back("00000000fffc44ea2e202bd905a9fbbb9491ef9e9d5a9eed4039079229afa35b", 1341712);  //mediantime: 1573821440 - Nov 15, 2019 ??:??:?? PM
+        checkpoints.emplace_back("000000000ce59bbc9a046429e608395a1666bcf11f28692909dd88ac7348fbeb", 1341713);  //mediantime: 1573822645 - Nov 15, 2019 ??:??:?? PM
 
         //2020-May Hardfork - fermat - (1589544000)
-        checkpoints.emplace_back("0000000070f33c64cb94629680fbc57d17bea354a73e693affcb366d023db324", 1378460);  //time: 1589550734 - May 15, 2020 01:52:14 PM
-        checkpoints.emplace_back("0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461);  //time: 1589552066 - May 15, 2020 02:14:26 PM
-        checkpoints.emplace_back("0000000066174e2e09129967402035d200341ccb44bbe4dd1b31997296457deb", 1378462);  //time: 1589553287 - May 15, 2020 02:34:47 PM
+        checkpoints.emplace_back("0000000070f33c64cb94629680fbc57d17bea354a73e693affcb366d023db324", 1378460);  //mediantime: 1589544294 - May 15, 2020 ??:??:?? PM
+        checkpoints.emplace_back("0000000099f5509b5f36b1926bcf82b21d936ebeadee811030dfbbb7fae915d7", 1378461);  //mediantime: 1589545500 - May 15, 2020 ??:??:?? PM
+        checkpoints.emplace_back("0000000066174e2e09129967402035d200341ccb44bbe4dd1b31997296457deb", 1378462);  //mediantime: 1589546755 - May 15, 2020 ??:??:?? PM
 
-        //Checkpoint added to find ASERT Anchor block
-        checkpoints.emplace_back("0000000000069a8d053a2f34739137cd86722bde2516f03759d9349a0c04fd2e", 1408990);
+        checkpoints.emplace_back("0000000000146da9eea6f299ca19ccb81371aa2e9490db229d610e74c4790e08", 1400000);
 
-        // //2020-Nov Hardfork - euler - (1605441600)
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
+        //2020-Nov Hardfork - euler - (1605441600)
+        checkpoints.emplace_back("00000000062c7f32591d883c99fc89ebe74a83287c0f2b7ffeef72e62217d40b", 1421481);  //mediantime: 1605442008 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("0000000023e0680a8a062b3cc289a4a341124ce7fcb6340ede207e194d73b60a", 1421482);  //mediantime: 1605443209 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("000000000a5b9e3ee77ddf5f29ecc5960e8e1a0b988f72edef24ee528c02b51c", 1421483);  //mediantime: 1605443867 - Nov 15, 2020 99:99:99 XX
 
         // //2021-May Hardfork - gauss - (1621080000)
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999 - May 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999 - May 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999 - May 15, 2021 99:99:99 XX
 
         // //2021-Nov Hardfork - unnamed - (9999999999)
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999 - Nov 15, 2021 99:99:99 XX
+        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999 - Nov 15, 2021 99:99:99 XX
 
     } else if (network == domain::config::network::testnet4) {
-        checkpoints.reserve(1);
+        checkpoints.reserve(7);
         checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
         checkpoints.emplace_back("000000009f092d074574a216faec682040a853c4f079c33dfd2c3ef1fd8108c4", 5000);
+        checkpoints.emplace_back("0000000001579f88fcf71795ca12488987148b15d4204317bf02a413b2b9ef0a", 10000);
+        checkpoints.emplace_back("00000000fc8eaff71ac9f2da72ce11f628491325784ba6bd7329add33ca8a2be", 15000);
+
+        //2020-Nov Hardfork - euler - (1605441600)
+        checkpoints.emplace_back("00000000602570ee2b66c1d3f75d404c234f8aacdcc784da97e65838a2daf0fc", 16844);  //mediantime: 1605442049 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("00000000fb325b8f34fe80c96a5f708a08699a68bbab82dba4474d86bd743077", 16845);  //mediantime: 1605445733 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("00000000ed0d448505fb8277bf2b272c8a243b86c89e9d8f397d4fdd3f0c7704", 16846);  //mediantime: 1605447198 - Nov 15, 2020 99:99:99 XX
     } else if (network == domain::config::network::scalenet) {
-        checkpoints.reserve(2);
+        checkpoints.reserve(8);
         checkpoints.emplace_back("00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52", 0);
         checkpoints.emplace_back("0000000042d7fc947b3d2a5adcbc5ae787a287d266182b57e9e3911ba9ab818e", 1);
+
+        checkpoints.emplace_back("000000000a9cdd4e68092626528bb0afc32c1b87aa5f8fbfafe45e87d0016a2b", 5000);
+        checkpoints.emplace_back("00000000b711dc753130e5083888d106f99b920b1b8a492eb5ac41d40e482905", 10000);
+        checkpoints.emplace_back("00000000ec24d110081e8a6ab4b23b0ab716f419eb7428d95307028a4df975f5", 15000);
+
+        //2020-Nov Hardfork - euler - (1605441600)
+        checkpoints.emplace_back("000000008b6a607a3a731ae1df816bb828450bec67fea5e8dbcf837ed711b99a", 16868);  //mediantime: 1605443014 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("00000000e4627a1a0bf9aaae007af5cea32720fb54cf2ccf0aa20b02a18392ab", 16869);  //mediantime: 1605444236 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("0000000047622ca2f34d9930adc7aa3a78a12c4dcd26e6675ab52df3f9e58f3e", 16870);  //mediantime: 1605445486 - Nov 15, 2020 99:99:99 XX
     } else if (network == domain::config::network::mainnet) {
-        checkpoints.reserve(57);
+        checkpoints.reserve(60);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
         checkpoints.emplace_back("0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d", 11111);
         checkpoints.emplace_back("000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6", 33333);
@@ -209,19 +224,16 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("000000000000000001c885feaa06e225ee51c37c98a293ab779e01912a99a620", 635000);
 
         //2020-May Hardfork - fermat - (1589544000)
-        checkpoints.emplace_back("000000000000000003302c47d01e78f1c86aa3b0e96b066761a5059bc8f5781a", 635258);  //time: 1589547409 - May 15, 2020 12:56:49 PM
-        checkpoints.emplace_back("00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259);  //time: 1589547811 - May 15, 2020 01:03:31 PM
-        checkpoints.emplace_back("0000000000000000021007984d36d32c49a249b216297694dfb9756f095aa645", 635260);  //time: 1589548077 - May 15, 2020 01:07:57 PM
+        checkpoints.emplace_back("000000000000000003302c47d01e78f1c86aa3b0e96b066761a5059bc8f5781a", 635258);  //mediantime: 1589544126 - May 15, 2020 12:56:49 PM
+        checkpoints.emplace_back("00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259);  //mediantime: 1589544127 - May 15, 2020 01:03:31 PM
+        checkpoints.emplace_back("0000000000000000021007984d36d32c49a249b216297694dfb9756f095aa645", 635260);  //mediantime: 1589544748 - May 15, 2020 01:07:57 PM
 
-        //Checkpoint added to find ASERT Anchor block
-        checkpoints.emplace_back("000000000000000001655f282a3684de3e422290dca55a7ff84753871073c37e", 652500);
+        checkpoints.emplace_back("000000000000000001e5a8e11a9a523e15ad985b8123df0f7b364ad8f83d82b0", 650000);
 
-        // checkpoints.emplace_back("????????????????????????????????????????????????????????????????", 635000);
-
-        // //2020-Nov Hardfork - euler - (1605441600)
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
-        // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - Nov 15, 2020 99:99:99 XX
+        //2020-Nov Hardfork - euler - (1605441600)
+        checkpoints.emplace_back("00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f", 661647);  //mediantime: 1605443067 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("0000000000000000029e471c41818d24b8b74c911071c4ef0b4a0509f9b5a8ce", 661648);  //mediantime: 1605443708 - Nov 15, 2020 99:99:99 XX
+        checkpoints.emplace_back("000000000000000004cc2dd59571e2ab3d6d322f181acba6f9cf6d68787879c2", 661649);  //mediantime: 1605444297 - Nov 15, 2020 99:99:99 XX
 
         // //2021-May Hardfork - gauss - (1621080000)
         // checkpoints.emplace_back("", 9999999);  //time: 9999999999 - May 15, 2021 99:99:99 XX
