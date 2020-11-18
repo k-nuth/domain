@@ -32,6 +32,8 @@ constexpr size_t max_block_sigops_scalenet = max_block_size_scalenet / max_sigop
 constexpr size_t max_tx_sigchecks = 3000;
 constexpr size_t block_maxbytes_maxsigchecks_ratio = 141;
 
+constexpr size_t max_payload_size_scalenet = max_block_size_scalenet;
+
 // Testnet4 frozen activation heights (frozen_activations).
 constexpr size_t testnet4_bip65_freeze = 3;
 constexpr size_t testnet4_bip66_freeze = 4;
