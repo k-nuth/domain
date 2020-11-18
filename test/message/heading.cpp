@@ -309,7 +309,7 @@ TEST_CASE("heading  maximum size  always  matches satoshi fixed size", "[heading
 //}
 
 TEST_CASE("heading  maximum payload size  witness  matches expected", "[heading]") {
-    REQUIRE(max_block_weight == heading::maximum_payload_size(0u, true));
+    REQUIRE(max_block_weight == heading::maximum_payload_size(0u, true, btc_mainnet));
 }
 #endif
 
