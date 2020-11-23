@@ -7,6 +7,8 @@
 #include <kth/domain/constants.hpp>
 #include <kth/domain/message/messages.hpp>
 #include <kth/domain/message/version.hpp>
+#include <kth/domain/multi_crypto_support.hpp>
+
 #include <kth/infrastructure/message/message_tools.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
@@ -32,7 +34,7 @@ size_t heading::maximum_size() {
 // Post-Witness:
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
-size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness) {
+size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t magic) {
     /*    static constexpr 
     size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr 
@@ -43,7 +45,7 @@ size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness) {
 #if defined(KTH_SEGWIT_ENABLED)
     return witness_val(witness) ? max_block_weight : max_payload_size;
 #else
-    return max_payload_size;
+    return get_max_payload_size(get_network(magic));
 #endif
 }
 

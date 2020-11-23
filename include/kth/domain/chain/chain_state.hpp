@@ -116,7 +116,7 @@ public:
 #if defined(KTH_CURRENCY_BCH)        
     struct assert_anchor_block_info_t {
         size_t height;
-        uint32_t prev_timestamp;
+        uint64_t ancestor_timestamp;
         uint32_t bits;
     };
 #endif
@@ -132,7 +132,7 @@ public:
                 // , pisano_t pisano_activation_time
                 // , mersenne_t mersenne_activation_time
                 // , fermat_t fermat_activation_time
-                , euler_t euler_activation_time
+                // , euler_t euler_activation_time
                 , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
@@ -187,8 +187,8 @@ public:
     // [[nodiscard]]
     // fermat_t fermat_activation_time() const;
 
-    [[nodiscard]]
-    euler_t euler_activation_time() const;
+    // [[nodiscard]]
+    // euler_t euler_activation_time() const;
 
     [[nodiscard]]
     gauss_t gauss_activation_time() const;
@@ -266,7 +266,7 @@ protected:
             // , pisano_t pisano_activation_time
             // , mersenne_t mersenne_activation_time
             // , fermat_t fermat_activation_time
-            , euler_t euler_activation_time
+            // , euler_t euler_activation_time
             , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
@@ -274,7 +274,7 @@ protected:
     static
     uint32_t work_required(data const& values, config::network network, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
-                            , euler_t euler_activation_time
+                            // , euler_t euler_activation_time
                             , gauss_t gauss_activation_time
                             , assert_anchor_block_info_t const& assert_anchor_block_info
                             , uint32_t asert_half_life
@@ -282,7 +282,7 @@ protected:
     );
 
 private:
-    void adjust_assert_anchor_block_info();
+    // void adjust_assert_anchor_block_info();
 
     static
     size_t bits_count(size_t height, uint32_t forks);
@@ -342,8 +342,8 @@ private:
     static
     bool is_fermat_enabled(size_t height, config::network network);
 
-    // static
-    // bool is_euler_enabled(size_t height, config::network network);
+    static
+    bool is_euler_enabled(size_t height, config::network network);
 
     // static
     // bool is_gauss_enabled(size_t height, config::network network);
@@ -426,7 +426,7 @@ private:
     // pisano_t const pisano_activation_time_;
     // mersenne_t const mersenne_activation_time_;
     // fermat_t const fermat_activation_time_;
-    euler_t const euler_activation_time_;
+    // euler_t const euler_activation_time_;
     gauss_t const gauss_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };

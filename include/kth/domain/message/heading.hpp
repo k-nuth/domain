@@ -65,7 +65,7 @@ public:
     size_t maximum_size();
     
     static
-    size_t maximum_payload_size(uint32_t version, bool witness);
+    size_t maximum_payload_size(uint32_t version, bool witness, uint32_t magic);
     
     static
     size_t satoshi_fixed_size();

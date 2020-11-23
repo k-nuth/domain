@@ -106,7 +106,7 @@ public:
         node_witness = (1U << 3),
 
 #if defined(KTH_CURRENCY_BCH)
-        node_network_cash = (1 << 5)  //TODO(kth): check what happens with node_network (or node_network_cash)
+        node_network_cash = (1U << 5)  //TODO(kth): check what happens with node_network (or node_network_cash)
 #endif                                //KTH_CURRENCY_BCH
     };
 

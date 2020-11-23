@@ -36,6 +36,14 @@ size_t get_max_block_size(domain::config::network network) noexcept {
 }
 
 constexpr inline 
+size_t get_max_payload_size(domain::config::network network) noexcept {
+#if defined(KTH_CURRENCY_BCH)
+    if (network == domain::config::network::scalenet) return max_payload_size_scalenet;
+#endif  //KTH_CURRENCY_BCH
+    return max_payload_size;
+}
+
+constexpr inline 
 size_t get_max_block_size_network_independent() noexcept {
 #if defined(KTH_CURRENCY_BCH)
     return max_block_size_new;
