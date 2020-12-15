@@ -74,28 +74,28 @@ constexpr gauss_t     bch_gauss_activation_time{1621080000};            // 2021-
 
 //2017-August-01 hard fork
 
-constexpr size_t mainnet_uahf_activation_height = 478558;
+constexpr size_t mainnet_uahf_activation_height = 478559;
 constexpr size_t testnet_uahf_activation_height = 1155876;
 constexpr size_t testnet4_uahf_activation_height = 6;
 constexpr size_t scalenet_uahf_activation_height = 6;
 
 //2017-November-13 hard fork
-constexpr size_t mainnet_daa_cw144_activation_height = 504031;
-constexpr size_t testnet_daa_cw144_activation_height = 1188697;
-constexpr size_t testnet4_daa_cw144_activation_height = 3000;
-constexpr size_t scalenet_daa_cw144_activation_height = 3000;
+constexpr size_t mainnet_daa_cw144_activation_height = 504032;
+constexpr size_t testnet_daa_cw144_activation_height = 1188698;
+constexpr size_t testnet4_daa_cw144_activation_height = 3001;
+constexpr size_t scalenet_daa_cw144_activation_height = 3001;
 
 //2018-May hard fork
-constexpr size_t mainnet_pythagoras_activation_height = 530359;
-constexpr size_t testnet_pythagoras_activation_height = 1233078;
-constexpr size_t testnet4_pythagoras_activation_height = 0;  //TODO(fernando): testnet4
-constexpr size_t scalenet_pythagoras_activation_height = 0;  //TODO(fernando): scalenet
+constexpr size_t mainnet_pythagoras_activation_height = 530356;  // Bitcoin Cash Node checkpoint: 530359, due to a historical inaccuracy in the Bitcoin ABC code: https://github.com/bitcoin-cash-node/bitcoin-cash-node/commit/97c32f461a1a6d6ca71c5958d67047a1c06d83fd#diff-ff53e63501a5e89fd650b378c9708274df8ad5d38fcffa6c64be417c4d438b6d
+constexpr size_t testnet_pythagoras_activation_height = 1233070; // Bitcoin Cash Node checkpoint: 1233078
+constexpr size_t testnet4_pythagoras_activation_height = 0;      // TODO(fernando): testnet4
+constexpr size_t scalenet_pythagoras_activation_height = 0;      // TODO(fernando): scalenet
 
 //2018-November hard fork
 constexpr size_t mainnet_euclid_activation_height = 556767;
-constexpr size_t testnet_euclid_activation_height = 1267996;
-constexpr size_t testnet4_euclid_activation_height = 4000;
-constexpr size_t scalenet_euclid_activation_height = 4000;
+constexpr size_t testnet_euclid_activation_height = 1267997;
+constexpr size_t testnet4_euclid_activation_height = 4001;
+constexpr size_t scalenet_euclid_activation_height = 4001;
 
 //2019-May hard fork
 constexpr size_t mainnet_pisano_activation_height = 582680;
@@ -106,8 +106,8 @@ constexpr size_t scalenet_pisano_activation_height = 0; //TODO(fernando): scalen
 //2019-Nov hard fork
 constexpr size_t mainnet_mersenne_activation_height = 609136;
 constexpr size_t testnet_mersenne_activation_height = 1341712;
-constexpr size_t testnet4_mersenne_activation_height = 5000;
-constexpr size_t scalenet_mersenne_activation_height = 5000;
+constexpr size_t testnet4_mersenne_activation_height = 5001;
+constexpr size_t scalenet_mersenne_activation_height = 5001;
 
 //2020-May hard fork
 constexpr size_t mainnet_fermat_activation_height = 635259;
