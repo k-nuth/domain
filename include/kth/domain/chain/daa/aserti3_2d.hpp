@@ -46,6 +46,7 @@ uint256_t shift_2way_safe(uint256_t x, int64_t n, uint256_t const& def) noexcept
         x >>= -n;
         // 0 is not a valid target, but 1 is.
         if (x == 0) return uint256_t(1);
+        if (x > def) return def;
         return x;
     }
 

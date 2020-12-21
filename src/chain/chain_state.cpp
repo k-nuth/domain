@@ -615,7 +615,7 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 
     if (network == config::network::regtest) return true;
 
-    return network_relation(network, std::greater<>{}, height
+    return network_relation(network, std::greater_equal<>{}, height
                             , mainnet_height
                             , testnet_height
                             , size_t(0)
@@ -918,9 +918,11 @@ uint32_t chain_state::work_required(data const& values, config::network network,
 #if defined(KTH_CURRENCY_BCH)
     //TODO(fernando): could it be improved?
     bool const daa_cw144_active = is_daa_cw144_enabled(values.height, network);
-    auto const last_time_span = median_time_past(values);
-    // bool const daa_asert_active = is_mtp_activated(last_time_span, to_underlying(euler_activation_time));
     bool const daa_asert_active = is_euler_enabled(values.height, network);
+
+    // MTP activation way: The comment is left in case in the future it is necessary to do it again.
+    // auto const last_time_span = median_time_past(values);
+    // bool const daa_asert_active = is_mtp_activated(last_time_span, to_underlying(euler_activation_time));
 #else
     bool const daa_cw144_active = false;
 #endif  //KTH_CURRENCY_BCH
@@ -948,6 +950,7 @@ uint32_t chain_state::work_required(data const& values, config::network network,
 
     //EDA
     if (is_uahf_enabled(values.height, network)) {
+        auto const last_time_span = median_time_past(values);
         auto const six_time_span = median_time_past(values, bch_daa_eda_blocks);
         // precondition: last_time_span >= six_time_span
         if ((last_time_span - six_time_span) > (12 * 3600)) {
