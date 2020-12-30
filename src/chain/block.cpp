@@ -19,10 +19,10 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <kth/domain/chain/chain_state.hpp>
-#include <kth/domain/common.hpp>
 #include <kth/domain/chain/compact.hpp>
 #include <kth/domain/chain/input_point.hpp>
 #include <kth/domain/chain/script.hpp>
+#include <kth/domain/common.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
