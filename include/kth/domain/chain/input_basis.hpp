@@ -174,8 +174,10 @@ public:
     [[nodiscard]]
     bool is_final() const;
     
+#if defined(KTH_SEGWIT_ENABLED)
     [[nodiscard]]
     bool is_segregated() const;
+#endif
     
     [[nodiscard]]
     bool is_locked(size_t block_height, uint32_t median_time_past) const;
