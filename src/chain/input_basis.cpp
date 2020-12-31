@@ -215,14 +215,12 @@ bool input_basis::is_final() const {
     return sequence_ == max_input_sequence;
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool input_basis::is_segregated() const {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    return false;
-#else
     // If no block tx is has witness data the commitment is optional (bip141).
     return !witness_.empty();
-#endif
 }
+#endif
 
 bool input_basis::is_locked(size_t block_height, uint32_t median_time_past) const {
     if ((sequence_ & relative_locktime_disabled) != 0) {
