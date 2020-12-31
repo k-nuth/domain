@@ -21,11 +21,11 @@
 #include <kth/domain/chain/witness.hpp>
 #endif
 
-#include <kth/domain/constants.hpp>
 #include <kth/domain/common.hpp>
+#include <kth/domain/constants.hpp>
 #include <kth/domain/machine/interpreter.hpp>
-#include <kth/domain/machine/program.hpp>
 #include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/program.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
 #include <kth/infrastructure/error.hpp>
