@@ -20,8 +20,8 @@
 #include <kth/domain/chain/output.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/constants.hpp>
-#include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
 #include <kth/infrastructure/error.hpp>
