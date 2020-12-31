@@ -685,4 +685,4 @@ size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
            std::accumulate(txs.begin(), txs.end(), size_t(0), sum);
 }
 
-} // namespace kth
+} // namespace kth::domain::chain
