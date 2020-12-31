@@ -172,4 +172,4 @@ uint32_t compact::from_big(uint256_t const& big) {
     return (static_cast<uint32_t>(exponent) << mantissa_bits) | mantissa;
 }
 
-} // namespace kth
+} // namespace kth::domain::chain
