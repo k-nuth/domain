@@ -163,11 +163,11 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
         //---------------------------------------------------------------------
     }
 
-    auto const addresses = *addresses_;
+    auto addresses = *addresses_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 
     return addresses;
 }
 
-} // namespace kth
+} // namespace kth::domain::chain
