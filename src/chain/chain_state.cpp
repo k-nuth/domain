@@ -603,8 +603,6 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 // median_time_past
 //-----------------------------------------------------------------------------
 
-#if defined(KTH_CURRENCY_BCH)
-
 inline 
 bool chain_state::is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
