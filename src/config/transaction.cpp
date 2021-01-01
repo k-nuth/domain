@@ -55,4 +55,4 @@ std::ostream& operator<<(std::ostream& output, transaction const& argument) {
     return output;
 }
 
-} // namespace kth
+} // namespace kth::domain::config
