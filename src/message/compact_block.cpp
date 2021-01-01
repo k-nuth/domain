@@ -213,12 +213,6 @@ void compact_block::set_transactions(prefilled_transaction::list&& value) {
     transactions_ = std::move(value);
 }
 
-
-// void to_data_header_nonce(compact_block const& block, writer& sink) {
-//     block.header().to_data(sink);
-//     sink.write_8_bytes_little_endian(block.nonce());
-// }
-
 // void to_data_header_nonce(compact_block const& block, std::ostream& stream) {
 void to_data_header_nonce(compact_block const& block, data_sink& stream) {
     ostream_writer sink_w(stream);
