@@ -122,4 +122,4 @@ std::istream& operator>>(std::istream& input, output& argument) {
     return input;
 }
 
-} // namespace kth
+} // namespace kth::domain::config
