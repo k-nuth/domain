@@ -27,19 +27,6 @@ address::address(infrastructure::message::network_address::list&& addresses)
     : addresses_(std::move(addresses)) 
 {}
 
-// address::address(address const& x)
-//     : address(x.addresses_) {
-// }
-
-// address::address(address&& x) noexcept
-//     : address(std::move(x.addresses_)) {
-// }
-
-// address& address::operator=(address&& x) noexcept {
-//     addresses_ = std::move(x.addresses_);
-//     return *this;
-// }
-
 bool address::operator==(address const& x) const {
     return (addresses_ == x.addresses_);
 }
