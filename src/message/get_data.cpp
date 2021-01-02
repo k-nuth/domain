@@ -66,4 +66,4 @@ void get_data::to_witness() {
 }
 #endif
 
-} // namespace kth
+} // namespace kth::domain::message
