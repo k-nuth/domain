@@ -107,4 +107,4 @@ void filter_load::set_flags(uint8_t value) {
     flags_ = value;
 }
 
-} // namespace kth
+} // namespace kth::domain::message
