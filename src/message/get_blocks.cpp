@@ -103,4 +103,4 @@ void get_blocks::set_stop_hash(hash_digest const& value) {
     stop_hash_ = value;
 }
 
-} // namespace kth
+} // namespace kth::domain::message
