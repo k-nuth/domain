@@ -21,14 +21,6 @@ memory_pool::memory_pool(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-// memory_pool::memory_pool(const memory_pool& x)
-//     : memory_pool(x.insufficient_version_) {
-// }
-
-// memory_pool::memory_pool(memory_pool&& x) noexcept
-//     : memory_pool(x.insufficient_version_) 
-// {}
-
 bool memory_pool::is_valid() const {
     return !insufficient_version_;
 }
