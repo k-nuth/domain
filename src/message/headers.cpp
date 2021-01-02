@@ -132,4 +132,4 @@ void headers::set_elements(header::list&& values) {
     elements_ = std::move(values);
 }
 
-} // namespace kth
+} // namespace kth::domain::message
