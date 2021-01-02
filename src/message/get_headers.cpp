@@ -31,4 +31,4 @@ bool get_headers::operator!=(get_headers const& x) const {
     return !(*this == x);
 }
 
-} // namespace kth
+} // namespace kth::domain::message
