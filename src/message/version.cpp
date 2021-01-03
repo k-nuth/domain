@@ -26,27 +26,6 @@ version::version(uint32_t value, uint64_t services, uint64_t timestamp, network_
     : value_(value), services_(services), timestamp_(timestamp), address_receiver_(address_receiver), address_sender_(address_sender), nonce_(nonce), user_agent_(std::move(user_agent)), start_height_(start_height), relay_(relay) {
 }
 
-// version::version(version const& x)
-//     : version(x.value_, x.services_, x.timestamp_, x.address_receiver_, x.address_sender_, x.nonce_, x.user_agent_, x.start_height_, x.relay_) {
-// }
-
-// version::version(version&& x) noexcept
-//     : version(x.value_, x.services_, x.timestamp_, std::move(x.address_receiver_), std::move(x.address_sender_), x.nonce_, std::move(x.user_agent_), x.start_height_, x.relay_) 
-// {}
-
-// version& version::operator=(version&& x) noexcept {
-//     value_ = x.value_;
-//     services_ = x.services_;
-//     timestamp_ = x.timestamp_;
-//     address_receiver_ = std::move(x.address_receiver_);
-//     address_sender_ = std::move(x.address_sender_);
-//     nonce_ = x.nonce_;
-//     user_agent_ = x.user_agent_;
-//     start_height_ = x.start_height_;
-//     relay_ = x.relay_;
-//     return *this;
-// }
-
 bool version::operator==(version const& x) const {
     return (value_ == x.value_) && (services_ == x.services_) &&
            (timestamp_ == x.timestamp_) &&
