@@ -39,21 +39,6 @@ merkle_block::merkle_block(chain::block const& block)
                    {}) {
 }
 
-// merkle_block::merkle_block(merkle_block const& x)
-//     : merkle_block(x.header_, x.total_transactions_, x.hashes_, x.flags_) {
-// }
-
-// merkle_block::merkle_block(merkle_block&& x) noexcept
-//     : merkle_block(x.header_, x.total_transactions_, std::move(x.hashes_), std::move(x.flags_)) 
-// {}
-
-// merkle_block& merkle_block::operator=(merkle_block&& x) noexcept {
-//     header_ = x.header_;
-//     hashes_ = std::move(x.hashes_);
-//     flags_ = std::move(x.flags_);
-//     return *this;
-// }
-
 bool merkle_block::operator==(merkle_block const& x) const {
     auto result = (header_ == x.header_) &&
                   (hashes_.size() == x.hashes_.size()) &&
