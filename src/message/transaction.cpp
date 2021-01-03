@@ -87,4 +87,4 @@ size_t transaction::serialized_size(uint32_t /*unused*/) const {
     return chain::transaction::serialized_size(true, true);
 }
 
-} // namespace kth
+} // namespace kth::domain::message
