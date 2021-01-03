@@ -33,19 +33,6 @@ not_found::not_found(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 
-// not_found::not_found(not_found const& x)
-//     : inventory(x) {
-// }
-
-// not_found::not_found(not_found&& x) noexcept
-//     : inventory(x) 
-// {}
-
-// not_found& not_found::operator=(not_found&& x) noexcept {
-//     set_inventories(x.inventories());
-//     return *this;
-// }
-
 bool not_found::operator==(not_found const& x) const {
     return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
