@@ -213,4 +213,4 @@ uint8_t reject::reason_to_byte(reason_code value) {
     }
 }
 
-} // namespace kth
+} // namespace kth::domain::message
