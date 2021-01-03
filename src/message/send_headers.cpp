@@ -25,14 +25,6 @@ send_headers::send_headers(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-// send_headers::send_headers(send_headers const& x)
-//     : send_headers(x.insufficient_version_) {
-// }
-
-// send_headers::send_headers(send_headers&& x) noexcept
-//     : send_headers(x.insufficient_version_) 
-// {}
-
 bool send_headers::is_valid() const {
     return !insufficient_version_;
 }
