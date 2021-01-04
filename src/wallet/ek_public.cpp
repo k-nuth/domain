@@ -24,19 +24,9 @@ ek_public::ek_public(std::string const& encoded)
     : ek_public(from_string(encoded)) {
 }
 
-// ek_public::ek_public(ek_public const& x)
-//     : valid_(x.valid_), public_(x.public_) {
-// }
-
 ek_public::ek_public(encrypted_public const& value)
     : valid_(true), public_(value) {
 }
-
-// ek_public& ek_public::operator=(ek_public const& x) {
-//     valid_ = x.valid_;
-//     public_ = x.public_;
-//     return *this;
-// }
 
 // Factories.
 // ----------------------------------------------------------------------------
