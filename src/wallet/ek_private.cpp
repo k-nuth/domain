@@ -24,19 +24,9 @@ ek_private::ek_private(std::string const& encoded)
     : ek_private(from_string(encoded)) {
 }
 
-// ek_private::ek_private(ek_private const& x)
-//     : valid_(x.valid_), private_(x.private_) {
-// }
-
 ek_private::ek_private(encrypted_private const& value)
     : valid_(true), private_(value) {
 }
-
-// ek_private& ek_private::operator=(ek_private const& x) {
-//     valid_ = x.valid_;
-//     private_ = x.private_;
-//     return *this;
-// }
 
 // Factories.
 // ----------------------------------------------------------------------------
