@@ -55,14 +55,6 @@ ec_public::ec_public(ec_compressed const& point, bool compress)
     : valid_(true), compress_(compress), point_(point) {
 }
 
-// ec_public& ec_public::operator=(ec_public const& x) {
-//     valid_ = x.valid_;
-//     compress_ = x.compress_;
-//     version_ = x.version_;
-//     point_ = x.point_;
-//     return *this;
-// }
-
 // Validators.
 // ----------------------------------------------------------------------------
 
