@@ -316,4 +316,4 @@ bool input_basis::extract_reserved_hash(hash_digest& out) const {
 }
 #endif // KTH_CURRENCY_BCH
 
-} // namespace kth
+} // namespace kth::domain::chain
