@@ -627,4 +627,4 @@ operation::list operations(script_basis const& script) {
     return res;
 }
 
-} // namespace kth
+} // namespace kth::domain::chain
