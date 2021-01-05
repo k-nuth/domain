@@ -54,4 +54,4 @@ bool stealth_receiver::derive_private(ec_secret& out_private,
                            spend_private_);
 }
 
-} // namespace kth
+} // namespace kth::domain::wallet
