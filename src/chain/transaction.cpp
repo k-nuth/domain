@@ -515,6 +515,8 @@ size_t transaction::signature_operations() const {
 //            total_size_contribution * serialized_size(true, true);
 // }
 
+#if defined(KTH_SEGWIT_ENABLED)
+
 bool transaction::is_segregated() const {
 #if ! defined(KTH_SEGWIT_ENABLED)
     return false;
