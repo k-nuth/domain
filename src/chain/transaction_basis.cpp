@@ -534,13 +534,9 @@ bool transaction_basis::is_standard() const {
         }
     }
 
-    for (auto const& out : outputs()) {
-        if (out.script().pattern() == script_pattern::non_standard) {
-            return false;
-        }
-    }
-
-    return true;
+    return std::all_of(begin(outputs()), end(outputs()), [](auto const& out){ 
+        return out.script().pattern() != script_pattern::non_standard; 
+    });
 }
 
 hash_digest hash_non_witness(transaction_basis const& tx) {
