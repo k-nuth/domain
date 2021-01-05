@@ -624,6 +624,7 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
                             );
 }
 
+#if defined(KTH_CURRENCY_BCH)
 
 //2017-August-01 hard fork
 inline 
