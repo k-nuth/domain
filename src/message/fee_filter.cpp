@@ -82,4 +82,4 @@ void fee_filter::set_minimum_fee(uint64_t value) {
     insufficient_version_ = false;
 }
 
-} // namespace kth
+} // namespace kth::domain::message
