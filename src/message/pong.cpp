@@ -69,4 +69,4 @@ void pong::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-} // namespace kth
+} // namespace kth::domain::message
