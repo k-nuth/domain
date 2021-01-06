@@ -147,4 +147,4 @@ void merkle_block::set_flags(data_chunk&& value) {
     flags_ = std::move(value);
 }
 
-} // namespace kth
+} // namespace kth::domain::message
