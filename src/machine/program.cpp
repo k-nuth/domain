@@ -62,8 +62,6 @@ program::program(script const& script, chain::transaction const& transaction, ui
       input_index_(input_index),
       forks_(forks),
       value_(max_uint64),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()) {
     reserve_stacks();
 }
