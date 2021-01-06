@@ -82,4 +82,4 @@ void address::set_addresses(infrastructure::message::network_address::list&& val
     addresses_ = std::move(value);
 }
 
-} // namespace kth
+} // namespace kth::domain::message
