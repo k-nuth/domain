@@ -108,4 +108,4 @@ void get_block_transactions::set_indexes(std::vector<uint64_t>&& values) {
     indexes_ = values;
 }
 
-} // namespace kth
+} // namespace kth::domain::message
