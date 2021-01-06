@@ -41,4 +41,4 @@ bool not_found::operator!=(not_found const& x) const {
     return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
-} // namespace kth
+} // namespace kth::domain::message
