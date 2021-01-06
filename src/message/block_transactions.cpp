@@ -111,4 +111,4 @@ void block_transactions::set_transactions(chain::transaction::list&& x) {
 }
 
 
-} // namespace kth
+} // namespace kth::domain::message
