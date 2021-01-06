@@ -53,4 +53,4 @@ size_t send_headers::serialized_size(uint32_t version) const {
     return send_headers::satoshi_fixed_size(version);
 }
 
-} // namespace kth
+} // namespace kth::domain::message
