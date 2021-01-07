@@ -677,10 +677,8 @@ bool is_overspent(transaction_basis const& tx) {
     return ! tx.is_coinbase() && total_output_value(tx) > total_input_value(tx);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool is_segregated(transaction_basis const& tx) {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    return false;
-#endif
     auto const segregated = [](input const& input) {
         return input.is_segregated();
     };
