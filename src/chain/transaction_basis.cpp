@@ -686,5 +686,6 @@ bool is_segregated(transaction_basis const& tx) {
     // If no block tx is has witness data the commitment is optional (bip141).
     return std::any_of(tx.inputs().begin(), tx.inputs().end(), segregated);
 }
+#endif
 
-} // namespace kth
+} // namespace kth::domain::chain
