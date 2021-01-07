@@ -587,7 +587,11 @@ code transaction::accept(bool transaction_pool) const {
 
 // These checks assume that prevout caching is completed on all tx.inputs.
 code transaction::accept(chain_state const& state, bool transaction_pool) const {
+#if defined(KTH_SEGWIT_ENABLED)
     return transaction_basis::accept(state, is_segregated(), is_overspent(), validation.duplicate, transaction_pool);
+#else
+    return transaction_basis::accept(state, false, is_overspent(), validation.duplicate, transaction_pool);
+#endif
 }
 
 code transaction::connect() const {
