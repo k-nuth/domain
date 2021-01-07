@@ -656,10 +656,8 @@ bool chain_state::is_pythagoras_enabled(size_t height, config::network network) 
     return is_rule_enabled(height, network
         , mainnet_pythagoras_activation_height
         , testnet_pythagoras_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_pythagoras_activation_height
         , scalenet_pythagoras_activation_height
-#endif
         );
 }
 
