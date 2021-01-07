@@ -86,8 +86,6 @@ program::program(script const& script, const program& x)
       input_index_(x.input_index_),
       forks_(x.forks_),
       value_(x.value_),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()),
       primary_(x.primary_) {
     reserve_stacks();
