@@ -74,8 +74,6 @@ program::program(script const& script, chain::transaction const& transaction, ui
       forks_(forks),
       value_(value),
       version_(version),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()),
       primary_(std::move(stack)) {
     reserve_stacks();
