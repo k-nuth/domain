@@ -545,6 +545,8 @@ bool transaction::is_segregated() const {
     return value;
 }
 
+#endif
+
 // Coinbase transactions return success, to simplify iteration.
 code transaction::connect_input(chain_state const& state, size_t input_index) const {
     if (input_index >= inputs().size()) {
