@@ -501,4 +501,4 @@ code block::connect() const {
     return state ? block_basis::connect(*state) : error::operation_failed;
 }
 
-} // namespace kth
+} // namespace kth::domain::chain
