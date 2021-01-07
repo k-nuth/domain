@@ -632,10 +632,8 @@ bool chain_state::is_uahf_enabled(size_t height, config::network network) {
     auto res = is_rule_enabled(height, network
         , mainnet_uahf_activation_height
         , testnet_uahf_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_uahf_activation_height
         , scalenet_uahf_activation_height
-#endif
         );
 
     return res;
