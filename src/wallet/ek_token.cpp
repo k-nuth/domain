@@ -96,4 +96,4 @@ std::ostream& operator<<(std::ostream& out, ek_token const& of) {
     return out;
 }
 
-} // namespace kth
+} // namespace kth::domain::wallet
