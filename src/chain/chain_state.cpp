@@ -667,10 +667,8 @@ bool chain_state::is_euclid_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_euclid_activation_height
         , testnet_euclid_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_euclid_activation_height
         , scalenet_euclid_activation_height
-#endif
         );
 }
 
