@@ -689,10 +689,8 @@ bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_mersenne_activation_height
         , testnet_mersenne_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_mersenne_activation_height
         , scalenet_mersenne_activation_height
-#endif
         );
 }
 
