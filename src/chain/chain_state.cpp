@@ -1035,7 +1035,7 @@ uint32_t chain_state::easy_work_required(data const& values
 #endif
 
     auto height = values.height;
-    auto& bits = values.bits.ordered;
+    auto const& bits = values.bits.ordered;
 
     // Reverse iterate the ordered-by-height list of header bits.
     for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit) {
