@@ -700,10 +700,8 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_fermat_activation_height
         , testnet_fermat_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_fermat_activation_height
         , scalenet_fermat_activation_height
-#endif
         );
 }
 
