@@ -1158,8 +1158,9 @@ uint32_t chain_state::signal_version(uint32_t forks) {
 
 // static
 chain_state::data chain_state::to_block(chain_state const& pool, block const& block) {
-    // Alias configured forks.
-    auto const forks = pool.forks_;
+    // // Alias configured forks.
+    // auto const forks = pool.forks_;
+
     // Copy data from presumed same-height pool state.
     auto data = pool.data_;
 
