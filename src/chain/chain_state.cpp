@@ -1294,4 +1294,4 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     );
 }
 
-} // namespace kth
+} // namespace kth::domain::chain
