@@ -735,10 +735,8 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 //     return is_rule_enabled(height, network
 //         , mainnet_unnamed_activation_height
 //         , testnet_unnamed_activation_height
-// #if defined(KTH_CURRENCY_BCH)
 //         , testnet4_unnamed_activation_height
 //         , scalenet_unnamed_activation_height
-// #endif
 //      );
 // }
 
