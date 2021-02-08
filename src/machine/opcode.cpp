@@ -678,4 +678,4 @@ bool opcode_from_hexadecimal(opcode& out_code, std::string const& value) {
     return true;
 }
 
-} // namespace kth
+} // namespace kth::domain::machine

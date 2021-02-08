@@ -184,4 +184,4 @@ std::pair<error::error_code_t, chain::transaction> input_set(data_chunk const& s
     return input_set(script, raw_tx, index);
 }
 
-}  //namespace kth
+}  //namespace kth::domain::wallet

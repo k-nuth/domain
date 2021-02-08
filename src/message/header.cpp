@@ -88,4 +88,4 @@ size_t header::serialized_size(uint32_t version) const {
     return satoshi_fixed_size(version);
 }
 
-} // namespace kth
+} // namespace kth::domain::message

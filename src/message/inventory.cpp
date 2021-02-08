@@ -144,4 +144,4 @@ void inventory::set_inventories(inventory_vector::list&& value) {
     inventories_ = std::move(value);
 }
 
-} // namespace kth
+} // namespace kth::domain::message

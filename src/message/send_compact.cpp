@@ -27,20 +27,6 @@ send_compact::send_compact(bool high_bandwidth_mode, uint64_t version)
       version_(version) {
 }
 
-// send_compact::send_compact(send_compact const& x)
-//     : send_compact(x.high_bandwidth_mode_, x.version_) {
-// }
-
-// send_compact::send_compact(send_compact&& x) noexcept
-//     : send_compact(x.high_bandwidth_mode_, x.version_) 
-// {}
-
-// send_compact& send_compact::operator=(send_compact&& x) noexcept {
-//     high_bandwidth_mode_ = x.high_bandwidth_mode_;
-//     version_ = x.version_;
-//     return *this;
-// }
-
 bool send_compact::operator==(send_compact const& x) const {
     return (high_bandwidth_mode_ == x.high_bandwidth_mode_) &&
            (version_ == x.version_);
@@ -95,4 +81,4 @@ void send_compact::set_version(uint64_t version) {
     version_ = version;
 }
 
-} // namespace kth
+} // namespace kth::domain::message

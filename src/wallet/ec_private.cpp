@@ -220,4 +220,4 @@ std::ostream& operator<<(std::ostream& out, ec_private const& of) {
     return out;
 }
 
-} // namespace kth
+} // namespace kth::domain::wallet

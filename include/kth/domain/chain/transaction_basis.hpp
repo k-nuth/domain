@@ -120,8 +120,10 @@ uint64_t total_input_value(transaction_basis const& tx);
 uint64_t total_output_value(transaction_basis const& tx);
 uint64_t fees(transaction_basis const& tx);
 bool is_overspent(transaction_basis const& tx);
-bool is_segregated(transaction_basis const& tx);
 
+#if defined(KTH_SEGWIT_ENABLED)
+bool is_segregated(transaction_basis const& tx);
+#endif
 
 class KD_API transaction_basis {
 public:

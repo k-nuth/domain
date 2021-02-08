@@ -19,4 +19,4 @@ uint64_t points_value::value() const {
     return std::accumulate(points.begin(), points.end(), uint64_t(0), sum);
 }
 
-} // namespace kth
+} // namespace kth::domain::chain

@@ -52,11 +52,6 @@ program::program()
 program::program(script const& script)
     : script_(script),
       transaction_(default_tx_),
-      input_index_(0),
-      forks_(0),
-      value_(0),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()) {
     reserve_stacks();
 }
@@ -67,8 +62,6 @@ program::program(script const& script, chain::transaction const& transaction, ui
       input_index_(input_index),
       forks_(forks),
       value_(max_uint64),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()) {
     reserve_stacks();
 }
@@ -81,8 +74,6 @@ program::program(script const& script, chain::transaction const& transaction, ui
       forks_(forks),
       value_(value),
       version_(version),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()),
       primary_(std::move(stack)) {
     reserve_stacks();
@@ -95,8 +86,6 @@ program::program(script const& script, const program& x)
       input_index_(x.input_index_),
       forks_(x.forks_),
       value_(x.value_),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()),
       primary_(x.primary_) {
     reserve_stacks();
@@ -109,8 +98,6 @@ program::program(script const& script, program&& x, bool /*unused*/)
       input_index_(x.input_index_),
       forks_(x.forks_),
       value_(x.value_),
-      negative_count_(0),
-      operation_count_(0),
       jump_(script_.begin()),
       primary_(std::move(x.primary_)) {
     reserve_stacks();

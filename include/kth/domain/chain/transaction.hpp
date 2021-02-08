@@ -217,7 +217,10 @@ public:
     size_t signature_operations() const;
 
     bool is_overspent() const;
+
+#if defined(KTH_SEGWIT_ENABLED)
     bool is_segregated() const;
+#endif
 
     using transaction_basis::accept;
 

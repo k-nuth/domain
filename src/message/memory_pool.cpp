@@ -21,14 +21,6 @@ memory_pool::memory_pool(bool insufficient_version)
     : insufficient_version_(insufficient_version) {
 }
 
-// memory_pool::memory_pool(const memory_pool& x)
-//     : memory_pool(x.insufficient_version_) {
-// }
-
-// memory_pool::memory_pool(memory_pool&& x) noexcept
-//     : memory_pool(x.insufficient_version_) 
-// {}
-
 bool memory_pool::is_valid() const {
     return !insufficient_version_;
 }
@@ -62,4 +54,4 @@ size_t memory_pool::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-} // namespace kth
+} // namespace kth::domain::message

@@ -80,4 +80,4 @@ void filter_add::set_data(data_chunk&& value) {
     data_ = std::move(value);
 }
 
-} // namespace kth
+} // namespace kth::domain::message

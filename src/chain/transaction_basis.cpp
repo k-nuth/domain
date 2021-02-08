@@ -20,8 +20,8 @@
 #include <kth/domain/chain/output.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/constants.hpp>
-#include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/opcode.hpp>
+#include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
 #include <kth/infrastructure/error.hpp>
@@ -534,13 +534,9 @@ bool transaction_basis::is_standard() const {
         }
     }
 
-    for (auto const& out : outputs()) {
-        if (out.script().pattern() == script_pattern::non_standard) {
-            return false;
-        }
-    }
-
-    return true;
+    return std::all_of(begin(outputs()), end(outputs()), [](auto const& out){ 
+        return out.script().pattern() != script_pattern::non_standard; 
+    });
 }
 
 hash_digest hash_non_witness(transaction_basis const& tx) {
@@ -681,10 +677,8 @@ bool is_overspent(transaction_basis const& tx) {
     return ! tx.is_coinbase() && total_output_value(tx) > total_input_value(tx);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 bool is_segregated(transaction_basis const& tx) {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    return false;
-#endif
     auto const segregated = [](input const& input) {
         return input.is_segregated();
     };
@@ -692,5 +686,6 @@ bool is_segregated(transaction_basis const& tx) {
     // If no block tx is has witness data the commitment is optional (bip141).
     return std::any_of(tx.inputs().begin(), tx.inputs().end(), segregated);
 }
+#endif
 
-} // namespace kth
+} // namespace kth::domain::chain

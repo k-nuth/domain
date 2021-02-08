@@ -35,24 +35,6 @@ get_block_transactions::get_block_transactions(hash_digest const& block_hash, st
     , indexes_(std::move(indexes)) 
 {}
 
-// get_block_transactions::get_block_transactions(get_block_transactions const& x)
-//     // : get_block_transactions(x.block_hash_, x.indexes_) 
-//     : block_hash_(x.block_hash_)
-//     , indexes_(x.indexes_) 
-// {}
-
-// get_block_transactions::get_block_transactions(get_block_transactions&& x) noexcept
-//     // : get_block_transactions(x.block_hash_, std::move(x.indexes_)) 
-//     : block_hash_(x.block_hash_)
-//     , indexes_(std::move(x.indexes_)) 
-// {}
-
-// get_block_transactions& get_block_transactions::operator=(get_block_transactions&& x) noexcept {
-//     block_hash_ = x.block_hash_;
-//     indexes_ = x.indexes_;
-//     return *this;
-// }
-
 bool get_block_transactions::operator==(get_block_transactions const& x) const {
     return (block_hash_ == x.block_hash_) && (indexes_ == x.indexes_);
 }
@@ -126,4 +108,4 @@ void get_block_transactions::set_indexes(std::vector<uint64_t>&& values) {
     indexes_ = values;
 }
 
-} // namespace kth
+} // namespace kth::domain::message

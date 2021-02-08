@@ -32,26 +32,6 @@ prefilled_transaction::prefilled_transaction(uint64_t index, chain::transaction&
     : index_(index), transaction_(std::move(tx)) {
 }
 
-// prefilled_transaction::prefilled_transaction(prefilled_transaction const& x)
-//     : prefilled_transaction(x.index_, x.transaction_) {
-// }
-
-// prefilled_transaction::prefilled_transaction(prefilled_transaction&& x) noexcept
-//     : prefilled_transaction(x.index_, std::move(x.transaction_)) 
-// {}
-
-// prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction&& x) noexcept {
-//     index_ = x.index_;
-//     transaction_ = std::move(x.transaction_);
-//     return *this;
-// }
-
-// prefilled_transaction& prefilled_transaction::operator=(prefilled_transaction const& x) {
-//     index_ = x.index_;
-//     transaction_ = x.transaction_;
-//     return *this;
-// }
-
 bool prefilled_transaction::operator==(prefilled_transaction const& x) const {
     return (index_ == x.index_) && (transaction_ == x.transaction_);
 }
@@ -118,4 +98,4 @@ void prefilled_transaction::set_transaction(chain::transaction&& tx) {
     transaction_ = std::move(tx);
 }
 
-} // namespace kth
+} // namespace kth::domain::message

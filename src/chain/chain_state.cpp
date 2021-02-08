@@ -603,8 +603,6 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 // median_time_past
 //-----------------------------------------------------------------------------
 
-#if defined(KTH_CURRENCY_BCH)
-
 inline 
 bool chain_state::is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
@@ -626,6 +624,7 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
                             );
 }
 
+#if defined(KTH_CURRENCY_BCH)
 
 //2017-August-01 hard fork
 inline 
@@ -633,10 +632,8 @@ bool chain_state::is_uahf_enabled(size_t height, config::network network) {
     auto res = is_rule_enabled(height, network
         , mainnet_uahf_activation_height
         , testnet_uahf_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_uahf_activation_height
         , scalenet_uahf_activation_height
-#endif
         );
 
     return res;
@@ -648,10 +645,8 @@ bool chain_state::is_daa_cw144_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_daa_cw144_activation_height
         , testnet_daa_cw144_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_daa_cw144_activation_height
         , scalenet_daa_cw144_activation_height
-#endif
         );
 }
 
@@ -661,10 +656,8 @@ bool chain_state::is_pythagoras_enabled(size_t height, config::network network) 
     return is_rule_enabled(height, network
         , mainnet_pythagoras_activation_height
         , testnet_pythagoras_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_pythagoras_activation_height
         , scalenet_pythagoras_activation_height
-#endif
         );
 }
 
@@ -674,10 +667,8 @@ bool chain_state::is_euclid_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_euclid_activation_height
         , testnet_euclid_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_euclid_activation_height
         , scalenet_euclid_activation_height
-#endif
         );
 }
 
@@ -687,10 +678,8 @@ bool chain_state::is_pisano_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_pisano_activation_height
         , testnet_pisano_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_pisano_activation_height
         , scalenet_pisano_activation_height
-#endif
         );
 }
 
@@ -700,10 +689,8 @@ bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_mersenne_activation_height
         , testnet_mersenne_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_mersenne_activation_height
         , scalenet_mersenne_activation_height
-#endif
         );
 }
 
@@ -713,10 +700,8 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_fermat_activation_height
         , testnet_fermat_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_fermat_activation_height
         , scalenet_fermat_activation_height
-#endif
         );
 }
 
@@ -726,10 +711,8 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_euler_activation_height
         , testnet_euler_activation_height
-#if defined(KTH_CURRENCY_BCH)
         , testnet4_euler_activation_height
         , scalenet_euler_activation_height
-#endif
      );
 }
 
@@ -740,10 +723,8 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 //     return is_rule_enabled(height, network
 //         , mainnet_gauss_activation_height
 //         , testnet_gauss_activation_height
-// #if defined(KTH_CURRENCY_BCH)
 //         , testnet4_gauss_activation_height
 //         , scalenet_gauss_activation_height
-// #endif
 //      );
 // }
 
@@ -754,10 +735,8 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 //     return is_rule_enabled(height, network
 //         , mainnet_unnamed_activation_height
 //         , testnet_unnamed_activation_height
-// #if defined(KTH_CURRENCY_BCH)
 //         , testnet4_unnamed_activation_height
 //         , scalenet_unnamed_activation_height
-// #endif
 //      );
 // }
 
@@ -1056,7 +1035,7 @@ uint32_t chain_state::easy_work_required(data const& values
 #endif
 
     auto height = values.height;
-    auto& bits = values.bits.ordered;
+    auto const& bits = values.bits.ordered;
 
     // Reverse iterate the ordered-by-height list of header bits.
     for (auto bit = bits.rbegin(); bit != bits.rend(); ++bit) {
@@ -1179,8 +1158,9 @@ uint32_t chain_state::signal_version(uint32_t forks) {
 
 // static
 chain_state::data chain_state::to_block(chain_state const& pool, block const& block) {
-    // Alias configured forks.
-    auto const forks = pool.forks_;
+    // // Alias configured forks.
+    // auto const forks = pool.forks_;
+
     // Copy data from presumed same-height pool state.
     auto data = pool.data_;
 
@@ -1314,4 +1294,4 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     );
 }
 
-} // namespace kth
+} // namespace kth::domain::chain

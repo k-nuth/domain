@@ -100,4 +100,4 @@ void alert::set_signature(data_chunk&& value) {
     signature_ = std::move(value);
 }
 
-} // namespace kth
+} // namespace kth::domain::message

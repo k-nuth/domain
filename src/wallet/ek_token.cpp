@@ -24,20 +24,9 @@ ek_token::ek_token(std::string const& encoded)
     : ek_token(from_string(encoded)) {
 }
 
-// ek_token::ek_token(ek_token const& x)
-//     : valid_(x.valid_), token_(x.token_) {
-// }
-
 ek_token::ek_token(encrypted_token const& value)
     : valid_(true), token_(value) {
 }
-
-// ek_token& ek_token::operator=(ek_token const& x) {
-//     valid_ = x.valid_;
-//     token_ = x.token_;
-//     return *this;
-// }
-
 
 // Factories.
 // ----------------------------------------------------------------------------
@@ -107,4 +96,4 @@ std::ostream& operator<<(std::ostream& out, ek_token const& of) {
     return out;
 }
 
-} // namespace kth
+} // namespace kth::domain::wallet

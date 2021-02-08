@@ -12,8 +12,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
-#include <kth/domain/common.hpp>
 #include <kth/domain/chain/script.hpp>
+#include <kth/domain/common.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/string.hpp>
 
@@ -75,4 +75,4 @@ std::ostream& operator<<(std::ostream& output, script const& argument) {
     return output;
 }
 
-} // namespace kth
+} // namespace kth::domain::config

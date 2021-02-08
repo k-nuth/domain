@@ -25,15 +25,6 @@ ping::ping(uint64_t nonce)
     : nonce_(nonce), valid_(true) {
 }
 
-// ping::ping(ping const& x)
-//     : nonce_(x.nonce_), nonceless_(x.nonceless_), valid_(x.valid_) {
-// }
-
-// ping& ping::operator=(ping&& x) noexcept {
-//     nonce_ = x.nonce_;
-//     return *this;
-// }
-
 bool ping::operator==(ping const& x) const {
     // Nonce should be zero if not used.
     return (nonce_ == x.nonce_);
@@ -82,4 +73,4 @@ void ping::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-} // namespace kth
+} // namespace kth::domain::message

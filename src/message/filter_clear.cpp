@@ -54,4 +54,4 @@ size_t filter_clear::satoshi_fixed_size(uint32_t /*version*/) {
     return 0;
 }
 
-} // namespace kth
+} // namespace kth::domain::message

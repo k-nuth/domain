@@ -340,4 +340,4 @@ void alert_payload::set_reserved(std::string&& value) {
     reserved_ = std::move(value);
 }
 
-} // namespace kth
+} // namespace kth::domain::message

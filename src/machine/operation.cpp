@@ -189,4 +189,4 @@ std::string operation::to_string(uint32_t active_forks) const {
     return "[" + opcode_to_prefix(code_, data_) + encode_base16(data_) + "]";
 }
 
-} // namespace kth
+} // namespace kth::domain::machine

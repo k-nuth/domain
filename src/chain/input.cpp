@@ -178,7 +178,7 @@ payment_address::list input::addresses() const {
         //---------------------------------------------------------------------
     }
 
-    auto const addresses = *addresses_;
+    auto addresses = *addresses_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
 

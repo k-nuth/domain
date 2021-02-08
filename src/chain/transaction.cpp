@@ -20,9 +20,9 @@
 #include <kth/domain/chain/output.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/constants.hpp>
+#include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/program.hpp>
-#include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_support.hpp>
 #include <kth/infrastructure/error.hpp>
@@ -515,6 +515,8 @@ size_t transaction::signature_operations() const {
 //            total_size_contribution * serialized_size(true, true);
 // }
 
+#if defined(KTH_SEGWIT_ENABLED)
+
 bool transaction::is_segregated() const {
 #if ! defined(KTH_SEGWIT_ENABLED)
     return false;
@@ -542,6 +544,8 @@ bool transaction::is_segregated() const {
 
     return value;
 }
+
+#endif
 
 // Coinbase transactions return success, to simplify iteration.
 code transaction::connect_input(chain_state const& state, size_t input_index) const {
@@ -583,7 +587,11 @@ code transaction::accept(bool transaction_pool) const {
 
 // These checks assume that prevout caching is completed on all tx.inputs.
 code transaction::accept(chain_state const& state, bool transaction_pool) const {
+#if defined(KTH_SEGWIT_ENABLED)
     return transaction_basis::accept(state, is_segregated(), is_overspent(), validation.duplicate, transaction_pool);
+#else
+    return transaction_basis::accept(state, false, is_overspent(), validation.duplicate, transaction_pool);
+#endif
 }
 
 code transaction::connect() const {
@@ -704,4 +712,4 @@ code verify(transaction const& tx, uint32_t input, uint32_t forks) {
 #endif
 }
 
-} // namespace kth
+} // namespace kth::domain::chain

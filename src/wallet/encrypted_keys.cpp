@@ -481,4 +481,4 @@ bool decrypt(ec_compressed& out_point, uint8_t& out_version, bool& out_compresse
 
 #endif  // WITH_ICU
 
-} // namespace kth
+} // namespace kth::domain::wallet

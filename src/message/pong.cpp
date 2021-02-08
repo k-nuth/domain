@@ -24,15 +24,6 @@ pong::pong(uint64_t nonce)
     : nonce_(nonce), valid_(true) {
 }
 
-// pong::pong(pong const& x)
-//     : nonce_(x.nonce_), valid_(x.valid_) {
-// }
-
-// pong& pong::operator=(pong&& x) noexcept {
-//     nonce_ = x.nonce_;
-//     return *this;
-// }
-
 bool pong::operator==(pong const& x) const {
     return (nonce_ == x.nonce_);
 }
@@ -78,4 +69,4 @@ void pong::set_nonce(uint64_t value) {
     nonce_ = value;
 }
 
-} // namespace kth
+} // namespace kth::domain::message

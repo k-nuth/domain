@@ -19,10 +19,10 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <kth/domain/chain/chain_state.hpp>
-#include <kth/domain/common.hpp>
 #include <kth/domain/chain/compact.hpp>
 #include <kth/domain/chain/input_point.hpp>
 #include <kth/domain/chain/script.hpp>
+#include <kth/domain/common.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
@@ -307,7 +307,7 @@ void block::set_transactions(transaction::list&& value) {
 chain::block genesis_generic(std::string const& raw_data) {
     data_chunk data;
     decode_base16(data, raw_data);
-    auto const genesis = create<chain::block>(data);
+    auto genesis = create<chain::block>(data);
 
     KTH_ASSERT(genesis.is_valid());
     KTH_ASSERT(genesis.transactions().size() == 1);
@@ -501,4 +501,4 @@ code block::connect() const {
     return state ? block_basis::connect(*state) : error::operation_failed;
 }
 
-} // namespace kth
+} // namespace kth::domain::chain

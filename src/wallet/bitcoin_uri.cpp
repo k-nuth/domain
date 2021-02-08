@@ -232,4 +232,4 @@ std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from) {
     return out;
 }
 
-} // namespace kth
+} // namespace kth::domain::wallet
