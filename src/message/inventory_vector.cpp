@@ -33,12 +33,14 @@ std::string inventory_vector::to_string(type_id type) {
             return "filtered_block";
         case type_id::compact_block:
             return "compact_block";
+#if defined(KTH_SEGWIT_ENABLED)            
         case type_id::witness_transaction:
             return "witness_transaction";
         case type_id::witness_block:
             return "witness_block";
         case type_id::reserved:
             return "reserved";
+#endif
         case type_id::error:
         default:
             return "error";
@@ -106,11 +108,20 @@ size_t inventory_vector::satoshi_fixed_size(uint32_t /*version*/) {
 }
 
 bool inventory_vector::is_block_type() const {
-    return type_ == type_id::witness_block || type_ == type_id::block || type_ == type_id::compact_block || type_ == type_id::filtered_block;
+    return type_ == type_id::block || 
+#if defined(KTH_SEGWIT_ENABLED)
+           type_ == type_id::witness_block ||
+#endif
+           type_ == type_id::compact_block || 
+           type_ == type_id::filtered_block;
 }
 
 bool inventory_vector::is_transaction_type() const {
-    return type_ == type_id::witness_transaction || type_ == type_id::transaction;
+    return type_ == type_id::transaction
+#if defined(KTH_SEGWIT_ENABLED)
+           || type_ == type_id::witness_transaction
+#endif
+           ;
 }
 
 inventory_vector::type_id inventory_vector::type() const {
