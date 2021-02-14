@@ -20,13 +20,6 @@ namespace kth::domain::chain {
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// header::header(header const& x, hash_digest const& hash)
-//     : header_basis(x)
-//     , validation(x.validation)
-// {
-//     hash_ = std::make_shared<hash_digest>(hash);
-// }
-
 header::header(header const& x)
     : header_basis(x)
     , validation(x.validation)
