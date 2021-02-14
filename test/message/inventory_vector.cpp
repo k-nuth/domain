@@ -174,6 +174,7 @@ TEST_CASE("inventory vector  to witness  compact block  unchanged", "[inventory 
     REQUIRE(instance.type() == expected);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 TEST_CASE("inventory vector  to witness  witness transaction  unchanged", "[inventory vector]") {
     static auto const expected = inventory_vector::type_id::witness_transaction;
     inventory_vector instance{expected, {}};
@@ -187,6 +188,7 @@ TEST_CASE("inventory vector  to witness  witness block  unchanged", "[inventory 
     instance.to_witness();
     REQUIRE(instance.type() == expected);
 }
+#endif
 
 TEST_CASE("inventory vector  to witness  block  expected", "[inventory vector]") {
     inventory_vector instance{inventory_vector::type_id::block, {}};
