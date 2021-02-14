@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DOMAIN_MESSAGE_INVENTORY_VECTOR_HPP
-#define KTH_DOMAIN_MESSAGE_INVENTORY_VECTOR_HPP
+#ifndef KTH_DOMAIN_MESSAGE_INVENTORY_VECTOR_HPP_
+#define KTH_DOMAIN_MESSAGE_INVENTORY_VECTOR_HPP_
 
 #include <cstdint>
 #include <istream>
@@ -33,10 +33,12 @@ public:
         block = 2,
         filtered_block = 3,
         compact_block = 4,
+#if defined(KTH_SEGWIT_ENABLED)
         witness = (1U << 30),
         witness_transaction = witness | transaction,
         witness_block = witness | block,
         reserved = witness | filtered_block
+#endif
     };
 
     static
@@ -129,4 +131,4 @@ private:
 
 } // namespace kth::domain::message
 
-#endif
+#endif // KTH_DOMAIN_MESSAGE_INVENTORY_VECTOR_HPP_

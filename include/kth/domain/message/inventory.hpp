@@ -33,7 +33,6 @@ public:
     using const_ptr = std::shared_ptr<const inventory>;
     using type_id = inventory_vector::type_id;
 
-
     inventory() = default;
     inventory(inventory_vector::list const& values);
     inventory(inventory_vector::list&& values);
