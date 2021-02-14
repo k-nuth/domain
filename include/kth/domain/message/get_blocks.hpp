@@ -1,9 +1,11 @@
-// Copyright (c) 2016-2020 Knuth Project developers.
+// Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DOMAIN_MESSAGE_GET_BLOCKS_HPP
-#define KTH_DOMAIN_MESSAGE_GET_BLOCKS_HPP
+#ifndef KTH_DOMAIN_MESSAGE_GET_BLOCKS_HPP_
+#define KTH_DOMAIN_MESSAGE_GET_BLOCKS_HPP_
+
+// #ifndef KTH_PROTOCOL_DISABLE_GET_BLOCKS
 
 #include <istream>
 #include <memory>
@@ -122,4 +124,6 @@ private:
 
 } // namespace kth::domain::message
 
-#endif
+// #endif // KTH_PROTOCOL_DISABLE_GET_BLOCKS
+
+#endif // KTH_DOMAIN_MESSAGE_GET_BLOCKS_HPP_

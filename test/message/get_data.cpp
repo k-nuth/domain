@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 Knuth Project developers.
+// Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -181,6 +181,7 @@ TEST_CASE("get data  to witness  compact block  unchanged", "[get data]") {
     REQUIRE(instance.inventories()[0].type() == expected);
 }
 
+#if defined(KTH_SEGWIT_ENABLED)
 TEST_CASE("get data  to witness  witness transaction  unchanged", "[get data]") {
     static auto const expected = inventory_vector::type_id::witness_transaction;
     get_data instance{{expected, {}}};
@@ -194,6 +195,7 @@ TEST_CASE("get data  to witness  witness block  unchanged", "[get data]") {
     instance.to_witness();
     REQUIRE(instance.inventories()[0].type() == expected);
 }
+#endif
 
 TEST_CASE("get data  to witness  block  expected", "[get data]") {
     get_data instance{{inventory_vector::type_id::block, {}}};

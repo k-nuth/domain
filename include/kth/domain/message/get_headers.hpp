@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 Knuth Project developers.
+// Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,12 +27,6 @@ public:
     get_headers() = default;
     get_headers(hash_list const& start, hash_digest const& stop);
     get_headers(hash_list&& start, hash_digest const& stop);
-
-    // get_headers(get_headers const& x) = default;
-    // get_headers(get_headers&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // get_headers& operator=(get_headers&& x) = default;
-    // get_headers& operator=(get_headers const&) = default;
 
     bool operator==(get_headers const& x) const;
     bool operator!=(get_headers const& x) const;

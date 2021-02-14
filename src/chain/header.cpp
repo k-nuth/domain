@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 Knuth Project developers.
+// Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -19,13 +19,6 @@ namespace kth::domain::chain {
 
 // Constructors.
 //-----------------------------------------------------------------------------
-
-// header::header(header const& x, hash_digest const& hash)
-//     : header_basis(x)
-//     , validation(x.validation)
-// {
-//     hash_ = std::make_shared<hash_digest>(hash);
-// }
 
 header::header(header const& x)
     : header_basis(x)

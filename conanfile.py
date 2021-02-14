@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2020 Knuth Project developers.
+# Copyright (c) 2016-2021 Knuth Project developers.
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -35,7 +35,8 @@ class KnuthDomainConan(KnuthConanFile):
                "cflags": "ANY",
                "glibcxx_supports_cxx11_abi": "ANY",
                "cmake_export_compile_commands": [True, False],
-               "log": ["boost", "spdlog", "binlog"]
+               "log": ["boost", "spdlog", "binlog"],
+               "disable_get_blocks": [True, False],
     }
 
     #    "with_png": [True, False],
@@ -59,6 +60,7 @@ class KnuthDomainConan(KnuthConanFile):
         "glibcxx_supports_cxx11_abi": "_DUMMY_",
         "cmake_export_compile_commands": False,
         "log": "spdlog",
+        "disable_get_blocks": False,
     }
 
         # "with_png=False", \

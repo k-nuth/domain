@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 Knuth Project developers.
+// Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -32,7 +32,6 @@ public:
     using ptr = std::shared_ptr<inventory>;
     using const_ptr = std::shared_ptr<const inventory>;
     using type_id = inventory_vector::type_id;
-
 
     inventory() = default;
     inventory(inventory_vector::list const& values);

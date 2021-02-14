@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 Knuth Project developers.
+// Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -35,29 +35,17 @@ header::header(uint32_t version,
                uint32_t timestamp,
                uint32_t bits,
                uint32_t nonce)
-    : chain::header(version, previous_block_hash, merkle, timestamp, bits, nonce) {}
+    : chain::header(version, previous_block_hash, merkle, timestamp, bits, nonce) 
+{}
 
 header::header(chain::header const& x)
     : chain::header(x) {
 }
 
-// header::header(header const& x)
-//     : chain::header(x) {
-// }
-
-// header::header(header&& x) noexcept
-//     : chain::header(std::move(x)) 
-// {}
-
 header& header::operator=(chain::header const& x) {
     chain::header::operator=(x);
     return *this;
 }
-
-// header& header::operator=(header&& x) noexcept {
-//     chain::header::operator=(std::move(x));
-//     return *this;
-// }
 
 header& header::operator=(header const& x) {
     chain::header::operator=(x);
