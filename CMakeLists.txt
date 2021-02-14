@@ -111,13 +111,23 @@ if (WITH_QRENCODE)
   endif (NO_CONAN_AT_ALL)
 endif()
 
-
 # Implement --JUST_KTH_SOURCES for linting.
 #------------------------------------------------------------------------------
 option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
 if (JUST_KTH_SOURCES)
   message(STATUS "Knuth: Just Knuth source code to be linted: enabled")
 endif()
+
+## Implement --DISABLE_GET_BLOCKS.
+##------------------------------------------------------------------------------
+#option(DISABLE_GET_BLOCKS "Option to disable the getblocks message." OFF)
+#if (DISABLE_GET_BLOCKS)
+#  message(STATUS "Knuth: getblocks message is disabled")
+#  add_definitions(-DKTH_PROTOCOL_DISABLE_GET_BLOCKS)
+#else()
+#  message(STATUS "Knuth: getblocks message is enabled")
+#endif()
+
 
 # # Implement --binlog.
 # #------------------------------------------------------------------------------
@@ -139,9 +149,6 @@ else()
 endif()
 
 message(STATUS "Knuth: Logging Library: ${LOG_LIBRARY}")
-
-
-
 
 set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
 # message(${KTH_PROJECT_VERSION})
@@ -431,7 +438,7 @@ set(kth_domain_sources_just_legacy
         src/message/filter_load.cpp
         src/message/get_address.cpp
         src/message/get_block_transactions.cpp
-        src/message/get_blocks.cpp
+
         src/message/get_data.cpp
         src/message/get_headers.cpp
         src/message/header.cpp
@@ -480,12 +487,19 @@ set(kth_domain_sources_just_legacy
         src/wallet/stealth_sender.cpp
 )
 
+# if (NOT DISABLE_GET_BLOCKS)
+  set(kth_domain_sources_just_legacy
+    ${kth_domain_sources_just_legacy}
+    src/message/get_blocks.cpp
+  )
+# endif()
+
 set(kth_domain_sources_just_kth
     src/wallet/transaction_functions.cpp
 )
 
 if (NOT ${CURRENCY} STREQUAL "BCH")
-    set(kth_domain_sources_just_legacy 
+    set(kth_domain_sources_just_legacy
       ${kth_domain_sources_just_legacy}
       src/chain/witness.cpp
     )
