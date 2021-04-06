@@ -115,27 +115,27 @@ std::string test_name(script_test const& test) {
 // Serialization tests.
 //------------------------------------------------------------------------------
 
-TEST_CASE("script one hash  literal  same", "[script]") {
+TEST_CASE("script one hash literal same", "[script]") {
     static auto const hash_one = hash_literal("0000000000000000000000000000000000000000000000000000000000000001");
     static hash_digest const one_hash{{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
     REQUIRE(one_hash == hash_one);
 }
 
-TEST_CASE("script from data  testnet 119058 invalid op codes  success", "[script]") {
+TEST_CASE("script from data testnet 119058 invalid op codes success", "[script]") {
     auto const raw_script = to_chunk(base16_literal("0130323066643366303435313438356531306633383837363437356630643265396130393739343332353534313766653139316438623963623230653430643863333030326431373463336539306366323433393231383761313037623634373337633937333135633932393264653431373731636565613062323563633534353732653302ae"));
 
     script parsed;
     REQUIRE(entity_from_data(parsed, raw_script, false));
 }
 
-TEST_CASE("script from data  parse  success", "[script]") {
+TEST_CASE("script from data parse success", "[script]") {
     auto const raw_script = to_chunk(base16_literal("3045022100ff1fc58dbd608e5e05846a8e6b45a46ad49878aef6879ad1a7cf4c5a7f853683022074a6a10f6053ab3cddc5620d169c7374cd42c1416c51b9744db2c8d9febfb84d01"));
 
     script parsed;
     REQUIRE(entity_from_data(parsed, raw_script, true));
 }
 
-TEST_CASE("script from data  to data  roundtrips", "[script]") {
+TEST_CASE("script from data to data roundtrips", "[script]") {
     auto const normal_output_script = to_chunk(base16_literal("76a91406ccef231c2db72526df9338894ccf9355e8f12188ac"));
 
     script out_script;
@@ -145,7 +145,7 @@ TEST_CASE("script from data  to data  roundtrips", "[script]") {
     REQUIRE(roundtrip == normal_output_script);
 }
 
-TEST_CASE("script from data  to data weird  roundtrips", "[script]") {
+TEST_CASE("script from data to data weird roundtrips", "[script]") {
     auto const weird_raw_script = to_chunk(base16_literal(
         "0c49206c69656b20636174732e483045022100c7387f64e1f4"
         "cf654cae3b28a15f7572106d6c1319ddcdc878e636ccb83845"
