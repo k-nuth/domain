@@ -61,13 +61,6 @@ public:
     script& operator=(script const& x);
     script& operator=(script&& x) noexcept;
 
-    // Operators.
-    //-------------------------------------------------------------------------
-
-    // bool operator==(script const& x) const;
-    // bool operator!=(script const& x) const;
-
-
     // Deserialization.
     //-------------------------------------------------------------------------
 
@@ -108,21 +101,21 @@ public:
 
     static
     hash_digest generate_signature_hash(transaction const& tx,
-                                               uint32_t input_index,
-                                               script const& script_code,
-                                               uint8_t sighash_type,
-                                               script_version version = script_version::unversioned,
-                                               uint64_t value = max_uint64);
+                                        uint32_t input_index,
+                                        script const& script_code,
+                                        uint8_t sighash_type,
+                                        script_version version = script_version::unversioned,
+                                        uint64_t value = max_uint64);
 
     static
     bool check_signature(ec_signature const& signature,
-                                uint8_t sighash_type,
-                                data_chunk const& public_key,
-                                script const& script_code,
-                                transaction const& tx,
-                                uint32_t input_index,
-                                script_version version = script_version::unversioned,
-                                uint64_t value = max_uint64);
+                            uint8_t sighash_type,
+                            data_chunk const& public_key,
+                            script const& script_code,
+                            transaction const& tx,
+                            uint32_t input_index,
+                            script_version version = script_version::unversioned,
+                            uint64_t value = max_uint64);
 
     static
     bool create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version = script_version::unversioned, uint64_t value = max_uint64);
@@ -229,9 +222,6 @@ public:
     size_t sigops(bool accurate) const;
     void find_and_delete(data_stack const& endorsements);
     bool is_unspendable() const;
-
-
-
 
     void reset();
 
