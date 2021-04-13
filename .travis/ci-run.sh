@@ -48,8 +48,8 @@ pip install kthbuild --upgrade
 conan user
 conan --version
 
-conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth || true
-conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth || true
+conan remote add kth_temp https://knuth.jfrog.io/artifactory/api/conan/knuth || true
+conan remote add kth_temp https://knuth.jfrog.io/artifactory/api/conan/knuth || true
 
 cd /home/conan/project
 

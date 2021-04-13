@@ -41,7 +41,7 @@ class KnuthDomainConan(KnuthConanFile):
 
     #    "with_png": [True, False],
 
-    default_options = { 
+    default_options = {
         "shared": False,
         "fPIC": True,
         "with_icu": False,
@@ -49,7 +49,7 @@ class KnuthDomainConan(KnuthConanFile):
         "tests": False,
         "examples": False,
         "currency": "BCH",
-        "microarchitecture": "_DUMMY_", 
+        "microarchitecture": "_DUMMY_",
         "fix_march": False,
         "march_id": "_DUMMY_",
         "verbose": False,
@@ -77,17 +77,14 @@ class KnuthDomainConan(KnuthConanFile):
         return self.options.currency == "BCH" and self.options.get_safe("keoken")
 
     def requirements(self):
-        self.requires("algorithm/0.1.220@tao/stable")
+        self.requires("algorithm/0.1.238@tao/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
         self.requires("infrastructure/0.X@%s/%s" % (self.user, self.channel))
         # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.13.1@")
+            self.requires("catch2/2.13.4")
 
-        # if self.options.with_png:
-        #     self.requires("libpng/1.6.34@kth/stable")
-            
         if self.options.currency == "LTC":
             #TODO(fernando): check if a newer version exists
             self.requires("OpenSSL/1.0.2l@conan/stable")
@@ -114,7 +111,7 @@ class KnuthDomainConan(KnuthConanFile):
 
     def package_id(self):
         KnuthConanFile.package_id(self)
-        
+
     def build(self):
         cmake = self.cmake_basis()
         cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
