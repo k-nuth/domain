@@ -58,7 +58,7 @@ const infrastructure::config::checkpoint scalenet_bip34_active_checkpoint {
 // enum class pisano_t : uint64_t {};
 // enum class mersenne_t : uint64_t {};
 // enum class fermat_t : uint64_t {};
-enum class euler_t : uint64_t {};
+// enum class euler_t : uint64_t {};
 enum class gauss_t : uint64_t {};
 enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
@@ -69,11 +69,11 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 // constexpr pisano_t   bch_pisano_activation_time = 1557921600;        // 2019-May-15 HF
 // constexpr mersenne_t bch_mersenne_activation_time = 1573819200;      // 2019-Nov-15 HF
 // constexpr fermat_t   bch_fermat_activation_time{1589544000};         // 2020-May-15 HF
-// constexpr euler_t     bch_euler_activation_time{1605441600};         // 2020-Nov-15 HF
-constexpr gauss_t     bch_gauss_activation_time{1621080000};            // 2021-May-15 HF
+// constexpr euler_t    bch_euler_activation_time{1605441600};          // 2020-Nov-15 HF
+                                                                        // 2021-May-15 (skipped, not a HF)
+// constexpr gauss_t     bch_gauss_activation_time{??????????};         // ????-???-?? HF
 
 //2017-August-01 hard fork
-
 constexpr size_t mainnet_uahf_activation_height = 478559;
 constexpr size_t testnet_uahf_activation_height = 1155876;
 constexpr size_t testnet4_uahf_activation_height = 6;
@@ -122,7 +122,7 @@ constexpr size_t scalenet_fermat_activation_height = 0;         //Note: https://
 // constexpr size_t testnet4_asert_anchor_lock_up_height = 0;      // Genesis: 000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b
 // constexpr size_t scalenet_asert_anchor_lock_up_height = 0;      // Genesis: 00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52
 
-//2020-Nov hard fork, ASERT Anchor/Reference block 
+//2020-Nov hard fork, ASERT Anchor/Reference block
 constexpr size_t mainnet_asert_anchor_block_height = 661647;        // 00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f
 constexpr uint32_t mainnet_asert_anchor_block_bits = 0x1804dafe;
 constexpr size_t mainnet_asert_anchor_block_ancestor_time = 1605447844;
