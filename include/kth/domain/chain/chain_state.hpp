@@ -113,7 +113,7 @@ public:
         } timestamp;
     };
 
-#if defined(KTH_CURRENCY_BCH)        
+#if defined(KTH_CURRENCY_BCH)
     struct assert_anchor_block_info_t {
         size_t height;
         uint64_t ancestor_timestamp;
@@ -133,7 +133,7 @@ public:
                 // , mersenne_t mersenne_activation_time
                 // , fermat_t fermat_activation_time
                 // , euler_t euler_activation_time
-                , gauss_t gauss_activation_time
+                // , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -177,21 +177,21 @@ public:
 
     // [[nodiscard]]
     // euclid_t euclid_activation_time() const;
-    
+
     // [[nodiscard]]
     // pisano_t pisano_activation_time() const;
 
     // [[nodiscard]]
     // mersenne_t mersenne_activation_time() const;
-    
+
     // [[nodiscard]]
     // fermat_t fermat_activation_time() const;
 
     // [[nodiscard]]
     // euler_t euler_activation_time() const;
 
-    [[nodiscard]]
-    gauss_t gauss_activation_time() const;
+    // [[nodiscard]]
+    // gauss_t gauss_activation_time() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
@@ -267,7 +267,7 @@ protected:
             // , mersenne_t mersenne_activation_time
             // , fermat_t fermat_activation_time
             // , euler_t euler_activation_time
-            , gauss_t gauss_activation_time
+            // , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -275,7 +275,7 @@ protected:
     uint32_t work_required(data const& values, config::network network, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                             // , euler_t euler_activation_time
-                            , gauss_t gauss_activation_time
+                            // , gauss_t gauss_activation_time
                             , assert_anchor_block_info_t const& assert_anchor_block_info
                             , uint32_t asert_half_life
 #endif
@@ -286,7 +286,7 @@ private:
 
     static
     size_t bits_count(size_t height, uint32_t forks);
-    
+
     static
     size_t version_count(size_t height, uint32_t forks, domain::config::network network);
 
@@ -323,22 +323,22 @@ private:
 #if defined(KTH_CURRENCY_BCH)
     static
     bool is_uahf_enabled(size_t height, config::network network);
-    
+
     static
     bool is_daa_cw144_enabled(size_t height, config::network network);
-    
+
     static
     bool is_pythagoras_enabled(size_t height, config::network network);
-    
+
     static
     bool is_euclid_enabled(size_t height, config::network network);
-    
+
     static
     bool is_pisano_enabled(size_t height, config::network network);
 
     static
     bool is_mersenne_enabled(size_t height, config::network network);
-    
+
     static
     bool is_fermat_enabled(size_t height, config::network network);
 
@@ -369,7 +369,7 @@ private:
 
     static
     uint32_t daa_cw144(data const& values);
-    
+
     static
     uint32_t work_required_adjust_cash(data const& values);
 #endif  //KTH_CURRENCY_BCH
@@ -377,10 +377,10 @@ private:
     // easy blocks
     static
     uint32_t work_required_easy(data const& values);
-    
+
     static
     uint32_t elapsed_time_limit(chain_state::data const& values);
-    
+
     static
     bool is_retarget_or_non_limit(size_t height, uint32_t bits);
 
@@ -393,10 +393,10 @@ private:
                             , uint32_t asert_half_life
 #endif
     );
-    
+
     static
     uint32_t easy_time_limit(chain_state::data const& values);
-    
+
     static
     size_t retarget_distance(size_t height);
 
@@ -427,7 +427,7 @@ private:
     // mersenne_t const mersenne_activation_time_;
     // fermat_t const fermat_activation_time_;
     // euler_t const euler_activation_time_;
-    gauss_t const gauss_activation_time_;
+    // gauss_t const gauss_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };
 

@@ -50,7 +50,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , mersenne_t mersenne_activation_time
     // , fermat_t fermat_activation_time
     // , euler_t euler_activation_time
-    , gauss_t gauss_activation_time
+    // , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
     : data_(std::move(values))
@@ -67,14 +67,14 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , mersenne_activation_time
         // , fermat_activation_time
         // , euler_activation_time
-        , gauss_activation_time
+        // , gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_))
     , work_required_(work_required(data_, network_, forks_
 #if defined(KTH_CURRENCY_BCH)
             // , euler_activation_time
-            , gauss_activation_time
+            // , gauss_activation_time
             , assert_anchor_block_info_
             , asert_half_life
 #endif
@@ -86,7 +86,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , mersenne_activation_time_(mersenne_activation_time)
     // , fermat_activation_time_(fermat_activation_time)
     // , euler_activation_time_(euler_activation_time)
-    , gauss_activation_time_(gauss_activation_time)
+    // , gauss_activation_time_(gauss_activation_time)
 #endif  //KTH_CURRENCY_BCH
 {
 // #if defined(KTH_CURRENCY_BCH)
@@ -125,7 +125,7 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
         , pool.asert_half_life_
         // , pool.fermat_activation_time_
         // , pool.euler_activation_time_
-        , pool.gauss_activation_time_
+        // , pool.gauss_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
 }
@@ -133,12 +133,12 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
 // Inlines.
 //-----------------------------------------------------------------------------
 
-inline 
+inline
 size_t version_sample_size(domain::config::network network) {
     return network == domain::config::network::mainnet ? mainnet_sample : testnet_sample;
 }
 
-inline 
+inline
 bool is_active(size_t count, domain::config::network network) {
     return network_relation(network, std::greater_equal<>{}, count
                             , mainnet_active
@@ -151,24 +151,24 @@ bool is_active(size_t count, domain::config::network network) {
                             );
 }
 
-inline 
+inline
 bool is_enforced(size_t count, domain::config::network network) {
     return count >= (network == domain::config::network::mainnet ? mainnet_enforce : testnet_enforce);
 }
 
-inline 
+inline
 bool is_bip16_exception(infrastructure::config::checkpoint const& check, domain::config::network network) {
     return network == domain::config::network::mainnet && check == mainnet_bip16_exception_checkpoint;
 }
 
-inline 
+inline
 bool is_bip30_exception(infrastructure::config::checkpoint const& check, domain::config::network network) {
     return network == domain::config::network::mainnet &&
            ((check == mainnet_bip30_exception_checkpoint1) ||
             (check == mainnet_bip30_exception_checkpoint2));
 }
 
-inline 
+inline
 bool allow_collisions(hash_digest const& hash, domain::config::network network) {
     return network_relation(network, std::equal_to<>{}, hash
                                 , mainnet_bip34_active_checkpoint.hash()
@@ -181,7 +181,7 @@ bool allow_collisions(hash_digest const& hash, domain::config::network network) 
                                 );
 }
 
-inline 
+inline
 bool allow_collisions(size_t height, domain::config::network network) {
     return network_relation(network, std::equal_to<>{}, height
                             , mainnet_bip34_active_checkpoint.height()
@@ -195,45 +195,45 @@ bool allow_collisions(size_t height, domain::config::network network) {
 }
 
 #if ! defined(KTH_CURRENCY_BCH)
-inline 
+inline
 bool bip9_bit0_active(hash_digest const& hash, domain::config::network network) {
     return network_relation(network, std::equal_to<>{}, hash,
-                            mainnet_bip9_bit0_active_checkpoint.hash(), 
-                            testnet_bip9_bit0_active_checkpoint.hash(), 
+                            mainnet_bip9_bit0_active_checkpoint.hash(),
+                            testnet_bip9_bit0_active_checkpoint.hash(),
                             regtest_bip9_bit0_active_checkpoint.hash());
 }
 
-inline 
+inline
 bool bip9_bit0_active(size_t height, domain::config::network network) {
     return network_relation(network, std::equal_to<>{}, height,
-                            mainnet_bip9_bit0_active_checkpoint.height(), 
-                            testnet_bip9_bit0_active_checkpoint.height(), 
+                            mainnet_bip9_bit0_active_checkpoint.height(),
+                            testnet_bip9_bit0_active_checkpoint.height(),
                             regtest_bip9_bit0_active_checkpoint.height());
 }
 
-inline 
+inline
 bool bip9_bit1_active(hash_digest const& hash, domain::config::network network) {
     return network_relation(network, std::equal_to<>{}, hash,
-                            mainnet_bip9_bit1_active_checkpoint.hash(), 
-                            testnet_bip9_bit1_active_checkpoint.hash(), 
+                            mainnet_bip9_bit1_active_checkpoint.hash(),
+                            testnet_bip9_bit1_active_checkpoint.hash(),
                             regtest_bip9_bit1_active_checkpoint.hash());
 }
 
-inline 
+inline
 bool bip9_bit1_active(size_t height, domain::config::network network) {
     return network_relation(network, std::equal_to<>{}, height,
-                            mainnet_bip9_bit1_active_checkpoint.height(), 
-                            testnet_bip9_bit1_active_checkpoint.height(), 
+                            mainnet_bip9_bit1_active_checkpoint.height(),
+                            testnet_bip9_bit1_active_checkpoint.height(),
                             regtest_bip9_bit1_active_checkpoint.height());
 }
 #endif
 
-inline 
+inline
 bool bip34(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
            network_relation(network, std::greater_equal<>{}, height
                             , mainnet_bip34_freeze
-                            , testnet_bip34_freeze 
+                            , testnet_bip34_freeze
                             , regtest_bip34_freeze
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip34_freeze
@@ -242,7 +242,7 @@ bool bip34(size_t height, bool frozen, domain::config::network network) {
                             );
 }
 
-inline 
+inline
 bool bip66(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
            network_relation(network, std::greater_equal<>{}, height
@@ -252,11 +252,11 @@ bool bip66(size_t height, bool frozen, domain::config::network network) {
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip66_freeze
                             , scalenet_bip66_freeze
-#endif                                          
+#endif
                             );
 }
 
-inline 
+inline
 bool bip65(size_t height, bool frozen, domain::config::network network) {
     return frozen &&
            network_relation(network, std::greater_equal<>{}, height
@@ -270,12 +270,12 @@ bool bip65(size_t height, bool frozen, domain::config::network network) {
                             );
 }
 
-inline 
+inline
 uint32_t timestamp_high(chain_state::data const& values) {
     return values.timestamp.ordered.back();
 }
 
-inline 
+inline
 uint32_t bits_high(chain_state::data const& values) {
     return values.bits.ordered.back();
 }
@@ -313,11 +313,11 @@ bool chain_state::is_euler_enabled() const {
     return is_euler_enabled(height(), network());
 }
 
-bool chain_state::is_gauss_enabled() const {
-   //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(gauss_activation_time()));
-    // return is_gauss_enabled(height(), network());
-}
+// bool chain_state::is_gauss_enabled() const {
+//    //TODO(fernando): this was activated, change to the other method
+//     return is_mtp_activated(median_time_past(), to_underlying(gauss_activation_time()));
+//     // return is_gauss_enabled(height(), network());
+// }
 
 // 2021-Nov
 // //static
@@ -341,7 +341,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , mersenne_t mersenne_activation_time
         // , fermat_t fermat_activation_time
         // , euler_t euler_activation_time
-        , gauss_t gauss_activation_time
+        // , gauss_t gauss_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
@@ -496,26 +496,17 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_fermat & forks);
     }
 
-    auto mtp = median_time_past(values);
-
-    // if (is_mtp_activated(mtp, to_underlying(fermat_activation_time))) {
-    //     //Note(Fernando): Move this to the next fork rules
-    // //     flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
-    // //     flags |= SCRIPT_REPORT_SIGCHECKS;
-    // //     flags |= SCRIPT_ZERO_SIGOPS;
-    //     result.forks |= (rule_fork::bch_fermat & forks);
-    // }
-
     if (is_euler_enabled(values.height, network)) {
         result.forks |= (rule_fork::bch_euler & forks);
     }
 
-    if (is_mtp_activated(mtp, to_underlying(gauss_activation_time))) {
-        //Note(Fernando): Move this to the next fork rules
-    //     flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
-        result.forks |= (rule_fork::bch_gauss & forks);
-        // result.forks |= (rule_fork::bch_replay_protection & forks);
-    }
+    // auto const mtp = median_time_past(values);
+    // if (is_mtp_activated(mtp, to_underlying(gauss_activation_time))) {
+    //     //Note(Fernando): Move this to the next fork rules
+    // //     flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
+    //     result.forks |= (rule_fork::bch_gauss & forks);
+    //     // result.forks |= (rule_fork::bch_replay_protection & forks);
+    // }
 #endif  //KTH_CURRENCY_BCH
 
     return result;
@@ -535,7 +526,7 @@ size_t chain_state::bits_count(size_t height, uint32_t forks) {
 
 // static
 size_t chain_state::version_count(size_t height, uint32_t forks, domain::config::network network) {
-    if (  script::is_enabled(forks, rule_fork::bip90_rule) || 
+    if (  script::is_enabled(forks, rule_fork::bip90_rule) ||
         ! script::is_enabled(forks, rule_fork::bip34_activations)) {
         return 0;
     }
@@ -582,8 +573,8 @@ size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks) {
     auto const regtest = !script::is_enabled(forks, rule_fork::retarget);
 
     auto const activation_height =
-        testnet ? testnet_bip9_bit0_active_checkpoint.height() : 
-        regtest ? regtest_bip9_bit0_active_checkpoint.height() : 
+        testnet ? testnet_bip9_bit0_active_checkpoint.height() :
+        regtest ? regtest_bip9_bit0_active_checkpoint.height() :
                   mainnet_bip9_bit0_active_checkpoint.height();
 
     // Require bip9_bit0 hash at heights above historical bip9_bit0 activation.
@@ -592,7 +583,7 @@ size_t chain_state::bip9_bit0_height(size_t height, uint32_t forks) {
 
 size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
     auto const testnet = script::is_enabled(forks, rule_fork::easy_blocks);
-    auto const activation_height = testnet ? testnet_bip9_bit1_active_checkpoint.height() : 
+    auto const activation_height = testnet ? testnet_bip9_bit1_active_checkpoint.height() :
                                              mainnet_bip9_bit1_active_checkpoint.height();
 
     // Require bip9_bit1 hash at heights above historical bip9_bit1 activation.
@@ -603,7 +594,7 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 // median_time_past
 //-----------------------------------------------------------------------------
 
-inline 
+inline
 bool chain_state::is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
                                     , size_t testnet4_height
@@ -627,7 +618,7 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 #if defined(KTH_CURRENCY_BCH)
 
 //2017-August-01 hard fork
-inline 
+inline
 bool chain_state::is_uahf_enabled(size_t height, config::network network) {
     auto res = is_rule_enabled(height, network
         , mainnet_uahf_activation_height
@@ -640,7 +631,7 @@ bool chain_state::is_uahf_enabled(size_t height, config::network network) {
 }
 
 //2017-November-13 hard fork
-inline 
+inline
 bool chain_state::is_daa_cw144_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_daa_cw144_activation_height
@@ -651,7 +642,7 @@ bool chain_state::is_daa_cw144_enabled(size_t height, config::network network) {
 }
 
 //2018-May hard fork
-inline 
+inline
 bool chain_state::is_pythagoras_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_pythagoras_activation_height
@@ -662,7 +653,7 @@ bool chain_state::is_pythagoras_enabled(size_t height, config::network network) 
 }
 
 //2018-Nov hard fork
-inline 
+inline
 bool chain_state::is_euclid_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_euclid_activation_height
@@ -673,7 +664,7 @@ bool chain_state::is_euclid_enabled(size_t height, config::network network) {
 }
 
 //2019-May hard fork
-inline 
+inline
 bool chain_state::is_pisano_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_pisano_activation_height
@@ -684,7 +675,7 @@ bool chain_state::is_pisano_enabled(size_t height, config::network network) {
 }
 
 //2019-Nov hard fork
-inline 
+inline
 bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_mersenne_activation_height
@@ -695,7 +686,7 @@ bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
 }
 
 //2020-May hard fork
-inline 
+inline
 bool chain_state::is_fermat_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_fermat_activation_height
@@ -706,7 +697,7 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
 }
 
 //2020-Nov hard fork
-inline 
+inline
 bool chain_state::is_euler_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_euler_activation_height
@@ -718,7 +709,7 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 
 //2021-May hard fork
 // Complete after the hard fork
-// inline 
+// inline
 // bool chain_state::is_gauss_enabled(size_t height, config::network network) {
 //     return is_rule_enabled(height, network
 //         , mainnet_gauss_activation_height
@@ -730,7 +721,7 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 
 //2021-Nov hard fork
 // Complete after the hard fork
-// inline 
+// inline
 // bool chain_state::is_unnamed_enabled(size_t height, config::network network) {
 //     return is_rule_enabled(height, network
 //         , mainnet_unnamed_activation_height
@@ -780,26 +771,26 @@ uint32_t chain_state::median_time_past(data const& values, size_t last_n /* = me
 
 template <typename T, typename U, typename R>
 // requires(SameType<T, U> && Domain<R, T>)         //C++20 Concepts
-inline constexpr 
+inline constexpr
 auto select_0_2(T&& a, U&& b, R r) {
     return r(b, a) ? std::forward<U>(b) : std::forward<T>(a);
 }
 
 template <typename T, typename U, typename V, typename R>
 // requires(SameType<T, U> && SameType<U, V> && Domain<R, T>)
-inline constexpr 
+inline constexpr
 auto select_1_3_unstable_ac(T&& a, U&& b, V&& c, R r) {
     // precondition: ! r(c, a)
-    return r(b, a) 
+    return r(b, a)
         ? std::forward<T>(a)                                        // b, a, c
         : select_0_2(std::forward<U>(b), std::forward<V>(c), r);    // a is not the median
 }
 
 template <typename T, typename U, typename V, typename R>
 // requires(SameType<T, U> && SameType<U, V> && Domain<R, T>)
-inline constexpr 
+inline constexpr
 auto select_1_3_unstable(T&& a, U&& b, V&& c, R r) {
-    return r(c, a) 
+    return r(c, a)
         ? select_1_3_unstable_ac(std::forward<V>(c), std::forward<U>(b), std::forward<T>(a), r)
         : select_1_3_unstable_ac(std::forward<T>(a), std::forward<U>(b), std::forward<V>(c), r);
 }
@@ -875,11 +866,11 @@ uint32_t chain_state::daa_cw144(data const& values) {
 // work_required
 //-----------------------------------------------------------------------------
 
-//static 
+//static
 uint32_t chain_state::work_required(data const& values, config::network network, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                                     // , euler_t euler_activation_time
-                                    , gauss_t gauss_activation_time
+                                    // , gauss_t gauss_activation_time
                                     , assert_anchor_block_info_t const& assert_anchor_block_info
                                     , uint32_t asert_half_life
 #endif
@@ -1256,9 +1247,9 @@ uint32_t chain_state::asert_half_life() const {
 //     return euler_activation_time_;
 // }
 
-gauss_t chain_state::gauss_activation_time() const {
-    return gauss_activation_time_;
-}
+// gauss_t chain_state::gauss_activation_time() const {
+//     return gauss_activation_time_;
+// }
 
 #endif  //KTH_CURRENCY_BCH
 
@@ -1287,7 +1278,7 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     return work_required(values, network(), enabled_forks()
 #if defined(KTH_CURRENCY_BCH)
                             // , euler_activation_time()
-                            , gauss_activation_time()
+                            // , gauss_activation_time()
                             , assert_anchor_block_info_
                             , asert_half_life()
 #endif

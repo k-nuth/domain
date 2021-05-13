@@ -48,15 +48,15 @@ enum rule_fork : uint32_t {
 #if defined(KTH_CURRENCY_BCH)
     bch_uahf = 1U << 11,                //2017-Aug Hardfork - Bitcoin Cash UAHF (1501590000)
     bch_daa_cw144  = 1U << 12,          //2017-Nov Hardfork - DAA/cw-144 - (1510600000)
-    bch_pythagoras = 1U << 13,            //2018-May Hardfork - pythagoras - (1526400000)
-    bch_euclid = 1U << 14,    //2018-Nov Hardfork - euclid - (1542300000)
-    bch_pisano = 1U << 15,          //2019-May Hardfork - pisano - (1557921600)
+    bch_pythagoras = 1U << 13,          //2018-May Hardfork - pythagoras - (1526400000)
+    bch_euclid = 1U << 14,              //2018-Nov Hardfork - euclid - (1542300000)
+    bch_pisano = 1U << 15,              //2019-May Hardfork - pisano - (1557921600)
     bch_mersenne = 1U << 16,            //2019-Nov Hardfork - mersenne - (1573819200)
     bch_fermat = 1U << 17,              //2020-May Hardfork - fermat - (1589544000)
     bch_euler = 1U << 18,               //2020-Nov Hardfork - euler - (1605441600)
-    bch_gauss = 1U << 19,             //2021-May Hardfork - gauss - (1621080000)
+    bch_gauss = 1U << 19,               //2021-May Hardfork - gauss - (1621080000)
     // bch_unnamed = 1U << 20,          //2021-Nov Hardfork - unnamed - (9999999999)
-#else 
+#else
     // Just for segwit coins
     /// Segregated witness consensus layer (soft fork, feature).
     bip141_rule = 1U << 11,
