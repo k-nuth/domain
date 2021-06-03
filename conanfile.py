@@ -77,13 +77,13 @@ class KnuthDomainConan(KnuthConanFile):
         return self.options.currency == "BCH" and self.options.get_safe("keoken")
 
     def requirements(self):
-        self.requires("algorithm/0.1.238@tao/stable")
+        self.requires("algorithm/0.1.239@tao/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
         self.requires("infrastructure/0.X@%s/%s" % (self.user, self.channel))
         # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.13.4")
+            self.requires("catch2/2.13.6")
 
         if self.options.currency == "LTC":
             #TODO(fernando): check if a newer version exists
