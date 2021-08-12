@@ -41,6 +41,8 @@ std::string inventory_vector::to_string(type_id type) {
         case type_id::reserved:
             return "reserved";
 #endif
+        case type_id::double_spend_proofs:
+            return "dsproof-beta";
         case type_id::error:
         default:
             return "error";

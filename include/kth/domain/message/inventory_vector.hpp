@@ -37,8 +37,9 @@ public:
         witness = (1U << 30),
         witness_transaction = witness | transaction,
         witness_block = witness | block,
-        reserved = witness | filtered_block
+        reserved = witness | filtered_block,
 #endif
+        double_spend_proofs = 0x94a0,
     };
 
     static
