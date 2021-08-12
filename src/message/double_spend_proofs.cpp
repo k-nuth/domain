@@ -20,7 +20,7 @@
 
 namespace kth::domain::message {
 
-std::string const double_spend_proofs::command = "cmpctblock";
+std::string const double_spend_proofs::command = "dsproof-beta";
 uint32_t const double_spend_proofs::version_minimum = version::level::bip152;
 uint32_t const double_spend_proofs::version_maximum = version::level::bip152;
 

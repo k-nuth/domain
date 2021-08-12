@@ -85,6 +85,9 @@ public:
     [[nodiscard]]
     bool is_transaction_type() const;
 
+    [[nodiscard]]
+    bool is_double_spend_proofs_type() const;
+
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, uint32_t /*version*/) {
         reset();

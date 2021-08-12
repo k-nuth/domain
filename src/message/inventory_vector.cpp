@@ -42,7 +42,7 @@ std::string inventory_vector::to_string(type_id type) {
             return "reserved";
 #endif
         case type_id::double_spend_proofs:
-            return "dsproof-beta";
+            return "double_spend_proofs";
         case type_id::error:
         default:
             return "error";
@@ -124,6 +124,10 @@ bool inventory_vector::is_transaction_type() const {
            || type_ == type_id::witness_transaction
 #endif
            ;
+}
+
+bool inventory_vector::is_double_spend_proofs_type() const {
+    return type_ == type_id::double_spend_proofs;
 }
 
 inventory_vector::type_id inventory_vector::type() const {
