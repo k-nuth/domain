@@ -33,6 +33,7 @@ enum class message_type {
     block,
     block_transactions,
     compact_block,
+    double_spend_proofs,
     fee_filter,
     filter_add,
     filter_clear,

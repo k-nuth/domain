@@ -49,6 +49,7 @@
 #include <kth/domain/message/block.hpp>
 #include <kth/domain/message/block_transactions.hpp>
 #include <kth/domain/message/compact_block.hpp>
+#include <kth/domain/message/double_spend_proofs.hpp>
 #include <kth/domain/message/fee_filter.hpp>
 #include <kth/domain/message/filter_add.hpp>
 #include <kth/domain/message/filter_clear.hpp>

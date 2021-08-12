@@ -46,19 +46,6 @@ inventory::inventory(std::initializer_list<inventory_vector> const& values)
     : inventories_(values) 
 {}
 
-// inventory::inventory(inventory const& x)
-//     : inventory(x.inventories_) 
-// {}
-
-// inventory::inventory(inventory&& x) noexcept
-//     : inventory(std::move(x.inventories_))
-// {}
-
-// inventory& inventory::operator=(inventory&& x) noexcept {
-//     inventories_ = std::move(x.inventories_);
-//     return *this;
-// }
-
 bool inventory::operator==(inventory const& x) const {
     return (inventories_ == x.inventories_);
 }

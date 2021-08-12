@@ -35,19 +35,6 @@ get_data::get_data(std::initializer_list<inventory_vector> const& values)
     : inventory(values) {
 }
 
-// get_data::get_data(get_data const& x)
-//     : inventory(x) {
-// }
-
-// get_data::get_data(get_data&& x) noexcept
-//     : inventory(x) 
-// {}
-
-// get_data& get_data::operator=(get_data&& x) noexcept {
-//     set_inventories(x.inventories());
-//     return *this;
-// }
-
 bool get_data::operator==(get_data const& x) const {
     return (static_cast<inventory>(*this) == static_cast<inventory>(x));
 }
