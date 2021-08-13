@@ -96,6 +96,25 @@ public:
             sink.write_hash(outputs_hash);
             sink.write_bytes(push_data);
         }
+
+        template <typename R, KTH_IS_READER(R)>
+        bool from_data(R& source) {
+            reset();
+
+            version = source.read_4_bytes_little_endian();
+            out_sequence = source.read_4_bytes_little_endian();
+            locktime = source.read_4_bytes_little_endian();
+            prev_outs_hash = source.read_hash();
+            sequence_hash = source.read_hash();
+            outputs_hash = source.read_hash();
+            push_data = source.read_bytes();
+
+            if ( ! source) {
+                reset();
+            }
+
+            return source;
+        }
     };
 
     double_spend_proofs() = default;
@@ -125,61 +144,6 @@ public:
     spender const& spender2() const;
     void set_spender2(spender const& x);
 
-    // template <typename R, KTH_IS_READER(R)>
-    // bool from_data(R& source) {
-    //     reset();
-
-    //     if ( ! header_.from_data(source)) {
-    //         return false;
-    //     }
-
-    //     nonce_ = source.read_8_bytes_little_endian();
-    //     auto count = source.read_size_little_endian();
-
-    //     // Guard against potential for arbitary memory allocation.
-    //     if (count > get_max_block_size_network_independent()) {
-    //         source.invalidate();
-    //     } else {
-    //         short_ids_.reserve(count);
-    //     }
-
-    //     //TODO: move to function
-    //     // Order is required.
-    //     for (size_t id = 0; id < count && source; ++id) {
-    //         uint32_t lsb = source.read_4_bytes_little_endian();
-    //         uint16_t msb = source.read_2_bytes_little_endian();
-    //         short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
-    //         //short_ids_.push_back(source.read_mini_hash());
-    //     }
-
-    //     count = source.read_size_little_endian();
-
-    //     // Guard against potential for arbitary memory allocation.
-    //     if (count > get_max_block_size_network_independent()) {
-    //         source.invalidate();
-    //     } else {
-    //         transactions_.resize(count);
-    //     }
-
-    //     // NOTE: Witness flag is controlled by prefilled tx
-    //     // Order is required.
-    //     for (auto& tx : transactions_) {
-    //         if ( ! entity_from_data(tx, version, source)) {
-    //             break;
-    //         }
-    //     }
-
-    //     if (version < double_spend_proofs::version_minimum) {
-    //         source.invalidate();
-    //     }
-
-    //     if ( ! source) {
-    //         reset();
-    //     }
-
-    //     return source;
-    // }
-
     [[nodiscard]]
     data_chunk to_data() const;
     
@@ -190,6 +154,29 @@ public:
         out_point_.to_data(sink);
         spender1_.to_data(sink);
         spender2_.to_data(sink);
+    }
+
+    template <typename R, KTH_IS_READER(R)>
+    bool from_data(R& source, uint32_t /*version*/) {
+        reset();
+
+        if ( ! out_point_.from_data(source)) {
+            return false;
+        }
+
+        if ( ! spender1_.from_data(source)) {
+            return false;
+        }
+
+        if ( ! spender2_.from_data(source)) {
+            return false;
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
     }
 
     [[nodiscard]]
