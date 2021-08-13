@@ -191,6 +191,8 @@ public:
             spender2_.serialized_size();
     }
 
+    hash_digest hash() const;
+
     static
     std::string const command;
     

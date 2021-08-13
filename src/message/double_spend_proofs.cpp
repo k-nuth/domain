@@ -58,6 +58,9 @@ void double_spend_proofs::to_data(data_sink& stream) const {
     to_data(sink_w);
 }
 
+hash_digest double_spend_proofs::hash() const {
+    return sha256_hash(to_data());
+}
 
 [[nodiscard]]
 chain::output_point const& double_spend_proofs::out_point() const {
@@ -86,8 +89,9 @@ void double_spend_proofs::set_spender2(double_spend_proofs::spender const& x) {
     spender2_ = x;
 }
 
+inline
 hash_digest hash(double_spend_proofs const& x) {
-    return sha256_hash(x.to_data());
+    return x.hash();
 }
 
 } // namespace kth::domain::message
