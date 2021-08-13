@@ -102,7 +102,6 @@ transaction::transaction(transaction&& x, hash_digest const& hash)
     // validation = std::move(x.validation);
 }
 
-
 transaction::transaction(transaction const& x)
     : transaction_basis(x)
 #ifdef KTH_CACHED_RPC_DATA

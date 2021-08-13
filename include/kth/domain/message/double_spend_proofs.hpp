@@ -7,11 +7,11 @@
 
 #include <istream>
 
-#include <kth/domain/chain/header.hpp>
+#include <kth/domain/chain/output_point.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
-#include <kth/domain/message/block.hpp>
-#include <kth/domain/message/prefilled_transaction.hpp>
+// #include <kth/domain/message/block.hpp>
+// #include <kth/domain/message/prefilled_transaction.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -26,140 +26,183 @@ namespace kth::domain::message {
 class KD_API double_spend_proofs {
 public:
     using ptr = std::shared_ptr<double_spend_proofs>;
-    using const_ptr = std::shared_ptr<const double_spend_proofs>;
+    using const_ptr = std::shared_ptr<double_spend_proofs const>;
     using short_id = uint64_t;
     using short_id_list = std::vector<short_id>;
 
-    static
-    double_spend_proofs factory_from_block(message::block const& blk);
+    struct spender {
+        uint32_t version = 0;
+        uint32_t out_sequence = 0;
+        uint32_t locktime = 0;
+        hash_digest prev_outs_hash = null_hash;
+        hash_digest sequence_hash = null_hash;
+        hash_digest outputs_hash = null_hash;
+        data_chunk push_data;
+
+        [[nodiscard]]
+        bool is_valid() const {
+            return version != 0 || 
+                   out_sequence != 0 ||
+                   locktime != 0 ||
+                   prev_outs_hash != null_hash ||
+                   sequence_hash != null_hash ||
+                   outputs_hash != null_hash;
+        }
+
+        void reset() {
+            version = 0;
+            out_sequence = 0;
+            locktime = 0;
+            prev_outs_hash = null_hash;
+            sequence_hash = null_hash;
+            outputs_hash = null_hash;
+            push_data.clear();
+        }
+
+        friend
+        bool operator==(spender const& x, spender const& y) {
+            return x.version == y.version && 
+                   x.out_sequence == y.out_sequence && 
+                   x.locktime == y.locktime && 
+                   x.prev_outs_hash == y.prev_outs_hash && 
+                   x.sequence_hash == y.sequence_hash && 
+                   x.outputs_hash == y.outputs_hash && 
+                   x.push_data == y.push_data;
+        }
+
+        friend
+        bool operator!=(spender const& x, spender const& y) { 
+            return !(x == y);
+        }
+
+        [[nodiscard]]
+        size_t serialized_size() const {
+            return sizeof(version) +
+                sizeof(out_sequence) +
+                sizeof(locktime) +
+                hash_size + 
+                hash_size + 
+                hash_size + 
+                push_data.size();
+        }
+
+        template <typename W>
+        void to_data(W& sink) const {
+            sink.write_4_bytes_little_endian(version);
+            sink.write_4_bytes_little_endian(out_sequence);
+            sink.write_4_bytes_little_endian(locktime);
+            sink.write_hash(prev_outs_hash);
+            sink.write_hash(sequence_hash);
+            sink.write_hash(outputs_hash);
+            sink.write_bytes(push_data);
+        }
+    };
 
     double_spend_proofs() = default;
-    double_spend_proofs(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions);
-    double_spend_proofs(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
+    double_spend_proofs(chain::output_point const& out_point, spender const& spender1, spender const& spender2);
 
-    bool operator==(double_spend_proofs const& x) const;
-    bool operator!=(double_spend_proofs const& x) const;
-
-    chain::header& header();
-    
-    [[nodiscard]]
-    chain::header const& header() const;
-    
-    void set_header(chain::header const& value);
-
-    [[nodiscard]]
-    uint64_t nonce() const;
-    
-    void set_nonce(uint64_t value);
-
-    short_id_list& short_ids();
-    
-    [[nodiscard]]
-    const short_id_list& short_ids() const;
-    
-    void set_short_ids(const short_id_list& value);
-    void set_short_ids(short_id_list&& value);
-
-    prefilled_transaction::list& transactions();
-    
-    [[nodiscard]]
-    prefilled_transaction::list const& transactions() const;
-    
-    void set_transactions(prefilled_transaction::list const& value);
-    void set_transactions(prefilled_transaction::list&& value);
-
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
-
-        if ( ! header_.from_data(source)) {
-            return false;
-        }
-
-        nonce_ = source.read_8_bytes_little_endian();
-        auto count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size_network_independent()) {
-            source.invalidate();
-        } else {
-            short_ids_.reserve(count);
-        }
-
-        //TODO: move to function
-        // Order is required.
-        for (size_t id = 0; id < count && source; ++id) {
-            uint32_t lsb = source.read_4_bytes_little_endian();
-            uint16_t msb = source.read_2_bytes_little_endian();
-            short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
-            //short_ids_.push_back(source.read_mini_hash());
-        }
-
-        count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size_network_independent()) {
-            source.invalidate();
-        } else {
-            transactions_.resize(count);
-        }
-
-        // NOTE: Witness flag is controlled by prefilled tx
-        // Order is required.
-        for (auto& tx : transactions_) {
-            if ( ! entity_from_data(tx, version, source)) {
-                break;
-            }
-        }
-
-        if (version < double_spend_proofs::version_minimum) {
-            source.invalidate();
-        }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+    friend
+    bool operator==(double_spend_proofs const& x, double_spend_proofs const& y) {
+        return x.out_point_ == y.out_point_ && 
+            x.spender1_ == y.spender1_ && 
+            x.spender2_ == y.spender2_;
     }
 
-    bool from_block(message::block const& block);
+    friend
+    bool operator!=(double_spend_proofs const& x, double_spend_proofs const& y) {
+        return !(x == y);
+    }
 
     [[nodiscard]]
-    data_chunk to_data(uint32_t version) const;
+    chain::output_point const& out_point() const;
+    void set_out_point(chain::output_point const& x);
+
+    [[nodiscard]]
+    spender const& spender1() const;
+    void set_spender1(spender const& x);
+
+    [[nodiscard]]
+    spender const& spender2() const;
+    void set_spender2(spender const& x);
+
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source) {
+    //     reset();
+
+    //     if ( ! header_.from_data(source)) {
+    //         return false;
+    //     }
+
+    //     nonce_ = source.read_8_bytes_little_endian();
+    //     auto count = source.read_size_little_endian();
+
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > get_max_block_size_network_independent()) {
+    //         source.invalidate();
+    //     } else {
+    //         short_ids_.reserve(count);
+    //     }
+
+    //     //TODO: move to function
+    //     // Order is required.
+    //     for (size_t id = 0; id < count && source; ++id) {
+    //         uint32_t lsb = source.read_4_bytes_little_endian();
+    //         uint16_t msb = source.read_2_bytes_little_endian();
+    //         short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
+    //         //short_ids_.push_back(source.read_mini_hash());
+    //     }
+
+    //     count = source.read_size_little_endian();
+
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > get_max_block_size_network_independent()) {
+    //         source.invalidate();
+    //     } else {
+    //         transactions_.resize(count);
+    //     }
+
+    //     // NOTE: Witness flag is controlled by prefilled tx
+    //     // Order is required.
+    //     for (auto& tx : transactions_) {
+    //         if ( ! entity_from_data(tx, version, source)) {
+    //             break;
+    //         }
+    //     }
+
+    //     if (version < double_spend_proofs::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    [[nodiscard]]
+    data_chunk to_data() const;
     
-    void to_data(uint32_t version, data_sink& stream) const;
+    void to_data(data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t version, W& sink) const {
-        header_.to_data(sink);
-        sink.write_8_bytes_little_endian(nonce_);
-        sink.write_variable_little_endian(short_ids_.size());
-
-        for (auto const& element : short_ids_) {
-            //sink.write_mini_hash(element);
-            uint32_t lsb = element & 0xffffffff;
-            uint16_t msb = (element >> 32) & 0xffff;
-            sink.write_4_bytes_little_endian(lsb);
-            sink.write_2_bytes_little_endian(msb);
-        }
-
-        sink.write_variable_little_endian(transactions_.size());
-
-        // NOTE: Witness flag is controlled by prefilled tx
-        for (auto const& element : transactions_) {
-            element.to_data(version, sink);
-        }
+    void to_data(W& sink) const {
+        out_point_.to_data(sink);
+        spender1_.to_data(sink);
+        spender2_.to_data(sink);
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
     
     void reset();
     
     [[nodiscard]]
-    size_t serialized_size(uint32_t version) const;
+    size_t serialized_size() const {
+        return out_point_.serialized_size() +
+            spender1_.serialized_size() +
+            spender2_.serialized_size();
+    }
 
     static
     std::string const command;
@@ -171,23 +214,12 @@ public:
     uint32_t const version_maximum;
 
 private:
-    chain::header header_;
-    uint64_t nonce_{0};
-    short_id_list short_ids_;
-    prefilled_transaction::list transactions_;
+    chain::output_point out_point_;
+    spender spender1_;
+    spender spender2_;
 };
 
-template <typename W>
-void to_data_header_nonce(double_spend_proofs const& block, W& sink) {
-    block.header().to_data(sink);
-    sink.write_8_bytes_little_endian(block.nonce());
-}
-
-void to_data_header_nonce(double_spend_proofs const& block, data_sink& stream);
-
-data_chunk to_data_header_nonce(double_spend_proofs const& block);
-
-hash_digest hash(double_spend_proofs const& block);
+hash_digest hash(double_spend_proofs const& x);
 
 } // namespace kth::domain::message
 

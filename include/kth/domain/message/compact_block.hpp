@@ -37,7 +37,7 @@ public:
     compact_block factory_from_block(message::block const& blk);
 
     compact_block() = default;
-    compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions);
+    compact_block(chain::header const& header, uint64_t nonce, short_id_list const& short_ids, prefilled_transaction::list const& transactions);
     compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions);
 
     bool operator==(compact_block const& x) const;
@@ -58,9 +58,9 @@ public:
     short_id_list& short_ids();
     
     [[nodiscard]]
-    const short_id_list& short_ids() const;
+    short_id_list const& short_ids() const;
     
-    void set_short_ids(const short_id_list& value);
+    void set_short_ids(short_id_list const& value);
     void set_short_ids(short_id_list&& value);
 
     prefilled_transaction::list& transactions();

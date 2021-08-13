@@ -35,19 +35,6 @@ transaction::transaction(uint32_t version, uint32_t locktime, const chain::input
     : chain::transaction(version, locktime, inputs, outputs) {
 }
 
-// transaction::transaction(transaction&& x) noexcept
-//     : chain::transaction(std::move(x)) 
-// {}
-
-// transaction::transaction(transaction const& x)
-//     : chain::transaction(x) {
-// }
-
-// transaction& transaction::operator=(transaction&& x) noexcept {
-//     chain::transaction::operator=(std::move(x));
-//     return *this;
-// }
-
 transaction& transaction::operator=(chain::transaction&& x) {
     reset();
     chain::transaction::operator=(std::move(x));
@@ -79,7 +66,6 @@ data_chunk transaction::to_data(uint32_t /*version*/, bool witness) const {
 void transaction::to_data(uint32_t /*version*/, data_sink& stream, bool witness) const {
     chain::transaction::to_data(stream, true, witness);
 }
-
 
 // Witness size is always counted if present.
 // NOTE: Witness on BCH is dissabled on the chain::block class

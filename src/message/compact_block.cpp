@@ -30,7 +30,7 @@ compact_block compact_block::factory_from_block(message::block const& blk) {
     return instance;
 }
 
-compact_block::compact_block(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions)
+compact_block::compact_block(chain::header const& header, uint64_t nonce, short_id_list const& short_ids, prefilled_transaction::list const& transactions)
     : header_(header)
     , nonce_(nonce)
     , short_ids_(short_ids)
@@ -189,7 +189,7 @@ compact_block::short_id_list const& compact_block::short_ids() const {
     return short_ids_;
 }
 
-void compact_block::set_short_ids(const short_id_list& value) {
+void compact_block::set_short_ids(short_id_list const& value) {
     short_ids_ = value;
 }
 

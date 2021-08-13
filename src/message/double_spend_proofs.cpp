@@ -21,179 +21,73 @@
 namespace kth::domain::message {
 
 std::string const double_spend_proofs::command = "dsproof-beta";
-uint32_t const double_spend_proofs::version_minimum = version::level::bip152;
-uint32_t const double_spend_proofs::version_maximum = version::level::bip152;
+uint32_t const double_spend_proofs::version_minimum = version::level::minimum;
+uint32_t const double_spend_proofs::version_maximum = version::level::maximum;
 
-double_spend_proofs double_spend_proofs::factory_from_block(message::block const& blk) {
-    double_spend_proofs instance;
-    instance.from_block(blk);
-    return instance;
-}
-
-double_spend_proofs::double_spend_proofs(chain::header const& header, uint64_t nonce, const short_id_list& short_ids, prefilled_transaction::list const& transactions)
-    : header_(header)
-    , nonce_(nonce)
-    , short_ids_(short_ids)
-    , transactions_(transactions) 
+double_spend_proofs::double_spend_proofs(chain::output_point const& out_point, spender const& spender1, spender const& spender2) 
+    : out_point_(out_point)
+    , spender1_(spender1)
+    , spender2_(spender2)
 {}
-
-double_spend_proofs::double_spend_proofs(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions)
-    : header_(header)
-    , nonce_(nonce)
-    , short_ids_(std::move(short_ids))
-    , transactions_(std::move(transactions)) 
-{}
-
-bool double_spend_proofs::operator==(double_spend_proofs const& x) const {
-    return (header_ == x.header_) && (nonce_ == x.nonce_) && (short_ids_ == x.short_ids_) && (transactions_ == x.transactions_);
-}
-
-bool double_spend_proofs::operator!=(double_spend_proofs const& x) const {
-    return !(*this == x);
-}
 
 bool double_spend_proofs::is_valid() const {
-    return header_.is_valid() 
-        && ! short_ids_.empty() 
-        && ! transactions_.empty();
+    return out_point_.is_valid() 
+        && spender1_.is_valid() 
+        && spender2_.is_valid();
 }
 
 void double_spend_proofs::reset() {
-    header_ = chain::header{};
-    nonce_ = 0;
-    short_ids_.clear();
-    short_ids_.shrink_to_fit();
-    transactions_.clear();
-    transactions_.shrink_to_fit();
+    out_point_.reset();
+    spender1_.reset();
+    spender2_.reset();
 }
 
-bool double_spend_proofs::from_block(message::block const& block) {
-    reset();
-
-    header_ = block.header();
-    nonce_ = pseudo_random(1, max_uint64);
-
-    prefilled_transaction::list prefilled_list{prefilled_transaction{0, block.transactions()[0]}};
-
-    auto header_hash = hash(block, nonce_);
-
-    auto k0 = from_little_endian_unsafe<uint64_t>(header_hash.begin());
-    auto k1 = from_little_endian_unsafe<uint64_t>(header_hash.begin() + sizeof(uint64_t));
-
-    double_spend_proofs::short_id_list short_ids_list;
-    short_ids_list.reserve(block.transactions().size() - 1);
-    for (size_t i = 1; i < block.transactions().size(); ++i) {
-        uint64_t shortid = sip_hash_uint256(k0, k1, block.transactions()[i].hash(witness_default())) & uint64_t(0xffffffffffff);
-        short_ids_list.push_back(shortid);
-    }
-
-    short_ids_ = std::move(short_ids_list);
-    transactions_ = std::move(prefilled_list);
-
-    return true;
-}
-
-data_chunk double_spend_proofs::to_data(uint32_t version) const {
+data_chunk double_spend_proofs::to_data() const {
     data_chunk data;
-    auto const size = serialized_size(version);
+    auto const size = serialized_size();
     data.reserve(size);
     data_sink ostream(data);
-    to_data(version, ostream);
+    to_data(ostream);
     ostream.flush();
     KTH_ASSERT(data.size() == size);
     return data;
 }
 
-void double_spend_proofs::to_data(uint32_t version, data_sink& stream) const {
+void double_spend_proofs::to_data(data_sink& stream) const {
     ostream_writer sink_w(stream);
-    to_data(version, sink_w);
+    to_data(sink_w);
 }
 
-size_t double_spend_proofs::serialized_size(uint32_t version) const {
-    auto size = chain::header::satoshi_fixed_size() +
-                infrastructure::message::variable_uint_size(short_ids_.size()) +
-                (short_ids_.size() * 6u) +
-                infrastructure::message::variable_uint_size(transactions_.size()) + 8u;
 
-    // NOTE: Witness flag is controlled by prefilled tx
-    for (auto const& tx : transactions_) {
-        size += tx.serialized_size(version);
-    }
-
-    return size;
+[[nodiscard]]
+chain::output_point const& double_spend_proofs::out_point() const {
+    return out_point_;
 }
 
-chain::header& double_spend_proofs::header() {
-    return header_;
+void double_spend_proofs::set_out_point(chain::output_point const& x) {
+    out_point_ = x;
 }
 
-chain::header const& double_spend_proofs::header() const {
-    return header_;
+[[nodiscard]]
+double_spend_proofs::spender const& double_spend_proofs::spender1() const {
+    return spender1_;
 }
 
-void double_spend_proofs::set_header(chain::header const& value) {
-    header_ = value;
+void double_spend_proofs::set_spender1(double_spend_proofs::spender const& x) {
+    spender1_ = x;
 }
 
-uint64_t double_spend_proofs::nonce() const {
-    return nonce_;
+[[nodiscard]]
+double_spend_proofs::spender const& double_spend_proofs::spender2() const {
+    return spender2_;
 }
 
-void double_spend_proofs::set_nonce(uint64_t value) {
-    nonce_ = value;
+void double_spend_proofs::set_spender2(double_spend_proofs::spender const& x) {
+    spender2_ = x;
 }
 
-double_spend_proofs::short_id_list& double_spend_proofs::short_ids() {
-    return short_ids_;
-}
-
-double_spend_proofs::short_id_list const& double_spend_proofs::short_ids() const {
-    return short_ids_;
-}
-
-void double_spend_proofs::set_short_ids(const short_id_list& value) {
-    short_ids_ = value;
-}
-
-void double_spend_proofs::set_short_ids(short_id_list&& value) {
-    short_ids_ = std::move(value);
-}
-
-prefilled_transaction::list& double_spend_proofs::transactions() {
-    return transactions_;
-}
-
-prefilled_transaction::list const& double_spend_proofs::transactions() const {
-    return transactions_;
-}
-
-void double_spend_proofs::set_transactions(prefilled_transaction::list const& value) {
-    transactions_ = value;
-}
-
-void double_spend_proofs::set_transactions(prefilled_transaction::list&& value) {
-    transactions_ = std::move(value);
-}
-
-void to_data_header_nonce(double_spend_proofs const& block, data_sink& stream) {
-    ostream_writer sink_w(stream);
-    to_data_header_nonce(block, sink_w);
-}
-
-data_chunk to_data_header_nonce(double_spend_proofs const& block) {
-    data_chunk data;
-    auto size = chain::header::satoshi_fixed_size() + sizeof(block.nonce());
-
-    data.reserve(size);
-    data_sink ostream(data);
-    to_data_header_nonce(block, ostream);
-    ostream.flush();
-    KTH_ASSERT(data.size() == size);
-    return data;
-}
-
-hash_digest hash(double_spend_proofs const& block) {
-    return sha256_hash(to_data_header_nonce(block));
+hash_digest hash(double_spend_proofs const& x) {
+    return sha256_hash(x.to_data());
 }
 
 } // namespace kth::domain::message
