@@ -276,11 +276,11 @@ if (NOT USE_CONAN)
 # Require kth-infrastructure of at least version 0 and output ${kth_infrastructure_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
-    find_package(secp256k1 0 REQUIRED) 
+    find_package(secp256k1 0 REQUIRED)
   endif()
 
   if (NOT TARGET kth-infrastructure)
-    find_package(kth-infrastructure 0 REQUIRED) 
+    find_package(kth-infrastructure 0 REQUIRED)
   endif()
 endif()
 
@@ -417,7 +417,7 @@ set(kth_domain_sources_just_legacy
         src/config/script.cpp
         src/config/ec_private.cpp
         src/config/endorsement.cpp
-        
+
         src/utility/property_tree.cpp
 
         src/multi_crypto_support.cpp
@@ -461,7 +461,7 @@ set(kth_domain_sources_just_legacy
         src/message/version.cpp
         src/message/xverack.cpp
         src/message/xversion.cpp
-        
+
         src/wallet/bitcoin_uri.cpp
         src/wallet/ec_private.cpp
         src/wallet/ec_public.cpp
@@ -507,15 +507,15 @@ if (NOT ${CURRENCY} STREQUAL "BCH")
 endif()
 
 if (${CURRENCY} STREQUAL "LTC")
-    set(kth_domain_sources_just_kth 
-      ${kth_domain_sources_just_kth}         
+    set(kth_domain_sources_just_kth
+      ${kth_domain_sources_just_kth}
       src/math/hash.cpp
       src/math/external/scrypt.cpp
       src/math/external/scrypt-sse2.cpp)
 endif()
 
 if (WITH_KEOKEN)
-  set(kth_domain_sources_just_kth 
+  set(kth_domain_sources_just_kth
     ${kth_domain_sources_just_kth}
     src/kth/domain/keoken/transaction_extractor.cpp
     src/kth/domain/keoken/entities/asset.cpp
@@ -527,14 +527,14 @@ if (WITH_KEOKEN)
 endif()
 
 if (NOT JUST_KTH_SOURCES)
-  set(kth_domain_sources 
+  set(kth_domain_sources
     ${kth_domain_sources_just_legacy}
   )
 endif()
 
-set(kth_domain_sources 
-  ${kth_domain_sources}   
-  ${kth_domain_sources_just_kth}         
+set(kth_domain_sources
+  ${kth_domain_sources}
+  ${kth_domain_sources_just_kth}
 )
 
 add_library(kth-domain ${MODE} ${kth_domain_sources})
@@ -556,7 +556,7 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 target_include_directories(kth-domain PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-  
+
 if (NOT ENABLE_SHARED)
     target_compile_definitions(kth-domain PUBLIC -DKD_STATIC) #TODO(fernando): manage with Conan????
 endif()
@@ -652,7 +652,7 @@ if (WITH_TESTS)
         test/chain/transaction.cpp
 
         test/main.cpp
-        
+
         test/machine/opcode.cpp
         test/machine/operation.cpp
 
@@ -705,7 +705,7 @@ if (WITH_TESTS)
         test/wallet/stealth_sender.cpp
         test/wallet/uri_reader.cpp
 
-        #TODO(fernando): to include 
+        #TODO(fernando): to include
         # test/wallet/transaction_functions.cpp
     )
 
@@ -719,7 +719,7 @@ if (WITH_TESTS)
     include(Catch)
     catch_discover_tests(kth_domain_test)
   endif()
-  
+
 
   # _group_sources(kth_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
@@ -849,7 +849,7 @@ set(_kth_domain_headers
 
     kth/domain/chain/block.hpp
     kth/domain/chain/chain_state.hpp
-    kth/domain/chain/compact.hpp    
+    kth/domain/chain/compact.hpp
     kth/domain/chain/header.hpp
     kth/domain/chain/history.hpp
     kth/domain/chain/input.hpp
@@ -866,14 +866,14 @@ set(_kth_domain_headers
     kth/domain/chain/witness.hpp
 
     kth/domain/machine/interpreter.hpp
-    kth/domain/machine/number.hpp    
+    kth/domain/machine/number.hpp
     kth/domain/machine/opcode.hpp
     kth/domain/machine/operation.hpp
     kth/domain/machine/program.hpp
     kth/domain/machine/rule_fork.hpp
-    
+
     kth/domain/config/parser.hpp
-    
+
     kth/domain/utility/property_tree.hpp
     kth/domain/impl/utility/property_tree.ipp
 
@@ -884,7 +884,7 @@ set(_kth_domain_headers
 
     kth/domain/math/limits.hpp
     kth/domain/math/stealth.hpp
-    
+
     kth/domain/message/address.hpp
     kth/domain/message/alert.hpp
     kth/domain/message/alert_payload.hpp

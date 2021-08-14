@@ -24,15 +24,15 @@ std::string const double_spend_proofs::command = "dsproof-beta";
 uint32_t const double_spend_proofs::version_minimum = version::level::minimum;
 uint32_t const double_spend_proofs::version_maximum = version::level::maximum;
 
-double_spend_proofs::double_spend_proofs(chain::output_point const& out_point, spender const& spender1, spender const& spender2) 
+double_spend_proofs::double_spend_proofs(chain::output_point const& out_point, spender const& spender1, spender const& spender2)
     : out_point_(out_point)
     , spender1_(spender1)
     , spender2_(spender2)
 {}
 
 bool double_spend_proofs::is_valid() const {
-    return out_point_.is_valid() 
-        && spender1_.is_valid() 
+    return out_point_.is_valid()
+        && spender1_.is_valid()
         && spender2_.is_valid();
 }
 
@@ -89,7 +89,6 @@ void double_spend_proofs::set_spender2(double_spend_proofs::spender const& x) {
     spender2_ = x;
 }
 
-inline
 hash_digest hash(double_spend_proofs const& x) {
     return x.hash();
 }
