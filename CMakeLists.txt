@@ -309,7 +309,7 @@ endif()
 # Warn on extra stuff.
 #------------------------------------------------------------------------------
 if (NOT MSVC)
-  _add_c_compile_flag(-Wextra _has_extra_warning_flag)
+  # _add_c_compile_flag(-Wextra _has_extra_warning_flag)
 endif()
 
 # Be really annoying.
@@ -432,7 +432,7 @@ set(kth_domain_sources_just_legacy
         src/message/block.cpp
         src/message/block_transactions.cpp
         src/message/compact_block.cpp
-        src/message/double_spend_proofs.cpp
+        src/message/double_spend_proof.cpp
         src/message/fee_filter.cpp
         src/message/filter_add.cpp
         src/message/filter_clear.cpp
@@ -891,7 +891,7 @@ set(_kth_domain_headers
     kth/domain/message/block.hpp
     kth/domain/message/block_transactions.hpp
     kth/domain/message/compact_block.hpp
-    kth/domain/message/double_spend_proofs.hpp
+    kth/domain/message/double_spend_proof.hpp
     kth/domain/message/fee_filter.hpp
     kth/domain/message/filter_add.hpp
     kth/domain/message/filter_clear.hpp

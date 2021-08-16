@@ -31,7 +31,7 @@ TEST_CASE("inventory vector to number compact block returns 4", "[inventory vect
 }
 
 TEST_CASE("inventory vector to number double spend proofs returns 0x94a0", "[inventory vector]") {
-    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::double_spend_proofs) == 0x94a0u);
+    REQUIRE(inventory_vector::to_number(inventory_vector::type_id::double_spend_proof) == 0x94a0u);
 }
 
 TEST_CASE("inventory vector to type 0 returns error", "[inventory vector]") {
@@ -55,7 +55,7 @@ TEST_CASE("inventory vector to type 4 returns compact block", "[inventory vector
 }
 
 TEST_CASE("inventory vector to type 0x94a0 returns double spend proofs", "[inventory vector]") {
-    REQUIRE(inventory_vector::type_id::double_spend_proofs == inventory_vector::to_type(0x94a0));
+    REQUIRE(inventory_vector::type_id::double_spend_proof == inventory_vector::to_type(0x94a0));
 }
 
 TEST_CASE("inventory vector constructor 1 always invalid", "[inventory vector]") {
@@ -225,7 +225,7 @@ TEST_CASE("inventory vector is block type compact block returns true", "[invento
 
 TEST_CASE("inventory vector is block type double spend proof returns false", "[inventory vector]") {
     inventory_vector instance;
-    instance.set_type(inventory_vector::type_id::double_spend_proofs);
+    instance.set_type(inventory_vector::type_id::double_spend_proof);
     REQUIRE( ! instance.is_block_type());
 }
 

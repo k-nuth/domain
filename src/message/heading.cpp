@@ -35,9 +35,9 @@ size_t heading::maximum_size() {
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
 size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t magic) {
-    /*    static constexpr 
+    /*    static constexpr
     size_t vector = sizeof(uint32_t) + hash_size;
-    static constexpr 
+    static constexpr
     size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */
@@ -105,7 +105,7 @@ message_type heading::type() const {
     if (command_ == block_transactions::command) return message_type::block_transactions;
     if (command_ == block::command) return message_type::block;
     if (command_ == compact_block::command) return message_type::compact_block;
-    if (command_ == double_spend_proofs::command) return message_type::double_spend_proofs;
+    if (command_ == double_spend_proof::command) return message_type::double_spend_proof;
     if (command_ == fee_filter::command) return message_type::fee_filter;
     if (command_ == filter_add::command) return message_type::filter_add;
     if (command_ == filter_clear::command) return message_type::filter_clear;

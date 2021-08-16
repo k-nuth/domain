@@ -248,8 +248,8 @@ TEST_CASE("heading type all cases match expected", "[heading]") {
     REQUIRE(message::message_type::block_transactions == instance.type());
     instance.set_command(message::compact_block::command);
     REQUIRE(message::message_type::compact_block == instance.type());
-    instance.set_command(message::double_spend_proofs::command);
-    REQUIRE(message::message_type::double_spend_proofs == instance.type());
+    instance.set_command(message::double_spend_proof::command);
+    REQUIRE(message::message_type::double_spend_proof == instance.type());
     instance.set_command(message::filter_add::command);
     REQUIRE(message::message_type::filter_add == instance.type());
     instance.set_command(message::filter_clear::command);

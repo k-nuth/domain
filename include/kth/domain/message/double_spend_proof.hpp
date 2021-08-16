@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_DOMAIN_MESSAGE_DOUBLE_SPEND_PROOFS_HPP
-#define KTH_DOMAIN_MESSAGE_DOUBLE_SPEND_PROOFS_HPP
+#ifndef KTH_DOMAIN_MESSAGE_double_spend_proof_HPP
+#define KTH_DOMAIN_MESSAGE_double_spend_proof_HPP
 
 #include <istream>
 
@@ -23,10 +23,10 @@
 
 namespace kth::domain::message {
 
-class KD_API double_spend_proofs {
+class KD_API double_spend_proof {
 public:
-    using ptr = std::shared_ptr<double_spend_proofs>;
-    using const_ptr = std::shared_ptr<double_spend_proofs const>;
+    using ptr = std::shared_ptr<double_spend_proof>;
+    using const_ptr = std::shared_ptr<double_spend_proof const>;
     using short_id = uint64_t;
     using short_id_list = std::vector<short_id>;
 
@@ -41,7 +41,7 @@ public:
 
         [[nodiscard]]
         bool is_valid() const {
-            return version != 0 || 
+            return version != 0 ||
                    out_sequence != 0 ||
                    locktime != 0 ||
                    prev_outs_hash != null_hash ||
@@ -61,17 +61,17 @@ public:
 
         friend
         bool operator==(spender const& x, spender const& y) {
-            return x.version == y.version && 
-                   x.out_sequence == y.out_sequence && 
-                   x.locktime == y.locktime && 
-                   x.prev_outs_hash == y.prev_outs_hash && 
-                   x.sequence_hash == y.sequence_hash && 
-                   x.outputs_hash == y.outputs_hash && 
+            return x.version == y.version &&
+                   x.out_sequence == y.out_sequence &&
+                   x.locktime == y.locktime &&
+                   x.prev_outs_hash == y.prev_outs_hash &&
+                   x.sequence_hash == y.sequence_hash &&
+                   x.outputs_hash == y.outputs_hash &&
                    x.push_data == y.push_data;
         }
 
         friend
-        bool operator!=(spender const& x, spender const& y) { 
+        bool operator!=(spender const& x, spender const& y) {
             return !(x == y);
         }
 
@@ -80,9 +80,9 @@ public:
             return sizeof(version) +
                 sizeof(out_sequence) +
                 sizeof(locktime) +
-                hash_size + 
-                hash_size + 
-                hash_size + 
+                hash_size +
+                hash_size +
+                hash_size +
                 push_data.size();
         }
 
@@ -117,18 +117,18 @@ public:
         }
     };
 
-    double_spend_proofs() = default;
-    double_spend_proofs(chain::output_point const& out_point, spender const& spender1, spender const& spender2);
+    double_spend_proof() = default;
+    double_spend_proof(chain::output_point const& out_point, spender const& spender1, spender const& spender2);
 
     friend
-    bool operator==(double_spend_proofs const& x, double_spend_proofs const& y) {
-        return x.out_point_ == y.out_point_ && 
-            x.spender1_ == y.spender1_ && 
+    bool operator==(double_spend_proof const& x, double_spend_proof const& y) {
+        return x.out_point_ == y.out_point_ &&
+            x.spender1_ == y.spender1_ &&
             x.spender2_ == y.spender2_;
     }
 
     friend
-    bool operator!=(double_spend_proofs const& x, double_spend_proofs const& y) {
+    bool operator!=(double_spend_proof const& x, double_spend_proof const& y) {
         return !(x == y);
     }
 
@@ -145,12 +145,12 @@ public:
     void set_spender2(spender const& x);
 
     [[nodiscard]]
-    data_chunk to_data() const;
-    
-    void to_data(data_sink& stream) const;
+    data_chunk to_data(size_t /*version*/) const;
+
+    void to_data(size_t /*version*/, data_sink& stream) const;
 
     template <typename W>
-    void to_data(W& sink) const {
+    void to_data(size_t /*version*/, W& sink) const {
         out_point_.to_data(sink);
         spender1_.to_data(sink);
         spender2_.to_data(sink);
@@ -181,11 +181,11 @@ public:
 
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
-    size_t serialized_size() const {
+    size_t serialized_size(size_t /*version*/) const {
         return out_point_.serialized_size() +
             spender1_.serialized_size() +
             spender2_.serialized_size();
@@ -195,10 +195,10 @@ public:
 
     static
     std::string const command;
-    
+
     static
     uint32_t const version_minimum;
-    
+
     static
     uint32_t const version_maximum;
 
@@ -208,8 +208,8 @@ private:
     spender spender2_;
 };
 
-hash_digest hash(double_spend_proofs const& x);
+hash_digest hash(double_spend_proof const& x);
 
 } // namespace kth::domain::message
 
-#endif // KTH_DOMAIN_MESSAGE_DOUBLE_SPEND_PROOFS_HPP
+#endif // KTH_DOMAIN_MESSAGE_double_spend_proof_HPP
