@@ -37,16 +37,17 @@ public:
         witness = (1U << 30),
         witness_transaction = witness | transaction,
         witness_block = witness | block,
-        reserved = witness | filtered_block
+        reserved = witness | filtered_block,
 #endif
+        double_spend_proof = 0x94a0,
     };
 
     static
     type_id to_type(uint32_t value);
-    
+
     static
     uint32_t to_number(type_id type);
-    
+
     static
     std::string to_string(type_id type);
 
@@ -68,21 +69,24 @@ public:
 
     [[nodiscard]]
     type_id type() const;
-    
+
     void set_type(type_id value);
 
     hash_digest& hash();
-    
+
     [[nodiscard]]
     hash_digest const& hash() const;
-    
+
     void set_hash(hash_digest const& value);
 
     [[nodiscard]]
     bool is_block_type() const;
-    
+
     [[nodiscard]]
     bool is_transaction_type() const;
+
+    [[nodiscard]]
+    bool is_double_spend_proof_type() const;
 
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, uint32_t /*version*/) {
@@ -101,7 +105,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
-    
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -114,13 +118,13 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
 
-#if defined(KTH_SEGWIT_ENABLED)    
+#if defined(KTH_SEGWIT_ENABLED)
     void to_witness();
 #endif
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 

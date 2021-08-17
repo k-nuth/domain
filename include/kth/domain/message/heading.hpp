@@ -33,6 +33,7 @@ enum class message_type {
     block,
     block_transactions,
     compact_block,
+    double_spend_proof,
     fee_filter,
     filter_add,
     filter_clear,
@@ -63,41 +64,41 @@ class KD_API heading {
 public:
     static
     size_t maximum_size();
-    
+
     static
     size_t maximum_payload_size(uint32_t version, bool witness, uint32_t magic);
-    
+
     static
     size_t satoshi_fixed_size();
-    
+
     heading() = default;
     heading(uint32_t magic, std::string const& command, uint32_t payload_size, uint32_t checksum);
     heading(uint32_t magic, std::string&& command, uint32_t payload_size, uint32_t checksum);
-    
+
     bool operator==(heading const& x) const;
     bool operator!=(heading const& x) const;
 
     [[nodiscard]]
     uint32_t magic() const;
-    
+
     void set_magic(uint32_t value);
 
     std::string& command();
-    
+
     [[nodiscard]]
     std::string const& command() const;
-    
+
     void set_command(std::string const& value);
     void set_command(std::string&& value);
 
     [[nodiscard]]
     uint32_t payload_size() const;
-    
+
     void set_payload_size(uint32_t value);
 
     [[nodiscard]]
     uint32_t checksum() const;
-    
+
     void set_checksum(uint32_t value);
 
     [[nodiscard]]
@@ -120,7 +121,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data() const;
-    
+
     void to_data(data_sink& stream) const;
 
     template <typename W>
@@ -134,7 +135,7 @@ public:
     //void to_data(writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
 
 

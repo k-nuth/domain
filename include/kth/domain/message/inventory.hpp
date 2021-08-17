@@ -91,7 +91,6 @@ public:
         }
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
     void to_hashes(hash_list& out, type_id type) const;
     void reduce(inventory_vector::list& out, type_id type) const;
     

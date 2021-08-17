@@ -15,6 +15,7 @@
 #include <kth/domain/message/block.hpp>
 #include <kth/domain/message/block_transactions.hpp>
 #include <kth/domain/message/compact_block.hpp>
+#include <kth/domain/message/double_spend_proof.hpp>
 #include <kth/domain/message/fee_filter.hpp>
 #include <kth/domain/message/filter_add.hpp>
 #include <kth/domain/message/filter_clear.hpp>
@@ -110,6 +111,7 @@ DECLARE_MESSAGE_POINTER_TYPES(address);
 DECLARE_MESSAGE_POINTER_TYPES(block);
 DECLARE_MESSAGE_POINTER_TYPES(block_transactions);
 DECLARE_MESSAGE_POINTER_TYPES(compact_block);
+DECLARE_MESSAGE_POINTER_TYPES(double_spend_proof);
 DECLARE_MESSAGE_POINTER_TYPES(get_address);
 DECLARE_MESSAGE_POINTER_TYPES(fee_filter);
 DECLARE_MESSAGE_POINTER_TYPES(get_blocks);

@@ -235,7 +235,7 @@ TEST_CASE("heading  operator boolean not equals  differs  returns true", "[headi
     REQUIRE(instance != expected);
 }
 
-TEST_CASE("heading  type  all cases  match expected", "[heading]") {
+TEST_CASE("heading type all cases match expected", "[heading]") {
     message::heading instance;
     REQUIRE(message::message_type::unknown == instance.type());
     instance.set_command(message::address::command);
@@ -248,6 +248,8 @@ TEST_CASE("heading  type  all cases  match expected", "[heading]") {
     REQUIRE(message::message_type::block_transactions == instance.type());
     instance.set_command(message::compact_block::command);
     REQUIRE(message::message_type::compact_block == instance.type());
+    instance.set_command(message::double_spend_proof::command);
+    REQUIRE(message::message_type::double_spend_proof == instance.type());
     instance.set_command(message::filter_add::command);
     REQUIRE(message::message_type::filter_add == instance.type());
     instance.set_command(message::filter_clear::command);

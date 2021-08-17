@@ -35,9 +35,9 @@ size_t heading::maximum_size() {
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
 size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t magic) {
-    /*    static constexpr 
+    /*    static constexpr
     size_t vector = sizeof(uint32_t) + hash_size;
-    static constexpr 
+    static constexpr
     size_t maximum = 3u + vector * max_inventory;
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */
@@ -100,93 +100,36 @@ void heading::to_data(data_sink& stream) const {
 
 message_type heading::type() const {
     // TODO(legacy): convert to static map.
-    if (command_ == address::command) {
-        return message_type::address;
-    }
-    if (command_ == alert::command) {
-        return message_type::alert;
-    }
-    if (command_ == block_transactions::command) {
-        return message_type::block_transactions;
-    }
-    if (command_ == block::command) {
-        return message_type::block;
-    }
-    if (command_ == compact_block::command) {
-        return message_type::compact_block;
-    }
-    if (command_ == fee_filter::command) {
-        return message_type::fee_filter;
-    }
-    if (command_ == filter_add::command) {
-        return message_type::filter_add;
-    }
-    if (command_ == filter_clear::command) {
-        return message_type::filter_clear;
-    }
-    if (command_ == filter_load::command) {
-        return message_type::filter_load;
-    }
-    if (command_ == get_address::command) {
-        return message_type::get_address;
-    }
-    if (command_ == get_block_transactions::command) {
-        return message_type::get_block_transactions;
-    }
-    if (command_ == get_blocks::command) {
-        return message_type::get_blocks;
-    }
-    if (command_ == get_data::command) {
-        return message_type::get_data;
-    }
-    if (command_ == get_headers::command) {
-        return message_type::get_headers;
-    }
-    if (command_ == headers::command) {
-        return message_type::headers;
-    }
-    if (command_ == inventory::command) {
-        return message_type::inventory;
-    }
-    if (command_ == memory_pool::command) {
-        return message_type::memory_pool;
-    }
-    if (command_ == merkle_block::command) {
-        return message_type::merkle_block;
-    }
-    if (command_ == not_found::command) {
-        return message_type::not_found;
-    }
-    if (command_ == ping::command) {
-        return message_type::ping;
-    }
-    if (command_ == pong::command) {
-        return message_type::pong;
-    }
-    if (command_ == reject::command) {
-        return message_type::reject;
-    }
-    if (command_ == send_compact::command) {
-        return message_type::send_compact;
-    }
-    if (command_ == send_headers::command) {
-        return message_type::send_headers;
-    }
-    if (command_ == transaction::command) {
-        return message_type::transaction;
-    }
-    if (command_ == verack::command) {
-        return message_type::verack;
-    }
-    if (command_ == version::command) {
-        return message_type::version;
-    }
-    if (command_ == xverack::command) {
-        return message_type::xverack;
-    }
-    if (command_ == xversion::command) {
-        return message_type::xversion;
-    }
+    if (command_ == address::command) return message_type::address;
+    if (command_ == alert::command) return message_type::alert;
+    if (command_ == block_transactions::command) return message_type::block_transactions;
+    if (command_ == block::command) return message_type::block;
+    if (command_ == compact_block::command) return message_type::compact_block;
+    if (command_ == double_spend_proof::command) return message_type::double_spend_proof;
+    if (command_ == fee_filter::command) return message_type::fee_filter;
+    if (command_ == filter_add::command) return message_type::filter_add;
+    if (command_ == filter_clear::command) return message_type::filter_clear;
+    if (command_ == filter_load::command) return message_type::filter_load;
+    if (command_ == get_address::command) return message_type::get_address;
+    if (command_ == get_block_transactions::command) return message_type::get_block_transactions;
+    if (command_ == get_blocks::command) return message_type::get_blocks;
+    if (command_ == get_data::command) return message_type::get_data;
+    if (command_ == get_headers::command) return message_type::get_headers;
+    if (command_ == headers::command) return message_type::headers;
+    if (command_ == inventory::command) return message_type::inventory;
+    if (command_ == memory_pool::command) return message_type::memory_pool;
+    if (command_ == merkle_block::command) return message_type::merkle_block;
+    if (command_ == not_found::command) return message_type::not_found;
+    if (command_ == ping::command) return message_type::ping;
+    if (command_ == pong::command) return message_type::pong;
+    if (command_ == reject::command) return message_type::reject;
+    if (command_ == send_compact::command) return message_type::send_compact;
+    if (command_ == send_headers::command) return message_type::send_headers;
+    if (command_ == transaction::command) return message_type::transaction;
+    if (command_ == verack::command) return message_type::verack;
+    if (command_ == version::command) return message_type::version;
+    if (command_ == xverack::command) return message_type::xverack;
+    if (command_ == xversion::command) return message_type::xversion;
 
     return message_type::unknown;
 }
