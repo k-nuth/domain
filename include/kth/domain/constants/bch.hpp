@@ -60,6 +60,7 @@ const infrastructure::config::checkpoint scalenet_bip34_active_checkpoint {
 // enum class fermat_t : uint64_t {};
 // enum class euler_t : uint64_t {};
 enum class gauss_t : uint64_t {};
+enum class descartes_t : uint64_t {};
 enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
 // constexpr size_t     bch_activation_height = 478559 //478558;        // 2017-Aug-01 HF
@@ -71,7 +72,8 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 // constexpr fermat_t   bch_fermat_activation_time{1589544000};         // 2020-May-15 HF
 // constexpr euler_t    bch_euler_activation_time{1605441600};          // 2020-Nov-15 HF
                                                                         // 2021-May-15 (skipped, not a HF)
-// constexpr gauss_t     bch_gauss_activation_time{??????????};         // ????-???-?? HF
+constexpr gauss_t     bch_gauss_activation_time{1652616000};            // 2022-May-15 HF
+constexpr descartes_t bch_descartes_activation_time{1684152000};        // 2023-May-15 HF
 
 //2017-August-01 hard fork
 constexpr size_t mainnet_uahf_activation_height = 478559;
@@ -144,6 +146,13 @@ constexpr size_t mainnet_euler_activation_height = 661648;
 constexpr size_t testnet_euler_activation_height = 1421482;
 constexpr size_t testnet4_euler_activation_height = 16845;
 constexpr size_t scalenet_euler_activation_height = 16869;
+
+// //2022-May hard fork
+// constexpr size_t mainnet_gauss_activation_height = ???;
+// constexpr size_t testnet_gauss_activation_height = ???;
+// constexpr size_t testnet4_gauss_activation_height = ???;
+// constexpr size_t scalenet_gauss_activation_height = ???;
+
 
 } // namespace kth
 

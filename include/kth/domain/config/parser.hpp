@@ -115,7 +115,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("00000000062c7f32591d883c99fc89ebe74a83287c0f2b7ffeef72e62217d40b", 1421481);  //mediantime: 1605442008. New rules activated in the next block.
         checkpoints.emplace_back("0000000023e0680a8a062b3cc289a4a341124ce7fcb6340ede207e194d73b60a", 1421482);  //mediantime: 1605443209. New rules activated in this block.
 
-        // //2021-May Hardfork - gauss - (1621080000)
+        // //2021-May Hardfork - gauss - (1652616000)
         // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999
         // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in the next block.
         // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in this block.
@@ -272,7 +272,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f", 661647);  //mediantime: 1605443067. New rules activated in the next block.
         checkpoints.emplace_back("0000000000000000029e471c41818d24b8b74c911071c4ef0b4a0509f9b5a8ce", 661648);  //mediantime: 1605443708. New rules activated in this block.
 
-        // //2021-May Hardfork - gauss - (1621080000)
+        // //2021-May Hardfork - gauss - (1652616000)
         // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999
         // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in the next block.
         // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in this block.
