@@ -121,6 +121,7 @@ class KnuthDomainConan(KnuthConanFile):
         # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
         cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
         cmake.definitions["LOG_LIBRARY"] = self.options.log
+        cmake.definitions["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
 
         cmake.configure(source_dir=self.source_folder)
         if not self.options.cmake_export_compile_commands:
