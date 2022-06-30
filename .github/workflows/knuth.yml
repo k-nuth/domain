@@ -5,8 +5,8 @@ on: [push, pull_request]
 jobs:
   master:
     name: Master
-    if: github.ref == 'refs/heads/master'
-        github.ref == 'refs/heads/dev' ||
+    if: github.ref == 'refs/heads/master' ||
+        github.ref == 'refs/heads/dev'
     runs-on: ubuntu-20.04
     steps:
       - name: Master Build
