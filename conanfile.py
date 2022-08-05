@@ -26,8 +26,8 @@ class KnuthDomainConan(KnuthConanFile):
                "examples": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
 
-                "march_id": "ANY",
-                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
+               "march_id": "ANY",
+               "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
 
                "verbose": [True, False],
             #    "keoken": [True, False],
@@ -93,6 +93,9 @@ class KnuthDomainConan(KnuthConanFile):
 
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@kth/stable")
+
+    def validate(self):
+        KnuthConanFile.validate(self)
 
     def config_options(self):
         KnuthConanFile.config_options(self)

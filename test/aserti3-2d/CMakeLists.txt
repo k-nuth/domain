@@ -21,8 +21,8 @@ set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
 # message(${KTH_PROJECT_VERSION})
 message( STATUS "Knuth: Compiling version ${KTH_PROJECT_VERSION}")
 
-set(KTH_MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
-message( STATUS "Knuth: Compiling for Microarchitecture ID ${KTH_MARCH_ID}")
+set(MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
+message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
 
 message( STATUS "Knuth: CONAN_CXX_FLAGS ${CONAN_CXX_FLAGS}")
 message( STATUS "Knuth: CONAN_C_FLAGS ${CONAN_C_FLAGS}")
