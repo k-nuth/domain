@@ -25,11 +25,12 @@ class KnuthDomainConan(KnuthConanFile):
                "tests": [True, False],
                "examples": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
-               "microarchitecture": "ANY",
-               "fix_march": [True, False],
-               "march_id": "ANY",
+
+                "march_id": "ANY",
+                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
+
                "verbose": [True, False],
-               "keoken": [True, False],
+            #    "keoken": [True, False],
                "cached_rpc_data": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
@@ -49,11 +50,12 @@ class KnuthDomainConan(KnuthConanFile):
         "tests": False,
         "examples": False,
         "currency": "BCH",
-        "microarchitecture": "_DUMMY_",
-        "fix_march": False,
+
         "march_id": "_DUMMY_",
+        "march_strategy": "download_if_possible",
+
         "verbose": False,
-        "keoken": False,
+        # "keoken": False,
         "cached_rpc_data": False,
         "cxxflags": "_DUMMY_",
         "cflags": "_DUMMY_",
@@ -72,9 +74,9 @@ class KnuthDomainConan(KnuthConanFile):
     package_files = "build/lkth-domain.a"
     build_policy = "missing"
 
-    @property
-    def is_keoken(self):
-        return self.options.currency == "BCH" and self.options.get_safe("keoken")
+    # @property
+    # def is_keoken(self):
+    #     return self.options.currency == "BCH" and self.options.get_safe("keoken")
 
     def requirements(self):
         self.requires("algorithm/0.1.239@tao/stable")
@@ -98,11 +100,11 @@ class KnuthDomainConan(KnuthConanFile):
     def configure(self):
         KnuthConanFile.configure(self)
 
-        if self.options.keoken and self.options.currency != "BCH":
-            self.output.warn("For the moment Keoken is only enabled for BCH. Building without Keoken support...")
-            del self.options.keoken
-        else:
-            self.options["*"].keoken = self.options.keoken
+        # if self.options.keoken and self.options.currency != "BCH":
+        #     self.output.warn("For the moment Keoken is only enabled for BCH. Building without Keoken support...")
+        #     del self.options.keoken
+        # else:
+        #     self.options["*"].keoken = self.options.keoken
 
         self.options["*"].cached_rpc_data = self.options.cached_rpc_data
 
@@ -115,7 +117,10 @@ class KnuthDomainConan(KnuthConanFile):
     def build(self):
         cmake = self.cmake_basis()
         cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
-        cmake.definitions["WITH_KEOKEN"] = option_on_off(self.is_keoken)
+
+        cmake.definitions["WITH_KEOKEN"] = option_on_off(False)
+        # cmake.definitions["WITH_KEOKEN"] = option_on_off(self.is_keoken)
+
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
         # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
