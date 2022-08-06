@@ -2,7 +2,7 @@ import copy
 import os
 import cpuid
 import platform
-from kthbuild import get_base_march_ids, get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
+from kthbuild import get_base_march_ids, get_builder, handle_microarchs, copy_env_vars, filter_marchs_tests
 
 if __name__ == "__main__":
     full_build = os.getenv('KTH_FULL_BUILD', '0') == '1'
@@ -34,7 +34,7 @@ if __name__ == "__main__":
                 # opts_ltc = copy.deepcopy(options)
 
                 opts_bch["%s:currency" % name] = "BCH"
-                opts_bch["%s:keoken" % name] = with_keoken
+                # opts_bch["%s:keoken" % name] = with_keoken
 
                 # opts_btc["%s:currency" % name] = "BTC"
                 # opts_ltc["%s:currency" % name] = "LTC"
@@ -44,7 +44,7 @@ if __name__ == "__main__":
                 # handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_ltc, env_vars, build_requires)
             else:
                 options["%s:currency" % name] = ci_currency
-                options["%s:keoken" % name] = with_keoken
+                # options["%s:keoken" % name] = with_keoken
                 handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, options, env_vars, build_requires)
 
             filter_marchs_tests(name, filtered_builds, ["%s:tests" % name, "%s:examples" % name])
