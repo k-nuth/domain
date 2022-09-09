@@ -123,17 +123,17 @@ size_t transaction_basis::serialized_size(bool wire, bool witness) const {
     };
 
     // Must be both witness and wire encoding for bip144 serialization.
-    return 
-           (wire ? sizeof(version_) : infrastructure::message::variable_uint_size(version_)) 
-         + (wire ? sizeof(locktime_) : infrastructure::message::variable_uint_size(locktime_)) 
-         + infrastructure::message::variable_uint_size(inputs_.size()) 
-         + infrastructure::message::variable_uint_size(outputs_.size()) 
-         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins) 
+    return
+           (wire ? sizeof(version_) : infrastructure::message::variable_uint_size(version_))
+         + (wire ? sizeof(locktime_) : infrastructure::message::variable_uint_size(locktime_))
+         + infrastructure::message::variable_uint_size(inputs_.size())
+         + infrastructure::message::variable_uint_size(outputs_.size())
+         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins)
          + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs)
 
 #if defined(KTH_SEGWIT_ENABLED)
-         + (wire && witness_val(witness) ? sizeof(witness_marker) : 0) 
-         + (wire && witness_val(witness) ? sizeof(witness_flag) : 0) 
+         + (wire && witness_val(witness) ? sizeof(witness_marker) : 0)
+         + (wire && witness_val(witness) ? sizeof(witness_flag) : 0)
 #endif
         ;
 }
@@ -242,15 +242,14 @@ bool transaction_basis::all_inputs_final() const {
 }
 
 bool transaction_basis::is_final(size_t block_height, uint32_t block_time) const {
-    auto const max_locktime = [=]() {
+    auto const max_locktime = [=, this]() {
         return locktime_ < locktime_threshold ? safe_unsigned<uint32_t>(block_height) : block_time;
     };
 
     return locktime_ == 0 || locktime_ < max_locktime() || all_inputs_final();
 }
 
-bool transaction_basis::is_locked(size_t block_height,
-                            uint32_t median_time_past) const {
+bool transaction_basis::is_locked(size_t block_height, uint32_t median_time_past) const {
     if (version_ < relative_locktime_min_version || is_coinbase()) {
         return false;
     }
@@ -394,7 +393,7 @@ code transaction_basis::check(uint64_t total_output_value, size_t max_block_size
     }
 
     // if (total_output_value() > max_money(retarget)) {
-    if (total_output_value > max_money(retarget)) {        
+    if (total_output_value > max_money(retarget)) {
         return error::spend_overflow;
     }
 
@@ -534,8 +533,8 @@ bool transaction_basis::is_standard() const {
         }
     }
 
-    return std::all_of(begin(outputs()), end(outputs()), [](auto const& out){ 
-        return out.script().pattern() != script_pattern::non_standard; 
+    return std::all_of(begin(outputs()), end(outputs()), [](auto const& out){
+        return out.script().pattern() != script_pattern::non_standard;
     });
 }
 

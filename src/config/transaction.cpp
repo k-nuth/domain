@@ -2,6 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#ifdef KTH_INFRASTUCTURE_CONFIG_ENABLED
+
 #include <kth/domain/config/transaction.hpp>
 
 #include <iostream>
@@ -56,3 +58,5 @@ std::ostream& operator<<(std::ostream& output, transaction const& argument) {
 }
 
 } // namespace kth::domain::config
+
+#endif // KTH_INFRASTUCTURE_CONFIG_ENABLED

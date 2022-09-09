@@ -7,7 +7,7 @@
 #include <string>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+// #include <boost/lexical_cast.hpp>
 
 // #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
@@ -41,7 +41,7 @@ inline std::string trim_token(std::string const& token) {
     return std::string(token.begin() + 1, token.end() - 1);
 }
 
-inline 
+inline
 string_list split_push_token(std::string const& token) {
     return split(trim_token(token), ".", false);
 }
@@ -74,8 +74,7 @@ bool opcode_from_data_prefix(opcode& out_code,
 }
 
 static
-bool data_from_number_token(data_chunk& out_data,
-                                   std::string const& token) {
+bool data_from_number_token(data_chunk& out_data, std::string const& token) {
     try {
         out_data = number(boost::lexical_cast<int64_t>(token)).data();
         return true;

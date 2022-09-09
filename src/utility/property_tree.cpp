@@ -38,6 +38,8 @@ using namespace kth::domain::wallet;
 // Edit with care - text property names trade DRY for readability.
 // Edit with care - tests are affected by property ORDER (keep alphabetical).
 
+#ifdef KTH_INFRASTUCTURE_CONFIG_ENABLED
+
 // headers
 
 ptree property_list(config::header const& header) {
@@ -65,6 +67,8 @@ ptree property_tree(std::vector<config::header> const& headers, bool json) {
     tree.add_child("headers", property_tree_list("header", headers, json));
     return tree;
 }
+
+#endif // KTH_INFRASTUCTURE_CONFIG_ENABLED
 
 // inputs
 
@@ -185,6 +189,8 @@ ptree property_tree(const chain::points_value& values, bool json) {
     return tree;
 }
 
+#ifdef KTH_INFRASTUCTURE_CONFIG_ENABLED
+
 // transactions
 
 ptree property_list(const config::transaction& transaction, bool json) {
@@ -214,7 +220,7 @@ ptree property_tree(const std::vector<config::transaction>& transactions, bool j
 
 // wrapper
 
-ptree property_list(const wallet::wrapped_data& wrapper) {
+ptree property_list(wallet::wrapped_data const& wrapper) {
     ptree tree;
     tree.put("checksum", wrapper.checksum);
     tree.put("payload", base16(wrapper.payload));
@@ -222,11 +228,14 @@ ptree property_list(const wallet::wrapped_data& wrapper) {
     return tree;
 }
 
-ptree property_tree(const wallet::wrapped_data& wrapper) {
+ptree property_tree(wallet::wrapped_data const& wrapper) {
     ptree tree;
     tree.add_child("wrapper", property_list(wrapper));
     return tree;
 }
+
+#endif // KTH_INFRASTUCTURE_CONFIG_ENABLED
+
 
 // metadata
 

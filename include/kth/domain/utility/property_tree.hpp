@@ -30,6 +30,8 @@ class wrapper;
  */
 using settings_list = std::map<std::string, std::string>;
 
+#ifdef KTH_INFRASTUCTURE_CONFIG_ENABLED
+
 /**
  * Generate a property list for a block header.
  * @param[in]  header  The header.
@@ -49,8 +51,9 @@ KD_API pt::ptree property_tree(config::header const& header);
  * @param[in]  headers  The set of headers.
  * @return              A property tree.
  */
-KD_API pt::ptree property_tree(std::vector<config::header> const& headers,
-                               bool json);
+KD_API pt::ptree property_tree(std::vector<config::header> const& headers, bool json);
+
+#endif // KTH_INFRASTUCTURE_CONFIG_ENABLED
 
 /**
  * Generate a property list for a transaction input.
@@ -135,6 +138,8 @@ KD_API pt::ptree property_list(const chain::point_value& point);
  */
 KD_API pt::ptree property_tree(chain::points_value const& values, bool json);
 
+#ifdef KTH_INFRASTUCTURE_CONFIG_ENABLED
+
 /**
  * Generate a property list for a transaction.
  * @param[in]  transaction  The transaction.
@@ -157,22 +162,25 @@ KD_API pt::ptree property_tree(config::transaction const& transaction, bool json
  * @param[in]  json          Use json array formatting.
  * @return                   A property tree.
  */
-KD_API pt::ptree property_tree(const std::vector<config::transaction>& transactions,
-                               bool json);
+KD_API pt::ptree property_tree(const std::vector<config::transaction>& transactions, bool json);
 
 /**
  * Generate a property list for a wrapper.
  * @param[in]  wrapper  The wrapper instance.
  * @return              A property list.
  */
-KD_API pt::ptree property_list(const wallet::wrapped_data& wrapper);
+KD_API pt::ptree property_list(wallet::wrapped_data const& wrapper);
 
 /**
  * Generate a property tree for a wrapper.
  * @param[in]  wrapper  The wrapper instance.
  * @return              A property tree.
  */
-KD_API pt::ptree property_tree(const wallet::wrapped_data& wrapper);
+KD_API pt::ptree property_tree(wallet::wrapped_data const& wrapper);
+
+#endif // KTH_INFRASTUCTURE_CONFIG_ENABLED
+
+
 
 /**
  * Create a property list for the fetch-tx-index command.
