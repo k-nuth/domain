@@ -62,7 +62,7 @@ script::script(operation::list&& ops) {
     from_operations(std::move(ops));
 }
 
-script::script(data_chunk&& encoded, bool prefix) 
+script::script(data_chunk&& encoded, bool prefix)
     : script_basis(std::move(encoded), prefix)
 {}
 
@@ -107,25 +107,25 @@ script& script::operator=(script const& x) {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// Concurrent read/write is not supported, so no critical section.
-bool script::from_string(std::string const& mnemonic) {
-    reset();
+// // Concurrent read/write is not supported, so no critical section.
+// bool script::from_string(std::string const& mnemonic) {
+//     reset();
 
-    // There is strictly one operation per string token.
-    auto const tokens = split(mnemonic);
-    operation::list ops;
-    ops.resize(tokens.empty() || tokens.front().empty() ? 0 : tokens.size());
+//     // There is strictly one operation per string token.
+//     auto const tokens = split(mnemonic);
+//     operation::list ops;
+//     ops.resize(tokens.empty() || tokens.front().empty() ? 0 : tokens.size());
 
-    // Create an op list from the split tokens, one operation per token.
-    for (size_t index = 0; index < ops.size(); ++index) {
-        if ( ! ops[index].from_string(tokens[index])) {
-            return false;
-        }
-    }
+//     // Create an op list from the split tokens, one operation per token.
+//     for (size_t index = 0; index < ops.size(); ++index) {
+//         if ( ! ops[index].from_string(tokens[index])) {
+//             return false;
+//         }
+//     }
 
-    from_operations(ops);
-    return true;
-}
+//     from_operations(ops);
+//     return true;
+// }
 
 // Concurrent read/write is not supported, so no critical section.
 void script::from_operations(operation::list&& ops) {
@@ -291,7 +291,7 @@ operation::list const& script::operations() const {
 // Signing (unversioned).
 //-----------------------------------------------------------------------------
 
-inline 
+inline
 hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
     KTH_ASSERT( ! tx.is_coinbase());
@@ -306,7 +306,7 @@ hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
 // there are 4 possible 7 bit values that can set "single" and 4 others that
 // can set none, and yet all other values set "all".
 //*****************************************************************************
-inline 
+inline
 sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     switch (sighash_type & sighash_algorithm::mask) {
         case sighash_algorithm::single:
@@ -318,7 +318,7 @@ sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     }
 }
 
-inline 
+inline
 uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
     return static_cast<uint8_t>(
         to_sighash_enum(sighash_type) == value
@@ -1125,7 +1125,7 @@ bool script::is_unspendable() const {
 //     } else
 // #endif
 //     // p2sh and p2w are mutually exclusive.
-//     /*else*/ 
+//     /*else*/
 //     if (prevout_script.is_pay_to_script_hash(forks)) {
 //         if ( ! is_relaxed_push(input_script.operations())) {
 //             return error::invalid_script_embed;

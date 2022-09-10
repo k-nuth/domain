@@ -294,7 +294,7 @@ std::string opcode_to_string(opcode value, uint32_t active_forks) {
             return "nop1";
         case opcode::checklocktimeverify:
             // return script::is_enabled(active_forks, rule_fork::bip65_rule) ?
-            return is_enabled(active_forks, rule_fork::bip65_rule) ? 
+            return is_enabled(active_forks, rule_fork::bip65_rule) ?
                 "checklocktimeverify" : "nop2";
         case opcode::checksequenceverify:
             // return script::is_enabled(active_forks, rule_fork::bip112_rule) ?
@@ -390,6 +390,13 @@ std::string opcode_to_string(opcode value, uint32_t active_forks) {
         default:
             return opcode_to_hexadecimal(value);
     }
+}
+
+//TODO(fernando): fix this
+// This converts only names, not any data for push codes.
+bool opcode_from_string(opcode& out_code, std::string_view value) {       //NOLINT
+    std::string const value_str(value);
+    return opcode_from_string(out_code, value_str);
 }
 
 // This converts only names, not any data for push codes.

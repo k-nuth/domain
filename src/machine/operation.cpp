@@ -22,27 +22,43 @@
 
 namespace kth::domain::machine {
 
-inline bool is_push_token(std::string const& token) {
+inline
+// bool is_push_token(std::string const& token) {
+bool is_push_token(std::string_view token) {
     return token.size() > 1 && token.front() == '[' && token.back() == ']';
 }
 
-inline bool is_text_token(std::string const& token) {
+inline
+// bool is_text_token(std::string const& token) {
+bool is_text_token(std::string_view token) {
     return token.size() > 1 && token.front() == '\'' && token.back() == '\'';
 }
 
-inline bool is_valid_data_size(opcode code, size_t size) {
+inline
+bool is_valid_data_size(opcode code, size_t size) {
     constexpr auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
     auto const value = static_cast<uint8_t>(code);
     return value > op_75 || value == size;
 }
 
-inline std::string trim_token(std::string const& token) {
+inline
+// std::string trim_token(std::string const& token) {
+std::string trim_token(std::string_view token) {
     KTH_ASSERT(token.size() > 1);
     return std::string(token.begin() + 1, token.end() - 1);
 }
 
 inline
 string_list split_push_token(std::string const& token) {
+    return split(trim_token(token), ".", false);
+}
+
+
+//TODO(fernando): fix this
+inline
+string_list split_push_token(std::string_view token_view) {
+    // std::string const token(token_view.begin(), token.end());
+    std::string const token(token_view);
     return split(trim_token(token), ".", false);
 }
 
@@ -74,7 +90,8 @@ bool opcode_from_data_prefix(opcode& out_code,
 }
 
 static
-bool data_from_number_token(data_chunk& out_data, std::string const& token) {
+// bool data_from_number_token(data_chunk& out_data, std::string const& token) {
+bool data_from_number_token(data_chunk& out_data, std::string_view token) {
     try {
         out_data = number(boost::lexical_cast<int64_t>(token)).data();
         return true;
@@ -83,8 +100,50 @@ bool data_from_number_token(data_chunk& out_data, std::string const& token) {
     }
 }
 
+// // The removal of spaces in v3 data is a compatability break with our v2.
+// bool operation::from_string(std::string const& mnemonic) {
+//     reset();
+
+//     if (is_push_token(mnemonic)) {
+//         // Data encoding uses single token (with optional non-minimality).
+//         auto const parts = split_push_token(mnemonic);
+
+//         if (parts.size() == 1) {
+//             // Extract operation using nominal data size encoding.
+//             if (decode_base16(data_, parts[0])) {
+//                 code_ = nominal_opcode_from_data(data_);
+//                 valid_ = true;
+//             }
+//         } else if (parts.size() == 2) {
+//             // Extract operation using explicit data size encoding.
+//             valid_ = decode_base16(data_, parts[1]) &&
+//                      opcode_from_data_prefix(code_, parts[0], data_);
+//         }
+//     } else if (is_text_token(mnemonic)) {
+//         auto const text = trim_token(mnemonic);
+//         data_ = data_chunk{text.begin(), text.end()};
+//         code_ = nominal_opcode_from_data(data_);
+//         valid_ = true;
+//     } else if (opcode_from_string(code_, mnemonic)) {
+//         // push_one_size, push_two_size and push_four_size succeed with empty.
+//         // push_size_1 through push_size_75 always fail because they are empty.
+//         valid_ = is_valid_data_size(code_, data_.size());
+//     } else if (data_from_number_token(data_, mnemonic)) {
+//         // [-1, 0, 1..16] integers captured by opcode_from_string, others here.
+//         // Otherwise minimal_opcode_from_data could convert integers here.
+//         code_ = nominal_opcode_from_data(data_);
+//         valid_ = true;
+//     }
+
+//     if ( ! valid_) {
+//         reset();
+//     }
+
+//     return valid_;
+// }
+
 // The removal of spaces in v3 data is a compatability break with our v2.
-bool operation::from_string(std::string const& mnemonic) {
+bool operation::from_string(std::string_view mnemonic) {
     reset();
 
     if (is_push_token(mnemonic)) {

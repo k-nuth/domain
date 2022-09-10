@@ -10,8 +10,12 @@
 #include <iterator>
 #include <memory>
 #include <numeric>
+#include <ranges>
 #include <sstream>
 #include <utility>
+
+// #include <string>
+// #include <functional>
 
 #include <boost/range/adaptor/reversed.hpp>
 
@@ -43,6 +47,9 @@
 #include <kth/infrastructure/utility/istream_reader.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 #include <kth/infrastructure/utility/string.hpp>
+
+namespace ranges = std::ranges;
+namespace views = std::views;
 
 using namespace kth::domain::machine;
 using namespace kth::infrastructure::machine;
@@ -87,19 +94,53 @@ bool script_basis::operator!=(script_basis const& x) const {
 //-----------------------------------------------------------------------------
 
 // Concurrent read/write is not supported, so no critical section.
+// bool script_basis::from_string(std::string const& mnemonic) {
+//     reset();
+
+//     // There is strictly one operation per string token.
+//     auto const tokens = split(mnemonic);
+//     operation::list ops;
+//     ops.resize(tokens.empty() || tokens.front().empty() ? 0 : tokens.size());
+
+//     // Create an op list from the split tokens, one operation per token.
+//     for (size_t index = 0; index < ops.size(); ++index) {
+//         if ( ! ops[index].from_string(tokens[index])) {
+//             return false;
+//         }
+//     }
+
+//     from_operations(ops);
+//     return true;
+// }
+
 bool script_basis::from_string(std::string const& mnemonic) {
     reset();
 
     // There is strictly one operation per string token.
-    auto const tokens = split(mnemonic);
-    operation::list ops;
-    ops.resize(tokens.empty() || tokens.front().empty() ? 0 : tokens.size());
+    // auto const tokens = split(mnemonic);
+    auto tokens = mnemonic | views::split(' ');
 
-    // Create an op list from the split tokens, one operation per token.
-    for (size_t index = 0; index < ops.size(); ++index) {
-        if ( ! ops[index].from_string(tokens[index])) {
-            return false;
+    operation::list ops;
+    // ops.resize(tokens.empty() || tokens.front().empty() ? 0 : ranges::distance(tokens));
+    if ( ! tokens.empty() && ! tokens.front().empty()) {
+        // ops.resize(ranges::distance(tokens));
+
+        // Create an op list from the split tokens, one operation per token.
+        for (auto token : tokens) {
+            operation op;
+            std::string_view v(token.begin(), token.end());
+            if ( ! op.from_string(v)) {
+                return false;
+            }
+            ops.push_back(std::move(op));
         }
+
+        // // Create an op list from the split tokens, one operation per token.
+        // for (size_t i = 0; i < ops.size(); ++i) {
+        //     if ( ! ops[i].from_string(tokens[i])) {
+        //         return false;
+        //     }
+        // }
     }
 
     from_operations(ops);
@@ -203,7 +244,7 @@ data_chunk const& script_basis::bytes() const {
 // Signing (unversioned).
 //-----------------------------------------------------------------------------
 
-inline 
+inline
 hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
     KTH_ASSERT( ! tx.is_coinbase());
@@ -218,7 +259,7 @@ hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
 // there are 4 possible 7 bit values that can set "single" and 4 others that
 // can set none, and yet all other values set "all".
 //*****************************************************************************
-inline 
+inline
 sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     switch (sighash_type & sighash_algorithm::mask) {
         case sighash_algorithm::single:
@@ -230,7 +271,7 @@ sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     }
 }
 
-inline 
+inline
 uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
     return static_cast<uint8_t>(
         to_sighash_enum(sighash_type) == value

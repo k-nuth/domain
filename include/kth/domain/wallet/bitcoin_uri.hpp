@@ -5,6 +5,8 @@
 #ifndef KTH_WALLET_BITCOIN_URI_HPP
 #define KTH_WALLET_BITCOIN_URI_HPP
 
+#ifdef KTH_INFRASTUCTURE_WALLET_ENABLED
+
 #include <cstdint>
 #include <iostream>
 #include <map>
@@ -49,25 +51,25 @@ public:
     /// Property getters.
     [[nodiscard]]
     uint64_t amount() const;
-    
+
     [[nodiscard]]
     std::string label() const;
-    
+
     [[nodiscard]]
     std::string message() const;
-    
+
     [[nodiscard]]
     std::string r() const;
-    
+
     [[nodiscard]]
     std::string address() const;
-    
+
     [[nodiscard]]
     payment_address payment() const;
-    
+
     [[nodiscard]]
     stealth_address stealth() const;
-    
+
     [[nodiscard]]
     std::string parameter(std::string const& key) const;
 
@@ -100,5 +102,7 @@ private:
 };
 
 } // namespace kth::domain::wallet
+
+#endif // KTH_INFRASTUCTURE_WALLET_ENABLED
 
 #endif

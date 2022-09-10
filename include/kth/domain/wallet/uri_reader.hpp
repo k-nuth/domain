@@ -5,6 +5,8 @@
 #ifndef KTH_WALLET_URI_READER_HPP
 #define KTH_WALLET_URI_READER_HPP
 
+#ifdef KTH_INFRASTUCTURE_WALLET_ENABLED
+
 #include <string>
 
 #include <kth/domain/define.hpp>
@@ -74,4 +76,7 @@ public:
 
 } // namespace kth::domain::wallet
 
+#endif // KTH_INFRASTUCTURE_WALLET_ENABLED
+
 #endif
+

@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <string>
+#include <string_view>
 #include <vector>
 
 #include <kth/domain/constants.hpp>
@@ -29,7 +31,7 @@
 namespace kth::domain::machine {
 
 //TODO(fernando): static?
-constexpr 
+constexpr
 auto invalid_code = opcode::disabled_xor;
 
 class KD_API operation {
@@ -53,7 +55,7 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
-    
+
     // TODO(legacy): optimize for larger data by using a shared byte array.
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source) {
@@ -79,6 +81,7 @@ public:
     }
 
     bool from_string(std::string const& mnemonic);
+    bool from_string(std::string_view mnemonic);
 
     [[nodiscard]]
     bool is_valid() const;
@@ -88,7 +91,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data() const;
-    
+
     void to_data(data_sink& stream) const;
 
     template <typename W>
@@ -159,31 +162,31 @@ public:
     /// Categories of opcodes.
     static
     bool is_push(opcode code);
-    
+
     static
     bool is_payload(opcode code);
-    
+
     static
     bool is_counted(opcode code);
-    
+
     static
     bool is_version(opcode code);
-    
+
     static
     bool is_numeric(opcode code);
-    
+
     static
     bool is_positive(opcode code);
-    
+
     static
     bool is_reserved(opcode code);
-    
+
     static
     bool is_disabled(opcode code);
-    
+
     static
     bool is_conditional(opcode code);
-    
+
     static
     bool is_relaxed_push(opcode code);
 

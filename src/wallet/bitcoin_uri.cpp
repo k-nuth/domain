@@ -2,6 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#ifdef KTH_INFRASTUCTURE_WALLET_ENABLED
+
 #include <kth/domain/wallet/bitcoin_uri.hpp>
 
 #include <cstddef>
@@ -233,3 +235,5 @@ std::ostream& operator<<(std::ostream& out, bitcoin_uri const& from) {
 }
 
 } // namespace kth::domain::wallet
+
+#endif // KTH_INFRASTUCTURE_WALLET_ENABLED

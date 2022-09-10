@@ -311,6 +311,10 @@ KD_API std::string opcode_to_string(opcode value, uint32_t active_forks);
 /// Convert a string to an opcode.
 KD_API bool opcode_from_string(opcode& out_code, std::string const& value);
 
+
+/// Convert a string to an opcode.
+KD_API bool opcode_from_string(opcode& out_code, std::string_view value);
+
 /// Convert any opcode to a string hexadecimal representation.
 KD_API std::string opcode_to_hexadecimal(opcode code);
 
