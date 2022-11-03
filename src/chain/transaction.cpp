@@ -59,7 +59,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list const&
     , cached_sigops_(cached_sigops)
     , cached_is_standard_(cached_is_standard)
 #endif
-    , validation{} 
+    , validation{}
 {}
 
 transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inputs, output::list&& outputs
@@ -73,7 +73,7 @@ transaction::transaction(uint32_t version, uint32_t locktime, input::list&& inpu
     , cached_sigops_(cached_sigops)
     , cached_is_standard_(cached_is_standard)
 #endif
-    , validation{} 
+    , validation{}
 {}
 
 transaction::transaction(transaction const& x, hash_digest const& hash)
@@ -83,7 +83,7 @@ transaction::transaction(transaction const& x, hash_digest const& hash)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
 #endif
-    , validation(x.validation) 
+    , validation(x.validation)
 {
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = x.validation;
@@ -96,7 +96,7 @@ transaction::transaction(transaction&& x, hash_digest const& hash)
     , cached_sigops_(x.cached_sigops_)
     , cached_is_standard_(x.cached_is_standard_)
 #endif
-    , validation(std::move(x.validation)) 
+    , validation(std::move(x.validation))
 {
     hash_ = std::make_shared<hash_digest>(hash);
     // validation = std::move(x.validation);
@@ -109,7 +109,7 @@ transaction::transaction(transaction const& x)
     , cached_sigops_(0)
     , cached_is_standard_(false)
 #endif
-    , validation(x.validation) 
+    , validation(x.validation)
 {}
 
 transaction::transaction(transaction&& x) noexcept
@@ -119,7 +119,7 @@ transaction::transaction(transaction&& x) noexcept
     , cached_sigops_(0)
     , cached_is_standard_(false)
 #endif
-    , validation(std::move(x.validation)) 
+    , validation(std::move(x.validation))
 {}
 
 transaction& transaction::operator=(transaction const& x) {
@@ -232,7 +232,7 @@ size_t transaction::serialized_size(bool wire, bool witness
 
     // Must be both witness and wire encoding for bip144 serialization.
     return transaction_basis::serialized_size(wire, witness)
-#ifdef KTH_CACHED_RPC_DATA         
+#ifdef KTH_CACHED_RPC_DATA
          + (( ! wire && unconfirmed) ? sizeof(uint32_t) + sizeof(uint64_t) + sizeof(uint8_t) : 0)
 #endif
          ;
@@ -651,7 +651,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
     } else
 #endif
     // p2sh and p2w are mutually exclusive.
-    /*else*/ 
+    /*else*/
     if (prevout_script.is_pay_to_script_hash(forks)) {
         if ( ! script::is_relaxed_push(input_script.operations())) {
             return error::invalid_script_embed;
