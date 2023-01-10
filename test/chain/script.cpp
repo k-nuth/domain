@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -614,7 +614,7 @@ TEST_CASE("script create endorsement  single input single output  expected", "[s
     auto const result = encode_base16(out);
     // auto const expected = "3045022100e428d3cc67a724cb6cfe8634aa299e58f189d9c46c02641e936c40cc16c7e8ed0220083949910fe999c21734a1f33e42fca15fb463ea2e08f0a1bccd952aacaadbb801";
     auto const expected = "304402200245ea46be39d72fed03c899aabc446b3c9baf93f57c2b382757856c3209854b0220795946074804a08c0053116eafe851c1a37b24414199afecf286f1eb4d82167801";
-    
+
     REQUIRE(result == expected);
 }
 

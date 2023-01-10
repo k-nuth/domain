@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -76,7 +76,7 @@ bool create_stealth_data(script& out_null_data, ec_secret& out_secret, binary co
 // Mine a filter into the leftmost bytes of sha256(sha256(output-script)).
 bool create_stealth_script(script& out_null_data, ec_secret const& secret, binary const& filter, data_chunk const& seed) {
     // [ephemeral-public-key-hash:32][pad:0-44][nonce:4]
-    static constexpr 
+    static constexpr
     size_t max_pad_size = max_null_data_size - hash_size -
                                            sizeof(uint32_t);
 

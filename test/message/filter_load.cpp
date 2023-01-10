@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -91,7 +91,7 @@ TEST_CASE("filter load  from data  insufficient version  failure", "[filter load
     data_chunk const data = expected.to_data(message::version::level::maximum);
     message::filter_load instance;
 
-    REQUIRE( ! entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance,
                                    message::filter_load::version_minimum - 1, data));
     REQUIRE( ! instance.is_valid());
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -39,30 +39,30 @@ public:
     bool operator!=(merkle_block const& x) const;
 
     chain::header& header();
-    
+
     [[nodiscard]]
     chain::header const& header() const;
-    
+
     void set_header(chain::header const& value);
 
     [[nodiscard]]
     size_t total_transactions() const;
-    
+
     void set_total_transactions(size_t value);
 
     hash_list& hashes();
-    
+
     [[nodiscard]]
     hash_list const& hashes() const;
-    
+
     void set_hashes(hash_list const& value);
     void set_hashes(hash_list&& value);
 
     data_chunk& flags();
-    
+
     [[nodiscard]]
     data_chunk const& flags() const;
-    
+
     void set_flags(data_chunk const& value);
     void set_flags(data_chunk&& value);
 
@@ -125,9 +125,9 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 

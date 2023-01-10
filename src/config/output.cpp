@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -23,7 +23,7 @@ namespace kth::domain::config {
 using namespace boost::program_options;
 
 output::output()
-    : pay_to_hash_(null_short_hash) 
+    : pay_to_hash_(null_short_hash)
     // , script_()
 {}
 

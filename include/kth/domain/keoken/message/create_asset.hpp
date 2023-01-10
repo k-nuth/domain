@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,10 +24,10 @@ class KD_API create_asset {
 public:
     static
     uint16_t const version = 0;
-    
+
     static
     uint16_t const type = 0;
-    
+
     static
     size_t const max_name_size = 32u + 1u;  //32 real chars plus null-terminated
 

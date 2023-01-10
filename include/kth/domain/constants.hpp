@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,7 +27,7 @@ constexpr size_t internal_max_block_sigchecks = get_max_block_size(domain::confi
 constexpr size_t internal_max_block_sigchecks_testnet4 = get_max_block_size(domain::config::network::testnet4) / block_maxbytes_maxsigchecks_ratio;
 constexpr size_t internal_max_block_sigchecks_scalenet = get_max_block_size(domain::config::network::scalenet) / block_maxbytes_maxsigchecks_ratio;
 
-constexpr inline 
+constexpr inline
 size_t get_max_block_sigchecks(domain::config::network network) noexcept {
     if (network == domain::config::network::testnet4) return internal_max_block_sigchecks_testnet4;
     if (network == domain::config::network::scalenet) return internal_max_block_sigchecks_scalenet;

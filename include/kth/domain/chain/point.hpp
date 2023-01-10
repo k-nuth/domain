@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -31,7 +31,7 @@ class KD_API point {
 public:
     /// This is a sentinel used in .index to indicate no output, e.g. coinbase.
     /// This value is serialized and defined by consensus, not implementation.
-    static constexpr 
+    static constexpr
     uint32_t null_index = no_previous_output;
 
     using list = std::vector<point>;
@@ -109,7 +109,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(bool wire = true) const;
-    
+
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <typename W>
@@ -129,7 +129,7 @@ public:
 
     [[nodiscard]]
     point_iterator begin() const;
-    
+
     [[nodiscard]]
     point_iterator end() const;
 

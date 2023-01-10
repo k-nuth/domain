@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,7 +21,7 @@
 namespace kth::keoken::wallet {
 
 // TODO(guillermo): calculate the fees instead of using a static value
-static constexpr 
+static constexpr
 uint64_t fees = 2000;
 
 using result_t = std::pair<kth::error::error_code_t, kth::domain::chain::transaction>;

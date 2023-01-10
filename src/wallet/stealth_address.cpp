@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -49,7 +49,7 @@ size_t const stealth_address::min_filter_bits = 1 * byte_bits;
 size_t const stealth_address::max_filter_bits = sizeof(uint32_t) * byte_bits;
 
 stealth_address::stealth_address()
-    : scan_key_(null_compressed_point) 
+    : scan_key_(null_compressed_point)
 {}
 
 // stealth_address::stealth_address(stealth_address const& x)

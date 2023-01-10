@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -48,11 +48,11 @@ std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
 #endif
 
 payment_address::payment_address()
-    : hash_(null_short_hash) 
+    : hash_(null_short_hash)
 {}
 
 payment_address::payment_address(payment_address&& x) noexcept
-    : valid_(x.valid_), version_(x.version_), hash_(x.hash_) 
+    : valid_(x.valid_), version_(x.version_), hash_(x.hash_)
 {}
 
 // payment_address::payment_address(payment_address const& x)

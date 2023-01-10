@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -119,27 +119,27 @@ public:
 
     [[nodiscard]]
     uint32_t value() const;
-    
+
     void set_value(uint32_t value);
 
     [[nodiscard]]
     uint64_t services() const;
-    
+
     void set_services(uint64_t services);
 
     [[nodiscard]]
     uint64_t timestamp() const;
-    
+
     void set_timestamp(uint64_t timestamp);
 
     network_address& address_receiver();
-    
+
     [[nodiscard]]
     network_address const& address_receiver() const;
-    
+
     void set_address_receiver(network_address const& address);
     network_address& address_sender();
-    
+
     [[nodiscard]]
     network_address const& address_sender() const;
 
@@ -147,26 +147,26 @@ public:
 
     [[nodiscard]]
     uint64_t nonce() const;
-    
+
     void set_nonce(uint64_t nonce);
 
     std::string& user_agent();
-    
+
     [[nodiscard]]
     std::string const& user_agent() const;
-    
+
     void set_user_agent(std::string const& agent);
     void set_user_agent(std::string&& agent);
 
     [[nodiscard]]
     uint32_t start_height() const;
-    
+
     void set_start_height(uint32_t height);
 
     // version >= 70001
     [[nodiscard]]
     bool relay() const;
-    
+
     void set_relay(bool relay);
 
     template <typename R, KTH_IS_READER(R)>
@@ -208,7 +208,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
-    
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -231,9 +231,9 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 

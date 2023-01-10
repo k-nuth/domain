@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -41,7 +41,7 @@ inline std::string trim_token(std::string const& token) {
     return std::string(token.begin() + 1, token.end() - 1);
 }
 
-inline 
+inline
 string_list split_push_token(std::string const& token) {
     return split(trim_token(token), ".", false);
 }

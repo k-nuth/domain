@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -37,41 +37,41 @@ uint32_t first_byte_mask = 0xffffff00;
 // Inlines
 //-----------------------------------------------------------------------------
 
-inline 
+inline
 bool is_negated(uint32_t compact) {
     return (compact & sign_bit) != 0;
 }
 
-inline 
+inline
 bool is_nonzero(uint32_t compact) {
     return (compact & mantissa_max) != 0;
 }
 
-inline 
+inline
 uint8_t log_256(uint32_t mantissa) {
     KTH_ASSERT_MSG(mantissa <= 0x00ffffff, "mantissa log256 is 4");
     return (mantissa > 0x0000ffff ? 3 : (mantissa > 0x000000ff ? 2 : (mantissa > 0x00000000 ? 1 : 0)));     //NOLINT
 }
 
-inline 
+inline
 bool is_overflow(uint8_t exponent, uint32_t mantissa) {
     // Overflow if exponent would shift the mantissa more than 32 bytes.
     return (mantissa > 0) && (exponent > 32 + 3 - log_256(mantissa));       //NOLINT
 }
 
-inline 
+inline
 uint32_t shift_low(uint8_t exponent) {
     KTH_ASSERT(exponent <= 3);
     return 8 * (3 - exponent);  //NOLINT
 }
 
-inline 
+inline
 uint32_t shift_high(uint8_t exponent) {
     KTH_ASSERT(exponent > 3);
     return 8 * (exponent - 3);  //NOLINT
 }
 
-inline 
+inline
 size_t logical_size(uint256_t value) {
     auto byte = 0;
 

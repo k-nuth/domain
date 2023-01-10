@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -493,7 +493,7 @@ code block::accept(chain_state const& state, bool transactions) const {
     return block_basis::accept(state, serialized_size(), weight(), transactions);
 #else
     return block_basis::accept(state, serialized_size(), transactions);
-#endif      
+#endif
 }
 
 code block::connect() const {

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -41,16 +41,16 @@ public:
     bool operator!=(headers const& x) const;
 
     header::list& elements();
-    
+
     [[nodiscard]]
     header::list const& elements() const;
-    
+
     void set_elements(header::list const& values);
     void set_elements(header::list&& values);
 
     [[nodiscard]]
     bool is_sequential() const;
-    
+
     void to_hashes(hash_list& out) const;
     void to_inventory(inventory_vector::list& out, inventory::type_id type) const;
 
@@ -87,7 +87,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
-    
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -102,9 +102,9 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 

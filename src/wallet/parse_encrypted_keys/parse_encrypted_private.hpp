@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -34,10 +34,10 @@ private:
 
     static constexpr
     uint8_t default_context_ = 0x42;
-    
+
     static constexpr
     uint8_t multiplied_context_ = 0x43;
-    
+
     static
     const byte_array<magic_size> magic_;
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,17 +21,17 @@ uint32_t const block_transactions::version_minimum = version::level::bip152;
 uint32_t const block_transactions::version_maximum = version::level::bip152;
 
 block_transactions::block_transactions()
-    : block_hash_(null_hash) 
+    : block_hash_(null_hash)
 {}
 
 block_transactions::block_transactions(hash_digest const& block_hash, chain::transaction::list const& transactions)
     : block_hash_(block_hash)
-    , transactions_(transactions) 
+    , transactions_(transactions)
 {}
 
 block_transactions::block_transactions(hash_digest const& block_hash, chain::transaction::list&& transactions)
     : block_hash_(block_hash)
-    , transactions_(std::move(transactions)) 
+    , transactions_(std::move(transactions))
 {}
 
 bool block_transactions::operator==(block_transactions const& x) const {

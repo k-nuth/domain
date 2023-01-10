@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -31,10 +31,10 @@ using arguments_metadata = boost::program_options::positional_options_descriptio
 
 namespace config {
 
-enum class load_error { 
-    non_existing_file = -1, 
-    default_config = 0, 
-    success = 1 
+enum class load_error {
+    non_existing_file = -1,
+    default_config = 0,
+    success = 1
 };
 
 // using namespace std::filesystem;
@@ -401,7 +401,7 @@ public:
         }
 
         return variable.as<bool>();
-    }    
+    }
 
     static
     path get_config_option(variables_map& variables, std::string const& name) {
@@ -432,7 +432,7 @@ public:
 
             checkpoints.insert(checkpoints.begin(), def_checkpoints.begin(), def_checkpoints.end());
         }
-    } 
+    }
 
 protected:
     // virtual
@@ -467,7 +467,7 @@ protected:
                 auto const config = parse_config_file(file, config_settings);
                 store(config, variables);
                 return load_error::success;
-            } 
+            }
             return load_error::non_existing_file;
         }
 

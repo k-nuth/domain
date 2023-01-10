@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -108,10 +108,10 @@ public:
 
     static
     block genesis_mainnet();
-    
+
     static
     block genesis_testnet();
-    
+
     static
     block genesis_regtest();
 
@@ -125,7 +125,7 @@ public:
 
     static
     size_t locator_size(size_t top);
-    
+
     static
     indexes locator_heights(size_t top);
 

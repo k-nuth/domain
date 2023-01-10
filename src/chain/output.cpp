@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -29,19 +29,19 @@ uint32_t const output::validation::not_spent = max_uint32;
 //-----------------------------------------------------------------------------
 
 // output::output()
-//     : validation{} 
+//     : validation{}
 // {}
 
 output::output(output const& x)
     : output_basis(x)
     , addresses_(x.addresses_cache())
-    , validation(x.validation) 
+    , validation(x.validation)
 {}
 
 output::output(output&& x) noexcept
     : output_basis(std::move(x))
     , addresses_(x.addresses_cache())
-    , validation(x.validation) 
+    , validation(x.validation)
 {}
 
 output& output::operator=(output const& x) {
@@ -61,13 +61,13 @@ output& output::operator=(output&& x) noexcept {
 // output::output(uint64_t value, chain::script&& script)
 //     : value_(value)
 //     , script_(std::move(script))
-//     , validation{} 
+//     , validation{}
 // {}
 
 // output::output(uint64_t value, chain::script const& script)
 //     : value_(value)
 //     , script_(script)
-//     , validation{} 
+//     , validation{}
 // {}
 
 // Private cache access for copy/move construction.
@@ -104,7 +104,7 @@ void output::to_data(data_sink& stream, bool wire) const {
 
 size_t output::serialized_size(bool wire) const {
     // validation.spender_height is size_t stored as uint32_t.
-    return (wire ? 0 : sizeof(uint32_t)) 
+    return (wire ? 0 : sizeof(uint32_t))
             + output_basis::serialized_size(wire);
 }
 

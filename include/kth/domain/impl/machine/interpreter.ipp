@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -734,7 +734,7 @@ interpreter::result interpreter::op_check_sig_verify(program& program) {
                : error::incorrect_signature;
 }
 
-inline 
+inline
 interpreter::result interpreter::op_check_sig(program& program) {
     auto const verified = op_check_sig_verify(program);
 
@@ -747,7 +747,7 @@ interpreter::result interpreter::op_check_sig(program& program) {
     return error::success;
 }
 
-inline 
+inline
 interpreter::result interpreter::op_check_multisig_verify(program& program) {
     int32_t key_count;
     if ( ! program.pop(key_count)) {
@@ -783,10 +783,10 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
     }
 
     //*************************************************************************
-    // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147 
+    // CONSENSUS: Satoshi bug, discard stack element, malleable until bip147
     //            in BTC. bip147 is disabled in BCH.
     //*************************************************************************
-    if ( ! program.pop().empty() 
+    if ( ! program.pop().empty()
 #if ! defined(KTH_CURRENCY_BCH)
         && chain::script::is_enabled(program.forks(), rule_fork::bip147_rule)
 #endif
@@ -1267,7 +1267,7 @@ interpreter::result interpreter::run_op(operation const& op,
             return op_nop(code);
 
         //TODO(kth): Implement OP_CHECKDATASIG and OP_CHECKDATASIGVERIFY
-            
+
         case opcode::reserved_186:
         case opcode::reserved_187:
         case opcode::reserved_188:

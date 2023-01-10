@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -28,7 +28,7 @@ uint8_t const ec_public::mainnet_p2kh = 0x00;
 #endif
 
 ec_public::ec_public()
-    : point_(null_compressed_point) 
+    : point_(null_compressed_point)
 {}
 
 ec_public::ec_public(ec_public const& x)
