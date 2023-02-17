@@ -85,7 +85,7 @@ class KnuthDomainConan(KnuthConanFile):
         # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.13.8")
+            self.requires("catch2/3.2.1")
 
         if self.options.currency == "LTC":
             #TODO(fernando): check if a newer version exists
