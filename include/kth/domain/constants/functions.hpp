@@ -24,18 +24,19 @@ constexpr uint32_t work_limit(bool retarget = true) noexcept {
     return retarget ? retarget_proof_of_work_limit : no_retarget_proof_of_work_limit;
 }
 
-constexpr inline 
+constexpr inline
 size_t get_max_block_size(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet4) return max_block_size_testnet4;
     if (network == domain::config::network::scalenet) return max_block_size_scalenet;
+    if (network == domain::config::network::chipnet) return max_block_size_chipnet;
     return max_block_size_new;
 #else
     return max_block_size;
 #endif  //KTH_CURRENCY_BCH
 }
 
-constexpr inline 
+constexpr inline
 size_t get_max_payload_size(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::scalenet) return max_payload_size_scalenet;
@@ -43,7 +44,7 @@ size_t get_max_payload_size(domain::config::network network) noexcept {
     return max_payload_size;
 }
 
-constexpr inline 
+constexpr inline
 size_t get_max_block_size_network_independent() noexcept {
 #if defined(KTH_CURRENCY_BCH)
     return max_block_size_new;
@@ -52,43 +53,44 @@ size_t get_max_block_size_network_independent() noexcept {
 #endif  //KTH_CURRENCY_BCH
 }
 
-constexpr inline 
+constexpr inline
 size_t get_max_block_sigops(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet4) return max_block_sigops_testnet4;
     if (network == domain::config::network::scalenet) return max_block_sigops_scalenet;
+    if (network == domain::config::network::chipnet) return max_block_sigops_chipnet;
     return max_block_sigops_new;
 #else
     return max_block_sigops;
 #endif  //KTH_CURRENCY_BCH
 }
 
-constexpr inline 
+constexpr inline
 size_t get_allowed_sigops(size_t block_size) noexcept {
     return (1 + ((block_size - 1) / one_million_bytes_block)) * sigops_per_million_bytes;
 }
 
-constexpr inline 
+constexpr inline
 uint64_t max_money_recursive(uint64_t money) noexcept {
     return money > 0 ? money + max_money_recursive(money >> 1) : 0;
 }
 
-constexpr inline 
+constexpr inline
 uint64_t bitcoin_to_satoshi(uint64_t bitcoin_uints = 1) noexcept {
     return bitcoin_uints * satoshi_per_bitcoin;
 }
 
-constexpr inline 
+constexpr inline
 uint64_t initial_block_subsidy_satoshi() noexcept {
     return bitcoin_to_satoshi(initial_block_subsidy_bitcoin);
 }
 
-constexpr 
+constexpr
 uint64_t subsidy_interval(bool retarget = true) noexcept {
     return retarget ? retarget_subsidy_interval : no_retarget_subsidy_interval;
 }
 
-constexpr 
+constexpr
 uint64_t max_money(bool retarget = true) noexcept {
     ////// Optimize out the derivation of recursive_money.
     ////KTH_ASSERT(recursive_money == max_money_recursive(
@@ -102,6 +104,7 @@ size_t network_map(domain::config::network network, size_t mainnet, size_t testn
 #if defined(KTH_CURRENCY_BCH)
 , size_t testnet4
 , size_t scalenet
+, size_t chipnet
 #endif
 ) noexcept {
     switch (network) {
@@ -114,6 +117,8 @@ size_t network_map(domain::config::network network, size_t mainnet, size_t testn
             return testnet4;
         case domain::config::network::scalenet:
             return scalenet;
+        case domain::config::network::chipnet:
+            return chipnet;
 #endif
         default:
         case domain::config::network::mainnet:
@@ -127,6 +132,7 @@ bool network_relation(domain::config::network network, R r, T const& value, T co
 #if defined(KTH_CURRENCY_BCH)
 , T const& testnet4
 , T const& scalenet
+, T const& chipnet
 #endif
 ) noexcept {
     switch (network) {
@@ -139,6 +145,8 @@ bool network_relation(domain::config::network network, R r, T const& value, T co
             return r(value, testnet4);
         case domain::config::network::scalenet:
             return r(value, scalenet);
+        case domain::config::network::chipnet:
+            return r(value, chipnet);
 #endif
         default:
         case domain::config::network::mainnet:

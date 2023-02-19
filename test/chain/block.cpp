@@ -258,6 +258,14 @@ TEST_CASE("block genesis scalenet valid structure", "[block serialization]") {
     REQUIRE(genesis.transactions().size() == 1u);
     REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
+
+TEST_CASE("block genesis chipnet valid structure", "[block serialization]") {
+    auto const genesis = chain::block::genesis_chipnet();
+    REQUIRE(genesis.is_valid());
+    REQUIRE(genesis.transactions().size() == 1u);
+    REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
+}
+
 #endif
 
 TEST_CASE("block  factory from data 1  genesis mainnet  success", "[block serialization]") {

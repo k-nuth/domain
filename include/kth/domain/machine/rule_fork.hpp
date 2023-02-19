@@ -57,7 +57,8 @@ enum rule_fork : uint32_t {
                                         //2021-May NO-Hardfork - (1621080000)
     bch_gauss = 1U << 19,               //2022-May Hardfork - gauss - (1652616000)
     bch_descartes = 1U << 20,           //2023-May Hardfork - descartes - (1684152000)
-    // bch_unnamed = 1U << 21,          //2024-May Hardfork - unnamed - (9999999999)
+    bch_lobachevski = 1U << 21,         //2024-May Hardfork - lobachevski - (1715774400)
+    // bch_unnamed = 1U << 22,          //2025-May Hardfork - unnamed - (9999999999)
 #else
     // Just for segwit coins
     /// Segregated witness consensus layer (soft fork, feature).

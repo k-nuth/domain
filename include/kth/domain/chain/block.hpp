@@ -108,10 +108,10 @@ public:
 
     static
     block genesis_mainnet();
-    
+
     static
     block genesis_testnet();
-    
+
     static
     block genesis_regtest();
 
@@ -121,11 +121,14 @@ public:
 
     static
     block genesis_scalenet();
+
+    static
+    block genesis_chipnet();
 #endif
 
     static
     size_t locator_size(size_t top);
-    
+
     static
     indexes locator_heights(size_t top);
 

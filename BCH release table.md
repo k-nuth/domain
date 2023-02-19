@@ -9,8 +9,8 @@ Date            Knuth name          BCHN name            Timestamp
 2021-May-15     -                   Tachyon             1621080000 (not a hard fork, just used on BCHN)
 2022-May-15     Gauss               Upgrade8            1652616000
 2023-May-15     Descartes           Upgrade9            1684152000
+2024-May-15     Lobachevski         Upgrade10           1715774400
 
-????-???-??     Lobachevski         ?                            ?
 ????-???-??     Galois              ?                            ?
 ????-???-??     Leibniz             ?                            ?
 ????-???-??     Cantor              ?                            ?
@@ -20,3 +20,6 @@ Date            Knuth name          BCHN name            Timestamp
 ????-???-??     Poincaré            ?                            ?
 ????-???-??     Gödel               ?                            ?
 ????-???-??     Ramanujan           ?                            ?
+????-???-??     Turing              ?                            ?
+????-???-??     Church              ?                            ?
+????-???-??     Von Neumann         ?                            ?

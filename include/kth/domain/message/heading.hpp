@@ -66,7 +66,7 @@ public:
     size_t maximum_size();
 
     static
-    size_t maximum_payload_size(uint32_t version, bool witness, uint32_t magic);
+    size_t maximum_payload_size(uint32_t version, bool witness, uint32_t magic, bool is_chipnet);
 
     static
     size_t satoshi_fixed_size();
