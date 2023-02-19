@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,12 +21,12 @@ namespace kth::domain::wallet {
 class payment_address;
 
 /// Private keys with public key compression metadata:
-static constexpr 
+static constexpr
 size_t wif_uncompressed_size = 37U;
 
 using wif_uncompressed = byte_array<wif_uncompressed_size>;
 
-static constexpr 
+static constexpr
 size_t wif_compressed_size = wif_uncompressed_size + 1U;
 
 using wif_compressed = byte_array<wif_compressed_size>;
@@ -43,19 +43,19 @@ public:
     // with hd keys, merging the two necessary values into one version.
     static
     uint8_t const mainnet_wif;
-    
+
     static
     uint8_t const mainnet_p2kh;
-    
+
     static
     uint16_t const mainnet;
 
     static
     uint8_t const testnet_wif;
-    
+
     static
     uint8_t const testnet_p2kh;
-    
+
     static
     uint16_t const testnet;
 
@@ -107,23 +107,23 @@ public:
     /// Accessors.
     [[nodiscard]]
     ec_secret const& secret() const;
-    
+
     [[nodiscard]]
     uint16_t version() const;
-    
+
     [[nodiscard]]
     uint8_t payment_version() const;
-    
+
     [[nodiscard]]
     uint8_t wif_version() const;
-    
+
     [[nodiscard]]
     bool compressed() const;
 
     /// Methods.
     [[nodiscard]]
     ec_public to_public() const;
-    
+
     [[nodiscard]]
     payment_address to_payment_address() const;
 
@@ -135,10 +135,10 @@ private:
     /// Factories.
     static
     ec_private from_string(std::string const& wif, uint8_t version);
-    
+
     static
     ec_private from_compressed(wif_compressed const& wif, uint8_t address_version);
-    
+
     static
     ec_private from_uncompressed(const wif_uncompressed& wif, uint8_t address_version);
 

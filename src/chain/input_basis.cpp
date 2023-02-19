@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -42,14 +42,14 @@ input_basis::input_basis(output_point const& previous_output, chain::script cons
     : previous_output_(previous_output)
     , script_(script)
     , witness_(witness)
-    , sequence_(sequence) 
+    , sequence_(sequence)
 {}
 
 input_basis::input_basis(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence)
     : previous_output_(std::move(previous_output))
     , script_(std::move(script))
     , witness_(std::move(witness))
-    , sequence_(sequence) 
+    , sequence_(sequence)
 {}
 #endif
 
@@ -58,9 +58,9 @@ input_basis::input_basis(output_point&& previous_output, chain::script&& script,
 //-----------------------------------------------------------------------------
 
 bool input_basis::operator==(input_basis const& x) const {
-    return (sequence_ == x.sequence_) 
-        && (previous_output_ == x.previous_output_) 
-        && (script_ == x.script_) 
+    return (sequence_ == x.sequence_)
+        && (previous_output_ == x.previous_output_)
+        && (script_ == x.script_)
 #if defined(KTH_SEGWIT_ENABLED)
         && (witness_ == x.witness_)
 #endif
@@ -82,9 +82,9 @@ void input_basis::reset() {
 
 // Since empty scripts and zero sequence are valid this relies on the prevout.
 bool input_basis::is_valid() const {
-    return sequence_ != 0 
-        || previous_output_.is_valid() 
-        || script_.is_valid() 
+    return sequence_ != 0
+        || previous_output_.is_valid()
+        || script_.is_valid()
 #if defined(KTH_SEGWIT_ENABLED)
         || witness_.is_valid()
 #endif
@@ -113,8 +113,8 @@ void input_basis::to_data(data_sink& stream, bool wire, bool witness) const {
 // Size.
 //-----------------------------------------------------------------------------
 size_t input_basis::serialized_size_non_witness(bool wire) const {
-    return previous_output_.serialized_size(wire) 
-         + script_.serialized_size(true) 
+    return previous_output_.serialized_size(wire)
+         + script_.serialized_size(true)
          + sizeof(sequence_);
 }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,7 +26,7 @@ class KD_API filter_add {
 public:
     using ptr = std::shared_ptr<filter_add>;
     using const_ptr = std::shared_ptr<const filter_add>;
-    
+
     filter_add() = default;
     filter_add(data_chunk const& data);
     filter_add(data_chunk&& data);
@@ -41,10 +41,10 @@ public:
     bool operator!=(filter_add const& x) const;
 
     data_chunk& data();
-    
+
     [[nodiscard]]
     data_chunk const& data() const;
-    
+
     void set_data(data_chunk const& value);
     void set_data(data_chunk&& value);
 
@@ -70,10 +70,10 @@ public:
 
         return source;
     }
-    
+
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
-    
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -83,21 +83,21 @@ public:
     }
 
     //void to_data(uint32_t version, writer& sink) const;
-    
+
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
     static
     std::string const command;
-    
+
     static
     uint32_t const version_minimum;
-    
+
     static
     uint32_t const version_maximum;
 

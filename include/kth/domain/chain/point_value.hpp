@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -37,7 +37,7 @@ public:
     bool operator!=(point_value const& x, point_value const& y);
 
     // Swap implementation required to properly handle base class.
-    friend 
+    friend
     void swap(point_value& x, point_value& y);
 
     // Properties (accessors).
@@ -45,7 +45,7 @@ public:
 
     [[nodiscard]]
     uint64_t value() const;
-    
+
     void set_value(uint64_t value);
 
 private:

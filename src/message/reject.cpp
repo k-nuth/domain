@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,7 +20,7 @@ uint32_t const reject::version_minimum = version::level::bip61;
 uint32_t const reject::version_maximum = version::level::maximum;
 
 reject::reject()
-    :  data_(null_hash) 
+    :  data_(null_hash)
 {}
 
 reject::reject(reason_code code, std::string const& message, std::string const& reason)
@@ -53,7 +53,7 @@ reject::reject(reason_code code, std::string&& message, std::string&& reason, ha
 // }
 
 // reject::reject(reject&& x) noexcept
-//     : reject(x.code_, std::move(x.message_), std::move(x.reason_), std::move(x.data_)) 
+//     : reject(x.code_, std::move(x.message_), std::move(x.reason_), std::move(x.data_))
 // {}
 
 // reject& reject::operator=(reject&& x) noexcept {

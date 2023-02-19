@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -152,7 +152,7 @@ public:
 
     static
     bool is_push_size(data_stack const& stack);
-    
+
     static
     bool is_reserved_pattern(data_stack const& stack);
 
@@ -173,7 +173,7 @@ public:
 private:
     static
     size_t serialized_size(data_stack const& stack);
-    
+
     static
     operation::list to_pay_key_hash(data_chunk&& program);
 

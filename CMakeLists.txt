@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2022 Knuth Project developers.
+# Copyright (c) 2016-2023 Knuth Project developers.
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -73,14 +73,6 @@ option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
 if (WITH_CACHED_RPC_DATA)
   message(STATUS "Knuth: Cached RPC data enabled")
   add_definitions(-DKTH_CACHED_RPC_DATA)
-endif()
-
-# Implement --with-keoken and declare WITH_KEOKEN.
-#------------------------------------------------------------------------------
-option(WITH_KEOKEN "Keoken enabled." OFF)
-if (WITH_KEOKEN)
-  message(STATUS "Knuth: Keoken enabled")
-  add_definitions(-DWITH_KEOKEN)
 endif()
 
 # Implement --with-icu and define BOOST_HAS_ICU and output ${icu}.
@@ -511,18 +503,6 @@ if (${CURRENCY} STREQUAL "LTC")
       src/math/external/scrypt-sse2.cpp)
 endif()
 
-if (WITH_KEOKEN)
-  set(kth_domain_sources_just_kth
-    ${kth_domain_sources_just_kth}
-    src/kth/domain/keoken/transaction_extractor.cpp
-    src/kth/domain/keoken/entities/asset.cpp
-    src/kth/domain/keoken/message/base.cpp
-    src/kth/domain/keoken/message/create_asset.cpp
-    src/kth/domain/keoken/message/send_tokens.cpp
-    src/kth/domain/keoken/wallet/create_transanction.cpp
-  )
-endif()
-
 if (NOT JUST_KTH_SOURCES)
   set(kth_domain_sources
     ${kth_domain_sources_just_legacy}
@@ -796,15 +776,13 @@ if (WITH_TESTS)
 endif()
 
 if (WITH_TESTS_NEW)
-  if (WITH_KEOKEN)
-    add_executable(kth_domain_test_new
-            test_new/main.cpp
-            test_new/create_transaction.cpp
-    )
-    target_link_libraries(kth_domain_test_new PUBLIC kth-domain)
+  add_executable(kth_domain_test_new
+          test_new/main.cpp
+          test_new/create_transaction.cpp
+  )
+  target_link_libraries(kth_domain_test_new PUBLIC kth-domain)
 
-    add_test(NAME kth_domain_test_new COMMAND kth_domain_test_new)
-  endif()
+  add_test(NAME kth_domain_test_new COMMAND kth_domain_test_new)
 endif()
 
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -123,17 +123,17 @@ size_t transaction_basis::serialized_size(bool wire, bool witness) const {
     };
 
     // Must be both witness and wire encoding for bip144 serialization.
-    return 
-           (wire ? sizeof(version_) : infrastructure::message::variable_uint_size(version_)) 
-         + (wire ? sizeof(locktime_) : infrastructure::message::variable_uint_size(locktime_)) 
-         + infrastructure::message::variable_uint_size(inputs_.size()) 
-         + infrastructure::message::variable_uint_size(outputs_.size()) 
-         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins) 
+    return
+           (wire ? sizeof(version_) : infrastructure::message::variable_uint_size(version_))
+         + (wire ? sizeof(locktime_) : infrastructure::message::variable_uint_size(locktime_))
+         + infrastructure::message::variable_uint_size(inputs_.size())
+         + infrastructure::message::variable_uint_size(outputs_.size())
+         + std::accumulate(inputs_.begin(), inputs_.end(), size_t{0}, ins)
          + std::accumulate(outputs_.begin(), outputs_.end(), size_t{0}, outs)
 
 #if defined(KTH_SEGWIT_ENABLED)
-         + (wire && witness_val(witness) ? sizeof(witness_marker) : 0) 
-         + (wire && witness_val(witness) ? sizeof(witness_flag) : 0) 
+         + (wire && witness_val(witness) ? sizeof(witness_marker) : 0)
+         + (wire && witness_val(witness) ? sizeof(witness_flag) : 0)
 #endif
         ;
 }
@@ -394,7 +394,7 @@ code transaction_basis::check(uint64_t total_output_value, size_t max_block_size
     }
 
     // if (total_output_value() > max_money(retarget)) {
-    if (total_output_value > max_money(retarget)) {        
+    if (total_output_value > max_money(retarget)) {
         return error::spend_overflow;
     }
 
@@ -534,8 +534,8 @@ bool transaction_basis::is_standard() const {
         }
     }
 
-    return std::all_of(begin(outputs()), end(outputs()), [](auto const& out){ 
-        return out.script().pattern() != script_pattern::non_standard; 
+    return std::all_of(begin(outputs()), end(outputs()), [](auto const& out){
+        return out.script().pattern() != script_pattern::non_standard;
     });
 }
 

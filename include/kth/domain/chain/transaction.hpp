@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -157,7 +157,7 @@ public:
 #endif
         transaction_basis::to_data(sink, wire, witness);
 
-#ifdef KTH_CACHED_RPC_DATA            
+#ifdef KTH_CACHED_RPC_DATA
         if ( ! wire && unconfirmed) {
             sink.write_4_bytes_little_endian(signature_operations());
             sink.write_8_bytes_little_endian(fees());

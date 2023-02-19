@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -44,12 +44,12 @@ public:
 
     [[nodiscard]]
     bool high_bandwidth_mode() const;
-    
+
     void set_high_bandwidth_mode(bool mode);
 
     [[nodiscard]]
     uint64_t version() const;
-    
+
     void set_version(uint64_t version);
 
     template <typename R, KTH_IS_READER(R)>
@@ -90,9 +90,9 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 

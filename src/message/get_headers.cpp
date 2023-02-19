@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,7 +20,7 @@ get_headers::get_headers(hash_list const& start, hash_digest const& stop)
 
 //TODO(fernando): move semantics lost
 get_headers::get_headers(hash_list&& start, hash_digest const& stop)
-    : get_headers(start, stop) 
+    : get_headers(start, stop)
 {}
 
 bool get_headers::operator==(get_headers const& x) const {

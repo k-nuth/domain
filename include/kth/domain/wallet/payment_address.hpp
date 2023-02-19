@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,7 +24,7 @@
 
 namespace kth::domain::wallet {
 
-static constexpr 
+static constexpr
 size_t payment_size = 1U + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
 
 using payment = byte_array<payment_size>;
@@ -34,20 +34,20 @@ class KD_API payment_address {
 public:
     static
     uint8_t const mainnet_p2kh;
-    
+
     static
     uint8_t const mainnet_p2sh;
 
     static
     uint8_t const testnet_p2kh;
-    
+
     static
     uint8_t const testnet_p2sh;
 
 #if defined(KTH_CURRENCY_BCH)
     static
     std::string const cashaddr_prefix_mainnet;
-    
+
     static
     std::string const cashaddr_prefix_testnet;
 #endif
@@ -59,7 +59,7 @@ public:
     payment_address();
     payment_address(payment_address const& x) = default;
     payment_address(payment_address&& x) noexcept;
-    
+
     payment_address(payment const& decoded);
     payment_address(ec_private const& secret);
     payment_address(std::string const& address);
@@ -76,7 +76,7 @@ public:
 
     friend
     std::istream& operator>>(std::istream& in, payment_address& to);
-    
+
     friend
     std::ostream& operator<<(std::ostream& out, payment_address const& of);
 
@@ -96,7 +96,7 @@ public:
     /// Accessors.
     [[nodiscard]]
     uint8_t version() const;
-    
+
     [[nodiscard]]
     short_hash const& hash() const;
 
@@ -107,10 +107,10 @@ public:
     /// Extract a payment address list from an input or output script.
     static
     list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    
+
     static
     list extract_input(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    
+
     static
     list extract_output(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
 
@@ -130,13 +130,13 @@ private:
 
     static
     payment_address from_payment(payment const& decoded);
-    
+
     static
     payment_address from_private(ec_private const& secret);
-    
+
     static
     payment_address from_public(ec_public const& point, uint8_t version);
-    
+
     static
     payment_address from_script(chain::script const& script, uint8_t version);
 

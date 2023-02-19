@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -54,7 +54,7 @@ public:
     // output(uint64_t value, chain::script&& script);
 
     using output_basis::output_basis;   //inherit constructors from output_basis
-    
+
     output(output const& x);
     output(output&& x) noexcept;
     output& operator=(output const& x);

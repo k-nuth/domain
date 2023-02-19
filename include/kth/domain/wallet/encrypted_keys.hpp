@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -19,16 +19,16 @@ namespace kth::domain::wallet {
 /**
  * The maximum lot and sequence values for encrypted key token creation.
  */
-static constexpr 
+static constexpr
 uint32_t ek_max_lot = 1048575;
 
-static constexpr 
+static constexpr
 uint32_t ek_max_sequence = 4095;
 
 /**
  * A seed for use in creating an intermediate passphrase (token).
  */
-static constexpr 
+static constexpr
 size_t ek_salt_size = 4;
 
 using ek_salt = byte_array<ek_salt_size>;
@@ -36,7 +36,7 @@ using ek_salt = byte_array<ek_salt_size>;
 /**
  * A seed for use in creating an intermediate passphrase (token).
  */
-static constexpr 
+static constexpr
 size_t ek_entropy_size = 8;
 
 using ek_entropy = byte_array<ek_entropy_size>;
@@ -44,7 +44,7 @@ using ek_entropy = byte_array<ek_entropy_size>;
 /**
  * A seed for use in creating a key pair.
  */
-static constexpr 
+static constexpr
 size_t ek_seed_size = 24;
 
 using ek_seed = byte_array<ek_seed_size>;
@@ -52,10 +52,10 @@ using ek_seed = byte_array<ek_seed_size>;
 /**
  * An intermediate passphrase (token) type (checked but not base58 encoded).
  */
-static constexpr 
+static constexpr
 size_t encrypted_token_encoded_size = 72;
 
-static constexpr 
+static constexpr
 size_t encrypted_token_decoded_size = 53;
 
 using encrypted_token = byte_array<encrypted_token_decoded_size>;
@@ -63,10 +63,10 @@ using encrypted_token = byte_array<encrypted_token_decoded_size>;
 /**
  * An encrypted private key type (checked but not base58 encoded).
  */
-static constexpr 
+static constexpr
 size_t ek_private_encoded_size = 58;
 
-static constexpr 
+static constexpr
 size_t ek_private_decoded_size = 43;
 
 using encrypted_private = byte_array<ek_private_decoded_size>;
@@ -76,10 +76,10 @@ using encrypted_private = byte_array<ek_private_decoded_size>;
  * An encrypted public key type (checked but not base58 encoded).
  * This is refered to as a confirmation code in bip38.
  */
-static constexpr 
+static constexpr
 size_t encrypted_public_encoded_size = 75;
 
-static constexpr 
+static constexpr
 size_t encrypted_public_decoded_size = 55;
 
 using encrypted_public = byte_array<encrypted_public_decoded_size>;

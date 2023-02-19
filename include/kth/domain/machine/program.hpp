@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -28,7 +28,7 @@ public:
     using value_type = data_stack::value_type;
     using op_iterator = operation::iterator;
 
-    //TODO(fernando): check this comment 
+    //TODO(fernando): check this comment
     // Older libstdc++ does not allow erase with const iterator.
     // This is a bug that requires we up the minimum compiler version.
     // So presently stack_iterator is a non-const iterator.
@@ -138,7 +138,7 @@ public:
 
     [[nodiscard]]
     bool if_(operation const& op) const;
-    
+
     [[nodiscard]]
     value_type const& item(size_t index) const;
 

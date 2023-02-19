@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -44,30 +44,30 @@ public:
     bool operator!=(compact_block const& x) const;
 
     chain::header& header();
-    
+
     [[nodiscard]]
     chain::header const& header() const;
-    
+
     void set_header(chain::header const& value);
 
     [[nodiscard]]
     uint64_t nonce() const;
-    
+
     void set_nonce(uint64_t value);
 
     short_id_list& short_ids();
-    
+
     [[nodiscard]]
     short_id_list const& short_ids() const;
-    
+
     void set_short_ids(short_id_list const& value);
     void set_short_ids(short_id_list&& value);
 
     prefilled_transaction::list& transactions();
-    
+
     [[nodiscard]]
     prefilled_transaction::list const& transactions() const;
-    
+
     void set_transactions(prefilled_transaction::list const& value);
     void set_transactions(prefilled_transaction::list&& value);
 
@@ -130,7 +130,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
-    
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -158,18 +158,18 @@ public:
     //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
     static
     std::string const command;
-    
+
     static
     uint32_t const version_minimum;
-    
+
     static
     uint32_t const version_maximum;
 

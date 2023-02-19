@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -62,7 +62,7 @@ script::script(operation::list&& ops) {
     from_operations(std::move(ops));
 }
 
-script::script(data_chunk&& encoded, bool prefix) 
+script::script(data_chunk&& encoded, bool prefix)
     : script_basis(std::move(encoded), prefix)
 {}
 
@@ -291,7 +291,7 @@ operation::list const& script::operations() const {
 // Signing (unversioned).
 //-----------------------------------------------------------------------------
 
-inline 
+inline
 hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
     KTH_ASSERT( ! tx.is_coinbase());
@@ -306,7 +306,7 @@ hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
 // there are 4 possible 7 bit values that can set "single" and 4 others that
 // can set none, and yet all other values set "all".
 //*****************************************************************************
-inline 
+inline
 sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     switch (sighash_type & sighash_algorithm::mask) {
         case sighash_algorithm::single:
@@ -318,7 +318,7 @@ sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     }
 }
 
-inline 
+inline
 uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
     return static_cast<uint8_t>(
         to_sighash_enum(sighash_type) == value
@@ -1125,7 +1125,7 @@ bool script::is_unspendable() const {
 //     } else
 // #endif
 //     // p2sh and p2w are mutually exclusive.
-//     /*else*/ 
+//     /*else*/
 //     if (prevout_script.is_pay_to_script_hash(forks)) {
 //         if ( ! is_relaxed_push(input_script.operations())) {
 //             return error::invalid_script_embed;

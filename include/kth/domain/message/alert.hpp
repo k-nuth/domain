@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -40,18 +40,18 @@ public:
     bool operator!=(alert const& x) const;
 
     data_chunk& payload();
-    
+
     [[nodiscard]]
     data_chunk const& payload() const;
-    
+
     void set_payload(data_chunk const& value);
     void set_payload(data_chunk&& value);
 
     data_chunk& signature();
-    
+
     [[nodiscard]]
     data_chunk const& signature() const;
-    
+
     void set_signature(data_chunk const& value);
     void set_signature(data_chunk&& value);
 
@@ -71,7 +71,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
-    
+
     void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
@@ -86,19 +86,19 @@ public:
 
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
 
     static
     std::string const command;
-    
+
     static
     uint32_t const version_minimum;
-    
+
     static
     uint32_t const version_maximum;
 

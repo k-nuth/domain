@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -142,17 +142,17 @@ public:
     /// Consensus patterns.
     static
     bool is_push_only(operation::list const& ops);
-    
+
     static
     bool is_relaxed_push(operation::list const& ops);
-    
+
     static
     bool is_coinbase_pattern(operation::list const& ops, size_t height);
-    
+
 #if defined(KTH_SEGWIT_ENABLED)
     static
     bool is_commitment_pattern(operation::list const& ops);
-    
+
     static
     bool is_witness_program_pattern(operation::list const& ops);
 #endif
@@ -225,7 +225,7 @@ public:
 
     void reset();
 
-#if defined(KTH_SEGWIT_ENABLED)    
+#if defined(KTH_SEGWIT_ENABLED)
     bool is_pay_to_witness(uint32_t forks) const;
 #endif
 
@@ -234,10 +234,10 @@ public:
 private:
     static
     size_t serialized_size(operation::list const& ops);
-    
+
     static
     data_chunk operations_to_data(operation::list const& ops);
-    
+
     static
     hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type);
 

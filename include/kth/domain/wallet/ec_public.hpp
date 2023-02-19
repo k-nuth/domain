@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -25,13 +25,13 @@ class KD_API ec_public {
 public:
     static
     uint8_t const compressed_even;
-    
+
     static
     uint8_t const compressed_odd;
-    
+
     static
     uint8_t const uncompressed;
-    
+
     static
     uint8_t const mainnet_p2kh;
 
@@ -65,23 +65,23 @@ public:
     /// Accessors.
     [[nodiscard]]
     ec_compressed const& point() const;
-    
+
     [[nodiscard]]
     uint16_t version() const;
-    
+
     [[nodiscard]]
     uint8_t payment_version() const;
-    
+
     [[nodiscard]]
     uint8_t wif_version() const;
-    
+
     [[nodiscard]]
     bool compressed() const;
 
     /// Methods.
     bool to_data(data_chunk& out) const;
     bool to_uncompressed(ec_uncompressed& out) const;
-    
+
     [[nodiscard]]
     payment_address to_payment_address(uint8_t version = mainnet_p2kh) const;
 
@@ -93,13 +93,13 @@ private:
     /// Factories.
     static
     ec_public from_data(data_chunk const& decoded);
-    
+
     static
     ec_public from_private(ec_private const& secret);
-    
+
     static
     ec_public from_string(std::string const& base16);
-    
+
     static
     ec_public from_point(ec_uncompressed const& point, bool compress);
 

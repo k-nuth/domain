@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2022 Knuth Project developers.
+# Copyright (c) 2016-2023 Knuth Project developers.
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -30,7 +30,6 @@ class KnuthDomainConan(KnuthConanFile):
                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
 
                "verbose": [True, False],
-            #    "keoken": [True, False],
                "cached_rpc_data": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
@@ -55,7 +54,6 @@ class KnuthDomainConan(KnuthConanFile):
         "march_strategy": "download_if_possible",
 
         "verbose": False,
-        # "keoken": False,
         "cached_rpc_data": False,
         "cxxflags": "_DUMMY_",
         "cflags": "_DUMMY_",
@@ -73,10 +71,6 @@ class KnuthDomainConan(KnuthConanFile):
 
     package_files = "build/lkth-domain.a"
     build_policy = "missing"
-
-    # @property
-    # def is_keoken(self):
-    #     return self.options.currency == "BCH" and self.options.get_safe("keoken")
 
     def requirements(self):
         self.requires("algorithm/0.1.239@tao/stable")
@@ -103,12 +97,6 @@ class KnuthDomainConan(KnuthConanFile):
     def configure(self):
         KnuthConanFile.configure(self)
 
-        # if self.options.keoken and self.options.currency != "BCH":
-        #     self.output.warn("For the moment Keoken is only enabled for BCH. Building without Keoken support...")
-        #     del self.options.keoken
-        # else:
-        #     self.options["*"].keoken = self.options.keoken
-
         self.options["*"].cached_rpc_data = self.options.cached_rpc_data
 
         self.options["*"].log = self.options.log
@@ -120,9 +108,6 @@ class KnuthDomainConan(KnuthConanFile):
     def build(self):
         cmake = self.cmake_basis()
         cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
-
-        cmake.definitions["WITH_KEOKEN"] = option_on_off(False)
-        # cmake.definitions["WITH_KEOKEN"] = option_on_off(self.is_keoken)
 
         cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
         cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)

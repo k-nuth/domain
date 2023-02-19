@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -43,10 +43,10 @@ public:
     bool operator!=(inventory const& x) const;
 
     inventory_vector::list& inventories();
-    
+
     [[nodiscard]]
     inventory_vector::list const& inventories() const;
-    
+
     void set_inventories(inventory_vector::list const& value);
     void set_inventories(inventory_vector::list&& value);
 
@@ -93,12 +93,12 @@ public:
 
     void to_hashes(hash_list& out, type_id type) const;
     void reduce(inventory_vector::list& out, type_id type) const;
-    
+
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 

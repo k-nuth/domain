@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,7 +21,7 @@ constexpr size_t max_index = max_uint16;
 #endif
 
 prefilled_transaction::prefilled_transaction()
-    : index_(max_index) 
+    : index_(max_index)
 {}
 
 prefilled_transaction::prefilled_transaction(uint64_t index, chain::transaction const& tx)
@@ -68,7 +68,7 @@ size_t prefilled_transaction::serialized_size(uint32_t /*version*/) const {
     // TODO(kth): serialize size should use witness for ! BCH
     return infrastructure::message::variable_uint_size(index_) +
            transaction_.serialized_size(/*wire*/ true, witness_default()
-#ifdef KTH_CACHED_RPC_DATA           
+#ifdef KTH_CACHED_RPC_DATA
                                       , /*unconfirmed*/ false
 #endif
                                        );

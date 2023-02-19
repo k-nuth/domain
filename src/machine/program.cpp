@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,10 +20,10 @@ namespace kth::domain::machine {
 using namespace kth::domain::chain;
 
 // Fixed tuning parameters, max_stack_size ensures no reallocation.
-static constexpr 
+static constexpr
 size_t stack_capactity = max_stack_size;
 
-static constexpr 
+static constexpr
 size_t condition_capactity = max_counted_ops;
 
 static
@@ -44,7 +44,7 @@ void program::reserve_stacks() {
 program::program()
     : script_(default_script_),
       transaction_(default_tx_),
-      jump_(script_.begin()) 
+      jump_(script_.begin())
 {
     reserve_stacks();
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -36,7 +36,7 @@ uint8_t const ec_private::testnet_p2kh = 0x6f;
 uint16_t const ec_private::testnet = to_version(testnet_p2kh, testnet_wif);
 
 ec_private::ec_private()
-    : secret_(null_hash) 
+    : secret_(null_hash)
 {}
 
 // ec_private::ec_private(ec_private const& x)

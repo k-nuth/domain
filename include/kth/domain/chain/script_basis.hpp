@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -126,7 +126,7 @@ public:
 
     [[nodiscard]]
     size_t serialized_size(bool prefix) const;
-    
+
     [[nodiscard]]
     data_chunk const& bytes() const;
     // operation::list const& operations() const;
@@ -143,13 +143,13 @@ public:
     /// Consensus patterns.
     static
     bool is_push_only(operation::list const& ops);
-    
+
     static
     bool is_relaxed_push(operation::list const& ops);
-    
+
     static
     bool is_coinbase_pattern(operation::list const& ops, size_t height);
-    
+
 #if defined(KTH_SEGWIT_ENABLED)
     static
     bool is_commitment_pattern(operation::list const& ops);
@@ -161,16 +161,16 @@ public:
     /// Common output patterns (psh and pwsh are also consensus).
     static
     bool is_null_data_pattern(operation::list const& ops);
-    
+
     static
     bool is_pay_multisig_pattern(operation::list const& ops);
-    
+
     static
     bool is_pay_public_key_pattern(operation::list const& ops);
-    
+
     static
     bool is_pay_key_hash_pattern(operation::list const& ops);
-    
+
     static
     bool is_pay_script_hash_pattern(operation::list const& ops);
 
@@ -182,32 +182,32 @@ public:
     /// Common input patterns (skh is also consensus).
     static
     bool is_sign_multisig_pattern(operation::list const& ops);
-    
+
     static
     bool is_sign_public_key_pattern(operation::list const& ops);
-    
+
     static
     bool is_sign_key_hash_pattern(operation::list const& ops);
-    
+
     static
     bool is_sign_script_hash_pattern(operation::list const& ops);
 
     /// Stack factories.
     static
     operation::list to_null_data_pattern(data_slice data);
-    
+
     static
     operation::list to_pay_public_key_pattern(data_slice point);
-    
+
     static
     operation::list to_pay_key_hash_pattern(short_hash const& hash);
-    
+
     static
     operation::list to_pay_script_hash_pattern(short_hash const& hash);
-    
+
     static
     operation::list to_pay_multisig_pattern(uint8_t signatures, point_list const& points);
-    
+
     static
     operation::list to_pay_multisig_pattern(uint8_t signatures, data_stack const& points);
 
@@ -223,22 +223,22 @@ public:
 
     [[nodiscard]]
     script_version version() const;
-    
+
     [[nodiscard]]
     script_pattern pattern() const;
-    
+
     [[nodiscard]]
     script_pattern output_pattern() const;
-    
+
     [[nodiscard]]
     script_pattern input_pattern() const;
 
     /// Consensus computations.
     [[nodiscard]]
     size_t sigops(bool accurate) const;
-    
+
     void find_and_delete(data_stack const& endorsements);
-    
+
     [[nodiscard]]
     bool is_unspendable() const;
 
@@ -260,7 +260,7 @@ public:
 private:
     static
     data_chunk operations_to_data(operation::list const& ops);
-    
+
     // static
     // hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
 

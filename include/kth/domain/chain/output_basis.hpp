@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -76,7 +76,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(bool wire = true) const;
-    
+
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <typename W>
@@ -93,15 +93,15 @@ public:
 
     [[nodiscard]]
     uint64_t value() const;
-    
+
     void set_value(uint64_t value);
 
     // [[deprecated]] // unsafe
     chain::script& script();
-    
+
     [[nodiscard]]
     chain::script const& script() const;
-    
+
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
@@ -110,11 +110,11 @@ public:
 
     [[nodiscard]]
     size_t signature_operations(bool bip141) const;
-    
+
     [[nodiscard]]
     bool is_dust(uint64_t minimum_output_value) const;
 
-#if defined(KTH_SEGWIT_ENABLED)    
+#if defined(KTH_SEGWIT_ENABLED)
     bool extract_committed_hash(hash_digest& out) const;
 #endif
 

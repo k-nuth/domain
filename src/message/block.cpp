@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,23 +24,23 @@ uint32_t const block::version_minimum = version::level::minimum;
 uint32_t const block::version_maximum = version::level::maximum;
 
 block::block(chain::block&& x)
-    : chain::block(std::move(x)) 
+    : chain::block(std::move(x))
 {}
 
 block::block(chain::block const& x)
-    : chain::block(x) 
+    : chain::block(x)
 {}
 
 block::block(chain::header const& header, chain::transaction::list&& transactions)
-    : chain::block(header, std::move(transactions)) 
+    : chain::block(header, std::move(transactions))
 {}
 
 block::block(chain::header const& header, chain::transaction::list const& transactions)
-    : chain::block(header, transactions) 
+    : chain::block(header, transactions)
 {}
 
 // block::block(block&& x) noexcept
-//     : chain::block(std::move(x)) 
+//     : chain::block(std::move(x))
 // {}
 
 block& block::operator=(chain::block&& x) {

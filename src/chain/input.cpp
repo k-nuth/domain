@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -58,7 +58,7 @@ input::addresses_ptr input::addresses_cache() const {
 //     , script_(script)
 //     , witness_(witness)
 // #endif
-//     , sequence_(sequence) 
+//     , sequence_(sequence)
 // {}
 
 // #if ! defined(KTH_SEGWIT_ENABLED)
@@ -71,7 +71,7 @@ input::addresses_ptr input::addresses_cache() const {
 //     , script_(std::move(script))
 //     , witness_(std::move(witness))
 // #endif
-//     , sequence_(sequence) 
+//     , sequence_(sequence)
 // {}
 
 
@@ -101,9 +101,9 @@ input& input::operator=(input&& x) noexcept {
 }
 
 // bool input::operator==(input const& x) const {
-//     return (sequence_ == x.sequence_) 
-//         && (previous_output_ == x.previous_output_) 
-//         && (script_ == x.script_) 
+//     return (sequence_ == x.sequence_)
+//         && (previous_output_ == x.previous_output_)
+//         && (script_ == x.script_)
 // #if defined(KTH_SEGWIT_ENABLED)
 //         && (witness_ == x.witness_)
 // #endif

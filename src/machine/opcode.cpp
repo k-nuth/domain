@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -294,7 +294,7 @@ std::string opcode_to_string(opcode value, uint32_t active_forks) {
             return "nop1";
         case opcode::checklocktimeverify:
             // return script::is_enabled(active_forks, rule_fork::bip65_rule) ?
-            return is_enabled(active_forks, rule_fork::bip65_rule) ? 
+            return is_enabled(active_forks, rule_fork::bip65_rule) ?
                 "checklocktimeverify" : "nop2";
         case opcode::checksequenceverify:
             // return script::is_enabled(active_forks, rule_fork::bip112_rule) ?

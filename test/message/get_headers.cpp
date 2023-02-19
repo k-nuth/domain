@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -78,7 +78,7 @@ TEST_CASE("get headers  from data  insufficient bytes  failure", "[get headers]"
     data_chunk const raw{0xab, 0xcd};
     message::get_headers instance;
 
-    REQUIRE( ! entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance,
                                    message::get_headers::version_minimum, raw));
 }
 
@@ -94,7 +94,7 @@ TEST_CASE("get headers  from data  insufficient version  failure", "[get headers
     auto const data = expected.to_data(message::get_headers::version_minimum);
     message::get_headers instance{};
 
-    REQUIRE( ! entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance,
                                    message::get_headers::version_minimum - 1, data));
 }
 
