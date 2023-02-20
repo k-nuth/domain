@@ -126,7 +126,7 @@ bool bitcoin_uri::set_address(std::string const& address) {
 }
 
 void bitcoin_uri::set_address(payment_address const& payment) {
-    address_ = payment.encoded();
+    address_ = payment.encoded_legacy();
 }
 
 void bitcoin_uri::set_address(stealth_address const& stealth) {

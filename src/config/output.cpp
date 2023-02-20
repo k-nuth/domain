@@ -28,7 +28,8 @@ output::output()
 {}
 
 output::output(std::string const& tuple)
-    : output() {
+    : output()
+{
     std::stringstream(tuple) >> *this;
 }
 
@@ -71,15 +72,15 @@ std::istream& operator>>(std::istream& input, output& argument) {
     auto const& target = tokens.front();
 
     // Is the target a payment address?
-    const wallet::payment_address payment(target);
+    wallet::payment_address const payment(target);
     if (payment) {
         argument.version_ = payment.version();
-        argument.pay_to_hash_ = payment.hash();
+        argument.pay_to_hash_ = payment.hash20();
         return input;
     }
 
     // Is the target a stealth address?
-    const wallet::stealth_address stealth(target);
+    wallet::stealth_address const stealth(target);
     if (stealth) {
         // TODO(legacy): finish stealth multisig implemetation (p2sh and !p2sh).
 
@@ -93,14 +94,12 @@ std::istream& operator>>(std::istream& input, output& argument) {
         }
 
         ec_secret ephemeral_secret;
-        if ( ! create_stealth_data(argument.script_, ephemeral_secret,
-                                 stealth.filter(), seed)) {
+        if ( ! create_stealth_data(argument.script_, ephemeral_secret, stealth.filter(), seed)) {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 
         ec_compressed stealth_key;
-        if ( ! uncover_stealth(stealth_key, stealth.scan_key(), ephemeral_secret,
-                             stealth.spend_keys().front())) {
+        if ( ! uncover_stealth(stealth_key, stealth.scan_key(), ephemeral_secret, stealth.spend_keys().front())) {
             BOOST_THROW_EXCEPTION(invalid_option_value(tuple));
         }
 

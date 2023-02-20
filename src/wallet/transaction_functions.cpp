@@ -67,7 +67,7 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
     }
 
     for (auto const& output : destiny_and_amount) {
-        std::string destiny_string = output.first.encoded() + ":" + std::to_string(output.second);
+        std::string destiny_string = output.first.encoded_legacy() + ":" + std::to_string(output.second);
         if ( ! push_scripts(tx.outputs(), config::output(destiny_string), script_version)) {
             return {error::error_code_t::invalid_output, {}};
         }

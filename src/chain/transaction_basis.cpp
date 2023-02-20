@@ -242,7 +242,7 @@ bool transaction_basis::all_inputs_final() const {
 }
 
 bool transaction_basis::is_final(size_t block_height, uint32_t block_time) const {
-    auto const max_locktime = [=]() {
+    auto const max_locktime = [=, this]() {
         return locktime_ < locktime_threshold ? safe_unsigned<uint32_t>(block_height) : block_time;
     };
 

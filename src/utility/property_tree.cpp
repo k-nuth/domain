@@ -76,7 +76,7 @@ ptree property_list(chain::input const& tx_input) {
     auto const address = tx_input.address();
 
     if (address) {
-        tree.put("address_hash", hash160(address.hash()));
+        tree.put("address_hash", hash160(address.hash20()));
     }
 
     tree.put("previous_output.hash", hash256(tx_input.previous_output().hash()));
@@ -134,7 +134,7 @@ ptree property_list(const chain::output& tx_output) {
     auto const address = tx_output.address();
 
     if (address) {
-        tree.put("address_hash", hash160(address.hash()));
+        tree.put("address_hash", hash160(address.hash20()));
     }
 
     tree.put("script", tx_output.script().to_string(rule_fork::all_rules));
