@@ -10,7 +10,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: bitcoin uri tests
+// Start Test Suite: bitcoin uri tests
 
 // Constructors
 // ----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ TEST_CASE("bitcoin uri  r  escaped  expected", "[bitcoin uri]") {
 TEST_CASE("bitcoin uri  payment  valid  expected", "[bitcoin uri]") {
     auto const expected_payment = "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD";
     auto const expected_uri = std::string("bitcoin:") + expected_payment;
-    REQUIRE(bitcoin_uri(expected_uri).payment().encoded() == expected_payment);
+    REQUIRE(bitcoin_uri(expected_uri).payment().encoded_legacy() == expected_payment);
 }
 
 TEST_CASE("bitcoin uri  stealth  valid  expected", "[bitcoin uri]") {
@@ -198,4 +198,4 @@ TEST_CASE("bitcoin uri  parameters all  complex uri  expected", "[bitcoin uri]")
     REQUIRE(uri.parameter("r") == "http://example.com?purchase=shoes&user=bob");
 }
 
-// End Boost Suite
+// End Test Suite

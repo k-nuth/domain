@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: block transactions tests
+// Start Test Suite: block transactions tests
 
 TEST_CASE("block transactions  constructor 1  always invalid", "[block transactions]") {
     message::block_transactions instance;
@@ -458,4 +458,4 @@ TEST_CASE("block transactions  operator boolean not equals  differs  returns tru
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

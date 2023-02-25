@@ -83,7 +83,7 @@ std::ostream& operator<<(std::ostream& os, prefilled_transaction const& x) {
 } // namespace kth::domain::message
 
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #define CHECK_MESSAGE(cond, msg) do { INFO(msg); CHECK(cond); } while((void)0, 0)
 #define REQUIRE_MESSAGE(cond, msg) do { INFO(msg); REQUIRE(cond); } while((void)0, 0)

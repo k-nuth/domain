@@ -16,71 +16,34 @@
 
 namespace kth::domain::chain {
 
-// using namespace kth::domain::wallet;
-
-// This is a consensus critical value that must be set on reset.
-uint64_t const output_basis::not_found = sighash_null_value;
-
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// output_basis::output_basis()
-//     : value_(not_found)
-// {}
-
-// output_basis::output_basis(output_basis&& x) noexcept
-//     : value_(x.value_),
-//       script_(std::move(x.script_))
-// {}
-
-// output_basis::output_basis(output_basis const& x)
-//     : value_(x.value_),
-//       script_(x.script_)
-// {}
-
-output_basis::output_basis(uint64_t value, chain::script&& script)
-    : value_(value),
-      script_(std::move(script))
+output_basis::output_basis(uint64_t value, chain::script const& script, token_data_opt const& token_data)
+    : value_(value)
+    , script_(script)
+    , token_data_(token_data)
 {}
 
-output_basis::output_basis(uint64_t value, chain::script const& script)
-    : value_(value),
-      script_(script)
+output_basis::output_basis(uint64_t value, chain::script&& script, token_data_opt&& token_data)
+    : value_(value)
+    , script_(std::move(script))
+    , token_data_(std::move(token_data))
 {}
 
-// output_basis& output_basis::operator=(output_basis&& x) noexcept {
-//     value_ = x.value_;
-//     script_ = std::move(x.script_);
-//     return *this;
-// }
-
-// output_basis& output_basis::operator=(output_basis const& x) {
-//     value_ = x.value_;
-//     script_ = x.script_;
-//     return *this;
-// }
-
-
-// Operators.
 //-----------------------------------------------------------------------------
-
-bool output_basis::operator==(output_basis const& x) const {
-    return (value_ == x.value_) && (script_ == x.script_);
-}
-
-bool output_basis::operator!=(output_basis const& x) const {
-    return !(*this == x);
-}
 
 // protected
 void output_basis::reset() {
     value_ = output_basis::not_found;
     script_.reset();
+    token_data_.reset();
 }
 
 // Empty scripts are valid, validation relies on not_found only.
 bool output_basis::is_valid() const {
-    return value_ != output_basis::not_found;
+    return value_ != output_basis::not_found &&
+           chain::is_valid(token_data_);
 }
 
 // Serialization.
@@ -106,7 +69,9 @@ void output_basis::to_data(data_sink& stream, bool wire) const {
 //-----------------------------------------------------------------------------
 
 size_t output_basis::serialized_size(bool /*wire*/) const {
-    return sizeof(value_) + script_.serialized_size(true);
+    return sizeof(value_) +
+           script_.serialized_size(true) +
+           chain::encoding::serialized_size(token_data_);
 }
 
 // Accessors.
@@ -116,8 +81,8 @@ uint64_t output_basis::value() const {
     return value_;
 }
 
-void output_basis::set_value(uint64_t value) {
-    value_ = value;
+void output_basis::set_value(uint64_t x) {
+    value_ = x;
 }
 
 chain::script& output_basis::script() {
@@ -128,14 +93,25 @@ chain::script const& output_basis::script() const {
     return script_;
 }
 
-void output_basis::set_script(chain::script const& value) {
-    script_ = value;
+void output_basis::set_script(chain::script const& x) {
+    script_ = x;
 }
 
-void output_basis::set_script(chain::script&& value) {
-    script_ = std::move(value);
+void output_basis::set_script(chain::script&& x) {
+    script_ = std::move(x);
 }
 
+chain::token_data_opt const& output_basis::token_data() const {
+    return token_data_;
+}
+
+void output_basis::set_token_data(chain::token_data_opt const& x) {
+    token_data_ = x;
+}
+
+void output_basis::set_token_data(chain::token_data_opt&& x) {
+    token_data_ = std::move(x);
+}
 
 // Validation helpers.
 //-----------------------------------------------------------------------------

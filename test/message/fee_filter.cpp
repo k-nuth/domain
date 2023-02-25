@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: fee filter tests
+// Start Test Suite: fee filter tests
 
 TEST_CASE("fee filter  constructor 1  always invalid", "[fee filter]") {
     const fee_filter instance;
@@ -135,4 +135,4 @@ TEST_CASE("fee filter  operator boolean not equals  differs  returns true", "[fe
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

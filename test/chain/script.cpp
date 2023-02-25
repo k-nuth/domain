@@ -110,7 +110,7 @@ std::string test_name(script_test const& test) {
     return out.str();
 }
 
-// Start Boost Suite: script tests
+// Start Test Suite: script tests
 
 // Serialization tests.
 //------------------------------------------------------------------------------
@@ -1063,4 +1063,4 @@ TEST_CASE("script native  bip143 no find and delete tx valid", "[script]") {
     REQUIRE(result0.value() == error::incorrect_signature);
 }
 #endif
-// End Boost Suite
+// End Test Suite

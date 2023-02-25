@@ -9,7 +9,7 @@ using namespace kd;
 
 auto const valid_raw_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));
 
-// Start Boost Suite: point tests
+// Start Test Suite: point tests
 
 TEST_CASE("point  constructor 1  always  returns default initialized", "[point]") {
     chain::point instance;
@@ -259,4 +259,4 @@ TEST_CASE("point  checksum  pattern high  returns expected", "[point]") {
     REQUIRE(instance.checksum() == 0x1234567aaaacdef);
 }
 
-// End Boost Suite
+// End Test Suite

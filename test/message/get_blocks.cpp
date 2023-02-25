@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: get blocks tests
+// Start Test Suite: get blocks tests
 
 TEST_CASE("get blocks  constructor 1  always invalid", "[get blocks]") {
     message::get_blocks instance;
@@ -324,4 +324,4 @@ TEST_CASE("get blocks  operator boolean not equals  differs  returns true", "[ge
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

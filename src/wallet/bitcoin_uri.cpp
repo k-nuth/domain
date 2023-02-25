@@ -2,6 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+//TODO(fernando): use Boost.URL
+
 #include <kth/domain/wallet/bitcoin_uri.hpp>
 
 #include <cstddef>

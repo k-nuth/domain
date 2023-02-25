@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: verack tests
+// Start Test Suite: verack tests
 
 TEST_CASE("verack - roundtrip to data factory from data chunk", "[verack]") {
     const message::verack expected{};
@@ -45,4 +45,4 @@ TEST_CASE("verack - roundtrip to data factory from data reader", "[verack]") {
     REQUIRE(0u == result.serialized_size(message::version::level::minimum));
 }
 
-// End Boost Suite
+// End Test Suite

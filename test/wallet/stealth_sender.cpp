@@ -5,6 +5,6 @@
 #include <test_helpers.hpp>
 
 // TODO(legacy): test sender in isolation.
-// Start Boost Suite: stealth sender tests
+// Start Test Suite: stealth sender tests
 
-// End Boost Suite
+// End Test Suite

@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.23)
 
 # asert-gen
 #==============================================================================
@@ -136,7 +136,7 @@ add_executable(asert-gen
 target_compile_definitions(asert-gen PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 target_compile_definitions(asert-gen PUBLIC -DBCN_STATIC -DBCB_STATIC -DBCD_STATIC -DBCT_STATIC -DBC_STATIC)
 
-target_link_libraries(asert-gen PUBLIC ${CONAN_LIBS})
+# target_link_libraries(asert-gen PUBLIC ${CONAN_LIBS})
 
 set_target_properties(
     asert-gen PROPERTIES

@@ -346,18 +346,18 @@ chain::block block::genesis_chipnet() {
 }
 #endif
 
-
 // With a 32 bit chain the size of the result should not exceed 43 and with a
 // 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
 size_t block::locator_size(size_t top) {
-    // Set rounding behavior, not consensus-related, thread side effect :<.
-    std::fesetround(FE_UPWARD);
+    const auto first_ten_or_top = std::min(size_t{10}, top);
+    const auto remaining = top - first_ten_or_top;
 
-    auto const first_ten_or_top = std::min(size_t(10), top);
-    auto const remaining = top - first_ten_or_top;
-    auto const back_off = remaining == 0 ? 0.0 : remaining == 1 ? 1.0 : std::log2(remaining);
-    auto const rounded_up_log = static_cast<size_t>(std::nearbyint(back_off));
-    return first_ten_or_top + rounded_up_log + size_t(1);
+    // Set log2(0) -> 0, log2(1) -> 1 and round up higher exponential backoff
+    // results to next whole number by adding 0.5 and truncating.
+    if (remaining < 2) {
+        return top + size_t{1};
+    }
+    return first_ten_or_top + static_cast<size_t>(std::log2(remaining) + 0.5) + size_t{1};
 }
 
 // This algorithm is a network best practice, not a consensus rule.

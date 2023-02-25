@@ -8,11 +8,11 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: select outputs tests
+// Start Test Suite: select outputs tests
 
 // TODO:
 // TEST_CASE("select outputs  select  empty greedy 0  expected", "[select outputs]") {
 //     REQUIRE(true);
 // }
 
-// End Boost Suite
+// End Test Suite

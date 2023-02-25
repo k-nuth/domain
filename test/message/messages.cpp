@@ -9,7 +9,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: messages tests
+// Start Test Suite: messages tests
 
 TEST_CASE("messages  variable uint size  one byte  expected", "[messages]") {
     static uint64_t const value = 1;
@@ -31,4 +31,4 @@ TEST_CASE("messages  variable uint size  eight byte  expected", "[messages]") {
     REQUIRE(infrastructure::message::variable_uint_size(value) == 9u);
 }
 
-// End Boost Suite
+// End Test Suite

@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::chain;
 
-// Start Boost Suite: point value tests
+// Start Test Suite: point value tests
 
 static auto const hash1 = hash_literal(
     "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
@@ -146,4 +146,4 @@ TEST_CASE("point value  set value  zeroize  zero", "[point value]") {
     REQUIRE(instance.value() == 0u);
 }
 
-// End Boost Suite
+// End Test Suite

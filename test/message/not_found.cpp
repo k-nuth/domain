@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: not found tests
+// Start Test Suite: not found tests
 
 TEST_CASE("not found  constructor 1  always invalid", "[not found]") {
     message::not_found instance;
@@ -225,4 +225,4 @@ TEST_CASE("not found  operator boolean not equals  differs  returns true", "[not
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

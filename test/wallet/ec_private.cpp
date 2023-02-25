@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: ec private tests
+// Start Test Suite: ec private tests
 
 // TODO(legacy): add version tests
 
@@ -50,4 +50,4 @@ TEST_CASE("ec private  decode wif  uncompressed  test", "[ec private]") {
     REQUIRE( ! secret.compressed());
 }
 
-// End Boost Suite
+// End Test Suite

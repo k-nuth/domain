@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: compact block tests
+// Start Test Suite: compact block tests
 
 TEST_CASE("compact block  constructor 1  always invalid", "[compact block]") {
     message::compact_block instance;
@@ -616,4 +616,4 @@ TEST_CASE("compact block  operator boolean not equals  differs  returns true", "
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

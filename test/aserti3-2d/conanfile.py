@@ -3,7 +3,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-from conans import CMake
+from conan import CMake
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
 from kthbuild import KnuthConanFile
 
@@ -46,11 +46,11 @@ class AsertTestVectorsGenerator(KnuthConanFile):
         "cmake_export_compile_commands": False,
     }
 
-    generators = "cmake"
+    # generators = "cmake"
     exports = "conan_*"
     exports_sources = "CMakeLists.txt", "genenerate_test_vectors.cpp"
 
-    build_policy = "missing"
+    # build_policy = "missing"
 
     def requirements(self):
         self.requires("domain/0.X@%s/%s" % (self.user, self.channel))
@@ -65,9 +65,20 @@ class AsertTestVectorsGenerator(KnuthConanFile):
     def package_id(self):
         KnuthConanFile.package_id(self)
 
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        tc = CMakeToolchain(self)
+        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        tc.generate()
+        tc = CMakeDeps(self)
+        tc.generate()
+
     def build(self):
         cmake = self.cmake_basis()
-        cmake.configure(source_dir=self.source_folder)
+        # cmake.configure(source_dir=self.source_folder)
+        cmake.configure()
         if not self.options.cmake_export_compile_commands:
             cmake.build()
             # if self.options.tests:
