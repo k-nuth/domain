@@ -29,6 +29,9 @@ constexpr size_t max_block_size_chipnet = 2000000;   //2 million bytes
 constexpr size_t min_transaction_size_old = 100;        // bytes
 constexpr size_t min_transaction_size_descartes = 65;   // bytes
 
+constexpr uint32_t transaction_version_min = 1;
+constexpr uint32_t transaction_version_max = 2;
+
 constexpr size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
 constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 constexpr size_t max_block_sigops_testnet4 = max_block_size_testnet4 / max_sigops_factor;

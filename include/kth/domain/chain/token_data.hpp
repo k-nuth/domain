@@ -214,12 +214,6 @@ enum class structure_t : uint8_t {
     reserved = 0x80,              // Must be unset.
 };
 
-// enum class capability_t : uint8_t {
-//     none    = 0x00,  // The token lacks any capability or permission and is either a pure-fungible token or an immutable non-fungible token.
-//     mut     = 0x01,  // If the mutable capability is present, it means that the encoded token is a non-fungible token that can be altered.
-//     minting = 0x02,  // If the minting capability is present, it indicates that the encoded token is a non-fungible token used for minting.
-// };
-
 inline constexpr
 bool has_nft(uint8_t bitfield) {
     return bitfield & uint8_t(structure_t::has_nft);

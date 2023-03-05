@@ -536,6 +536,15 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     }
 #endif
 
+#if defined(KTH_CURRENCY_BCH)
+    if (state.is_descartes_enabled()) {
+        // CHIP 2021-01 Restrict Transaction Version. Enabled in 2023-May-15
+        if (version_ > transaction_version_max || version_ < transaction_version_min) {
+            return error::transaction_version_out_of_range;
+        }
+    }
+#endif
+
     return error::success;
 }
 
