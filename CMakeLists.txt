@@ -375,41 +375,41 @@ set(kth_domain_sources_just_legacy
         src/math/stealth.cpp
         src/math/external/scrypt.h
 
-        # src/message/address.cpp
-        # src/message/alert.cpp
-        # src/message/alert_payload.cpp
-        # src/message/block.cpp
-        # src/message/block_transactions.cpp
-        # src/message/compact_block.cpp
-        # src/message/double_spend_proof.cpp
-        # src/message/fee_filter.cpp
-        # src/message/filter_add.cpp
-        # src/message/filter_clear.cpp
-        # src/message/filter_load.cpp
-        # src/message/get_address.cpp
-        # src/message/get_block_transactions.cpp
+        src/message/address.cpp
+        src/message/alert.cpp
+        src/message/alert_payload.cpp
+        src/message/block.cpp
+        src/message/block_transactions.cpp
+        src/message/compact_block.cpp
+        src/message/double_spend_proof.cpp
+        src/message/fee_filter.cpp
+        src/message/filter_add.cpp
+        src/message/filter_clear.cpp
+        src/message/filter_load.cpp
+        src/message/get_address.cpp
+        src/message/get_block_transactions.cpp
 
-        # src/message/get_data.cpp
-        # src/message/get_headers.cpp
-        # src/message/header.cpp
-        # src/message/headers.cpp
-        # src/message/heading.cpp
-        # src/message/inventory.cpp
-        # src/message/inventory_vector.cpp
-        # src/message/memory_pool.cpp
-        # src/message/merkle_block.cpp
-        # src/message/not_found.cpp
-        # src/message/ping.cpp
-        # src/message/pong.cpp
-        # src/message/prefilled_transaction.cpp
-        # src/message/reject.cpp
-        # src/message/send_compact.cpp
-        # src/message/send_headers.cpp
-        # src/message/transaction.cpp
-        # src/message/verack.cpp
-        # src/message/version.cpp
-        # src/message/xverack.cpp
-        # src/message/xversion.cpp
+        src/message/get_data.cpp
+        src/message/get_headers.cpp
+        src/message/header.cpp
+        src/message/headers.cpp
+        src/message/heading.cpp
+        src/message/inventory.cpp
+        src/message/inventory_vector.cpp
+        src/message/memory_pool.cpp
+        src/message/merkle_block.cpp
+        src/message/not_found.cpp
+        src/message/ping.cpp
+        src/message/pong.cpp
+        src/message/prefilled_transaction.cpp
+        src/message/reject.cpp
+        src/message/send_compact.cpp
+        src/message/send_headers.cpp
+        src/message/transaction.cpp
+        src/message/verack.cpp
+        src/message/version.cpp
+        src/message/xverack.cpp
+        src/message/xversion.cpp
 
         src/wallet/bitcoin_uri.cpp
         src/wallet/ec_private.cpp
@@ -568,73 +568,73 @@ if (WITH_TESTS)
   enable_testing()
   find_package(Catch2 3 REQUIRED)
   add_executable(kth_domain_test
-        # test/chain/block.cpp
-        # test/chain/compact.cpp
-        # test/chain/header.cpp
-        # test/chain/input.cpp
+        test/chain/block.cpp
+        test/chain/compact.cpp
+        test/chain/header.cpp
+        test/chain/input.cpp
         test/chain/output.cpp
-        # test/chain/output_point.cpp
-        # test/chain/point.cpp
-        # test/chain/point_iterator.cpp
-        # test/chain/point_value.cpp
-        # test/chain/points_value.cpp
-        # test/chain/satoshi_words.cpp
-        # test/chain/script.cpp
-        # test/chain/transaction.cpp
+        test/chain/output_point.cpp
+        test/chain/point.cpp
+        test/chain/point_iterator.cpp
+        test/chain/point_value.cpp
+        test/chain/points_value.cpp
+        test/chain/satoshi_words.cpp
+        test/chain/script.cpp
+        test/chain/transaction.cpp
 
         test/main.cpp
 
-        # test/machine/opcode.cpp
-        # test/machine/operation.cpp
+        test/machine/opcode.cpp
+        test/machine/operation.cpp
 
-        # test/math/limits.cpp
-        # test/math/stealth.cpp
+        test/math/limits.cpp
+        test/math/stealth.cpp
 
-        # test/message/address.cpp
-        # test/message/alert.cpp
-        # test/message/alert_payload.cpp
-        # test/message/block.cpp
-        # test/message/block_transactions.cpp
-        # test/message/compact_block.cpp
-        # test/message/fee_filter.cpp
-        # test/message/filter_add.cpp
-        # test/message/filter_clear.cpp
-        # test/message/filter_load.cpp
-        # test/message/get_address.cpp
-        # test/message/get_block_transactions.cpp
-        # test/message/get_blocks.cpp
-        # test/message/get_data.cpp
-        # test/message/get_headers.cpp
-        # test/message/header.cpp
-        # test/message/headers.cpp
-        # test/message/heading.cpp
-        # test/message/inventory.cpp
-        # test/message/inventory_vector.cpp
-        # test/message/memory_pool.cpp
-        # test/message/merkle_block.cpp
-        # test/message/messages.cpp
-        # test/message/not_found.cpp
-        # test/message/ping.cpp
-        # test/message/pong.cpp
-        # test/message/prefilled_transaction.cpp
-        # test/message/reject.cpp
-        # test/message/send_compact.cpp
-        # test/message/send_headers.cpp
-        # test/message/transaction.cpp
-        # test/message/verack.cpp
-        # test/message/version.cpp
+        test/message/address.cpp
+        test/message/alert.cpp
+        test/message/alert_payload.cpp
+        test/message/block.cpp
+        test/message/block_transactions.cpp
+        test/message/compact_block.cpp
+        test/message/fee_filter.cpp
+        test/message/filter_add.cpp
+        test/message/filter_clear.cpp
+        test/message/filter_load.cpp
+        test/message/get_address.cpp
+        test/message/get_block_transactions.cpp
+        test/message/get_blocks.cpp
+        test/message/get_data.cpp
+        test/message/get_headers.cpp
+        test/message/header.cpp
+        test/message/headers.cpp
+        test/message/heading.cpp
+        test/message/inventory.cpp
+        test/message/inventory_vector.cpp
+        test/message/memory_pool.cpp
+        test/message/merkle_block.cpp
+        test/message/messages.cpp
+        test/message/not_found.cpp
+        test/message/ping.cpp
+        test/message/pong.cpp
+        test/message/prefilled_transaction.cpp
+        test/message/reject.cpp
+        test/message/send_compact.cpp
+        test/message/send_headers.cpp
+        test/message/transaction.cpp
+        test/message/verack.cpp
+        test/message/version.cpp
 
-        # test/wallet/bitcoin_uri.cpp
-        # test/wallet/ec_private.cpp
-        # test/wallet/ec_public.cpp
-        # test/wallet/encrypted_keys.cpp
-        # test/wallet/message.cpp
-        # test/wallet/payment_address.cpp
-        # test/wallet/select_outputs.cpp
-        # test/wallet/stealth_address.cpp
-        # test/wallet/stealth_receiver.cpp
-        # test/wallet/stealth_sender.cpp
-        # test/wallet/uri_reader.cpp
+        test/wallet/bitcoin_uri.cpp
+        test/wallet/ec_private.cpp
+        test/wallet/ec_public.cpp
+        test/wallet/encrypted_keys.cpp
+        test/wallet/message.cpp
+        test/wallet/payment_address.cpp
+        test/wallet/select_outputs.cpp
+        test/wallet/stealth_address.cpp
+        test/wallet/stealth_receiver.cpp
+        test/wallet/stealth_sender.cpp
+        test/wallet/uri_reader.cpp
 
         #TODO(fernando): to include
         # test/wallet/transaction_functions.cpp

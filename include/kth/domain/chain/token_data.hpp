@@ -20,6 +20,7 @@
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
+#include <kth/infrastructure/utility/serializer.hpp>
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
@@ -112,11 +113,30 @@ bool is_valid(token_data_opt const& x) {
 namespace encoding {
 
 inline constexpr
+size_t serialized_size(fungible const& x) {
+    return kth::size_variable_integer(uint64_t(x.amount));
+}
+
+inline constexpr
+size_t serialized_size(non_fungible const& x) {
+    if (x.commitment.empty()) return 0;
+    return kth::size_variable_integer(x.commitment.size()) + x.commitment.size();
+}
+
+inline constexpr
+size_t serialized_size(both_kinds const& x) {
+    return serialized_size(x.first) +  serialized_size(x.second);
+}
+
+inline constexpr
 size_t serialized_size(token_data_t const& x) {
+    auto const visitor = [](auto&& arg) {
+        return serialized_size(arg);
+    };
+
     return std::size(x.id) +
            1 + // bitfield
-           0 //TODO(fernando): the rest
-           ;
+           std::visit(visitor, x.data);
 }
 
 inline constexpr
@@ -132,9 +152,8 @@ uint8_t bitfield(fungible const& x) {
 
 inline constexpr
 uint8_t bitfield(non_fungible const& x) {
-    //TODO(fernando): siempre tienen HAS_COMMITMENT y HAS_NFT ?
-    return uint8_t{0b0100'0000} | // 0x40 - HAS_COMMITMENT_LENGTH, the prefix encodes a commitment length and commitment.
-           uint8_t{0b0010'0000} | // 0x20 - HAS_NFT, the prefix encodes a non-fungible token.
+    return (x.commitment.empty() ? uint8_t{0} : uint8_t{0b0100'0000}) | // 0x40 - HAS_COMMITMENT_LENGTH, the prefix encodes a commitment length and commitment.
+           uint8_t{0b0010'0000} |                                       // 0x20 - HAS_NFT, the prefix encodes a non-fungible token.
            uint8_t(x.capability);
 }
 
@@ -154,13 +173,15 @@ uint8_t bitfield(token_data_t const& x) {
 template <typename W>
 inline constexpr
 void to_data(W& sink, fungible const& x) {
-    //TODO(fernando): revisar en el spec cómo se debe serializar este amount. Si compact o de alguna otra forma.
-    sink.write_8_bytes_little_endian(int64_t(x.amount));
+    sink.write_variable_little_endian(int64_t(x.amount));
 }
 
 template <typename W>
 inline constexpr
 void to_data(W& sink, non_fungible const& x) {
+    if (x.commitment.empty()) return;
+
+    sink.write_size_little_endian(x.commitment.size());
     sink.write_bytes(x.commitment);
 }
 
@@ -174,7 +195,7 @@ void to_data(W& sink, both_kinds const& x) {
 template <typename W>
 inline constexpr
 void to_data(W& sink, token_data_t const& x) {
-    sink.write_bytes(std::begin(x.id), std::size(x.id));
+    sink.write_hash(x.id);
     sink.write_byte(bitfield(x));
 
     auto const visitor = [&sink](auto&& arg) {
@@ -227,7 +248,6 @@ capability_t capability(uint8_t bitfield) {
     return capability_t{c};
 };
 
-
 inline constexpr
 bool is_valid_bitfield(uint8_t bitfield) {
     //TODO(fernando): comparar la logica con la que escribimos en el spec interno
@@ -254,7 +274,6 @@ bool is_valid_bitfield(uint8_t bitfield) {
 template <typename R, KTH_IS_READER(R)>
 inline constexpr
 bool from_data(R& source, fungible& x, bool /*has_commitment*/) {
-    std::cout << "from_data - fungible" << std::endl;
     x.amount = amount_t(source.read_variable_little_endian());
     return source;
 }
@@ -262,11 +281,9 @@ bool from_data(R& source, fungible& x, bool /*has_commitment*/) {
 template <typename R, KTH_IS_READER(R)>
 inline constexpr
 bool from_data(R& source, non_fungible& x, bool has_commitment) {
-    std::cout << "from_data - non_fungible" << std::endl;
-    auto const size = source.read_size_little_endian();
-
     if (has_commitment) {
         //TODO(fernando): check size is valid
+        auto const size = source.read_size_little_endian();
         x.commitment = source.read_bytes(size);
     }
     return source;
@@ -275,7 +292,6 @@ bool from_data(R& source, non_fungible& x, bool has_commitment) {
 template <typename R, KTH_IS_READER(R)>
 inline constexpr
 bool from_data(R& source, both_kinds& x, bool has_commitment) {
-    std::cout << "from_data - both_kinds" << std::endl;
     from_data(source, x.second, has_commitment);
     from_data(source, x.first, has_commitment);
     return source;

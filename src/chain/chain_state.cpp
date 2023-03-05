@@ -96,11 +96,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     , descartes_activation_time_(descartes_activation_time)
     , lobachevski_activation_time_(lobachevski_activation_time)
 #endif  //KTH_CURRENCY_BCH
-{
-// #if defined(KTH_CURRENCY_BCH)
-//     adjust_assert_anchor_block_info();
-// #endif
-}
+{}
 
 domain::config::network chain_state::network() const {
     // Retargeting and testnet are only activated via configuration.
@@ -477,6 +473,11 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     }
 
 #if defined(KTH_CURRENCY_BCH)
+    if (is_csv_enabled(values.height, network)) {
+        // flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
+        result.forks |= (rule_fork::bip112_rule & forks);
+    }
+
     if (is_uahf_enabled(values.height, network)) {
         // result.forks |= (rule_fork::cash_verify_flags_script_enable_sighash_forkid & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_STRICTENC & forks);
@@ -663,6 +664,19 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 }
 
 #if defined(KTH_CURRENCY_BCH)
+// Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
+inline
+bool chain_state::is_csv_enabled(size_t height, config::network network) {
+    auto res = is_rule_enabled(height, network
+        , mainnet_csv_activation_height
+        , testnet_csv_activation_height
+        , testnet4_csv_activation_height
+        , scalenet_csv_activation_height
+        , chipnet_csv_activation_height
+        );
+
+    return res;
+}
 
 //2017-August-01 hard fork
 inline

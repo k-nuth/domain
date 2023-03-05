@@ -426,6 +426,18 @@ code transaction_basis::check(uint64_t total_output_value, size_t max_block_size
     return error::success;
 }
 
+size_t transaction_basis::min_tx_size(chain_state const& state) const {
+#if defined(KTH_CURRENCY_BCH)
+    if (state.is_descartes_enabled()) {
+        return min_transaction_size_descartes;      // 2023-May-15
+    }
+    if (state.is_euclid_enabled()) {
+        return min_transaction_size_old;            // 2018-Nov-15
+    }
+#endif
+    return 0;
+}
+
 // These checks assume that prevout caching is completed on all tx.inputs.
 code transaction_basis::accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated /*= false*/, bool transaction_pool /*= true*/) const {
     auto const bip16 = state.is_enabled(kth::domain::machine::rule_fork::bip16_rule);
@@ -446,7 +458,7 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    if (state.is_euclid_enabled() && serialized_size(true, false) < min_transaction_size) {
+    if (serialized_size(true, false) < min_tx_size(state)) {
         return error::transaction_size_limit;
     }
 #endif

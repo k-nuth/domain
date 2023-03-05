@@ -71,7 +71,8 @@ void output_basis::to_data(data_sink& stream, bool wire) const {
 size_t output_basis::serialized_size(bool /*wire*/) const {
     return sizeof(value_) +
            script_.serialized_size(true) +
-           chain::encoding::serialized_size(token_data_);
+           chain::encoding::serialized_size(token_data_) +
+           size_t(token_data_.has_value());
 }
 
 // Accessors.

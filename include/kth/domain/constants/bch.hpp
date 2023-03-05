@@ -26,7 +26,9 @@ constexpr size_t max_block_size_testnet4 = 2000000;   //2 million bytes
 constexpr size_t max_block_size_scalenet = 256000000;   //256 million bytes
 constexpr size_t max_block_size_chipnet = 2000000;   //2 million bytes
 
-constexpr size_t min_transaction_size = 100;   //one hundred bytes
+constexpr size_t min_transaction_size_old = 100;        // bytes
+constexpr size_t min_transaction_size_descartes = 65;   // bytes
+
 constexpr size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
 constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 constexpr size_t max_block_sigops_testnet4 = max_block_size_testnet4 / max_sigops_factor;
@@ -90,6 +92,14 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 constexpr descartes_t   bch_descartes_activation_time{1684152000};      // 2023-May-15 HF
 constexpr lobachevski_t bch_lobachevski_activation_time{1715774400};    // 2024-May-15 HF
 
+
+// Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
+constexpr size_t mainnet_csv_activation_height = 419329;
+constexpr size_t testnet_csv_activation_height = 770113;
+constexpr size_t testnet4_csv_activation_height = 6;
+constexpr size_t scalenet_csv_activation_height = 6;
+constexpr size_t chipnet_csv_activation_height = 6;
+
 //2017-August-01 hard fork
 constexpr size_t mainnet_uahf_activation_height = 478559;
 constexpr size_t testnet_uahf_activation_height = 1155876;
@@ -109,7 +119,7 @@ constexpr size_t mainnet_pythagoras_activation_height = 530356;  // Bitcoin Cash
 constexpr size_t testnet_pythagoras_activation_height = 1233070; // Bitcoin Cash Node checkpoint: 1233078
 constexpr size_t testnet4_pythagoras_activation_height = 0;      // TODO(fernando): testnet4
 constexpr size_t scalenet_pythagoras_activation_height = 0;      // TODO(fernando): scalenet
-constexpr size_t chipnet_pythagoras_activation_height = 0;      // TODO(fernando): chipnet
+constexpr size_t chipnet_pythagoras_activation_height = 0;       // TODO(fernando): chipnet
 
 //2018-November hard fork
 constexpr size_t mainnet_euclid_activation_height = 556767;
@@ -123,7 +133,7 @@ constexpr size_t mainnet_pisano_activation_height = 582680;
 constexpr size_t testnet_pisano_activation_height = 1303885;
 constexpr size_t testnet4_pisano_activation_height = 0; //TODO(fernando): testnet4
 constexpr size_t scalenet_pisano_activation_height = 0; //TODO(fernando): scalenet
-constexpr size_t chipnet_pisano_activation_height = 0; //TODO(fernando): chipnet
+constexpr size_t chipnet_pisano_activation_height = 0;  //TODO(fernando): chipnet
 
 //2019-Nov hard fork
 constexpr size_t mainnet_mersenne_activation_height = 609136;

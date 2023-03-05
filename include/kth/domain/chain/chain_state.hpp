@@ -341,6 +341,10 @@ private:
 
     // ------------------------------------------------------------------------
 #if defined(KTH_CURRENCY_BCH)
+    // Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
+    static
+    bool is_csv_enabled(size_t height, config::network network);
+
     static
     bool is_uahf_enabled(size_t height, config::network network);
 
