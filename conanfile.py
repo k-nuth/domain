@@ -3,7 +3,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-from conan import CMake
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
 from kthbuild import KnuthConanFile
 
@@ -112,24 +112,21 @@ class KnuthDomainConan(KnuthConanFile):
         cmake_layout(self)
 
     def generate(self):
-        tc = CMakeToolchain(self)
+        tc = self.cmake_toolchain_basis()
         # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        tc.variables["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
+        tc.variables["WITH_ICU"] = option_on_off(self.options.with_icu)
+        tc.variables["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
+        # tc.variables["WITH_PNG"] = option_on_off(self.options.with_png)
+        tc.variables["WITH_PNG"] = option_on_off(self.options.with_qrencode)
+        tc.variables["LOG_LIBRARY"] = self.options.log
+        tc.variables["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
         tc.generate()
         tc = CMakeDeps(self)
         tc.generate()
 
     def build(self):
-        cmake = self.cmake_basis()
-        cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
-
-        cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
-        cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
-        # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
-        cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
-        cmake.definitions["LOG_LIBRARY"] = self.options.log
-        cmake.definitions["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
-
-        # cmake.configure(source_dir=self.source_folder)
+        cmake = CMake(self)
         cmake.configure()
         if not self.options.cmake_export_compile_commands:
             cmake.build()
