@@ -5,12 +5,9 @@
 import os
 from conans import CMake
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
-from kthbuild import KnuthConanFile
+from kthbuild import KnuthConanFileV2
 
-class AsertTestVectorsGenerator(KnuthConanFile):
-    def recipe_dir(self):
-        return os.path.dirname(os.path.abspath(__file__))
-
+class AsertTestVectorsGenerator(KnuthConanFileV2):
     name = "asert-gen"
     url = "https://github.com/k-nuth/kth"
     description = "aserti3-2e test vectors generator"
@@ -19,15 +16,15 @@ class AsertTestVectorsGenerator(KnuthConanFile):
     options = {
         # "currency": ['BCH', 'BTC', 'LTC'],
 
-        "microarchitecture": "ANY",
+        "microarchitecture": ["ANY"],
         "fix_march": [True, False],
-        "march_id": "ANY",
+        "march_id": ["ANY"],
 
         "verbose": [True, False],
 
-        "cxxflags": "ANY",
-        "cflags": "ANY",
-        "glibcxx_supports_cxx11_abi": "ANY",
+        "cxxflags": ["ANY"],
+        "cflags": ["ANY"],
+        "glibcxx_supports_cxx11_abi": ["ANY"],
         "cmake_export_compile_commands": [True, False],
     }
 
@@ -56,14 +53,14 @@ class AsertTestVectorsGenerator(KnuthConanFile):
         self.requires("domain/0.X@%s/%s" % (self.user, self.channel))
 
     def config_options(self):
-        KnuthConanFile.config_options(self)
+        KnuthConanFileV2.config_options(self)
 
     def configure(self):
-        KnuthConanFile.configure(self)
+        KnuthConanFileV2.configure(self)
         self.options["*"].currency = "BCH"
 
     def package_id(self):
-        KnuthConanFile.package_id(self)
+        KnuthConanFileV2.package_id(self)
 
     def build(self):
         cmake = self.cmake_basis()

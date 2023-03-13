@@ -5,14 +5,10 @@
 import os
 from conans import CMake
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
-from kthbuild import KnuthConanFile
+from kthbuild import KnuthConanFileV2
 
-class KnuthDomainConan(KnuthConanFile):
-    def recipe_dir(self):
-        return os.path.dirname(os.path.abspath(__file__))
-
+class KnuthDomainConan(KnuthConanFileV2):
     name = "domain"
-    # version = get_version()
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/k-nuth/domain"
     description = "Crypto Cross-Platform C++ Development Toolkit"
@@ -26,14 +22,14 @@ class KnuthDomainConan(KnuthConanFile):
                "examples": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
 
-               "march_id": "ANY",
+               "march_id": ["ANY"],
                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
 
                "verbose": [True, False],
                "cached_rpc_data": [True, False],
-               "cxxflags": "ANY",
-               "cflags": "ANY",
-               "glibcxx_supports_cxx11_abi": "ANY",
+               "cxxflags": ["ANY"],
+               "cflags": ["ANY"],
+               "glibcxx_supports_cxx11_abi": ["ANY"],
                "cmake_export_compile_commands": [True, False],
                "log": ["boost", "spdlog", "binlog"],
                "disable_get_blocks": [True, False],
@@ -89,13 +85,13 @@ class KnuthDomainConan(KnuthConanFile):
             self.requires("libqrencode/4.0.0@kth/stable")
 
     def validate(self):
-        KnuthConanFile.validate(self)
+        KnuthConanFileV2.validate(self)
 
     def config_options(self):
-        KnuthConanFile.config_options(self)
+        KnuthConanFileV2.config_options(self)
 
     def configure(self):
-        KnuthConanFile.configure(self)
+        KnuthConanFileV2.configure(self)
 
         self.options["*"].cached_rpc_data = self.options.cached_rpc_data
 
@@ -103,7 +99,7 @@ class KnuthDomainConan(KnuthConanFile):
         self.output.info("Compiling with log: %s" % (self.options.log,))
 
     def package_id(self):
-        KnuthConanFile.package_id(self)
+        KnuthConanFileV2.package_id(self)
 
     def build(self):
         cmake = self.cmake_basis()
@@ -128,14 +124,12 @@ class KnuthDomainConan(KnuthConanFile):
         self.copy("*.h", "", "include")
 
     def package(self):
-        self.copy("*.h", dst="include", src="include")
-        self.copy("*.hpp", dst="include", src="include")
-        self.copy("*.ipp", dst="include", src="include")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.dylib*", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        cmake = CMake(self)
+        cmake.install()
+        # rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
+        # rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
+        # rmdir(self, os.path.join(self.package_folder, "res"))
+        # rmdir(self, os.path.join(self.package_folder, "share"))
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
