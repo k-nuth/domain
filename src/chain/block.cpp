@@ -143,6 +143,11 @@ std::string const encoded_testnet4_genesis_block =
 static
 std::string const encoded_scalenet_genesis_block =
     "0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4ac6da435fffff001da4d594a20101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4d04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73ffffffff0100f2052a01000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000"; //NOLINT
+
+static
+std::string const encoded_chipnet_genesis_block =
+    "0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4af1a93c5fffff001d01d3cd060101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4d04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73ffffffff0100f2052a01000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000"; //NOLINT
+
 #endif
 
 static
@@ -335,20 +340,24 @@ chain::block block::genesis_testnet4() {
 chain::block block::genesis_scalenet() {
     return genesis_generic(encoded_scalenet_genesis_block);
 }
-#endif
 
+chain::block block::genesis_chipnet() {
+    return genesis_generic(encoded_chipnet_genesis_block);
+}
+#endif
 
 // With a 32 bit chain the size of the result should not exceed 43 and with a
 // 64 bit chain should not exceed 75, using a limit of: 10 + log2(height) + 1.
 size_t block::locator_size(size_t top) {
-    // Set rounding behavior, not consensus-related, thread side effect :<.
-    std::fesetround(FE_UPWARD);
+    const auto first_ten_or_top = std::min(size_t{10}, top);
+    const auto remaining = top - first_ten_or_top;
 
-    auto const first_ten_or_top = std::min(size_t(10), top);
-    auto const remaining = top - first_ten_or_top;
-    auto const back_off = remaining == 0 ? 0.0 : remaining == 1 ? 1.0 : std::log2(remaining);
-    auto const rounded_up_log = static_cast<size_t>(std::nearbyint(back_off));
-    return first_ten_or_top + rounded_up_log + size_t(1);
+    // Set log2(0) -> 0, log2(1) -> 1 and round up higher exponential backoff
+    // results to next whole number by adding 0.5 and truncating.
+    if (remaining < 2) {
+        return top + size_t{1};
+    }
+    return first_ten_or_top + static_cast<size_t>(std::log2(remaining) + 0.5) + size_t{1};
 }
 
 // This algorithm is a network best practice, not a consensus rule.

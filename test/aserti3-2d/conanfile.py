@@ -3,9 +3,14 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-from conans import CMake
+from conan import ConanFile
+from conan.tools.build.cppstd import check_min_cppstd
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.files import copy #, apply_conandata_patches, export_conandata_patches, get, rm, rmdir
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
 from kthbuild import KnuthConanFileV2
+
+required_conan_version = ">=2.0"
 
 class AsertTestVectorsGenerator(KnuthConanFileV2):
     name = "asert-gen"
@@ -24,30 +29,24 @@ class AsertTestVectorsGenerator(KnuthConanFileV2):
 
         "cxxflags": ["ANY"],
         "cflags": ["ANY"],
-        "glibcxx_supports_cxx11_abi": ["ANY"],
         "cmake_export_compile_commands": [True, False],
     }
 
     default_options = {
         # "currency": "BCH",
 
-        "microarchitecture": "_DUMMY_",
         "fix_march": False,
-        "march_id": "_DUMMY_",
 
         "verbose": False,
 
-        "cxxflags": "_DUMMY_",
-        "cflags": "_DUMMY_",
-        "glibcxx_supports_cxx11_abi": "_DUMMY_",
         "cmake_export_compile_commands": False,
     }
 
-    generators = "cmake"
-    exports = "conan_*"
+    # generators = "cmake"
+    # exports = "conan_*"
     exports_sources = "CMakeLists.txt", "genenerate_test_vectors.cpp"
 
-    build_policy = "missing"
+    # build_policy = "missing"
 
     def requirements(self):
         self.requires("domain/0.X@%s/%s" % (self.user, self.channel))
@@ -62,9 +61,23 @@ class AsertTestVectorsGenerator(KnuthConanFileV2):
     def package_id(self):
         KnuthConanFileV2.package_id(self)
 
+    def layout(self):
+        cmake_layout(self)
+
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        tc = self.cmake_toolchain_basis()
+        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        tc.generate()
+        tc = CMakeDeps(self)
+        tc.generate()
+
     def build(self):
-        cmake = self.cmake_basis()
-        cmake.configure(source_dir=self.source_folder)
+        cmake = CMake(self)
+        cmake.configure()
+
         if not self.options.cmake_export_compile_commands:
             cmake.build()
             # if self.options.tests:

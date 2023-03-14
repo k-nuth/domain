@@ -121,6 +121,9 @@ public:
 
     static
     block genesis_scalenet();
+
+    static
+    block genesis_chipnet();
 #endif
 
     static

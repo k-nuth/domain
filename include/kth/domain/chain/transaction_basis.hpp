@@ -367,6 +367,9 @@ public:
     code check(uint64_t total_output_value, size_t max_block_size, bool transaction_pool = true, bool retarget = true) const;
 
     [[nodiscard]]
+    size_t min_tx_size(chain_state const& state) const;
+
+    [[nodiscard]]
     code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
 
     [[nodiscard]]

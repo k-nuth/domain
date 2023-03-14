@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.15)
 
 # asert-gen
 #==============================================================================
@@ -14,7 +14,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check for baseline language coverage in the compiler for the C++14 standard.
 #------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
@@ -136,7 +136,7 @@ add_executable(asert-gen
 # target_compile_definitions(asert-gen PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 target_compile_definitions(asert-gen PUBLIC -DBCN_STATIC -DBCB_STATIC -DBCD_STATIC -DBCT_STATIC -DBC_STATIC)
 
-target_link_libraries(asert-gen PUBLIC ${CONAN_LIBS})
+# target_link_libraries(asert-gen PUBLIC ${CONAN_LIBS})
 
 set_target_properties(
     asert-gen PROPERTIES

@@ -29,7 +29,7 @@ bool all_valid(chain::transaction::list const& transactions) {
     return valid;
 }
 
-// Start Boost Suite: chain block tests
+// Start Test Suite: chain block tests
 
 TEST_CASE("block proof2 genesis mainnet expected", "[chain block]") {
     auto const block = chain::block::genesis_mainnet();
@@ -201,7 +201,7 @@ TEST_CASE("block  is valid merkle root  valid  returns true", "[chain block]") {
     REQUIRE(instance.is_valid_merkle_root());
 }
 
-// Start Boost Suite: block serialization tests
+// Start Test Suite: block serialization tests
 
 TEST_CASE("block  from data  insufficient bytes  failure", "[block serialization]") {
     data_chunk data(10);
@@ -258,6 +258,14 @@ TEST_CASE("block genesis scalenet valid structure", "[block serialization]") {
     REQUIRE(genesis.transactions().size() == 1u);
     REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
 }
+
+TEST_CASE("block genesis chipnet valid structure", "[block serialization]") {
+    auto const genesis = chain::block::genesis_chipnet();
+    REQUIRE(genesis.is_valid());
+    REQUIRE(genesis.transactions().size() == 1u);
+    REQUIRE(genesis.header().merkle() == genesis.generate_merkle_root());
+}
+
 #endif
 
 TEST_CASE("block  factory from data 1  genesis mainnet  success", "[block serialization]") {
@@ -320,9 +328,9 @@ TEST_CASE("block  factory from data 3  genesis mainnet  success", "[block serial
     REQUIRE(genesis.header().merkle() == block.generate_merkle_root());
 }
 
-// End Boost Suite
+// End Test Suite
 
-// Start Boost Suite: block generate merkle root tests
+// Start Test Suite: block generate merkle root tests
 
 TEST_CASE("block  generate merkle root  block with zero transactions  matches null hash", "[block generate merkle root]") {
     chain::block empty;
@@ -550,9 +558,9 @@ TEST_CASE("block  operator boolean not equals  differs  returns true", "[block g
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite
 
-// Start Boost Suite: block is distinct transaction set tests
+// Start Test Suite: block is distinct transaction set tests
 
 TEST_CASE("block  distinct transactions  empty  true", "[block is distinct transaction set]") {
     chain::block value;
@@ -598,9 +606,9 @@ TEST_CASE("validate block is cash pow valid true", "[block is distinct transacti
 }
 #endif  //KTH_CURRENCY_BCH
 
-// End Boost Suite
+// End Test Suite
 
-// Start Boost Suite: block is forward reference tests
+// Start Test Suite: block is forward reference tests
 
 TEST_CASE("block  is forward reference  no transactions  false", "[block is forward reference]") {
     chain::block value;
@@ -642,6 +650,6 @@ TEST_CASE("block  is forward reference  forward reference  true", "[block is for
     REQUIRE(value.is_forward_reference());
 }
 
-// End Boost Suite
+// End Test Suite
 
-// End Boost Suite
+// End Test Suite

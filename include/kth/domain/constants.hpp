@@ -26,11 +26,13 @@ namespace kth {
 constexpr size_t internal_max_block_sigchecks = get_max_block_size(domain::config::network::mainnet) / block_maxbytes_maxsigchecks_ratio;
 constexpr size_t internal_max_block_sigchecks_testnet4 = get_max_block_size(domain::config::network::testnet4) / block_maxbytes_maxsigchecks_ratio;
 constexpr size_t internal_max_block_sigchecks_scalenet = get_max_block_size(domain::config::network::scalenet) / block_maxbytes_maxsigchecks_ratio;
+constexpr size_t internal_max_block_sigchecks_chipnet = get_max_block_size(domain::config::network::chipnet) / block_maxbytes_maxsigchecks_ratio;
 
 constexpr inline
 size_t get_max_block_sigchecks(domain::config::network network) noexcept {
     if (network == domain::config::network::testnet4) return internal_max_block_sigchecks_testnet4;
     if (network == domain::config::network::scalenet) return internal_max_block_sigchecks_scalenet;
+    if (network == domain::config::network::chipnet) return internal_max_block_sigchecks_chipnet;
     return internal_max_block_sigchecks;
 }
 

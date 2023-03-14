@@ -2,39 +2,15 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+cmake_minimum_required(VERSION 3.15)
 
-cmake_minimum_required(VERSION 3.8)
-
-# kth-domain
-#==============================================================================
-project(kth-domain
-  VERSION 0
-  LANGUAGES CXX C)
-  # VERSION 0.11.0
-
-
-#if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-#  # using Clang
-#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-#  # using GCC
-#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-#  # using Intel C++
-#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-#  # using Visual Studio C++
-#endif()
-#if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#  # using regular Clang or AppleClang
-#endif()
-
-# message(CMAKE_CXX_COMPILER_ID)
-# message(${CMAKE_CXX_COMPILER_ID})
-
+project(kth-domain VERSION 0 LANGUAGES CXX C)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Check for baseline language coverage in the compiler for the C++17 standard.
+# Check for baseline language coverage in the compiler for the C++20 standard.
 #------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Process options.
@@ -42,12 +18,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Implement --use-conan
 #------------------------------------------------------------------------------
-option(USE_CONAN "Use Conan Build Tool." OFF)
-option(NO_CONAN_AT_ALL "Conan totally disabled." OFF)
+# option(USE_CONAN "Use Conan Build Tool." OFF)
+# option(NO_CONAN_AT_ALL "Conan totally disabled." OFF)
 
-if (NO_CONAN_AT_ALL)
-  set(USE_CONAN OFF)
-endif()
+# if (NO_CONAN_AT_ALL)
+#   set(USE_CONAN OFF)
+# endif()
 
 
 # Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
@@ -80,9 +56,9 @@ endif()
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
 if (WITH_ICU)
   add_definitions(-DWITH_ICU -DBOOST_HAS_ICU)
-  if (NO_CONAN_AT_ALL)
-    message(FATAL_ERROR "WITH_ICU not yet implemented")
-  endif (NO_CONAN_AT_ALL)
+  # if (NO_CONAN_AT_ALL)
+  #   message(FATAL_ERROR "WITH_ICU not yet implemented")
+  # endif (NO_CONAN_AT_ALL)
 endif()
 
 # Implement --with-png and output ${png}.
@@ -98,9 +74,9 @@ option(WITH_QRENCODE "Compile with QREncode." OFF)
 if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
 
-  if (NO_CONAN_AT_ALL)
-    message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
-  endif (NO_CONAN_AT_ALL)
+  # if (NO_CONAN_AT_ALL)
+  #   message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
+  # endif (NO_CONAN_AT_ALL)
 endif()
 
 # Implement --JUST_KTH_SOURCES for linting.
@@ -168,59 +144,40 @@ endif()
 message(STATUS "Knuth: Cryptocurrency: ${CURRENCY}")
 
 
-# Conan infrastructure
-#==============================================================================
-if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
-else()
-    message( STATUS "knuthbuildinfo doent exists")
-endif()
-
-
-
-
-# get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-# foreach( d ${DirDefs} )
-#     message( STATUS "Found Define: " ${d} )
-# endforeach()
-# message( STATUS "DirDefs: " ${DirDefs} )
-
-# remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-# remove_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-
-# get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-# foreach( d ${DirDefs} )
-#     message( STATUS "Found Define: " ${d} )
-# endforeach()
-# message( STATUS "DirDefs: " ${DirDefs} )
-
+# # Conan infrastructure
+# #==============================================================================
+# if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
+#     include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
+# else()
+#     message( STATUS "knuthbuildinfo doent exists")
+# endif()
 
 set(Boost_DEBUG ON)
 
 # Check dependencies.
 #==============================================================================
 #------------------------------------------------------------------------------
-if (NO_CONAN_AT_ALL)
-  # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
-  #------------------------------------------------------------------------------
-  if (NOT ENABLE_SHARED)
-    set(Boost_USE_STATIC_LIBS ON)
-  endif()
+# if (NO_CONAN_AT_ALL)
+#   # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
+#   #------------------------------------------------------------------------------
+#   if (NOT ENABLE_SHARED)
+#     set(Boost_USE_STATIC_LIBS ON)
+#   endif()
 
-  if (MSVC)
-    find_package(
-      Boost 1.66.0 REQUIRED
-      COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options system thread unit_test_framework
-      # regex
-    )
-  else()
-    find_package(
-      Boost 1.66.0 REQUIRED
-      COMPONENTS chrono date_time filesystem iostreams locale log program_options system thread unit_test_framework
-      # regex
-    )
-  endif()
-endif()
+#   if (MSVC)
+#     find_package(
+#       Boost 1.66.0 REQUIRED
+#       COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options system thread unit_test_framework
+#       # regex
+#     )
+#   else()
+#     find_package(
+#       Boost 1.66.0 REQUIRED
+#       COMPONENTS chrono date_time filesystem iostreams locale log program_options system thread unit_test_framework
+#       # regex
+#     )
+#   endif()
+# endif()
 
 
 
@@ -231,15 +188,15 @@ find_package(Threads REQUIRED)  #TODO(fernando): manage with conan
 # Require png of at least version 1.6.25 and output ${png_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (WITH_PNG)
-    if (NO_CONAN_AT_ALL)
-        find_package(PNG 1.6.25 REQUIRED)
+    # if (NO_CONAN_AT_ALL)
+    #     find_package(PNG 1.6.25 REQUIRED)
 
-        add_library(png INTERFACE IMPORTED)
-        set_target_properties(png PROPERTIES
-            INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
-            INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
-            INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
-    endif(NO_CONAN_AT_ALL)
+    #     add_library(png INTERFACE IMPORTED)
+    #     set_target_properties(png PROPERTIES
+    #         INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
+    #         INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
+    #         INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
+    # endif(NO_CONAN_AT_ALL)
 endif()
 
 
@@ -260,18 +217,21 @@ endif()
 
 
 
-if (NOT USE_CONAN)
-# Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
-# Require kth-infrastructure of at least version 0 and output ${kth_infrastructure_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-  if (NOT TARGET secp256k1)
-    find_package(secp256k1 0 REQUIRED)
-  endif()
+# if (NOT USE_CONAN)
+# # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+# # Require kth-infrastructure of at least version 0 and output ${kth_infrastructure_CPPFLAGS/LIBS/PKG}.
+# #------------------------------------------------------------------------------
+#   if (NOT TARGET secp256k1)
+#     find_package(secp256k1 0 REQUIRED)
+#   endif()
 
-  if (NOT TARGET kth-infrastructure)
-    find_package(kth-infrastructure 0 REQUIRED)
-  endif()
-endif()
+#   if (NOT TARGET kth-infrastructure)
+#     find_package(kth-infrastructure 0 REQUIRED)
+#   endif()
+# endif()
+
+find_package(secp256k1 REQUIRED)
+find_package(kth-infrastructure REQUIRED)
 
 
 # Set flags.
@@ -549,29 +509,29 @@ endif()
 
 
 
-if (NOT NO_CONAN_AT_ALL)
-  target_link_libraries(kth-domain PUBLIC ${CONAN_LIBS})
-else()
-  if (MSVC)
-    target_link_libraries(kth-domain PUBLIC
-      ${Boost_ATOMIC_LIBRARY}
-      ${Boost_LOG_SETUP_LIBRARY}
-    )
-  endif()
+# if (NOT NO_CONAN_AT_ALL)
+#   # target_link_libraries(kth-domain PUBLIC ${CONAN_LIBS})
+# else()
+#   if (MSVC)
+#     target_link_libraries(kth-domain PUBLIC
+#       ${Boost_ATOMIC_LIBRARY}
+#       ${Boost_LOG_SETUP_LIBRARY}
+#     )
+#   endif()
 
-  target_link_libraries(kth-domain PUBLIC
-    ${Boost_CHRONO_LIBRARY}
-    ${Boost_DATE_TIME_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_IOSTREAMS_LIBRARY}
-    ${Boost_LOCALE_LIBRARY}
-    ${Boost_LOG_LIBRARY}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    # ${Boost_REGEX_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-  )
-endif()
+#   target_link_libraries(kth-domain PUBLIC
+#     ${Boost_CHRONO_LIBRARY}
+#     ${Boost_DATE_TIME_LIBRARY}
+#     ${Boost_FILESYSTEM_LIBRARY}
+#     ${Boost_IOSTREAMS_LIBRARY}
+#     ${Boost_LOCALE_LIBRARY}
+#     ${Boost_LOG_LIBRARY}
+#     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+#     # ${Boost_REGEX_LIBRARY}
+#     ${Boost_SYSTEM_LIBRARY}
+#     ${Boost_THREAD_LIBRARY}
+#   )
+# endif()
 
 target_link_libraries(kth-domain PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
 
@@ -582,9 +542,9 @@ target_link_libraries(kth-domain PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernan
 # endif()
 
 if (WITH_PNG)
-    if (NO_CONAN_AT_ALL)
-        target_link_libraries(kth-domain PUBLIC png)
-    endif (NO_CONAN_AT_ALL)
+    # if (NO_CONAN_AT_ALL)
+    #     target_link_libraries(kth-domain PUBLIC png)
+    # endif (NO_CONAN_AT_ALL)
 endif()
 
 if (${CURRENCY} STREQUAL "LTC")
@@ -595,24 +555,18 @@ if (${CURRENCY} STREQUAL "LTC")
   # OPENSSL_LIBRARIES
 endif()
 
-if (NOT USE_CONAN)
-  target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
-endif()
+# if (NOT USE_CONAN)
+#   target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
+# endif()
+target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
 
 _group_sources(kth-domain "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
-
 if (WITH_TESTS)
   enable_testing()
-endif()
-
-
-# local: test/kth_domain_test
-#------------------------------------------------------------------------------
-if (WITH_TESTS)
-
+  find_package(Catch2 3 REQUIRED)
   add_executable(kth_domain_test
         test/chain/block.cpp
         test/chain/compact.cpp
@@ -686,93 +640,14 @@ if (WITH_TESTS)
         # test/wallet/transaction_functions.cpp
     )
 
-    target_include_directories(kth_domain_test PUBLIC
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
+  target_include_directories(kth_domain_test PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
 
-    target_link_libraries(kth_domain_test PUBLIC kth-domain)
+  target_link_libraries(kth_domain_test PUBLIC kth-domain)
+  target_link_libraries(kth_domain_test PRIVATE Catch2::Catch2WithMain)
 
-  if (WITH_TESTS)
-    include(CTest)
-    include(Catch)
-    catch_discover_tests(kth_domain_test)
-  endif()
-
-
-  # _group_sources(kth_domain_test "${CMAKE_CURRENT_LIST_DIR}/test")
-
-  # # TODO(fernando): check if there are new tests in Makefile (no Cmake)
-  # _add_tests(kth_domain_test
-  #   address_tests
-  #   alert_payload_tests
-  #   alert_tests
-  #   # binary_tests
-  #   bitcoin_uri_tests
-  #   chain_block_tests
-  #   message_block_tests
-  #   block_transactions_tests
-  #   # collection_tests
-  #   compact_block_tests
-  #   # data_tests
-  #   ec_private_tests
-  #   # ec_public_tests # no test cases
-  #   encrypted_tests
-  #   # endian_tests
-  #   fee_filter_tests
-  #   filter_add_tests
-  #   filter_clear_tests
-  #   filter_load_tests
-  #   get_address_tests
-  #   get_block_transactions_tests
-  #   get_blocks_tests
-  #   get_data_tests
-  #   get_headers_tests
-  #   # hash_number_tests
-  #   chain_header_tests
-  #   headers_tests
-  #   heading_tests
-  #   input_tests
-  #   inventory_tests
-  #   inventory_vector_tests
-  #   memory_pool_tests
-  #   merkle_block_tests
-  #   message_tests
-  #   # network_address_tests
-  #   not_found_tests
-  #   output_tests
-  #   payment_address_tests
-  #   ping_tests
-  #   point_tests
-  #   pong_tests
-  #   prefilled_transaction_tests
-  #   # pseudo_random_tests
-  #   reject_tests
-  #   # script_number_tests
-  #   script_tests
-  #   # send_compact_blocks_tests
-  #   send_headers_tests
-  #   # serializer_tests
-  #   stealth_address_tests
-  #   stealth_tests
-  #   # stream_tests
-  #   # thread_tests
-  #   chain_transaction_tests
-  #   message_transaction_tests
-  #   # unicode_istream_tests
-  #   # unicode_ostream_tests
-  #   # unicode_tests
-  #   uri_reader_tests
-  #   verack_tests
-  #   version_tests
-  #   transaction_functions_tests
-  # )
-
-  # if (WITH_PNG)
-  #   _add_tests(kth_domain_test png_tests)
-  # endif()
-
-  # if (WITH_QRENCODE)
-  #   _add_tests(kth_domain_test qrcode_tests)
-  # endif()
+  include(CTest)
+  include(Catch)
+  catch_discover_tests(kth_domain_test)
 endif()
 
 if (WITH_TESTS_NEW)
@@ -807,10 +682,6 @@ install(TARGETS kth-domain EXPORT kth-domain
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
 )
-
-#install(EXPORT kth-domainTargets
-#
-#)
 
 set(_kth_domain_headers
     kth/domain/multi_crypto_support.hpp

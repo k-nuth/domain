@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: send headers tests
+// Start Test Suite: send headers tests
 
 TEST_CASE("send headers - roundtrip to data factory from data chunk", "[send headers]") {
     const message::send_headers expected{};
@@ -67,4 +67,4 @@ TEST_CASE("from data reader version at least bip130 success", "[send headers]") 
     REQUIRE(instance.is_valid());
 }
 
-// End Boost Suite
+// End Test Suite

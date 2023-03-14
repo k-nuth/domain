@@ -116,7 +116,7 @@ bool sign_message(message_signature& out_signature, data_slice message, ec_secre
     return true;
 }
 
-bool verify_message(data_slice message, payment_address const& address, const message_signature& signature) {
+bool verify_message(data_slice message, payment_address const& address, message_signature const& signature) {
     auto const magic = signature.front();
     auto const compact = slice<1, message_signature_size>(signature);
 
@@ -129,7 +129,8 @@ bool verify_message(data_slice message, payment_address const& address, const me
     short_hash hash;
     auto const message_digest = hash_message(message);
     return recover(hash, compressed, compact, recovery_id, message_digest) &&
-           (hash == address.hash());
+           std::equal(hash.begin(), hash.end(), address.hash().begin());
+        //    (hash == address.hash20());
 }
 
 } // namespace kth::domain::wallet

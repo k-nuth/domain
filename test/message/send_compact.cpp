@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: send compact tests
+// Start Test Suite: send compact tests
 
 TEST_CASE("send compact  constructor 1  always invalid", "[send compact]") {
     message::send_compact instance;
@@ -154,4 +154,4 @@ TEST_CASE("send compact  operator boolean not equals  differs  returns true", "[
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

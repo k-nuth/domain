@@ -11,7 +11,7 @@ using namespace kd;
 using namespace kth::domain::wallet;
 using namespace kth::infrastructure::wallet;
 
-// Start Boost Suite: transaction functions tests
+// Start Test Suite: transaction functions tests
 
 #define SEED "fffb587496cc54912bbcef874fa9a61a"
 #define WALLET "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG"
@@ -117,4 +117,4 @@ TEST_CASE("set signature  test", "[transaction functions]") {
     REQUIRE(kth::encode_base16(result.second.to_data()) == COMPLETE_TX);
 }
 
-// End Boost Suite
+// End Test Suite

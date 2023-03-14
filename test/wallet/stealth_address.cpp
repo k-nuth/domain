@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: stealth address tests
+// Start Test Suite: stealth address tests
 
 #define SCAN_KEY "03d9e876028f4fc062c19f7097762e4affc2ce4edfffa7d42e3c17cd157ec6d1bc"
 #define SPEND_KEY1 "0215a49b55a2ed2a02569cb6c018644211d408caab3aca86d2cc7d6a9e5789b1d2"
@@ -64,4 +64,4 @@ TEST_CASE("stealth address  encoding  scan pub testnet  round trip", "[stealth a
     REQUIRE(address.version() == 43u);
 }
 
-// End Boost Suite
+// End Test Suite

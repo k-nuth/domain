@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: memory pool tests
+// Start Test Suite: memory pool tests
 
 TEST_CASE("memory pool - from data insufficient version failure", "[memory pool]") {
     const message::memory_pool expected;
@@ -53,4 +53,4 @@ TEST_CASE("memory pool - roundtrip to data factory from data reader", "[memory p
     REQUIRE(0u == result.serialized_size(message::version::level::maximum));
 }
 
-// End Boost Suite
+// End Test Suite

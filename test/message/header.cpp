@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: message header tests
+// Start Test Suite: message header tests
 
 TEST_CASE("message header constructor 1  always initialized invalid", "[message header]") {
     message::header instance;
@@ -338,4 +338,4 @@ TEST_CASE("message header  operator boolean not equals 2  differs  returns true"
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite
