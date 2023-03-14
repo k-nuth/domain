@@ -118,9 +118,9 @@ endif()
 
 message(STATUS "Knuth: Logging Library: ${LOG_LIBRARY}")
 
-set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
-# message(${KTH_PROJECT_VERSION})
-message( STATUS "Knuth: Compiling version ${KTH_PROJECT_VERSION}")
+# set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
+# # message(${KTH_PROJECT_VERSION})
+# message( STATUS "Knuth: Compiling version ${KTH_PROJECT_VERSION}")
 
 set(MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
 message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
@@ -498,7 +498,7 @@ if (NOT ENABLE_SHARED)
     target_compile_definitions(kth-domain PUBLIC -DKD_STATIC) #TODO(fernando): manage with Conan????
 endif()
 
-target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
+# target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 
 target_include_directories(kth-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
