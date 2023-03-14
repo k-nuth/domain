@@ -3,9 +3,14 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-from conans import CMake
+from conan import ConanFile
+from conan.tools.build.cppstd import check_min_cppstd
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.files import copy #, apply_conandata_patches, export_conandata_patches, get, rm, rmdir
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
 from kthbuild import KnuthConanFileV2
+
+required_conan_version = ">=2.0"
 
 class KnuthDomainConan(KnuthConanFileV2):
     name = "domain"
@@ -29,7 +34,6 @@ class KnuthDomainConan(KnuthConanFileV2):
                "cached_rpc_data": [True, False],
                "cxxflags": ["ANY"],
                "cflags": ["ANY"],
-               "glibcxx_supports_cxx11_abi": ["ANY"],
                "cmake_export_compile_commands": [True, False],
                "log": ["boost", "spdlog", "binlog"],
                "disable_get_blocks": [True, False],
@@ -46,32 +50,22 @@ class KnuthDomainConan(KnuthConanFileV2):
         "examples": False,
         "currency": "BCH",
 
-        "march_id": "_DUMMY_",
         "march_strategy": "download_if_possible",
 
         "verbose": False,
         "cached_rpc_data": False,
-        "cxxflags": "_DUMMY_",
-        "cflags": "_DUMMY_",
-        "glibcxx_supports_cxx11_abi": "_DUMMY_",
         "cmake_export_compile_commands": False,
         "log": "spdlog",
         "disable_get_blocks": False,
     }
+    # "with_png=False", \
 
-        # "with_png=False", \
-
-    generators = "cmake"
-    exports = "conan_*", "ci_utils/*"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "kth-domainConfig.cmake.in", "include/*", "test/*", "examples/*", "test_new/*"
-
-    package_files = "build/lkth-domain.a"
-    build_policy = "missing"
+    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "kth-domainConfig.cmake.in", "include/*", "test/*", "examples/*", "test_new/*"
 
     def requirements(self):
-        self.requires("algorithm/0.1.239@tao/stable")
-        self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
-        self.requires("infrastructure/0.X@%s/%s" % (self.user, self.channel))
+        # self.requires("algorithm/0.1.239@tao/stable")
+        # self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("infrastructure/0.24.0")
         # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
@@ -92,27 +86,35 @@ class KnuthDomainConan(KnuthConanFileV2):
 
     def configure(self):
         KnuthConanFileV2.configure(self)
-
         self.options["*"].cached_rpc_data = self.options.cached_rpc_data
-
         self.options["*"].log = self.options.log
         self.output.info("Compiling with log: %s" % (self.options.log,))
 
     def package_id(self):
         KnuthConanFileV2.package_id(self)
 
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        tc = self.cmake_toolchain_basis()
+        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        tc.variables["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
+        tc.variables["WITH_ICU"] = option_on_off(self.options.with_icu)
+        tc.variables["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
+        # tc.variables["WITH_PNG"] = option_on_off(self.options.with_png)
+        tc.variables["WITH_PNG"] = option_on_off(self.options.with_qrencode)
+        tc.variables["LOG_LIBRARY"] = self.options.log
+        tc.variables["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
+
+        tc.generate()
+        tc = CMakeDeps(self)
+        tc.generate()
+
     def build(self):
-        cmake = self.cmake_basis()
-        cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
+        cmake = CMake(self)
+        cmake.configure()
 
-        cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
-        cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
-        # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
-        cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
-        cmake.definitions["LOG_LIBRARY"] = self.options.log
-        cmake.definitions["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
-
-        cmake.configure(source_dir=self.source_folder)
         if not self.options.cmake_export_compile_commands:
             cmake.build()
             #Note: Cmake Tests and Visual Studio doesn't work
