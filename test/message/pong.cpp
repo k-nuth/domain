@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: pong tests
+// Start Test Suite: pong tests
 
 TEST_CASE("pong  constructor 1  always invalid", "[pong]") {
     message::pong instance;
@@ -132,4 +132,4 @@ TEST_CASE("pong  operator boolean not equals  differs  returns true", "[pong]") 
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

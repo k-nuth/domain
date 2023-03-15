@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: prefilled transaction tests
+// Start Test Suite: prefilled transaction tests
 
 TEST_CASE("prefilled transaction  constructor 1  always invalid", "[prefilled transaction]") {
     message::prefilled_transaction instance;
@@ -221,4 +221,4 @@ TEST_CASE("prefilled transaction  operator boolean not equals  differs  returns 
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

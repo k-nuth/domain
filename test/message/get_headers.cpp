@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: get headers tests
+// Start Test Suite: get headers tests
 
 TEST_CASE("get headers  constructor 1  always invalid", "[get headers]") {
     message::get_headers instance;
@@ -235,4 +235,4 @@ TEST_CASE("get headers  operator boolean not equals  differs  returns true", "[g
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

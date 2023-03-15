@@ -46,7 +46,7 @@ class AsertTestVectorsGenerator(KnuthConanFileV2):
     # exports = "conan_*"
     exports_sources = "CMakeLists.txt", "genenerate_test_vectors.cpp"
 
-    build_policy = "missing"
+    # build_policy = "missing"
 
     def requirements(self):
         self.requires("domain/0.X@%s/%s" % (self.user, self.channel))
@@ -63,6 +63,13 @@ class AsertTestVectorsGenerator(KnuthConanFileV2):
 
     def layout(self):
         cmake_layout(self)
+
+    def generate(self):
+        tc = self.cmake_toolchain_basis()
+        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        tc.generate()
+        tc = CMakeDeps(self)
+        tc.generate()
 
     def build(self):
         cmake = CMake(self)

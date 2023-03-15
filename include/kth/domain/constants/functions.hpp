@@ -29,6 +29,7 @@ size_t get_max_block_size(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet4) return max_block_size_testnet4;
     if (network == domain::config::network::scalenet) return max_block_size_scalenet;
+    if (network == domain::config::network::chipnet) return max_block_size_chipnet;
     return max_block_size_new;
 #else
     return max_block_size;
@@ -57,6 +58,7 @@ size_t get_max_block_sigops(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
     if (network == domain::config::network::testnet4) return max_block_sigops_testnet4;
     if (network == domain::config::network::scalenet) return max_block_sigops_scalenet;
+    if (network == domain::config::network::chipnet) return max_block_sigops_chipnet;
     return max_block_sigops_new;
 #else
     return max_block_sigops;
@@ -102,6 +104,7 @@ size_t network_map(domain::config::network network, size_t mainnet, size_t testn
 #if defined(KTH_CURRENCY_BCH)
 , size_t testnet4
 , size_t scalenet
+, size_t chipnet
 #endif
 ) noexcept {
     switch (network) {
@@ -114,6 +117,8 @@ size_t network_map(domain::config::network network, size_t mainnet, size_t testn
             return testnet4;
         case domain::config::network::scalenet:
             return scalenet;
+        case domain::config::network::chipnet:
+            return chipnet;
 #endif
         default:
         case domain::config::network::mainnet:
@@ -127,6 +132,7 @@ bool network_relation(domain::config::network network, R r, T const& value, T co
 #if defined(KTH_CURRENCY_BCH)
 , T const& testnet4
 , T const& scalenet
+, T const& chipnet
 #endif
 ) noexcept {
     switch (network) {
@@ -139,6 +145,8 @@ bool network_relation(domain::config::network network, R r, T const& value, T co
             return r(value, testnet4);
         case domain::config::network::scalenet:
             return r(value, scalenet);
+        case domain::config::network::chipnet:
+            return r(value, chipnet);
 #endif
         default:
         case domain::config::network::mainnet:

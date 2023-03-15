@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: ping tests
+// Start Test Suite: ping tests
 
 TEST_CASE("ping  constructor 1  always invalid", "[ping]") {
     message::ping instance;
@@ -198,4 +198,4 @@ TEST_CASE("ping  operator boolean not equals  differs  returns true", "[ping]") 
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

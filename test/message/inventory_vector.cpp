@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: inventory vector tests
+// Start Test Suite: inventory vector tests
 
 TEST_CASE("inventory vector to number error returns 0", "[inventory vector]") {
     REQUIRE(inventory_vector::to_number(inventory_vector::type_id::error) == 0u);
@@ -357,4 +357,4 @@ TEST_CASE("inventory vector - reject  operator boolean not equals differs return
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

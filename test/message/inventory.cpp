@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: inventory tests
+// Start Test Suite: inventory tests
 
 TEST_CASE("inventory  constructor 1  always invalid", "[inventory]") {
     message::inventory instance;
@@ -356,4 +356,4 @@ TEST_CASE("inventory  reduce  matching type  returns matches", "[inventory]") {
     REQUIRE(expected == result);
 }
 
-// End Boost Suite
+// End Test Suite

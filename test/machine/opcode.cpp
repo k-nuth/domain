@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::machine;
 
-// Start Boost Suite: opcode tests
+// Start Test Suite: opcode tests
 
 // opcode_to_string
 //-----------------------------------------------------------------------------
@@ -669,4 +669,4 @@ TEST_CASE("opcode  opcode from hexadecimal  upper case prefix  false", "[None]")
     REQUIRE( ! opcode_from_hexadecimal(out_code, "0X4f"));
 }
 
-// End Boost Suite
+// End Test Suite

@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: merkle block tests
+// Start Test Suite: merkle block tests
 
 TEST_CASE("merkle block  constructor 1  always invalid", "[merkle block]") {
     const message::merkle_block instance;
@@ -508,4 +508,4 @@ TEST_CASE("merkle block  operator boolean not equals  differs  returns true", "[
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

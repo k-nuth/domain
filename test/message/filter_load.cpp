@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: filter load tests
+// Start Test Suite: filter load tests
 
 TEST_CASE("filter load  constructor 1  always invalid", "[filter load]") {
     message::filter_load instance;
@@ -296,4 +296,4 @@ TEST_CASE("filter load  operator boolean not equals  differs  returns true", "[f
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

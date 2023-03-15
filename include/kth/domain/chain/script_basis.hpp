@@ -92,6 +92,25 @@ public:
         return source;
     }
 
+    template <typename R, KTH_IS_READER(R)>
+    bool from_data_with_size(R& source, size_t size) {
+        reset();
+        valid_ = true;
+
+        // The max_script_size constant limits evaluation, but not all scripts evaluate, so use max_block_size to guard memory allocation here.
+        if (size > get_max_block_size_network_independent()) {
+            source.invalidate();
+        } else {
+            bytes_ = source.read_bytes(size);
+        }
+
+        if ( ! source) {
+            reset();
+        }
+
+        return source;
+    }
+
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list const& ops);
     bool from_string(std::string const& mnemonic);

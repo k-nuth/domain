@@ -242,7 +242,7 @@ bool transaction_basis::all_inputs_final() const {
 }
 
 bool transaction_basis::is_final(size_t block_height, uint32_t block_time) const {
-    auto const max_locktime = [=]() {
+    auto const max_locktime = [=, this]() {
         return locktime_ < locktime_threshold ? safe_unsigned<uint32_t>(block_height) : block_time;
     };
 
@@ -426,6 +426,18 @@ code transaction_basis::check(uint64_t total_output_value, size_t max_block_size
     return error::success;
 }
 
+size_t transaction_basis::min_tx_size(chain_state const& state) const {
+#if defined(KTH_CURRENCY_BCH)
+    if (state.is_descartes_enabled()) {
+        return min_transaction_size_descartes;      // 2023-May-15
+    }
+    if (state.is_euclid_enabled()) {
+        return min_transaction_size_old;            // 2018-Nov-15
+    }
+#endif
+    return 0;
+}
+
 // These checks assume that prevout caching is completed on all tx.inputs.
 code transaction_basis::accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated /*= false*/, bool transaction_pool /*= true*/) const {
     auto const bip16 = state.is_enabled(kth::domain::machine::rule_fork::bip16_rule);
@@ -446,7 +458,7 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    if (state.is_euclid_enabled() && serialized_size(true, false) < min_transaction_size) {
+    if (serialized_size(true, false) < min_tx_size(state)) {
         return error::transaction_size_limit;
     }
 #endif
@@ -521,6 +533,15 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
 #if defined(KTH_SEGWIT_ENABLED)
     if (transaction_pool && bip141 && weight() > max_block_weight) {
         return error::transaction_weight_limit;
+    }
+#endif
+
+#if defined(KTH_CURRENCY_BCH)
+    if (state.is_descartes_enabled()) {
+        // CHIP 2021-01 Restrict Transaction Version. Enabled in 2023-May-15
+        if (version_ > transaction_version_max || version_ < transaction_version_min) {
+            return error::transaction_version_out_of_range;
+        }
     }
 #endif
 

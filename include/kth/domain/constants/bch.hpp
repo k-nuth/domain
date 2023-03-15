@@ -24,11 +24,20 @@ constexpr size_t max_block_size_old = 8000000;   //eight million bytes
 constexpr size_t max_block_size_new = 32000000;  //thirty two million bytes
 constexpr size_t max_block_size_testnet4 = 2000000;   //2 million bytes
 constexpr size_t max_block_size_scalenet = 256000000;   //256 million bytes
-constexpr size_t min_transaction_size = 100;   //one hundred bytes
+constexpr size_t max_block_size_chipnet = 2000000;   //2 million bytes
+
+constexpr size_t min_transaction_size_old = 100;        // bytes
+constexpr size_t min_transaction_size_descartes = 65;   // bytes
+
+constexpr uint32_t transaction_version_min = 1;
+constexpr uint32_t transaction_version_max = 2;
+
 constexpr size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
 constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
 constexpr size_t max_block_sigops_testnet4 = max_block_size_testnet4 / max_sigops_factor;
 constexpr size_t max_block_sigops_scalenet = max_block_size_scalenet / max_sigops_factor;
+constexpr size_t max_block_sigops_chipnet = max_block_size_chipnet / max_sigops_factor;
+
 constexpr size_t max_tx_sigchecks = 3000;
 constexpr size_t block_maxbytes_maxsigchecks_ratio = 141;
 
@@ -44,6 +53,11 @@ constexpr size_t scalenet_bip65_freeze = 3;
 constexpr size_t scalenet_bip66_freeze = 4;
 constexpr size_t scalenet_bip34_freeze = 2;
 
+// Chipnet frozen activation heights (frozen_activations).
+constexpr size_t chipnet_bip65_freeze = 3;
+constexpr size_t chipnet_bip66_freeze = 4;
+constexpr size_t chipnet_bip34_freeze = 2;
+
 
 static
 const infrastructure::config::checkpoint testnet4_bip34_active_checkpoint {
@@ -53,14 +67,19 @@ static
 const infrastructure::config::checkpoint scalenet_bip34_active_checkpoint {
     "00000000c8c35eaac40e0089a83bf5c5d9ecf831601f98c21ed4a7cb511a07d8", 2};
 
+static
+const infrastructure::config::checkpoint chipnet_bip34_active_checkpoint {
+    "00000000b0c65b1e03baace7d5c093db0d6aac224df01484985ffd5e86a1a20c", 2};
+
 // enum class pythagoras_t : uint64_t {};
 // enum class euclid_t : uint64_t {};
 // enum class pisano_t : uint64_t {};
 // enum class mersenne_t : uint64_t {};
 // enum class fermat_t : uint64_t {};
 // enum class euler_t : uint64_t {};
-enum class gauss_t : uint64_t {};
+// enum class gauss_t : uint64_t {};
 enum class descartes_t : uint64_t {};
+enum class lobachevski_t : uint64_t {};
 enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
 // constexpr size_t     bch_activation_height = 478559 //478558;        // 2017-Aug-01 HF
@@ -72,50 +91,66 @@ enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 // constexpr fermat_t   bch_fermat_activation_time{1589544000};         // 2020-May-15 HF
 // constexpr euler_t    bch_euler_activation_time{1605441600};          // 2020-Nov-15 HF
                                                                         // 2021-May-15 (skipped, not a HF)
-constexpr gauss_t     bch_gauss_activation_time{1652616000};            // 2022-May-15 HF
-constexpr descartes_t bch_descartes_activation_time{1684152000};        // 2023-May-15 HF
+// constexpr gauss_t       bch_gauss_activation_time{1652616000};       // 2022-May-15 HF
+constexpr descartes_t   bch_descartes_activation_time{1684152000};      // 2023-May-15 HF
+constexpr lobachevski_t bch_lobachevski_activation_time{1715774400};    // 2024-May-15 HF
+
+
+// Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
+constexpr size_t mainnet_csv_activation_height = 419329;
+constexpr size_t testnet_csv_activation_height = 770113;
+constexpr size_t testnet4_csv_activation_height = 6;
+constexpr size_t scalenet_csv_activation_height = 6;
+constexpr size_t chipnet_csv_activation_height = 6;
 
 //2017-August-01 hard fork
 constexpr size_t mainnet_uahf_activation_height = 478559;
 constexpr size_t testnet_uahf_activation_height = 1155876;
 constexpr size_t testnet4_uahf_activation_height = 6;
 constexpr size_t scalenet_uahf_activation_height = 6;
+constexpr size_t chipnet_uahf_activation_height = 6;
 
 //2017-November-13 hard fork
 constexpr size_t mainnet_daa_cw144_activation_height = 504032;
 constexpr size_t testnet_daa_cw144_activation_height = 1188698;
 constexpr size_t testnet4_daa_cw144_activation_height = 3001;
 constexpr size_t scalenet_daa_cw144_activation_height = 3001;
+constexpr size_t chipnet_daa_cw144_activation_height = 3001;
 
 //2018-May hard fork
 constexpr size_t mainnet_pythagoras_activation_height = 530356;  // Bitcoin Cash Node checkpoint: 530359, due to a historical inaccuracy in the Bitcoin ABC code: https://github.com/bitcoin-cash-node/bitcoin-cash-node/commit/97c32f461a1a6d6ca71c5958d67047a1c06d83fd#diff-ff53e63501a5e89fd650b378c9708274df8ad5d38fcffa6c64be417c4d438b6d
 constexpr size_t testnet_pythagoras_activation_height = 1233070; // Bitcoin Cash Node checkpoint: 1233078
 constexpr size_t testnet4_pythagoras_activation_height = 0;      // TODO(fernando): testnet4
 constexpr size_t scalenet_pythagoras_activation_height = 0;      // TODO(fernando): scalenet
+constexpr size_t chipnet_pythagoras_activation_height = 0;       // TODO(fernando): chipnet
 
 //2018-November hard fork
 constexpr size_t mainnet_euclid_activation_height = 556767;
 constexpr size_t testnet_euclid_activation_height = 1267997;
 constexpr size_t testnet4_euclid_activation_height = 4001;
 constexpr size_t scalenet_euclid_activation_height = 4001;
+constexpr size_t chipnet_euclid_activation_height = 4001;
 
 //2019-May hard fork
 constexpr size_t mainnet_pisano_activation_height = 582680;
 constexpr size_t testnet_pisano_activation_height = 1303885;
 constexpr size_t testnet4_pisano_activation_height = 0; //TODO(fernando): testnet4
 constexpr size_t scalenet_pisano_activation_height = 0; //TODO(fernando): scalenet
+constexpr size_t chipnet_pisano_activation_height = 0;  //TODO(fernando): chipnet
 
 //2019-Nov hard fork
 constexpr size_t mainnet_mersenne_activation_height = 609136;
 constexpr size_t testnet_mersenne_activation_height = 1341712;
 constexpr size_t testnet4_mersenne_activation_height = 5001;
 constexpr size_t scalenet_mersenne_activation_height = 5001;
+constexpr size_t chipnet_mersenne_activation_height = 5001;
 
 //2020-May hard fork
 constexpr size_t mainnet_fermat_activation_height = 635259;
 constexpr size_t testnet_fermat_activation_height = 1378461;
 constexpr size_t testnet4_fermat_activation_height = 0;         //Note: https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blame/master/src/chainparams.cpp#L594
 constexpr size_t scalenet_fermat_activation_height = 0;         //Note: https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blame/master/src/chainparams.cpp#L594
+constexpr size_t chipnet_fermat_activation_height = 0;          //Note: https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blame/master/src/chainparams.cpp#L594
 
 // //2020-Nov hard fork, ASERT Anchor block lock up
 // //Will be removed once Euler(2020-Nov) update is activated
@@ -123,6 +158,7 @@ constexpr size_t scalenet_fermat_activation_height = 0;         //Note: https://
 // constexpr size_t testnet_asert_anchor_lock_up_height = 1408990; // 0000000000069a8d053a2f34739137cd86722bde2516f03759d9349a0c04fd2e
 // constexpr size_t testnet4_asert_anchor_lock_up_height = 0;      // Genesis: 000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b
 // constexpr size_t scalenet_asert_anchor_lock_up_height = 0;      // Genesis: 00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52
+// constexpr size_t chipnet_asert_anchor_lock_up_height = 0;       // Genesis: 00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52
 
 //2020-Nov hard fork, ASERT Anchor/Reference block
 constexpr size_t mainnet_asert_anchor_block_height = 661647;        // 00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f
@@ -141,18 +177,32 @@ constexpr size_t scalenet_asert_anchor_block_height = 16868;        // 000000008
 constexpr uint32_t scalenet_asert_anchor_block_bits = 0x1d00ffff;
 constexpr size_t scalenet_asert_anchor_block_ancestor_time = 1605448590;
 
+constexpr size_t chipnet_asert_anchor_block_height = 16844;        // 00000000602570ee2b66c1d3f75d404c234f8aacdcc784da97e65838a2daf0fc
+constexpr uint32_t chipnet_asert_anchor_block_bits = 0x1d00ffff;
+constexpr size_t chipnet_asert_anchor_block_ancestor_time = 1605451779;
+
 //2020-Nov hard fork
 constexpr size_t mainnet_euler_activation_height = 661648;
 constexpr size_t testnet_euler_activation_height = 1421482;
 constexpr size_t testnet4_euler_activation_height = 16845;
 constexpr size_t scalenet_euler_activation_height = 16869;
+constexpr size_t chipnet_euler_activation_height = 16845;
 
-// //2022-May hard fork
+//2021-May hard fork - There was no hard fork in May 2021
+
+//2022-May hard fork
+constexpr size_t mainnet_gauss_activation_height = 740'238;
+constexpr size_t testnet_gauss_activation_height = 1'500'206;
+constexpr size_t testnet4_gauss_activation_height = 95'465;
+constexpr size_t scalenet_gauss_activation_height = 10'007;
+constexpr size_t chipnet_gauss_activation_height = 95'465;
+
+// //2023-May hard fork
 // constexpr size_t mainnet_gauss_activation_height = ???;
 // constexpr size_t testnet_gauss_activation_height = ???;
 // constexpr size_t testnet4_gauss_activation_height = ???;
 // constexpr size_t scalenet_gauss_activation_height = ???;
-
+// constexpr size_t chipnet_gauss_activation_height = ???;
 
 } // namespace kth
 

@@ -20,7 +20,7 @@ bool push_scripts(chain::output::list& outputs, config::output const& output, ui
 
     // explicit script
     if ( ! output.is_stealth() && output.script().is_valid()) {
-        outputs.push_back({output.amount(), output.script()});
+        outputs.push_back({output.amount(), output.script(), chain::token_data_opt{}});
         return true;
     }
 
@@ -43,10 +43,10 @@ bool push_scripts(chain::output::list& outputs, config::output const& output, ui
 
     // If stealth add null data stealth output immediately before payment.
     if (output.is_stealth()) {
-        outputs.push_back({no_amount, output.script()});
+        outputs.push_back({no_amount, output.script(), chain::token_data_opt{}});
     }
 
-    outputs.push_back({output.amount(), {payment_ops}});
+    outputs.push_back({output.amount(), {payment_ops}, chain::token_data_opt{}});
     return true;
 }
 
@@ -67,7 +67,7 @@ std::pair<error::error_code_t, chain::transaction> tx_encode(chain::input_point:
     }
 
     for (auto const& output : destiny_and_amount) {
-        std::string destiny_string = output.first.encoded() + ":" + std::to_string(output.second);
+        std::string destiny_string = output.first.encoded_legacy() + ":" + std::to_string(output.second);
         if ( ! push_scripts(tx.outputs(), config::output(destiny_string), script_version)) {
             return {error::error_code_t::invalid_output, {}};
         }

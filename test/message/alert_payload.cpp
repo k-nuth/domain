@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: alert payload tests
+// Start Test Suite: alert payload tests
 
 TEST_CASE("alert payload  constructor 1  always invalid", "[alert payload]") {
     message::alert_payload instance;
@@ -753,4 +753,4 @@ TEST_CASE("alert payload  operator boolean not equals  differs  returns true", "
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

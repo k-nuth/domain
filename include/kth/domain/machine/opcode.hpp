@@ -225,12 +225,53 @@ enum class opcode : uint8_t {
     nop9 = 184,
     nop10 = 185,
 
-    //Note(kth): This is implemented through Bitcoin-ABC...
-    //TODO(kth): Implement in the Legacy way.
-    // OP_CHECKDATASIG = CScriptOp(0xba)
-    // OP_CHECKDATASIGVERIFY = CScriptOp(0xbb)
-    // checkdatasig = 186,
-    // checkdatasigverigy = 187,
+    // More crypto
+    checkdatasig = 0xba,
+    checkdatasigverify = 0xbb,
+
+    // additional byte string operations
+    reversebytes = 0xbc,
+
+    // Available codepoints
+    // 0xbd,
+    // 0xbe,
+    // 0xbf,
+
+    // Native Introspection opcodes
+    inputindex = 0xc0,
+    activebytecode = 0xc1,
+    txversion = 0xc2,
+    txinputcount = 0xc3,
+    txoutputcount = 0xc4,
+    txlocktime = 0xc5,
+    utxovalue = 0xc6,
+    utxobytecode = 0xc7,
+    outpointtxhash = 0xc8,
+    outpointindex = 0xc9,
+    inputbytecode = 0xca,
+    inputsequencenumber = 0xcb,
+    outputvalue = 0xcc,
+    outputbytecode = 0xcd,
+
+    // Native Introspection of tokens (SCRIPT_ENABLE_TOKENS must be set)
+    utxotokencategory = 0xce,
+    utxotokencommitment = 0xcf,
+    utxotokenamount = 0xd0,
+    outputtokencategory = 0xd1,
+    outputtokencommitment = 0xd2,
+    outputtokenamount = 0xd3,
+
+    reserved3 = 0xd4,
+    reserved4 = 0xd5,
+
+    // The first op_code value after all defined opcodes
+    first_undefined_op_value,
+
+    // Invalid opcode if executed, but used for special token prefix if at
+    // position 0 in scriptPubKey. See: primitives/token.h
+    special_token_prefix = 0xef,
+
+    invalidopcode = 0xff,   ///< Not a real OPCODE!
 
     reserved_186 = 186,
     reserved_187 = 187,

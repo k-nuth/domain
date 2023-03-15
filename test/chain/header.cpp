@@ -9,7 +9,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: chain header tests
+// Start Test Suite: chain header tests
 
 TEST_CASE("chain header constructor 1 always initialized invalid", "[chain header]") {
     chain::header instance;
@@ -450,4 +450,4 @@ TEST_CASE("chain header  operator boolean not equals  differs  returns true", "[
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

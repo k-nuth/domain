@@ -8,9 +8,9 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: ec public tests
+// Start Test Suite: ec public tests
 
 // TEST_CASE("ec public  todo", "[None]") {
 //}
 
-// End Boost Suite
+// End Test Suite

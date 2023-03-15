@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: chain transaction tests
+// Start Test Suite: chain transaction tests
 
 TEST_CASE("chain transaction  constructor 1  always  returns default initialized", "[chain transaction]") {
     chain::transaction instance;
@@ -980,4 +980,4 @@ TEST_CASE("chain transaction  hash  block320670  success", "[chain transaction]"
     REQUIRE(data == instance.to_data());
 }
 
-// End Boost Suite
+// End Test Suite

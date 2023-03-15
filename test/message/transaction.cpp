@@ -10,7 +10,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: message transaction tests
+// Start Test Suite: message transaction tests
 
 TEST_CASE("message transaction  constructor 1  always  initialized invalid", "[message transaction]") {
     transaction instance;
@@ -605,4 +605,4 @@ TEST_CASE("message transaction  operator boolean not equals 2  differs  returns 
     REQUIRE(alpha != beta);
 }
 
-// End Boost Suite
+// End Test Suite

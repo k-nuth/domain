@@ -62,14 +62,15 @@ class KnuthDomainConan(KnuthConanFileV2):
 
     exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "kth-domainConfig.cmake.in", "include/*", "test/*", "examples/*", "test_new/*"
 
+    def build_requirements(self):
+        if self.options.tests:
+            self.test_requires("catch2/3.3.1")
+
     def requirements(self):
         # self.requires("algorithm/0.1.239@tao/stable")
         # self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
         self.requires("infrastructure/0.24.0")
         # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
-
-        if self.options.tests:
-            self.requires("catch2/2.13.8")
 
         if self.options.currency == "LTC":
             #TODO(fernando): check if a newer version exists
@@ -80,6 +81,8 @@ class KnuthDomainConan(KnuthConanFileV2):
 
     def validate(self):
         KnuthConanFileV2.validate(self)
+        if self.info.settings.compiler.cppstd:
+            check_min_cppstd(self, "20")
 
     def config_options(self):
         KnuthConanFileV2.config_options(self)

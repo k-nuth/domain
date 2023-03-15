@@ -6,7 +6,7 @@
 
 #include <test_helpers.hpp>
 
-// Start Boost Suite: compact tests
+// Start Test Suite: compact tests
 
 using namespace kth;
 using namespace kd;
@@ -193,4 +193,4 @@ TEST_CASE("compact  constructor2  hash  round trips", "[compact]") {
     REQUIRE(to_uint256(primes) == compact(to_uint256(primes)));
 }
 
-// End Boost Suite
+// End Test Suite

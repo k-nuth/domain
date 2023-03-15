@@ -133,8 +133,9 @@ public:
                 // , mersenne_t mersenne_activation_time
                 // , fermat_t fermat_activation_time
                 // , euler_t euler_activation_time
-                , gauss_t gauss_activation_time
+                // , gauss_t gauss_activation_time
                 , descartes_t descartes_activation_time
+                , lobachevski_t lobachevski_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -191,11 +192,14 @@ public:
     // [[nodiscard]]
     // euler_t euler_activation_time() const;
 
-    [[nodiscard]]
-    gauss_t gauss_activation_time() const;
+    // [[nodiscard]]
+    // gauss_t gauss_activation_time() const;
 
     [[nodiscard]]
     descartes_t descartes_activation_time() const;
+
+    [[nodiscard]]
+    lobachevski_t lobachevski_activation_time() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
@@ -251,7 +255,11 @@ public:
 
     [[nodiscard]]
     bool is_descartes_enabled() const;
+
+    [[nodiscard]]
+    bool is_lobachevski_enabled() const;
 #endif  //KTH_CURRENCY_BCH
+
 
     static
     uint32_t median_time_past(data const& values, size_t last_n = median_time_past_interval);
@@ -274,8 +282,9 @@ protected:
             // , mersenne_t mersenne_activation_time
             // , fermat_t fermat_activation_time
             // , euler_t euler_activation_time
-            , gauss_t gauss_activation_time
+            // , gauss_t gauss_activation_time
             , descartes_t descartes_activation_time
+            , lobachevski_t lobachevski_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -283,8 +292,9 @@ protected:
     uint32_t work_required(data const& values, config::network network, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                             // , euler_t euler_activation_time
-                            , gauss_t gauss_activation_time
+                            // , gauss_t gauss_activation_time
                             , descartes_t descartes_activation_time
+                            , lobachevski_t lobachevski_activation_time
                             , assert_anchor_block_info_t const& assert_anchor_block_info
                             , uint32_t asert_half_life
 #endif
@@ -324,12 +334,17 @@ private:
 #if defined(KTH_CURRENCY_BCH)
         , size_t testnet4_height
         , size_t scalenet_height
+        , size_t chipnet_height
 #endif
         );
 
 
     // ------------------------------------------------------------------------
 #if defined(KTH_CURRENCY_BCH)
+    // Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
+    static
+    bool is_csv_enabled(size_t height, config::network network);
+
     static
     bool is_uahf_enabled(size_t height, config::network network);
 
@@ -354,11 +369,14 @@ private:
     static
     bool is_euler_enabled(size_t height, config::network network);
 
-    // static
-    // bool is_gauss_enabled(size_t height, config::network network);
+    static
+    bool is_gauss_enabled(size_t height, config::network network);
 
     // static
     // bool is_descartes_enabled(size_t height, config::network network);
+
+    // static
+    // bool is_lobachevski_enabled(size_t height, config::network network);
 #endif // KTH_CURRENCY_BCH
     // ------------------------------------------------------------------------
 
@@ -439,8 +457,9 @@ private:
     // mersenne_t const mersenne_activation_time_;
     // fermat_t const fermat_activation_time_;
     // euler_t const euler_activation_time_;
-    gauss_t const gauss_activation_time_;
+    // gauss_t const gauss_activation_time_;
     descartes_t const descartes_activation_time_;
+    lobachevski_t const lobachevski_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };
 

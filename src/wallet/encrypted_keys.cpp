@@ -43,7 +43,7 @@ static_assert(2 * quarter == kth::aes256_block_size, "oops!");
 
 static
 hash_digest address_hash(payment_address const& address) {
-    return bitcoin_hash(to_chunk(address.encoded()));
+    return bitcoin_hash(to_chunk(address.encoded_legacy()));
 }
 
 static
