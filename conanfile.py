@@ -39,8 +39,6 @@ class KnuthDomainConan(KnuthConanFileV2):
                "disable_get_blocks": [True, False],
     }
 
-    #    "with_png": [True, False],
-
     default_options = {
         "shared": False,
         "fPIC": True,
@@ -58,22 +56,18 @@ class KnuthDomainConan(KnuthConanFileV2):
         "log": "spdlog",
         "disable_get_blocks": False,
     }
-    # "with_png=False", \
 
-    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "kth-domainConfig.cmake.in", "include/*", "test/*", "examples/*", "test_new/*"
+    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "include/*", "test/*", "examples/*", "test_new/*"
 
     def build_requirements(self):
         if self.options.tests:
             self.test_requires("catch2/3.3.1")
 
     def requirements(self):
-        # self.requires("algorithm/0.1.239@tao/stable")
-        # self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("fmt/9.1.0")
         self.requires("infrastructure/0.24.0")
-        # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.currency == "LTC":
-            #TODO(fernando): check if a newer version exists
             self.requires("OpenSSL/1.0.2l@conan/stable")
 
         if self.options.with_qrencode:
@@ -125,8 +119,8 @@ class KnuthDomainConan(KnuthConanFileV2):
                 cmake.test()
                 # cmake.test(target="tests")
 
-    def imports(self):
-        self.copy("*.h", "", "include")
+    # def imports(self):
+    #     self.copy("*.h", "", "include")
 
     def package(self):
         cmake = CMake(self)
@@ -138,14 +132,14 @@ class KnuthDomainConan(KnuthConanFileV2):
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["kth-domain"]
+        self.cpp_info.libs = ["domain"]
 
         if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
-            self.cpp_info.libs.append("pthread")
+            self.cpp_info.system_libs.append("pthread")
 
         if self.settings.os == "Windows" and self.settings.compiler == "gcc": # MinGW
-            self.cpp_info.libs.append("ws2_32")
-            self.cpp_info.libs.append("wsock32")
+            self.cpp_info.system_libs.append("ws2_32")
+            self.cpp_info.system_libs.append("wsock32")
 
         if not self.is_shared:
             self.cpp_info.defines.append("KD_STATIC")

@@ -4,105 +4,39 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(kth-domain VERSION 0 LANGUAGES CXX C)
+project(domain VERSION 0 LANGUAGES CXX C)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-# Check for baseline language coverage in the compiler for the C++20 standard.
-#------------------------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Process options.
-#==============================================================================
-
-# Implement --use-conan
-#------------------------------------------------------------------------------
-# option(USE_CONAN "Use Conan Build Tool." OFF)
-# option(NO_CONAN_AT_ALL "Conan totally disabled." OFF)
-
-# if (NO_CONAN_AT_ALL)
-#   set(USE_CONAN OFF)
-# endif()
-
-
-# Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
-#------------------------------------------------------------------------------
 option(ENABLE_SHARED "" OFF)
-
-# Implement POSITION_INDEPENDENT_CODE
-#------------------------------------------------------------------------------
 option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE property" ON)
-
-# Implement --with-tests and declare WITH_TESTS.
-#------------------------------------------------------------------------------
 option(WITH_TESTS "Compile with unit tests." ON)
-
-# Implement --with-examples and declare WITH_EXAMPLES.
-#------------------------------------------------------------------------------
 option(WITH_EXAMPLES "Compile with examples." OFF)
-
-
-# Implement --with-cached-rpc-data and declare WITH_CACHED_RPC_DATA.
-#------------------------------------------------------------------------------
 option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
+option(WITH_ICU "Compile with International Components for Unicode." OFF)
+option(WITH_PNG "Compile with Libpng support." OFF)
+option(WITH_QRENCODE "Compile with QREncode." OFF)
+option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
+
 if (WITH_CACHED_RPC_DATA)
   message(STATUS "Knuth: Cached RPC data enabled")
   add_definitions(-DKTH_CACHED_RPC_DATA)
 endif()
 
-# Implement --with-icu and define BOOST_HAS_ICU and output ${icu}.
-#------------------------------------------------------------------------------
-option(WITH_ICU "Compile with International Components for Unicode." OFF)
 if (WITH_ICU)
   add_definitions(-DWITH_ICU -DBOOST_HAS_ICU)
-  # if (NO_CONAN_AT_ALL)
-  #   message(FATAL_ERROR "WITH_ICU not yet implemented")
-  # endif (NO_CONAN_AT_ALL)
 endif()
 
-# Implement --with-png and output ${png}.
-#------------------------------------------------------------------------------
-option(WITH_PNG "Compile with Libpng support." OFF)
 if (WITH_PNG)
   add_definitions(-DWITH_PNG)
 endif()
 
-# Implement --with-qrencode and output ${qrencode}.
-#------------------------------------------------------------------------------
-option(WITH_QRENCODE "Compile with QREncode." OFF)
 if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
-
-  # if (NO_CONAN_AT_ALL)
-  #   message(FATAL_ERROR "WITH_QRENCODE not yet implemented")
-  # endif (NO_CONAN_AT_ALL)
 endif()
 
-# Implement --JUST_KTH_SOURCES for linting.
-#------------------------------------------------------------------------------
-option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
-if (JUST_KTH_SOURCES)
-  message(STATUS "Knuth: Just Knuth source code to be linted: enabled")
-endif()
-
-## Implement --DISABLE_GET_BLOCKS.
-##------------------------------------------------------------------------------
-#option(DISABLE_GET_BLOCKS "Option to disable the getblocks message." OFF)
-#if (DISABLE_GET_BLOCKS)
-#  message(STATUS "Knuth: getblocks message is disabled")
-#  add_definitions(-DKTH_PROTOCOL_DISABLE_GET_BLOCKS)
-#else()
-#  message(STATUS "Knuth: getblocks message is enabled")
-#endif()
-
-
-# # Implement --binlog.
-# #------------------------------------------------------------------------------
-# option(BINLOG "Uses BinLog logging library." OFF)
-# if (BINLOG)
-#   add_definitions(-DKTH_USE_BINLOG)
-# endif()
 
 set(LOG_LIBRARY "boost" CACHE STRING "Setting for the logging library (boost|spdlog|binlog).")
 
@@ -118,9 +52,10 @@ endif()
 
 message(STATUS "Knuth: Logging Library: ${LOG_LIBRARY}")
 
-# set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
-# # message(${KTH_PROJECT_VERSION})
-# message( STATUS "Knuth: Compiling version ${KTH_PROJECT_VERSION}")
+if (JUST_KTH_SOURCES)
+  message(STATUS "Knuth: Just Knuth source code to be linted: enabled")
+endif()
+
 
 set(MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
 message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
@@ -143,110 +78,27 @@ endif()
 
 message(STATUS "Knuth: Cryptocurrency: ${CURRENCY}")
 
-
-# # Conan infrastructure
-# #==============================================================================
-# if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
-#     include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
-# else()
-#     message( STATUS "knuthbuildinfo doent exists")
-# endif()
-
 set(Boost_DEBUG ON)
 
-# Check dependencies.
-#==============================================================================
-#------------------------------------------------------------------------------
-# if (NO_CONAN_AT_ALL)
-#   # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
-#   #------------------------------------------------------------------------------
-#   if (NOT ENABLE_SHARED)
-#     set(Boost_USE_STATIC_LIBS ON)
-#   endif()
-
-#   if (MSVC)
-#     find_package(
-#       Boost 1.66.0 REQUIRED
-#       COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options system thread unit_test_framework
-#       # regex
-#     )
-#   else()
-#     find_package(
-#       Boost 1.66.0 REQUIRED
-#       COMPONENTS chrono date_time filesystem iostreams locale log program_options system thread unit_test_framework
-#       # regex
-#     )
-#   endif()
-# endif()
-
-
-
-# Require pthread and output ${pthread_CPPFLAGS/LIBS}.
-#------------------------------------------------------------------------------
-find_package(Threads REQUIRED)  #TODO(fernando): manage with conan
-
-# Require png of at least version 1.6.25 and output ${png_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-if (WITH_PNG)
-    # if (NO_CONAN_AT_ALL)
-    #     find_package(PNG 1.6.25 REQUIRED)
-
-    #     add_library(png INTERFACE IMPORTED)
-    #     set_target_properties(png PROPERTIES
-    #         INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
-    #         INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
-    #         INTERFACE_COMPILE_DEFINITIONS "${PNG_DEFINITIONS}")
-    # endif(NO_CONAN_AT_ALL)
-endif()
-
-
-# Require OpenSSL
-#------------------------------------------------------------------------------
-# if (WITH_LITECOIN)
-if (${CURRENCY} STREQUAL "LTC")
-  find_package(OpenSSL 1.0.1 REQUIRED)  #TODO(fernando): manage with conan
-endif()
-
-# Require rt if on linux and output ${rt_LIBS}.
-#------------------------------------------------------------------------------
-
-# Require icu-i18n of at least version 51.2 and output ${icu_i18n_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-
-# Require qrencode of at least version 3.4.4 and output ${qrencode_CPPFLAGS/LIBS/PKG}.
-
-
-
-# if (NOT USE_CONAN)
-# # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
-# # Require kth-infrastructure of at least version 0 and output ${kth_infrastructure_CPPFLAGS/LIBS/PKG}.
-# #------------------------------------------------------------------------------
-#   if (NOT TARGET secp256k1)
-#     find_package(secp256k1 0 REQUIRED)
-#   endif()
-
-#   if (NOT TARGET kth-infrastructure)
-#     find_package(kth-infrastructure 0 REQUIRED)
-#   endif()
-# endif()
-
+find_package(Threads REQUIRED)
 find_package(secp256k1 REQUIRED)
-find_package(kth-infrastructure REQUIRED)
+find_package(infrastructure REQUIRED)
+
+if (${CURRENCY} STREQUAL "LTC")
+  find_package(OpenSSL 1.0.1 REQUIRED)
+endif()
 
 
-# Set flags.
-#==============================================================================
+find_package(Boost 1.81.0 COMPONENTS program_options REQUIRED)
+find_package(Boost 1.81.0 COMPONENTS thread REQUIRED)
+find_package(Boost 1.81.0 COMPONENTS boost REQUIRED)
+find_package(fmt 9.1.0 REQUIRED)
+
 include(CheckCXXCompilerFlag)
 
-# Including common functions
-#------------------------------------------------------------------------------
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
-
 include(KnuthTools)
 
-
-# Warn on all stuff.
-#------------------------------------------------------------------------------
 if (NOT MSVC)
   _add_c_compile_flag(-Wall _has_all_warning_flag)
 else()
@@ -255,14 +107,10 @@ else()
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-# Warn on extra stuff.
-#------------------------------------------------------------------------------
 if (NOT MSVC)
   _add_c_compile_flag(-Wextra _has_extra_warning_flag)
 endif()
 
-# Be really annoying.
-#------------------------------------------------------------------------------
 _add_c_compile_flag(-Wpedantic _has_pedantic_warning_flag)
 if (_has_pedantic_warning_flag)
   _add_c_compile_flag(-pedantic _has_pedantic_flag)
@@ -287,51 +135,24 @@ if(ENABLE_TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
 endif()
 
-# Conform to style.
-#------------------------------------------------------------------------------
 _add_cxx_compile_flag(-Wno-missing-braces _has_no_missing_braces_warning_flag)
-
-# Conflict in stdlib under clang. Enabled in clang only.
-#------------------------------------------------------------------------------
 _add_cxx_compile_flag(-Wno-mismatched-tags _has_no_mismatched_tags_warning_flag)
-
-# Clean up boost 1.55 headers. Enabled in gcc only.
-#------------------------------------------------------------------------------
 _add_c_compile_flag(-Wno-deprecated-declarations _has_no_deprecated_declarations_warning_flag)
-
-# Protect stack.
-#------------------------------------------------------------------------------
 _add_link_flag(-fstack-protector _has_stack_protector_flag)
-
-# Protect stack comprehensively.
-#------------------------------------------------------------------------------
 _add_link_flag(-fstack-protector-all _has_stack_protector_all_flag)
-
-# Hide internal functions from external libs. Enabled in gcc only.
-#------------------------------------------------------------------------------
 _add_cxx_compile_flag(-fvisibility-hidden _has_visibility_hidden_flag)
-
-# Hide inlines from external libs. Enabled in gcc only.
-#------------------------------------------------------------------------------
 _add_cxx_compile_flag(-fvisibility-inlines-hidden _has_visibility_inlines_hidden_flag)
 
-# Target Windows Vista. Enabled in msvc only.
-#------------------------------------------------------------------------------
-if (MSVC) # OR MINGW)
+if (MSVC)
   add_definitions(-D_WIN32_WINNT=0x0600)
 endif()
 
-# Build
-#==============================================================================
-
-# src/kth-domain.la => ${libdir}
-#------------------------------------------------------------------------------
 set(MODE STATIC)
 if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-set(kth_domain_sources_just_legacy
+set(kth_sources_just_legacy
         src/chain/block_basis.cpp
         src/chain/block.cpp
         src/chain/chain_state.cpp
@@ -437,141 +258,205 @@ set(kth_domain_sources_just_legacy
         src/wallet/stealth_sender.cpp
 )
 
-# if (NOT DISABLE_GET_BLOCKS)
-  set(kth_domain_sources_just_legacy
-    ${kth_domain_sources_just_legacy}
-    src/message/get_blocks.cpp
-  )
-# endif()
+set(kth_sources_just_legacy
+  ${kth_sources_just_legacy}
+  src/message/get_blocks.cpp
+)
 
-set(kth_domain_sources_just_kth
+set(kth_sources_just_kth
     src/wallet/transaction_functions.cpp
 )
 
 if (NOT ${CURRENCY} STREQUAL "BCH")
-    set(kth_domain_sources_just_legacy
-      ${kth_domain_sources_just_legacy}
+    set(kth_sources_just_legacy
+      ${kth_sources_just_legacy}
       src/chain/witness.cpp
     )
 endif()
 
 if (${CURRENCY} STREQUAL "LTC")
-    set(kth_domain_sources_just_kth
-      ${kth_domain_sources_just_kth}
+    set(kth_sources_just_kth
+      ${kth_sources_just_kth}
       src/math/hash.cpp
       src/math/external/scrypt.cpp
       src/math/external/scrypt-sse2.cpp)
 endif()
 
 if (NOT JUST_KTH_SOURCES)
-  set(kth_domain_sources
-    ${kth_domain_sources_just_legacy}
+  set(kth_sources
+    ${kth_sources_just_legacy}
   )
 endif()
 
-set(kth_domain_sources
-  ${kth_domain_sources}
-  ${kth_domain_sources_just_kth}
+set(kth_sources ${kth_sources} ${kth_sources_just_kth})
+
+set(kth_headers
+    include/kth/domain/concepts_undef.hpp
+    include/kth/domain/message/address.hpp
+    include/kth/domain/message/xversion.hpp
+    include/kth/domain/message/get_data.hpp
+    include/kth/domain/message/headers.hpp
+    include/kth/domain/message/messages.hpp
+    include/kth/domain/message/heading.hpp
+    include/kth/domain/message/get_headers.hpp
+    include/kth/domain/message/block.hpp
+    include/kth/domain/message/not_found.hpp
+    include/kth/domain/message/merkle_block.hpp
+    include/kth/domain/message/memory_pool.hpp
+    include/kth/domain/message/filter_clear.hpp
+    include/kth/domain/message/fee_filter.hpp
+    include/kth/domain/message/filter_load.hpp
+    include/kth/domain/message/alert_payload.hpp
+    include/kth/domain/message/prefilled_transaction.hpp
+    include/kth/domain/message/send_compact.hpp
+    include/kth/domain/message/xverack.hpp
+    include/kth/domain/message/get_blocks.hpp
+    include/kth/domain/message/header.hpp
+    include/kth/domain/message/inventory_vector.hpp
+    include/kth/domain/message/verack.hpp
+    include/kth/domain/message/ping.hpp
+    include/kth/domain/message/pong.hpp
+    include/kth/domain/message/double_spend_proof.hpp
+    include/kth/domain/message/send_headers.hpp
+    include/kth/domain/message/transaction.hpp
+    include/kth/domain/message/reject.hpp
+    include/kth/domain/message/compact_block.hpp
+    include/kth/domain/message/get_block_transactions.hpp
+    include/kth/domain/message/alert.hpp
+    include/kth/domain/message/filter_add.hpp
+    include/kth/domain/message/get_address.hpp
+    include/kth/domain/message/inventory.hpp
+    include/kth/domain/message/block_transactions.hpp
+    include/kth/domain/message/version.hpp
+    include/kth/domain/constants/bch.hpp
+    include/kth/domain/constants/btc.hpp
+    include/kth/domain/constants/functions.hpp
+    include/kth/domain/constants/ltc.hpp
+    include/kth/domain/constants/common.hpp
+    include/kth/domain/constants/segwit.hpp
+    include/kth/domain/constants/bch_btc.hpp
+    include/kth/domain/concepts.hpp
+    include/kth/domain/chain/points_value.hpp
+    include/kth/domain/chain/chain_state.hpp
+    include/kth/domain/chain/header_basis.hpp
+    include/kth/domain/chain/block_basis.hpp
+    include/kth/domain/chain/input_point.hpp
+    include/kth/domain/chain/input_basis.hpp
+    include/kth/domain/chain/block.hpp
+    include/kth/domain/chain/output.hpp
+    include/kth/domain/chain/daa/aserti3_2d.hpp
+    include/kth/domain/chain/token_data.hpp
+    include/kth/domain/chain/output_point.hpp
+    include/kth/domain/chain/hash_memoizer.hpp
+    include/kth/domain/chain/script_basis.hpp
+    include/kth/domain/chain/transaction_basis.hpp
+    include/kth/domain/chain/stealth.hpp
+    include/kth/domain/chain/witness.hpp
+    include/kth/domain/chain/point_iterator.hpp
+    include/kth/domain/chain/header.hpp
+    include/kth/domain/chain/history.hpp
+    include/kth/domain/chain/compact.hpp
+    include/kth/domain/chain/input.hpp
+    include/kth/domain/chain/script.hpp
+    include/kth/domain/chain/transaction.hpp
+    include/kth/domain/chain/point.hpp
+    include/kth/domain/chain/output_basis.hpp
+    include/kth/domain/chain/point_value.hpp
+    include/kth/domain/define.hpp
+    include/kth/domain/multi_crypto_support.hpp
+    include/kth/domain/constants.hpp
+    include/kth/domain/wallet/stealth_address.hpp
+    include/kth/domain/wallet/transaction_functions.hpp
+    include/kth/domain/wallet/bitcoin_uri.hpp
+    include/kth/domain/wallet/ec_private.hpp
+    include/kth/domain/wallet/stealth_receiver.hpp
+    include/kth/domain/wallet/stealth_sender.hpp
+    include/kth/domain/wallet/message.hpp
+    include/kth/domain/wallet/ek_private.hpp
+    include/kth/domain/wallet/ek_public.hpp
+    include/kth/domain/wallet/ec_public.hpp
+    include/kth/domain/wallet/ek_token.hpp
+    include/kth/domain/wallet/payment_address.hpp
+    include/kth/domain/wallet/select_outputs.hpp
+    include/kth/domain/wallet/uri_reader.hpp
+    include/kth/domain/wallet/encrypted_keys.hpp
+    include/kth/domain/utils.hpp
+    include/kth/domain/common.hpp
+    include/kth/domain/machine/opcode.hpp
+    include/kth/domain/machine/operation.hpp
+    include/kth/domain/machine/interpreter.hpp
+    include/kth/domain/machine/program.hpp
+    include/kth/domain/machine/rule_fork.hpp
+    include/kth/domain/math/limits.hpp
+    include/kth/domain/math/stealth.hpp
+    include/kth/domain/utility/property_tree.hpp
+    include/kth/domain/multi_crypto_settings.hpp
+    include/kth/domain/impl/machine
+    include/kth/domain/impl/machine/program.ipp
+    include/kth/domain/impl/machine/interpreter.ipp
+    include/kth/domain/impl/machine/operation.ipp
+    include/kth/domain/impl/utility
+    include/kth/domain/impl/utility/property_tree.ipp
+    include/kth/domain/config/ec_private.hpp
+    include/kth/domain/config/output.hpp
+    include/kth/domain/config/network.hpp
+    include/kth/domain/config/header.hpp
+    include/kth/domain/config/input.hpp
+    include/kth/domain/config/script.hpp
+    include/kth/domain/config/transaction.hpp
+    include/kth/domain/config/point.hpp
+    include/kth/domain/config/parser.hpp
+    include/kth/domain/config/endorsement.hpp
+    include/kth/domain/version.hpp
+    include/kth/domain.hpp
 )
 
-add_library(kth-domain ${MODE} ${kth_domain_sources})
+
+add_library(${PROJECT_NAME} ${MODE} ${kth_sources} ${kth_headers})
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 20 CXX_STANDARD_REQUIRED TRUE)
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
-    set_property(TARGET kth-domain PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
 
-
-
-#set_target_properties(kth-domain PROPERTIES CXX_VISIBILITY_PRESET hidden)
-#set_target_properties(kth-domain PROPERTIES CXX_VISIBILITY_PRESET internal)
-
-#-fvisibility=default|internal|hidden|protected
-
-# add_library(kth-domain ${MODE}
-#        src/wallet/uri.cpp)
-
-target_include_directories(kth-domain PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
 if (NOT ENABLE_SHARED)
-    target_compile_definitions(kth-domain PUBLIC -DKD_STATIC) #TODO(fernando): manage with Conan????
+    target_compile_definitions(${PROJECT_NAME} PUBLIC -DKD_STATIC)
 endif()
 
-# target_compile_definitions(kth-domain PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
-target_include_directories(kth-domain SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
-
-# if (WITH_LITECOIN)
 if (${CURRENCY} STREQUAL "LTC")
-  target_include_directories(kth-domain SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
 endif()
 
 
+target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
-# if (NOT NO_CONAN_AT_ALL)
-#   # target_link_libraries(kth-domain PUBLIC ${CONAN_LIBS})
-# else()
-#   if (MSVC)
-#     target_link_libraries(kth-domain PUBLIC
-#       ${Boost_ATOMIC_LIBRARY}
-#       ${Boost_LOG_SETUP_LIBRARY}
-#     )
-#   endif()
-
-#   target_link_libraries(kth-domain PUBLIC
-#     ${Boost_CHRONO_LIBRARY}
-#     ${Boost_DATE_TIME_LIBRARY}
-#     ${Boost_FILESYSTEM_LIBRARY}
-#     ${Boost_IOSTREAMS_LIBRARY}
-#     ${Boost_LOCALE_LIBRARY}
-#     ${Boost_LOG_LIBRARY}
-#     ${Boost_PROGRAM_OPTIONS_LIBRARY}
-#     # ${Boost_REGEX_LIBRARY}
-#     ${Boost_SYSTEM_LIBRARY}
-#     ${Boost_THREAD_LIBRARY}
-#   )
-# endif()
-
-target_link_libraries(kth-domain PUBLIC ${CMAKE_THREAD_LIBS_INIT})  #TODO(fernando): manage with Conan????
-
-# if (NO_CONAN_AT_ALL)
-    if (MINGW) #(WIN32)
-        target_link_libraries(kth-domain PUBLIC ws2_32 wsock32)
-    endif()
-# endif()
-
-if (WITH_PNG)
-    # if (NO_CONAN_AT_ALL)
-    #     target_link_libraries(kth-domain PUBLIC png)
-    # endif (NO_CONAN_AT_ALL)
+if (MINGW)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ws2_32 wsock32)
 endif()
 
 if (${CURRENCY} STREQUAL "LTC")
-  target_link_libraries(kth-domain PUBLIC ${OPENSSL_CRYPTO_LIBRARY})  #TODO(fernando): manage with Conan
-
-  # OPENSSL_CRYPTO_LIBRARY
-  # OPENSSL_SSL_LIBRARY
-  # OPENSSL_LIBRARIES
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENSSL_CRYPTO_LIBRARY})
 endif()
 
-# if (NOT USE_CONAN)
-#   target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
-# endif()
-
-find_package(Boost 1.81.0 COMPONENTS program_options REQUIRED)
-find_package(Boost 1.81.0 COMPONENTS thread REQUIRED)
-find_package(Boost 1.81.0 COMPONENTS boost REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
 target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
 target_link_libraries(${PROJECT_NAME} PUBLIC Boost::boost)
 
-target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
+target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
-_group_sources(kth-domain "${CMAKE_CURRENT_LIST_DIR}")
+target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
+
+_group_sources(${PROJECT_NAME} "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
-#==============================================================================
+# ------------------------------------------------------------------------------
 if (WITH_TESTS)
   enable_testing()
   find_package(Catch2 3 REQUIRED)
@@ -650,7 +535,7 @@ if (WITH_TESTS)
 
   target_include_directories(kth_domain_test PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
 
-  target_link_libraries(kth_domain_test PUBLIC kth-domain)
+  target_link_libraries(kth_domain_test PUBLIC ${PROJECT_NAME})
   target_link_libraries(kth_domain_test PRIVATE Catch2::Catch2WithMain)
 
   include(CTest)
@@ -663,179 +548,40 @@ if (WITH_TESTS_NEW)
           test_new/main.cpp
           test_new/create_transaction.cpp
   )
-  target_link_libraries(kth_domain_test_new PUBLIC kth-domain)
+  target_link_libraries(kth_domain_test_new PUBLIC ${PROJECT_NAME})
 
   add_test(NAME kth_domain_test_new COMMAND kth_domain_test_new)
 endif()
 
 
 # Examples
-#==============================================================================
-# local: examples/kth_domain_examples
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 if (WITH_EXAMPLES)
   add_executable(kth_domain_examples
     examples/main.cpp)
 
-  target_link_libraries(kth_domain_examples PUBLIC kth-domain)
+  target_link_libraries(kth_domain_examples PUBLIC ${PROJECT_NAME})
 
   _group_sources(kth_domain_examples "${CMAKE_CURRENT_LIST_DIR}/examples")
 endif()
 
 # Install
-#==============================================================================
-install(TARGETS kth-domain EXPORT kth-domain
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
+# ------------------------------------------------------------------------------
+
+include(GNUInstallDirs)
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+# Generate and install a CMake package configuration file
+install(EXPORT ${PROJECT_NAME}-targets
+    FILE ${PROJECT_NAME}-config.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
-set(_kth_domain_headers
-    kth/domain/multi_crypto_support.hpp
-    kth/domain/compat.h
-    kth/domain/compat.hpp
-    kth/domain/constants.hpp
-    kth/domain/define.hpp
-
-    kth/domain/handlers.hpp
-    kth/domain/version.hpp
-
-    kth/domain/chain/block.hpp
-    kth/domain/chain/chain_state.hpp
-    kth/domain/chain/compact.hpp
-    kth/domain/chain/header.hpp
-    kth/domain/chain/history.hpp
-    kth/domain/chain/input.hpp
-    kth/domain/chain/input_point.hpp
-    kth/domain/chain/output.hpp
-    kth/domain/chain/output_point.hpp
-    kth/domain/chain/point.hpp
-    kth/domain/chain/point_iterator.hpp
-    kth/domain/chain/point_value.hpp
-    kth/domain/chain/points_value.hpp
-    kth/domain/chain/script.hpp
-    kth/domain/chain/stealth.hpp
-    kth/domain/chain/transaction.hpp
-    kth/domain/chain/witness.hpp
-
-    kth/domain/machine/interpreter.hpp
-    kth/domain/machine/number.hpp
-    kth/domain/machine/opcode.hpp
-    kth/domain/machine/operation.hpp
-    kth/domain/machine/program.hpp
-    kth/domain/machine/rule_fork.hpp
-
-    kth/domain/config/parser.hpp
-
-    kth/domain/utility/property_tree.hpp
-    kth/domain/impl/utility/property_tree.ipp
-
-    kth/domain/impl/machine/interpreter.ipp
-    kth/domain/impl/machine/number.ipp
-    kth/domain/impl/machine/operation.ipp
-    kth/domain/impl/machine/program.ipp
-
-    kth/domain/math/limits.hpp
-    kth/domain/math/stealth.hpp
-
-    kth/domain/message/address.hpp
-    kth/domain/message/alert.hpp
-    kth/domain/message/alert_payload.hpp
-    kth/domain/message/block.hpp
-    kth/domain/message/block_transactions.hpp
-    kth/domain/message/compact_block.hpp
-    kth/domain/message/double_spend_proof.hpp
-    kth/domain/message/fee_filter.hpp
-    kth/domain/message/filter_add.hpp
-    kth/domain/message/filter_clear.hpp
-    kth/domain/message/filter_load.hpp
-    kth/domain/message/get_address.hpp
-    kth/domain/message/get_block_transactions.hpp
-    kth/domain/message/get_blocks.hpp
-    kth/domain/message/get_data.hpp
-    kth/domain/message/get_headers.hpp
-    kth/domain/message/header.hpp
-    kth/domain/message/headers.hpp
-    kth/domain/message/heading.hpp
-    kth/domain/message/inventory.hpp
-    kth/domain/message/inventory_vector.hpp
-    kth/domain/message/memory_pool.hpp
-    kth/domain/message/merkle_block.hpp
-    kth/domain/message/messages.hpp
-
-    kth/domain/message/not_found.hpp
-    kth/domain/message/ping.hpp
-    kth/domain/message/pong.hpp
-    kth/domain/message/prefilled_transaction.hpp
-    kth/domain/message/reject.hpp
-    kth/domain/message/send_compact.hpp
-    kth/domain/message/send_headers.hpp
-    kth/domain/message/transaction.hpp
-    kth/domain/message/verack.hpp
-    kth/domain/message/version.hpp
-    kth/domain/message/xverack.hpp
-    kth/domain/message/xversion.hpp
-
-    kth/domain/wallet/bitcoin_uri.hpp
-
-    kth/domain/wallet/ec_private.hpp
-    kth/domain/wallet/ec_public.hpp
-    kth/domain/wallet/ek_private.hpp
-    kth/domain/wallet/ek_public.hpp
-    kth/domain/wallet/ek_token.hpp
-    kth/domain/wallet/encrypted_keys.hpp
-    kth/domain/wallet/hd_private.hpp
-    kth/domain/wallet/hd_public.hpp
-    kth/domain/wallet/message.hpp
-    kth/domain/wallet/mini_keys.hpp
-    kth/domain/wallet/mnemonic.hpp
-    kth/domain/wallet/payment_address.hpp
-    kth/domain/wallet/qrcode.hpp
-    kth/domain/wallet/select_outputs.hpp
-    kth/domain/wallet/stealth_address.hpp
-    kth/domain/wallet/stealth_receiver.hpp
-    kth/domain/wallet/stealth_sender.hpp
-
-    kth/domain/wallet/uri_reader.hpp
-    kth/domain/wallet/transaction_functions.hpp
-    kth/domain.hpp
-  )
-
-foreach (_header ${_kth_domain_headers})
-  get_filename_component(_directory "${_header}" DIRECTORY)
-  install(FILES "include/${_header}" DESTINATION "include/${_directory}")
-endforeach()
-
-# Export
-#==============================================================================
-include(CMakePackageConfigHelpers)
-
-export(EXPORT kth-domain
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/kth-domainTargets.cmake")
-export(PACKAGE kth-domain)
-
-if (UNIX)
-  set(_config_package_location "lib/cmake")
-elseif (WIN32)
-  set(_config_package_location "cmake")
-endif()
-
-install(EXPORT kth-domain
-  FILE kth-domainTargets.cmake
-  DESTINATION ${_config_package_location})
-
-configure_file(kth-domainConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfig.cmake"
-  @ONLY)
-
-write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfigVersion.cmake"
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY AnyNewerVersion)
-
-install(
-  FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/kth-domainConfigVersion.cmake"
-  DESTINATION ${_config_package_location})
