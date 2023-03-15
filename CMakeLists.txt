@@ -558,6 +558,14 @@ endif()
 # if (NOT USE_CONAN)
 #   target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
 # endif()
+
+find_package(Boost 1.81.0 COMPONENTS program_options REQUIRED)
+find_package(Boost 1.81.0 COMPONENTS thread REQUIRED)
+find_package(Boost 1.81.0 COMPONENTS boost REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::boost)
+
 target_link_libraries(kth-domain PUBLIC secp256k1 kth-infrastructure)
 
 _group_sources(kth-domain "${CMAKE_CURRENT_LIST_DIR}")
