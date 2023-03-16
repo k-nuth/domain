@@ -146,7 +146,7 @@ private:
     uint8_t version_ = 0;
     // short_hash hash_ = null_short_hash;
     hash_digest hash_data_ = null_hash;
-    byte_span hash_span_ = {hash_data_.begin(), 0};
+    byte_span hash_span_ = {hash_data_.begin(), size_t(0)};
 };
 
 /// The pre-encoded structure of a payment address or other similar data.

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <algorithm>
+#include <compare>
 #include <cstddef>
 #include <cstdint>
 #include <optional>
@@ -41,6 +43,56 @@ using token_id_t = hash_digest;
 enum class amount_t : int64_t {};
 using commitment_t = std::vector<uint8_t>;
 
+// #if __cpp_impl_three_way_comparison >= 201907L
+// #else
+// #error "This code is not ready for C++20 yet."
+// #endif
+
+// #if __cpp_lib_three_way_comparison >= 201907L
+// #else
+// #error "This code is not ready for C++20 yet."
+// #endif
+
+//TODO(fernando): move to a helper library
+#if __cpp_lib_three_way_comparison < 201907L
+template <typename I1, typename I2> //, typename Cmp>
+constexpr
+// auto lexicographical_compare_three_way(I1 f1, I1 l1, I2 f2, I2 l2, Cmp comp) { //-> decltype(comp(*f1, *f2)) {
+auto lexicographical_compare_three_way(I1 f1, I1 l1, I2 f2, I2 l2) { //-> decltype(comp(*f1, *f2)) {
+    // using ret_t = decltype(comp(*f1, *f2));
+    using ret_t = decltype(*f1 <=> *f2);
+    static_assert(std::disjunction_v<
+                      std::is_same<ret_t, std::strong_ordering>,
+                      std::is_same<ret_t, std::weak_ordering>,
+                      std::is_same<ret_t, std::partial_ordering>>,
+                  "The return type must be a comparison category type.");
+
+    bool exhaust1 = (f1 == l1);
+    bool exhaust2 = (f2 == l2);
+    for (; !exhaust1 && !exhaust2; exhaust1 = (++f1 == l1), exhaust2 = (++f2 == l2)) {
+        // if (auto c = comp(*f1, *f2); c != 0) {
+        if (auto c = *f1 <=> *f2; c != 0) {
+            return c;
+        }
+    }
+
+    return !exhaust1 ? std::strong_ordering::greater:
+           !exhaust2 ? std::strong_ordering::less:
+                       std::strong_ordering::equal;
+}
+
+constexpr
+auto operator<=>(commitment_t const& x, commitment_t const& y) {
+    return lexicographical_compare_three_way(x.begin(), x.end(), y.begin(), y.end());
+}
+
+constexpr
+auto operator<=>(token_id_t const& x, token_id_t const& y) {
+    return lexicographical_compare_three_way(x.begin(), x.end(), y.begin(), y.end());
+}
+#endif
+
+
 // The values assigned to the low-order nibble of the bitfield byte represent the "permissions" of an NFT.
 // For pure-fungible tokens, the value must be none (0x0).
 // It's important to note that only the three specified bitpatterns are valid for this nibble.
@@ -49,6 +101,7 @@ enum class capability_t : uint8_t {
     mut     = 0x01,  // If the mutable capability is present, it means that the encoded token is a non-fungible token that can be altered.
     minting = 0x02,  // If the minting capability is present, it indicates that the encoded token is a non-fungible token used for minting.
 };
+
 
 struct fungible {
     amount_t amount;
@@ -61,7 +114,7 @@ struct non_fungible {
     capability_t capability;
     commitment_t commitment;
 
-    friend constexpr
+    friend
     auto operator<=>(non_fungible const&, non_fungible const&) = default;
 };
 
@@ -100,7 +153,6 @@ bool is_valid(token_data_t const& x) {
     };
 
     //TODO(fernando): id validation
-
     return std::visit(visitor, x.data);
 }
 
@@ -304,9 +356,9 @@ bool from_data(R& source, token_data_opt& x) {
     }
 
     if (has_nft(bitfield) && has_amount(bitfield)) {
-        x.emplace(id, both_kinds { {}, {capability(bitfield), {}} });
+        x.emplace(token_data_t {id, both_kinds { {}, {capability(bitfield), {}} }});
     } else if (has_nft(bitfield)) {
-        x.emplace(id, non_fungible { .capability = capability(bitfield) });
+        x.emplace(token_data_t {id, non_fungible { .capability = capability(bitfield) }});
     } else if (has_amount(bitfield)) {
         x.emplace(token_data_t {id, fungible {}});
     }
