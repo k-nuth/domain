@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::chain;
 
-// Start Boost Suite: points value tests
+// Start Test Suite: points value tests
 
 TEST_CASE("points value  value  default  zero", "[points value]") {
     static const points_value instance{};
@@ -55,4 +55,4 @@ TEST_CASE("points value  value  multiple point values clear  zero", "[points val
     REQUIRE(instance.value() == 0u);
 }
 
-// End Boost Suite
+// End Test Suite

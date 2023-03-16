@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,7 +24,7 @@
 
 namespace kth::domain::wallet {
 
-static constexpr 
+static constexpr
 size_t payment_size = 1U + short_hash_size + checksum_size;  // 1 + 20 + sizeof(uint32_t) = 1 + 20 + 4 = 25
 
 using payment = byte_array<payment_size>;
@@ -32,34 +32,30 @@ using payment = byte_array<payment_size>;
 /// A class for working with non-stealth payment addresses.
 class KD_API payment_address {
 public:
-    static
-    uint8_t const mainnet_p2kh;
-    
-    static
-    uint8_t const mainnet_p2sh;
 
-    static
-    uint8_t const testnet_p2kh;
-    
-    static
-    uint8_t const testnet_p2sh;
+#if defined(KTH_CURRENCY_LTC)
+    static constexpr uint8_t mainnet_p2kh = 0x30;
+#else
+    static constexpr uint8_t mainnet_p2kh = 0x00;
+#endif
+
+    static constexpr uint8_t mainnet_p2sh = 0x05;
+    static constexpr uint8_t testnet_p2kh = 0x6f;
+    static constexpr uint8_t testnet_p2sh = 0xc4;
 
 #if defined(KTH_CURRENCY_BCH)
-    static
-    std::string const cashaddr_prefix_mainnet;
-    
-    static
-    std::string const cashaddr_prefix_testnet;
+    static constexpr std::string_view cashaddr_prefix_mainnet = "bitcoincash";
+    static constexpr std::string_view cashaddr_prefix_testnet = "bchtest";
 #endif
 
     using list = std::vector<payment_address>;
     using ptr = std::shared_ptr<payment_address>;
 
     /// Constructors.
-    payment_address();
+    payment_address() = default;
     payment_address(payment_address const& x) = default;
-    payment_address(payment_address&& x) noexcept;
-    
+    // payment_address(payment_address&& x) noexcept;
+
     payment_address(payment const& decoded);
     payment_address(ec_private const& secret);
     payment_address(std::string const& address);
@@ -76,29 +72,35 @@ public:
 
     friend
     std::istream& operator>>(std::istream& in, payment_address& to);
-    
+
     friend
     std::ostream& operator<<(std::ostream& out, payment_address const& of);
 
     /// Cast operators.
     operator bool() const;
-    operator short_hash const&() const;
+    // operator short_hash const&() const;
 
     /// Serializer.
     [[nodiscard]]
-    std::string encoded() const;
+    std::string encoded_legacy() const;
 
 #if defined(KTH_CURRENCY_BCH)
     [[nodiscard]]
-    std::string encoded_cashaddr() const;
+    std::string encoded_cashaddr(bool token_aware) const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Accessors.
     [[nodiscard]]
     uint8_t version() const;
-    
+
     [[nodiscard]]
-    short_hash const& hash() const;
+    byte_span hash() const;
+
+    [[nodiscard]]
+    short_hash hash20() const;
+
+    [[nodiscard]]
+    hash_digest const& hash32() const;
 
     /// Methods.
     [[nodiscard]]
@@ -107,10 +109,10 @@ public:
     /// Extract a payment address list from an input or output script.
     static
     list extract(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    
+
     static
     list extract_input(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
-    
+
     static
     list extract_output(chain::script const& script, uint8_t p2kh_version = mainnet_p2kh, uint8_t p2sh_version = mainnet_p2sh);
 
@@ -130,21 +132,21 @@ private:
 
     static
     payment_address from_payment(payment const& decoded);
-    
+
     static
     payment_address from_private(ec_private const& secret);
-    
+
     static
     payment_address from_public(ec_public const& point, uint8_t version);
-    
+
     static
     payment_address from_script(chain::script const& script, uint8_t version);
 
-    /// Members.
-    /// These should be const, apart from the need to implement assignment.
-    bool valid_{false};
-    uint8_t version_{0};
-    short_hash hash_{null_short_hash};
+    bool valid_ = false;
+    uint8_t version_ = 0;
+    // short_hash hash_ = null_short_hash;
+    hash_digest hash_data_ = null_hash;
+    byte_span hash_span_ = {hash_data_.begin(), size_t(0)};
 };
 
 /// The pre-encoded structure of a payment address or other similar data.
@@ -160,8 +162,9 @@ struct KD_API wrapped_data {
 namespace std {
 template <>
 struct hash<kth::domain::wallet::payment_address> {
-    size_t operator()(const kth::domain::wallet::payment_address& address) const {
-        return std::hash<kth::short_hash>()(address.hash());
+    size_t operator()(kth::domain::wallet::payment_address const& address) const {
+        return std::hash<kth::byte_span>()(address.hash());
+        // return std::hash<kth::short_hash>()(address.hash());
     }
 };
 } // namespace std

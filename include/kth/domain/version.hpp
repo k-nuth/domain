@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,25 +10,12 @@
 #ifndef KTH_DOMAIN_VERSION_HPP
 #define KTH_DOMAIN_VERSION_HPP
 
-/**
- * The semantic version of this repository as: [major].[minor].[patch]
- * For interpretation of the versioning scheme see: http://semver.org
- */
+#define KTH_DOMAIN_VERSION "0.0.0-dev.1";
 
-#ifdef KTH_PROJECT_VERSION
-#define KTH_DOMAIN_VERSION KTH_PROJECT_VERSION
-#else
-#define KTH_DOMAIN_VERSION "0.0.0"
-#endif
-
-// #define KTH_VERSION KTH_DOMAIN_VERSION
-
-namespace kth {
-namespace domain {
+namespace kth::domain {
 
 char const* version();
 
-} // namespace domain
-} // namespace kth
+} // namespace kth::domain
 
 #endif // KTH_DOMAIN_VERSION_HPP

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: pong tests
+// Start Test Suite: pong tests
 
 TEST_CASE("pong  constructor 1  always invalid", "[pong]") {
     message::pong instance;
@@ -132,4 +132,4 @@ TEST_CASE("pong  operator boolean not equals  differs  returns true", "[pong]") 
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

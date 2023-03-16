@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,7 +26,7 @@ auto const version_maximum = message::version::level::maximum;
 // "/therealbitcoin.org:0.9.99.99/" (99999) no relay
 #define NO_RELAY_THEREALBITCOIN_1 "9f86010001000000000000002336a15800000000010000000000000000000000000000000000ffff1813e52ebb81010000000000000000000000000000000000ffff6f6f6f6f208db1f33b262e6acb331e2f7468657265616c626974636f696e2e6f72673a302e392e39392e39392fb9e80600"
 
-// Start Boost Suite: version tests
+// Start Test Suite: version tests
 
 TEST_CASE("version  factory  therealbitcoin dot org valid", "[version]") {
     data_chunk payload;
@@ -871,4 +871,4 @@ TEST_CASE("version  operator boolean not equals  differs  returns true", "[versi
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

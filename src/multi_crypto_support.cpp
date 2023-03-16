@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -30,7 +30,7 @@ config::currency get_currency() {
 #endif
 }
 
-domain::config::network get_network(uint32_t identifier) {
+domain::config::network get_network(uint32_t identifier, bool is_chipnet) {
 #if defined(KTH_CURRENCY_LTC)
     switch (identifier) {
         case netmagic::ltc_testnet:
@@ -48,6 +48,9 @@ domain::config::network get_network(uint32_t identifier) {
         case netmagic::bch_regtest:
             return domain::config::network::regtest;
         case netmagic::bch_testnet4:
+            if (is_chipnet) {
+                return domain::config::network::chipnet;
+            }
             return domain::config::network::testnet4;
         case netmagic::bch_scalenet:
             return domain::config::network::scalenet;

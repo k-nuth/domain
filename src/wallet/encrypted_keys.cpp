@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -43,7 +43,7 @@ static_assert(2 * quarter == kth::aes256_block_size, "oops!");
 
 static
 hash_digest address_hash(payment_address const& address) {
-    return bitcoin_hash(to_chunk(address.encoded()));
+    return bitcoin_hash(to_chunk(address.encoded_legacy()));
 }
 
 static

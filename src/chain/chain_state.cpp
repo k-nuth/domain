@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -50,8 +50,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , mersenne_t mersenne_activation_time
     // , fermat_t fermat_activation_time
     // , euler_t euler_activation_time
-    , gauss_t gauss_activation_time
+    // , gauss_t gauss_activation_time
     , descartes_t descartes_activation_time
+    , lobachevski_t lobachevski_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
     : data_(std::move(values))
@@ -68,16 +69,18 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , mersenne_activation_time
         // , fermat_activation_time
         // , euler_activation_time
-        , gauss_activation_time
+        // , gauss_activation_time
         , descartes_activation_time
+        , lobachevski_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_))
     , work_required_(work_required(data_, network_, forks_
 #if defined(KTH_CURRENCY_BCH)
             // , euler_activation_time
-            , gauss_activation_time
+            // , gauss_activation_time
             , descartes_activation_time
+            , lobachevski_activation_time
             , assert_anchor_block_info_
             , asert_half_life
 #endif
@@ -89,14 +92,11 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , mersenne_activation_time_(mersenne_activation_time)
     // , fermat_activation_time_(fermat_activation_time)
     // , euler_activation_time_(euler_activation_time)
-    , gauss_activation_time_(gauss_activation_time)
+    // , gauss_activation_time_(gauss_activation_time)
     , descartes_activation_time_(descartes_activation_time)
+    , lobachevski_activation_time_(lobachevski_activation_time)
 #endif  //KTH_CURRENCY_BCH
-{
-// #if defined(KTH_CURRENCY_BCH)
-//     adjust_assert_anchor_block_info();
-// #endif
-}
+{}
 
 domain::config::network chain_state::network() const {
     // Retargeting and testnet are only activated via configuration.
@@ -129,8 +129,9 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
         , pool.asert_half_life_
         // , pool.fermat_activation_time_
         // , pool.euler_activation_time_
-        , pool.gauss_activation_time_
+        // , pool.gauss_activation_time_
         , pool.descartes_activation_time_
+        , pool.lobachevski_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
 }
@@ -150,6 +151,7 @@ bool is_active(size_t count, domain::config::network network) {
                             , testnet_active
                             , size_t(0)
 #if defined(KTH_CURRENCY_BCH)
+                            , size_t(0)
                             , size_t(0)
                             , size_t(0)
 #endif
@@ -182,6 +184,7 @@ bool allow_collisions(hash_digest const& hash, domain::config::network network) 
 #if defined(KTH_CURRENCY_BCH)
                                 , testnet4_bip34_active_checkpoint.hash()
                                 , scalenet_bip34_active_checkpoint.hash()
+                                , chipnet_bip34_active_checkpoint.hash()
 #endif
                                 );
 }
@@ -195,6 +198,7 @@ bool allow_collisions(size_t height, domain::config::network network) {
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip34_active_checkpoint.height()
                             , scalenet_bip34_active_checkpoint.height()
+                            , chipnet_bip34_active_checkpoint.height()
 #endif
                             );
 }
@@ -243,6 +247,7 @@ bool bip34(size_t height, bool frozen, domain::config::network network) {
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip34_freeze
                             , scalenet_bip34_freeze
+                            , chipnet_bip34_freeze
 #endif
                             );
 }
@@ -257,6 +262,7 @@ bool bip66(size_t height, bool frozen, domain::config::network network) {
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip66_freeze
                             , scalenet_bip66_freeze
+                            , chipnet_bip66_freeze
 #endif
                             );
 }
@@ -271,6 +277,7 @@ bool bip65(size_t height, bool frozen, domain::config::network network) {
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_bip65_freeze
                             , scalenet_bip65_freeze
+                            , chipnet_bip65_freeze
 #endif
                             );
 }
@@ -319,9 +326,7 @@ bool chain_state::is_euler_enabled() const {
 }
 
 bool chain_state::is_gauss_enabled() const {
-   //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(gauss_activation_time()));
-    // return is_gauss_enabled(height(), network());
+    return is_gauss_enabled(height(), network());
 }
 
 bool chain_state::is_descartes_enabled() const {
@@ -330,8 +335,13 @@ bool chain_state::is_descartes_enabled() const {
     // return is_descartes_enabled(height(), network());
 }
 
+bool chain_state::is_lobachevski_enabled() const {
+   //TODO(fernando): this was activated, change to the other method
+    return is_mtp_activated(median_time_past(), to_underlying(lobachevski_activation_time()));
+    // return is_lobachevski_enabled(height(), network());
+}
 
-// 2021-Nov
+// 2025-Nov
 // //static
 // bool chain_state::is_unnamed_enabled() const {
 //    //TODO(fernando): this was activated, change to the other method
@@ -353,8 +363,9 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , mersenne_t mersenne_activation_time
         // , fermat_t fermat_activation_time
         // , euler_t euler_activation_time
-        , gauss_t gauss_activation_time
+        // , gauss_t gauss_activation_time
         , descartes_t descartes_activation_time
+        , lobachevski_t lobachevski_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
@@ -462,6 +473,11 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     }
 
 #if defined(KTH_CURRENCY_BCH)
+    if (is_csv_enabled(values.height, network)) {
+        // flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
+        result.forks |= (rule_fork::bip112_rule & forks);
+    }
+
     if (is_uahf_enabled(values.height, network)) {
         // result.forks |= (rule_fork::cash_verify_flags_script_enable_sighash_forkid & forks);
         // result.forks |= (rule_fork::SCRIPT_VERIFY_STRICTENC & forks);
@@ -513,15 +529,19 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_euler & forks);
     }
 
-    auto const mtp = median_time_past(values);
-    if (is_mtp_activated(mtp, to_underlying(gauss_activation_time))) {
-        //Note(Fernando): Move this to the next fork rules
+    if (is_gauss_enabled(values.height, network)) {
         result.forks |= (rule_fork::bch_gauss & forks);
     }
 
+    auto const mtp = median_time_past(values);
     if (is_mtp_activated(mtp, to_underlying(descartes_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
         result.forks |= (rule_fork::bch_descartes & forks);
+    }
+
+    if (is_mtp_activated(mtp, to_underlying(lobachevski_activation_time))) {
+        //Note(Fernando): Move this to the next fork rules
+        result.forks |= (rule_fork::bch_lobachevski & forks);
     }
 
     // Old rules with Replay Protection
@@ -585,6 +605,7 @@ size_t chain_state::collision_height(size_t height, config::network network) {
 #if defined(KTH_CURRENCY_BCH)
                                         , testnet4_bip34_active_checkpoint.height()
                                         , scalenet_bip34_active_checkpoint.height()
+                                        , chipnet_bip34_active_checkpoint.height()
 #endif
                                         );
 
@@ -624,6 +645,7 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 #if defined(KTH_CURRENCY_BCH)
                                     , size_t testnet4_height
                                     , size_t scalenet_height
+                                    , size_t chipnet_height
 #endif
 ) {
 
@@ -636,11 +658,25 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 #if defined(KTH_CURRENCY_BCH)
                             , testnet4_height
                             , scalenet_height
+                            , chipnet_height
 #endif
                             );
 }
 
 #if defined(KTH_CURRENCY_BCH)
+// Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
+inline
+bool chain_state::is_csv_enabled(size_t height, config::network network) {
+    auto res = is_rule_enabled(height, network
+        , mainnet_csv_activation_height
+        , testnet_csv_activation_height
+        , testnet4_csv_activation_height
+        , scalenet_csv_activation_height
+        , chipnet_csv_activation_height
+        );
+
+    return res;
+}
 
 //2017-August-01 hard fork
 inline
@@ -650,6 +686,7 @@ bool chain_state::is_uahf_enabled(size_t height, config::network network) {
         , testnet_uahf_activation_height
         , testnet4_uahf_activation_height
         , scalenet_uahf_activation_height
+        , chipnet_uahf_activation_height
         );
 
     return res;
@@ -663,6 +700,7 @@ bool chain_state::is_daa_cw144_enabled(size_t height, config::network network) {
         , testnet_daa_cw144_activation_height
         , testnet4_daa_cw144_activation_height
         , scalenet_daa_cw144_activation_height
+        , chipnet_daa_cw144_activation_height
         );
 }
 
@@ -674,6 +712,7 @@ bool chain_state::is_pythagoras_enabled(size_t height, config::network network) 
         , testnet_pythagoras_activation_height
         , testnet4_pythagoras_activation_height
         , scalenet_pythagoras_activation_height
+        , chipnet_pythagoras_activation_height
         );
 }
 
@@ -685,6 +724,7 @@ bool chain_state::is_euclid_enabled(size_t height, config::network network) {
         , testnet_euclid_activation_height
         , testnet4_euclid_activation_height
         , scalenet_euclid_activation_height
+        , chipnet_euclid_activation_height
         );
 }
 
@@ -696,6 +736,7 @@ bool chain_state::is_pisano_enabled(size_t height, config::network network) {
         , testnet_pisano_activation_height
         , testnet4_pisano_activation_height
         , scalenet_pisano_activation_height
+        , chipnet_pisano_activation_height
         );
 }
 
@@ -707,6 +748,7 @@ bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
         , testnet_mersenne_activation_height
         , testnet4_mersenne_activation_height
         , scalenet_mersenne_activation_height
+        , chipnet_mersenne_activation_height
         );
 }
 
@@ -718,6 +760,7 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
         , testnet_fermat_activation_height
         , testnet4_fermat_activation_height
         , scalenet_fermat_activation_height
+        , chipnet_fermat_activation_height
         );
 }
 
@@ -729,20 +772,21 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
         , testnet_euler_activation_height
         , testnet4_euler_activation_height
         , scalenet_euler_activation_height
+        , chipnet_euler_activation_height
      );
 }
 
-// //2022-May hard fork
-// // Complete after the hard fork
-// inline
-// bool chain_state::is_gauss_enabled(size_t height, config::network network) {
-//     return is_rule_enabled(height, network
-//         , mainnet_gauss_activation_height
-//         , testnet_gauss_activation_height
-//         , testnet4_gauss_activation_height
-//         , scalenet_gauss_activation_height
-//      );
-// }
+//2022-May hard fork
+inline
+bool chain_state::is_gauss_enabled(size_t height, config::network network) {
+    return is_rule_enabled(height, network
+        , mainnet_gauss_activation_height
+        , testnet_gauss_activation_height
+        , testnet4_gauss_activation_height
+        , scalenet_gauss_activation_height
+        , chipnet_gauss_activation_height
+     );
+}
 
 // //2023-May hard fork
 // // Complete after the hard fork
@@ -753,10 +797,24 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 //         , testnet_descartes_activation_height
 //         , testnet4_descartes_activation_height
 //         , scalenet_descartes_activation_height
+//         , chipnet_descartes_activation_height
 //      );
 // }
 
 //2024-May hard fork
+// Complete after the hard fork
+// inline
+// bool chain_state::is_lobachevski_enabled(size_t height, config::network network) {
+//     return is_rule_enabled(height, network
+//         , mainnet_lobachevski_activation_height
+//         , testnet_lobachevski_activation_height
+//         , testnet4_lobachevski_activation_height
+//         , scalenet_lobachevski_activation_height
+//         , chipnet_lobachevski_activation_height
+//      );
+// }
+
+//2025-May hard fork
 // Complete after the hard fork
 // inline
 // bool chain_state::is_unnamed_enabled(size_t height, config::network network) {
@@ -765,6 +823,7 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 //         , testnet_unnamed_activation_height
 //         , testnet4_unnamed_activation_height
 //         , scalenet_unnamed_activation_height
+//         , chipnet_unnamed_activation_height
 //      );
 // }
 
@@ -907,8 +966,9 @@ uint32_t chain_state::daa_cw144(data const& values) {
 uint32_t chain_state::work_required(data const& values, config::network network, uint32_t forks
 #if defined(KTH_CURRENCY_BCH)
                                     // , euler_t euler_activation_time
-                                    , gauss_t gauss_activation_time
+                                    // , gauss_t gauss_activation_time
                                     , descartes_t descartes_activation_time
+                                    , lobachevski_t lobachevski_activation_time
                                     , assert_anchor_block_info_t const& assert_anchor_block_info
                                     , uint32_t asert_half_life
 #endif
@@ -1285,12 +1345,16 @@ uint32_t chain_state::asert_half_life() const {
 //     return euler_activation_time_;
 // }
 
-gauss_t chain_state::gauss_activation_time() const {
-    return gauss_activation_time_;
-}
+// gauss_t chain_state::gauss_activation_time() const {
+//     return gauss_activation_time_;
+// }
 
 descartes_t chain_state::descartes_activation_time() const {
     return descartes_activation_time_;
+}
+
+lobachevski_t chain_state::lobachevski_activation_time() const {
+    return lobachevski_activation_time_;
 }
 
 #endif  //KTH_CURRENCY_BCH
@@ -1320,8 +1384,9 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
     return work_required(values, network(), enabled_forks()
 #if defined(KTH_CURRENCY_BCH)
                             // , euler_activation_time()
-                            , gauss_activation_time()
+                            // , gauss_activation_time()
                             , descartes_activation_time()
+                            , lobachevski_activation_time()
                             , assert_anchor_block_info_
                             , asert_half_life()
 #endif

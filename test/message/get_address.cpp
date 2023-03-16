@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: get address tests
+// Start Test Suite: get address tests
 
 TEST_CASE("get address - roundtrip to data factory from data chunk", "[get address]") {
     const message::get_address expected{};
@@ -45,4 +45,4 @@ TEST_CASE("get address - roundtrip to data factory from data reader", "[get addr
     REQUIRE(0u == result.serialized_size(message::version::level::minimum));
 }
 
-// End Boost Suite
+// End Test Suite

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -76,7 +76,7 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
 #if defined(KTH_SEGWIT_ENABLED)
 // Input list must be pre-populated as it determines witness count.
 template <typename R, KTH_IS_READER(R)>
-inline 
+inline
 void read_witnesses(R& source, input::list& inputs) {
     auto const deserialize = [&](input& input) {
         input.witness().from_data(source, true);
@@ -222,7 +222,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(bool wire = true, bool witness = false) const;
-    
+
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     // Witness is not used by outputs, just for template normalization.
@@ -272,7 +272,7 @@ public:
 
     [[nodiscard]]
     uint32_t locktime() const;
-    
+
     void set_locktime(uint32_t value);
 
     // [[deprecated]] // unsafe
@@ -283,13 +283,13 @@ public:
 
     void set_inputs(const ins& value);
     void set_inputs(ins&& value);
-    
+
     // [[deprecated]] // unsafe
     outs& outputs();
-    
+
     [[nodiscard]]
     const outs& outputs() const;
-    
+
     void set_outputs(const outs& value);
     void set_outputs(outs&& value);
 
@@ -306,25 +306,25 @@ public:
 
     [[nodiscard]]
     uint64_t fees() const;
-    
+
     [[nodiscard]]
     point::list previous_outputs() const;
-    
+
     [[nodiscard]]
     point::list missing_previous_outputs() const;
-    
+
     [[nodiscard]]
     hash_list missing_previous_transactions() const;
-    
+
     [[nodiscard]]
     uint64_t total_input_value() const;
-        
+
     [[nodiscard]]
     size_t signature_operations() const;
-    
+
     [[nodiscard]]
     size_t signature_operations(bool bip16, bool bip141) const;
-    
+
 #if defined(KTH_SEGWIT_ENABLED)
     [[nodiscard]]
     size_t weight() const;
@@ -365,10 +365,13 @@ public:
 
     [[nodiscard]]
     code check(uint64_t total_output_value, size_t max_block_size, bool transaction_pool = true, bool retarget = true) const;
-       
+
+    [[nodiscard]]
+    size_t min_tx_size(chain_state const& state) const;
+
     [[nodiscard]]
     code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
-    
+
     [[nodiscard]]
     bool is_standard() const;
 

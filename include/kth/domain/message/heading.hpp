@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -66,7 +66,7 @@ public:
     size_t maximum_size();
 
     static
-    size_t maximum_payload_size(uint32_t version, bool witness, uint32_t magic);
+    size_t maximum_payload_size(uint32_t version, bool witness, uint32_t magic, bool is_chipnet);
 
     static
     size_t satoshi_fixed_size();

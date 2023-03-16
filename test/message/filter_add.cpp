@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: filter add tests
+// Start Test Suite: filter add tests
 
 TEST_CASE("filter add  constructor 1  always invalid", "[filter add]") {
     message::filter_add instance;
@@ -63,7 +63,7 @@ TEST_CASE("filter add  from data  insufficient version  failure", "[filter add]"
     auto const data = expected.to_data(message::version::level::maximum);
     message::filter_add instance;
 
-    REQUIRE( ! entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance,
                                    message::filter_add::version_minimum - 1, data));
 }
 
@@ -188,4 +188,4 @@ TEST_CASE("filter add  operator boolean not equals  differs  returns true", "[fi
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

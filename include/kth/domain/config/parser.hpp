@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -31,15 +31,11 @@ using arguments_metadata = boost::program_options::positional_options_descriptio
 
 namespace config {
 
-enum class load_error { 
-    non_existing_file = -1, 
-    default_config = 0, 
-    success = 1 
+enum class load_error {
+    non_existing_file = -1,
+    default_config = 0,
+    success = 1
 };
-
-// using namespace std::filesystem;
-// using namespace boost::program_options;
-// using namespace boost::system;
 
 using kth::path;
 using boost::program_options::command_line_parser;
@@ -126,7 +122,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in this block.
 
     } else if (network == domain::config::network::testnet4) {
-        checkpoints.reserve(7);
+        checkpoints.reserve(18);
         checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
 
         checkpoints.emplace_back("000000001d4ea1368ef790f94fd0f267814701d7ec0f5a5711d7dfe9b1f57ad6", 4);
@@ -153,7 +149,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("00000000602570ee2b66c1d3f75d404c234f8aacdcc784da97e65838a2daf0fc", 16844);  //mediantime: 1605442049. New rules activated in the next block.
         checkpoints.emplace_back("00000000fb325b8f34fe80c96a5f708a08699a68bbab82dba4474d86bd743077", 16845);  //mediantime: 1605445733. New rules activated in this block.
     } else if (network == domain::config::network::scalenet) {
-        checkpoints.reserve(8);
+        checkpoints.reserve(19);
         checkpoints.emplace_back("00000000e6453dc2dfe1ffa19023f86002eb11dbb8e87d0291a4599f0430be52", 0);
         checkpoints.emplace_back("0000000042d7fc947b3d2a5adcbc5ae787a287d266182b57e9e3911ba9ab818e", 1);
 
@@ -180,6 +176,35 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("000000000abfdc199d8afad460d834a68a6ef35bce1b8877b96e418530d47fc1", 16867);  //mediantime: 1605441188
         checkpoints.emplace_back("000000008b6a607a3a731ae1df816bb828450bec67fea5e8dbcf837ed711b99a", 16868);  //mediantime: 1605443014. New rules activated in the next block.
         checkpoints.emplace_back("00000000e4627a1a0bf9aaae007af5cea32720fb54cf2ccf0aa20b02a18392ab", 16869);  //mediantime: 1605444236. New rules activated in this block.
+
+    } else if (network == domain::config::network::chipnet) {
+        checkpoints.reserve(12);
+
+        checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
+
+
+        checkpoints.emplace_back("000000009f092d074574a216faec682040a853c4f079c33dfd2c3ef1fd8108c4", 5000);
+
+        // Axion activation.
+        checkpoints.emplace_back("00000000fb325b8f34fe80c96a5f708a08699a68bbab82dba4474d86bd743077", 16845);
+        checkpoints.emplace_back("000000000015197537e59f339e3b1bbf81a66f691bd3d7aa08560fc7bf5113fb", 38000);
+
+        // Upgrade 7 ("tachyon") era (actual activation block was in the past significantly before this)
+        checkpoints.emplace_back("00000000009af4379d87f17d0f172ee4769b48839a5a3a3e81d69da4322518b8", 54700);
+        checkpoints.emplace_back("0000000000a2c2fc11a3b72adbd10a3f02a1f8745da55a85321523043639829a", 68117);
+
+        // Upgrade 8; May 15, 2022 (MTP time >= 1652616000), first upgrade block: 95465
+        checkpoints.emplace_back("00000000a77206a2265cabc47cc2c34706ba1c5e5a5743ac6681b83d43c91a01", 95465);
+
+        // Fork block for chipnet
+        checkpoints.emplace_back("00000000040ba9641ba98a37b2e5ceead38e4e2930ac8f145c8094f94c708727", 115252);
+        checkpoints.emplace_back("000000006ad16ee5ee579bc3712b6f15cdf0a7f25a694e1979616794b73c5122", 115510);
+
+        // Upgrade9 - first block mined under upgrade9 rules for chipnet (Nov. 15, 2022)
+        checkpoints.emplace_back("0000000056087dee73fb66178ca70da89dfd0be098b1a63cf6fe93934cd04c78", 121957);
+        checkpoints.emplace_back("000000000363cd56e49a46684cec1d99854c4aae662a6faee0df4c9a49dc8a33", 122396);
+        checkpoints.emplace_back("0000000010e506eeb528dd8238947c6fcdf8d752ece66517eea778650600edae", 128042);
+
     } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(60);
         checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
@@ -401,7 +426,7 @@ public:
         }
 
         return variable.as<bool>();
-    }    
+    }
 
     static
     path get_config_option(variables_map& variables, std::string const& name) {
@@ -416,8 +441,8 @@ public:
     }
 
     static
-    void fix_checkpoints(uint32_t identifier, kth::infrastructure::config::checkpoint::list& checkpoints) {
-        auto const def_checkpoints = default_checkpoints(get_network(identifier));
+    void fix_checkpoints(uint32_t identifier, kth::infrastructure::config::checkpoint::list& checkpoints, bool is_chipnet) {
+        auto const def_checkpoints = default_checkpoints(get_network(identifier, is_chipnet));
 
         auto const it = std::max_element(def_checkpoints.begin(), def_checkpoints.end(), [](auto const& x, auto const& y) {
             return x.height() < y.height();
@@ -432,7 +457,7 @@ public:
 
             checkpoints.insert(checkpoints.begin(), def_checkpoints.begin(), def_checkpoints.end());
         }
-    } 
+    }
 
 protected:
     // virtual
@@ -467,7 +492,7 @@ protected:
                 auto const config = parse_config_file(file, config_settings);
                 store(config, variables);
                 return load_error::success;
-            } 
+            }
             return load_error::non_existing_file;
         }
 

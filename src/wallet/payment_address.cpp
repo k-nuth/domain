@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -32,63 +32,45 @@ using namespace kth::infrastructure::wallet;
 
 namespace kth::domain::wallet {
 
-#if defined(KTH_CURRENCY_LTC)
-uint8_t const payment_address::mainnet_p2kh = 0x30;
-#else
-uint8_t const payment_address::mainnet_p2kh = 0x00;
-#endif
+// #if defined(KTH_CURRENCY_LTC)
+// uint8_t const payment_address::mainnet_p2kh = 0x30;
+// #else
+// uint8_t const payment_address::mainnet_p2kh = 0x00;
+// #endif
 
-uint8_t const payment_address::mainnet_p2sh = 0x05;
-uint8_t const payment_address::testnet_p2kh = 0x6f;
-uint8_t const payment_address::testnet_p2sh = 0xc4;
+// uint8_t const payment_address::mainnet_p2sh = 0x05;
+// uint8_t const payment_address::testnet_p2kh = 0x6f;
+// uint8_t const payment_address::testnet_p2sh = 0xc4;
 
-#if defined(KTH_CURRENCY_BCH)
-std::string const payment_address::cashaddr_prefix_mainnet = "bitcoincash";
-std::string const payment_address::cashaddr_prefix_testnet = "bchtest";
-#endif
-
-payment_address::payment_address()
-    : hash_(null_short_hash) 
-{}
-
-payment_address::payment_address(payment_address&& x) noexcept
-    : valid_(x.valid_), version_(x.version_), hash_(x.hash_) 
-{}
-
-// payment_address::payment_address(payment_address const& x)
-//     : valid_(x.valid_), version_(x.version_), hash_(x.hash_) {
-// }
+// payment_address::payment_address(payment_address&& x) noexcept
+//     : valid_(x.valid_), version_(x.version_), hash_data_(x.hash_data_)
+// {}
 
 payment_address::payment_address(payment const& decoded)
-    : payment_address(from_payment(decoded)) {
-}
+    : payment_address(from_payment(decoded))
+{}
 
 payment_address::payment_address(std::string const& address)
-    : payment_address(from_string(address)) {
-}
+    : payment_address(from_string(address))
+{}
 
 payment_address::payment_address(ec_private const& secret)
-    : payment_address(from_private(secret)) {
-}
+    : payment_address(from_private(secret))
+{}
 
 payment_address::payment_address(ec_public const& point, uint8_t version)
-    : payment_address(from_public(point, version)) {
-}
+    : payment_address(from_public(point, version))
+{}
 
 payment_address::payment_address(chain::script const& script, uint8_t version)
-    : payment_address(from_script(script, version)) {
-}
+    : payment_address(from_script(script, version))
+{}
 
 payment_address::payment_address(short_hash const& hash, uint8_t version)
-    : valid_(true), version_(version), hash_(hash) {
+    : valid_(true), version_(version), hash_span_{hash_data_.begin(), hash.size()}
+{
+    std::copy_n(hash.begin(), hash.size(), hash_data_.begin());
 }
-
-// payment_address& payment_address::operator=(payment_address const& x) {
-//     valid_ = x.valid_;
-//     version_ = x.version_;
-//     hash_ = x.hash_;
-//     return *this;
-// }
 
 // Validators.
 // ----------------------------------------------------------------------------
@@ -132,8 +114,12 @@ bool convert_bits(O& out, I it, I end) {
     return true;
 }
 
-enum cash_addr_type : uint8_t { PUBKEY_TYPE = 0,
-                              SCRIPT_TYPE = 1 };
+enum cash_addr_type : uint8_t {
+    PUBKEY_TYPE = 0,
+    SCRIPT_TYPE = 1,
+    TOKEN_PUBKEY_TYPE = 2, // Token-Aware P2PKH
+    TOKEN_SCRIPT_TYPE = 3, // Token-Aware P2SH
+};
 
 // CashAddrContent DecodeCashAddrContent(std::string const& address) {
 payment_address payment_address::from_string_cashaddr(std::string const& address) {
@@ -142,9 +128,7 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
 
     // TODO(kth): validate the network on RPC/Interface calls and make payment_address independent of the network
 
-    std::string prefix;
-    data_chunk payload;
-    std::tie(prefix, payload) = cashaddr::decode(address, cashaddr_prefix());
+    auto const [prefix, payload] = cashaddr::decode(address, cashaddr_prefix());
 
     if (prefix != cashaddr_prefix()) {
         return {};
@@ -190,16 +174,6 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return {};
     }
 
-    //uint8_t version2;
-    //switch (type) {
-    //    case PUBKEY_TYPE:
-    //        version2 = 0x00;
-    //        break;
-    //    case SCRIPT_TYPE:
-    //        version2 = 0x05;
-    //        break;
-    //}
-
     short_hash hash;
     std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
 
@@ -207,17 +181,13 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return {hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh};
     }
     return {hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh};
-
-    // // Pop the version.
-    // data.erase(data.begin());
-    // return {type, std::move(data)};
 }
 
 #endif  //KTH_CURRENCY_BCH
 
 payment_address payment_address::from_string(std::string const& address) {
     payment decoded;
-    if ( ! decode_base58(decoded, address) || !is_address(decoded)) {
+    if ( ! decode_base58(decoded, address) || ! is_address(decoded)) {
 #if defined(KTH_CURRENCY_BCH)
         return from_string_cashaddr(address);
 #else
@@ -271,18 +241,20 @@ payment_address::operator bool() const {
     return valid_;
 }
 
-payment_address::operator short_hash const&() const {
-    return hash_;
-}
+// payment_address::operator short_hash const&() const {
+//     return hash_;
+// }
 
 // Serializer.
 // ----------------------------------------------------------------------------
 
-std::string payment_address::encoded() const {
-    return encode_base58(wrap(version_, hash_));
+std::string payment_address::encoded_legacy() const {
+    return encode_base58(wrap(version_, hash20()));
 }
 
 #if defined(KTH_CURRENCY_BCH)
+
+namespace {
 
 // Convert the data part to a 5 bit representation.
 template <typename T>
@@ -334,20 +306,33 @@ data_chunk pack_addr_data_(T const& id, uint8_t type) {
     return converted;
 }
 
-std::string encode_cashaddr_(payment_address const& wallet) {
+std::string encode_cashaddr_(payment_address const& wallet, bool token_aware) {
+    // Mainnet
     if (wallet.version() == payment_address::mainnet_p2kh || wallet.version() == payment_address::mainnet_p2sh) {
-        // Mainnet
-        return cashaddr::encode(payment_address::cashaddr_prefix_mainnet, pack_addr_data_(wallet.hash(), wallet.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
+        if (token_aware) {
+            return cashaddr::encode(payment_address::cashaddr_prefix_mainnet,
+                pack_addr_data_(wallet.hash(), wallet.version() == payment_address::mainnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
+        }
+        return cashaddr::encode(payment_address::cashaddr_prefix_mainnet,
+            pack_addr_data_(wallet.hash(), wallet.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }
+
+    // Testnet
     if (wallet.version() == payment_address::testnet_p2kh || wallet.version() == payment_address::testnet_p2sh) {
-        // Testnet
-        return cashaddr::encode(payment_address::cashaddr_prefix_testnet, pack_addr_data_(wallet.hash(), wallet.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
+        if (token_aware) {
+            return cashaddr::encode(payment_address::cashaddr_prefix_testnet,
+                pack_addr_data_(wallet.hash(), wallet.version() == payment_address::testnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
+        }
+        return cashaddr::encode(payment_address::cashaddr_prefix_testnet,
+            pack_addr_data_(wallet.hash(), wallet.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }
     return "";
 }
 
-std::string payment_address::encoded_cashaddr() const {
-    return encode_cashaddr_(*this);
+} // anonymous namespace
+
+std::string payment_address::encoded_cashaddr(bool token_aware) const {
+    return encode_cashaddr_(*this, token_aware);
 }
 
 #endif  //KTH_CURRENCY_BCH
@@ -359,26 +344,36 @@ uint8_t payment_address::version() const {
     return version_;
 }
 
-short_hash const& payment_address::hash() const {
-    return hash_;
+kth::byte_span payment_address::hash() const {
+    return hash_span_;
+}
+
+short_hash payment_address::hash20() const {
+    short_hash hash;
+    std::copy_n(hash_data_.begin(), hash.size(), hash.begin());
+    return hash;
+}
+
+hash_digest const& payment_address::hash32() const {
+    return hash_data_;
 }
 
 // Methods.
 // ----------------------------------------------------------------------------
 
 payment payment_address::to_payment() const {
-    return wrap(version_, hash_);
+    return wrap(version_, hash20());
 }
 
 // Operators.
 // ----------------------------------------------------------------------------
 bool payment_address::operator<(payment_address const& x) const {
-    return encoded() < x.encoded();
+    return encoded_legacy() < x.encoded_legacy();
 }
 
 bool payment_address::operator==(payment_address const& x) const {
     return valid_ == x.valid_ && version_ == x.version_ &&
-           hash_ == x.hash_;
+           std::equal(hash_data_.begin(), hash_data_.end(), x.hash_data_.begin());
 }
 
 bool payment_address::operator!=(payment_address const& x) const {
@@ -399,7 +394,7 @@ std::istream& operator>>(std::istream& in, payment_address& to) {
 }
 
 std::ostream& operator<<(std::ostream& out, payment_address const& of) {
-    out << of.encoded();
+    out << of.encoded_legacy();
     return out;
 }
 
@@ -451,10 +446,7 @@ payment_address::list payment_address::extract_input(chain::script const& script
 }
 
 // A server should use this against the prevout instead of using extract_input.
-payment_address::list payment_address::extract_output(
-    chain::script const& script,
-    uint8_t p2kh_version,
-    uint8_t p2sh_version) {
+payment_address::list payment_address::extract_output(chain::script const& script, uint8_t p2kh_version, uint8_t p2sh_version) {
     auto const pattern = script.output_pattern();
 
     switch (pattern) {

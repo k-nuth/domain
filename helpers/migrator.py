@@ -106,10 +106,6 @@ source_list = [
     'wallet/ec_public'
 ]
 
-# ./src/kth/domain/keoken/message/create_asset.cpp
-# ./src/kth/domain/keoken/message/send_tokens.cpp
-
-
 def extract_function(content, frm):
     idx = content.index(frm)
     # idx = content.index('::from_data(reader')
@@ -192,10 +188,10 @@ def move_writer_function_to_header(header_content, src_content, header_look, src
 def process_pair(header, src, class_name):
 
     with open(src, 'r') as f:
-        src_content = f.read()   
+        src_content = f.read()
 
     with open(header, 'r') as f:
-        header_content = f.read()        
+        header_content = f.read()
 
     header_content, src_content = move_reader_function_to_header(header_content, src_content, 'bool from_data(reader', '::from_data(reader', class_name)
     header_content, src_content = move_reader_function_to_header(header_content, src_content, 'static ' + class_name + ' factory_from_data(reader', '::factory_from_data(reader', class_name)
@@ -218,21 +214,21 @@ def process_pair(header, src, class_name):
 
     # print(src_content)
     with open(src, 'w') as f:
-        f.write(src_content)   
+        f.write(src_content)
 
     # print(header_content)
     with open(header, 'w') as f:
-        f.write(header_content)   
+        f.write(header_content)
 
 
 
 def process_pair_2(header, src, class_name):
 
     with open(src, 'r') as f:
-        src_content = f.read()   
+        src_content = f.read()
 
     with open(header, 'r') as f:
-        header_content = f.read()        
+        header_content = f.read()
 
     # bool alert::from_data(uint32_t version, reader& source)
 
@@ -257,20 +253,20 @@ def process_pair_2(header, src, class_name):
 
     # print(src_content)
     with open(src, 'w') as f:
-        f.write(src_content)   
+        f.write(src_content)
 
     # print(header_content)
     with open(header, 'w') as f:
-        f.write(header_content)           
+        f.write(header_content)
 
 
 def process_pair_3(header, src, class_name):
 
     with open(src, 'r') as f:
-        src_content = f.read()   
+        src_content = f.read()
 
     with open(header, 'r') as f:
-        header_content = f.read()        
+        header_content = f.read()
 
     header_content, src_content = move_reader_function_to_header(header_content, src_content, 'bool from_data(uint32_t version, reader', '::from_data(uint32_t version, reader', class_name)
     header_content, src_content = move_reader_function_to_header(header_content, src_content, 'static ' + class_name + ' factory_from_data(uint32_t version, reader', '::factory_from_data(uint32_t version, reader', class_name)
@@ -286,11 +282,11 @@ def process_pair_3(header, src, class_name):
 
     # print(src_content)
     with open(src, 'w') as f:
-        f.write(src_content)   
+        f.write(src_content)
 
     # print(header_content)
     with open(header, 'w') as f:
-        f.write(header_content)           
+        f.write(header_content)
 
 
 def remove_dir(f):

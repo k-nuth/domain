@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: inventory tests
+// Start Test Suite: inventory tests
 
 TEST_CASE("inventory  constructor 1  always invalid", "[inventory]") {
     message::inventory instance;
@@ -356,4 +356,4 @@ TEST_CASE("inventory  reduce  matching type  returns matches", "[inventory]") {
     REQUIRE(expected == result);
 }
 
-// End Boost Suite
+// End Test Suite

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: prefilled transaction tests
+// Start Test Suite: prefilled transaction tests
 
 TEST_CASE("prefilled transaction  constructor 1  always invalid", "[prefilled transaction]") {
     message::prefilled_transaction instance;
@@ -221,4 +221,4 @@ TEST_CASE("prefilled transaction  operator boolean not equals  differs  returns 
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

@@ -1,6 +1,9 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+
+//TODO(fernando): use Boost.URL
 
 #ifndef KTH_WALLET_BITCOIN_URI_HPP
 #define KTH_WALLET_BITCOIN_URI_HPP
@@ -49,25 +52,25 @@ public:
     /// Property getters.
     [[nodiscard]]
     uint64_t amount() const;
-    
+
     [[nodiscard]]
     std::string label() const;
-    
+
     [[nodiscard]]
     std::string message() const;
-    
+
     [[nodiscard]]
     std::string r() const;
-    
+
     [[nodiscard]]
     std::string address() const;
-    
+
     [[nodiscard]]
     payment_address payment() const;
-    
+
     [[nodiscard]]
     stealth_address stealth() const;
-    
+
     [[nodiscard]]
     std::string parameter(std::string const& key) const;
 

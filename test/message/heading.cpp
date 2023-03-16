@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: heading tests
+// Start Test Suite: heading tests
 
 TEST_CASE("heading  constructor 1  always  initialized invalid", "[heading]") {
     heading instance;
@@ -315,4 +315,4 @@ TEST_CASE("heading  maximum payload size  witness  matches expected", "[heading]
 }
 #endif
 
-// End Boost Suite
+// End Test Suite

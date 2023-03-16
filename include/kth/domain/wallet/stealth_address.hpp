@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -64,16 +64,16 @@ public:
     /// Accessors.
     [[nodiscard]]
     uint8_t version() const;
-    
+
     [[nodiscard]]
     ec_compressed const& scan_key() const;
-    
+
     [[nodiscard]]
     point_list const& spend_keys() const;
-    
+
     [[nodiscard]]
     uint8_t signatures() const;
-    
+
     [[nodiscard]]
     binary const& filter() const;
 
@@ -85,10 +85,10 @@ private:
     /// Factories.
     static
     stealth_address from_string(std::string const& encoded);
-    
+
     static
     stealth_address from_stealth(data_chunk const& decoded);
-    
+
     static
     stealth_address from_stealth(binary const& filter,
                                         ec_compressed const& scan_key,
@@ -102,7 +102,7 @@ private:
     /// Helpers.
     [[nodiscard]]
     bool reuse_key() const;
-    
+
     [[nodiscard]]
     uint8_t options() const;
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -42,7 +42,7 @@ public:
 
     // Operators.
     //-----------------------------------------------------------------------------
-    
+
     friend
     bool operator==(header_basis const& x, header_basis const& y);
 
@@ -93,16 +93,16 @@ public:
     //-----------------------------------------------------------------------------
     static
     uint256_t proof(uint32_t bits);
-    
+
     [[nodiscard]]
     uint256_t proof() const;
 
     static constexpr
     size_t satoshi_fixed_size() {
-        return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) + 
+        return sizeof(version_) + hash_size + hash_size + sizeof(timestamp_) +
             sizeof(bits_) + sizeof(nonce_);
     }
-    
+
     [[nodiscard]]
     constexpr
     size_t serialized_size(bool /*wire*/) const {
@@ -116,33 +116,33 @@ public:
 
     // [[deprecated]] // unsafe
     hash_digest& previous_block_hash();
-    
+
     [[nodiscard]]
     hash_digest const& previous_block_hash() const;
-    
+
     void set_previous_block_hash(hash_digest const& value);
 
     // [[deprecated]] // unsafe
     hash_digest& merkle();
-    
+
     [[nodiscard]]
     hash_digest const& merkle() const;
-    
+
     void set_merkle(hash_digest const& value);
 
     [[nodiscard]]
     uint32_t timestamp() const;
-    
+
     void set_timestamp(uint32_t value);
 
     [[nodiscard]]
     uint32_t bits() const;
-    
+
     void set_bits(uint32_t value);
 
     [[nodiscard]]
     uint32_t nonce() const;
-    
+
     void set_nonce(uint32_t value);
 
     // Validation.
@@ -150,13 +150,13 @@ public:
 
     [[nodiscard]]
     bool is_valid_timestamp() const;
-    
+
     [[nodiscard]]
     bool is_valid_proof_of_work(hash_digest const& hash, bool retarget = true) const;
 
     [[nodiscard]]
     code check(hash_digest const& hash, bool retarget = false) const;
-    
+
     [[nodiscard]]
     code accept(chain_state const& state, hash_digest const& hash) const;
 

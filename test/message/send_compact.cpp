@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: send compact tests
+// Start Test Suite: send compact tests
 
 TEST_CASE("send compact  constructor 1  always invalid", "[send compact]") {
     message::send_compact instance;
@@ -154,4 +154,4 @@ TEST_CASE("send compact  operator boolean not equals  differs  returns true", "[
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

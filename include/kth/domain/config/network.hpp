@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -17,6 +17,7 @@ enum class network {
 #if defined(KTH_CURRENCY_BCH)
     , testnet4
     , scalenet
+    , chipnet
 #endif
 };
 
@@ -32,6 +33,8 @@ std::string name(network net) {
             return "Testnet4";
         case network::scalenet:
             return "Scalenet";
+        case network::chipnet:
+            return "Chipnet";
 #endif
         default:
         case network::mainnet:

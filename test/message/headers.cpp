@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: headers tests
+// Start Test Suite: headers tests
 
 TEST_CASE("headers  constructor 1  always  initialized invalid", "[headers]") {
     headers instance;
@@ -591,4 +591,4 @@ TEST_CASE("headers  is sequential  disordered  false", "[headers]") {
     REQUIRE( ! instance.is_sequential());
 }
 
-// End Boost Suite
+// End Test Suite

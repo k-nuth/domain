@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,9 +26,9 @@ using namespace kth::domain::wallet;
 // Generated using Electrum and above SECRET (compressed):
 #define ELECTRUM_SIGNATURE "1f1429ddc5e03888411065e4b36eec7de4901d580d51e6209798b9c06fdd39461a4884679f35d1e8d7321fe01f3401ed916732383f6b5f8a688ea9ae4321fbf4ae"
 
-// Start Boost Suite: message tests
+// Start Test Suite: message tests
 
-// Start Boost Suite: message  recovery magic
+// Start Test Suite: message  recovery magic
 
 TEST_CASE("message  recovery id to magic  uncompressed valid  expected", "[message  recovery magic]") {
     uint8_t out_magic;
@@ -107,9 +107,9 @@ TEST_CASE("message  magic to recovery id  invalid  false", "[message  recovery m
     REQUIRE( ! magic_to_recovery_id(out_recovery_id, out_compressed, max_uint8));
 }
 
-// End Boost Suite
+// End Test Suite
 
-// Start Boost Suite: message  sign message
+// Start Test Suite: message  sign message
 
 TEST_CASE("message  sign message  compressed  expected", "[message  sign message]") {
     auto const compressed = true;
@@ -158,9 +158,9 @@ TEST_CASE("message  sign message wif  uncompressed  expected", "[message  sign m
     REQUIRE(encode_base16(out_signature) == SIGNATURE_WIF_UNCOMPRESSED);
 }
 
-// End Boost Suite
+// End Test Suite
 
-// Start Boost Suite: message  verify message
+// Start Test Suite: message  verify message
 
 TEST_CASE("message  verify message  compressed  expected", "[message  verify message]") {
     const payment_address address(base16_literal(SECRET));
@@ -212,6 +212,6 @@ TEST_CASE("message  verify message  electrum incorrect address  false", "[messag
     REQUIRE( ! verify_message(message, address, signature));
 }
 
-// End Boost Suite
+// End Test Suite
 
-// End Boost Suite
+// End Test Suite

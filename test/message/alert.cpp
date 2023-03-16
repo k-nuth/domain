@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: alert tests
+// Start Test Suite: alert tests
 
 TEST_CASE("alert  constructor 1  always invalid", "[alert]") {
     message::alert instance;
@@ -297,4 +297,4 @@ TEST_CASE("alert  operator boolean not equals  differs  returns true", "[alert]"
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

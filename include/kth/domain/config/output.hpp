@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -33,16 +33,16 @@ public:
     /// Parsed properties
     [[nodiscard]]
     bool is_stealth() const;
-    
+
     [[nodiscard]]
     uint64_t amount() const;
-    
+
     [[nodiscard]]
     uint8_t version() const;
-    
+
     [[nodiscard]]
     chain::script const& script() const;
-    
+
     [[nodiscard]]
     short_hash const& pay_to_hash() const;
 

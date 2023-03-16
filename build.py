@@ -25,8 +25,6 @@ if __name__ == "__main__":
             march_ids = get_base_march_ids()
 
             ci_currency = os.getenv('KTH_CI_CURRENCY', None)
-            # with_keoken = os.getenv('KTH_WITH_KEOKEN', 'false') == 'true'
-            with_keoken = False
 
             if ci_currency is None:
                 opts_bch = copy.deepcopy(options)
@@ -34,7 +32,6 @@ if __name__ == "__main__":
                 # opts_ltc = copy.deepcopy(options)
 
                 opts_bch["%s:currency" % name] = "BCH"
-                # opts_bch["%s:keoken" % name] = with_keoken
 
                 # opts_btc["%s:currency" % name] = "BTC"
                 # opts_ltc["%s:currency" % name] = "LTC"
@@ -44,7 +41,6 @@ if __name__ == "__main__":
                 # handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_ltc, env_vars, build_requires)
             else:
                 options["%s:currency" % name] = ci_currency
-                # options["%s:keoken" % name] = with_keoken
                 handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, options, env_vars, build_requires)
 
             filter_marchs_tests(name, filtered_builds, ["%s:tests" % name, "%s:examples" % name])

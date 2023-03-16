@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -97,7 +97,7 @@ public:
 
     [[nodiscard]]
     data_chunk to_data(bool wire = true, bool witness = false) const;
-    
+
     void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     template <typename W>
@@ -131,19 +131,19 @@ public:
 
 
     output_point& previous_output();
-    
+
     [[nodiscard]]
     output_point const& previous_output() const;
-    
+
     void set_previous_output(output_point const& value);
     void set_previous_output(output_point&& value);
 
     // [[deprecated]] // unsafe
     chain::script& script();
-    
+
     [[nodiscard]]
     chain::script const& script() const;
-    
+
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
@@ -158,7 +158,7 @@ public:
 
     [[nodiscard]]
     uint32_t sequence() const;
-    
+
     void set_sequence(uint32_t value);
 
     // Utilities.
@@ -173,18 +173,18 @@ public:
 
     [[nodiscard]]
     bool is_final() const;
-    
+
 #if defined(KTH_SEGWIT_ENABLED)
     [[nodiscard]]
     bool is_segregated() const;
 #endif
-    
+
     [[nodiscard]]
     bool is_locked(size_t block_height, uint32_t median_time_past) const;
-    
+
     [[nodiscard]]
     size_t signature_operations(bool bip16, bool bip141) const;
-    
+
     bool extract_reserved_hash(hash_digest& out) const;
     bool extract_embedded_script(chain::script& out) const;
 

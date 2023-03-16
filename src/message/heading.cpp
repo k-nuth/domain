@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -34,7 +34,7 @@ size_t heading::maximum_size() {
 // Post-Witness:
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
-size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t magic) {
+size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t magic, bool is_chipnet) {
     /*    static constexpr
     size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr
@@ -45,7 +45,7 @@ size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t
 #if defined(KTH_SEGWIT_ENABLED)
     return witness_val(witness) ? max_block_weight : max_payload_size;
 #else
-    return get_max_payload_size(get_network(magic));
+    return get_max_payload_size(get_network(magic, is_chipnet));
 #endif
 }
 

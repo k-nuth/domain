@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: get data tests
+// Start Test Suite: get data tests
 
 TEST_CASE("get data  constructor 1  always invalid", "[get data]") {
     const get_data instance;
@@ -273,4 +273,4 @@ TEST_CASE("get data  operator boolean not equals  differs  returns true", "[get 
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

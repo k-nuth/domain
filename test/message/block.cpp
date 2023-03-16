@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: message block tests
+// Start Test Suite: message block tests
 
 TEST_CASE("block  constructor 1  always invalid", "[message block]") {
     block instance;
@@ -397,4 +397,4 @@ TEST_CASE("block  operator boolean not equals 2  differs  returns true", "[messa
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

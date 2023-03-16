@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +11,7 @@ using namespace kth::domain::chain;
 #define SOURCE "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f0100"
 static auto const valid_raw_point_iterator_source = to_chunk(base16_literal(SOURCE));
 
-// Start Boost Suite: point iterator tests
+// Start Test Suite: point iterator tests
 
 TEST_CASE("point iterator  operator bool  not at end  returns true", "[point iterator]") {
     point_iterator instance(point{});
@@ -96,4 +96,4 @@ TEST_CASE("point iterator  copy assigment", "[point iterator]") {
     instance = expected;
 }
 
-// End Boost Suite
+// End Test Suite

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -91,7 +91,7 @@ bool block_basis::is_valid() const {
 
 data_chunk block_basis::to_data(size_t serialized_size, bool /*witness*/) const {
     data_chunk data;
-    
+
     // auto const size = serialized_size(witness_val(witness));
     auto const size = serialized_size;
 
@@ -286,7 +286,7 @@ size_t block_basis::non_coinbase_input_count() const {
 }
 
 
-//Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
+//Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC)
 //               and for BitcoinCash (BCH) before 2018-Nov-15.
 //****************************************************************************
 // CONSENSUS: This is only necessary because satoshi stores and queries as it
@@ -311,7 +311,7 @@ bool block_basis::is_forward_reference() const {
 
 bool block_basis::is_canonical_ordered() const {
     //precondition: transactions_.size() > 1
-    
+
     auto const hash_cmp = [](transaction const& a, transaction const& b){
         return std::lexicographical_compare(a.hash().rbegin(), a.hash().rend(), b.hash().rbegin(), b.hash().rend());
     };
@@ -469,7 +469,7 @@ code block_basis::check(size_t serialized_size_false, size_t max_block_size) con
     }
 
 #if ! defined(KTH_CURRENCY_BCH) // BTC and LTC
-    //Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
+    //Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC)
     //               and for BitcoinCash (BCH) before 2018-Nov-15.
     if (is_forward_reference()) {
         return error::forward_reference;
@@ -508,7 +508,7 @@ code block_basis::check(size_t serialized_size_false, size_t max_block_size) con
 code block_basis::accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions) const {
 #else
 code block_basis::accept(chain_state const& state, size_t serialized_size, bool transactions) const {
-#endif    
+#endif
     // validation.start_accept = asio::steady_clock::now();
 
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
@@ -538,7 +538,7 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    //Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC) 
+    //Note(kth): LTOR (Legacy Transaction ORdering) is a check just for Bitcoin (BTC)
     //               and for BitcoinCash (BCH) before 2018-Nov-15.
 
     if (state.is_euclid_enabled()) {

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -43,10 +43,10 @@ bool version::is_valid() const {
     return value_ != 0
         || services_ != 0
         || timestamp_ != 0
-        || address_receiver_.is_valid() 
-        || address_sender_.is_valid() 
+        || address_receiver_.is_valid()
+        || address_sender_.is_valid()
         || nonce_ != 0
-        || ! user_agent_.empty() 
+        || ! user_agent_.empty()
         || start_height_ != 0
         || relay_;
 }

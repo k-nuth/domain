@@ -1,6 +1,8 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+//TODO(fernando): use Boost.URL
 
 #include <kth/domain/wallet/bitcoin_uri.hpp>
 
@@ -126,7 +128,7 @@ bool bitcoin_uri::set_address(std::string const& address) {
 }
 
 void bitcoin_uri::set_address(payment_address const& payment) {
-    address_ = payment.encoded();
+    address_ = payment.encoded_legacy();
 }
 
 void bitcoin_uri::set_address(stealth_address const& stealth) {

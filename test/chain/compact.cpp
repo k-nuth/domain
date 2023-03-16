@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,7 +6,7 @@
 
 #include <test_helpers.hpp>
 
-// Start Boost Suite: compact tests
+// Start Test Suite: compact tests
 
 using namespace kth;
 using namespace kd;
@@ -193,4 +193,4 @@ TEST_CASE("compact  constructor2  hash  round trips", "[compact]") {
     REQUIRE(to_uint256(primes) == compact(to_uint256(primes)));
 }
 
-// End Boost Suite
+// End Test Suite

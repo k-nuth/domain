@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +11,7 @@ using namespace kd;
 using namespace kth::domain::wallet;
 using namespace kth::infrastructure::wallet;
 
-// Start Boost Suite: transaction functions tests
+// Start Test Suite: transaction functions tests
 
 #define SEED "fffb587496cc54912bbcef874fa9a61a"
 #define WALLET "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG"
@@ -117,4 +117,4 @@ TEST_CASE("set signature  test", "[transaction functions]") {
     REQUIRE(kth::encode_base16(result.second.to_data()) == COMPLETE_TX);
 }
 
-// End Boost Suite
+// End Test Suite

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: block transactions tests
+// Start Test Suite: block transactions tests
 
 TEST_CASE("block transactions  constructor 1  always invalid", "[block transactions]") {
     message::block_transactions instance;
@@ -87,7 +87,7 @@ TEST_CASE("block transactions  from data  insufficient bytes  failure", "[block 
     data_chunk const raw{0xab, 0xcd};
     message::block_transactions instance{};
 
-    REQUIRE( ! entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance,
                                    message::block_transactions::version_minimum, raw));
 }
 
@@ -159,7 +159,7 @@ TEST_CASE("block transactions  from data  insufficient version  failure", "[bloc
 
     REQUIRE(raw == data);
     message::block_transactions instance;
-    REQUIRE( ! entity_from_data(instance, 
+    REQUIRE( ! entity_from_data(instance,
                                    message::block_transactions::version_minimum - 1, data));
 }
 
@@ -458,4 +458,4 @@ TEST_CASE("block transactions  operator boolean not equals  differs  returns tru
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

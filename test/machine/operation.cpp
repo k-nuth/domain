@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,7 @@ using namespace kth::domain::machine;
 
 data_chunk valid_raw_operation = to_chunk(base16_literal("0900ff11ee22bb33aa44"));
 
-// Start Boost Suite: operation tests
+// Start Test Suite: operation tests
 
 TEST_CASE("operation  constructor 1  always  returns default initialized", "[operation]") {
     operation instance;
@@ -616,4 +616,4 @@ TEST_CASE("operation  from string  checklocktimeverify  nop3 checksequenceverify
     REQUIRE(value.data().empty());
 }
 
-// End Boost Suite
+// End Test Suite

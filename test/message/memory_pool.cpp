@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: memory pool tests
+// Start Test Suite: memory pool tests
 
 TEST_CASE("memory pool - from data insufficient version failure", "[memory pool]") {
     const message::memory_pool expected;
@@ -53,4 +53,4 @@ TEST_CASE("memory pool - roundtrip to data factory from data reader", "[memory p
     REQUIRE(0u == result.serialized_size(message::version::level::maximum));
 }
 
-// End Boost Suite
+// End Test Suite

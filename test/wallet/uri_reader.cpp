@@ -1,6 +1,8 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+//TODO(fernando): use Boost.URL
 
 #include <optional>
 
@@ -10,7 +12,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: uri reader tests
+// Start Test Suite: uri reader tests
 
 // Test helper that relies on bitcoin_uri.
 static
@@ -86,7 +88,7 @@ private:
 TEST_CASE("uri reader  parse  typical uri  test", "[uri reader]") {
     auto const uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD?amount=0.1");
     REQUIRE(uri);
-    REQUIRE(uri.payment().encoded() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    REQUIRE(uri.payment().encoded_legacy() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     REQUIRE(uri.amount() == 10000000u);
     REQUIRE(uri.label().empty());
     REQUIRE(uri.message().empty());
@@ -134,7 +136,7 @@ TEST_CASE("uri reader  parse  negative unknown required parameter  test", "[uri 
 TEST_CASE("uri reader  parse  address  test", "[uri reader]") {
     auto const uri = parse("bitcoin:113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     REQUIRE(uri);
-    REQUIRE(uri.payment().encoded() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    REQUIRE(uri.payment().encoded_legacy() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     REQUIRE(uri.amount() == 0);
     REQUIRE(uri.label().empty());
     REQUIRE(uri.message().empty());
@@ -144,7 +146,7 @@ TEST_CASE("uri reader  parse  address  test", "[uri reader]") {
 TEST_CASE("uri reader  parse  uri encoded address  test", "[uri reader]") {
     auto const uri = parse("bitcoin:%3113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
     REQUIRE(uri);
-    REQUIRE(uri.payment().encoded() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
+    REQUIRE(uri.payment().encoded_legacy() == "113Pfw4sFqN1T5kXUnKbqZHMJHN9oyjtgD");
 }
 
 TEST_CASE("uri reader  parse  negative address  test", "[uri reader]") {
@@ -251,4 +253,4 @@ TEST_CASE("uri reader  parse  custom reader not strict  test", "[uri reader]") {
     REQUIRE(uri_reader::parse<custom_reader>("foo:?unknown=not-fail-when-not-strict", false).is_valid());
 }
 
-// End Boost Suite
+// End Test Suite

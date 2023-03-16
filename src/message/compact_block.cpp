@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -34,22 +34,22 @@ compact_block::compact_block(chain::header const& header, uint64_t nonce, short_
     : header_(header)
     , nonce_(nonce)
     , short_ids_(short_ids)
-    , transactions_(transactions) 
+    , transactions_(transactions)
 {}
 
 compact_block::compact_block(chain::header const& header, uint64_t nonce, short_id_list&& short_ids, prefilled_transaction::list&& transactions)
     : header_(header)
     , nonce_(nonce)
     , short_ids_(std::move(short_ids))
-    , transactions_(std::move(transactions)) 
+    , transactions_(std::move(transactions))
 {}
 
 // compact_block::compact_block(compact_block&& x) noexcept
-//     // : compact_block(x.header_, x.nonce_, std::move(x.short_ids_), std::move(x.transactions_)) 
+//     // : compact_block(x.header_, x.nonce_, std::move(x.short_ids_), std::move(x.transactions_))
 //     : header_(x.header_)
 //     , nonce_(x.nonce_)
 //     , short_ids_(std::move(x.short_ids_))
-//     , transactions_(std::move(x.transactions_)) 
+//     , transactions_(std::move(x.transactions_))
 // {}
 
 
@@ -72,8 +72,8 @@ bool compact_block::operator!=(compact_block const& x) const {
 bool compact_block::is_valid() const {
     //std::cout << "compact_block::is_valid\n";
 
-    return header_.is_valid() 
-        && ! short_ids_.empty() 
+    return header_.is_valid()
+        && ! short_ids_.empty()
         && ! transactions_.empty();
 }
 

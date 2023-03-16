@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -14,7 +14,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: encrypted tests
+// Start Test Suite: encrypted tests
 
 #ifdef WITH_ICU
 
@@ -31,7 +31,7 @@ TEST_CASE("encrypted  fixture  unicode passphrase  matches encrypted test vector
 
 // ----------------------------------------------------------------------------
 
-// Start Boost Suite: encrypted  create token lot
+// Start Test Suite: encrypted  create token lot
 
 #define KD_REQUIRE_CREATE_TOKEN_LOT(passphrase, bytes, lot, sequence) \
     encrypted_token out_token;                                        \
@@ -100,11 +100,11 @@ TEST_CASE("encrypted  create token lot  passphrase lot sequence  expected", "[en
     REQUIRE(encode_base58(out_token) == "passphrasecpXbDpHuo8FGWnwMTnTFiHSDnqyARArE2YSFQzMHtCZvM2oWg2K3Ua2crKyc11");
 }
 
-// End Boost Suite
+// End Test Suite
 
 // ----------------------------------------------------------------------------
 
-// Start Boost Suite: encrypted  create token entropy
+// Start Test Suite: encrypted  create token entropy
 
 #define KD_CREATE_TOKEN_ENTROPY(passphrase, bytes) \
     encrypted_token out_token;                     \
@@ -124,11 +124,11 @@ TEST_CASE("encrypted  create token entropy  passphrase  expected", "[encrypted  
     REQUIRE(encode_base58(out_token) == "passphraseqVHzjNrYRo5G6sfRB4YdSaQ2m8URnkBYS1UT6JBju5G5o45YRZKLDpK6J3PEGq");
 }
 
-// End Boost Suite
+// End Test Suite
 
 // ----------------------------------------------------------------------------
 
-// Start Boost Suite: encrypted  encrypt private
+// Start Test Suite: encrypted  encrypt private
 
 #define KD_REQUIRE_ENCRYPT(secret, passphrase, version, compressed, expected)     \
     encrypted_private out_private;                                                \
@@ -182,11 +182,11 @@ TEST_CASE("encrypted  encrypt private  vector unicode  expected", "[encrypted  e
     KD_REQUIRE_ENCRYPT(secret, passphrase, version, compression, expected);
 }
 
-// End Boost Suite
+// End Test Suite
 
 // ----------------------------------------------------------------------------
 
-// Start Boost Suite: encrypted  decrypt1
+// Start Test Suite: encrypted  decrypt1
 
 // TODO(legacy): create compressed+multiplied and altchain/testnet vector(s).
 
@@ -297,11 +297,11 @@ TEST_CASE("encrypted  decrypt private  vector 9 multiplied  expected", "[encrypt
     REQUIRE( ! out_is_compressed);
 }
 
-// End Boost Suite
+// End Test Suite
 
 // ----------------------------------------------------------------------------
 
-// Start Boost Suite: encrypted  decrypt public
+// Start Test Suite: encrypted  decrypt public
 
 // TODO(legacy): create compressed and altchain/testnet vector(s).
 
@@ -352,13 +352,13 @@ TEST_CASE("encrypted  decrypt public  vector 9  expected", "[encrypted  decrypt 
     REQUIRE(derived_address == "1NjjvGqXDrx1DvrhjYJxzrpyopk1ygHTSJ");
 }
 
-// End Boost Suite
+// End Test Suite
 
 #endif  // WITH_ICU
 
 // ----------------------------------------------------------------------------
 
-// Start Boost Suite: encrypted  create key pair
+// Start Test Suite: encrypted  create key pair
 
 // TODO(legacy): create compressed vector(s).
 
@@ -427,11 +427,11 @@ TEST_CASE("encrypted  create key pair  vector 9 compressed testnet  expected", "
     REQUIRE(encode_base16(out_point) == "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
 }
 
-// End Boost Suite
+// End Test Suite
 
 // ----------------------------------------------------------------------------
 
-// Start Boost Suite: encrypted  create key pair with confirmation
+// Start Test Suite: encrypted  create key pair with confirmation
 
 // TODO(legacy): create compressed vector(s).
 
@@ -504,13 +504,13 @@ TEST_CASE("encrypted  create key pair with confirmation  vector 9 compressed tes
     REQUIRE(encode_base16(out_point) == "02c3b28a224e38af4219cd782653250d2e4b67ed85ac342201f8f05ff909efdc52");
 }
 
-// End Boost Suite
+// End Test Suite
 
 // ----------------------------------------------------------------------------
 
 #ifdef WITH_ICU
 
-// Start Boost Suite: encrypted  round trips
+// Start Test Suite: encrypted  round trips
 
 TEST_CASE("encrypted  encrypt  compressed testnet  matches secret version and compression", "[encrypted  round trips]") {
     auto const secret = base16_literal("09c2686880095b1a4c249ee3ac4eea8a014f11e6f986d0b5025ac1f39afbd9ae");
@@ -608,7 +608,7 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
     REQUIRE(encode_base16(out_point2) == encode_base16(compressed));
 }
 
-// End Boost Suite
+// End Test Suite
 
 #endif
 
@@ -616,7 +616,7 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
 
 // These are not actual tests, just for emitting the version maps.
 
-// Start Boost Suite: encrypted  altchain versions
+// Start Test Suite: encrypted  altchain versions
 //
 //static std::string hex(uint8_t number)
 //{
@@ -665,8 +665,8 @@ TEST_CASE("encrypted  create token lot  private and public compressed testnet  d
 //    }
 //}
 //
-// End Boost Suite
+// End Test Suite
 
 // ----------------------------------------------------------------------------
 
-// End Boost Suite
+// End Test Suite

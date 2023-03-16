@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -53,7 +53,7 @@ public:
 
     friend
     bool operator!=(header const& x, header const& y) {
-        return !(x == y);    
+        return !(x == y);
     }
 
     friend
@@ -63,7 +63,7 @@ public:
 
     friend
     bool operator!=(header const& x, chain::header const& y) {
-        return !(x == y);    
+        return !(x == y);
     }
 
     friend
@@ -73,9 +73,9 @@ public:
 
     friend
     bool operator!=(chain::header const& x, header const& y) {
-        return !(x == y);    
+        return !(x == y);
     }
-    
+
     template <typename R, KTH_IS_READER(R)>
     bool from_data(R& source, uint32_t version) {
         if ( ! chain::header::from_data(source)) {
@@ -113,10 +113,10 @@ public:
 
     static
     std::string const command;
-    
+
     static
     uint32_t const version_minimum;
-    
+
     static
     uint32_t const version_maximum;
 };

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -79,19 +79,19 @@ public:
 
     [[nodiscard]]
     reason_code code() const;
-    
+
     void set_code(reason_code value);
 
     std::string& message();
 
     [[nodiscard]]
     std::string const& message() const;
-    
+
     void set_message(std::string const& value);
     void set_message(std::string&& value);
 
     std::string& reason();
-    
+
     [[nodiscard]]
     std::string const& reason() const;
 
@@ -154,9 +154,9 @@ public:
 
     [[nodiscard]]
     bool is_valid() const;
-    
+
     void reset();
-    
+
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;
 
@@ -174,7 +174,7 @@ public:
 private:
     static
     reason_code reason_from_byte(uint8_t byte);
-    
+
     static
     uint8_t reason_to_byte(reason_code value);
 

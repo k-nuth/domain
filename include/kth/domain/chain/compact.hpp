@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -16,11 +16,11 @@ namespace kth::domain::chain {
 class KD_API compact {
 public:
     /// Construct a normal form compact number from a 32 bit compact number.
-    explicit 
+    explicit
     compact(uint32_t compact);
 
     /// Construct a normal form compact number from a 256 bit number
-    explicit 
+    explicit
     compact(uint256_t const& big);
 
     /// True if construction overflowed.
@@ -42,7 +42,7 @@ public:
 private:
     static
     bool from_compact(uint256_t& out, uint32_t compact);
-    
+
     static
     uint32_t from_big(uint256_t const& big);
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -55,7 +55,7 @@ uint256_t shift_2way_safe(uint256_t x, int64_t n, uint256_t const& def) noexcept
     x <<= n;
     if (x > def) return def;
     return x;
-} 
+}
 
 } // namespace
 

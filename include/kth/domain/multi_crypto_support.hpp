@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -22,6 +22,7 @@ constexpr uint32_t bch_testnet  = 0xf4f3e5f4U;
 constexpr uint32_t bch_regtest  = 0xfabfb5daU;
 constexpr uint32_t bch_testnet4 = 0xafdab7e2U;
 constexpr uint32_t bch_scalenet = 0xa2e1afc3U;
+constexpr uint32_t bch_chipnet  = 0xafdab7e2U;
 #else
 constexpr uint32_t btc_mainnet = 0xd9b4bef9U;
 constexpr uint32_t btc_testnet = 0x0709110bU;
@@ -40,7 +41,7 @@ enum class currency {
 } // namespace config
 
 config::currency get_currency();
-domain::config::network get_network(uint32_t identifier);
+domain::config::network get_network(uint32_t identifier, bool is_chipnet);
 
 #if defined(KTH_CURRENCY_BCH)
 std::string cashaddr_prefix();

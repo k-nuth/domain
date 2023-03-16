@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,7 @@ using namespace kd;
 auto const hash1 = hash_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
 auto const valid_raw_output_point = to_chunk(base16_literal("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f00000015"));
 
-// Start Boost Suite: output point tests
+// Start Test Suite: output point tests
 
 TEST_CASE("output point  constructor 1  always  returns default initialized", "[output point]") {
     const chain::point instance;
@@ -295,4 +295,4 @@ TEST_CASE("output point  operator boolean not equals 2  differs  returns true", 
     REQUIRE(alpha != beta);
 }
 
-// End Boost Suite
+// End Test Suite

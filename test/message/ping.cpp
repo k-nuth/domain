@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: ping tests
+// Start Test Suite: ping tests
 
 TEST_CASE("ping  constructor 1  always invalid", "[ping]") {
     message::ping instance;
@@ -198,4 +198,4 @@ TEST_CASE("ping  operator boolean not equals  differs  returns true", "[ping]") 
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

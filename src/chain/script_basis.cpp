@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -203,7 +203,7 @@ data_chunk const& script_basis::bytes() const {
 // Signing (unversioned).
 //-----------------------------------------------------------------------------
 
-inline 
+inline
 hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
     KTH_ASSERT( ! tx.is_coinbase());
@@ -218,7 +218,7 @@ hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
 // there are 4 possible 7 bit values that can set "single" and 4 others that
 // can set none, and yet all other values set "all".
 //*****************************************************************************
-inline 
+inline
 sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     switch (sighash_type & sighash_algorithm::mask) {
         case sighash_algorithm::single:
@@ -230,7 +230,7 @@ sighash_algorithm to_sighash_enum(uint8_t sighash_type) {
     }
 }
 
-inline 
+inline
 uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
     return static_cast<uint8_t>(
         to_sighash_enum(sighash_type) == value

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,7 +12,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::wallet;
 
-// Start Boost Suite: stealth receiver tests
+// Start Test Suite: stealth receiver tests
 
 #define MAIN_KEY "tprv8ctN3HAF9dCgX9ggdCwiZHa7c3UHuG2Ev4jgYWDhTHDUVWKKsg7znbr3vYtmCzVqcMQsjd9cSKsyKGaDvTAUMkw1UphETe1j8LcT21eWPkH"
 #define STEALTH_ADDRESS "vJmudwspxzmEoz1AP5tTrRMcuop6XjNWa1SnjHFmLeSc9DAkro6J6oYnD7MubLHx9wT3rm7D6xgA8U9Lr9zjzijhVSuUbYdMNYUN27"
@@ -45,7 +45,7 @@ TEST_CASE("stealth receiver  exchange between sender and receiver  always  round
     REQUIRE(sender);
 
     auto const& payment = sender.payment_address();
-    REQUIRE(payment.encoded() == DERIVED_ADDRESS);
+    REQUIRE(payment.encoded_legacy() == DERIVED_ADDRESS);
 
     // Receiver scans blockchain to get a list of potentially-matching values.
     // client.fetch_stealth() will yield rows of:
@@ -72,4 +72,4 @@ TEST_CASE("stealth receiver  exchange between sender and receiver  always  round
     REQUIRE(payment_address(receiver_public, version) == derived_address);
 }
 
-// End Boost Suite
+// End Test Suite

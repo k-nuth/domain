@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,7 +9,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: messages tests
+// Start Test Suite: messages tests
 
 TEST_CASE("messages  variable uint size  one byte  expected", "[messages]") {
     static uint64_t const value = 1;
@@ -31,4 +31,4 @@ TEST_CASE("messages  variable uint size  eight byte  expected", "[messages]") {
     REQUIRE(infrastructure::message::variable_uint_size(value) == 9u);
 }
 
-// End Boost Suite
+// End Test Suite

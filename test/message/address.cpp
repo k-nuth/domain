@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,7 +21,7 @@ bool equal(address const& x, address const& y) {
     return same;
 }
 
-// Start Boost Suite: address tests
+// Start Test Suite: address tests
 
 TEST_CASE("address  constructor 1  always invalid", "[address]") {
     address instance;
@@ -357,4 +357,4 @@ TEST_CASE("address  operator boolean not equals  differs  returns true", "[addre
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

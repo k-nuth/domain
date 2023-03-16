@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -15,7 +15,7 @@ data_chunk valid_raw_input = to_chunk(base16_literal(
     "da450151d36012103893d5a06201d5cf61400e96fa4a7514fc12ab45166ace618d68b"
     "8066c9c585f9ffffffff"));
 
-// Start Boost Suite: input tests
+// Start Test Suite: input tests
 
 TEST_CASE("input  constructor 1  always  returns default initialized", "[input]") {
     input instance;
@@ -339,4 +339,4 @@ TEST_CASE("input  operator boolean not equals  differs  returns true", "[input]"
     REQUIRE(alpha != beta);
 }
 
-// End Boost Suite
+// End Test Suite

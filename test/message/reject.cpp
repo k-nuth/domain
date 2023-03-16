@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,7 +24,7 @@ static hash_digest const data{
      0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
      0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F}};
 
-// Start Boost Suite: reject tests
+// Start Test Suite: reject tests
 
 TEST_CASE("reject  factory from data  tx nonstandard empty data valid", "[reject]") {
     data_chunk payload;
@@ -460,4 +460,4 @@ TEST_CASE("reject - reject  operator boolean not equals  differs  returns true",
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite

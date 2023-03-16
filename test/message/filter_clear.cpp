@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@ using namespace kth;
 using namespace kd;
 using namespace kth::domain::message;
 
-// Start Boost Suite: filter clear tests
+// Start Test Suite: filter clear tests
 
 TEST_CASE("filter clear - from data insufficient version failure", "[filter clear]") {
     static const filter_clear expected{};
@@ -52,4 +52,4 @@ TEST_CASE("filter clear - roundtrip to data factory from data reader", "[filter 
     REQUIRE(result.serialized_size(version::level::maximum) == 0u);
 }
 
-// End Boost Suite
+// End Test Suite

@@ -1,18 +1,19 @@
-# Copyright (c) 2016-2022 Knuth Project developers.
+# Copyright (c) 2016-2023 Knuth Project developers.
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-from conans import CMake
+from conan import ConanFile
+from conan.tools.build.cppstd import check_min_cppstd
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.files import copy #, apply_conandata_patches, export_conandata_patches, get, rm, rmdir
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
-from kthbuild import KnuthConanFile
+from kthbuild import KnuthConanFileV2
 
-class KnuthDomainConan(KnuthConanFile):
-    def recipe_dir(self):
-        return os.path.dirname(os.path.abspath(__file__))
+required_conan_version = ">=2.0"
 
+class KnuthDomainConan(KnuthConanFileV2):
     name = "domain"
-    # version = get_version()
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/k-nuth/domain"
     description = "Crypto Cross-Platform C++ Development Toolkit"
@@ -26,21 +27,17 @@ class KnuthDomainConan(KnuthConanFile):
                "examples": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
 
-               "march_id": "ANY",
+               "march_id": ["ANY"],
                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
 
                "verbose": [True, False],
-            #    "keoken": [True, False],
                "cached_rpc_data": [True, False],
-               "cxxflags": "ANY",
-               "cflags": "ANY",
-               "glibcxx_supports_cxx11_abi": "ANY",
+               "cxxflags": ["ANY"],
+               "cflags": ["ANY"],
                "cmake_export_compile_commands": [True, False],
                "log": ["boost", "spdlog", "binlog"],
                "disable_get_blocks": [True, False],
     }
-
-    #    "with_png": [True, False],
 
     default_options = {
         "shared": False,
@@ -51,87 +48,72 @@ class KnuthDomainConan(KnuthConanFile):
         "examples": False,
         "currency": "BCH",
 
-        "march_id": "_DUMMY_",
         "march_strategy": "download_if_possible",
 
         "verbose": False,
-        # "keoken": False,
         "cached_rpc_data": False,
-        "cxxflags": "_DUMMY_",
-        "cflags": "_DUMMY_",
-        "glibcxx_supports_cxx11_abi": "_DUMMY_",
         "cmake_export_compile_commands": False,
         "log": "spdlog",
         "disable_get_blocks": False,
     }
 
-        # "with_png=False", \
+    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "include/*", "test/*", "examples/*", "test_new/*"
 
-    generators = "cmake"
-    exports = "conan_*", "ci_utils/*"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "kth-domainConfig.cmake.in", "include/*", "test/*", "examples/*", "test_new/*"
-
-    package_files = "build/lkth-domain.a"
-    build_policy = "missing"
-
-    # @property
-    # def is_keoken(self):
-    #     return self.options.currency == "BCH" and self.options.get_safe("keoken")
+    def build_requirements(self):
+        if self.options.tests:
+            self.test_requires("catch2/3.3.1")
 
     def requirements(self):
-        self.requires("algorithm/0.1.239@tao/stable")
-        self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
-        self.requires("infrastructure/0.X@%s/%s" % (self.user, self.channel))
-        # self.requires("crypto/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("infrastructure/0.24.0")
 
-        if self.options.tests:
-            self.requires("catch2/2.13.8")
+        self.requires("boost/1.81.0")
+        self.requires("fmt/9.1.0")
 
         if self.options.currency == "LTC":
-            #TODO(fernando): check if a newer version exists
             self.requires("OpenSSL/1.0.2l@conan/stable")
 
         if self.options.with_qrencode:
             self.requires("libqrencode/4.0.0@kth/stable")
 
     def validate(self):
-        KnuthConanFile.validate(self)
+        KnuthConanFileV2.validate(self)
+        if self.info.settings.compiler.cppstd:
+            check_min_cppstd(self, "20")
 
     def config_options(self):
-        KnuthConanFile.config_options(self)
+        KnuthConanFileV2.config_options(self)
 
     def configure(self):
-        KnuthConanFile.configure(self)
-
-        # if self.options.keoken and self.options.currency != "BCH":
-        #     self.output.warn("For the moment Keoken is only enabled for BCH. Building without Keoken support...")
-        #     del self.options.keoken
-        # else:
-        #     self.options["*"].keoken = self.options.keoken
-
+        KnuthConanFileV2.configure(self)
         self.options["*"].cached_rpc_data = self.options.cached_rpc_data
-
         self.options["*"].log = self.options.log
         self.output.info("Compiling with log: %s" % (self.options.log,))
 
     def package_id(self):
-        KnuthConanFile.package_id(self)
+        KnuthConanFileV2.package_id(self)
+
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        tc = self.cmake_toolchain_basis()
+        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        tc.variables["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
+        tc.variables["WITH_ICU"] = option_on_off(self.options.with_icu)
+        tc.variables["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
+        # tc.variables["WITH_PNG"] = option_on_off(self.options.with_png)
+        tc.variables["WITH_PNG"] = option_on_off(self.options.with_qrencode)
+        tc.variables["LOG_LIBRARY"] = self.options.log
+        tc.variables["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
+
+        tc.generate()
+        tc = CMakeDeps(self)
+        tc.generate()
 
     def build(self):
-        cmake = self.cmake_basis()
-        cmake.definitions["WITH_CACHED_RPC_DATA"] = option_on_off(self.options.cached_rpc_data)
+        cmake = CMake(self)
+        cmake.configure()
 
-        cmake.definitions["WITH_KEOKEN"] = option_on_off(False)
-        # cmake.definitions["WITH_KEOKEN"] = option_on_off(self.is_keoken)
-
-        cmake.definitions["WITH_ICU"] = option_on_off(self.options.with_icu)
-        cmake.definitions["WITH_QRENCODE"] = option_on_off(self.options.with_qrencode)
-        # cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_png)
-        cmake.definitions["WITH_PNG"] = option_on_off(self.options.with_qrencode)
-        cmake.definitions["LOG_LIBRARY"] = self.options.log
-        cmake.definitions["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
-
-        cmake.configure(source_dir=self.source_folder)
         if not self.options.cmake_export_compile_commands:
             cmake.build()
             #Note: Cmake Tests and Visual Studio doesn't work
@@ -139,29 +121,27 @@ class KnuthDomainConan(KnuthConanFile):
                 cmake.test()
                 # cmake.test(target="tests")
 
-    def imports(self):
-        self.copy("*.h", "", "include")
+    # def imports(self):
+    #     self.copy("*.h", "", "include")
 
     def package(self):
-        self.copy("*.h", dst="include", src="include")
-        self.copy("*.hpp", dst="include", src="include")
-        self.copy("*.ipp", dst="include", src="include")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.dylib*", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        cmake = CMake(self)
+        cmake.install()
+        # rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
+        # rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
+        # rmdir(self, os.path.join(self.package_folder, "res"))
+        # rmdir(self, os.path.join(self.package_folder, "share"))
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["kth-domain"]
+        self.cpp_info.libs = ["domain"]
 
         if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
-            self.cpp_info.libs.append("pthread")
+            self.cpp_info.system_libs.append("pthread")
 
         if self.settings.os == "Windows" and self.settings.compiler == "gcc": # MinGW
-            self.cpp_info.libs.append("ws2_32")
-            self.cpp_info.libs.append("wsock32")
+            self.cpp_info.system_libs.append("ws2_32")
+            self.cpp_info.system_libs.append("wsock32")
 
         if not self.is_shared:
             self.cpp_info.defines.append("KD_STATIC")

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -18,7 +18,7 @@ namespace kth::domain::wallet {
 /**
  * A message signature is an EC signature with one prefix byte.
  */
-static constexpr 
+static constexpr
 size_t message_signature_size = 1 + ec_signature_size;
 
 using message_signature = byte_array<message_signature_size>;

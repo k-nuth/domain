@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Knuth Project developers.
+// Copyright (c) 2016-2023 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 using namespace kth;
 using namespace kd;
 
-// Start Boost Suite: get block transactions tests
+// Start Test Suite: get block transactions tests
 
 TEST_CASE("get block transactions  constructor 1  always invalid", "[get block transactions]") {
     message::get_block_transactions instance;
@@ -237,4 +237,4 @@ TEST_CASE("get block transactions  operator boolean not equals  differs  returns
     REQUIRE(instance != expected);
 }
 
-// End Boost Suite
+// End Test Suite
