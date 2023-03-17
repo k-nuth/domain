@@ -64,7 +64,7 @@ class KnuthDomainConan(KnuthConanFileV2):
             self.test_requires("catch2/3.3.1")
 
     def requirements(self):
-        self.requires("infrastructure/0.24.0")
+        self.requires("infrastructure/0.25.0")
 
         self.requires("boost/1.81.0")
         self.requires("fmt/9.1.0")
