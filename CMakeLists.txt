@@ -445,11 +445,10 @@ if (${CURRENCY} STREQUAL "LTC")
   target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENSSL_CRYPTO_LIBRARY})
 endif()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::boost)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
+# target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
+# target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
+# target_link_libraries(${PROJECT_NAME} PUBLIC Boost::boost)
+# target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
 

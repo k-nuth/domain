@@ -64,16 +64,16 @@ class KnuthDomainConan(KnuthConanFileV2):
             self.test_requires("catch2/3.3.1")
 
     def requirements(self):
-        self.requires("infrastructure/0.23.0")
+        self.requires("infrastructure/0.23.0", transitive_headers=True, transitive_libs=True)
 
-        self.requires("boost/1.81.0")
-        self.requires("fmt/9.1.0")
+        # self.requires("boost/1.81.0")
+        # self.requires("fmt/9.1.0")
 
         if self.options.currency == "LTC":
-            self.requires("OpenSSL/1.0.2l@conan/stable")
+            self.requires("OpenSSL/1.0.2l@conan/stable", transitive_headers=True, transitive_libs=True)
 
-        if self.options.with_qrencode:
-            self.requires("libqrencode/4.0.0@kth/stable")
+        # if self.options.with_qrencode:
+        #     self.requires("libqrencode/4.0.0@kth/stable", transitive_headers=True, transitive_libs=True)
 
     def validate(self):
         KnuthConanFileV2.validate(self)
