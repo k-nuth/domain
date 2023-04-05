@@ -81,18 +81,11 @@ message(STATUS "Knuth: Cryptocurrency: ${CURRENCY}")
 set(Boost_DEBUG ON)
 
 find_package(Threads REQUIRED)
-find_package(secp256k1 REQUIRED)
 find_package(infrastructure REQUIRED)
 
 if (${CURRENCY} STREQUAL "LTC")
   find_package(OpenSSL 1.0.1 REQUIRED)
 endif()
-
-
-find_package(Boost 1.81.0 COMPONENTS program_options REQUIRED)
-find_package(Boost 1.81.0 COMPONENTS thread REQUIRED)
-find_package(Boost 1.81.0 COMPONENTS boost REQUIRED)
-find_package(fmt 9.1.0 REQUIRED)
 
 include(CheckCXXCompilerFlag)
 
@@ -444,12 +437,6 @@ endif()
 if (${CURRENCY} STREQUAL "LTC")
   target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENSSL_CRYPTO_LIBRARY})
 endif()
-
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::boost)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
 
