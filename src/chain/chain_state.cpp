@@ -51,8 +51,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , fermat_t fermat_activation_time
     // , euler_t euler_activation_time
     // , gauss_t gauss_activation_time
-    , descartes_t descartes_activation_time
+    // , descartes_t descartes_activation_time
     , lobachevski_t lobachevski_activation_time
+    , galois_t galois_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
     : data_(std::move(values))
@@ -70,8 +71,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , fermat_activation_time
         // , euler_activation_time
         // , gauss_activation_time
-        , descartes_activation_time
+        // , descartes_activation_time
         , lobachevski_activation_time
+        , galois_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_))
@@ -79,8 +81,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 #if defined(KTH_CURRENCY_BCH)
             // , euler_activation_time
             // , gauss_activation_time
-            , descartes_activation_time
+            // , descartes_activation_time
             , lobachevski_activation_time
+            , galois_activation_time
             , assert_anchor_block_info_
             , asert_half_life
 #endif
@@ -93,8 +96,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , fermat_activation_time_(fermat_activation_time)
     // , euler_activation_time_(euler_activation_time)
     // , gauss_activation_time_(gauss_activation_time)
-    , descartes_activation_time_(descartes_activation_time)
+    // , descartes_activation_time_(descartes_activation_time)
     , lobachevski_activation_time_(lobachevski_activation_time)
+    , galois_activation_time_(galois_activation_time)
 #endif  //KTH_CURRENCY_BCH
 {}
 
@@ -130,8 +134,9 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
         // , pool.fermat_activation_time_
         // , pool.euler_activation_time_
         // , pool.gauss_activation_time_
-        , pool.descartes_activation_time_
+        // , pool.descartes_activation_time_
         , pool.lobachevski_activation_time_
+        , pool.galois_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
 }
@@ -330,9 +335,7 @@ bool chain_state::is_gauss_enabled() const {
 }
 
 bool chain_state::is_descartes_enabled() const {
-   //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(descartes_activation_time()));
-    // return is_descartes_enabled(height(), network());
+    return is_descartes_enabled(height(), network());
 }
 
 bool chain_state::is_lobachevski_enabled() const {
@@ -341,7 +344,14 @@ bool chain_state::is_lobachevski_enabled() const {
     // return is_lobachevski_enabled(height(), network());
 }
 
-// 2025-Nov
+// 2025-May
+bool chain_state::is_galois_enabled() const {
+   //TODO(fernando): this was activated, change to the other method
+    return is_mtp_activated(median_time_past(), to_underlying(galois_activation_time()));
+    // return is_galois_enabled(height(), network());
+}
+
+// 2026-May
 // //static
 // bool chain_state::is_unnamed_enabled() const {
 //    //TODO(fernando): this was activated, change to the other method
@@ -364,8 +374,9 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , fermat_t fermat_activation_time
         // , euler_t euler_activation_time
         // , gauss_t gauss_activation_time
-        , descartes_t descartes_activation_time
+        // , descartes_t descartes_activation_time
         , lobachevski_t lobachevski_activation_time
+        , galois_t galois_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
@@ -533,15 +544,19 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_gauss & forks);
     }
 
-    auto const mtp = median_time_past(values);
-    if (is_mtp_activated(mtp, to_underlying(descartes_activation_time))) {
-        //Note(Fernando): Move this to the next fork rules
+    if (is_descartes_enabled(values.height, network)) {
         result.forks |= (rule_fork::bch_descartes & forks);
     }
 
+    auto const mtp = median_time_past(values);
     if (is_mtp_activated(mtp, to_underlying(lobachevski_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
         result.forks |= (rule_fork::bch_lobachevski & forks);
+    }
+
+    if (is_mtp_activated(mtp, to_underlying(galois_activation_time))) {
+        //Note(Fernando): Move this to the next fork rules
+        result.forks |= (rule_fork::bch_galois & forks);
     }
 
     // Old rules with Replay Protection
@@ -788,18 +803,17 @@ bool chain_state::is_gauss_enabled(size_t height, config::network network) {
      );
 }
 
-// //2023-May hard fork
-// // Complete after the hard fork
-// inline
-// bool chain_state::is_descartes_enabled(size_t height, config::network network) {
-//     return is_rule_enabled(height, network
-//         , mainnet_descartes_activation_height
-//         , testnet_descartes_activation_height
-//         , testnet4_descartes_activation_height
-//         , scalenet_descartes_activation_height
-//         , chipnet_descartes_activation_height
-//      );
-// }
+//2023-May hard fork
+inline
+bool chain_state::is_descartes_enabled(size_t height, config::network network) {
+    return is_rule_enabled(height, network
+        , mainnet_descartes_activation_height
+        , testnet_descartes_activation_height
+        , testnet4_descartes_activation_height
+        , scalenet_descartes_activation_height
+        , chipnet_descartes_activation_height
+     );
+}
 
 //2024-May hard fork
 // Complete after the hard fork
@@ -813,6 +827,20 @@ bool chain_state::is_gauss_enabled(size_t height, config::network network) {
 //         , chipnet_lobachevski_activation_height
 //      );
 // }
+
+//2025-May hard fork
+// Complete after the hard fork
+// inline
+// bool chain_state::is_galois_enabled(size_t height, config::network network) {
+//     return is_rule_enabled(height, network
+//         , mainnet_galois_activation_height
+//         , testnet_galois_activation_height
+//         , testnet4_galois_activation_height
+//         , scalenet_galois_activation_height
+//         , chipnet_galois_activation_height
+//      );
+// }
+
 
 //2025-May hard fork
 // Complete after the hard fork
@@ -967,8 +995,9 @@ uint32_t chain_state::work_required(data const& values, config::network network,
 #if defined(KTH_CURRENCY_BCH)
                                     // , euler_t euler_activation_time
                                     // , gauss_t gauss_activation_time
-                                    , descartes_t descartes_activation_time
+                                    // , descartes_t descartes_activation_time
                                     , lobachevski_t lobachevski_activation_time
+                                    , galois_t galois_activation_time
                                     , assert_anchor_block_info_t const& assert_anchor_block_info
                                     , uint32_t asert_half_life
 #endif
@@ -1349,12 +1378,16 @@ uint32_t chain_state::asert_half_life() const {
 //     return gauss_activation_time_;
 // }
 
-descartes_t chain_state::descartes_activation_time() const {
-    return descartes_activation_time_;
-}
+// descartes_t chain_state::descartes_activation_time() const {
+//     return descartes_activation_time_;
+// }
 
 lobachevski_t chain_state::lobachevski_activation_time() const {
     return lobachevski_activation_time_;
+}
+
+galois_t chain_state::galois_activation_time() const {
+    return galois_activation_time_;
 }
 
 #endif  //KTH_CURRENCY_BCH
@@ -1385,8 +1418,9 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
 #if defined(KTH_CURRENCY_BCH)
                             // , euler_activation_time()
                             // , gauss_activation_time()
-                            , descartes_activation_time()
+                            // , descartes_activation_time()
                             , lobachevski_activation_time()
+                            , galois_activation_time()
                             , assert_anchor_block_info_
                             , asert_half_life()
 #endif

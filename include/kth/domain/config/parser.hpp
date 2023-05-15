@@ -318,9 +318,14 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("00000000000000000340a607ca5e9a8b56b620297216edb818eb09e3c6e95609", 792774);
 
         // //2024-May Hardfork - lobachevski - (1715774400)
-        // checkpoints.emplace_back("", 740236);
-        // checkpoints.emplace_back("", 740237); // New rules activated in the next block.
-        // checkpoints.emplace_back("", 740238); // New rules activated in this block.
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
+
+        // //2025-May Hardfork - galois - (1747310400)
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
     } else {
         // BCH Regtest
         checkpoints.reserve(1);
