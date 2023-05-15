@@ -297,16 +297,23 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f", 661647);  //mediantime: 1605443067. New rules activated in the next block.
         checkpoints.emplace_back("0000000000000000029e471c41818d24b8b74c911071c4ef0b4a0509f9b5a8ce", 661648);  //mediantime: 1605443708. New rules activated in this block.
 
-        // //2021-May Hardfork - gauss - (1652616000)
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in the next block.
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in this block.
+        // There were no consensus changes in the May 2021.
+        // There were no consensus changes in the November 2021.
 
-        // //2021-Nov Hardfork - unnamed - (9999999999)
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in the next block.
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in this block.
+        //2022-May Hardfork - gauss - (1652616000)
+        checkpoints.emplace_back("000000000000000000b92c50d56fc2c60b0502fffec6dc5410065a9b1e29109f", 740236);
+        checkpoints.emplace_back("0000000000000000018e572c8e2615b86c1c45c61be8a5f380a339abdff15caa", 740237); // New rules activated in the next block.
+        checkpoints.emplace_back("000000000000000002afc6fbd302f01f8cf4533f4b45207abc61d9f4297bf969", 740238); // New rules activated in this block.
 
+        // //2023-May Hardfork - descartes - (1684152000)
+        // checkpoints.emplace_back("", 792767);
+        // checkpoints.emplace_back("", 792768); // New rules activated in the next block.
+        // checkpoints.emplace_back("", 792769); // New rules activated in this block.
+
+        // //2024-May Hardfork - lobachevski - (1715774400)
+        // checkpoints.emplace_back("", 740236);
+        // checkpoints.emplace_back("", 740237); // New rules activated in the next block.
+        // checkpoints.emplace_back("", 740238); // New rules activated in this block.
     } else {
         // BCH Regtest
         checkpoints.reserve(1);
