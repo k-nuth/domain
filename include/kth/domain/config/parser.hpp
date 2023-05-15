@@ -300,6 +300,13 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         // There were no consensus changes in the May 2021.
         // There were no consensus changes in the November 2021.
 
+        checkpoints.emplace_back("000000000000000002bf5f3f1f385c767ac78ab2db48abeaffff9d609b1b34ff", 665000);
+        checkpoints.emplace_back("00000000000000000040b37f904a9cbba25a6d37aa313d4ae8c4c46589cf4c6e", 680000);
+        checkpoints.emplace_back("000000000000000002796d49edb3fc3643d82808aa0babf55cb7deed8147446b", 695000);
+        checkpoints.emplace_back("00000000000000000259ad550b5420e5418cdfc14873d6985bcf1dfa261dbc9c", 710000);
+        checkpoints.emplace_back("00000000000000000545f96d55f3664d794c9940ae5b97dd66d9c6829c05bf23", 725000);
+        checkpoints.emplace_back("0000000000000000021c8878d6905b85ef4d4cf8ea0e036874ffeea13654561f", 740000);
+
         //2022-May Hardfork - gauss - (1652616000)
         checkpoints.emplace_back("000000000000000000b92c50d56fc2c60b0502fffec6dc5410065a9b1e29109f", 740236);
         checkpoints.emplace_back("0000000000000000018e572c8e2615b86c1c45c61be8a5f380a339abdff15caa", 740237); // New rules activated in the next block.
