@@ -93,8 +93,9 @@ public:
     [[nodiscard]]
     uint8_t version() const;
 
-    [[nodiscard]]
-    byte_span hash() const;
+    //TODO(fernando): re-enable this
+    // [[nodiscard]]
+    // byte_span hash() const;
 
     [[nodiscard]]
     short_hash hash20() const;
@@ -163,8 +164,9 @@ namespace std {
 template <>
 struct hash<kth::domain::wallet::payment_address> {
     size_t operator()(kth::domain::wallet::payment_address const& address) const {
-        return std::hash<kth::byte_span>()(address.hash());
-        // return std::hash<kth::short_hash>()(address.hash());
+        //TODO(fernando): re-enable this
+        // return std::hash<kth::byte_span>()(address.hash());
+        return std::hash<kth::short_hash>()(address.hash20());
     }
 };
 } // namespace std
