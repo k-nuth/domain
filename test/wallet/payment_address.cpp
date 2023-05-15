@@ -265,6 +265,7 @@ TEST_CASE("payment address cashAddr testnet encode", "[payment address]") {
 TEST_CASE("payment address cashAddr mainnet from string", "[payment address]") {
     payment_address const address("bitcoincash:qpzz8n7jp6847yyx8t33matrgcsdx6c0cvmtevrfgz");
     REQUIRE(address);
+    REQUIRE(address.encoded_cashaddr(false) == "bitcoincash:qpzz8n7jp6847yyx8t33matrgcsdx6c0cvmtevrfgz");
     REQUIRE(address.encoded_legacy() == "17DHrHvtmMRs9ciersFCPNhvJtryd5NWbT");
 }
 
@@ -272,6 +273,7 @@ TEST_CASE("payment address cashAddr testnet from string", "[payment address]") {
     set_cashaddr_prefix("bchtest");
     payment_address const address("bchtest:qpzz8n7jp6847yyx8t33matrgcsdx6c0cvleatp707");
     REQUIRE(address);
+    REQUIRE(address.encoded_cashaddr(false) == "bchtest:qpzz8n7jp6847yyx8t33matrgcsdx6c0cvleatp707");
     REQUIRE(address.encoded_legacy() == "mmjF9M1saNs7vjCGaSDaDHvFAtTgUNtfrJ");
 }
 #endif
