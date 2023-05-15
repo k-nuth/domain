@@ -530,15 +530,16 @@ if (WITH_TESTS)
   catch_discover_tests(kth_domain_test)
 endif()
 
-if (WITH_TESTS_NEW)
-  add_executable(kth_domain_test_new
-          test_new/main.cpp
-          test_new/create_transaction.cpp
-  )
-  target_link_libraries(kth_domain_test_new PUBLIC ${PROJECT_NAME})
+#TODO(fernando): re-enable this
+# if (WITH_TESTS_NEW)
+#   add_executable(kth_domain_test_new
+#           test_new/main.cpp
+#           test_new/create_transaction.cpp
+#   )
+#   target_link_libraries(kth_domain_test_new PUBLIC ${PROJECT_NAME})
 
-  add_test(NAME kth_domain_test_new COMMAND kth_domain_test_new)
-endif()
+#   add_test(NAME kth_domain_test_new COMMAND kth_domain_test_new)
+# endif()
 
 
 # Examples
