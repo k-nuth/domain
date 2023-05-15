@@ -297,16 +297,35 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f", 661647);  //mediantime: 1605443067. New rules activated in the next block.
         checkpoints.emplace_back("0000000000000000029e471c41818d24b8b74c911071c4ef0b4a0509f9b5a8ce", 661648);  //mediantime: 1605443708. New rules activated in this block.
 
-        // //2021-May Hardfork - gauss - (1652616000)
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in the next block.
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in this block.
+        // There were no consensus changes in the May 2021.
+        // There were no consensus changes in the November 2021.
 
-        // //2021-Nov Hardfork - unnamed - (9999999999)
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in the next block.
-        // checkpoints.emplace_back("", 9999999);  //mediantime: 9999999999. New rules activated in this block.
+        checkpoints.emplace_back("000000000000000002bf5f3f1f385c767ac78ab2db48abeaffff9d609b1b34ff", 665000);
+        checkpoints.emplace_back("00000000000000000040b37f904a9cbba25a6d37aa313d4ae8c4c46589cf4c6e", 680000);
+        checkpoints.emplace_back("000000000000000002796d49edb3fc3643d82808aa0babf55cb7deed8147446b", 695000);
+        checkpoints.emplace_back("00000000000000000259ad550b5420e5418cdfc14873d6985bcf1dfa261dbc9c", 710000);
+        checkpoints.emplace_back("00000000000000000545f96d55f3664d794c9940ae5b97dd66d9c6829c05bf23", 725000);
+        checkpoints.emplace_back("0000000000000000021c8878d6905b85ef4d4cf8ea0e036874ffeea13654561f", 740000);
 
+        //2022-May Hardfork - gauss - (1652616000)
+        checkpoints.emplace_back("000000000000000000b92c50d56fc2c60b0502fffec6dc5410065a9b1e29109f", 740236);
+        checkpoints.emplace_back("0000000000000000018e572c8e2615b86c1c45c61be8a5f380a339abdff15caa", 740237);
+        checkpoints.emplace_back("000000000000000002afc6fbd302f01f8cf4533f4b45207abc61d9f4297bf969", 740238);
+
+        //2023-May Hardfork - descartes - (1684152000)
+        checkpoints.emplace_back("000000000000000002b678c471841c3e404ec7ae9ca9c32026fe27eb6e3a1ed1", 792772);
+        checkpoints.emplace_back("000000000000000002fc0cdadaef1857bbd2936d37ea94f80ba3db4a5e8353e8", 792773);
+        checkpoints.emplace_back("00000000000000000340a607ca5e9a8b56b620297216edb818eb09e3c6e95609", 792774);
+
+        // //2024-May Hardfork - lobachevski - (1715774400)
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
+
+        // //2025-May Hardfork - galois - (1747310400)
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
+        // checkpoints.emplace_back("", 0);
     } else {
         // BCH Regtest
         checkpoints.reserve(1);

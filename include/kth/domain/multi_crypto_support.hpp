@@ -5,6 +5,7 @@
 #ifndef KTH_DOMAIN_MULTI_CRYPTO_SUPPORT_HPP
 #define KTH_DOMAIN_MULTI_CRYPTO_SUPPORT_HPP
 
+#include <cstdint>
 #include <string>
 
 #include <kth/domain/config/network.hpp>

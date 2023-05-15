@@ -10,8 +10,8 @@ Date            Knuth name          BCHN name            Timestamp
 2022-May-15     Gauss               Upgrade8            1652616000
 2023-May-15     Descartes           Upgrade9            1684152000
 2024-May-15     Lobachevski         Upgrade10           1715774400
+2025-May-15     Galois              Upgrade11           1747310400
 
-????-???-??     Galois              ?                            ?
 ????-???-??     Leibniz             ?                            ?
 ????-???-??     Cantor              ?                            ?
 ????-???-??     Peano               ?                            ?

@@ -78,22 +78,24 @@ const infrastructure::config::checkpoint chipnet_bip34_active_checkpoint {
 // enum class fermat_t : uint64_t {};
 // enum class euler_t : uint64_t {};
 // enum class gauss_t : uint64_t {};
-enum class descartes_t : uint64_t {};
+// enum class descartes_t : uint64_t {};
 enum class lobachevski_t : uint64_t {};
+enum class galois_t : uint64_t {};
 enum class unnamed_t : uint64_t {}; //TODO(fernando): rename it
 
-// constexpr size_t     bch_activation_height = 478559 //478558;        // 2017-Aug-01 HF
-// constexpr uint32_t   bch_daa_cw144_activation_time = 1510600000;     // 2017-Nov-13 HF
-// constexpr uint32_t   bch_pythagoras_activation_time = 1526400000;    // 2018-May-15 HF
-// constexpr euclid_t   bch_euclid_activation_time = 1542300000;        // 2018-Nov-15 HF
-// constexpr pisano_t   bch_pisano_activation_time = 1557921600;        // 2019-May-15 HF
-// constexpr mersenne_t bch_mersenne_activation_time = 1573819200;      // 2019-Nov-15 HF
-// constexpr fermat_t   bch_fermat_activation_time{1589544000};         // 2020-May-15 HF
-// constexpr euler_t    bch_euler_activation_time{1605441600};          // 2020-Nov-15 HF
-                                                                        // 2021-May-15 (skipped, not a HF)
-// constexpr gauss_t       bch_gauss_activation_time{1652616000};       // 2022-May-15 HF
-constexpr descartes_t   bch_descartes_activation_time{1684152000};      // 2023-May-15 HF
-constexpr lobachevski_t bch_lobachevski_activation_time{1715774400};    // 2024-May-15 HF
+// constexpr size_t         bch_activation_height = 478559 //478558;     // 2017-Aug-01 HF
+// constexpr uint32_t       bch_daa_cw144_activation_time = 1510600000;  // 2017-Nov-13 HF
+// constexpr uint32_t       bch_pythagoras_activation_time = 1526400000; // 2018-May-15 HF
+// constexpr euclid_t       bch_euclid_activation_time = 1542300000;     // 2018-Nov-15 HF
+// constexpr pisano_t       bch_pisano_activation_time = 1557921600;     // 2019-May-15 HF
+// constexpr mersenne_t     bch_mersenne_activation_time = 1573819200;   // 2019-Nov-15 HF
+// constexpr fermat_t       bch_fermat_activation_time{1589544000};      // 2020-May-15 HF
+// constexpr euler_t        bch_euler_activation_time{1605441600};       // 2020-Nov-15 HF
+                                                                         // 2021-May-15 (skipped, not a HF)
+// constexpr gauss_t        bch_gauss_activation_time{1652616000};       // 2022-May-15 HF
+// constexpr descartes_t    bch_descartes_activation_time{1684152000};   // 2023-May-15 HF
+constexpr lobachevski_t bch_lobachevski_activation_time{1715774400};     // 2024-May-15 HF
+constexpr galois_t      bch_galois_activation_time{1747310400};          // 2025-May-15 HF
 
 
 // Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
@@ -197,12 +199,19 @@ constexpr size_t testnet4_gauss_activation_height = 95'465;
 constexpr size_t scalenet_gauss_activation_height = 10'007;
 constexpr size_t chipnet_gauss_activation_height = 95'465;
 
-// //2023-May hard fork
-// constexpr size_t mainnet_gauss_activation_height = ???;
-// constexpr size_t testnet_gauss_activation_height = ???;
-// constexpr size_t testnet4_gauss_activation_height = ???;
-// constexpr size_t scalenet_gauss_activation_height = ???;
-// constexpr size_t chipnet_gauss_activation_height = ???;
+//2023-May hard fork
+constexpr size_t mainnet_descartes_activation_height = 792'773;
+constexpr size_t testnet_descartes_activation_height = 1'500'206;   //FIXME(fernando): check this
+constexpr size_t testnet4_descartes_activation_height = 95'465;     //FIXME(fernando): check this
+constexpr size_t scalenet_descartes_activation_height = 10'007;     //FIXME(fernando): check this
+constexpr size_t chipnet_descartes_activation_height = 95'465;      //FIXME(fernando): check this
+
+// //2024-May hard fork
+// constexpr size_t mainnet_lobachevski_activation_height = ???;
+// constexpr size_t testnet_lobachevski_activation_height = ???;
+// constexpr size_t testnet4_lobachevski_activation_height = ???;
+// constexpr size_t scalenet_lobachevski_activation_height = ???;
+// constexpr size_t chipnet_lobachevski_activation_height = ???;
 
 } // namespace kth
 
