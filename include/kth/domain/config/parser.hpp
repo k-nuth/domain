@@ -309,13 +309,13 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
 
         //2022-May Hardfork - gauss - (1652616000)
         checkpoints.emplace_back("000000000000000000b92c50d56fc2c60b0502fffec6dc5410065a9b1e29109f", 740236);
-        checkpoints.emplace_back("0000000000000000018e572c8e2615b86c1c45c61be8a5f380a339abdff15caa", 740237); // New rules activated in the next block.
-        checkpoints.emplace_back("000000000000000002afc6fbd302f01f8cf4533f4b45207abc61d9f4297bf969", 740238); // New rules activated in this block.
+        checkpoints.emplace_back("0000000000000000018e572c8e2615b86c1c45c61be8a5f380a339abdff15caa", 740237);
+        checkpoints.emplace_back("000000000000000002afc6fbd302f01f8cf4533f4b45207abc61d9f4297bf969", 740238);
 
-        // //2023-May Hardfork - descartes - (1684152000)
-        // checkpoints.emplace_back("", 792767);
-        // checkpoints.emplace_back("", 792768); // New rules activated in the next block.
-        // checkpoints.emplace_back("", 792769); // New rules activated in this block.
+        //2023-May Hardfork - descartes - (1684152000)
+        checkpoints.emplace_back("000000000000000002b678c471841c3e404ec7ae9ca9c32026fe27eb6e3a1ed1", 792772);
+        checkpoints.emplace_back("000000000000000002fc0cdadaef1857bbd2936d37ea94f80ba3db4a5e8353e8", 792773);
+        checkpoints.emplace_back("00000000000000000340a607ca5e9a8b56b620297216edb818eb09e3c6e95609", 792774);
 
         // //2024-May Hardfork - lobachevski - (1715774400)
         // checkpoints.emplace_back("", 740236);
