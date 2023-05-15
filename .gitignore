@@ -8,3 +8,4 @@ check_files.py
 test_marchs.py
 
 .DS_Store
+CMakeUserPresets.json
