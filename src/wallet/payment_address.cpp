@@ -32,20 +32,6 @@ using namespace kth::infrastructure::wallet;
 
 namespace kth::domain::wallet {
 
-// #if defined(KTH_CURRENCY_LTC)
-// uint8_t const payment_address::mainnet_p2kh = 0x30;
-// #else
-// uint8_t const payment_address::mainnet_p2kh = 0x00;
-// #endif
-
-// uint8_t const payment_address::mainnet_p2sh = 0x05;
-// uint8_t const payment_address::testnet_p2kh = 0x6f;
-// uint8_t const payment_address::testnet_p2sh = 0xc4;
-
-// payment_address::payment_address(payment_address&& x) noexcept
-//     : valid_(x.valid_), version_(x.version_), hash_data_(x.hash_data_)
-// {}
-
 payment_address::payment_address(payment const& decoded)
     : payment_address(from_payment(decoded))
 {}
@@ -311,20 +297,20 @@ std::string encode_cashaddr_(payment_address const& wallet, bool token_aware) {
     if (wallet.version() == payment_address::mainnet_p2kh || wallet.version() == payment_address::mainnet_p2sh) {
         if (token_aware) {
             return cashaddr::encode(payment_address::cashaddr_prefix_mainnet,
-                pack_addr_data_(wallet.hash(), wallet.version() == payment_address::mainnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
+                pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::mainnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
         }
         return cashaddr::encode(payment_address::cashaddr_prefix_mainnet,
-            pack_addr_data_(wallet.hash(), wallet.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
+            pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }
 
     // Testnet
     if (wallet.version() == payment_address::testnet_p2kh || wallet.version() == payment_address::testnet_p2sh) {
         if (token_aware) {
             return cashaddr::encode(payment_address::cashaddr_prefix_testnet,
-                pack_addr_data_(wallet.hash(), wallet.version() == payment_address::testnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
+                pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::testnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
         }
         return cashaddr::encode(payment_address::cashaddr_prefix_testnet,
-            pack_addr_data_(wallet.hash(), wallet.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
+            pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }
     return "";
 }
@@ -344,9 +330,10 @@ uint8_t payment_address::version() const {
     return version_;
 }
 
-kth::byte_span payment_address::hash() const {
-    return hash_span_;
-}
+//TODO(fernando): re-enable this
+// kth::byte_span payment_address::hash() const {
+//     return hash_span_;
+// }
 
 short_hash payment_address::hash20() const {
     short_hash hash;
