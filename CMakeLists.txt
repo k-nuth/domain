@@ -20,6 +20,8 @@ option(WITH_PNG "Compile with Libpng support." OFF)
 option(WITH_QRENCODE "Compile with QREncode." OFF)
 option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
 
+option(GLOBAL_BUILD "" OFF)
+
 if (WITH_CACHED_RPC_DATA)
   message(STATUS "Knuth: Cached RPC data enabled")
   add_definitions(-DKTH_CACHED_RPC_DATA)
@@ -80,8 +82,14 @@ message(STATUS "Knuth: Cryptocurrency: ${CURRENCY}")
 
 set(Boost_DEBUG ON)
 
+find_package(Boost 1.81.0 COMPONENTS program_options REQUIRED)
+find_package(Boost 1.81.0 COMPONENTS thread REQUIRED)
+
 find_package(Threads REQUIRED)
-find_package(infrastructure REQUIRED)
+
+if (NOT GLOBAL_BUILD)
+  find_package(infrastructure REQUIRED)
+endif()
 
 if (${CURRENCY} STREQUAL "LTC")
   find_package(OpenSSL 1.0.1 REQUIRED)
@@ -439,7 +447,7 @@ if (${CURRENCY} STREQUAL "LTC")
 endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
+# target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
 target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
 
 _group_sources(${PROJECT_NAME} "${CMAKE_CURRENT_LIST_DIR}")
