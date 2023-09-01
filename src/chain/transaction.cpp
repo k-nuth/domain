@@ -299,6 +299,7 @@ bool transaction::cached_is_standard() const {
 
 // protected
 void transaction::invalidate_cache() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     hash_mutex_.lock_upgrade();
@@ -314,6 +315,18 @@ void transaction::invalidate_cache() const {
 
     hash_mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
+#else
+    {
+        std::shared_lock lock(hash_mutex_);
+        if ( ! hash_ && ! witness_hash_) {
+            return;
+        }
+    }
+
+    std::unique_lock lock(hash_mutex_);
+    hash_.reset();
+    witness_hash_.reset();
+#endif
 }
 
 hash_digest transaction::hash(bool witness) const {
@@ -321,6 +334,7 @@ hash_digest transaction::hash(bool witness) const {
     // Witness hashing must be disabled for non-segregated txs.
     witness = witness && is_segregated();
 #endif
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     hash_mutex_.lock_upgrade(); //TODO(fernando): use RAII
@@ -347,12 +361,44 @@ hash_digest transaction::hash(bool witness) const {
 
     auto const hash = witness_val(witness) ? *witness_hash_ : *hash_;
     hash_mutex_.unlock_upgrade();
-    ///////////////////////////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////////////////////////
     return hash;
+#else
+    {
+        std::shared_lock lock(hash_mutex_);
+
+        if (witness_val(witness)) {
+#if defined(KTH_SEGWIT_ENABLED)
+            if (witness_hash_) {
+                return *witness_hash_;
+            }
+#endif
+        } else {
+            if (hash_) {
+                return *hash_;
+            }
+        }
+    }
+
+    std::unique_lock lock(hash_mutex_);
+
+    if (witness_val(witness)) {
+#if defined(KTH_SEGWIT_ENABLED)
+        if ( ! witness_hash_) {
+            witness_hash_ = std::make_shared<hash_digest>(hash_witness(*this));
+        }
+        return *witness_hash_;
+#endif
+    }
+    if ( ! hash_) {
+        hash_ = std::make_shared<hash_digest>(hash_non_witness(*this));
+    }
+    return *hash_;
+#endif
 }
 
 hash_digest transaction::outputs_hash() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     hash_mutex_.lock_upgrade();
@@ -370,9 +416,24 @@ hash_digest transaction::outputs_hash() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return hash;
+#else
+    {
+        std::shared_lock lock(hash_mutex_);
+        if (outputs_hash_) {
+            return *outputs_hash_;
+        }
+    }
+    std::unique_lock lock(hash_mutex_);
+    if ( ! outputs_hash_) {
+        outputs_hash_ = std::make_shared<hash_digest>(to_outputs(*this));
+    }
+    return *outputs_hash_;
+
+#endif
 }
 
 hash_digest transaction::inpoints_hash() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     hash_mutex_.lock_upgrade();
@@ -390,9 +451,23 @@ hash_digest transaction::inpoints_hash() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return hash;
+#else
+    {
+        std::shared_lock lock(hash_mutex_);
+        if (inpoints_hash_) {
+            return *inpoints_hash_;
+        }
+    }
+    std::unique_lock lock(hash_mutex_);
+    if ( ! inpoints_hash_) {
+        inpoints_hash_ = std::make_shared<hash_digest>(to_inpoints(*this));
+    }
+    return *inpoints_hash_;
+#endif
 }
 
 hash_digest transaction::sequences_hash() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     hash_mutex_.lock_upgrade();
@@ -410,6 +485,19 @@ hash_digest transaction::sequences_hash() const {
     ///////////////////////////////////////////////////////////////////////////
 
     return hash;
+#else
+    {
+        std::shared_lock lock(hash_mutex_);
+        if (sequences_hash_) {
+            return *sequences_hash_;
+        }
+    }
+    std::unique_lock lock(hash_mutex_);
+    if ( ! sequences_hash_) {
+        sequences_hash_ = std::make_shared<hash_digest>(to_sequences(*this));
+    }
+    return *sequences_hash_;
+#endif
 }
 
 // Utilities.
@@ -438,14 +526,14 @@ void transaction::recompute_hash() {
 
 // Returns max_uint64 in case of overflow.
 uint64_t transaction::total_input_value() const {
-    uint64_t value;
 
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
 
     if (total_input_value_ != std::nullopt) {
-        value = total_input_value_.value();
+        auto const value = total_input_value_.value();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;
@@ -454,24 +542,37 @@ uint64_t transaction::total_input_value() const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    value = chain::total_input_value(*this);
+    auto const value = chain::total_input_value(*this);
     total_input_value_ = value;
     mutex_.unlock();
     ///////////////////////////////////////////////////////////////////////////
 
     return value;
+#else
+    {
+        std::shared_lock lock(mutex_);
+        if (total_input_value_ != std::nullopt) {
+            return total_input_value_.value();
+        }
+    }
+    std::unique_lock lock(mutex_);
+    if (total_input_value_ == std::nullopt) {
+        total_input_value_ = chain::total_input_value(*this);
+    }
+    return total_input_value_.value();
+#endif
 }
 
 // Returns max_uint64 in case of overflow.
 uint64_t transaction::total_output_value() const {
-    uint64_t value;
 
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
 
     if (total_output_value_ != std::nullopt) {
-        value = total_output_value_.value();
+        auto const value = total_output_value_.value();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;
@@ -480,12 +581,26 @@ uint64_t transaction::total_output_value() const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    value = chain::total_output_value(*this);
+    auto const value = chain::total_output_value(*this);
     total_output_value_ = value;
     mutex_.unlock();
     ///////////////////////////////////////////////////////////////////////////
 
     return value;
+#else
+    {
+        std::shared_lock lock(mutex_);
+        if (total_output_value_ != std::nullopt) {
+            return total_output_value_.value();
+        }
+    }
+
+    std::unique_lock lock(mutex_);
+    if (total_output_value_ == std::nullopt) {
+        total_output_value_ = chain::total_output_value(*this);
+    }
+    return total_output_value_.value();
+#endif
 }
 
 uint64_t transaction::fees() const {

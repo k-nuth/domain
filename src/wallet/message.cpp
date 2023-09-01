@@ -88,7 +88,7 @@ bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed, uint8_
         recovery_id -= magic_differential;
     }
 
-    out_recovery_id = safe_to_unsigned<uint8_t>(recovery_id);
+    out_recovery_id = *safe_to_unsigned<uint8_t>(recovery_id);
     return true;
 }
 

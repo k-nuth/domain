@@ -13,6 +13,7 @@ template <typename T>
 class hash_memoizer {
 public:
     hash_digest hash() const {
+#if ! defined(__EMSCRIPTEN__)
         ///////////////////////////////////////////////////////////////////////////
         // Critical Section
         mutex_.lock_upgrade();
@@ -28,9 +29,13 @@ public:
         mutex_.unlock_upgrade();
         ///////////////////////////////////////////////////////////////////////////
         return hash;
+#else
+        return bitcoin_hash(derived().to_data());
+#endif
     }
 
     void invalidate() const {
+#if ! defined(__EMSCRIPTEN__)
         ///////////////////////////////////////////////////////////////////////////
         // Critical Section
         mutex_.lock_upgrade();
@@ -45,14 +50,17 @@ public:
 
         mutex_.unlock_upgrade();
         ///////////////////////////////////////////////////////////////////////////
+#endif
     }
 
 private:
     T& derived() {return *static_cast<T*>(this);}
     T const& derived() const {return *static_cast<T const*>(this);}
 
+#if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
+#endif
 };
 
 } // namespace kth::domain::chain

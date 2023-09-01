@@ -447,8 +447,10 @@ if (${CURRENCY} STREQUAL "LTC")
 endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
-# target_link_libraries(${PROJECT_NAME} PUBLIC Boost::program_options)
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
+
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
+endif()
 
 _group_sources(${PROJECT_NAME} "${CMAKE_CURRENT_LIST_DIR}")
 

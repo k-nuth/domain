@@ -654,7 +654,7 @@ indexes locator_heights(size_t top) {
 
 size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
     auto const inputs = [](size_t total, transaction const& tx) {
-        return safe_add(total, tx.inputs().size());
+        return *safe_add(total, tx.inputs().size());
     };
 
     auto const& txs = blk.transactions();
@@ -676,7 +676,7 @@ bool is_segregated(block_basis const& blk) {
 // Full block serialization is always canonical encoding.
 size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
     auto const sum = [witness](size_t total, transaction const& tx) {
-        return safe_add(total, tx.serialized_size(true, witness_val(witness)));
+        return *safe_add(total, tx.serialized_size(true, witness_val(witness)));
     };
 
     auto const& txs = blk.transactions();

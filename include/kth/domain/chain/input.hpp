@@ -11,6 +11,10 @@
 #include <memory>
 #include <vector>
 
+#if defined(__EMSCRIPTEN__)
+#include <shared_mutex>
+#endif
+
 #include <kth/domain/chain/input_basis.hpp>
 #include <kth/domain/chain/output_point.hpp>
 #include <kth/domain/chain/script.hpp>
@@ -69,7 +73,13 @@ protected:
 private:
     using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
     addresses_ptr addresses_cache() const;
+
+#if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex mutex_;
+#else
+    mutable std::shared_mutex mutex_;
+#endif
+
     mutable addresses_ptr addresses_;
 };
 

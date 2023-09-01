@@ -34,7 +34,7 @@ merkle_block::merkle_block(chain::header const& header, size_t total_transaction
 // for the transaction count and invalidating on deserialization and construct.
 merkle_block::merkle_block(chain::block const& block)
     : merkle_block(block.header(),
-                   safe_unsigned<uint32_t>(block.transactions().size()),
+                   *safe_unsigned<uint32_t>(block.transactions().size()),
                    block.to_hashes(),
                    {}) {
 }
