@@ -251,7 +251,12 @@ private:
     // These are protected by mutex.
     mutable bool cached_{false};
     mutable operation::list operations_;
+
+#if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex mutex_;
+#else
+    mutable shared_mutex mutex_;
+#endif
 };
 
 } // namespace kth::domain::chain

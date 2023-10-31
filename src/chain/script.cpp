@@ -266,6 +266,7 @@ operation::iterator script::end() const {
 
 // protected
 operation::list const& script::operations() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
@@ -284,7 +285,19 @@ operation::list const& script::operations() const {
 
     mutex_.unlock();
     ///////////////////////////////////////////////////////////////////////////
-
+#else
+    {
+        std::shared_lock lock(mutex_);
+        if (cached_) {
+            return operations_;
+        }
+    }
+    std::unique_lock lock(mutex_);
+    if ( ! cached_) {
+        operations_ = chain::operations(*this);
+        cached_ = true;
+    }
+#endif
     return operations_;
 }
 

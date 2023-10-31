@@ -88,9 +88,8 @@ public:
     void to_data(W& sink, bool wire = true, bool witness = false) const {
         if ( ! wire) {
             auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
-            sink.write_4_bytes_little_endian(height32);
+            sink.write_4_bytes_little_endian(*height32);
         }
-
         output_basis::to_data(sink, wire, witness);
     }
 
@@ -124,7 +123,13 @@ protected:
 private:
     using addresses_ptr = std::shared_ptr<wallet::payment_address::list>;
     addresses_ptr addresses_cache() const;
+
+#if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex mutex_;
+#else
+    mutable shared_mutex mutex_;
+#endif
+
     mutable addresses_ptr addresses_;
 };
 

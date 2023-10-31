@@ -28,16 +28,6 @@ using namespace kth::domain::machine;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// input::input(output_point&& previous_output, chain::script&& script, uint32_t sequence)
-//     : previous_output_(std::move(previous_output)),
-//       script_(std::move(script)),
-//       sequence_(sequence) {}
-
-// input::input(output_point const& previous_output, chain::script const& script, uint32_t sequence)
-//     : previous_output_(previous_output),
-//       script_(script),
-//       sequence_(sequence) {}
-
 // Private cache access for copy/move construction.
 input::addresses_ptr input::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
@@ -47,33 +37,6 @@ input::addresses_ptr input::addresses_cache() const {
     return addresses_;
     ///////////////////////////////////////////////////////////////////////////
 }
-
-// #if ! defined(KTH_SEGWIT_ENABLED)
-// input::input(output_point const& previous_output, chain::script const& script, chain::witness const& /*witness*/, uint32_t sequence)
-//     : previous_output_(previous_output)
-//     , script_(script)
-// #else
-// input::input(output_point const& previous_output, chain::script const& script, chain::witness const& witness, uint32_t sequence)
-//     : previous_output_(previous_output)
-//     , script_(script)
-//     , witness_(witness)
-// #endif
-//     , sequence_(sequence)
-// {}
-
-// #if ! defined(KTH_SEGWIT_ENABLED)
-// input::input(output_point&& previous_output, chain::script&& script, chain::witness&& /*witness*/, uint32_t sequence)
-//     : previous_output_(std::move(previous_output))
-//     , script_(std::move(script))
-// #else
-// input::input(output_point&& previous_output, chain::script&& script, chain::witness&& witness, uint32_t sequence)
-//     : previous_output_(std::move(previous_output))
-//     , script_(std::move(script))
-//     , witness_(std::move(witness))
-// #endif
-//     , sequence_(sequence)
-// {}
-
 
 input::input(input const& x)
     : input_basis(x)
@@ -99,20 +62,6 @@ input& input::operator=(input&& x) noexcept {
     addresses_ = x.addresses_cache();
     return *this;
 }
-
-// bool input::operator==(input const& x) const {
-//     return (sequence_ == x.sequence_)
-//         && (previous_output_ == x.previous_output_)
-//         && (script_ == x.script_)
-// #if defined(KTH_SEGWIT_ENABLED)
-//         && (witness_ == x.witness_)
-// #endif
-//         ;
-// }
-
-// bool input::operator!=(input const& x) const {
-//     return !(*this == x);
-// }
 
 
 // Accessors.
@@ -142,6 +91,7 @@ void input::set_witness(chain::witness&& value) {
 
 // protected
 void input::invalidate_cache() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
@@ -156,6 +106,18 @@ void input::invalidate_cache() const {
 
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
+
+#else
+    {
+        std::shared_lock lock(mutex_);
+        if ( ! addresses_) {
+            return;
+        }
+    }
+
+    std::unique_lock lock(mutex_);
+    addresses_.reset();
+#endif
 }
 
 payment_address input::address() const {
@@ -164,6 +126,7 @@ payment_address input::address() const {
 }
 
 payment_address::list input::addresses() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
@@ -181,6 +144,22 @@ payment_address::list input::addresses() const {
     auto addresses = *addresses_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
+#else
+    {
+        std::shared_lock lock(mutex_);
+
+        if (addresses_) {
+            return *addresses_;
+        }
+    }
+
+    std::unique_lock lock(mutex_);
+    if ( ! addresses_) {
+        addresses_ = std::make_shared<payment_address::list>(payment_address::extract_input(script()));
+    }
+
+    auto addresses = *addresses_;
+#endif
 
     return addresses;
 }

@@ -168,7 +168,12 @@ private:
     mutable std::optional<size_t> total_inputs_;
     mutable std::optional<size_t> base_size_;
     mutable std::optional<size_t> total_size_;
+
+#if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex mutex_;
+#else
+    mutable shared_mutex mutex_;
+#endif
 };
 
 } // namespace kth::domain::chain

@@ -110,7 +110,7 @@ public:
     void to_data(uint32_t /*version*/, W& sink) const {
         header_.to_data(sink);
 
-        auto const total32 = safe_unsigned<uint32_t>(total_transactions_);
+        auto const total32 = *safe_unsigned<uint32_t>(total_transactions_);
         sink.write_4_bytes_little_endian(total32);
         sink.write_variable_little_endian(hashes_.size());
 

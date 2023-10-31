@@ -123,6 +123,7 @@ void output::set_script(chain::script&& value) {
 
 // protected
 void output::invalidate_cache() const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
@@ -137,7 +138,19 @@ void output::invalidate_cache() const {
 
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
+#else
+    {
+        std::shared_lock lock(mutex_);
+        if ( ! addresses_) {
+            return;
+        }
+    }
+
+    std::unique_lock lock(mutex_);
+    addresses_.reset();
+#endif
 }
+
 payment_address output::address(bool testnet /*= false*/) const {
     if (testnet) {
         return address(wallet::payment_address::testnet_p2kh, wallet::payment_address::testnet_p2sh);
@@ -151,6 +164,7 @@ payment_address output::address(uint8_t p2kh_version, uint8_t p2sh_version) cons
 }
 
 payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_version) const {
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
@@ -166,7 +180,20 @@ payment_address::list output::addresses(uint8_t p2kh_version, uint8_t p2sh_versi
     auto addresses = *addresses_;
     mutex_.unlock_upgrade();
     ///////////////////////////////////////////////////////////////////////////
+#else
+    {
+        std::shared_lock lock(mutex_);
+        if (addresses_) {
+            return *addresses_;
+        }
+    }
 
+    std::unique_lock lock(mutex_);
+    if ( ! addresses_) {
+        addresses_ = std::make_shared<payment_address::list>(payment_address::extract_output(script(), p2kh_version, p2sh_version));
+    }
+    auto addresses = *addresses_;
+#endif
     return addresses;
 }
 

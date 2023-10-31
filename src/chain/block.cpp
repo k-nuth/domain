@@ -246,6 +246,7 @@ data_chunk block::to_data(bool witness) const {
 size_t block::serialized_size(bool witness) const {
     size_t value;
 
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
@@ -267,6 +268,22 @@ size_t block::serialized_size(bool witness) const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#else
+    {
+        std::shared_lock lock(mutex_);
+
+        if (witness_val(witness) && total_size_ != std::nullopt) {
+            return total_size_.value();
+        }
+
+        if ( ! witness_val(witness) && base_size_ != std::nullopt) {
+            return base_size_.value();
+        }
+    }
+
+    std::unique_lock lock(mutex_);
+#endif
+
     value = chain::serialized_size(*this, witness);
 
     if (witness_val(witness)) {
@@ -275,8 +292,10 @@ size_t block::serialized_size(bool witness) const {
         base_size_ = value;
     }
 
+#if ! defined(__EMSCRIPTEN__)
     mutex_.unlock();
     ///////////////////////////////////////////////////////////////////////////
+#endif
 
     return value;
 }
@@ -423,14 +442,13 @@ size_t block::signature_operations() const {
 }
 
 size_t block::total_inputs(bool with_coinbase) const {
-    size_t value;
-
+#if ! defined(__EMSCRIPTEN__)
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
     mutex_.lock_upgrade();
 
     if (total_inputs_ != std::nullopt) {
-        value = total_inputs_.value();
+        auto const value = total_inputs_.value();
         mutex_.unlock_upgrade();
         //---------------------------------------------------------------------
         return value;
@@ -439,10 +457,26 @@ size_t block::total_inputs(bool with_coinbase) const {
     mutex_.unlock_upgrade_and_lock();
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    value = chain::total_inputs(*this, with_coinbase);
+    auto const value = chain::total_inputs(*this, with_coinbase);
     total_inputs_ = value;
     mutex_.unlock();
     ///////////////////////////////////////////////////////////////////////////
+#else
+    {
+        std::shared_lock lock(mutex_);
+
+        if (total_inputs_) {
+            return total_inputs_.value();
+        }
+    }
+
+    std::unique_lock lock(mutex_);
+    if ( ! total_inputs_) {
+        total_inputs_ = chain::total_inputs(*this, with_coinbase);
+    }
+
+    auto value = total_inputs_.value();
+#endif
 
     return value;
 }

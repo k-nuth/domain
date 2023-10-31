@@ -13,7 +13,7 @@ namespace kth::domain::chain {
 
 uint64_t points_value::value() const {
     auto const sum = [](uint64_t total, point_value const& point) {
-        return safe_add(total, point.value());
+        return *safe_add(total, point.value());
     };
 
     return std::accumulate(points.begin(), points.end(), uint64_t(0), sum);

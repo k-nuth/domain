@@ -264,13 +264,23 @@ private:
     mutable hash_ptr outputs_hash_;
     mutable hash_ptr inpoints_hash_;
     mutable hash_ptr sequences_hash_;
+
+#if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex hash_mutex_;
+#else
+    mutable shared_mutex hash_mutex_;
+#endif
 
     // These share a mutex as they are not expected to contend.
     mutable std::optional<uint64_t> total_input_value_;
     mutable std::optional<uint64_t> total_output_value_;
     mutable std::optional<bool> segregated_;
+
+#if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex mutex_;
+#else
+    mutable shared_mutex mutex_;
+#endif
 };
 
 #if ! defined(KTH_SEGWIT_ENABLED)
