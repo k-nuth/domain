@@ -87,8 +87,8 @@ public:
     template <typename W>
     void to_data(W& sink, bool wire = true, bool witness = false) const {
         if ( ! wire) {
-            auto height32 = safe_unsigned<uint32_t>(validation.spender_height);
-            sink.write_4_bytes_little_endian(*height32);
+            auto const height32 = *safe_unsigned<uint32_t>(validation.spender_height);
+            sink.write_4_bytes_little_endian(height32);
         }
         output_basis::to_data(sink, wire, witness);
     }

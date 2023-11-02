@@ -305,15 +305,15 @@ TEST_CASE("limits  safe signed  min int64 to int32  throws range", "[limits]") {
 //-----------------------------------------------------------------------------
 
 TEST_CASE("limits  safe unsigned  min uint32 to uint32  min uint32", "[limits]") {
-    REQUIRE(safe_unsigned<uint32_t>(min_uint32) == min_uint32);
+    REQUIRE(*safe_unsigned<uint32_t>(min_uint32) == min_uint32);
 }
 
 TEST_CASE("limits  safe unsigned  max uint32 to uint32  max uint32", "[limits]") {
-    REQUIRE(safe_unsigned<uint32_t>(max_uint32) == max_uint32);
+    REQUIRE(*safe_unsigned<uint32_t>(max_uint32) == max_uint32);
 }
 
 TEST_CASE("limits  safe unsigned  max uint64 to uint32  throws range", "[limits]") {
-    REQUIRE_THROWS_AS(safe_unsigned<uint32_t>(max_uint64), std::range_error);
+    REQUIRE_THROWS_AS(*safe_unsigned<uint32_t>(max_uint64), std::range_error);
 }
 
 // safe_to_signed
