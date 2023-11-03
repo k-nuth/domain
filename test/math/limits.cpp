@@ -200,23 +200,23 @@ TEST_CASE("limits  floor subtract  half uint64 minus max uint64  min uint64", "[
 //-----------------------------------------------------------------------------
 
 TEST_CASE("limits  safe add  size t minimum plus minimum  minimum", "[limits]") {
-    REQUIRE(safe_add(minimum, minimum) == minimum);
+    REQUIRE(*safe_add(minimum, minimum) == minimum);
 }
 
 TEST_CASE("limits  safe add  size t maximum plus maximum  throws overflow", "[limits]") {
-    REQUIRE_THROWS_AS(safe_add(maximum, maximum), std::overflow_error);
+    REQUIRE_THROWS_AS(*safe_add(maximum, maximum), std::overflow_error);
 }
 
 TEST_CASE("limits  safe add  size t minimum plus maximum  maximum", "[limits]") {
-    REQUIRE(safe_add(minimum, maximum) == maximum);
+    REQUIRE(*safe_add(minimum, maximum) == maximum);
 }
 
 TEST_CASE("limits  safe add  size t maximum plus minimum  maximum", "[limits]") {
-    REQUIRE(safe_add(maximum, minimum) == maximum);
+    REQUIRE(*safe_add(maximum, minimum) == maximum);
 }
 
 TEST_CASE("limits  safe add  size t half plus maximum  throws overflow", "[limits]") {
-    REQUIRE_THROWS_AS(safe_add(half, maximum), std::overflow_error);
+    REQUIRE_THROWS_AS(*safe_add(half, maximum), std::overflow_error);
 }
 
 // safe_subtract

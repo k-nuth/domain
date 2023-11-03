@@ -92,7 +92,7 @@ bool compact_block::from_block(message::block const& block) {
     reset();
 
     header_ = block.header();
-    nonce_ = pseudo_random(1, max_uint64);
+    nonce_ = pseudo_random_broken_do_not_use(1, max_uint64);
 
     prefilled_transaction::list prefilled_list{prefilled_transaction{0, block.transactions()[0]}};
 
