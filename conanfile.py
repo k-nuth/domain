@@ -130,7 +130,7 @@ class KnuthDomainConan(KnuthConanFileV2):
         self.cpp_info.includedirs = ['include']
         self.cpp_info.libs = ["domain"]
 
-        if self.settings.os == "Linux" or self.settings.os == "FreeBSD":
+        if self.settings.os == "Linux" or self.settings.os == "FreeBSD" or self.settings.os == "Emscripten":
             self.cpp_info.system_libs.append("pthread")
 
         if self.settings.os == "Windows" and self.settings.compiler == "gcc": # MinGW

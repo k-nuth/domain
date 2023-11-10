@@ -450,7 +450,14 @@ target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
+else()
+  target_compile_options(${PROJECT_NAME} PUBLIC "-pthread")
+  target_link_options(${PROJECT_NAME} PUBLIC "-pthread")
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+                          COMPILE_FLAGS "-pthread"
+                          LINK_FLAGS "-pthread")
 endif()
+
 
 _group_sources(${PROJECT_NAME} "${CMAKE_CURRENT_LIST_DIR}")
 
