@@ -65,7 +65,7 @@ public:
         // The max_script_size and max_push_data_size constants limit
         // evaluation, but not all scripts evaluate, so use max_block_size
         // to guard memory allocation here.
-        if (size > get_max_block_size_network_independent()) {
+        if (size > static_absolute_max_block_size()) {
             source.invalidate();
         } else {
             data_ = source.read_bytes(size);

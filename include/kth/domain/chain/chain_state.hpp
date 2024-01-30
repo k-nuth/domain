@@ -10,12 +10,14 @@
 #include <deque>
 #include <memory>
 
+#include <kth/domain/chain/abla.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/infrastructure/config/checkpoint.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+
 
 namespace kth::domain::chain {
 
@@ -111,6 +113,10 @@ public:
             uint32_t retarget;
             timestamps ordered;
         } timestamp;
+
+#if defined(KTH_CURRENCY_BCH)
+        std::optional<abla::state> abla_state_opt;
+#endif
     };
 
 #if defined(KTH_CURRENCY_BCH)
@@ -128,6 +134,7 @@ public:
 #if defined(KTH_CURRENCY_BCH)
                 , assert_anchor_block_info_t const& assert_anchor_block_info
                 , uint32_t asert_half_life
+                , abla::config const& abla_config
                 // , euclid_t euclid_activation_time
                 // , pisano_t pisano_activation_time
                 // , mersenne_t mersenne_activation_time
@@ -177,6 +184,17 @@ public:
 
     [[nodiscard]]
     uint32_t asert_half_life() const;
+
+    [[nodiscard]]
+    uint64_t dynamic_max_block_size() const;
+
+    [[nodiscard]]
+    uint64_t dynamic_max_block_sigops() const;
+
+    [[nodiscard]]
+    uint64_t dynamic_max_block_sigchecks() const;
+
+
 
     // [[nodiscard]]
     // euclid_t euclid_activation_time() const;
@@ -268,7 +286,6 @@ public:
 
 #endif  //KTH_CURRENCY_BCH
 
-
     static
     uint32_t median_time_past(data const& values, size_t last_n = median_time_past_interval);
 
@@ -311,7 +328,6 @@ protected:
     );
 
 private:
-    // void adjust_assert_anchor_block_info();
 
     static
     size_t bits_count(size_t height, uint32_t forks);
@@ -464,6 +480,7 @@ private:
 //TODO(fernando): inherit BCH data and functions for a specific BCH class
 #if defined(KTH_CURRENCY_BCH)
     uint32_t const asert_half_life_;
+    abla::config abla_config_;
 
     // euclid_t const euclid_activation_time_;
     // pisano_t const pisano_activation_time_;

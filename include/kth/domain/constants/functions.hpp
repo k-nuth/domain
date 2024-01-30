@@ -25,12 +25,12 @@ constexpr uint32_t work_limit(bool retarget = true) noexcept {
 }
 
 constexpr inline
-size_t get_max_block_size(domain::config::network network) noexcept {
+size_t static_max_block_size(domain::config::network network) noexcept {
 #if defined(KTH_CURRENCY_BCH)
-    if (network == domain::config::network::testnet4) return max_block_size_testnet4;
-    if (network == domain::config::network::scalenet) return max_block_size_scalenet;
-    if (network == domain::config::network::chipnet) return max_block_size_chipnet;
-    return max_block_size_new;
+    if (network == domain::config::network::testnet4) return max_block_size::testnet4;
+    if (network == domain::config::network::scalenet) return max_block_size::scalenet;
+    if (network == domain::config::network::chipnet) return max_block_size::chipnet;
+    return max_block_size::mainnet_new;
 #else
     return max_block_size;
 #endif  //KTH_CURRENCY_BCH
@@ -45,21 +45,30 @@ size_t get_max_payload_size(domain::config::network network) noexcept {
 }
 
 constexpr inline
-size_t get_max_block_size_network_independent() noexcept {
+size_t static_max_block_size_network_independent() noexcept {
 #if defined(KTH_CURRENCY_BCH)
-    return max_block_size_new;
+    return max_block_size::mainnet_new;
 #else
     return max_block_size;
 #endif  //KTH_CURRENCY_BCH
 }
 
 constexpr inline
-size_t get_max_block_sigops(domain::config::network network) noexcept {
+size_t static_absolute_max_block_size() noexcept {
 #if defined(KTH_CURRENCY_BCH)
-    if (network == domain::config::network::testnet4) return max_block_sigops_testnet4;
-    if (network == domain::config::network::scalenet) return max_block_sigops_scalenet;
-    if (network == domain::config::network::chipnet) return max_block_sigops_chipnet;
-    return max_block_sigops_new;
+    return 2'000'000'000;
+#else
+    return max_block_size;
+#endif
+}
+
+constexpr inline
+size_t static_max_block_sigops(domain::config::network network) noexcept {
+#if defined(KTH_CURRENCY_BCH)
+    if (network == domain::config::network::testnet4) return max_block_sigops::testnet4;
+    if (network == domain::config::network::scalenet) return max_block_sigops::scalenet;
+    if (network == domain::config::network::chipnet) return max_block_sigops::chipnet;
+    return max_block_sigops::mainnet_new;
 #else
     return max_block_sigops;
 #endif  //KTH_CURRENCY_BCH

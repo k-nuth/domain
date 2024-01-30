@@ -44,7 +44,7 @@ bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
     auto const count = source.read_size_little_endian();
 
     // Guard against potential for arbitary memory allocation.
-    if (count > get_max_block_size_network_independent()) {
+    if (count > static_absolute_max_block_size()) {
         source.invalidate();
     } else {
         puts.resize(count);

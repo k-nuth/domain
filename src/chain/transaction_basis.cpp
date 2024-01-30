@@ -517,7 +517,9 @@ code transaction_basis::accept(chain_state const& state, bool is_segregated, boo
         // bip141 discounts segwit sigops by increasing limit and legacy weight.
         auto const max_sigops = bip141 ? max_fast_sigops : get_max_block_sigops(network);
 #else
-        auto const max_sigops = get_max_block_sigops(network);
+        auto const max_sigops = state.is_lobachevski_enabled() ?
+            state.dynamic_max_block_sigops() :
+            static_max_block_sigops(network);
 #endif
 
         if (transaction_pool && signature_operations(bip16, bip141) > max_sigops) {
