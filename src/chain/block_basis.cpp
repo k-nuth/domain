@@ -408,7 +408,8 @@ bool block_basis::is_valid_witness_commitment() const {
 #endif // KTH_SEGWIT_ENABLED
 
 
-code block_basis::check_transactions(size_t max_block_size) const {
+code block_basis::check_transactions() const {
+    constexpr size_t max_block_size = static_absolute_max_block_size();
     code ec;
     for (auto const& tx : transactions_) {
         if ((ec = tx.check(max_block_size, false))) {
@@ -442,7 +443,7 @@ code block_basis::connect_transactions(chain_state const& state) const {
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code block_basis::check(size_t serialized_size_false, size_t max_block_size) const {
+code block_basis::check(size_t serialized_size_false) const {
     code ec;
 
     if ((ec = header_.check())) {
@@ -451,7 +452,7 @@ code block_basis::check(size_t serialized_size_false, size_t max_block_size) con
         // TODO(legacy): relates to total of tx.size(false) (pool cache). -> no witness size
     }
 
-    if (serialized_size_false > max_block_size) {
+    if (serialized_size_false > static_absolute_max_block_size()) {
         return error::block_size_limit;
     }
 
@@ -499,7 +500,7 @@ code block_basis::check(size_t serialized_size_false, size_t max_block_size) con
         ////    return error::block_legacy_sigop_limit;
     }
 
-    return check_transactions(max_block_size);
+    return check_transactions();
 }
 
 // These checks assume that prevout caching is completed on all tx.inputs.
@@ -527,13 +528,18 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
     }
 
 #if defined(KTH_CURRENCY_BCH)
-    //Note(kth): In Bitcoin Cash, block size check is now dependent on the Blockchain state.
-    if ( ! state.is_pythagoras_enabled() && serialized_size > max_block_size::mainnet_old) {
-        return error::block_size_limit;
-    }
-
-    if ( ! state.is_lobachevski_enabled() && serialized_size > state.dynamic_max_block_size()) {
-        return error::block_size_limit;
+    if (state.is_lobachevski_enabled()) {
+        if (serialized_size > state.dynamic_max_block_size()) {
+            return error::block_size_limit;
+        }
+    } else if (state.is_pythagoras_enabled()) {
+        if (serialized_size > static_max_block_size(state.network())) {
+            return error::block_size_limit;
+        }
+    } else {
+        if (serialized_size > max_block_size::mainnet_old) {
+            return error::block_size_limit;
+        }
     }
 #endif
 

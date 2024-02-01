@@ -1318,6 +1318,10 @@ size_t chain_state::height() const {
     return data_.height;
 }
 
+abla::state const& chain_state::abla_state() const {
+    return data_.abla_state;
+}
+
 uint32_t chain_state::enabled_forks() const {
     return active_.forks;
 }
@@ -1344,8 +1348,12 @@ uint32_t chain_state::asert_half_life() const {
 }
 
 uint64_t chain_state::dynamic_max_block_size() const {
-    abla::state const st(abla_config_, abla::DEFAULT_CONSENSUS_BLOCK_SIZE);
-    return block_size_limit(st);
+    uint64_t const static_size = static_max_block_size(network());
+    if ( ! is_lobachevski_enabled()) {
+        return static_size;
+    }
+    uint64_t const dynamic_size = block_size_limit(data_.abla_state);
+    return std::max(static_size, dynamic_size);
 }
 
 uint64_t chain_state::dynamic_max_block_sigops() const {

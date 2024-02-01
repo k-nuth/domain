@@ -115,7 +115,7 @@ public:
         } timestamp;
 
 #if defined(KTH_CURRENCY_BCH)
-        std::optional<abla::state> abla_state_opt;
+        abla::state abla_state;
 #endif
     };
 
@@ -165,6 +165,9 @@ public:
 
     [[nodiscard]]
     size_t height() const;
+
+    [[nodiscard]]
+    abla::state const& abla_state() const;
 
     [[nodiscard]]
     uint32_t enabled_forks() const;

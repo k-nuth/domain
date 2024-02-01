@@ -204,6 +204,10 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("0000000056087dee73fb66178ca70da89dfd0be098b1a63cf6fe93934cd04c78", 121957);
         checkpoints.emplace_back("000000000363cd56e49a46684cec1d99854c4aae662a6faee0df4c9a49dc8a33", 122396);
         checkpoints.emplace_back("0000000010e506eeb528dd8238947c6fcdf8d752ece66517eea778650600edae", 128042);
+        checkpoints.emplace_back("000000009788ecce39b046caab3cf0f72e8c5409df23454679dbdcae2bd4dded", 148000);
+
+        A block significantly after Upgrade 10 activated (which activated on Nov. 15, 2023)
+        checkpoints.emplace_back("000000003c37cc0372a5b9ccacca921786bbfc699722fc41e9fdbb1de4146ef1", 178140);
 
     } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(60);

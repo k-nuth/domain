@@ -238,9 +238,6 @@ code header_basis::check(hash_digest const& hash, bool retarget) const {
     return error::success;
 }
 
-// code header_basis::check(bool retarget) const {
-// }
-
 code header_basis::accept(chain_state const& state, hash_digest const& hash) const {
     if (bits_ != state.work_required()) {
         return error::incorrect_proof_of_work;
@@ -264,8 +261,5 @@ code header_basis::accept(chain_state const& state, hash_digest const& hash) con
 
     return error::success;
 }
-
-// code header_basis::accept(chain_state const& state) const {
-// }
 
 } // namespace kth::domain::chain

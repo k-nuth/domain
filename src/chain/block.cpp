@@ -518,9 +518,9 @@ bool block::is_segregated() const {
 //-----------------------------------------------------------------------------
 
 // These checks are self-contained; blockchain (and so version) independent.
-code block::check(size_t max_block_size) const {
+code block::check() const {
     validation.start_check = asio::steady_clock::now();
-    return block_basis::check(serialized_size(false), max_block_size);
+    return block_basis::check(serialized_size(false));
 }
 
 code block::accept(bool transactions) const {
