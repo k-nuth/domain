@@ -21,12 +21,6 @@ constexpr size_t bch_daa_cw_144_retarget_algorithm = 147;
 constexpr size_t chain_state_timestamp_count = bch_daa_cw_144_retarget_algorithm;
 constexpr size_t bch_daa_eda_blocks = 6 + 11;
 
-
-// constexpr size_t max_block_size_old = 8000000;   //eight million bytes
-// constexpr size_t max_block_size_new = 32000000;  //thirty two million bytes
-// constexpr size_t max_block_size_testnet4 = 2000000;   //2 million bytes
-// constexpr size_t max_block_size_scalenet = 256000000;   //256 million bytes
-// constexpr size_t max_block_size_chipnet = 2000000;   //2 million bytes
 namespace max_block_size {
 constexpr size_t mainnet_old = 8'000'000;  // 8 million bytes
 constexpr size_t mainnet_new = 32'000'000; // 32 million bytes
@@ -36,13 +30,6 @@ constexpr size_t testnet4 = 2'000'000;     // 2 million bytes
 constexpr size_t scalenet = 256'000'000;   // 256 million bytes
 constexpr size_t chipnet = 2'000'000;      // 2 million bytes
 } // namespace block_size
-
-
-// constexpr size_t max_block_sigops_old = max_block_size_old / max_sigops_factor;
-// constexpr size_t max_block_sigops_new = max_block_size_new / max_sigops_factor;
-// constexpr size_t max_block_sigops_testnet4 = max_block_size_testnet4 / max_sigops_factor;
-// constexpr size_t max_block_sigops_scalenet = max_block_size_scalenet / max_sigops_factor;
-// constexpr size_t max_block_sigops_chipnet = max_block_size_chipnet / max_sigops_factor;
 
 namespace max_block_sigops {
 constexpr size_t mainnet_old = max_block_size::mainnet_old / max_sigops_factor;
@@ -77,7 +64,6 @@ constexpr size_t scalenet_bip34_freeze = 2;
 constexpr size_t chipnet_bip65_freeze = 3;
 constexpr size_t chipnet_bip66_freeze = 4;
 constexpr size_t chipnet_bip34_freeze = 2;
-
 
 static
 const infrastructure::config::checkpoint testnet4_bip34_active_checkpoint {
