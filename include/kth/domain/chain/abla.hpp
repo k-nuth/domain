@@ -29,7 +29,6 @@ std::optional<uint64_t> muldiv(uint64_t x, uint64_t y, uint64_t z) {
         return std::nullopt;
     }
     uint128_t const res = (uint128_t(x) * uint128_t(y)) / uint128_t(z);
-    // assert(res <= uint128_t(std::numeric_limits<uint64_t>::max()));
     if (res > uint128_t(std::numeric_limits<uint64_t>::max())) {
         return std::nullopt;
     }
@@ -38,6 +37,9 @@ std::optional<uint64_t> muldiv(uint64_t x, uint64_t y, uint64_t z) {
 
 #else
 
+#error "You need to have __int128 support to use this library"
+
+// Not tested yet
 // std::optional<uint64_t> muldiv(uint64_t x, uint64_t y, uint64_t z) {
 //     if (z == 0) {
 //         return std::nullopt;
@@ -73,26 +75,6 @@ std::optional<uint64_t> muldiv(uint64_t x, uint64_t y, uint64_t z) {
 
 //     return result;
 // }
-
-
-int
-mulmuldiv(int a, int b, int c)
-{
-    assert(c != 0);
-    int sa = a >= 0 ? 1 : -1;
-    int sb = b >= 0 ? 1 : -1;
-    int sc = c >= 0 ? 1 : -1;
-    auto ua = static_cast<unsigned>(a);
-    auto ub = static_cast<unsigned>(b);
-    auto uc = static_cast<unsigned>(c);
-    auto d = std::gcd(ua, uc);
-    ua /= d;
-    uc /= d;
-    d = std::gcd(ub, uc);
-    ub /= d;
-    uc /= d;
-    return static_cast<int>(ua * ub / uc) * sa * sb * sc;
-}
 
 #endif // HAVE_INT128
 
@@ -243,7 +225,6 @@ uint64_t block_size_limit(state const& st) {
 inline constexpr
 std::optional<state> next(state const& st, config const& cfg, uint64_t next_block_size) {
     state ret;
-    // ret.block_height = st.block_height + 1ull;
     ret.block_size = next_block_size;  // save the blocksize for the next block to its State
 
     // For safety: we clamp this current block's blocksize to the maximum value this algorithm expects. Normally this
@@ -256,7 +237,6 @@ std::optional<state> next(state const& st, config const& cfg, uint64_t next_bloc
     // control function
 
     // zeta * x_{n-1}
-    // auto const amplified_current_block_size_opt = muldiv(cfg.zeta_xB7, current_block_size, cfg.B7);
     auto const amplified_current_block_size_opt = muldiv(cfg.zeta_xB7, clamped_block_size, cfg.B7);
     if ( ! amplified_current_block_size_opt) {
         return std::nullopt;
