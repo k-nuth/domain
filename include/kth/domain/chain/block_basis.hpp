@@ -79,7 +79,7 @@ public:
         auto const count = source.read_size_little_endian();
 
         // Guard against potential for arbitary memory allocation.
-        if (count > get_max_block_size_network_independent()) {
+        if (count > static_absolute_max_block_size()) {
             source.invalidate();
         } else {
             transactions_.resize(count);
@@ -215,10 +215,10 @@ public:
     bool is_valid_merkle_root() const;
 
     [[nodiscard]]
-    code check(size_t serialized_size_false, size_t max_block_size) const;
+    code check(size_t serialized_size_false) const;
 
     [[nodiscard]]
-    code check_transactions(size_t max_block_size) const;
+    code check_transactions() const;
 
     [[nodiscard]]
 #if defined(KTH_SEGWIT_ENABLED)

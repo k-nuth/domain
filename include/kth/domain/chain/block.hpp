@@ -151,7 +151,7 @@ public:
     bool is_segregated() const;
 #endif
 
-    code check(size_t max_block_size) const;
+    code check() const;
     code accept(bool transactions = true) const;
     code accept(chain_state const& state, bool transactions = true) const;
     code connect() const;

@@ -10,6 +10,7 @@
 #include <kth/domain/version.hpp>
 #include <kth/domain/multi_crypto_settings.hpp>
 
+#include <kth/domain/chain/abla.hpp>
 #include <kth/domain/chain/block.hpp>
 #include <kth/domain/chain/chain_state.hpp>
 #include <kth/domain/common.hpp>

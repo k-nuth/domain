@@ -45,6 +45,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
 #if defined(KTH_CURRENCY_BCH)
     , assert_anchor_block_info_t const& assert_anchor_block_info
     , uint32_t asert_half_life
+    , abla::config const& abla_config
     // , euclid_t euclid_activation_time
     // , pisano_t pisano_activation_time
     // , mersenne_t mersenne_activation_time
@@ -90,6 +91,7 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     ))
 #if defined(KTH_CURRENCY_BCH)
     , asert_half_life_(asert_half_life)
+    , abla_config_(abla_config)
     // , euclid_activation_time_(euclid_activation_time)
     // , pisano_activation_time_(pisano_activation_time)
     // , mersenne_activation_time_(mersenne_activation_time)
@@ -110,16 +112,6 @@ domain::config::network chain_state::network() const {
     return network_;
 }
 
-// #if defined(KTH_CURRENCY_BCH)
-// //Note(fernando): remove once Euler is activated
-// void chain_state::adjust_assert_anchor_block_info() {
-//     if (is_fermat_enabled() && ! is_euler_enabled()) {
-//         assert_anchor_block_info_.height = data_.height;
-//         assert_anchor_block_info_.bits = data_.bits.self;
-//         assert_anchor_block_info_.ancestor_timestamp = data_.timestamp.ordered.back();
-//     }
-// }
-// #endif
 
 // Named constructors.
 //-----------------------------------------------------------------------------
@@ -131,6 +123,7 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
 #if defined(KTH_CURRENCY_BCH)
         , pool.assert_anchor_block_info_
         , pool.asert_half_life_
+        , pool.abla_config_
         // , pool.fermat_activation_time_
         // , pool.euler_activation_time_
         // , pool.gauss_activation_time_
@@ -1325,6 +1318,10 @@ size_t chain_state::height() const {
     return data_.height;
 }
 
+abla::state const& chain_state::abla_state() const {
+    return data_.abla_state;
+}
+
 uint32_t chain_state::enabled_forks() const {
     return active_.forks;
 }
@@ -1348,6 +1345,23 @@ chain_state::assert_anchor_block_info_t chain_state::assert_anchor_block_info() 
 
 uint32_t chain_state::asert_half_life() const {
     return asert_half_life_;
+}
+
+uint64_t chain_state::dynamic_max_block_size() const {
+    uint64_t const static_size = static_max_block_size(network());
+    if ( ! is_lobachevski_enabled()) {
+        return static_size;
+    }
+    uint64_t const dynamic_size = block_size_limit(data_.abla_state);
+    return std::max(static_size, dynamic_size);
+}
+
+uint64_t chain_state::dynamic_max_block_sigops() const {
+    return dynamic_max_block_size() / max_sigops_factor;
+}
+
+uint64_t chain_state::dynamic_max_block_sigchecks() const {
+    return dynamic_max_block_size() / block_maxbytes_maxsigchecks_ratio;
 }
 
 // uint64_t chain_state::pythagoras_activation_time() const {
