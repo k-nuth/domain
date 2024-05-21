@@ -563,16 +563,21 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         result.forks |= (rule_fork::bch_descartes & forks);
     }
 
-    auto const mtp = median_time_past(values);
-    if (is_mtp_activated(mtp, to_underlying(lobachevski_activation_time))) {
-        //Note(Fernando): Move this to the next fork rules
+    if (is_lobachevski_enabled(values.height, network)) {
         result.forks |= (rule_fork::bch_lobachevski & forks);
     }
 
+    auto const mtp = median_time_past(values);
     if (is_mtp_activated(mtp, to_underlying(galois_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
         result.forks |= (rule_fork::bch_galois & forks);
     }
+
+    if (is_mtp_activated(mtp, to_underlying(leibniz_activation_time))) {
+        //Note(Fernando): Move this to the next fork rules
+        result.forks |= (rule_fork::bch_leibniz & forks);
+    }
+
 
     // Old rules with Replay Protection
     // auto const mtp = median_time_past(values);
@@ -670,7 +675,6 @@ size_t chain_state::bip9_bit1_height(size_t height, uint32_t forks) {
 // median_time_past
 //-----------------------------------------------------------------------------
 
-inline
 bool chain_state::is_rule_enabled(size_t height, config::network network, size_t mainnet_height, size_t testnet_height
 #if defined(KTH_CURRENCY_BCH)
                                     , size_t testnet4_height
@@ -695,7 +699,6 @@ bool chain_state::is_rule_enabled(size_t height, config::network network, size_t
 
 #if defined(KTH_CURRENCY_BCH)
 // Block height at which CSV (BIP68, BIP112 and BIP113) becomes active
-inline
 bool chain_state::is_csv_enabled(size_t height, config::network network) {
     auto res = is_rule_enabled(height, network
         , mainnet_csv_activation_height
@@ -709,7 +712,6 @@ bool chain_state::is_csv_enabled(size_t height, config::network network) {
 }
 
 //2017-August-01 hard fork
-inline
 bool chain_state::is_uahf_enabled(size_t height, config::network network) {
     auto res = is_rule_enabled(height, network
         , mainnet_uahf_activation_height
@@ -723,7 +725,6 @@ bool chain_state::is_uahf_enabled(size_t height, config::network network) {
 }
 
 //2017-November-13 hard fork
-inline
 bool chain_state::is_daa_cw144_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_daa_cw144_activation_height
@@ -735,7 +736,6 @@ bool chain_state::is_daa_cw144_enabled(size_t height, config::network network) {
 }
 
 //2018-May hard fork
-inline
 bool chain_state::is_pythagoras_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_pythagoras_activation_height
@@ -747,7 +747,6 @@ bool chain_state::is_pythagoras_enabled(size_t height, config::network network) 
 }
 
 //2018-Nov hard fork
-inline
 bool chain_state::is_euclid_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_euclid_activation_height
@@ -759,7 +758,6 @@ bool chain_state::is_euclid_enabled(size_t height, config::network network) {
 }
 
 //2019-May hard fork
-inline
 bool chain_state::is_pisano_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_pisano_activation_height
@@ -771,7 +769,6 @@ bool chain_state::is_pisano_enabled(size_t height, config::network network) {
 }
 
 //2019-Nov hard fork
-inline
 bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_mersenne_activation_height
@@ -783,7 +780,6 @@ bool chain_state::is_mersenne_enabled(size_t height, config::network network) {
 }
 
 //2020-May hard fork
-inline
 bool chain_state::is_fermat_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_fermat_activation_height
@@ -795,7 +791,6 @@ bool chain_state::is_fermat_enabled(size_t height, config::network network) {
 }
 
 //2020-Nov hard fork
-inline
 bool chain_state::is_euler_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_euler_activation_height
@@ -807,7 +802,6 @@ bool chain_state::is_euler_enabled(size_t height, config::network network) {
 }
 
 //2022-May hard fork
-inline
 bool chain_state::is_gauss_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_gauss_activation_height
@@ -819,7 +813,6 @@ bool chain_state::is_gauss_enabled(size_t height, config::network network) {
 }
 
 //2023-May hard fork
-inline
 bool chain_state::is_descartes_enabled(size_t height, config::network network) {
     return is_rule_enabled(height, network
         , mainnet_descartes_activation_height
@@ -830,22 +823,19 @@ bool chain_state::is_descartes_enabled(size_t height, config::network network) {
      );
 }
 
-//2024-May hard fork
-// Complete after the hard fork
-// inline
-// bool chain_state::is_lobachevski_enabled(size_t height, config::network network) {
-//     return is_rule_enabled(height, network
-//         , mainnet_lobachevski_activation_height
-//         , testnet_lobachevski_activation_height
-//         , testnet4_lobachevski_activation_height
-//         , scalenet_lobachevski_activation_height
-//         , chipnet_lobachevski_activation_height
-//      );
-// }
+// 2024-May hard fork
+bool chain_state::is_lobachevski_enabled(size_t height, config::network network) {
+    return is_rule_enabled(height, network
+        , mainnet_lobachevski_activation_height
+        , testnet_lobachevski_activation_height
+        , testnet4_lobachevski_activation_height
+        , scalenet_lobachevski_activation_height
+        , chipnet_lobachevski_activation_height
+     );
+}
 
 //2025-May hard fork
 // Complete after the hard fork
-// inline
 // bool chain_state::is_galois_enabled(size_t height, config::network network) {
 //     return is_rule_enabled(height, network
 //         , mainnet_galois_activation_height
@@ -856,10 +846,20 @@ bool chain_state::is_descartes_enabled(size_t height, config::network network) {
 //      );
 // }
 
-
-//2025-May hard fork
+//2026-May hard fork
 // Complete after the hard fork
-// inline
+// bool chain_state::is_leibniz_enabled(size_t height, config::network network) {
+//     return is_rule_enabled(height, network
+//         , mainnet_leibniz_activation_height
+//         , testnet_leibniz_activation_height
+//         , testnet4_leibniz_activation_height
+//         , scalenet_leibniz_activation_height
+//         , chipnet_leibniz_activation_height
+//      );
+// }
+
+//2027-May hard fork
+// Complete after the hard fork
 // bool chain_state::is_unnamed_enabled(size_t height, config::network network) {
 //     return is_rule_enabled(height, network
 //         , mainnet_unnamed_activation_height
@@ -1460,8 +1460,9 @@ uint32_t chain_state::get_next_work_required(uint32_t time_now) {
                             // , euler_activation_time()
                             // , gauss_activation_time()
                             // , descartes_activation_time()
-                            , lobachevski_activation_time()
+                            // , lobachevski_activation_time()
                             , galois_activation_time()
+                            , leibniz_activation_time()
                             , assert_anchor_block_info_
                             , asert_half_life()
 #endif

@@ -365,6 +365,7 @@ private:
     size_t bip9_bit1_height(size_t height, uint32_t forks);
 #endif
 
+public:
     // static
     // bool is_rule_enabled(size_t height, uint32_t forks, size_t mainnet_height, size_t testnet_height);
     static
@@ -413,14 +414,19 @@ private:
     static
     bool is_descartes_enabled(size_t height, config::network network);
 
-    // static
-    // bool is_lobachevski_enabled(size_t height, config::network network);
+    static
+    bool is_lobachevski_enabled(size_t height, config::network network);
 
     // static
     // bool is_galois_enabled(size_t height, config::network network);
+
+    // static
+    // bool is_leibniz_enabled(size_t height, config::network network);
+
 #endif // KTH_CURRENCY_BCH
     // ------------------------------------------------------------------------
 
+private:
     static
     data to_block(chain_state const& pool, block const& block);
 
