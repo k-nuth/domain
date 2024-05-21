@@ -53,8 +53,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , euler_t euler_activation_time
     // , gauss_t gauss_activation_time
     // , descartes_t descartes_activation_time
-    , lobachevski_t lobachevski_activation_time
+    // , lobachevski_t lobachevski_activation_time
     , galois_t galois_activation_time
+    , leibniz_t leibniz_activation_time
 #endif  //KTH_CURRENCY_BCH
 )
     : data_(std::move(values))
@@ -73,8 +74,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
         // , euler_activation_time
         // , gauss_activation_time
         // , descartes_activation_time
-        , lobachevski_activation_time
+        // , lobachevski_activation_time
         , galois_activation_time
+        , leibniz_activation_time
 #endif  //KTH_CURRENCY_BCH
         ))
     , median_time_past_(median_time_past(data_))
@@ -83,8 +85,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
             // , euler_activation_time
             // , gauss_activation_time
             // , descartes_activation_time
-            , lobachevski_activation_time
+            // , lobachevski_activation_time
             , galois_activation_time
+            , leibniz_activation_time
             , assert_anchor_block_info_
             , asert_half_life
 #endif
@@ -99,8 +102,9 @@ chain_state::chain_state(data&& values, uint32_t forks, checkpoints const& check
     // , euler_activation_time_(euler_activation_time)
     // , gauss_activation_time_(gauss_activation_time)
     // , descartes_activation_time_(descartes_activation_time)
-    , lobachevski_activation_time_(lobachevski_activation_time)
+    // , lobachevski_activation_time_(lobachevski_activation_time)
     , galois_activation_time_(galois_activation_time)
+    , leibniz_activation_time_(leibniz_activation_time)
 #endif  //KTH_CURRENCY_BCH
 {}
 
@@ -128,8 +132,9 @@ std::shared_ptr<chain_state> chain_state::from_pool_ptr(chain_state const& pool,
         // , pool.euler_activation_time_
         // , pool.gauss_activation_time_
         // , pool.descartes_activation_time_
-        , pool.lobachevski_activation_time_
+        // , pool.lobachevski_activation_time_
         , pool.galois_activation_time_
+        , pool.leibniz_activation_time_
 #endif  //KTH_CURRENCY_BCH
     );
 }
@@ -299,42 +304,51 @@ bool chain_state::is_mtp_activated(uint32_t median_time_past, uint32_t activatio
     return (median_time_past >= activation_time);
 }
 
+// 2018-May
 bool chain_state::is_pythagoras_enabled() const {
     return is_pythagoras_enabled(height(), network());
 }
 
+// 2018-Nov
 bool chain_state::is_euclid_enabled() const {
     return is_euclid_enabled(height(), network());
 }
 
+// 2019-May
 bool chain_state::is_pisano_enabled() const {
     return is_pisano_enabled(height(), network());
 }
 
+// 2019-Nov
 bool chain_state::is_mersenne_enabled() const {
     return is_mersenne_enabled(height(), network());
 }
 
+// 2020-May
 bool chain_state::is_fermat_enabled() const {
     return is_fermat_enabled(height(), network());
 }
 
+// 2020-Nov
 bool chain_state::is_euler_enabled() const {
     return is_euler_enabled(height(), network());
 }
 
+// 2021-May: There were no hard forks in 2021
+
+// 2022-May
 bool chain_state::is_gauss_enabled() const {
     return is_gauss_enabled(height(), network());
 }
 
+// 2023-May
 bool chain_state::is_descartes_enabled() const {
     return is_descartes_enabled(height(), network());
 }
 
+// 2024-May
 bool chain_state::is_lobachevski_enabled() const {
-   //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(lobachevski_activation_time()));
-    // return is_lobachevski_enabled(height(), network());
+    return is_lobachevski_enabled(height(), network());
 }
 
 // 2025-May
@@ -345,6 +359,13 @@ bool chain_state::is_galois_enabled() const {
 }
 
 // 2026-May
+bool chain_state::is_leibniz_enabled() const {
+   //TODO(fernando): this was activated, change to the other method
+    return is_mtp_activated(median_time_past(), to_underlying(leibniz_activation_time()));
+    // return is_leibniz_enabled(height(), network());
+}
+
+// 2027-May
 // //static
 // bool chain_state::is_unnamed_enabled() const {
 //    //TODO(fernando): this was activated, change to the other method
@@ -368,8 +389,9 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
         // , euler_t euler_activation_time
         // , gauss_t gauss_activation_time
         // , descartes_t descartes_activation_time
-        , lobachevski_t lobachevski_activation_time
+        // , lobachevski_t lobachevski_activation_time
         , galois_t galois_activation_time
+        , leibniz_t leibniz_activation_time
 #endif  //KTH_CURRENCY_BCH
 ) {
     auto const height = values.height;
@@ -989,8 +1011,9 @@ uint32_t chain_state::work_required(data const& values, config::network network,
                                     // , euler_t euler_activation_time
                                     // , gauss_t gauss_activation_time
                                     // , descartes_t descartes_activation_time
-                                    , lobachevski_t lobachevski_activation_time
+                                    // , lobachevski_t lobachevski_activation_time
                                     , galois_t galois_activation_time
+                                    , leibniz_t leibniz_activation_time
                                     , assert_anchor_block_info_t const& assert_anchor_block_info
                                     , uint32_t asert_half_life
 #endif
@@ -1396,12 +1419,16 @@ uint64_t chain_state::dynamic_max_block_sigchecks() const {
 //     return descartes_activation_time_;
 // }
 
-lobachevski_t chain_state::lobachevski_activation_time() const {
-    return lobachevski_activation_time_;
-}
+// lobachevski_t chain_state::lobachevski_activation_time() const {
+//     return lobachevski_activation_time_;
+// }
 
 galois_t chain_state::galois_activation_time() const {
     return galois_activation_time_;
+}
+
+leibniz_t chain_state::leibniz_activation_time() const {
+    return leibniz_activation_time_;
 }
 
 #endif  //KTH_CURRENCY_BCH

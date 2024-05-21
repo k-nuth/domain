@@ -142,8 +142,9 @@ public:
                 // , euler_t euler_activation_time
                 // , gauss_t gauss_activation_time
                 // , descartes_t descartes_activation_time
-                , lobachevski_t lobachevski_activation_time
+                // , lobachevski_t lobachevski_activation_time
                 , galois_t galois_activation_time
+                , leibniz_t leibniz_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -220,11 +221,14 @@ public:
     // [[nodiscard]]
     // descartes_t descartes_activation_time() const;
 
-    [[nodiscard]]
-    lobachevski_t lobachevski_activation_time() const;
+    // [[nodiscard]]
+    // lobachevski_t lobachevski_activation_time() const;
 
     [[nodiscard]]
     galois_t galois_activation_time() const;
+
+    [[nodiscard]]
+    leibniz_t leibniz_activation_time() const;
 #endif  //KTH_CURRENCY_BCH
 
     /// Construction with zero height or any empty array causes invalid state.
@@ -287,6 +291,9 @@ public:
     [[nodiscard]]
     bool is_galois_enabled() const;
 
+    [[nodiscard]]
+    bool is_leibniz_enabled() const;
+
 #endif  //KTH_CURRENCY_BCH
 
     static
@@ -312,8 +319,9 @@ protected:
             // , euler_t euler_activation_time
             // , gauss_t gauss_activation_time
             // , descartes_t descartes_activation_time
-            , lobachevski_t lobachevski_activation_time
+            // , lobachevski_t lobachevski_activation_time
             , galois_t galois_activation_time
+            , leibniz_t leibniz_activation_time
 #endif  //KTH_CURRENCY_BCH
     );
 
@@ -323,8 +331,9 @@ protected:
                             // , euler_t euler_activation_time
                             // , gauss_t gauss_activation_time
                             // , descartes_t descartes_activation_time
-                            , lobachevski_t lobachevski_activation_time
+                            // , lobachevski_t lobachevski_activation_time
                             , galois_t galois_activation_time
+                            , leibniz_t leibniz_activation_time
                             , assert_anchor_block_info_t const& assert_anchor_block_info
                             , uint32_t asert_half_life
 #endif
@@ -492,8 +501,9 @@ private:
     // euler_t const euler_activation_time_;
     // gauss_t const gauss_activation_time_;
     // descartes_t const descartes_activation_time_;
-    lobachevski_t const lobachevski_activation_time_;
+    // lobachevski_t const lobachevski_activation_time_;
     galois_t const galois_activation_time_;
+    leibniz_t const leibniz_activation_time_;
 #endif  //KTH_CURRENCY_BCH
 };
 
