@@ -321,12 +321,17 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("000000000000000002fc0cdadaef1857bbd2936d37ea94f80ba3db4a5e8353e8", 792773);
         checkpoints.emplace_back("00000000000000000340a607ca5e9a8b56b620297216edb818eb09e3c6e95609", 792774);
 
-        // //2024-May Hardfork - lobachevski - (1715774400)
+        //2024-May Hardfork - lobachevski - (1715774400)
+        checkpoints.emplace_back("000000000000000001806bcdde19c47f088a8026e24905ac6f75afe3ef83594c", 845'890);
+        checkpoints.emplace_back("0000000000000000017012058e7b67032926f1f20f96d1a2cd66abff9aaf8244", 845'891);
+        checkpoints.emplace_back("0000000000000000016e3353d5da435ef5d374abe90d9bb430c0408e423632d5", 845'892);
+
+        // //2025-May Hardfork - galois - (1747310400)
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
 
-        // //2025-May Hardfork - galois - (1747310400)
+        // //2026-May Hardfork - leibniz - (1778846400)
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
