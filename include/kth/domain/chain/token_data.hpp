@@ -170,7 +170,7 @@ size_t serialized_size(fungible const& x) {
 
 inline constexpr
 size_t serialized_size(non_fungible const& x) {
-    if (x.commitment.empty()) return 0;
+    if (std::size(x.commitment) == 0) return 0;
     return kth::size_variable_integer(x.commitment.size()) + x.commitment.size();
 }
 
