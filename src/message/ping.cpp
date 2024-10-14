@@ -21,9 +21,9 @@ size_t ping::satoshi_fixed_size(uint32_t version) {
 }
 
 //TODO(fernando): nonceless_ is never used! Check it!
-ping::ping(uint64_t nonce)
-    : nonce_(nonce), valid_(true) {
-}
+ping::ping(uint64_t nonce, bool nonceless /* = false */)
+    : nonce_(nonce), valid_(true), nonceless_(nonceless)
+{}
 
 bool ping::operator==(ping const& x) const {
     // Nonce should be zero if not used.

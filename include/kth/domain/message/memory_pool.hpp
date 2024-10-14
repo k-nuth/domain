@@ -10,6 +10,7 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -35,22 +36,32 @@ public:
     memory_pool(memory_pool const& x) = default;
     memory_pool(memory_pool&& x) = default;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        // Initialize as valid from deserialization.
-        insufficient_version_ = false;
+    //     // Initialize as valid from deserialization.
+    //     insufficient_version_ = false;
 
+    //     if (version < memory_pool::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<memory_pool> from_data(byte_reader& reader, uint32_t version) {
         if (version < memory_pool::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::unsupported_version);
         }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        auto const insufficient_version = false;
+        return memory_pool(insufficient_version);
     }
 
     [[nodiscard]]

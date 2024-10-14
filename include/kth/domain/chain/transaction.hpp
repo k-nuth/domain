@@ -72,19 +72,19 @@ public:
     //-----------------------------------------------------------------------------
 
     transaction();
-
-    transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs
-#ifdef KTH_CACHED_RPC_DATA
-                , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
-#endif
-               );
-    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs
-#ifdef KTH_CACHED_RPC_DATA
-               , uint32_t cached_sigops = 0, uint64_t cached_fees = 0, bool cached_is_standard = false
-#endif
-               );
+    transaction(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs);
+    transaction(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs);
     transaction(transaction const& x, hash_digest const& hash);
     transaction(transaction&& x, hash_digest const& hash);
+
+    explicit
+    transaction(transaction_basis const& x);
+    explicit
+    transaction(transaction_basis&& x) noexcept;
+
+
+    // Special member functions.
+    //-----------------------------------------------------------------------------
 
 
     //Note(kth): cannot be defaulted because of the mutex data member.
@@ -93,51 +93,47 @@ public:
     transaction& operator=(transaction const& x);
     transaction& operator=(transaction&& x) noexcept;
 
-    // Operators.
-    //-----------------------------------------------------------------------------
-
-    // bool operator==(transaction const& x) const;
-    // bool operator!=(transaction const& x) const;
-
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    // Witness is not used by outputs, just for template normalization.
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool witness = false
-#ifdef KTH_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                ) {
+    static
+    expect<transaction> from_data(byte_reader& reader, bool wire);
 
-        transaction_basis::from_data(source, wire, witness);
+//     // Witness is not used by outputs, just for template normalization.
+//     template <typename R, KTH_IS_READER(R)>
+//     bool from_data(R& source, bool wire = true, bool witness = false
+// #ifdef KTH_CACHED_RPC_DATA
+//                     , bool unconfirmed = false
+// #endif
+//                 ) {
 
-#ifdef KTH_CACHED_RPC_DATA
-        if ( !  wire && unconfirmed) {
-            auto const sigops = source.read_4_bytes_little_endian();
-            cached_sigops_ = static_cast<uint32_t>(sigops);
-            auto const fees = source.read_8_bytes_little_endian();
-            cached_fees_ = static_cast<uint64_t>(fees);
-            auto const is_standard = source.read_byte();
-            cached_is_standard_ = static_cast<bool>(is_standard);
-        }
-#endif
+//         transaction_basis::from_data(source, wire, witness);
 
-        return source;
-    }
+// #ifdef KTH_CACHED_RPC_DATA
+//         if ( !  wire && unconfirmed) {
+//             auto const sigops = source.read_4_bytes_little_endian();
+//             cached_sigops_ = static_cast<uint32_t>(sigops);
+//             auto const fees = source.read_8_bytes_little_endian();
+//             cached_fees_ = static_cast<uint64_t>(fees);
+//             auto const is_standard = source.read_byte();
+//             cached_is_standard_ = static_cast<bool>(is_standard);
+//         }
+// #endif
 
-    // bool is_valid() const;
+//         return source;
+//     }
+
 
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire = true, bool witness = false
+    data_chunk to_data(bool wire = true
 #ifdef KTH_CACHED_RPC_DATA
                         , bool unconfirmed = false
 #endif
                     ) const;
 
-    void to_data(data_sink& stream, bool wire = true, bool witness = false
+    void to_data(data_sink& stream, bool wire = true
 #ifdef KTH_CACHED_RPC_DATA
                     , bool unconfirmed = false
 #endif
@@ -145,17 +141,13 @@ public:
 
     // Witness is not used by outputs, just for template normalization.
     template <typename W>
-    void to_data(W& sink, bool wire = true, bool witness = false
+    void to_data(W& sink, bool wire = true
 #ifdef KTH_CACHED_RPC_DATA
                 , bool unconfirmed = false
 #endif
                 ) const {
 
-#if defined(KTH_SEGWIT_ENABLED)
-        // Witness handling must be disabled for non-segregated txs.
-        witness = witness && is_segregated();
-#endif
-        transaction_basis::to_data(sink, wire, witness);
+        transaction_basis::to_data(sink, wire);
 
 #ifdef KTH_CACHED_RPC_DATA
         if ( ! wire && unconfirmed) {
@@ -169,7 +161,7 @@ public:
     // Properties (size, accessors, cache).
     //-----------------------------------------------------------------------------
 
-    size_t serialized_size(bool wire = true, bool witness = false
+    size_t serialized_size(bool wire = true
 #ifdef KTH_CACHED_RPC_DATA
                             , bool unconfirmed = false
 #endif
@@ -191,15 +183,10 @@ public:
     hash_digest outputs_hash() const;
     hash_digest inpoints_hash() const;
     hash_digest sequences_hash() const;
-    hash_digest hash(bool witness = false) const;
+    hash_digest hash() const;
 
     // Utilities.
     //-------------------------------------------------------------------------
-
-#if defined(KTH_SEGWIT_ENABLED)
-    /// Clear witness from all inputs (does not change default hash).
-    void strip_witness();
-#endif
 
     void recompute_hash();
 
@@ -217,10 +204,6 @@ public:
     size_t signature_operations() const;
 
     bool is_overspent() const;
-
-#if defined(KTH_SEGWIT_ENABLED)
-    bool is_segregated() const;
-#endif
 
     using transaction_basis::accept;
 
@@ -260,7 +243,6 @@ private:
 
     // These share a mutex as they are not expected to contend.
     mutable hash_ptr hash_;
-    mutable hash_ptr witness_hash_;
     mutable hash_ptr outputs_hash_;
     mutable hash_ptr inpoints_hash_;
     mutable hash_ptr sequences_hash_;
@@ -283,12 +265,8 @@ private:
 #endif
 };
 
-#if ! defined(KTH_SEGWIT_ENABLED)
-code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
-#else
-code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value);
-#endif
 
+code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
 code verify(transaction const& tx, uint32_t input, uint32_t forks);
 
 } // namespace kth::domain::chain

@@ -12,6 +12,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/message/block.hpp>
 #include <kth/domain/message/prefilled_transaction.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -27,7 +28,6 @@ class KD_API compact_block {
 public:
     using ptr = std::shared_ptr<compact_block>;
     using const_ptr = std::shared_ptr<const compact_block>;
-
     //using short_id = mini_hash;
     //using short_id_list = mini_hash_list;
     using short_id = uint64_t;
@@ -71,59 +71,107 @@ public:
     void set_transactions(prefilled_transaction::list const& value);
     void set_transactions(prefilled_transaction::list&& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        if ( ! header_.from_data(source)) {
-            return false;
+    //     if ( ! header_.from_data(source)) {
+    //         return false;
+    //     }
+
+    //     nonce_ = source.read_8_bytes_little_endian();
+    //     auto count = source.read_size_little_endian();
+
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > static_absolute_max_block_size()) {
+    //         source.invalidate();
+    //     } else {
+    //         short_ids_.reserve(count);
+    //     }
+
+    //     //TODO: move to function
+    //     // Order is required.
+    //     for (size_t id = 0; id < count && source; ++id) {
+    //         uint32_t lsb = source.read_4_bytes_little_endian();
+    //         uint16_t msb = source.read_2_bytes_little_endian();
+    //         short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
+    //         //short_ids_.push_back(source.read_mini_hash());
+    //     }
+
+    //     count = source.read_size_little_endian();
+
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > static_absolute_max_block_size()) {
+    //         source.invalidate();
+    //     } else {
+    //         transactions_.resize(count);
+    //     }
+
+    //     // NOTE: Witness flag is controlled by prefilled tx
+    //     // Order is required.
+    //     for (auto& tx : transactions_) {
+    //         if ( ! entity_from_data(tx, version, source)) {
+    //             break;
+    //         }
+    //     }
+
+    //     if (version < compact_block::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<compact_block> from_data(byte_reader& reader, uint32_t version) {
+        auto const header = chain::header::from_data(reader);
+        if ( ! header) {
+            return make_unexpected(header.error());
         }
 
-        nonce_ = source.read_8_bytes_little_endian();
-        auto count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > static_absolute_max_block_size()) {
-            source.invalidate();
-        } else {
-            short_ids_.reserve(count);
+        auto const nonce = reader.read_little_endian<uint64_t>();
+        if ( ! nonce) {
+            return make_unexpected(nonce.error());
         }
 
-        //TODO: move to function
-        // Order is required.
-        for (size_t id = 0; id < count && source; ++id) {
-            uint32_t lsb = source.read_4_bytes_little_endian();
-            uint16_t msb = source.read_2_bytes_little_endian();
-            short_ids_.push_back((uint64_t(msb) << 32) | uint64_t(lsb));
+        auto const short_id_count = reader.read_size_little_endian();
+        if ( ! short_id_count) {
+            return make_unexpected(short_id_count.error());
+        }
+        if (*short_id_count > static_absolute_max_block_size()) {
+            return make_unexpected(error::invalid_compact_block);
+        }
+
+        short_id_list short_ids;
+        short_ids.reserve(*short_id_count);
+        for (size_t i = 0; i < *short_id_count; ++i) {
+            auto const lsb = reader.read_little_endian<uint32_t>();
+            if ( ! lsb) {
+                return make_unexpected(lsb.error());
+            }
+            auto const msb = reader.read_little_endian<uint16_t>();
+            if ( ! msb) {
+                return make_unexpected(msb.error());
+            }
+            short_ids.emplace_back((uint64_t(*msb) << 32) | uint64_t(*lsb));
             //short_ids_.push_back(source.read_mini_hash());
         }
 
-        count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > static_absolute_max_block_size()) {
-            source.invalidate();
-        } else {
-            transactions_.resize(count);
-        }
-
-        // NOTE: Witness flag is controlled by prefilled tx
-        // Order is required.
-        for (auto& tx : transactions_) {
-            if ( ! entity_from_data(tx, version, source)) {
-                break;
-            }
+        auto txs = read_collection<prefilled_transaction>(reader, version);
+        if ( ! txs) {
+            return make_unexpected(txs.error());
         }
 
         if (version < compact_block::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::version_too_low);
         }
 
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return compact_block(*header, *nonce, std::move(short_ids), std::move(*txs));
     }
 
     bool from_block(message::block const& block);

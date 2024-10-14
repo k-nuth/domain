@@ -15,6 +15,7 @@
 #include <kth/domain/message/inventory.hpp>
 #include <kth/domain/message/inventory_vector.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -34,33 +35,44 @@ public:
     not_found(inventory_vector::list&& values);
     not_found(hash_list const& hashes, type_id type);
     not_found(std::initializer_list<inventory_vector> const& values);
-
-    // not_found(not_found const& x) = default;
-    // not_found(not_found&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // not_found& operator=(not_found&& x) = default;
-    // not_found& operator=(not_found const&) = default;
+    not_found(inventory&& inv)
+        : inventory(std::move(inv))
+    {}
 
     bool operator==(not_found const& x) const;
     bool operator!=(not_found const& x) const;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        if ( ! inventory::from_data(source, version)) {
-            return false;
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     if ( ! inventory::from_data(source, version)) {
+    //         return false;
+    //     }
+
+    //     if (version < not_found::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<not_found> from_data(byte_reader& reader, uint32_t version) {
+        auto inv = inventory::from_data(reader, version);
+        if ( ! inv) {
+            return make_unexpected(inv.error());
         }
 
         if (version < not_found::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::unsupported_version);
         }
 
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return not_found(std::move(*inv));
     }
-
 
     static
     std::string const command;

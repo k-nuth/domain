@@ -10,6 +10,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -52,18 +53,32 @@ public:
     void set_transaction(chain::transaction const& tx);
     void set_transaction(chain::transaction&& tx);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
 
-        index_ = source.read_variable_little_endian();
-        transaction_.from_data(source, true, witness_default());
+    //     index_ = source.read_variable_little_endian();
+    //     transaction_.from_data(source, true, witness_default());
 
-        if ( ! source) {
-            reset();
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<prefilled_transaction> from_data(byte_reader& reader, uint32_t version) {
+        auto const index = reader.read_variable_little_endian();
+        if ( ! index) {
+            return make_unexpected(index.error());
         }
-
-        return source;
+        auto const transaction = chain::transaction::from_data(reader, true);
+        if ( ! transaction) {
+            return make_unexpected(transaction.error());
+        }
+        return prefilled_transaction(*index, std::move(*transaction));
     }
 
     [[nodiscard]]
@@ -74,11 +89,7 @@ public:
     template <typename W>
     void to_data(uint32_t /*version*/, W& sink) const {
         sink.write_variable_little_endian(index_);
-        transaction_.to_data(sink, /*wire*/ true, witness_default()
-#ifdef KTH_CACHED_RPC_DATA
-                             , /*unconfirmed*/ false
-#endif
-                             );
+        transaction_.to_data(sink, true);
     }
 
     [[nodiscard]]

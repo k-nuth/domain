@@ -12,6 +12,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/multi_crypto_settings.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -20,6 +21,7 @@
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
+#include <kth/domain/deserialization.hpp>
 
 namespace kth::domain::message {
 
@@ -33,12 +35,6 @@ public:
         block = 2,
         filtered_block = 3,
         compact_block = 4,
-#if defined(KTH_SEGWIT_ENABLED)
-        witness = (1U << 30),
-        witness_transaction = witness | transaction,
-        witness_block = witness | block,
-        reserved = witness | filtered_block,
-#endif
         double_spend_proof = 0x94a0,
     };
 
@@ -88,20 +84,35 @@ public:
     [[nodiscard]]
     bool is_double_spend_proof_type() const;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
 
-        auto const raw_type = source.read_4_bytes_little_endian();
-        type_ = inventory_vector::to_type(raw_type);
-        hash_ = source.read_hash();
+    //     auto const raw_type = source.read_4_bytes_little_endian();
+    //     type_ = inventory_vector::to_type(raw_type);
+    //     hash_ = source.read_hash();
 
-        if ( ! source) {
-            reset();
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<inventory_vector> from_data(byte_reader& reader, uint32_t version) {
+        auto const raw_type = reader.read_little_endian<uint32_t>();
+        if ( ! raw_type) {
+            return make_unexpected(raw_type.error());
         }
-
-        return source;
+        auto const hash = read_hash(reader);
+        if ( ! hash) {
+            return make_unexpected(hash.error());
+        }
+        return inventory_vector(inventory_vector::to_type(*raw_type), *hash);
     }
+
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
@@ -120,10 +131,6 @@ public:
     bool is_valid() const;
 
     void reset();
-
-#if defined(KTH_SEGWIT_ENABLED)
-    void to_witness();
-#endif
 
     [[nodiscard]]
     size_t serialized_size(uint32_t version) const;

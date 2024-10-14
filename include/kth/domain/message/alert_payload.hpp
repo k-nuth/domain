@@ -10,6 +10,7 @@
 
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/elliptic_curve.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -110,39 +111,113 @@ public:
     void set_reserved(std::string const& value);
     void set_reserved(std::string&& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
 
-        this->version_ = source.read_4_bytes_little_endian();
-        relay_until_ = source.read_8_bytes_little_endian();
-        expiration_ = source.read_8_bytes_little_endian();
-        id_ = source.read_4_bytes_little_endian();
-        cancel_ = source.read_4_bytes_little_endian();
-        set_cancel_.reserve(source.read_size_little_endian());
+    //     this->version_ = source.read_4_bytes_little_endian();
+    //     relay_until_ = source.read_8_bytes_little_endian();
+    //     expiration_ = source.read_8_bytes_little_endian();
+    //     id_ = source.read_4_bytes_little_endian();
+    //     cancel_ = source.read_4_bytes_little_endian();
+    //     set_cancel_.reserve(source.read_size_little_endian());
 
-        for (size_t i = 0; i < set_cancel_.capacity() && source; i++) {
-            set_cancel_.push_back(source.read_4_bytes_little_endian());
-}
+    //     for (size_t i = 0; i < set_cancel_.capacity() && source; i++) {
+    //         set_cancel_.push_back(source.read_4_bytes_little_endian());
+    //     }
 
-        min_version_ = source.read_4_bytes_little_endian();
-        max_version_ = source.read_4_bytes_little_endian();
-        set_sub_version_.reserve(source.read_size_little_endian());
+    //     min_version_ = source.read_4_bytes_little_endian();
+    //     max_version_ = source.read_4_bytes_little_endian();
+    //     set_sub_version_.reserve(source.read_size_little_endian());
 
-        for (size_t i = 0; i < set_sub_version_.capacity() && source; i++) {
-            set_sub_version_.push_back(source.read_string());
-}
+    //     for (size_t i = 0; i < set_sub_version_.capacity() && source; i++) {
+    //         set_sub_version_.push_back(source.read_string());
+    //     }
 
-        priority_ = source.read_4_bytes_little_endian();
-        comment_ = source.read_string();
-        status_bar_ = source.read_string();
-        reserved_ = source.read_string();
+    //     priority_ = source.read_4_bytes_little_endian();
+    //     comment_ = source.read_string();
+    //     status_bar_ = source.read_string();
+    //     reserved_ = source.read_string();
 
-        if ( ! source) {
-            reset();
-}
+    //     if ( ! source) {
+    //         reset();
+    //     }
 
-        return source;
+    //     return source;
+    // }
+
+    static
+    expect<alert_payload> from_data(byte_reader& reader, uint32_t /*version*/) {
+        auto version = reader.read_little_endian<uint32_t>();
+        if (!version) return make_unexpected(version.error());
+
+        auto relay_until = reader.read_little_endian<uint64_t>();
+        if (!relay_until) return make_unexpected(relay_until.error());
+
+        auto expiration = reader.read_little_endian<uint64_t>();
+        if (!expiration) return make_unexpected(expiration.error());
+
+        auto id = reader.read_little_endian<uint32_t>();
+        if (!id) return make_unexpected(id.error());
+
+        auto cancel = reader.read_little_endian<uint32_t>();
+        if (!cancel) return make_unexpected(cancel.error());
+
+        auto set_cancel_size = reader.read_size_little_endian();
+        if (!set_cancel_size) return make_unexpected(set_cancel_size.error());
+
+        std::vector<uint32_t> set_cancel;
+        set_cancel.reserve(*set_cancel_size);
+        for (size_t i = 0; i < *set_cancel_size; ++i) {
+            auto value = reader.read_little_endian<uint32_t>();
+            if (!value) return make_unexpected(value.error());
+            set_cancel.push_back(*value);
+        }
+
+        auto const min_version = reader.read_little_endian<uint32_t>();
+        if (!min_version) return make_unexpected(min_version.error());
+
+        auto const max_version = reader.read_little_endian<uint32_t>();
+        if (!max_version) return make_unexpected(max_version.error());
+
+        auto const set_sub_version_size = reader.read_size_little_endian();
+        if (!set_sub_version_size) return make_unexpected(set_sub_version_size.error());
+
+        std::vector<std::string> set_sub_version;
+        set_sub_version.reserve(*set_sub_version_size);
+        for (size_t i = 0; i < *set_sub_version_size; ++i) {
+            auto value = reader.read_string();
+            if (!value) return make_unexpected(value.error());
+            set_sub_version.emplace_back(std::move(*value));
+        }
+
+        auto const priority = reader.read_little_endian<uint32_t>();
+        if (!priority) return make_unexpected(priority.error());
+
+        auto const comment = reader.read_string();
+        if (!comment) return make_unexpected(comment.error());
+
+        auto const status_bar = reader.read_string();
+        if (!status_bar) return make_unexpected(status_bar.error());
+
+        auto const reserved = reader.read_string();
+        if (!reserved) return make_unexpected(reserved.error());
+
+        return alert_payload{
+            *version,
+            *relay_until,
+            *expiration,
+            *id,
+            *cancel,
+            std::move(set_cancel),
+            *min_version,
+            *max_version,
+            std::move(set_sub_version),
+            *priority,
+            std::move(*comment),
+            std::move(*status_bar),
+            std::move(*reserved)
+        };
     }
 
     [[nodiscard]]

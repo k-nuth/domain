@@ -13,7 +13,9 @@
 #include <kth/domain/concepts.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/deserialization.hpp>
 #include <kth/infrastructure/message/network_address.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
@@ -30,18 +32,8 @@ public:
     address(infrastructure::message::network_address::list const& addresses);
     address(infrastructure::message::network_address::list&& addresses);
 
-    /// This class is move assignable but not copy assignable.
-    // address(address const& x);
-    // address(address&& x) noexcept;
-    // address& operator=(address&& x) noexcept;
-    // address(address const& x) = default;
-    // address(address&& x) = default;
-    // address& operator=(address&& x) = default;
-    // address& operator=(address const&) = default;
-
     bool operator==(address const& x) const;
     bool operator!=(address const& x) const;
-
 
     infrastructure::message::network_address::list& addresses();
 
@@ -51,30 +43,31 @@ public:
     void set_addresses(infrastructure::message::network_address::list const& value);
     void set_addresses(infrastructure::message::network_address::list&& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
-
-        auto const count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > max_address) {
-            source.invalidate();
-        } else {
-            addresses_.resize(count);
+    //TODO: move to .cpp file
+    static
+    expect<address> from_data(byte_reader& reader, uint32_t version) {
+        auto count = reader.read_size_little_endian();
+        if (!count) {
+            return make_unexpected(count.error());
         }
 
-        for (auto& address : addresses_) {
-            if ( ! address.from_data(source, version, true)) {
-                break;
+        // Guard against potential for arbitrary memory allocation.
+        if (*count > max_address) {
+            return make_unexpected(error::invalid_address_count);
+        }
+
+        infrastructure::message::network_address::list addresses;
+        addresses.reserve(*count);
+
+        for (size_t i = 0; i < *count; ++i) {
+            auto address = infrastructure::message::network_address::from_data(reader, version, true);
+            if (!address) {
+                return make_unexpected(address.error());
             }
+            addresses.push_back(std::move(*address));
         }
 
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return address(std::move(addresses));
     }
 
     [[nodiscard]]
