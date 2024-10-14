@@ -104,7 +104,11 @@ bool compact_block::from_block(message::block const& block) {
     compact_block::short_id_list short_ids_list;
     short_ids_list.reserve(block.transactions().size() - 1);
     for (size_t i = 1; i < block.transactions().size(); ++i) {
-        uint64_t shortid = sip_hash_uint256(k0, k1, block.transactions()[i].hash(witness_default())) & uint64_t(0xffffffffffff);
+        uint64_t shortid = sip_hash_uint256(
+            k0,
+            k1,
+            block.transactions()[i].hash()
+        ) & uint64_t(0xffffffffffff);
         short_ids_list.push_back(shortid);
     }
 

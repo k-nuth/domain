@@ -57,12 +57,6 @@ public:
     output_point(point const& x);
     output_point& operator=(point const& /*x*/);
 
-    // output_point(output_point const& x) = default;
-    // output_point(output_point&& x) = default;
-    // // This class is move assignable and copy assignable.
-    // output_point& operator=(output_point const&) = default;
-    // output_point& operator=(output_point&& x) = default;
-
     // Operators.
     //-------------------------------------------------------------------------
 
@@ -74,9 +68,6 @@ public:
 
     friend bool operator==(output_point const& x, output_point const& y);
     friend bool operator!=(output_point const& x, output_point const& y);
-
-    // Deserialization.
-    //-------------------------------------------------------------------------
 
     // Validation.
     //-------------------------------------------------------------------------

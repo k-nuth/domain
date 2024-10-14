@@ -10,6 +10,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -55,36 +56,56 @@ public:
     void set_transactions(chain::transaction::list const& x);
     void set_transactions(chain::transaction::list&& x);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        block_hash_ = source.read_hash();
-        auto const count = source.read_size_little_endian();
+    //     block_hash_ = source.read_hash();
+    //     auto const count = source.read_size_little_endian();
 
-        // Guard against potential for arbitary memory allocation.
-        if (count > static_absolute_max_block_size()) {
-            source.invalidate();
-        } else {
-            transactions_.resize(count);
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > static_absolute_max_block_size()) {
+    //         source.invalidate();
+    //     } else {
+    //         transactions_.resize(count);
+    //     }
+
+    //     // Order is required.
+    //     for (auto& tx : transactions_) {
+    //         if ( ! entity_from_data(tx, source, true, witness_default())) {
+    //             break;
+    //         }
+    //     }
+
+    //     if (version < block_transactions::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<block_transactions> from_data(byte_reader& reader, uint32_t version) {
+        auto const block_hash = read_hash(reader);
+        if ( ! block_hash) {
+            return make_unexpected(block_hash.error());
         }
 
-        // Order is required.
-        for (auto& tx : transactions_) {
-            if ( ! entity_from_data(tx, source, true, witness_default())) {
-                break;
-            }
+        auto txs = read_collection<chain::transaction>(reader, true);
+        if ( ! txs) {
+            return make_unexpected(txs.error());
         }
 
         if (version < block_transactions::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::version_too_low);
         }
 
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return block_transactions(*block_hash, std::move(*txs));
     }
 
     [[nodiscard]]
@@ -98,15 +119,10 @@ public:
         sink.write_variable_little_endian(transactions_.size());
 
         for (auto const& element : transactions_) {
-            element.to_data(sink, /*wire*/ true, witness_default()
-#ifdef KTH_CACHED_RPC_DATA
-                            , /*unconfirmed*/ false
-#endif
-                            );
+            element.to_data(sink, /*wire*/ true);
         }
     }
 
-    //void to_data(uint32_t version, writer& sink) const;
     [[nodiscard]]
     bool is_valid() const;
 

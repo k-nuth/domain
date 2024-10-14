@@ -15,6 +15,7 @@
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -23,6 +24,7 @@
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
+#include <kth/domain/deserialization.hpp>
 
 namespace kth::domain::message {
 
@@ -53,33 +55,66 @@ public:
 
     void set_stop_hash(hash_digest const& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // /*virtual*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
 
+    //     // Discard protocol version because it is stupid.
+    //     source.read_4_bytes_little_endian();
+    //     auto const count = source.read_size_little_endian();
+
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > max_get_blocks) {
+    //         source.invalidate();
+    //     } else {
+    //         start_hashes_.reserve(count);
+    //     }
+
+    //     for (size_t hash = 0; hash < count && source; ++hash) {
+    //         start_hashes_.push_back(source.read_hash());
+    //     }
+
+    //     stop_hash_ = source.read_hash();
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<get_blocks> from_data(byte_reader& reader, uint32_t /*version*/) {
         // Discard protocol version because it is stupid.
-        source.read_4_bytes_little_endian();
-        auto const count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > max_get_blocks) {
-            source.invalidate();
-        } else {
-            start_hashes_.reserve(count);
+        auto const skipped_version = reader.skip(4);
+        if ( ! skipped_version) {
+            return make_unexpected(skipped_version.error());
         }
 
-        for (size_t hash = 0; hash < count && source; ++hash) {
-            start_hashes_.push_back(source.read_hash());
+        auto const count = reader.read_size_little_endian();
+        if ( ! count) {
+            return make_unexpected(count.error());
         }
 
-        stop_hash_ = source.read_hash();
+        hash_list start_hashes;
+        start_hashes.reserve(*count);
 
-        if ( ! source) {
-            reset();
+        for (size_t i = 0; i < *count; ++i) {
+            auto const start_hash = read_hash(reader);
+            if ( ! start_hash) {
+                return make_unexpected(start_hash.error());
+            }
+            start_hashes.emplace_back(*start_hash);
         }
 
-        return source;
+        auto const stop_hash = read_hash(reader);
+        if ( ! stop_hash) {
+            return make_unexpected(stop_hash.error());
+        }
+
+        return get_blocks(std::move(start_hashes), *stop_hash);
     }
 
     [[nodiscard]]

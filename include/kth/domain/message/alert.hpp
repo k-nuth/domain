@@ -10,6 +10,7 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -30,12 +31,6 @@ public:
     alert(data_chunk const& payload, data_chunk const& signature);
     alert(data_chunk&& payload, data_chunk&& signature);
 
-    // alert(alert const& x) = default;
-    // alert(alert&& x) = default;
-    // /// This class is move assignable but not copy assignable.
-    // alert& operator=(alert&& x) = default;
-    // alert& operator=(alert const&) = default;
-
     bool operator==(alert const& x) const;
     bool operator!=(alert const& x) const;
 
@@ -55,18 +50,46 @@ public:
     void set_signature(data_chunk const& value);
     void set_signature(data_chunk&& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
 
-        payload_ = source.read_bytes(source.read_size_little_endian());
-        signature_ = source.read_bytes(source.read_size_little_endian());
+    //     payload_ = source.read_bytes(source.read_size_little_endian());
+    //     signature_ = source.read_bytes(source.read_size_little_endian());
 
-        if ( ! source) {
-            reset();
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<alert> from_data(byte_reader& reader, uint32_t /*version*/) {
+        auto const payload_size = reader.read_size_little_endian();
+        if ( ! payload_size) {
+            return make_unexpected(payload_size.error());
         }
 
-        return source;
+        auto const payload = reader.read_bytes(*payload_size);
+        if ( ! payload) {
+            return make_unexpected(payload.error());
+        }
+
+        auto const signature_size = reader.read_size_little_endian();
+        if ( ! signature_size) {
+            return make_unexpected(signature_size.error());
+        }
+
+        auto const signature = reader.read_bytes(*signature_size);
+        if ( ! signature) {
+            return make_unexpected(signature.error());
+        }
+
+        return alert(
+            data_chunk(payload->begin(), payload->end()),
+            data_chunk(signature->begin(), signature->end()));
     }
 
     [[nodiscard]]

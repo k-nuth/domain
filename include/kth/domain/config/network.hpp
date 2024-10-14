@@ -21,8 +21,8 @@ enum class network {
 #endif
 };
 
-inline
-std::string name(network net) {
+inline constexpr
+std::string_view name(network net) {
     switch (net) {
         case network::testnet:
             return "Testnet";

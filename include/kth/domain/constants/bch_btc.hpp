@@ -8,15 +8,7 @@
 #include <cstddef>
 #include <cstdint>
 
-// #include <kth/domain/define.hpp>
-// #include <kth/domain/multi_crypto_settings.hpp>
-// #include <kth/domain/version.hpp>
-
-// #include <kth/infrastructure/compat.hpp>
 #include <kth/infrastructure/config/checkpoint.hpp>
-// #include <kth/infrastructure/constants.hpp>
-// #include <kth/infrastructure/math/hash.hpp>
-// #include <kth/infrastructure/message/network_address.hpp>
 
 namespace kth {
 

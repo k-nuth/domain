@@ -58,7 +58,7 @@ input::input(input const& x)
     : input(x.value_) {}
 
 input::input(chain::input_point const& value)
-    : value_({value, {}, max_input_sequence}) {}
+    : value_(chain::input{value, {}, max_input_sequence}) {}
 
 input::operator chain::input const&() const {
     return value_;

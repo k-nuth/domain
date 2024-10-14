@@ -10,7 +10,9 @@
 
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/deserialization.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -49,29 +51,55 @@ public:
     void set_indexes(const std::vector<uint64_t>& values);
     void set_indexes(std::vector<uint64_t>&& values);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
 
-        block_hash_ = source.read_hash();
-        auto const count = source.read_size_little_endian();
+    //     block_hash_ = source.read_hash();
+    //     auto const count = source.read_size_little_endian();
 
-        // Guard against potential for arbitary memory allocation.
-        if (count > static_absolute_max_block_size()) {
-            source.invalidate();
-        } else {
-            indexes_.reserve(count);
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > static_absolute_max_block_size()) {
+    //         source.invalidate();
+    //     } else {
+    //         indexes_.reserve(count);
+    //     }
+
+    //     for (size_t position = 0; position < count && source; ++position) {
+    //         indexes_.push_back(source.read_size_little_endian());
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<get_block_transactions> from_data(byte_reader& reader, uint32_t /*version*/) {
+        auto const block_hash = read_hash(reader);
+        if ( ! block_hash) {
+            return make_unexpected(block_hash.error());
         }
-
-        for (size_t position = 0; position < count && source; ++position) {
-            indexes_.push_back(source.read_size_little_endian());
+        auto const count = reader.read_size_little_endian();
+        if ( ! count) {
+            return make_unexpected(count.error());
         }
-
-        if ( ! source) {
-            reset();
+        if (*count > static_absolute_max_block_size()) {
+            return make_unexpected(error::invalid_size);
         }
-
-        return source;
+        std::vector<uint64_t> indexes;
+        indexes.reserve(*count);
+        for (size_t i = 0; i < *count; ++i) {
+            auto const index = reader.read_size_little_endian();
+            if ( ! index) {
+                return make_unexpected(index.error());
+            }
+            indexes.push_back(*index);
+        }
+        return get_block_transactions(*block_hash, std::move(indexes));
     }
 
     [[nodiscard]]

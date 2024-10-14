@@ -13,6 +13,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/message/block.hpp>
 #include <kth/domain/message/transaction.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
@@ -60,18 +61,10 @@ public:
     using const_ptr = std::shared_ptr<const reject>;
 
     reject();
-
     reject(reason_code code, std::string const& message, std::string const& reason);
     reject(reason_code code, std::string&& message, std::string&& reason);
-
     reject(reason_code code, std::string const& message, std::string const& reason, hash_digest const& data);
     reject(reason_code code, std::string&& message, std::string&& reason, hash_digest const& data);
-
-    // reject(reject const& x) = default;
-    // reject(reject&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // reject& operator=(reject&& x) = default;
-    // reject& operator=(reject const&) = default;
 
     bool operator==(reject const& x) const;
     bool operator!=(reject const& x) const;
@@ -105,34 +98,75 @@ public:
 
     void set_data(hash_digest const& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        message_ = source.read_string();
-        code_ = reason_from_byte(source.read_byte());
-        reason_ = source.read_string();
+    //     message_ = source.read_string();
+    //     code_ = reason_from_byte(source.read_byte());
+    //     reason_ = source.read_string();
 
-        if ((message_ == block::command) ||
-            (message_ == transaction::command)) {
+    //     if ((message_ == block::command) ||
+    //         (message_ == transaction::command)) {
+    //         // Some nodes do not follow the documented convention of supplying hash
+    //         // for tx and block rejects. Use this to prevent error on empty stream.
+    //         auto const bytes = source.read_bytes();
+
+    //         if (bytes.size() == hash_size) {
+    //             build_array(data_, {bytes});
+    //         }
+    //     }
+
+    //     if (version < reject::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<reject> from_data(byte_reader& reader, uint32_t version) {
+        auto message = reader.read_string();
+        if ( ! message) {
+            return make_unexpected(message.error());
+        }
+        auto const code = reader.read_byte();
+        if ( ! code) {
+            return make_unexpected(code.error());
+        }
+        auto reason = reader.read_string();
+        if ( ! reason) {
+            return make_unexpected(reason.error());
+        }
+
+        hash_digest data;
+        if (*message == block::command || *message == transaction::command) {
             // Some nodes do not follow the documented convention of supplying hash
             // for tx and block rejects. Use this to prevent error on empty stream.
-            auto const bytes = source.read_bytes();
-
-            if (bytes.size() == hash_size) {
-                build_array(data_, {bytes});
+            auto const bytes = reader.read_remaining_bytes();
+            if ( ! bytes) {
+                return make_unexpected(bytes.error());
+            }
+            if (bytes->size() == hash_size) {
+                build_array(data, {data_chunk(bytes->begin(), bytes->end())});
             }
         }
 
         if (version < reject::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::version_too_low);
         }
 
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return reject(
+            reason_from_byte(*code),
+            std::move(*message),
+            std::move(*reason),
+            data
+        );
     }
 
     [[nodiscard]]
