@@ -16,7 +16,6 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <kth/domain/chain/transaction.hpp>
-#include <kth/domain/chain/witness.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/interpreter.hpp>
 #include <kth/domain/machine/operation.hpp>
@@ -70,6 +69,14 @@ script::script(data_chunk const& encoded, bool prefix)
     : script_basis(encoded, prefix)
 {}
 
+script::script(script_basis const& x)
+    : script_basis(x)
+{}
+
+script::script(script_basis&& x) noexcept
+    : script_basis(std::move(x))
+{}
+
 script::script(script&& x) noexcept
     : script_basis(std::move(x))
 {}
@@ -93,19 +100,27 @@ script& script::operator=(script const& x) {
     script_basis::operator=(x);
     return *this;
 }
-// Operators.
-//-----------------------------------------------------------------------------
-
-// bool script::operator==(script const& x) const {
-//     return bytes_ == x.bytes_;
-// }
-
-// bool script::operator!=(script const& x) const {
-//     return !(*this == x);
-// }
 
 // Deserialization.
 //-----------------------------------------------------------------------------
+
+// static
+expect<script> script::from_data(byte_reader& reader, bool prefix) {
+    auto basis = script_basis::from_data(reader, prefix);
+    if ( ! basis) {
+        return make_unexpected(basis.error());
+    }
+    return script(std::move(*basis));
+}
+
+// static
+expect<script> script::from_data_with_size(byte_reader& reader, size_t size) {
+    auto basis = script_basis::from_data_with_size(reader, size);
+    if ( ! basis) {
+        return make_unexpected(basis.error());
+    }
+    return script(std::move(*basis));
+}
 
 // Concurrent read/write is not supported, so no critical section.
 bool script::from_string(std::string const& mnemonic) {
@@ -140,6 +155,12 @@ void script::from_operations(operation::list const& ops) {
     operations_ = ops;
     cached_ = true;
 }
+
+
+
+
+
+
 
 // protected
 // Concurrent read/write is not supported, so no critical section.
@@ -309,7 +330,7 @@ std::pair<hash_digest, size_t> signature_hash(transaction const& tx, uint32_t si
     // There is no rational interpretation of a signature hash for a coinbase.
     KTH_ASSERT( ! tx.is_coinbase());
 
-    auto serialized = tx.to_data(true, false);
+    auto serialized = tx.to_data(true);
     extend_data(serialized, to_little_endian(sighash_type));
     return {bitcoin_hash(serialized), serialized.size()};
 }
@@ -720,26 +741,6 @@ bool script::is_coinbase_pattern(operation::list const& ops, size_t height) {
     return ops[0].is_nominal_push() && ops[0].data() == number(height).data();
 }
 
-//*****************************************************************************
-// CONSENSUS: this pattern is used to commit to bip141 witness data.
-//*****************************************************************************
-#if defined(KTH_SEGWIT_ENABLED)
-bool script::is_commitment_pattern(operation::list const& ops) {
-    static auto const header = to_big_endian(witness_head);
-
-    // Bytes after commitment are optional with no consensus meaning (bip141).
-    // Commitment is not executable so invalid trailing operations are allowed.
-    return ops.size() > 1 && ops[0].code() == opcode::return_ && ops[1].code() == opcode::push_size_36 && std::equal(header.begin(), header.end(), ops[1].data().begin());
-}
-
-//*****************************************************************************
-// CONSENSUS: this pattern is used in bip141 validation rules.
-//*****************************************************************************
-bool script::is_witness_program_pattern(operation::list const& ops) {
-    return ops.size() == 2 && ops[0].is_version() && ops[1].data().size() >= min_witness_program && ops[1].data().size() <= max_witness_program;
-}
-#endif
-
 // The satoshi client tests for 83 bytes total. This allows for the waste of
 // one byte to represent up to 75 bytes using the push_one_size opcode.
 // It also allows any number of push ops and limits it to 0 value and 1 per tx.
@@ -824,13 +825,6 @@ bool script::is_pay_script_hash_32_pattern(operation::list const& ops) {
         ops[0].code() == opcode::hash256 &&
         ops[1].code() == opcode::push_size_32 &&
         ops[2].code() == opcode::equal;
-}
-
-//*****************************************************************************
-// CONSENSUS: this pattern is used to activate bip141 validation rules.
-//*****************************************************************************
-bool script::is_pay_witness_script_hash_pattern(operation::list const& ops) {
-    return ops.size() == 2 && ops[0].code() == opcode::push_size_0 && ops[1].code() == opcode::push_size_32;
 }
 
 // The first push is based on wacky satoshi op_check_multisig behavior that
@@ -963,30 +957,6 @@ operation::list script::to_pay_multisig_pattern(uint8_t signatures, data_stack c
 // Utilities (non-static).
 //-----------------------------------------------------------------------------
 
-#if defined(KTH_SEGWIT_ENABLED)
-data_chunk script::witness_program() const {
-    // The first operations access must be method-based to guarantee the cache.
-    auto const& ops = operations();
-    return is_witness_program_pattern(ops) ? ops[1].data() : data_chunk{};
-}
-#endif
-
-#if ! defined(KTH_CURRENCY_BCH)
-script_version script::version() const {
-    // The first operations access must be method-based to guarantee the cache.
-    auto const& ops = operations();
-
-#if defined(KTH_SEGWIT_ENABLED)
-    if ( ! is_witness_program_pattern(ops)) {
-        return script_version::unversioned;
-    }
-#endif
-
-    // Version 0 is specified, others are reserved (bip141).
-    return (ops[0].code() == opcode::push_size_0) ? script_version::zero : script_version::reserved;
-}
-#endif // ! KTH_CURRENCY_BCH
-
 // Caller should test for is_sign_script_hash_pattern when sign_public_key_hash result
 // as it is possible for an input script to match both patterns.
 script_pattern script::pattern() const {
@@ -1058,20 +1028,6 @@ script_pattern script::input_pattern() const {
     return script_pattern::non_standard;
 }
 
-#if defined(KTH_SEGWIT_ENABLED)
-bool script::is_pay_to_witness(uint32_t forks) const {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    (void)forks;    //Note(kth): to mute the Linter
-    return false;
-#else
-    // This is used internally as an optimization over using script::pattern.
-    // The first operations access must be method-based to guarantee the cache.
-    return is_enabled(forks, rule_fork::bip141_rule) &&
-           is_witness_program_pattern(operations());
-#endif
-}
-#endif
-
 bool script::is_pay_to_script_hash(uint32_t forks) const {
     // This is used internally as an optimization over using script::pattern.
     // The first operations access must be method-based to guarantee the cache.
@@ -1110,17 +1066,6 @@ size_t script::sigops(bool accurate) const {
 
     return total;
 }
-
-#if ! defined(KTH_CURRENCY_BCH)
-// Concurrent read/write is not supported, so no critical section.
-void script::find_and_delete(data_stack const& endorsements) {
-    script_basis::find_and_delete(endorsements);
-
-    // Invalidate the cache so that the operations may be regenerated.
-    operations_.clear();
-    cached_ = false;
-}
-#endif // ! KTH_CURRENCY_BCH
 
 ////// This is slightly more efficient because the script does not get parsed,
 ////// but the static template implementation is more self-explanatory.
@@ -1197,12 +1142,7 @@ code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
     auto const& in = tx.inputs()[input];
     auto const& prevout = in.previous_output().validation.cache;
 
-#if ! defined(KTH_SEGWIT_ENABLED)
-    auto res = verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
-    return res;
-#else
-    return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
-#endif
+    return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
 }
 
 } // namespace kth::domain::chain

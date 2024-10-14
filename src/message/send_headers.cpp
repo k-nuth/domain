@@ -34,6 +34,21 @@ void send_headers::reset() {
     insufficient_version_ = true;
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<send_headers> send_headers::from_data(byte_reader& reader, uint32_t version) {
+    if (version < send_headers::version_minimum) {
+        return make_unexpected(error::version_too_low);
+    }
+    auto const insufficient_version = false;
+    return send_headers(insufficient_version);
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk send_headers::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

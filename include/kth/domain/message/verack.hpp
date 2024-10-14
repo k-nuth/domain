@@ -10,13 +10,14 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/utils.hpp>
+
 #include <kth/domain/concepts.hpp>
 
 namespace kth::domain::message {
@@ -32,11 +33,8 @@ public:
 
     verack() = default;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
-        return source;
-    }
+    static
+    expect<verack> from_data(byte_reader& reader, uint32_t version);
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;

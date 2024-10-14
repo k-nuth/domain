@@ -1169,25 +1169,13 @@ std::pair<interpreter::result, size_t> op_check_sig_common(program& program, int
     ec_signature signature;
     der_signature distinguished;
     auto const bip66 = chain::script::is_enabled(program.forks(), rule_fork::bip66_rule);
-
-#if defined(KTH_CURRENCY_BCH)
     auto const bip143 = false;
-#else
-    auto const bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
-#endif
 
     auto const public_key = program.pop();
     auto endorsement = program.pop();
 
     // Create a subscript with endorsements stripped (sort of).
     chain::script script_code(program.subscript());
-
-#if ! defined(KTH_CURRENCY_BCH)
-    // BIP143: find and delete of the signature is not applied for v0.
-    if ( ! (bip143 && program.version() == script_version::zero)) {
-        script_code.find_and_delete({endorsement});
-    }
-#endif // ! KTH_CURRENCY_BCH
 
     // BIP62: An empty endorsement is not considered lax encoding.
     if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement))) {
@@ -1316,22 +1304,10 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
     der_signature distinguished;
     auto public_key = public_keys.begin();
     auto bip66 = chain::script::is_enabled(program.forks(), rule_fork::bip66_rule);
-
-#if ! defined(KTH_CURRENCY_BCH)
-    auto bip143 = chain::script::is_enabled(program.forks(), bip143_rule);
-#else
     auto bip143 = false;
-#endif
 
     // Before looping create subscript with endorsements stripped (sort of).
     chain::script script_code(program.subscript());
-
-#if ! defined(KTH_CURRENCY_BCH)
-    // BIP143: find and delete of the signature is not applied for v0.
-    if ( ! (bip143 && program.version() == script_version::zero)) {
-        script_code.find_and_delete(endorsements);
-    }
-#endif // ! KTH_CURRENCY_BCH
 
     // The exact number of signatures are required and must be in order.
     // One key can validate more than one script. So we always advance

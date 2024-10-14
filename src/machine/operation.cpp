@@ -137,6 +137,27 @@ void operation::reset() {
     valid_ = false;
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<operation> operation::from_data(byte_reader& reader) {
+    auto code_exp = reader.read_byte();
+    if ( ! code_exp) {
+        return make_unexpected(code_exp.error());
+    }
+    auto code = opcode(*code_exp);
+    auto const size = read_data_size(code, reader);
+    if ( ! size) {
+        return make_unexpected(size.error());
+    }
+    auto data = reader.read_bytes(*size);
+    if ( ! data) {
+        return make_unexpected(data.error());
+    }
+    return operation(data_chunk(data->begin(), data->end()), false);
+}
+
 // Serialization.
 //-----------------------------------------------------------------------------
 

@@ -14,7 +14,6 @@ option(ENABLE_SHARED "" OFF)
 option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE property" ON)
 option(WITH_TESTS "Compile with unit tests." ON)
 option(WITH_EXAMPLES "Compile with examples." OFF)
-option(WITH_CACHED_RPC_DATA "Cached RPC data enabled." OFF)
 option(WITH_ICU "Compile with International Components for Unicode." OFF)
 option(WITH_PNG "Compile with Libpng support." OFF)
 option(WITH_QRENCODE "Compile with QREncode." OFF)
@@ -22,11 +21,6 @@ option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
 option(WITH_CONSOLE "Compile console application." OFF)
 
 option(GLOBAL_BUILD "" OFF)
-
-if (WITH_CACHED_RPC_DATA)
-  message(STATUS "Knuth: Cached RPC data enabled")
-  add_definitions(-DKTH_CACHED_RPC_DATA)
-endif()
 
 if (WITH_ICU)
   add_definitions(-DWITH_ICU -DBOOST_HAS_ICU)
@@ -39,6 +33,8 @@ endif()
 if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
 endif()
+
+add_definitions(-DJEMALLOC)
 
 
 set(LOG_LIBRARY "boost" CACHE STRING "Setting for the logging library (boost|spdlog|binlog).")
@@ -101,6 +97,20 @@ if (WITH_ICU)
 endif()
 
 find_package(tiny-aes-c REQUIRED)
+# # jemalloc
+# find_package(PkgConfig REQUIRED)
+# pkg_check_modules(JEMALLOC jemalloc)
+
+# message("-- Found jemalloc: JEMALLOC_INCLUDE_DIRS: ${JEMALLOC_INCLUDE_DIRS}")
+# message("-- Found jemalloc: JEMALLOC_LIBRARY_DIRS: ${JEMALLOC_LIBRARY_DIRS}")
+# message("-- Found jemalloc: JEMALLOC_CFLAGS_OTHER: ${JEMALLOC_CFLAGS_OTHER}")
+
+# include_directories(${JEMALLOC_INCLUDE_DIRS})
+# link_directories(${JEMALLOC_LIBRARY_DIRS})
+# add_definitions(${JEMALLOC_CFLAGS_OTHER})
+
+
+
 
 include(CheckCXXCompilerFlag)
 
@@ -284,13 +294,6 @@ set(kth_sources_just_kth
     # src/wallet/transaction_functions.cpp
 )
 
-if (NOT ${CURRENCY} STREQUAL "BCH")
-    set(kth_sources_just_legacy
-      ${kth_sources_just_legacy}
-      src/chain/witness.cpp
-    )
-endif()
-
 if (${CURRENCY} STREQUAL "LTC")
     set(kth_sources_just_kth
       ${kth_sources_just_kth}
@@ -369,7 +372,6 @@ set(kth_headers
     include/kth/domain/chain/script_basis.hpp
     include/kth/domain/chain/transaction_basis.hpp
     include/kth/domain/chain/stealth.hpp
-    include/kth/domain/chain/witness.hpp
     include/kth/domain/chain/point_iterator.hpp
     include/kth/domain/chain/header.hpp
     include/kth/domain/chain/history.hpp
@@ -402,7 +404,6 @@ set(kth_headers
     include/kth/domain/wallet/encrypted_keys.hpp
     include/kth/domain/wallet/wallet_manager.hpp
 
-    include/kth/domain/utils.hpp
     include/kth/domain/common.hpp
     include/kth/domain/machine/opcode.hpp
     include/kth/domain/machine/operation.hpp
@@ -412,7 +413,6 @@ set(kth_headers
     include/kth/domain/math/limits.hpp
     include/kth/domain/math/stealth.hpp
     include/kth/domain/utility/property_tree.hpp
-    include/kth/domain/multi_crypto_settings.hpp
     include/kth/domain/impl/machine
     include/kth/domain/impl/machine/program.ipp
     include/kth/domain/impl/machine/interpreter.ipp
@@ -477,6 +477,7 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
 target_link_libraries(${PROJECT_NAME} PUBLIC tiny-aes-c::tiny-aes-c)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${JEMALLOC_LIBRARIES})
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
