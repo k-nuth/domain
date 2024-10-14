@@ -35,11 +35,6 @@ point::point()
 point::point(hash_digest const& hash, uint32_t index)
     : hash_(hash), index_(index), valid_(true) {}
 
-// // protected
-// point::point(hash_digest const& hash, uint32_t index, bool valid)
-//     : hash_(hash), index_(index), valid_(valid)
-// {}
-
 // Operators.
 //-----------------------------------------------------------------------------
 
@@ -85,6 +80,34 @@ void point::reset() {
 // constexpr
 bool point::is_valid() const {
     return valid_ || (hash_ != null_hash) || (index_ != 0);
+}
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+
+expect<point> point::from_data(byte_reader& reader, bool wire) {
+    auto const hash = read_hash(reader);
+    if ( ! hash) {
+        return make_unexpected(hash.error());
+    }
+
+    if ( ! wire) {
+        auto const index = reader.read_little_endian<uint16_t>();
+        if ( ! index) {
+            return make_unexpected(index.error());
+        }
+        if (*index == max_uint16) {
+            return point {*hash, null_index};
+        }
+        return point {*hash, *index};
+    }
+
+    auto const index = reader.read_little_endian<uint32_t>();
+    if ( ! index) {
+        return make_unexpected(index.error());
+    }
+    return point {*hash, *index};
 }
 
 // Serialization.

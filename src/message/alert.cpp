@@ -47,6 +47,39 @@ void alert::reset() {
     signature_.shrink_to_fit();
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<alert> alert::from_data(byte_reader& reader, uint32_t /*version*/) {
+    auto const payload_size = reader.read_size_little_endian();
+    if ( ! payload_size) {
+        return make_unexpected(payload_size.error());
+    }
+
+    auto const payload = reader.read_bytes(*payload_size);
+    if ( ! payload) {
+        return make_unexpected(payload.error());
+    }
+
+    auto const signature_size = reader.read_size_little_endian();
+    if ( ! signature_size) {
+        return make_unexpected(signature_size.error());
+    }
+
+    auto const signature = reader.read_bytes(*signature_size);
+    if ( ! signature) {
+        return make_unexpected(signature.error());
+    }
+
+    return alert(
+        data_chunk(payload->begin(), payload->end()),
+        data_chunk(signature->begin(), signature->end()));
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk alert::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

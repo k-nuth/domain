@@ -137,6 +137,50 @@ void operation::reset() {
     valid_ = false;
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// template <typename R, KTH_IS_READER(R)>
+// bool from_data(R& source) {
+//     ////reset();
+//     valid_ = true;
+//     code_ = static_cast<opcode>(source.read_byte());
+//     auto const size = read_data_size(code_, source);
+
+//     // The max_script_size and max_push_data_size constants limit
+//     // evaluation, but not all scripts evaluate, so use max_block_size
+//     // to guard memory allocation here.
+//     if (size > static_absolute_max_block_size()) {
+//         source.invalidate();
+//     } else {
+//         data_ = source.read_bytes(size);
+//     }
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return valid_;
+// }
+
+// static
+expect<operation> operation::from_data(byte_reader& reader) {
+    auto code_exp = reader.read_byte();
+    if ( ! code_exp) {
+        return make_unexpected(code_exp.error());
+    }
+    auto code = opcode(*code_exp);
+    auto const size = read_data_size(code, reader);
+    if ( ! size) {
+        return make_unexpected(size.error());
+    }
+    auto data = reader.read_bytes(*size);
+    if ( ! data) {
+        return make_unexpected(data.error());
+    }
+    return operation(data_chunk(data->begin(), data->end()), false);
+}
+
 // Serialization.
 //-----------------------------------------------------------------------------
 

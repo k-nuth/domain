@@ -33,39 +33,97 @@
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
-#include <kth/domain/deserialization.hpp>
+
+
+#include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <fmt/std.h>
+
+#ifdef JEMALLOC
+#include <jemalloc/jemalloc.h>
+
+inline
+void print_memory_usage(std::string_view message) {
+    size_t epoch = 1;
+    size_t sz = sizeof(size_t);
+    size_t allocated = 0;
+    size_t active = 0;
+    size_t resident = 0;
+    size_t retained = 0;
+
+    mallctl("thread.tcache.flush", NULL, NULL, NULL, 0);
+    mallctl("epoch", NULL, NULL, &epoch, sizeof(epoch));
+    mallctl("stats.allocated", &allocated, &sz, nullptr, 0);
+    mallctl("stats.active", &active, &sz, nullptr, 0);
+    mallctl("stats.resident", &resident, &sz, nullptr, 0);
+    mallctl("stats.retained", &retained, &sz, nullptr, 0);
+
+    double allocated_mb = allocated / 1'000'000.0;
+    double active_mb = active / 1'000'000.0;
+    double resident_mb = resident / 1'000'000.0;
+    double retained_mb = retained / 1'000'000.0;
+
+    fmt::print("{:<60} - allocated: {:>10} - active: {:>10} - resident: {:>10} - retained: {:>10}\n", message, allocated_mb, active_mb, resident_mb, retained_mb);
+}
+#else
+inline
+void print_memory_usage(std::string_view message) {
+    fmt::print("{} - memory usage not available\n", message);
+}
+#endif
+
+
+#ifndef JEMALLOC
+#error "JEMALLOC must be defined"
+#endif
+
 
 namespace kth::domain::chain {
 
 namespace detail {
+// Read a length-prefixed collection of inputs or outputs from the source.
+template <class Source, class Put>
+bool read(Source& source, std::vector<Put>& puts, bool wire, bool witness) {
+    auto result = true;
+    auto const count = source.read_size_little_endian();
+    fmt::print("count: {}\n", count);
 
-// // Read a length-prefixed collection of inputs or outputs from the source.
-// template <class Source, class Put>
-// bool read(Source& source, std::vector<Put>& puts, bool wire) {
-//     auto result = true;
-//     auto const count = source.read_size_little_endian();
+    // Guard against potential for arbitary memory allocation.
+    if (count > static_absolute_max_block_size()) {
+        fmt::print("count > static_absolute_max_block_size -> invalidate\n");
+        source.invalidate();
+    } else {
+        fmt::print("count <= static_absolute_max_block_size -> resize\n");
+        puts.resize(count);
+    }
 
-//     // Guard against potential for arbitary memory allocation.
-//     if (count > static_absolute_max_block_size()) {
-//         source.invalidate();
-//     } else {
-//         puts.resize(count);
-//     }
+    auto const deserialize = [&](Put& put) {
+        std::string message = fmt::format("before parsing element");
+        print_memory_usage(message);
 
-//     auto const deserialize = [&](Put& put) {
-//         result = result && put.from_data(source, wire);
-// #ifndef NDEBUG
-//         put.script().operations();
-// #endif
-//     };
+        result = result && put.from_data(source, wire);
 
-//     std::for_each(puts.begin(), puts.end(), deserialize);
-//     return result;
-// }
+        message = fmt::format("after parsing element");
+        print_memory_usage(message);
+
+        fmt::print("result: {}\n", result);
+
+#ifndef NDEBUG
+        fmt::print("running put.script().operations()\n");
+        put.script().operations();
+#endif
+    };
+
+    std::for_each(puts.begin(), puts.end(), deserialize);
+    fmt::print("after std::for_each\n");
+    print_memory_usage("after std::for_each");
+
+    return result;
+}
 
 // Write a length-prefixed collection of inputs or outputs to the sink.
 template <class Sink, class Put>
-void write(Sink& sink, const std::vector<Put>& puts, bool wire) {
+void write(Sink& sink, const std::vector<Put>& puts, bool wire, bool witness) {
     sink.write_variable_little_endian(puts.size());
 
     auto const serialize = [&](const Put& put) {
@@ -80,7 +138,7 @@ void write(Sink& sink, const std::vector<Put>& puts, bool wire) {
 
 class transaction_basis;
 
-hash_digest hash(transaction_basis const& tx);
+hash_digest hash(transaction_basis const& tx, bool witness);
 hash_digest outputs_hash(transaction_basis const& tx);
 hash_digest inpoints_hash(transaction_basis const& tx);
 hash_digest sequences_hash(transaction_basis const& tx);
@@ -93,7 +151,6 @@ uint64_t total_input_value(transaction_basis const& tx);
 uint64_t total_output_value(transaction_basis const& tx);
 uint64_t fees(transaction_basis const& tx);
 bool is_overspent(transaction_basis const& tx);
-
 
 class KD_API transaction_basis {
 public:
@@ -109,6 +166,12 @@ public:
     transaction_basis(uint32_t version, uint32_t locktime, ins const& inputs, outs const& outputs);
     transaction_basis(uint32_t version, uint32_t locktime, ins&& inputs, outs&& outputs);
 
+    // transaction_basis(transaction_basis const& x) = default;
+    // transaction_basis(transaction_basis&& x) = default;
+    // transaction_basis& operator=(transaction_basis const& x) = default;
+    // transaction_basis& operator=(transaction_basis&& x) = default;
+
+
     // Operators.
     //-----------------------------------------------------------------------------
 
@@ -118,8 +181,74 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    static
-    expect<transaction_basis> from_data(byte_reader& reader, bool wire = true);
+    // Witness is not used by outputs, just for template normalization.
+    template <typename R, KTH_IS_READER(R)>
+    bool from_data(R& source, bool wire = true, bool witness = false) {
+        reset();
+        fmt::print("transaction_basis::from_data\n");
+        fmt::print("wire: {}\n", wire);
+        fmt::print("witness: {}\n", witness);
+
+        if (wire) {
+            // Wire (satoshi protocol) deserialization.
+            version_ = source.read_4_bytes_little_endian();
+            fmt::print("version_: {}\n", version_);
+
+            std::string message = fmt::format("before parsing inputs");
+            print_memory_usage(message);
+
+            detail::read(source, inputs_, wire);
+
+            message = fmt::format("after parsing inputs");
+            print_memory_usage(message);
+
+            auto const marker = false;
+            fmt::print("marker: {}\n", marker);
+#endif
+
+            // This is always enabled so caller should validate with is_segregated.
+            if (marker) {
+                fmt::print("marker is true\n");
+                // Skip over the peeked witness flag.
+                source.skip(1);
+                detail::read(source, inputs_, wire);
+                detail::read(source, outputs_, wire);
+            } else {
+                fmt::print("marker is false\n");
+                message = fmt::format("before parsing outputs");
+                print_memory_usage(message);
+                detail::read(source, outputs_, wire);
+                message = fmt::format("after parsing outputs");
+                print_memory_usage(message);
+            }
+
+            locktime_ = source.read_4_bytes_little_endian();
+            fmt::print("locktime_: {}\n", locktime_);
+        } else {
+            // Database (outputs forward) serialization.
+            // Witness data is managed internal to inputs.
+            detail::read(source, outputs_, wire);
+            detail::read(source, inputs_, wire);
+            auto const locktime = source.read_variable_little_endian();
+            auto const version = source.read_variable_little_endian();
+
+            if (locktime > max_uint32 || version > max_uint32) {
+                source.invalidate();
+            }
+
+            locktime_ = static_cast<uint32_t>(locktime);
+            version_ = static_cast<uint32_t>(version);
+        }
+
+        if ( ! source) {
+            fmt::print("source is invalid\n");
+            reset();
+        } else {
+            fmt::print("source is valid\n");
+        }
+
+        return source;
+    }
 
     [[nodiscard]]
     bool is_valid() const;
@@ -128,21 +257,19 @@ public:
     //-----------------------------------------------------------------------------
 
     [[nodiscard]]
-    data_chunk to_data(bool wire = true) const;
+    data_chunk to_data(bool wire = true, bool witness = false) const;
 
-    void to_data(data_sink& stream, bool wire = true) const;
+    void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     // Witness is not used by outputs, just for template normalization.
     template <typename W>
-    void to_data(W& sink, bool wire = true) const {
+    void to_data(W& sink, bool wire = true, bool witness = false) const {
         if (wire) {
             // Wire (satoshi protocol) serialization.
             sink.write_4_bytes_little_endian(version_);
 
-
             detail::write(sink, inputs_, wire);
             detail::write(sink, outputs_, wire);
-
 
             sink.write_4_bytes_little_endian(locktime_);
         } else {
@@ -159,7 +286,7 @@ public:
     //-----------------------------------------------------------------------------
 
     [[nodiscard]]
-    size_t serialized_size(bool wire = true) const;
+    size_t serialized_size(bool wire = true, bool witness = false) const;
 
     [[nodiscard]]
     uint32_t version() const;
@@ -213,6 +340,11 @@ public:
     [[nodiscard]]
     size_t signature_operations(bool bip16, bool bip141) const;
 
+#if defined(KTH_SEGWIT_ENABLED)
+    [[nodiscard]]
+    size_t weight() const;
+#endif
+
     [[nodiscard]]
     bool is_coinbase() const;
 
@@ -253,7 +385,7 @@ public:
     size_t min_tx_size(chain_state const& state) const;
 
     [[nodiscard]]
-    code accept(chain_state const& state, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
+    code accept(chain_state const& state, bool is_segregated, bool is_overspent, bool is_duplicated, bool transaction_pool = true) const;
 
     [[nodiscard]]
     bool is_standard() const;

@@ -30,6 +30,22 @@ void memory_pool::reset() {
     insufficient_version_ = true;
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<memory_pool> memory_pool::from_data(byte_reader& reader, uint32_t version) {
+    if (version < memory_pool::version_minimum) {
+        return make_unexpected(error::unsupported_version);
+    }
+    auto const insufficient_version = false;
+    return memory_pool(insufficient_version);
+}
+
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk memory_pool::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

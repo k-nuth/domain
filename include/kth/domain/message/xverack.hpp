@@ -10,6 +10,7 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -36,11 +37,8 @@ public:
 
     xverack() = default;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
-        return source;
-    }
+    static
+    expect<xverack> from_data(byte_reader& reader, uint32_t version);
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;

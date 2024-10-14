@@ -41,6 +41,22 @@ bool fee_filter::operator!=(fee_filter const& x) const {
     return !(*this == x);
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<fee_filter> fee_filter::from_data(byte_reader& reader, uint32_t /*version*/) {
+    auto const minimum = reader.read_little_endian<uint64_t>();
+    if ( ! minimum) {
+        return make_unexpected(minimum.error());
+    }
+    auto const insufficient_version = false;
+    return fee_filter(*minimum, insufficient_version);
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk fee_filter::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

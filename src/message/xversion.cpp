@@ -31,6 +31,20 @@ bool xversion::is_valid() const {
 
 void xversion::reset() {}
 
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<xversion> xversion::from_data(byte_reader& reader, uint32_t version) {
+    //TODO(fernando): we are skiping the message for the moment.
+    reader.skip_remaining();
+    return xversion();
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 // data_chunk xversion::to_data(uint32_t version) const {
 //     data_chunk data;
 //     auto const size = serialized_size(version);

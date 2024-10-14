@@ -13,6 +13,7 @@
 #include <kth/domain/chain/header.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -66,40 +67,8 @@ public:
     void set_flags(data_chunk const& value);
     void set_flags(data_chunk&& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
-
-        if ( ! header_.from_data(source)) {
-            return false;
-        }
-
-        total_transactions_ = source.read_4_bytes_little_endian();
-        auto const count = source.read_size_little_endian();
-
-        // Guard against potential for arbitary memory allocation.
-        if (count > static_absolute_max_block_size()) {
-            source.invalidate();
-        } else {
-            hashes_.reserve(count);
-        }
-
-        for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash) {
-            hashes_.push_back(source.read_hash());
-        }
-
-        flags_ = source.read_bytes(source.read_size_little_endian());
-
-        if (version < merkle_block::version_minimum) {
-            source.invalidate();
-        }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
-    }
+    static
+    expect<merkle_block> from_data(byte_reader& reader, uint32_t version);
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;

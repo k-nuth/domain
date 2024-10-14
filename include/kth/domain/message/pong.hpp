@@ -11,6 +11,7 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -33,11 +34,6 @@ public:
     pong() = default;
     pong(uint64_t nonce);
 
-    // pong(pong const& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // pong& operator=(pong&& x) = default;
-    // pong& operator=(pong const&) = default;
-
     bool operator==(pong const& x) const;
     bool operator!=(pong const& x) const;
 
@@ -47,19 +43,8 @@ public:
 
     void set_nonce(uint64_t value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
-
-        valid_ = true;
-        nonce_ = source.read_8_bytes_little_endian();
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
-    }
+    static
+    expect<pong> from_data(byte_reader& reader, uint32_t version);
 
     [[nodiscard]]
     data_chunk to_data(uint32_t version) const;
