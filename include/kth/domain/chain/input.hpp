@@ -18,7 +18,6 @@
 #include <kth/domain/chain/input_basis.hpp>
 #include <kth/domain/chain/output_point.hpp>
 #include <kth/domain/chain/script.hpp>
-#include <kth/domain/chain/witness.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/multi_crypto_settings.hpp>
 #include <kth/domain/wallet/payment_address.hpp>
@@ -44,20 +43,31 @@ public:
     input() = default;
     using input_basis::input_basis; // inherit constructors from input_basis
 
+    explicit
+    input(input_basis const& x);
+
+    explicit
+    input(input_basis&& x) noexcept;
+
+    // Special member functions.
+    //-------------------------------------------------------------------------
+
     input(input const& x);
     input(input&& x) noexcept;
     input& operator=(input&& x) noexcept;
     input& operator=(input const& x);
 
+    // Deserialization.
+    //-------------------------------------------------------------------------
+
+    static
+    expect<input> from_data(byte_reader& reader, bool wire);
+
+
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
-
-#if defined(KTH_SEGWIT_ENABLED)
-    void set_witness(chain::witness const& value);
-    void set_witness(chain::witness&& value);
-#endif // KTH_CURRENCY_BCH
 
     /// The first payment address extracted (may be invalid).
     wallet::payment_address address() const;

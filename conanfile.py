@@ -59,7 +59,7 @@ class KnuthDomainConan(KnuthConanFileV2):
 
     def build_requirements(self):
         if self.options.tests:
-            self.test_requires("catch2/3.6.0")
+            self.test_requires("catch2/3.7.1")
 
     def requirements(self):
         self.requires("infrastructure/0.35.0", transitive_headers=True, transitive_libs=True)

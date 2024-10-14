@@ -15,52 +15,65 @@ namespace kth::domain {
 // enum class wire_t : bool {};
 // enum class witness_t : bool {};
 
-template <typename T, typename R, KTH_IS_READER(R), typename... U>
-inline
-bool entity_from_data(T& x, R& source, U&&... u) {
-    return x.from_data(source, std::forward<U>(u)...);
-}
+// template <typename T, typename R, KTH_IS_READER(R), typename... U>
+// inline
+// bool entity_from_data(T& x, R& source, U&&... u) {
+//     return x.from_data(source, std::forward<U>(u)...);
+// }
 
+// template <typename T, typename... U>
+// inline
+// bool entity_from_data(T& x, std::istream& stream, U&&... u) {
+//     istream_reader stream_r(stream);
+//     return entity_from_data(x, stream_r, std::forward<U>(u)...);
+// }
+
+// template <typename T, typename... U>
+// inline
+// bool entity_from_data(T& x, data_chunk const& data, U&&... u) {
+//     data_source istream(data);
+//     return entity_from_data(x, istream, std::forward<U>(u)...);
+// }
+
+// template <typename T, typename R, KTH_IS_READER(R), typename... U>
+// inline
+// bool entity_from_data(T& x, uint32_t version, R& source, U&&... u) {
+//     return x.from_data(source, version, std::forward<U>(u)...);
+// }
+
+// template <typename T, typename... U>
+// inline
+// bool entity_from_data(T& x, uint32_t version, std::istream& stream, U&&... u) {
+//     istream_reader stream_r(stream);
+//     return entity_from_data(x, version, stream_r, std::forward<U>(u)...);
+// }
+
+// template <typename T, typename... U>
+// inline
+// bool entity_from_data(T& x, uint32_t version, data_chunk const& data, U&&... u) {
+//     data_source istream(data);
+//     return entity_from_data(x, version, istream, std::forward<U>(u)...);
+// }
+
+// template <typename T, typename... U>
+// inline
+// T create(U&&... u) {
+//     T x;
+//     entity_from_data(x, std::forward<U>(u)...);
+//     return x;
+// }
+
+
+//TODO: this is obselete, remove it later
 template <typename T, typename... U>
 inline
-bool entity_from_data(T& x, std::istream& stream, U&&... u) {
-    istream_reader stream_r(stream);
-    return entity_from_data(x, stream_r, std::forward<U>(u)...);
-}
-
-template <typename T, typename... U>
-inline
-bool entity_from_data(T& x, data_chunk const& data, U&&... u) {
-    data_source istream(data);
-    return entity_from_data(x, istream, std::forward<U>(u)...);
-}
-
-template <typename T, typename R, KTH_IS_READER(R), typename... U>
-inline
-bool entity_from_data(T& x, uint32_t version, R& source, U&&... u) {
-    return x.from_data(source, version, std::forward<U>(u)...);
-}
-
-template <typename T, typename... U>
-inline
-bool entity_from_data(T& x, uint32_t version, std::istream& stream, U&&... u) {
-    istream_reader stream_r(stream);
-    return entity_from_data(x, version, stream_r, std::forward<U>(u)...);
-}
-
-template <typename T, typename... U>
-inline
-bool entity_from_data(T& x, uint32_t version, data_chunk const& data, U&&... u) {
-    data_source istream(data);
-    return entity_from_data(x, version, istream, std::forward<U>(u)...);
-}
-
-template <typename T, typename... U>
-inline
-T create(U&&... u) {
-    T x;
-    entity_from_data(x, std::forward<U>(u)...);
-    return x;
+T create_old(data_chunk const& data, U&&... u) {
+    byte_reader reader(data);
+    auto res = T::from_data(reader, std::forward<U>(u)...);
+    if ( ! res) {
+        return {};
+    }
+    return *res;
 }
 
 } // namespace kth::domain
@@ -109,3 +122,4 @@ T create(U&&... u) {
 //     x.from_data(stream, witness_val(witness));
 //     return x;
 // }
+

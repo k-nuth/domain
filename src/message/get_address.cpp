@@ -22,6 +22,17 @@ bool get_address::is_valid() const {
 
 void get_address::reset() {}
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<get_address> from_data(byte_reader& reader, uint32_t /*version*/) {
+    return get_address();
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk get_address::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

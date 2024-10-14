@@ -28,9 +28,13 @@ uint32_t const output::validation::not_spent = max_uint32;
 // Constructors.
 //-----------------------------------------------------------------------------
 
-// output::output()
-//     : validation{}
-// {}
+output::output(output_basis const& x)
+    : output_basis(x)
+{}
+
+output::output(output_basis&& x) noexcept
+    : output_basis(std::move(x))
+{}
 
 output::output(output const& x)
     : output_basis(x)
@@ -78,6 +82,18 @@ output::addresses_ptr output::addresses_cache() const {
 
     return addresses_;
     ///////////////////////////////////////////////////////////////////////////
+}
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<output> output::from_data(byte_reader& reader, bool wire) {
+    auto basis = output_basis::from_data(reader, wire);
+    if ( ! basis) {
+        return make_unexpected(basis.error());
+    }
+    return output(std::move(*basis));
 }
 
 // Serialization.

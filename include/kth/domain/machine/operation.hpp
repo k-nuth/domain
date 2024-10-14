@@ -17,11 +17,13 @@
 //#include <kth/infrastructure/define.hpp>
 
 #include <kth/infrastructure/machine/script_pattern.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
+
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
@@ -55,28 +57,31 @@ public:
     //-------------------------------------------------------------------------
 
     // TODO(legacy): optimize for larger data by using a shared byte array.
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source) {
-        ////reset();
-        valid_ = true;
-        code_ = static_cast<opcode>(source.read_byte());
-        auto const size = read_data_size(code_, source);
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source) {
+    //     ////reset();
+    //     valid_ = true;
+    //     code_ = static_cast<opcode>(source.read_byte());
+    //     auto const size = read_data_size(code_, source);
 
-        // The max_script_size and max_push_data_size constants limit
-        // evaluation, but not all scripts evaluate, so use max_block_size
-        // to guard memory allocation here.
-        if (size > static_absolute_max_block_size()) {
-            source.invalidate();
-        } else {
-            data_ = source.read_bytes(size);
-        }
+    //     // The max_script_size and max_push_data_size constants limit
+    //     // evaluation, but not all scripts evaluate, so use max_block_size
+    //     // to guard memory allocation here.
+    //     if (size > static_absolute_max_block_size()) {
+    //         source.invalidate();
+    //     } else {
+    //         data_ = source.read_bytes(size);
+    //     }
 
-        if ( ! source) {
-            reset();
-        }
+    //     if ( ! source) {
+    //         reset();
+    //     }
 
-        return valid_;
-    }
+    //     return valid_;
+    // }
+
+    static
+    expect<operation> from_data(byte_reader& reader);
 
     bool from_string(std::string const& mnemonic);
 
@@ -222,9 +227,12 @@ protected:
     operation(opcode code, data_chunk&& data, bool valid);
     operation(opcode code, data_chunk const& data, bool valid);
 
-    template <typename R>
+    // template <typename R>
+    // static
+    // uint32_t read_data_size(opcode code, R& source);
+
     static
-    uint32_t read_data_size(opcode code, R& source);
+    expect<uint32_t> read_data_size(opcode code, byte_reader& reader);
 
     opcode opcode_from_data(data_chunk const& data, bool minimal);
     void reset();

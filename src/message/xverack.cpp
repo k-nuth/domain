@@ -23,6 +23,17 @@ bool xverack::is_valid() const {
 void xverack::reset() {
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<xverack> xverack::from_data(byte_reader& /*reader*/, uint32_t /*version*/) {
+    return xverack();
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk xverack::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

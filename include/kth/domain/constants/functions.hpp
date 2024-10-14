@@ -5,6 +5,10 @@
 #ifndef KTH_DOMAIN_CONSTANTS_FUNCTIONS_HPP_
 #define KTH_DOMAIN_CONSTANTS_FUNCTIONS_HPP_
 
+#include <kth/domain/config/network.hpp>
+#include <kth/domain/constants/bch.hpp>
+#include <kth/domain/constants/bch_btc.hpp>
+
 namespace kth {
 
 constexpr uint32_t work_limit(bool retarget = true) noexcept {

@@ -51,6 +51,11 @@ public:
     header() = default;
     // header(header const& x, hash_digest const& hash);
 
+    explicit
+    header(header_basis const& basis)
+        : header_basis(basis)
+    {}
+
     /// This class is copy constructible and copy assignable.
     // Note(kth): Cannot be defaulted because the std::mutex data member.
     header(header const& x);
@@ -65,20 +70,23 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, bool wire = true) {
-        header_basis::from_data(source, wire);
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, bool wire = true) {
+    //     header_basis::from_data(source);
 
-        if ( ! wire) {
-            validation.median_time_past = source.read_4_bytes_little_endian();
-        }
+    //     if ( ! wire) {
+    //         validation.median_time_past = source.read_4_bytes_little_endian();
+    //     }
 
-        if ( ! source) {
-            reset();
-        }
+    //     if ( ! source) {
+    //         reset();
+    //     }
 
-        return source;
-    }
+    //     return source;
+    // }
+
+    static
+    expect<header> from_data(byte_reader& reader, bool wire = true);
 
     // Serialization.
     //-----------------------------------------------------------------------------

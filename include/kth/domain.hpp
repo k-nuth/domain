@@ -29,10 +29,6 @@
 #include <kth/domain/chain/stealth.hpp>
 #include <kth/domain/chain/transaction.hpp>
 
-#if defined(KTH_SEGWIT_ENABLED)
-#include <kth/domain/chain/witness.hpp>
-#endif
-
 #include <kth/domain/config/network.hpp>
 #include <kth/domain/config/parser.hpp>
 

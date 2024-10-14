@@ -43,10 +43,12 @@ bool push_scripts(chain::output::list& outputs, config::output const& output, ui
 
     // If stealth add null data stealth output immediately before payment.
     if (output.is_stealth()) {
-        outputs.push_back({no_amount, output.script(), chain::token_data_opt{}});
+        // outputs.push_back({no_amount, output.script(), chain::token_data_opt{}});
+        outputs.emplace_back(no_amount, output.script(), chain::token_data_opt{});
     }
 
-    outputs.push_back({output.amount(), {payment_ops}, chain::token_data_opt{}});
+    // outputs.push_back({output.amount(), {payment_ops}, chain::token_data_opt{}});
+    outputs.emplace_back(output.amount(), chain::script{payment_ops}, chain::token_data_opt{});
     return true;
 }
 

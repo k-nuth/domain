@@ -15,6 +15,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -54,19 +55,15 @@ public:
     bool operator==(transaction const& x) const;
     bool operator!=(transaction const& x) const;
 
-    // Witness is always deserialized if present.
-    // NOTE: Witness on BCH is dissabled on the chain::block class
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        return chain::transaction::from_data(source, true, true);
-    }
+    static
+    expect<transaction> from_data(byte_reader& reader, uint32_t version);
 
-    data_chunk to_data(uint32_t version, bool witness = true) const;
-    void to_data(uint32_t version, data_sink& stream, bool witness = true) const;
+    data_chunk to_data(uint32_t version) const;
+    void to_data(uint32_t version, data_sink& stream) const;
 
     template <typename W>
-    void to_data(uint32_t /*version*/, W& sink, bool witness = true) const {
-        chain::transaction::to_data(sink, true, witness);
+    void to_data(uint32_t /*version*/, W& sink) const {
+        chain::transaction::to_data(sink, true);
     }
 
     size_t serialized_size(uint32_t version) const;
@@ -79,7 +76,6 @@ public:
 
     static
     uint32_t const version_maximum;
-
 };
 
 } // namespace kth::domain::message

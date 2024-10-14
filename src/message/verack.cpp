@@ -22,6 +22,17 @@ bool verack::is_valid() const {
 
 void verack::reset() {}
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<verack> verack::from_data(byte_reader& /*reader*/, uint32_t /*version*/) {
+    return verack();
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk verack::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

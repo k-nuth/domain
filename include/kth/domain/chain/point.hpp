@@ -15,6 +15,7 @@
 #include <kth/domain/chain/point_iterator.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/deserialization.hpp>
 #include <kth/infrastructure/math/hash.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
@@ -76,29 +77,32 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, bool wire = true) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, bool wire = true) {
+    //     reset();
 
-        valid_ = true;
-        hash_ = source.read_hash();
+    //     valid_ = true;
+    //     hash_ = source.read_hash();
 
-        if (wire) {
-            index_ = source.read_4_bytes_little_endian();
-        } else {
-            index_ = source.read_2_bytes_little_endian();
+    //     if (wire) {
+    //         index_ = source.read_4_bytes_little_endian();
+    //     } else {
+    //         index_ = source.read_2_bytes_little_endian();
 
-            if (index_ == max_uint16) {
-                index_ = null_index;
-            }
-        }
+    //         if (index_ == max_uint16) {
+    //             index_ = null_index;
+    //         }
+    //     }
 
-        if ( ! source) {
-            reset();
-        }
+    //     if ( ! source) {
+    //         reset();
+    //     }
 
-        return source;
-    }
+    //     return source;
+    // }
+
+    static
+    expect<point> from_data(byte_reader& reader, bool wire = true);
 
     // constexpr
     [[nodiscard]]

@@ -7,6 +7,9 @@
 
 #include <type_traits>
 
+#include <kth/infrastructure/concepts.hpp>
+
+
 // #define Reader typename //NOLINT
 // #define Writer typename //NOLINT
 
