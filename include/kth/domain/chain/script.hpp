@@ -37,7 +37,6 @@
 namespace kth::domain::chain {
 
 class transaction;
-class witness;
 
 class KD_API script : public script_basis {
 public:
@@ -51,10 +50,25 @@ public:
 
     script() = default;
 
+    explicit
     script(operation::list const& ops);
+
+    explicit
     script(operation::list&& ops);
+
+    explicit
     script(data_chunk const& encoded, bool prefix);
+
     script(data_chunk&& encoded, bool prefix);
+
+    explicit
+    script(script_basis const& x);
+
+    explicit
+    script(script_basis&& x) noexcept;
+
+    // Special member functions.
+    //-------------------------------------------------------------------------
 
     script(script const& x);
     script(script&& x) noexcept;
@@ -63,6 +77,12 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
+
+    static
+    expect<script> from_data(byte_reader& reader, bool wire);
+
+    static
+    expect<script> from_data_with_size(byte_reader& reader, size_t size);
 
     /// Deserialization invalidates the iterator.
     void from_operations(operation::list&& ops);
@@ -149,14 +169,6 @@ public:
     static
     bool is_coinbase_pattern(operation::list const& ops, size_t height);
 
-#if defined(KTH_SEGWIT_ENABLED)
-    static
-    bool is_commitment_pattern(operation::list const& ops);
-
-    static
-    bool is_witness_program_pattern(operation::list const& ops);
-#endif
-
     /// Common output patterns (psh and pwsh are also consensus).
     static
     bool is_null_data_pattern(operation::list const& ops);
@@ -172,9 +184,6 @@ public:
 
     static
     bool is_pay_script_hash_pattern(operation::list const& ops);
-
-    static
-    bool is_pay_witness_script_hash_pattern(operation::list const& ops);
 
     /// Common input patterns (skh is also consensus).
     static
@@ -220,14 +229,9 @@ public:
 
     /// Consensus computations.
     size_t sigops(bool accurate) const;
-    void find_and_delete(data_stack const& endorsements);
     bool is_unspendable() const;
 
     void reset();
-
-#if defined(KTH_SEGWIT_ENABLED)
-    bool is_pay_to_witness(uint32_t forks) const;
-#endif
 
     bool is_pay_to_script_hash(uint32_t forks) const;
 

@@ -160,57 +160,6 @@ TEST_CASE("inventory vector factory from data 3  valid input  success", "[invent
     REQUIRE(expected.serialized_size(version) == result.serialized_size(version));
 }
 
-#if defined(KTH_SEGWIT_ENABLED)
-TEST_CASE("inventory vector to witness  error  unchanged", "[inventory vector]") {
-    static auto const expected = inventory_vector::type_id::error;
-    inventory_vector instance{expected, {}};
-    instance.to_witness();
-    REQUIRE(instance.type() == expected);
-}
-
-TEST_CASE("inventory vector to witness  filtered block  unchanged", "[inventory vector]") {
-    static auto const expected = inventory_vector::type_id::filtered_block;
-    inventory_vector instance{expected, {}};
-    instance.to_witness();
-    REQUIRE(instance.type() == expected);
-}
-
-TEST_CASE("inventory vector to witness  compact block  unchanged", "[inventory vector]") {
-    static auto const expected = inventory_vector::type_id::compact_block;
-    inventory_vector instance{expected, {}};
-    instance.to_witness();
-    REQUIRE(instance.type() == expected);
-}
-
-#if defined(KTH_SEGWIT_ENABLED)
-TEST_CASE("inventory vector to witness  witness transaction  unchanged", "[inventory vector]") {
-    static auto const expected = inventory_vector::type_id::witness_transaction;
-    inventory_vector instance{expected, {}};
-    instance.to_witness();
-    REQUIRE(instance.type() == expected);
-}
-
-TEST_CASE("inventory vector to witness  witness block  unchanged", "[inventory vector]") {
-    static auto const expected = inventory_vector::type_id::witness_block;
-    inventory_vector instance{expected, {}};
-    instance.to_witness();
-    REQUIRE(instance.type() == expected);
-}
-#endif
-
-TEST_CASE("inventory vector to witness  block  expected", "[inventory vector]") {
-    inventory_vector instance{inventory_vector::type_id::block, {}};
-    instance.to_witness();
-    REQUIRE(instance.type() == inventory_vector::type_id::witness_block);
-}
-
-TEST_CASE("inventory vector to witness  transaction  expected", "[inventory vector]") {
-    inventory_vector instance{inventory_vector::type_id::transaction, {}};
-    instance.to_witness();
-    REQUIRE(instance.type() == inventory_vector::type_id::witness_transaction);
-}
-#endif // KTH_CURRENCY_BCH
-
 TEST_CASE("inventory vector is block type block returns true", "[inventory vector]") {
     inventory_vector instance;
     instance.set_type(inventory_vector::type_id::block);

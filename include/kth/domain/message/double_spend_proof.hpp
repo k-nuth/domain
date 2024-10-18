@@ -12,6 +12,7 @@
 #include <kth/domain/define.hpp>
 // #include <kth/domain/message/block.hpp>
 // #include <kth/domain/message/prefilled_transaction.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -59,6 +60,7 @@ public:
             push_data.clear();
         }
 
+        //TODO: use <=> operator
         friend
         bool operator==(spender const& x, spender const& y) {
             return x.version == y.version &&
@@ -97,23 +99,66 @@ public:
             sink.write_bytes(push_data);
         }
 
-        template <typename R, KTH_IS_READER(R)>
-        bool from_data(R& source) {
-            reset();
+        // template <typename R, KTH_IS_READER(R)>
+        // bool from_data(R& source) {
+        //     reset();
 
-            version = source.read_4_bytes_little_endian();
-            out_sequence = source.read_4_bytes_little_endian();
-            locktime = source.read_4_bytes_little_endian();
-            prev_outs_hash = source.read_hash();
-            sequence_hash = source.read_hash();
-            outputs_hash = source.read_hash();
-            push_data = source.read_bytes();
+        //     version = source.read_4_bytes_little_endian();
+        //     out_sequence = source.read_4_bytes_little_endian();
+        //     locktime = source.read_4_bytes_little_endian();
+        //     prev_outs_hash = source.read_hash();
+        //     sequence_hash = source.read_hash();
+        //     outputs_hash = source.read_hash();
+        //     push_data = source.read_bytes();
 
-            if ( ! source) {
-                reset();
+        //     if ( ! source) {
+        //         reset();
+        //     }
+
+        //     return source;
+        // }
+
+        //TODO: move the function definition to the cpp file
+        static
+        expect<spender> from_data(byte_reader& reader, uint32_t /*version*/) {
+            auto const version = reader.read_little_endian<uint32_t>();
+            if ( ! version) {
+                return make_unexpected(version.error());
+            }
+            auto const out_sequence = reader.read_little_endian<uint32_t>();
+            if ( ! out_sequence) {
+                return make_unexpected(out_sequence.error());
+            }
+            auto const locktime = reader.read_little_endian<uint32_t>();
+            if ( ! locktime) {
+                return make_unexpected(locktime.error());
+            }
+            auto const prev_outs_hash = read_hash(reader);
+            if ( ! prev_outs_hash) {
+                return make_unexpected(prev_outs_hash.error());
+            }
+            auto const sequence_hash = read_hash(reader);
+            if ( ! sequence_hash) {
+                return make_unexpected(sequence_hash.error());
+            }
+            auto const outputs_hash = read_hash(reader);
+            if ( ! outputs_hash) {
+                return make_unexpected(outputs_hash.error());
+            }
+            auto const push_data = reader.read_remaining_bytes();
+            if ( ! push_data) {
+                return make_unexpected(push_data.error());
             }
 
-            return source;
+            return spender {
+                *version,
+                *out_sequence,
+                *locktime,
+                *prev_outs_hash,
+                *sequence_hash,
+                *outputs_hash,
+                data_chunk(push_data->begin(), push_data->end())
+            };
         }
     };
 
@@ -156,27 +201,47 @@ public:
         spender2_.to_data(sink);
     }
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
 
-        if ( ! out_point_.from_data(source)) {
-            return false;
+    //     if ( ! out_point_.from_data(source)) {
+    //         return false;
+    //     }
+
+    //     if ( ! spender1_.from_data(source)) {
+    //         return false;
+    //     }
+
+    //     if ( ! spender2_.from_data(source)) {
+    //         return false;
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<double_spend_proof> from_data(byte_reader& reader, uint32_t /*version*/) {
+        auto const out_point = chain::output_point::from_data(reader, true);
+        if ( ! out_point) {
+            return make_unexpected(out_point.error());
+        }
+        auto const spender1 = spender::from_data(reader, 0);
+        if ( ! spender1) {
+            return make_unexpected(spender1.error());
         }
 
-        if ( ! spender1_.from_data(source)) {
-            return false;
+        auto const spender2 = spender::from_data(reader, 0);
+        if ( ! spender2) {
+            return make_unexpected(spender2.error());
         }
 
-        if ( ! spender2_.from_data(source)) {
-            return false;
-        }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return double_spend_proof(*out_point, *spender1, *spender2);
     }
 
     [[nodiscard]]

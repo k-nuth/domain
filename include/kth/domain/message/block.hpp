@@ -15,6 +15,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/message/version.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -44,22 +45,24 @@ public:
 
     block& operator=(chain::block&& x);
 
-    // block(block const& x) = default;
-    // block(block&& x) = default;
-    // // This class is move assignable but not copy assignable.
-    // block& operator=(block&& x) = default;
-    // block& operator=(block const&) = default;
-
     bool operator==(chain::block const& x) const;
     bool operator!=(chain::block const& x) const;
     bool operator==(block const& x) const;
     bool operator!=(block const& x) const;
 
-    // Witness is always deserialized if present.
-    // NOTE: Witness on BCH is dissabled on the chain::block class
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        return chain::block::from_data(source, true);
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     return chain::block::from_data(source, true);
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<block> from_data(byte_reader& reader, uint32_t /*version*/) {
+        auto chain_block = chain::block::from_data(reader);
+        if ( ! chain_block) {
+            return make_unexpected(chain_block.error());
+        }
+        return block(std::move(*chain_block));
     }
 
     data_chunk to_data(uint32_t version) const;

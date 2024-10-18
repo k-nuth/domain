@@ -23,6 +23,7 @@
 #include <kth/domain/chain/input_point.hpp>
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/constants.hpp>
+#include <kth/domain/deserialization.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
 #include <kth/domain/multi_crypto_settings.hpp>
@@ -86,13 +87,142 @@ bool block_basis::is_valid() const {
     return !transactions_.empty() || header_.is_valid();
 }
 
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// template <typename R, KTH_IS_READER(R)>
+// bool from_data(R& source) {
+//     // validation.start_deserialize = asio::steady_clock::now();
+//     reset();
+
+//     if ( ! header_.from_data(source, true)) {
+//         return false;
+//     }
+
+//     auto const count = source.read_size_little_endian();
+
+//     // Guard against potential for arbitary memory allocation.
+//     if (count > static_absolute_max_block_size()) {
+//         source.invalidate();
+//     } else {
+//         transactions_.resize(count);
+//     }
+
+//     // Order is required, explicit loop allows early termination.
+//     for (auto& tx : transactions_) {
+//         if ( ! entity_from_data(tx, source, true)) {
+//             break;
+//         }
+//     }
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     // validation.end_deserialize = asio::steady_clock::now();
+//     return source;
+// }
+
+// static
+expect<block_basis> block_basis::from_data(byte_reader& reader, bool wire) {
+    auto const hdr = chain::header::from_data(reader, wire);
+    if ( ! hdr) {
+        return make_unexpected(hdr.error());
+    }
+    auto txs = read_collection<chain::transaction>(reader, wire);
+    if ( ! txs) {
+        return make_unexpected(txs.error());
+    }
+    return block_basis {*hdr, std::move(*txs)};
+}
+
+// // static
+// expect<block_basis> block_basis::from_data(byte_reader& reader, bool wire) {
+
+
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - wire: ", wire);
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - reader.buffer_size(): ", reader.buffer_size());
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - reader.remaining_size(): ", reader.remaining_size());
+
+//     auto new_reader = reader;
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - new_reader.buffer_size(): ", new_reader.buffer_size());
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - new_reader.remaining_size(): ", new_reader.remaining_size());
+
+//     auto all_bytes = new_reader.read_remaining_bytes();
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - all_bytes->size(): ", all_bytes->size());
+//     data_chunk all_bytes_chunk(all_bytes->begin(), all_bytes->end());
+//     std::string original_hex_string = encode_base16(all_bytes_chunk);
+
+
+//     auto const hdr = chain::header::from_data(reader, wire);
+//     if ( ! hdr) {
+//         return make_unexpected(hdr.error());
+//     }
+
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - AFTER PARSING THE HEADER");
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - reader.remaining_size(): ", reader.remaining_size());
+
+//     auto txs = read_collection_tmp<chain::transaction>(reader, wire);
+//     if ( ! txs) {
+//         return make_unexpected(txs.error());
+//     }
+
+
+
+//     // std::vector<chain::transaction> txs;
+//     // {
+//     //     auto const count_exp = reader.read_size_little_endian();
+//     //     if ( ! count_exp) {
+//     //         return make_unexpected(count_exp.error());
+//     //     }
+//     //     auto const count = *count_exp;
+//     //     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - txs count: ", count);
+//     //     if (count > static_absolute_max_block_size()) {
+//     //         return make_unexpected(error::invalid_size);
+//     //     }
+
+//     //     txs.reserve(count);
+
+//     //     for (size_t i = 0; i < count; ++i) {
+//     //         auto res = chain::transaction::from_data(reader, wire);
+//     //         if ( ! res) {
+//     //             return make_unexpected(res.error());
+//     //         }
+//     //         txs.emplace_back(std::move(*res));
+//     //     }
+//     // }
+//     // LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - txs.size(): ", txs.size());
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - txs->size(): ", txs->size());
+
+//     // return block_basis {*hdr, std::move(*txs)};
+
+//     // block_basis result {*hdr, std::move(txs)};
+//     block_basis result {*hdr, std::move(*txs)};
+//     auto const ser_size = serialized_size(result);
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - ser_size: ", ser_size);
+//     auto serialized_bytes = result.to_data(ser_size);
+//     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - serialized_bytes.size(): ", serialized_bytes.size());
+//     std::string serialized_hex_string = encode_base16(serialized_bytes);
+
+//     if (serialized_hex_string != original_hex_string) {
+//         LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - serialized_hex_string != original_hex_string");
+//         LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - original_hex_string: ", original_hex_string);
+//         LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - serialized_hex_string: ", serialized_hex_string);
+//         std::terminate();
+//     }
+
+
+//     return result;
+// }
+
+
+
 // Serialization.
 //-----------------------------------------------------------------------------
 
-data_chunk block_basis::to_data(size_t serialized_size, bool /*witness*/) const {
+data_chunk block_basis::to_data(size_t serialized_size) const {
     data_chunk data;
-
-    // auto const size = serialized_size(witness_val(witness));
     auto const size = serialized_size;
 
     data.reserve(size);
@@ -103,16 +233,16 @@ data_chunk block_basis::to_data(size_t serialized_size, bool /*witness*/) const 
     return data;
 }
 
-void block_basis::to_data(data_sink& stream, bool witness) const {
+void block_basis::to_data(data_sink& stream) const {
     ostream_writer sink_w(stream);
-    to_data(sink_w, witness_val(witness));
+    to_data(sink_w);
 }
 
-hash_list block_basis::to_hashes(bool witness) const {
+hash_list block_basis::to_hashes() const {
     hash_list out;
     out.reserve(transactions_.size());
-    auto const to_hash = [&out, witness](transaction const& tx) {
-        out.push_back(tx.hash(witness_val(witness)));
+    auto const to_hash = [&out](transaction const& tx) {
+        out.push_back(tx.hash());
     };
 
     // Hash ordering matters, don't use std::transform here.
@@ -161,18 +291,6 @@ hash_digest block_basis::hash() const {
     return header_.hash();
 }
 
-// Utilities.
-//-----------------------------------------------------------------------------
-
-#if defined(KTH_SEGWIT_ENABLED)
-// Clear witness from all inputs (does not change default transaction hash).
-void strip_witness(block_basis& blk) {
-    for (auto&& tx : blk.transactions()) {
-        tx.strip_witness();
-    };
-}
-#endif
-
 // Validation helpers.
 //-----------------------------------------------------------------------------
 
@@ -192,9 +310,7 @@ uint64_t block_basis::subsidy(size_t height, bool retarget) {
 
 // Returns max_size_t in case of overflow.
 size_t block_basis::signature_operations(bool bip16, bool bip141) const {
-#if ! defined(KTH_SEGWIT_ENABLED)
     bip141 = false;  // No segwit
-#endif
     auto const value = [bip16, bip141](size_t total, transaction const& tx) {
         return ceiling_add(total, tx.signature_operations(bip16, bip141));
     };
@@ -243,13 +359,13 @@ bool block_basis::is_distinct_transaction_set() const {
     return distinct_end == hashes.end();
 }
 
-hash_digest block_basis::generate_merkle_root(bool witness) const {
+hash_digest block_basis::generate_merkle_root() const {
     if (transactions_.empty()) {
         return null_hash;
     }
 
     hash_list update;
-    auto merkle = to_hashes(witness_val(witness));
+    auto merkle = to_hashes();
 
     // Initial capacity is half of the original list (clear doesn't reset).
     update.reserve((merkle.size() + 1) / 2);
@@ -380,34 +496,6 @@ bool block_basis::is_valid_coinbase_script(size_t height) const {
     return script::is_coinbase_pattern(script.operations(), height);
 }
 
-#if defined(KTH_SEGWIT_ENABLED)
-bool block_basis::is_valid_witness_commitment() const {
-#if ! defined(KTH_SEGWIT_ENABLED)
-    return false;
-#else
-    if (transactions_.empty() || transactions_.front().inputs().empty()) {
-        return false;
-    }
-
-    hash_digest reserved, committed;
-    auto const& coinbase = transactions_.front();
-
-    // Last output of commitment pattern holds committed value (bip141).
-    if (coinbase.inputs().front().extract_reserved_hash(reserved)) {
-        for (auto const& output : reverse(coinbase.outputs())) {
-            if (output.extract_committed_hash(committed)) {
-                return committed == bitcoin_hash(build_chunk({generate_merkle_root(true), reserved}));
-            }
-        }
-    }
-
-    // If no txs in block are segregated the commitment is optional (bip141).
-    return !is_segregated(*this);
-#endif // KTH_SEGWIT_ENABLED
-}
-#endif // KTH_SEGWIT_ENABLED
-
-
 code block_basis::check_transactions() const {
     constexpr size_t max_block_size = static_absolute_max_block_size();
     code ec;
@@ -505,22 +593,14 @@ code block_basis::check(size_t serialized_size_false) const {
 
 // These checks assume that prevout caching is completed on all tx.inputs.
 
-#if defined(KTH_SEGWIT_ENABLED)
-code block_basis::accept(chain_state const& state, size_t serialized_size, size_t weight, bool transactions) const {
-#else
+
 code block_basis::accept(chain_state const& state, size_t serialized_size, bool transactions) const {
-#endif
     // validation.start_accept = asio::steady_clock::now();
 
     auto const bip16 = state.is_enabled(rule_fork::bip16_rule);
     auto const bip34 = state.is_enabled(rule_fork::bip34_rule);
     auto const bip113 = state.is_enabled(rule_fork::bip113_rule);
-
-#if ! defined(KTH_SEGWIT_ENABLED)
     auto const bip141 = false;  // No segwit
-#else
-    auto const bip141 = state.is_enabled(rule_fork::bip141_rule);
-#endif
 
     code ec;
     if ((ec = header_.accept(state))) {
@@ -562,12 +642,6 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
     }
 #endif
 
-#if defined(KTH_SEGWIT_ENABLED)
-    // TODO(legacy): relates height to total of tx.size(true) (pool cache).
-    if (bip141 && weight > max_block_weight) {
-        return error::block_weight_limit;
-    }
-#endif
 
     if (bip34 && !is_valid_coinbase_script(state.height())) {
         return error::coinbase_height_mismatch;
@@ -583,14 +657,6 @@ code block_basis::accept(chain_state const& state, size_t serialized_size, bool 
     if ( ! is_final(state.height(), block_time)) {
         return error::block_non_final;
     }
-
-#if defined(KTH_SEGWIT_ENABLED)
-    // TODO(legacy): relates height to tx.hash(true) (pool cache).
-    // NOTE: for BCH bit141 is set as false
-    if (bip141 && ! is_valid_witness_commitment()) {
-        return error::invalid_witness_commitment;
-    }
-#endif //defined(KTH_SEGWIT_ENABLED)
 
 #if defined(KTH_CURRENCY_BCH)
     if ( ! state.is_fermat_enabled()) {
@@ -672,21 +738,10 @@ size_t total_inputs(block_basis const& blk, bool with_coinbase /*= true*/) {
     return std::accumulate(txs.begin() + offset, txs.end(), size_t(0), inputs);
 }
 
-#if defined(KTH_SEGWIT_ENABLED)
-bool is_segregated(block_basis const& blk) {
-    auto const segregated = [](transaction const& tx) {
-        return tx.is_segregated();
-    };
-
-    // If no block tx has witness data the commitment is optional (bip141).
-    return std::any_of(blk.transactions().begin(), blk.transactions().end(), segregated);
-}
-#endif // defined(KTH_SEGWIT_ENABLED)
-
 // Full block serialization is always canonical encoding.
-size_t serialized_size(block_basis const& blk, bool witness /*= false*/) {
-    auto const sum = [witness](size_t total, transaction const& tx) {
-        return *safe_add(total, tx.serialized_size(true, witness_val(witness)));
+size_t serialized_size(block_basis const& blk) {
+    auto const sum = [](size_t total, transaction const& tx) {
+        return *safe_add(total, tx.serialized_size(true));
     };
 
     auto const& txs = blk.transactions();

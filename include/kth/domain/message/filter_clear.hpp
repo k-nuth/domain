@@ -10,6 +10,7 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -35,22 +36,32 @@ public:
     filter_clear(filter_clear const& x) = default;
     filter_clear(filter_clear&& x) = default;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        // Initialize as valid from deserialization.
-        insufficient_version_ = false;
+    //     // Initialize as valid from deserialization.
+    //     insufficient_version_ = false;
 
+    //     if (version < filter_clear::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<filter_clear> from_data(byte_reader& reader, uint32_t version) {
+        auto const insufficient_version = false;
         if (version < filter_clear::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::version_too_low);
         }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return filter_clear(insufficient_version);
     }
 
     [[nodiscard]]

@@ -10,6 +10,7 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -33,23 +34,33 @@ public:
     send_headers(send_headers const& x) = default;
     send_headers(send_headers&& x) = default;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        // Initialize as valid from deserialization.
-        insufficient_version_ = false;
+    //     // Initialize as valid from deserialization.
+    //     insufficient_version_ = false;
 
+    //     if (version < send_headers::version_minimum) {
+    //         insufficient_version_ = true;
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<send_headers> from_data(byte_reader& reader, uint32_t version) {
         if (version < send_headers::version_minimum) {
-            insufficient_version_ = true;
-            source.invalidate();
+            return make_unexpected(error::version_too_low);
         }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        auto const insufficient_version = false;
+        return send_headers(insufficient_version);
     }
 
     [[nodiscard]]
