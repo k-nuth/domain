@@ -39,6 +39,8 @@ if (WITH_QRENCODE)
   add_definitions(-DWITH_QRENCODE)
 endif()
 
+add_definitions(-DJEMALLOC)
+
 
 set(LOG_LIBRARY "boost" CACHE STRING "Setting for the logging library (boost|spdlog|binlog).")
 
@@ -94,6 +96,21 @@ endif()
 if (${CURRENCY} STREQUAL "LTC")
   find_package(OpenSSL 1.0.1 REQUIRED)
 endif()
+
+# # jemalloc
+# find_package(PkgConfig REQUIRED)
+# pkg_check_modules(JEMALLOC jemalloc)
+
+# message("-- Found jemalloc: JEMALLOC_INCLUDE_DIRS: ${JEMALLOC_INCLUDE_DIRS}")
+# message("-- Found jemalloc: JEMALLOC_LIBRARY_DIRS: ${JEMALLOC_LIBRARY_DIRS}")
+# message("-- Found jemalloc: JEMALLOC_CFLAGS_OTHER: ${JEMALLOC_CFLAGS_OTHER}")
+
+# include_directories(${JEMALLOC_INCLUDE_DIRS})
+# link_directories(${JEMALLOC_LIBRARY_DIRS})
+# add_definitions(${JEMALLOC_CFLAGS_OTHER})
+
+
+
 
 include(CheckCXXCompilerFlag)
 
@@ -268,13 +285,6 @@ set(kth_sources_just_kth
     src/wallet/transaction_functions.cpp
 )
 
-if (NOT ${CURRENCY} STREQUAL "BCH")
-    set(kth_sources_just_legacy
-      ${kth_sources_just_legacy}
-      src/chain/witness.cpp
-    )
-endif()
-
 if (${CURRENCY} STREQUAL "LTC")
     set(kth_sources_just_kth
       ${kth_sources_just_kth}
@@ -352,7 +362,6 @@ set(kth_headers
     include/kth/domain/chain/script_basis.hpp
     include/kth/domain/chain/transaction_basis.hpp
     include/kth/domain/chain/stealth.hpp
-    include/kth/domain/chain/witness.hpp
     include/kth/domain/chain/point_iterator.hpp
     include/kth/domain/chain/header.hpp
     include/kth/domain/chain/history.hpp
@@ -447,6 +456,7 @@ if (${CURRENCY} STREQUAL "LTC")
 endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${JEMALLOC_LIBRARIES})
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)

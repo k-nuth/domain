@@ -134,28 +134,41 @@ data_chunk const& operation::data() const {
 // than two bytes to encode. However the four byte encoding can represent
 // a value of any size, so remains valid despite the data size limit.
 //*****************************************************************************
-template <typename R>
+// template <typename R>
+// inline
+// uint32_t operation::read_data_size(opcode code, R& source) {
+//     constexpr auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
+
+//     switch (code) {
+//         case opcode::push_one_size:
+//             return source.read_byte();
+//         case opcode::push_two_size:
+//             return source.read_2_bytes_little_endian();
+//         case opcode::push_four_size:
+//             return source.read_4_bytes_little_endian();
+//         default:
+//             auto const byte = static_cast<uint8_t>(code);
+//             return byte <= op_75 ? byte : 0;
+//     }
+// }
+
 inline
-uint32_t operation::read_data_size(opcode code, R& source) {
+expect<uint32_t> operation::read_data_size(opcode code, byte_reader& reader) {
     constexpr auto op_75 = static_cast<uint8_t>(opcode::push_size_75);
 
     switch (code) {
         case opcode::push_one_size:
-            return source.read_byte();
+            return reader.read_byte();
         case opcode::push_two_size:
-            return source.read_2_bytes_little_endian();
+            return reader.read_little_endian<uint16_t>();
         case opcode::push_four_size:
-            return source.read_4_bytes_little_endian();
+            return reader.read_little_endian<uint32_t>();
         default:
-            auto const byte = static_cast<uint8_t>(code);
+            auto const byte = uint8_t(code);
             return byte <= op_75 ? byte : 0;
     }
 }
 
-//*****************************************************************************
-// CONSENSUS: this is non-minial but consensus critical due to find_and_delete.
-// Presumably this was just an oversight in the original script encoding.
-//*****************************************************************************
 inline
 opcode operation::opcode_from_size(size_t size) {
     KTH_ASSERT(size <= max_uint32);
@@ -207,7 +220,8 @@ opcode operation::nominal_opcode_from_data(data_chunk const& data) {
 
 inline
 opcode operation::opcode_from_data(data_chunk const& data, bool minimal) {
-    return minimal ? minimal_opcode_from_data(data) :
+    return minimal ?
+        minimal_opcode_from_data(data) :
         nominal_opcode_from_data(data);
 }
 

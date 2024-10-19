@@ -43,14 +43,4 @@ bool get_data::operator!=(get_data const& x) const {
     return (static_cast<inventory>(*this) != static_cast<inventory>(x));
 }
 
-#if defined(KTH_SEGWIT_ENABLED)
-void get_data::to_witness() {
-    auto const convert = [](inventory_vector& element) {
-        element.to_witness();
-    };
-
-    std::for_each(inventories().begin(), inventories().end(), convert);
-}
-#endif
-
 } // namespace kth::domain::message

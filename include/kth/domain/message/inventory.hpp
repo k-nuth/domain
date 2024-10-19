@@ -16,6 +16,7 @@
 #include <kth/domain/define.hpp>
 #include <kth/domain/message/inventory_vector.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -50,31 +51,54 @@ public:
     void set_inventories(inventory_vector::list const& value);
     void set_inventories(inventory_vector::list&& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        auto const count = source.read_size_little_endian();
+    //     auto const count = source.read_size_little_endian();
 
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > max_inventory) {
+    //         source.invalidate();
+    //     } else {
+    //         inventories_.resize(count);
+    //     }
+
+    //     // Order is required.
+    //     for (auto& inventory : inventories_) {
+    //         if ( ! inventory.from_data(source, version)) {
+    //             break;
+    //         }
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<inventory> from_data(byte_reader& reader, uint32_t version) {
+        auto const count = reader.read_variable_little_endian();
+        if ( ! count) {
+            return make_unexpected(count.error());
+        }
         // Guard against potential for arbitary memory allocation.
-        if (count > max_inventory) {
-            source.invalidate();
-        } else {
-            inventories_.resize(count);
+        if (*count > max_inventory) {
+            return make_unexpected(error::bad_inventory_count);
         }
-
-        // Order is required.
-        for (auto& inventory : inventories_) {
-            if ( ! inventory.from_data(source, version)) {
-                break;
+        inventory_vector::list inventories;
+        inventories.reserve(*count);
+        for (size_t i = 0; i < *count; ++i) {
+            auto const inventory = inventory_vector::from_data(reader, version);
+            if ( ! inventory) {
+                return make_unexpected(inventory.error());
             }
+            inventories.emplace_back(std::move(*inventory));
         }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return inventory(std::move(inventories));
     }
 
     [[nodiscard]]

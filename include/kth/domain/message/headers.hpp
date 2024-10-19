@@ -16,6 +16,7 @@
 #include <kth/domain/message/inventory.hpp>
 #include <kth/domain/message/inventory_vector.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -54,35 +55,62 @@ public:
     void to_hashes(hash_list& out) const;
     void to_inventory(inventory_vector::list& out, inventory::type_id type) const;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        auto const count = source.read_size_little_endian();
+    //     auto const count = source.read_size_little_endian();
 
-        // Guard against potential for arbitary memory allocation.
-        if (count > max_get_headers) {
-            source.invalidate();
-        } else {
-            elements_.resize(count);
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > max_get_headers) {
+    //         source.invalidate();
+    //     } else {
+    //         elements_.resize(count);
+    //     }
+
+    //     // Order is required.
+    //     for (auto& element : elements_) {
+    //         if ( ! element.from_data(source, version)) {
+    //             break;
+    //         }
+    //     }
+
+    //     if (version < headers::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<headers> from_data(byte_reader& reader, uint32_t version) {
+        auto const count = reader.read_variable_little_endian();
+        if ( ! count) {
+            return make_unexpected(count.error());
         }
-
-        // Order is required.
-        for (auto& element : elements_) {
-            if ( ! element.from_data(source, version)) {
-                break;
+        if (*count > max_get_headers) {
+            return make_unexpected(error::version_too_new);
+        }
+        header::list elements;
+        elements.reserve(*count);
+        for (size_t i = 0; i < *count; ++i) {
+            auto element = header::from_data(reader, version);
+            if ( ! element) {
+                return make_unexpected(element.error());
             }
+            elements.push_back(std::move(*element));
         }
 
         if (version < headers::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::version_too_new);
         }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return headers(std::move(elements));
     }
 
     [[nodiscard]]

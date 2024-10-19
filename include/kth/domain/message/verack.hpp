@@ -10,6 +10,7 @@
 #include <string>
 
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -32,10 +33,16 @@ public:
 
     verack() = default;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t /*version*/) {
-        reset();
-        return source;
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t /*version*/) {
+    //     reset();
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<verack> from_data(byte_reader& reader, uint32_t version) {
+        return verack();
     }
 
     [[nodiscard]]

@@ -34,7 +34,7 @@ size_t heading::maximum_size() {
 // Post-Witness:
 // The maximum block size inclusive of witness is greater than 1,800,003, so
 // with witness-enabled block size (4,000,000).
-size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t magic, bool is_chipnet) {
+size_t heading::maximum_payload_size(uint32_t /*unused*/, uint32_t magic, bool is_chipnet) {
     /*    static constexpr
     size_t vector = sizeof(uint32_t) + hash_size;
     static constexpr
@@ -42,11 +42,7 @@ size_t heading::maximum_payload_size(uint32_t /*unused*/, bool witness, uint32_t
     static_assert(maximum <= max_size_t, "maximum_payload_size overflow");
 */
 
-#if defined(KTH_SEGWIT_ENABLED)
-    return witness_val(witness) ? max_block_weight : max_payload_size;
-#else
     return get_max_payload_size(get_network(magic, is_chipnet));
-#endif
 }
 
 size_t heading::satoshi_fixed_size() {

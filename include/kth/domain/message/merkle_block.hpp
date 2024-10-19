@@ -13,6 +13,7 @@
 #include <kth/domain/chain/header.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/data.hpp>
@@ -66,39 +67,93 @@ public:
     void set_flags(data_chunk const& value);
     void set_flags(data_chunk&& value);
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) {
-        reset();
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) {
+    //     reset();
 
-        if ( ! header_.from_data(source)) {
-            return false;
+    //     if ( ! header_.from_data(source)) {
+    //         return false;
+    //     }
+
+    //     total_transactions_ = source.read_4_bytes_little_endian();
+    //     auto const count = source.read_size_little_endian();
+
+    //     // Guard against potential for arbitary memory allocation.
+    //     if (count > static_absolute_max_block_size()) {
+    //         source.invalidate();
+    //     } else {
+    //         hashes_.reserve(count);
+    //     }
+
+    //     for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash) {
+    //         hashes_.push_back(source.read_hash());
+    //     }
+
+    //     flags_ = source.read_bytes(source.read_size_little_endian());
+
+    //     if (version < merkle_block::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<merkle_block> from_data(byte_reader& reader, uint32_t version) {
+        auto const header = chain::header::from_data(reader, version);
+        if ( ! header) {
+            return make_unexpected(header.error());
         }
 
-        total_transactions_ = source.read_4_bytes_little_endian();
-        auto const count = source.read_size_little_endian();
+        auto const total_transactions = reader.read_little_endian<uint32_t>();
+        if ( ! total_transactions) {
+            return make_unexpected(total_transactions.error());
+        }
 
+        auto const count = reader.read_size_little_endian();
+        if ( ! count) {
+            return make_unexpected(count.error());
+        }
         // Guard against potential for arbitary memory allocation.
-        if (count > static_absolute_max_block_size()) {
-            source.invalidate();
-        } else {
-            hashes_.reserve(count);
+        if (*count > static_absolute_max_block_size()) {
+            return make_unexpected(error::bad_merkle_block_count);
         }
 
-        for (size_t hash = 0; hash < hashes_.capacity() && source; ++hash) {
-            hashes_.push_back(source.read_hash());
+        hash_list hashes;
+        hashes.reserve(*count);
+        for (size_t i = 0; i < *count; ++i) {
+            auto const hash = read_hash(reader);
+            if ( ! hash) {
+                return make_unexpected(hash.error());
+            }
+            hashes.emplace_back(*hash);
         }
 
-        flags_ = source.read_bytes(source.read_size_little_endian());
+        auto const flags_size = reader.read_size_little_endian();
+        if ( ! flags_size) {
+            return make_unexpected(flags_size.error());
+        }
+
+        auto const flags = reader.read_bytes(*flags_size);
+        if ( ! flags) {
+            return make_unexpected(flags.error());
+        }
 
         if (version < merkle_block::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::unsupported_version);
         }
 
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return merkle_block(
+            *header,
+            *total_transactions,
+            std::move(hashes),
+            data_chunk(flags->begin(), flags->end())
+        );
     }
 
     [[nodiscard]]

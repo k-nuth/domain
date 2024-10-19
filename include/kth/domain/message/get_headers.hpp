@@ -11,6 +11,7 @@
 
 #include <kth/domain/message/get_blocks.hpp>
 #include <kth/infrastructure/math/hash.hpp>
+#include <kth/infrastructure/utility/byte_reader.hpp>
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 
@@ -31,21 +32,34 @@ public:
     bool operator==(get_headers const& x) const;
     bool operator!=(get_headers const& x) const;
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, uint32_t version) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
-        if ( ! get_blocks::from_data(source, version)) {
-            return false;
-        }
+    // template <typename R, KTH_IS_READER(R)>
+    // bool from_data(R& source, uint32_t version) { /*override*/  //TODO(fernando): check if this function is used in a run-time-polymorphic way
+    //     if ( ! get_blocks::from_data(source, version)) {
+    //         return false;
+    //     }
 
+    //     if (version < get_headers::version_minimum) {
+    //         source.invalidate();
+    //     }
+
+    //     if ( ! source) {
+    //         reset();
+    //     }
+
+    //     return source;
+    // }
+
+    //TODO: move the function definition to the cpp file
+    static
+    expect<get_headers> from_data(byte_reader& reader, uint32_t version) {
+        auto blocks = get_blocks::from_data(reader, version);
+        if ( ! blocks) {
+            return make_unexpected(blocks.error());
+        }
         if (version < get_headers::version_minimum) {
-            source.invalidate();
+            return make_unexpected(error::version_too_new);
         }
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
+        return get_headers(std::move(blocks->start_hashes()), blocks->stop_hash());
     }
 
     static

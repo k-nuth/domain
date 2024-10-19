@@ -77,13 +77,11 @@ data_chunk block::to_data(uint32_t /*unused*/) const {
 }
 
 void block::to_data(uint32_t /*version*/, data_sink& stream) const {
-    chain::block::to_data(stream, true);
+    chain::block::to_data(stream);
 }
 
-// Witness size is always counted if present.
-// NOTE: Witness on BCH is dissabled on the chain::block class
 size_t block::serialized_size(uint32_t /*unused*/) const {
-    return chain::block::serialized_size(true);
+    return chain::block::serialized_size();
 }
 
 // //TODO(fernando): check this family of functions: to_data_header_nonce

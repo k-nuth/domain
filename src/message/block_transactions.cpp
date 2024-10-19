@@ -72,11 +72,7 @@ size_t block_transactions::serialized_size(uint32_t /*version*/) const {
     auto size = hash_size + infrastructure::message::variable_uint_size(transactions_.size());
 
     for (auto const& element : transactions_) {
-        size += element.serialized_size(/*wire*/ true, witness_default()
-#ifdef KTH_CACHED_RPC_DATA
-                                       , /*unconfirmed*/ false
-#endif
-                                       );
+        size += element.serialized_size(/*wire*/ true);
     }
 
     return size;

@@ -87,6 +87,57 @@ bool point::is_valid() const {
     return valid_ || (hash_ != null_hash) || (index_ != 0);
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// template <typename R, KTH_IS_READER(R)>
+// bool from_data(R& source, bool wire = true) {
+//     reset();
+
+//     valid_ = true;
+//     hash_ = source.read_hash();
+
+//     if (wire) {
+//         index_ = source.read_4_bytes_little_endian();
+//     } else {
+//         index_ = source.read_2_bytes_little_endian();
+
+//         if (index_ == max_uint16) {
+//             index_ = null_index;
+//         }
+//     }
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return source;
+// }
+
+expect<point> point::from_data(byte_reader& reader, bool wire) {
+    auto const hash = read_hash(reader);
+    if ( ! hash) {
+        return make_unexpected(hash.error());
+    }
+
+    if ( ! wire) {
+        auto const index = reader.read_little_endian<uint16_t>();
+        if ( ! index) {
+            return make_unexpected(index.error());
+        }
+        if (*index == max_uint16) {
+            return point {*hash, null_index};
+        }
+        return point {*hash, *index};
+    }
+
+    auto const index = reader.read_little_endian<uint32_t>();
+    if ( ! index) {
+        return make_unexpected(index.error());
+    }
+    return point {*hash, *index};
+}
+
 // Serialization.
 //-----------------------------------------------------------------------------
 
