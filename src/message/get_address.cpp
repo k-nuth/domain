@@ -26,7 +26,7 @@ void get_address::reset() {}
 //-----------------------------------------------------------------------------
 
 // static
-expect<get_address> from_data(byte_reader& reader, uint32_t /*version*/) {
+expect<get_address> get_address::from_data(byte_reader& reader, uint32_t /*version*/) {
     return get_address();
 }
 

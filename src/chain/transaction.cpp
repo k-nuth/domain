@@ -39,7 +39,6 @@
 #define FMT_HEADER_ONLY 1
 #include <fmt/core.h>
 
-// using namespace kth::domain::machine;
 using namespace kth::infrastructure::machine;
 
 namespace kth::domain::chain {
@@ -181,18 +180,125 @@ void transaction::reset() {
     total_output_value_ = std::nullopt;
 }
 
+
 // Deserialization.
 //-----------------------------------------------------------------------------
 
+// namespace detail {
+
+// // Read a length-prefixed collection of inputs or outputs from the source.
+// template <class Source, class Put>
+// bool read(Source& source, std::vector<Put>& puts, bool wire) {
+//     auto result = true;
+//     auto const count = source.read_size_little_endian();
+
+//     // Guard against potential for arbitary memory allocation.
+//     if (count > static_absolute_max_block_size()) {
+//         source.invalidate();
+//     } else {
+//         puts.resize(count);
+//     }
+
+//     auto const deserialize = [&](Put& put) {
+//         result = result && put.from_data_old(source, wire);
+//     };
+
+//     std::for_each(puts.begin(), puts.end(), deserialize);
+//     return result;
+// }
+
+
+// } // namespace detail
+
+
+// bool transaction::from_data_old(istream_reader& source, bool wire) {
+//     reset();
+
+//     if (wire) {
+//         // Wire (satoshi protocol) deserialization.
+//         version_ = source.read_4_bytes_little_endian();
+//         detail::read(source, inputs_, wire);
+//         auto const marker = false;
+
+//         // This is always enabled so caller should validate with is_segregated.
+//         if (marker) {
+//             // Skip over the peeked witness flag.
+//             source.skip(1);
+//             detail::read(source, inputs_, wire);
+//             detail::read(source, outputs_, wire);
+//         } else {
+//             detail::read(source, outputs_, wire);
+//         }
+
+//         locktime_ = source.read_4_bytes_little_endian();
+//     } else {
+//         // Database (outputs forward) serialization.
+//         // Witness data is managed internal to inputs.
+//         detail::read(source, outputs_, wire);
+//         detail::read(source, inputs_, wire);
+//         auto const locktime = source.read_variable_little_endian();
+//         auto const version = source.read_variable_little_endian();
+
+//         if (locktime > max_uint32 || version > max_uint32) {
+//             source.invalidate();
+//         }
+
+//         locktime_ = static_cast<uint32_t>(locktime);
+//         version_ = static_cast<uint32_t>(version);
+//     }
+
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return source;
+// }
+
+// // static
+// expect<transaction> transaction::from_data(byte_reader& reader, bool wire) {
+
+//     transaction old_object;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** TRANSACTION read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         data_chunk data(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(data);
+//         istream_reader source(istream);
+//         old_object.from_data_old(source, wire);
+//     }
+
+//     auto basis = transaction_basis::from_data(reader, wire);
+//     if ( ! basis) {
+//         return make_unexpected(basis.error());
+//     }
+//     auto res = transaction(std::move(*basis));
+
+//     std::string old_hex = encode_base16(old_object.to_data(wire));
+//     std::string new_hex = encode_base16(res.to_data(wire));
+//     if (old_hex != new_hex) {
+//         fmt::print("****** TRANSACTION MISMATCH *******\n");
+//         fmt::print("old_hex: {}\n", old_hex);
+//         fmt::print("new_hex: {}\n", new_hex);
+//         std::terminate();
+//     }
+
+//     return res;
+// }
+
 // static
 expect<transaction> transaction::from_data(byte_reader& reader, bool wire) {
-    auto const basis = transaction_basis::from_data(reader, wire);
+    auto basis = transaction_basis::from_data(reader, wire);
     if ( ! basis) {
         return make_unexpected(basis.error());
     }
     return transaction(std::move(*basis));
 }
-
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -546,8 +652,8 @@ uint64_t transaction::total_output_value() const {
 }
 
 uint64_t transaction::fees() const {
-    fmt::print("transaction::fees() - total_input_value(): {}\n", total_input_value());
-    fmt::print("transaction::fees() - total_output_value(): {}\n", total_output_value());
+    // fmt::print("transaction::fees() - total_input_value(): {}\n", total_input_value());
+    // fmt::print("transaction::fees() - total_output_value(): {}\n", total_output_value());
     return floor_subtract(total_input_value(), total_output_value());
 }
 
@@ -647,6 +753,8 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
 
     // This precludes bare witness programs of -0 (undocumented).
     if ( ! prevout.stack_result(false)) {
+        fmt::print("verify() - embedded.stack_result(false) - 1\n");
+        std::terminate();
         return error::stack_false;
     }
 
@@ -667,6 +775,8 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
 
         // This precludes embedded witness programs of -0 (undocumented).
         if ( ! embedded.stack_result(false)) {
+            fmt::print("verify() - embedded.stack_result(false) - 2\n");
+            std::terminate();
             return error::stack_false;
         }
     }

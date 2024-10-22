@@ -337,59 +337,58 @@ bool is_valid_bitfield(uint8_t bitfield) {
     return true;
 }
 
-// template <typename R, KTH_IS_READER(R)>
-// inline constexpr
-// bool from_data(R& source, fungible& x, bool /*has_commitment*/) {
-//     x.amount = amount_t(source.read_variable_little_endian());
-//     return source;
-// }
+template <typename R, KTH_IS_READER(R)>
+bool from_data_old(R& source, fungible& x, bool /*has_commitment*/) {
+    x.amount = amount_t(source.read_variable_little_endian());
+    return source;
+}
 
-// template <typename R, KTH_IS_READER(R)>
-// inline constexpr
-// bool from_data(R& source, non_fungible& x, bool has_commitment) {
-//     if (has_commitment) {
-//         //TODO(fernando): check size is valid
-//         auto const size = source.read_size_little_endian();
-//         x.commitment = source.read_bytes(size);
-//     }
-//     return source;
-// }
+template <typename R, KTH_IS_READER(R)>
+inline constexpr
+bool from_data_old(R& source, non_fungible& x, bool has_commitment) {
+    if (has_commitment) {
+        //TODO(fernando): check size is valid
+        auto const size = source.read_size_little_endian();
+        x.commitment = source.read_bytes(size);
+    }
+    return source;
+}
 
-// template <typename R, KTH_IS_READER(R)>
-// inline constexpr
-// bool from_data(R& source, both_kinds& x, bool has_commitment) {
-//     from_data(source, x.second, has_commitment);
-//     from_data(source, x.first, has_commitment);
-//     return source;
-// }
+template <typename R, KTH_IS_READER(R)>
+inline constexpr
+bool from_data_old(R& source, both_kinds& x, bool has_commitment) {
+    from_data_old(source, x.second, has_commitment);
+    from_data_old(source, x.first, has_commitment);
+    return source;
+}
 
-// template <typename R, KTH_IS_READER(R)>
-// inline constexpr
-// bool from_data(R& source, token_data_opt& x) {
-//     x.reset();
-//     auto const id = source.read_hash();
-//     auto const bitfield = source.read_byte();
+template <typename R, KTH_IS_READER(R)>
+inline constexpr
+bool from_data_old(R& source, token_data_opt& x) {
+    x.reset();
+    auto const id = source.read_hash();
+    auto const bitfield = source.read_byte();
 
-//     if ( ! is_valid_bitfield(bitfield)) {
-//         source.invalidate();
-//         return false;
-//     }
+    if ( ! is_valid_bitfield(bitfield)) {
+        source.invalidate();
+        return false;
+    }
 
-//     if (has_nft(bitfield) && has_amount(bitfield)) {
-//         x.emplace(token_data_t {id, both_kinds { {}, {capability(bitfield), {}} }});
-//     } else if (has_nft(bitfield)) {
-//         x.emplace(token_data_t {id, non_fungible { .capability = capability(bitfield) }});
-//     } else if (has_amount(bitfield)) {
-//         x.emplace(token_data_t {id, fungible {}});
-//     }
+    if (has_nft(bitfield) && has_amount(bitfield)) {
+        x.emplace(token_data_t {id, both_kinds { {}, {capability(bitfield), {}} }});
+    } else if (has_nft(bitfield)) {
+        x.emplace(token_data_t {id, non_fungible { .capability = capability(bitfield) }});
+    } else if (has_amount(bitfield)) {
+        x.emplace(token_data_t {id, fungible {}});
+    }
 
-//     auto const visitor = [&source, bitfield](auto&& arg) {
-//         return from_data(source, arg, has_commitment(bitfield));
-//     };
-//     std::visit(visitor, x->data);
+    auto const visitor = [&source, bitfield](auto&& arg) {
+        return from_data_old(source, arg, has_commitment(bitfield));
+    };
+    std::visit(visitor, x->data);
 
-//     return source;
-// }
+    return source;
+}
 
 namespace detail {
 

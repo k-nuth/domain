@@ -39,6 +39,66 @@ void header::reset() {
 
 // Deserialization.
 //-----------------------------------------------------------------------------
+
+// bool header::from_data_old(istream_reader& source, bool wire) {
+//     version_ = source.read_4_bytes_little_endian();
+//     previous_block_hash_ = source.read_hash();
+//     merkle_ = source.read_hash();
+//     timestamp_ = source.read_4_bytes_little_endian();
+//     bits_ = source.read_4_bytes_little_endian();
+//     nonce_ = source.read_4_bytes_little_endian();
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return source;
+// }
+
+// // static
+// expect<header> header::from_data(byte_reader& reader, bool wire) {
+
+//    header old_object;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** HEADER read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         data_chunk data(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(data);
+//         istream_reader source(istream);
+//         old_object.from_data_old(source, wire);
+//     }
+
+//     auto const basis = header_basis::from_data(reader, wire);
+//     if ( ! basis) {
+//         return make_unexpected(basis.error());
+//     }
+//     header hdr {*basis};
+
+//     if ( ! wire) {
+//         auto const mtp = reader.read_little_endian<uint32_t>();
+//         if ( ! mtp) {
+//             return make_unexpected(mtp.error());
+//         }
+//         hdr.validation.median_time_past = *mtp;
+//     }
+
+//     std::string old_hex = encode_base16(old_object.to_data(wire));
+//     std::string new_hex = encode_base16(hdr.to_data(wire));
+//     if (old_hex != new_hex) {
+//         fmt::print("****** HEADER MISMATCH *******\n");
+//         fmt::print("old_hex: {}\n", old_hex);
+//         fmt::print("new_hex: {}\n", new_hex);
+//         std::terminate();
+//     }
+
+//     return hdr;
+// }
+
 // static
 expect<header> header::from_data(byte_reader& reader, bool wire) {
     auto const basis = header_basis::from_data(reader, wire);

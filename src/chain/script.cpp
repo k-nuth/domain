@@ -104,9 +104,130 @@ script& script::operator=(script const& x) {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
+// bool script::from_data_old(istream_reader& source, bool prefix) {
+//     reset();
+//     valid_ = true;
+
+//     if (prefix) {
+//         auto const size = source.read_size_little_endian();
+
+//         // The max_script_size constant limits evaluation, but not all scripts
+//         // evaluate, so use max_block_size to guard memory allocation here.
+//         if (size > static_absolute_max_block_size()) {
+//             source.invalidate();
+//         } else {
+//             bytes_ = source.read_bytes(size);
+//         }
+//     } else {
+//         bytes_ = source.read_bytes();
+//     }
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return source;
+// }
+
+// bool script::from_data_with_size_old(istream_reader& source, size_t size) {
+//     reset();
+//     valid_ = true;
+
+//     // The max_script_size constant limits evaluation, but not all scripts evaluate, so use max_block_size to guard memory allocation here.
+//     if (size > static_absolute_max_block_size()) {
+//         source.invalidate();
+//     } else {
+//         bytes_ = source.read_bytes(size);
+//     }
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return source;
+// }
+
+// // static
+// expect<script> script::from_data(byte_reader& reader, bool prefix) {
+
+//     script old_object;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** SCRIPT(1) read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         data_chunk data(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(data);
+//         istream_reader source(istream);
+//         old_object.from_data_old(source, prefix);
+//     }
+
+//     auto basis = script_basis::from_data(reader, prefix);
+//     if ( ! basis) {
+//         return make_unexpected(basis.error());
+//     }
+//     auto res = script(std::move(*basis));
+
+//     std::string old_hex = encode_base16(old_object.to_data(prefix));
+//     std::string new_hex = encode_base16(res.to_data(prefix));
+//     // fmt::print("old_hex: {}\n", old_hex);
+//     // fmt::print("new_hex: {}\n", new_hex);
+
+//     if (old_hex != new_hex) {
+//         fmt::print("****** SCRIPT(1) MISMATCH *******\n");
+//         fmt::print("old_hex: {}\n", old_hex);
+//         fmt::print("new_hex: {}\n", new_hex);
+//         std::terminate();
+//     }
+
+
+//     return res;
+// }
+
+// // static
+// expect<script> script::from_data_with_size(byte_reader& reader, size_t size) {
+
+//     script old_object;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** SCRIPT(2) read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         data_chunk data(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(data);
+//         istream_reader source(istream);
+//         old_object.from_data_with_size_old(source, size);
+//     }
+
+//     auto basis = script_basis::from_data_with_size(reader, size);
+//     if ( ! basis) {
+//         return make_unexpected(basis.error());
+//     }
+
+//     auto res = script(std::move(*basis));
+
+//     std::string old_hex = encode_base16(old_object.to_data(true));
+//     std::string new_hex = encode_base16(res.to_data(true));
+//     if (old_hex != new_hex) {
+//         fmt::print("****** SCRIPT(2) MISMATCH *******\n");
+//         fmt::print("old_hex: {}\n", old_hex);
+//         fmt::print("new_hex: {}\n", new_hex);
+//         std::terminate();
+//     }
+
+
+//     return res;
+// }
+
 // static
-expect<script> script::from_data(byte_reader& reader, bool wire) {
-    auto basis = script_basis::from_data(reader, wire);
+expect<script> script::from_data(byte_reader& reader, bool prefix) {
+    auto basis = script_basis::from_data(reader, prefix);
     if ( ! basis) {
         return make_unexpected(basis.error());
     }
@@ -119,6 +240,7 @@ expect<script> script::from_data_with_size(byte_reader& reader, size_t size) {
     if ( ! basis) {
         return make_unexpected(basis.error());
     }
+
     return script(std::move(*basis));
 }
 

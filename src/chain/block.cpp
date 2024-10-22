@@ -220,35 +220,81 @@ block& block::operator=(block&& x) noexcept {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// // private
-// void block::reset() {
-//     block_basis::reset();
-//     header_.reset();
-//     transactions_.clear();
-//     transactions_.shrink_to_fit();
-// }
+// bool block::from_data_old(istream_reader& source, bool wire) {
 
-// bool block::is_valid() const {
-//     return !transactions_.empty() || header_.is_valid();
-// }
+//     // validation.start_deserialize = asio::steady_clock::now();
+//     reset();
 
-// Deserialization.
-//-----------------------------------------------------------------------------
+//     if ( ! header_.from_data_old(source, true)) {
+//         return false;
+//     }
 
-// template <typename R, KTH_IS_READER(R)>
-// bool from_data(R& source, bool witness = false) {
-//     validation.start_deserialize = asio::steady_clock::now();
-//     block_basis::from_data(source, witness);
-//     validation.end_deserialize = asio::steady_clock::now();
+//     auto const count = source.read_size_little_endian();
+
+//     // Guard against potential for arbitary memory allocation.
+//     if (count > static_absolute_max_block_size()) {
+//         source.invalidate();
+//     } else {
+//         transactions_.resize(count);
+//     }
+
+//     // Order is required, explicit loop allows early termination.
+//     for (auto& tx : transactions_) {
+//         if ( ! entity_from_data(tx, source, true)) {
+//             break;
+//         }
+//     }
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     // validation.end_deserialize = asio::steady_clock::now();
 //     return source;
 // }
 
+// expect<block> block::from_data(byte_reader& reader, bool wire) {
+//     block old_object;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** BLOCK read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         data_chunk data(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(data);
+//         istream_reader source(istream);
+//         old_object.from_data_old(source, wire);
+//     }
+
+//     auto basis = block_basis::from_data(reader, wire);
+//     if ( ! basis) {
+//         return make_unexpected(basis.error());
+//     }
+//     auto res =  block {std::move(*basis)};
+
+
+//     std::string old_hex = encode_base16(old_object.to_data());
+//     std::string new_hex = encode_base16(res.to_data());
+//     if (old_hex != new_hex) {
+//         fmt::print("****** BLOCK MISMATCH *******\n");
+//         fmt::print("old_hex: {}\n", old_hex);
+//         fmt::print("new_hex: {}\n", new_hex);
+//         std::terminate();
+//     }
+
+//     return res;
+// }
+
+
 expect<block> block::from_data(byte_reader& reader, bool wire) {
-    auto const basis = block_basis::from_data(reader, wire);
+    auto basis = block_basis::from_data(reader, wire);
     if ( ! basis) {
         return make_unexpected(basis.error());
     }
-    return block {*basis};
+    return block {std::move(*basis)};
 }
 
 // Serialization.

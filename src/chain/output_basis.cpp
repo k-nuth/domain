@@ -46,42 +46,8 @@ bool output_basis::is_valid() const {
            chain::is_valid(token_data_);
 }
 
-// Serialization.
+// Deserialization.
 //-----------------------------------------------------------------------------
-
-    // template <typename R, KTH_IS_READER(R)>
-    // bool from_data(R& source, bool /*wire*/ = true, bool /*witness*/ = false) {
-    //     reset();
-
-    //     value_ = source.read_8_bytes_little_endian();
-
-    //     auto script_size = source.read_size_little_endian();
-    //     if ( ! source) {
-    //         reset();
-    //         return source;
-    //     }
-
-    //     auto const has_token_data = source.peek_byte() == chain::encoding::PREFIX_BYTE;
-    //     if ( ! source) {
-    //         reset();
-    //         return source;
-    //     }
-
-    //     if (has_token_data) {
-    //         source.skip(1); // skip prefix byte
-    //         chain::encoding::from_data(source, token_data_);
-    //         script_size -= chain::encoding::serialized_size(token_data_);
-    //         script_size -= 1; // prefix byte
-    //     }
-
-    //     script_.from_data_with_size(source, script_size);
-
-    //     if ( ! source) {
-    //         reset();
-    //     }
-
-    //     return source;
-    // }
 
 expect<output_basis> output_basis::from_data(byte_reader& reader, bool /*wire*/) {
     auto const value = reader.read_little_endian<uint64_t>();
@@ -125,6 +91,9 @@ expect<output_basis> output_basis::from_data(byte_reader& reader, bool /*wire*/)
         std::move(token_data)
     };
 }
+
+// Serialization.
+//-----------------------------------------------------------------------------
 
 data_chunk output_basis::to_data(bool wire) const {
     data_chunk data;

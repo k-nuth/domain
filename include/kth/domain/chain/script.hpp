@@ -33,11 +33,9 @@
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
-
 namespace kth::domain::chain {
 
 class transaction;
-
 class KD_API script : public script_basis {
 public:
     using operation = machine::operation;
@@ -77,6 +75,10 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
+
+
+    // bool from_data_old(istream_reader& source, bool prefix);
+    // bool from_data_with_size_old(istream_reader& source, size_t size);
 
     static
     expect<script> from_data(byte_reader& reader, bool wire);

@@ -89,6 +89,8 @@ public:
 
     // Deserialization.
     //-------------------------------------------------------------------------
+
+    // bool from_data_old(istream_reader& source, bool wire = true);
     static
     expect<block> from_data(byte_reader& reader, bool wire = true);
 

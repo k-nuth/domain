@@ -24,9 +24,7 @@
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
-
 namespace kth::domain::chain {
-
 class KD_API output : public output_basis {
 public:
     using list = std::vector<output>;
@@ -67,15 +65,7 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    // template <typename R, KTH_IS_READER(R)>
-    // bool from_data(R& source, bool wire = true, bool witness = false) {
-    //     if ( ! wire) {
-    //         validation.spender_height = source.read_4_bytes_little_endian();
-    //     }
-
-    //     output_basis::from_data(source, wire, witness);
-    //     return source;
-    // }
+    // bool from_data_old(istream_reader& source, bool wire = true);
 
     static
     expect<output> from_data(byte_reader& reader, bool wire = true);

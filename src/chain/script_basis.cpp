@@ -192,11 +192,24 @@ bool script_basis::is_valid() const {
 
 // static
 expect<script_basis> script_basis::from_data(byte_reader& reader, bool prefix) {
-    if (! prefix) {
+    // fmt::print("script_basis::from_data() - prefix: {}\n", prefix);
+    if ( ! prefix) {
+
         auto const bytes = reader.read_remaining_bytes();
         if ( ! bytes) {
             return make_unexpected(bytes.error());
         }
+
+        data_chunk data1(std::begin(*bytes), std::end(*bytes));
+        auto hex_data1 = encode_base16(data1);
+        // fmt::print("****************************************************\n");
+        // fmt::print("WITHOUT PREFIX\n");
+        // fmt::print("****************************************************\n");
+        // fmt::print("script_basis::from_data() - bytes.size(): {}\n", bytes->size());
+        // fmt::print("script_basis::from_data() - data1.size(): {}\n", data1.size());
+        // fmt::print("script_basis::from_data() - hex_data1:    {}\n", hex_data1);
+        // fmt::print("****************************************************\n");
+
         return script_basis {data_chunk(std::begin(*bytes), std::end(*bytes)), false};
     }
 
@@ -214,6 +227,20 @@ expect<script_basis> script_basis::from_data(byte_reader& reader, bool prefix) {
     if ( ! bytes) {
         return make_unexpected(bytes.error());
     }
+
+
+    data_chunk data1(std::begin(*bytes), std::end(*bytes));
+    auto hex_data1 = encode_base16(data1);
+    // fmt::print("****************************************************\n");
+    // fmt::print("WITH PREFIX\n");
+    // fmt::print("****************************************************\n");
+    // fmt::print("script_basis::from_data() - size:        {}\n", *size);
+    // fmt::print("script_basis::from_data() - bytes.size(): {}\n", bytes->size());
+    // fmt::print("script_basis::from_data() - data1.size(): {}\n", data1.size());
+    // fmt::print("script_basis::from_data() - hex_data1:    {}\n", hex_data1);
+    // fmt::print("****************************************************\n");
+
+
     return script_basis {data_chunk(std::begin(*bytes), std::end(*bytes)), false};
 }
 
@@ -249,6 +276,27 @@ expect<script_basis> script_basis::from_data_with_size(byte_reader& reader, size
     if ( ! bytes) {
         return make_unexpected(bytes.error());
     }
+
+    data_chunk data1(std::begin(*bytes), std::end(*bytes));
+    auto hex_data1 = encode_base16(data1);
+    // fmt::print("script_basis::from_data_with_size() - size: {}\n", size);
+    // fmt::print("script_basis::from_data_with_size() - data1.size(): {}\n", data1.size());
+    // fmt::print("script_basis::from_data_with_size() - hex_data1: {}\n", hex_data1);
+
+
+
+    // fmt::print("script_basis::from_data_with_size() - size: {}\n", size);
+    // fmt::print("script_basis::from_data_with_size() - bytes.size(): {}\n", bytes->size());
+    script_basis res {data_chunk(std::begin(*bytes), std::end(*bytes)), false};
+
+    auto new_data = res.to_data(false);
+    auto hex_new_data = encode_base16(new_data);
+    // fmt::print("script_basis::from_data_with_size() - hex_new_data: {}\n", hex_new_data);
+    auto new_data_with_prefix = res.to_data(true);
+    auto hex_new_data_with_prefix = encode_base16(new_data_with_prefix);
+    // fmt::print("script_basis::from_data_with_size() - hex_new_data_with_prefix: {}\n", hex_new_data_with_prefix);
+
+
     return script_basis {data_chunk(std::begin(*bytes), std::end(*bytes)), false};
 }
 

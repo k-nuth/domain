@@ -27,9 +27,7 @@
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
-
 namespace kth::domain::chain {
-
 class KD_API header : public header_basis, public hash_memoizer<header> {                                 // NOLINT(cppcoreguidelines-special-member-functions)
 public:
     using list = std::vector<header>;
@@ -49,7 +47,6 @@ public:
     using header_basis::header_basis; // inherit constructors from header_basis
 
     header() = default;
-    // header(header const& x, hash_digest const& hash);
 
     explicit
     header(header_basis const& basis)
@@ -61,30 +58,11 @@ public:
     header(header const& x);
     header& operator=(header const& x);
 
-    // Operators.
-    //-----------------------------------------------------------------------------
-
-    // bool operator==(header const& x) const;
-    // bool operator!=(header const& x) const;
 
     // Deserialization.
     //-----------------------------------------------------------------------------
 
-    // template <typename R, KTH_IS_READER(R)>
-    // bool from_data(R& source, bool wire = true) {
-    //     header_basis::from_data(source);
-
-    //     if ( ! wire) {
-    //         validation.median_time_past = source.read_4_bytes_little_endian();
-    //     }
-
-    //     if ( ! source) {
-    //         reset();
-    //     }
-
-    //     return source;
-    // }
-
+    // bool from_data_old(istream_reader& source, bool wire = true);
     static
     expect<header> from_data(byte_reader& reader, bool wire = true);
 

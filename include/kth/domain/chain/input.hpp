@@ -60,9 +60,9 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
+    // bool from_data_old(istream_reader& source, bool wire);
     static
     expect<input> from_data(byte_reader& reader, bool wire);
-
 
     // Properties (size, accessors, cache).
     //-------------------------------------------------------------------------

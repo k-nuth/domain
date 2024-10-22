@@ -77,29 +77,7 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    // template <typename R, KTH_IS_READER(R)>
-    // bool from_data(R& source, bool wire = true) {
-    //     reset();
-
-    //     valid_ = true;
-    //     hash_ = source.read_hash();
-
-    //     if (wire) {
-    //         index_ = source.read_4_bytes_little_endian();
-    //     } else {
-    //         index_ = source.read_2_bytes_little_endian();
-
-    //         if (index_ == max_uint16) {
-    //             index_ = null_index;
-    //         }
-    //     }
-
-    //     if ( ! source) {
-    //         reset();
-    //     }
-
-    //     return source;
-    // }
+    // bool from_data_old(istream_reader& source, bool wire = true);
 
     static
     expect<point> from_data(byte_reader& reader, bool wire = true);

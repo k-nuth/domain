@@ -84,16 +84,118 @@ output::addresses_ptr output::addresses_cache() const {
     ///////////////////////////////////////////////////////////////////////////
 }
 
+
 // Deserialization.
 //-----------------------------------------------------------------------------
 
+// bool output::from_data_old(istream_reader& source, bool wire) {
+//     reset();
+
+//     if ( ! wire) {
+//         validation.spender_height = source.read_4_bytes_little_endian();
+//     }
+
+//     value_ = source.read_8_bytes_little_endian();
+
+//     auto script_size = source.read_size_little_endian();
+//     if ( ! source) {
+//         reset();
+//         return source;
+//     }
+
+//     auto const has_token_data = source.peek_byte() == chain::encoding::PREFIX_BYTE;
+//     if ( ! source) {
+//         reset();
+//         return source;
+//     }
+
+//     if (has_token_data) {
+//         source.skip(1); // skip prefix byte
+//         token::encoding::from_data_old(source, token_data_);
+//         script_size -= token::encoding::serialized_size(token_data_);
+//         script_size -= 1; // prefix byte
+//     }
+
+//     script_.from_data_with_size_old(source, script_size);
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return source;
+// }
+
+// // static
+// expect<output> output::from_data(byte_reader& reader, bool wire) {
+//     output old_object;
+//     data_chunk old_data;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** OUTPUT read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         old_data = data_chunk(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(old_data);
+//         istream_reader source(istream);
+//         old_object.from_data_old(source, wire);
+//     }
+
+
+//     uint32_t spender_height = validation::not_spent;
+//     if ( ! wire) {
+//         auto const height = reader.read_little_endian<uint32_t>();
+//         if ( ! height) {
+//             return make_unexpected(height.error());
+//         }
+//         spender_height = *height;
+//     }
+
+
+//     auto basis = output_basis::from_data(reader, wire);
+//     if ( ! basis) {
+//         return make_unexpected(basis.error());
+//     }
+
+//     output result(std::move(*basis));
+//     result.validation.spender_height = spender_height;
+
+
+//     std::string old_hex = encode_base16(old_object.to_data(wire));
+//     std::string new_hex = encode_base16(result.to_data(wire));
+//     if (old_hex != new_hex) {
+//         fmt::print("****** OUTPUT MISMATCH *******\n");
+//         fmt::print("wire:     {}\n", wire);
+//         fmt::print("old_hex:  {}\n", old_hex);
+//         fmt::print("new_hex:  {}\n", new_hex);
+//         fmt::print("old_data: {}\n", encode_base16(old_data));
+//         std::terminate();
+//     }
+
+//     return result;
+// }
+
 // static
 expect<output> output::from_data(byte_reader& reader, bool wire) {
+    uint32_t spender_height = validation::not_spent;
+    if ( ! wire) {
+        auto const height = reader.read_little_endian<uint32_t>();
+        if ( ! height) {
+            return make_unexpected(height.error());
+        }
+        spender_height = *height;
+    }
+
     auto basis = output_basis::from_data(reader, wire);
     if ( ! basis) {
         return make_unexpected(basis.error());
     }
-    return output(std::move(*basis));
+
+    output result(std::move(*basis));
+    result.validation.spender_height = spender_height;
+    return result;
 }
 
 // Serialization.

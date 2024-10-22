@@ -35,11 +35,6 @@ point::point()
 point::point(hash_digest const& hash, uint32_t index)
     : hash_(hash), index_(index), valid_(true) {}
 
-// // protected
-// point::point(hash_digest const& hash, uint32_t index, bool valid)
-//     : hash_(hash), index_(index), valid_(valid)
-// {}
-
 // Operators.
 //-----------------------------------------------------------------------------
 
@@ -90,8 +85,59 @@ bool point::is_valid() const {
 // Deserialization.
 //-----------------------------------------------------------------------------
 
-// template <typename R, KTH_IS_READER(R)>
-// bool from_data(R& source, bool wire = true) {
+// expect<point> point::from_data(byte_reader& reader, bool wire) {
+//     point old_object;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** POINT read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         data_chunk data(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(data);
+//         istream_reader source(istream);
+//         old_object.from_data_old(source, wire);
+//     }
+
+//     auto const hash = read_hash(reader);
+//     if ( ! hash) {
+//         return make_unexpected(hash.error());
+//     }
+
+//     if ( ! wire) {
+//         auto const index = reader.read_little_endian<uint16_t>();
+//         if ( ! index) {
+//             return make_unexpected(index.error());
+//         }
+//         if (*index == max_uint16) {
+//             return point {*hash, null_index};
+//         }
+//         return point {*hash, *index};
+//     }
+
+//     auto const index = reader.read_little_endian<uint32_t>();
+//     if ( ! index) {
+//         return make_unexpected(index.error());
+//     }
+
+//     auto res = point {*hash, *index};
+
+
+//     std::string old_hex = encode_base16(old_object.to_data(wire));
+//     std::string new_hex = encode_base16(res.to_data(wire));
+//     if (old_hex != new_hex) {
+//         fmt::print("****** POINT MISMATCH *******\n");
+//         fmt::print("old_hex: {}\n", old_hex);
+//         fmt::print("new_hex: {}\n", new_hex);
+//         std::terminate();
+//     }
+
+//     return res;
+// }
+
+// bool point::from_data_old(istream_reader& source, bool wire) {
 //     reset();
 
 //     valid_ = true;
@@ -113,7 +159,6 @@ bool point::is_valid() const {
 
 //     return source;
 // }
-
 expect<point> point::from_data(byte_reader& reader, bool wire) {
     auto const hash = read_hash(reader);
     if ( ! hash) {
@@ -135,8 +180,10 @@ expect<point> point::from_data(byte_reader& reader, bool wire) {
     if ( ! index) {
         return make_unexpected(index.error());
     }
+
     return point {*hash, *index};
 }
+
 
 // Serialization.
 //-----------------------------------------------------------------------------

@@ -35,7 +35,9 @@
 #include <kth/infrastructure/utility/limits.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-// using namespace kth::domain::machine;
+#define FMT_HEADER_ONLY 1
+#include <fmt/core.h>
+
 using namespace kth::infrastructure::machine;
 
 namespace kth::domain::chain {
@@ -508,6 +510,8 @@ code transaction_basis::accept(chain_state const& state, bool is_overspent, bool
     }
 
     if (is_missing_previous_outputs()) {
+        fmt::print("transaction_basis::accept() - is_missing_previous_outputs()\n");
+        std::terminate();
         return error::missing_previous_output;
     }
 

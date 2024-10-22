@@ -21,39 +21,45 @@ namespace kth::domain {
 //     return x.from_data(source, std::forward<U>(u)...);
 // }
 
-// template <typename T, typename... U>
-// inline
-// bool entity_from_data(T& x, std::istream& stream, U&&... u) {
-//     istream_reader stream_r(stream);
-//     return entity_from_data(x, stream_r, std::forward<U>(u)...);
-// }
+template <typename T, typename R, KTH_IS_READER(R), typename... U>
+inline
+bool entity_from_data(T& x, R& source, U&&... u) {
+    return x.from_data_old(source, std::forward<U>(u)...);
+}
 
-// template <typename T, typename... U>
-// inline
-// bool entity_from_data(T& x, data_chunk const& data, U&&... u) {
-//     data_source istream(data);
-//     return entity_from_data(x, istream, std::forward<U>(u)...);
-// }
+template <typename T, typename... U>
+inline
+bool entity_from_data(T& x, std::istream& stream, U&&... u) {
+    istream_reader stream_r(stream);
+    return entity_from_data(x, stream_r, std::forward<U>(u)...);
+}
 
-// template <typename T, typename R, KTH_IS_READER(R), typename... U>
-// inline
-// bool entity_from_data(T& x, uint32_t version, R& source, U&&... u) {
-//     return x.from_data(source, version, std::forward<U>(u)...);
-// }
+template <typename T, typename... U>
+inline
+bool entity_from_data(T& x, data_chunk const& data, U&&... u) {
+    data_source istream(data);
+    return entity_from_data(x, istream, std::forward<U>(u)...);
+}
 
-// template <typename T, typename... U>
-// inline
-// bool entity_from_data(T& x, uint32_t version, std::istream& stream, U&&... u) {
-//     istream_reader stream_r(stream);
-//     return entity_from_data(x, version, stream_r, std::forward<U>(u)...);
-// }
+template <typename T, typename R, KTH_IS_READER(R), typename... U>
+inline
+bool entity_from_data(T& x, uint32_t version, R& source, U&&... u) {
+    return x.from_data(source, version, std::forward<U>(u)...);
+}
 
-// template <typename T, typename... U>
-// inline
-// bool entity_from_data(T& x, uint32_t version, data_chunk const& data, U&&... u) {
-//     data_source istream(data);
-//     return entity_from_data(x, version, istream, std::forward<U>(u)...);
-// }
+template <typename T, typename... U>
+inline
+bool entity_from_data(T& x, uint32_t version, std::istream& stream, U&&... u) {
+    istream_reader stream_r(stream);
+    return entity_from_data(x, version, stream_r, std::forward<U>(u)...);
+}
+
+template <typename T, typename... U>
+inline
+bool entity_from_data(T& x, uint32_t version, data_chunk const& data, U&&... u) {
+    data_source istream(data);
+    return entity_from_data(x, version, istream, std::forward<U>(u)...);
+}
 
 // template <typename T, typename... U>
 // inline

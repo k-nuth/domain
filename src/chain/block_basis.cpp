@@ -124,50 +124,18 @@ bool block_basis::is_valid() const {
 //     return source;
 // }
 
-// // static
-// expect<block_basis> block_basis::from_data(byte_reader& reader, bool wire) {
-//     auto const hdr = chain::header::from_data(reader, wire);
-//     if ( ! hdr) {
-//         return make_unexpected(hdr.error());
-//     }
-//     auto txs = read_collection<chain::transaction>(reader, wire);
-//     if ( ! txs) {
-//         return make_unexpected(txs.error());
-//     }
-//     return block_basis {*hdr, std::move(*txs)};
-// }
 
 // static
 expect<block_basis> block_basis::from_data(byte_reader& reader, bool wire) {
-
-    fmt::print("block_basis::from_data() - wire: {}\n", wire);
-    fmt::print("block_basis::from_data() - reader.buffer_size(): {}\n", reader.buffer_size());
-    fmt::print("block_basis::from_data() - reader.remaining_size(): {}\n", reader.remaining_size());
-
-    auto new_reader = reader;
-    fmt::print("block_basis::from_data() - new_reader.buffer_size(): {}\n", new_reader.buffer_size());
-    fmt::print("block_basis::from_data() - new_reader.remaining_size(): {}\n", new_reader.remaining_size());
-
-    auto all_bytes = new_reader.read_remaining_bytes();
-    fmt::print("block_basis::from_data() - all_bytes->size(): {}\n", all_bytes->size());
-    data_chunk all_bytes_chunk(all_bytes->begin(), all_bytes->end());
-    std::string original_hex_string = encode_base16(all_bytes_chunk);
-
-
     auto const hdr = chain::header::from_data(reader, wire);
     if ( ! hdr) {
         return make_unexpected(hdr.error());
     }
 
-    fmt::print("block_basis::from_data() - AFTER PARSING THE HEADER\n");
-    fmt::print("block_basis::from_data() - reader.remaining_size(): {}\n", reader.remaining_size());
-
     auto txs = read_collection<chain::transaction>(reader, wire);
     if ( ! txs) {
         return make_unexpected(txs.error());
     }
-
-
 
     // std::vector<chain::transaction> txs;
     // {
@@ -191,31 +159,96 @@ expect<block_basis> block_basis::from_data(byte_reader& reader, bool wire) {
     //         txs.emplace_back(std::move(*res));
     //     }
     // }
-    // LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - txs.size(): ", txs.size());
-    fmt::print("block_basis::from_data() - txs->size(): {}\n", txs->size());
 
     // return block_basis {*hdr, std::move(*txs)};
 
     // block_basis result {*hdr, std::move(txs)};
     block_basis result {*hdr, std::move(*txs)};
-    auto const ser_size = serialized_size(result);
-    fmt::print("block_basis::from_data() - ser_size: {}\n", ser_size);
-    auto serialized_bytes = result.to_data(ser_size);
-    fmt::print("block_basis::from_data() - serialized_bytes.size(): {}\n", serialized_bytes.size());
-    std::string serialized_hex_string = encode_base16(serialized_bytes);
+    // auto const ser_size = serialized_size(result);
+    // auto serialized_bytes = result.to_data(ser_size);
+    // std::string serialized_hex_string = encode_base16(serialized_bytes);
 
-    if (serialized_hex_string != original_hex_string) {
-        fmt::print("block_basis::from_data() - serialized_hex_string != original_hex_string\n");
-        fmt::print("block_basis::from_data() - original_hex_string: {}\n", original_hex_string);
-        fmt::print("block_basis::from_data() - serialized_hex_string: {}\n", serialized_hex_string);
-        std::terminate();
-    }
-
+    // if (serialized_hex_string != original_hex_string) {
+    //     fmt::print("block_basis::from_data() - serialized_hex_string != original_hex_string\n");
+    //     fmt::print("block_basis::from_data() - original_hex_string: {}\n", original_hex_string);
+    //     fmt::print("block_basis::from_data() - serialized_hex_string: {}\n", serialized_hex_string);
+    //     std::terminate();
+    // }
 
     return result;
 }
 
+// // static
+// expect<block_basis> block_basis::from_data(byte_reader& reader, bool wire) {
 
+//     auto new_reader = reader;
+
+//     auto all_bytes = new_reader.read_remaining_bytes();
+
+//     data_chunk all_bytes_chunk(all_bytes->begin(), all_bytes->end());
+//     std::string original_hex_string = encode_base16(all_bytes_chunk);
+
+
+//     auto const hdr = chain::header::from_data(reader, wire);
+//     if ( ! hdr) {
+//         return make_unexpected(hdr.error());
+//     }
+
+//     fmt::print("block_basis::from_data() - AFTER PARSING THE HEADER\n");
+//     fmt::print("block_basis::from_data() - reader.remaining_size(): {}\n", reader.remaining_size());
+
+//     auto txs = read_collection<chain::transaction>(reader, wire);
+//     if ( ! txs) {
+//         return make_unexpected(txs.error());
+//     }
+
+
+
+//     // std::vector<chain::transaction> txs;
+//     // {
+//     //     auto const count_exp = reader.read_size_little_endian();
+//     //     if ( ! count_exp) {
+//     //         return make_unexpected(count_exp.error());
+//     //     }
+//     //     auto const count = *count_exp;
+//     //     LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - txs count: ", count);
+//     //     if (count > static_absolute_max_block_size()) {
+//     //         return make_unexpected(error::invalid_size);
+//     //     }
+
+//     //     txs.reserve(count);
+
+//     //     for (size_t i = 0; i < count; ++i) {
+//     //         auto res = chain::transaction::from_data(reader, wire);
+//     //         if ( ! res) {
+//     //             return make_unexpected(res.error());
+//     //         }
+//     //         txs.emplace_back(std::move(*res));
+//     //     }
+//     // }
+//     // LOG_INFO(LOG_DOMAIN, "block_basis::from_data() - txs.size(): ", txs.size());
+//     fmt::print("block_basis::from_data() - txs->size(): {}\n", txs->size());
+
+//     // return block_basis {*hdr, std::move(*txs)};
+
+//     // block_basis result {*hdr, std::move(txs)};
+//     block_basis result {*hdr, std::move(*txs)};
+//     auto const ser_size = serialized_size(result);
+//     fmt::print("block_basis::from_data() - ser_size: {}\n", ser_size);
+//     auto serialized_bytes = result.to_data(ser_size);
+//     fmt::print("block_basis::from_data() - serialized_bytes.size(): {}\n", serialized_bytes.size());
+//     std::string serialized_hex_string = encode_base16(serialized_bytes);
+
+//     if (serialized_hex_string != original_hex_string) {
+//         fmt::print("block_basis::from_data() - serialized_hex_string != original_hex_string\n");
+//         fmt::print("block_basis::from_data() - original_hex_string: {}\n", original_hex_string);
+//         fmt::print("block_basis::from_data() - serialized_hex_string: {}\n", serialized_hex_string);
+//         std::terminate();
+//     }
+
+
+//     return result;
+// }
 
 // Serialization.
 //-----------------------------------------------------------------------------
@@ -465,7 +498,6 @@ bool block_basis::is_valid_merkle_root() const {
 uint64_t block_basis::fees() const {
     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
     auto const value = [](uint64_t total, transaction const& tx) {
-        fmt::print("block_basis::fees() - tx.fees(): {}\n", tx.fees());
         return ceiling_add(total, tx.fees());
     };
 
@@ -474,24 +506,16 @@ uint64_t block_basis::fees() const {
 }
 
 uint64_t block_basis::claim() const {
-    fmt::print("block_basis::claim() - transactions_.empty(): {}\n", transactions_.empty());
-    fmt::print("block_basis::claim() - transactions_.front().total_output_value(): {}\n", transactions_.front().total_output_value());
     return transactions_.empty() ? 0 : transactions_.front().total_output_value();
 }
 
 // Overflow returns max_uint64.
 uint64_t block_basis::reward(size_t height) const {
     ////static_assert(max_money() < max_uint64, "overflow sentinel invalid");
-
-    fmt::print("block_basis::reward() - fees(): {}\n", fees());
-    fmt::print("block_basis::reward() - subsidy(height): {}\n", subsidy(height));
     return ceiling_add(fees(), subsidy(height));
 }
 
 bool block_basis::is_valid_coinbase_claim(size_t height) const {
-    fmt::print("block_basis::is_valid_coinbase_claim() - height:         {}\n", height);
-    fmt::print("block_basis::is_valid_coinbase_claim() - claim():        {}\n", claim());
-    fmt::print("block_basis::is_valid_coinbase_claim() - reward(height): {}\n", reward(height));
     return claim() <= reward(height);
 }
 

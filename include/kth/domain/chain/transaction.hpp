@@ -36,9 +36,7 @@
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
-
 namespace kth::domain::chain {
-
 class KD_API transaction : public transaction_basis {
 public:
     using ins = input::list;
@@ -96,33 +94,10 @@ public:
     // Deserialization.
     //-----------------------------------------------------------------------------
 
+    // bool from_data_old(istream_reader& source, bool wire);
+
     static
     expect<transaction> from_data(byte_reader& reader, bool wire);
-
-//     // Witness is not used by outputs, just for template normalization.
-//     template <typename R, KTH_IS_READER(R)>
-//     bool from_data(R& source, bool wire = true, bool witness = false
-// #ifdef KTH_CACHED_RPC_DATA
-//                     , bool unconfirmed = false
-// #endif
-//                 ) {
-
-//         transaction_basis::from_data(source, wire, witness);
-
-// #ifdef KTH_CACHED_RPC_DATA
-//         if ( !  wire && unconfirmed) {
-//             auto const sigops = source.read_4_bytes_little_endian();
-//             cached_sigops_ = static_cast<uint32_t>(sigops);
-//             auto const fees = source.read_8_bytes_little_endian();
-//             cached_fees_ = static_cast<uint64_t>(fees);
-//             auto const is_standard = source.read_byte();
-//             cached_is_standard_ = static_cast<bool>(is_standard);
-//         }
-// #endif
-
-//         return source;
-//     }
-
 
     // Serialization.
     //-----------------------------------------------------------------------------

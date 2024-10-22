@@ -66,19 +66,81 @@ input& input::operator=(input&& x) noexcept {
     return *this;
 }
 
+void input::reset() {
+    input_basis::reset();
+    addresses_.reset();
+}
+
 // Deserialization.
 //-----------------------------------------------------------------------------
+
+// bool input::from_data_old(istream_reader& source, bool wire) {
+//     reset();
+
+//     if ( ! previous_output_.from_data_old(source, wire)) {
+//         return false;
+//     }
+
+//     script_.from_data_old(source, true);
+//     sequence_ = source.read_4_bytes_little_endian();
+
+//     if ( ! source) {
+//         reset();
+//     }
+
+//     return source;
+// }
+
+// // static
+// expect<input> input::from_data(byte_reader& reader, bool wire) {
+//     // return input_basis::from_data(reader, wire);
+
+
+//    input old_object;
+//     {
+//         auto new_reader = reader;
+//         auto tmp = new_reader.read_remaining_bytes();
+//         if ( ! tmp) {
+//             fmt::print("****** INPUT read_remaining_bytes ERROR *******\n");
+//             std::terminate();
+//         }
+//         auto spn_bytes = *tmp;
+//         data_chunk data(spn_bytes.begin(), spn_bytes.end());
+//         data_source istream(data);
+//         istream_reader source(istream);
+//         old_object.from_data_old(source, wire);
+//     }
+
+//     auto basis = input_basis::from_data(reader, wire);
+//     if ( ! basis) {
+//         return make_unexpected(basis.error());
+//     }
+
+//     auto res = input(std::move(*basis));
+
+//     std::string old_hex = encode_base16(old_object.to_data(wire));
+//     std::string new_hex = encode_base16(res.to_data(wire));
+//     if (old_hex != new_hex) {
+//         fmt::print("****** INPUT MISMATCH *******\n");
+//         fmt::print("old_hex: {}\n", old_hex);
+//         fmt::print("new_hex: {}\n", new_hex);
+//         std::terminate();
+//     }
+
+//     return res;
+// }
+
 
 // static
 expect<input> input::from_data(byte_reader& reader, bool wire) {
     // return input_basis::from_data(reader, wire);
-
     auto basis = input_basis::from_data(reader, wire);
     if ( ! basis) {
         return make_unexpected(basis.error());
     }
     return input(std::move(*basis));
 }
+
 
 // Accessors.
 //-----------------------------------------------------------------------------
