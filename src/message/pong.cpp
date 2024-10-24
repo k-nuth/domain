@@ -32,6 +32,23 @@ bool pong::operator!=(pong const& x) const {
     return !(*this == x);
 }
 
+
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<pong> pong::from_data(byte_reader& reader, uint32_t version) {
+    auto const nonce = reader.read_little_endian<uint64_t>();
+    if ( ! nonce) {
+        return make_unexpected(nonce.error());
+    }
+    return pong(*nonce);
+}
+
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk pong::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

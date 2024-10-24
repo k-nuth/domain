@@ -30,6 +30,21 @@ void filter_clear::reset() {
     insufficient_version_ = true;
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<filter_clear> filter_clear::from_data(byte_reader& reader, uint32_t version) {
+    auto const insufficient_version = false;
+    if (version < filter_clear::version_minimum) {
+        return make_unexpected(error::version_too_low);
+    }
+    return filter_clear(insufficient_version);
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk filter_clear::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);
