@@ -33,30 +33,39 @@ using namespace kth::infrastructure::wallet;
 namespace kth::domain::wallet {
 
 payment_address::payment_address(payment const& decoded)
-    : payment_address(from_payment(decoded))
+    : payment_address(payment_address{from_payment(decoded)})
 {}
 
 payment_address::payment_address(std::string const& address)
-    : payment_address(from_string(address))
+    : payment_address(payment_address{from_string(address)})
 {}
 
 payment_address::payment_address(ec_private const& secret)
-    : payment_address(from_private(secret))
+    : payment_address(payment_address{from_private(secret)})
 {}
 
 payment_address::payment_address(ec_public const& point, uint8_t version)
-    : payment_address(from_public(point, version))
+    : payment_address(payment_address{from_public(point, version)})
 {}
 
 payment_address::payment_address(chain::script const& script, uint8_t version)
-    : payment_address(from_script(script, version))
+    : payment_address(payment_address{from_script(script, version)})
 {}
 
 payment_address::payment_address(short_hash const& hash, uint8_t version)
-    : valid_(true), version_(version), hash_span_{hash_data_.begin(), hash.size()}
+    : valid_(true)
+    , version_(version)
+    , hash_size_(hash.size())
 {
     std::copy_n(hash.begin(), hash.size(), hash_data_.begin());
 }
+
+payment_address::payment_address(hash_digest const& hash, uint8_t version)
+    : valid_(true)
+    , version_(version)
+    , hash_data_(hash)
+    , hash_size_(hash.size())
+{}
 
 // Validators.
 // ----------------------------------------------------------------------------
@@ -160,13 +169,34 @@ payment_address payment_address::from_string_cashaddr(std::string const& address
         return {};
     }
 
-    short_hash hash;
-    std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
+    if (data.size() == short_hash_size + 1) {
+        short_hash hash;
+        if ((data.size() - 1) != hash.size()) {
+            return {};
+        }
+        std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
 
-    if (prefix == payment_address::cashaddr_prefix_mainnet) {
-        return {hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh};
+        if (prefix == payment_address::cashaddr_prefix_mainnet) {
+            return payment_address{hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh};
+        }
+        return payment_address{hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh};
     }
-    return {hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh};
+
+    if (data.size() == hash_size + 1) {
+        hash_digest hash;
+        if ((data.size() - 1) != hash.size()) {
+            return {};
+        }
+        std::copy(std::begin(data) + 1, std::end(data), std::begin(hash));
+
+        if (prefix == payment_address::cashaddr_prefix_mainnet) {
+            return payment_address{hash, type == PUBKEY_TYPE ? payment_address::mainnet_p2kh : payment_address::mainnet_p2sh};
+        }
+        return payment_address{hash, type == PUBKEY_TYPE ? payment_address::testnet_p2kh : payment_address::testnet_p2sh};
+    }
+
+    // Invalid address.
+    return {};
 }
 
 #endif  //KTH_CURRENCY_BCH
@@ -181,7 +211,7 @@ payment_address payment_address::from_string(std::string const& address) {
 #endif  //KTH_CURRENCY_BCH
     }
 
-    return {decoded};
+    return payment_address{decoded};
 }
 
 payment_address payment_address::from_payment(payment const& decoded) {
@@ -190,34 +220,34 @@ payment_address payment_address::from_payment(payment const& decoded) {
     }
 
     auto const hash = slice<1, short_hash_size + 1>(decoded);
-    return {hash, decoded.front()};
+    return payment_address{hash, decoded.front()};
 }
 
 payment_address payment_address::from_private(ec_private const& secret) {
     if ( ! secret) {
-        return {};
+        return payment_address{};
     }
 
-    return {secret.to_public(), secret.payment_version()};
+    return payment_address{secret.to_public(), secret.payment_version()};
 }
 
 payment_address payment_address::from_public(ec_public const& point, uint8_t version) {
     if ( ! point) {
-        return {};
+        return payment_address{};
     }
 
     data_chunk data;
     if ( ! point.to_data(data)) {
-        return {};
+        return payment_address{};
     }
 
-    return {bitcoin_short_hash(data), version};
+    return payment_address{bitcoin_short_hash(data), version};
 }
 
 payment_address payment_address::from_script(chain::script const& script, uint8_t version) {
     // Working around VC++ CTP compiler break here.
     auto const data = script.to_data(false);
-    return {bitcoin_short_hash(data), version};
+    return payment_address{bitcoin_short_hash(data), version};
 }
 
 // Cast operators.
@@ -292,25 +322,26 @@ data_chunk pack_addr_data_(T const& id, uint8_t type) {
     return converted;
 }
 
-std::string encode_cashaddr_(payment_address const& wallet, bool token_aware) {
+std::string encode_cashaddr_(payment_address const& addr, bool token_aware) {
     // Mainnet
-    if (wallet.version() == payment_address::mainnet_p2kh || wallet.version() == payment_address::mainnet_p2sh) {
+    if (addr.version() == payment_address::mainnet_p2kh || addr.version() == payment_address::mainnet_p2sh) {
         if (token_aware) {
             return cashaddr::encode(payment_address::cashaddr_prefix_mainnet,
-                pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::mainnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
+                pack_addr_data_(addr.hash_span(), addr.version() == payment_address::mainnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
         }
-        return cashaddr::encode(payment_address::cashaddr_prefix_mainnet,
-            pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
+        return cashaddr::encode(
+            payment_address::cashaddr_prefix_mainnet,
+            pack_addr_data_(addr.hash_span(), addr.version() == payment_address::mainnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }
 
     // Testnet
-    if (wallet.version() == payment_address::testnet_p2kh || wallet.version() == payment_address::testnet_p2sh) {
+    if (addr.version() == payment_address::testnet_p2kh || addr.version() == payment_address::testnet_p2sh) {
         if (token_aware) {
             return cashaddr::encode(payment_address::cashaddr_prefix_testnet,
-                pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::testnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
+                pack_addr_data_(addr.hash_span(), addr.version() == payment_address::testnet_p2kh ? TOKEN_PUBKEY_TYPE : TOKEN_SCRIPT_TYPE));
         }
         return cashaddr::encode(payment_address::cashaddr_prefix_testnet,
-            pack_addr_data_(wallet.hash20(), wallet.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
+            pack_addr_data_(addr.hash_span(), addr.version() == payment_address::testnet_p2kh ? PUBKEY_TYPE : SCRIPT_TYPE));
     }
     return "";
 }
@@ -330,10 +361,9 @@ uint8_t payment_address::version() const {
     return version_;
 }
 
-//TODO(fernando): re-enable this
-// kth::byte_span payment_address::hash() const {
-//     return hash_span_;
-// }
+kth::byte_span payment_address::hash_span() const {
+    return {hash_data_.begin(), hash_size_};
+}
 
 short_hash payment_address::hash20() const {
     short_hash hash;
@@ -405,11 +435,14 @@ payment_address::list payment_address::extract_input(chain::script const& script
         // A server can differentiate by extracting from the previous output.
         case script_pattern::sign_key_hash: {
             return {
-                {ec_public{script[1].data()}, p2kh_version},
-                {bitcoin_short_hash(script.back().data()), p2sh_version}};
+                payment_address{ec_public{script[1].data()}, p2kh_version},
+                payment_address{bitcoin_short_hash(script.back().data()), p2sh_version}
+            };
         }
         case script_pattern::sign_script_hash: {
-            return {{bitcoin_short_hash(script.back().data()), p2sh_version}};
+            return {
+                payment_address{bitcoin_short_hash(script.back().data()), p2sh_version}
+            };
         }
 
         // There is no address in sign_public_key script (signature only)
@@ -439,16 +472,19 @@ payment_address::list payment_address::extract_output(chain::script const& scrip
     switch (pattern) {
         case script_pattern::pay_key_hash: {
             return {
-                {to_array<short_hash_size>(script[2].data()), p2kh_version}};
+                payment_address{to_array<short_hash_size>(script[2].data()), p2kh_version}
+            };
         }
         case script_pattern::pay_script_hash: {
             return {
-                {to_array<short_hash_size>(script[1].data()), p2sh_version}};
+                payment_address{to_array<short_hash_size>(script[1].data()), p2sh_version}
+            };
         }
         case script_pattern::pay_public_key: {
             return {
                 // pay_public_key is not p2kh but we conflate for tracking.
-                {ec_public{script[0].data()}, p2kh_version}};
+                payment_address{ec_public{script[0].data()}, p2kh_version}
+            };
         }
 
         // Bare multisig and null data do not associate a payment address.
