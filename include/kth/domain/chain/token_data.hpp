@@ -105,16 +105,23 @@ enum class capability_t : uint8_t {
 struct fungible {
     amount_t amount;
 
+
     friend constexpr
-    auto operator<=>(fungible const&, fungible const&) = default;
+    bool operator==(fungible const&, fungible const&) = default;
+
+    friend constexpr
+    bool operator!=(fungible const&, fungible const&) = default;
 };
 
 struct non_fungible {
     capability_t capability;
     commitment_t commitment;
 
-    friend
-    auto operator<=>(non_fungible const&, non_fungible const&) = default;
+    friend constexpr
+    bool operator==(non_fungible const&, non_fungible const&) = default;
+
+    friend constexpr
+    bool operator!=(non_fungible const&, non_fungible const&) = default;
 };
 
 using both_kinds = std::pair<fungible, non_fungible>;
@@ -124,7 +131,10 @@ struct token_data_t {
     std::variant<fungible, non_fungible, both_kinds> data;
 
     friend constexpr
-    auto operator<=>(token_data_t const&, token_data_t const&) = default;
+    bool operator==(token_data_t const&, token_data_t const&) = default;
+
+    friend constexpr
+    bool operator!=(token_data_t const&, token_data_t const&) = default;
 };
 
 using token_data_opt = std::optional<token_data_t>;

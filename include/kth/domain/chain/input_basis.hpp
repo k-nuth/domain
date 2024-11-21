@@ -53,8 +53,11 @@ public:
     // Operators.
     //-------------------------------------------------------------------------
 
-    bool operator==(input_basis const& x) const;
-    bool operator!=(input_basis const& x) const;
+    friend
+    bool operator==(input_basis const&, input_basis const&) = default;
+
+    friend
+    bool operator!=(input_basis const&, input_basis const&) = default;
 
     // Deserialization.
     //-------------------------------------------------------------------------

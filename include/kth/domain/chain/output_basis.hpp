@@ -49,10 +49,11 @@ struct KD_API output_basis {
 
     // Operators.
     //-------------------------------------------------------------------------
-    // bool operator==(output_basis const& x) const;
-    // bool operator!=(output_basis const& x) const;
     friend
-    auto operator<=>(output_basis const&, output_basis const&) = default;
+    bool operator==(output_basis const&, output_basis const&) = default;
+
+    friend
+    bool operator!=(output_basis const&, output_basis const&) = default;
 
     // Deserialization.
     //-------------------------------------------------------------------------

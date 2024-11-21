@@ -53,24 +53,6 @@ input_basis::input_basis(output_point&& previous_output, chain::script&& script,
 {}
 #endif
 
-
-// Operators.
-//-----------------------------------------------------------------------------
-
-bool input_basis::operator==(input_basis const& x) const {
-    return (sequence_ == x.sequence_)
-        && (previous_output_ == x.previous_output_)
-        && (script_ == x.script_)
-#if defined(KTH_SEGWIT_ENABLED)
-        && (witness_ == x.witness_)
-#endif
-        ;
-}
-
-bool input_basis::operator!=(input_basis const& x) const {
-    return !(*this == x);
-}
-
 void input_basis::reset() {
     previous_output_.reset();
     script_.reset();
