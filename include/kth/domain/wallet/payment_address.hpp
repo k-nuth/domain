@@ -53,17 +53,27 @@ public:
 
     /// Constructors.
     payment_address() = default;
-    payment_address(payment_address const& x) = default;
-    // payment_address(payment_address&& x) noexcept;
 
+    explicit
     payment_address(payment const& decoded);
-    payment_address(ec_private const& secret);
-    payment_address(std::string const& address);
-    payment_address(short_hash const& hash, uint8_t version = mainnet_p2kh);
-    payment_address(ec_public const& point, uint8_t version = mainnet_p2kh);
-    payment_address(chain::script const& script, uint8_t version = mainnet_p2sh);
 
-    payment_address& operator=(payment_address const& x) = default;
+    explicit
+    payment_address(ec_private const& secret);
+
+    explicit
+    payment_address(std::string const& address);
+
+    explicit
+    payment_address(short_hash const& hash, uint8_t version = mainnet_p2kh);
+
+    explicit
+    payment_address(hash_digest const& hash, uint8_t version = mainnet_p2kh);
+
+    explicit
+    payment_address(ec_public const& point, uint8_t version = mainnet_p2kh);
+
+    explicit
+    payment_address(chain::script const& script, uint8_t version = mainnet_p2sh);
 
     /// Operators.
     bool operator==(payment_address const& x) const;
@@ -93,9 +103,8 @@ public:
     [[nodiscard]]
     uint8_t version() const;
 
-    //TODO(fernando): re-enable this
-    // [[nodiscard]]
-    // byte_span hash() const;
+    [[nodiscard]]
+    byte_span hash_span() const;
 
     [[nodiscard]]
     short_hash hash20() const;
@@ -145,9 +154,8 @@ private:
 
     bool valid_ = false;
     uint8_t version_ = 0;
-    // short_hash hash_ = null_short_hash;
     hash_digest hash_data_ = null_hash;
-    byte_span hash_span_ = {hash_data_.begin(), size_t(0)};
+    size_t hash_size_ = 0;
 };
 
 /// The pre-encoded structure of a payment address or other similar data.
@@ -164,9 +172,7 @@ namespace std {
 template <>
 struct hash<kth::domain::wallet::payment_address> {
     size_t operator()(kth::domain::wallet::payment_address const& address) const {
-        //TODO(fernando): re-enable this
-        // return std::hash<kth::byte_span>()(address.hash());
-        return std::hash<kth::short_hash>()(address.hash20());
+        return std::hash<kth::byte_span>()(address.hash_span());
     }
 };
 } // namespace std

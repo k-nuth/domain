@@ -19,6 +19,7 @@ option(WITH_ICU "Compile with International Components for Unicode." OFF)
 option(WITH_PNG "Compile with Libpng support." OFF)
 option(WITH_QRENCODE "Compile with QREncode." OFF)
 option(JUST_KTH_SOURCES "Just Knuth source code to be linted." OFF)
+option(WITH_CONSOLE "Compile console application." OFF)
 
 option(GLOBAL_BUILD "" OFF)
 
@@ -460,6 +461,55 @@ endif()
 
 
 _group_sources(${PROJECT_NAME} "${CMAKE_CURRENT_LIST_DIR}")
+
+# Console
+# ------------------------------------------------------------------------------
+message(STATUS "Knuth: WITH_CONSOLE ${WITH_CONSOLE}")
+if (WITH_CONSOLE)
+    set(_test_console_sources
+      console/main.cpp
+    )
+
+  add_executable(kth_domain_console ${_test_console_sources})
+
+  target_link_libraries(kth_domain_console ${PROJECT_NAME})
+
+  set_target_properties(
+          kth_domain_console PROPERTIES
+          FOLDER "domain"
+          OUTPUT_NAME kth_domain_console)
+
+
+  # Enable sanitizers and other debug options only in debug mode
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+      message(STATUS "Activating sanitizers and debug options")
+      message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+      message(STATUS "APPLE: ${APPLE}")
+
+      if (APPLE)
+          # In macOS, use only AddressSanitizer and UndefinedBehaviorSanitizer
+          target_compile_options(kth_domain_console PRIVATE
+              -fsanitize=address,undefined
+              -fno-omit-frame-pointer
+              -g
+          )
+          target_link_options(kth_domain_console PRIVATE
+              -fsanitize=address,undefined
+          )
+      else()
+          # In other operating systems (like Linux), add LeakSanitizer also
+          target_compile_options(kth_domain_console PRIVATE
+              -fsanitize=address,undefined,leak
+              -fno-omit-frame-pointer
+              -g
+          )
+          target_link_options(kth_domain_console PRIVATE
+              -fsanitize=address,undefined,leak
+          )
+      endif()
+
+  endif()
+endif()
 
 # Tests
 # ------------------------------------------------------------------------------

@@ -75,7 +75,7 @@ std::string bitcoin_uri::r() const {
 }
 
 payment_address bitcoin_uri::payment() const {
-    return {address_};
+    return payment_address{address_};
 }
 
 stealth_address bitcoin_uri::stealth() const {
