@@ -44,7 +44,7 @@ bool stealth_receiver::derive_address(payment_address& out_address,
         return false;
     }
 
-    out_address = {receiver_public, version_};
+    out_address = payment_address{ec_public{receiver_public}, version_};
     return true;
 }
 

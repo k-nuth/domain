@@ -74,7 +74,7 @@ TEST_CASE("stealth round trip", "[stealth]") {
 
     // Both parties therefore have the ability to generate the p2pkh address.
     // versioning: stealth_address::main corresponds to payment_address::main_p2pkh
-    wallet::payment_address address(stealth_public, wallet::payment_address::mainnet_p2kh);
+    wallet::payment_address address(wallet::ec_public{stealth_public}, wallet::payment_address::mainnet_p2kh);
     REQUIRE(address.encoded_legacy() == P2PKH_ADDRESS);
 }
 
