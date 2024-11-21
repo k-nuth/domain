@@ -69,7 +69,7 @@ TEST_CASE("stealth receiver  exchange between sender and receiver  always  round
 
     // The receiver now has the stealth private key and the send address.
     REQUIRE(encode_base16(receiver_private) == RECEIVER_PRIVATE);
-    REQUIRE(payment_address(receiver_public, version) == derived_address);
+    REQUIRE(payment_address(ec_public{receiver_public}, version) == derived_address);
 }
 
 // End Test Suite

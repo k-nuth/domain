@@ -36,14 +36,24 @@ public:
     uint8_t const mainnet_p2kh;
 
     /// Constructors.
-    ec_public();
-    ec_public(ec_public const& x);
+    ec_public() = default;
+
+    explicit
     ec_public(ec_private const& secret);
+
+    explicit
     ec_public(data_chunk const& decoded);
+
+    explicit
     ec_public(std::string const& base16);
+
+    explicit
     ec_public(ec_compressed const& point, bool compress = true);
+
+    explicit
     ec_public(ec_uncompressed const& point, bool compress = false);
 
+    ec_public(ec_public const& x) = default;
     ec_public& operator=(ec_public const& x) = default;
 
     /// Operators.
@@ -108,7 +118,7 @@ private:
     bool valid_{false};
     bool compress_{true};
     uint8_t version_;
-    ec_compressed point_;
+    ec_compressed point_ = null_compressed_point;
 };
 
 } // namespace kth::domain::wallet
