@@ -60,11 +60,6 @@ public:
     output& operator=(output const& x);
     output& operator=(output&& x) noexcept;
 
-    // Operators.
-    //-------------------------------------------------------------------------
-    // bool operator==(output const& x) const;
-    // bool operator!=(output const& x) const;
-
     // Deserialization.
     //-------------------------------------------------------------------------
 
