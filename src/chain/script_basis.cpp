@@ -243,7 +243,7 @@ size_t preimage_size(size_t script_size) {
 }
 
 // private/static
-hash_digest script_basis::generate_version_0_signature_hash(transaction const& tx,
+std::pair<hash_digest, size_t> script_basis::generate_version_0_signature_hash(transaction const& tx,
                                                       uint32_t input_index,
                                                       script_basis const& script_code,
                                                       uint64_t value,
@@ -310,7 +310,7 @@ hash_digest script_basis::generate_version_0_signature_hash(transaction const& t
 
     ostream.flush();
     KTH_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
+    return {bitcoin_hash(data), data.size()};
 }
 
 // Utilities (static).

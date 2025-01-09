@@ -100,7 +100,7 @@ public:
     //-------------------------------------------------------------------------
 
     static
-    hash_digest generate_signature_hash(transaction const& tx,
+    std::pair<hash_digest, size_t> generate_signature_hash(transaction const& tx,
                                         uint32_t input_index,
                                         script const& script_code,
                                         uint8_t sighash_type,
@@ -108,7 +108,7 @@ public:
                                         uint64_t value = max_uint64);
 
     static
-    bool check_signature(ec_signature const& signature,
+    std::pair<bool, size_t> check_signature(ec_signature const& signature,
                             uint8_t sighash_type,
                             data_chunk const& public_key,
                             script const& script_code,
@@ -231,6 +231,16 @@ public:
 
     bool is_pay_to_script_hash(uint32_t forks) const;
 
+    // Validation.
+    //-----------------------------------------------------------------------------
+
+    //TODO: move to script_basis (?)
+    static
+    code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/);
+
+    static
+    code verify(transaction const& tx, uint32_t input, uint32_t forks);
+
 private:
     static
     size_t serialized_size(operation::list const& ops);
@@ -239,10 +249,10 @@ private:
     data_chunk operations_to_data(operation::list const& ops);
 
     static
-    hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type);
+    std::pair<hash_digest, size_t> generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type);
 
     static
-    hash_digest generate_version_0_signature_hash(transaction const& tx,
+    std::pair<hash_digest, size_t> generate_version_0_signature_hash(transaction const& tx,
                                                   uint32_t input_index,
                                                   script const& script_code,
                                                   uint64_t value,

@@ -305,13 +305,13 @@ operation::list const& script::operations() const {
 //-----------------------------------------------------------------------------
 
 inline
-hash_digest signature_hash(transaction const& tx, uint32_t sighash_type) {
+std::pair<hash_digest, size_t> signature_hash(transaction const& tx, uint32_t sighash_type) {
     // There is no rational interpretation of a signature hash for a coinbase.
     KTH_ASSERT( ! tx.is_coinbase());
 
     auto serialized = tx.to_data(true, false);
     extend_data(serialized, to_little_endian(sighash_type));
-    return bitcoin_hash(serialized);
+    return {bitcoin_hash(serialized), serialized.size()};
 }
 
 //*****************************************************************************
@@ -339,7 +339,7 @@ uint8_t is_sighash_enum(uint8_t sighash_type, sighash_algorithm value) {
 }
 
 static
-hash_digest sign_none(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
+std::pair<hash_digest, size_t> sign_none(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -367,7 +367,7 @@ hash_digest sign_none(transaction const& tx, uint32_t input_index, script const&
 }
 
 static
-hash_digest sign_single(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
+std::pair<hash_digest, size_t> sign_single(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -404,7 +404,7 @@ hash_digest sign_single(transaction const& tx, uint32_t input_index, script cons
 }
 
 static
-hash_digest sign_all(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
+std::pair<hash_digest, size_t> sign_all(transaction const& tx, uint32_t input_index, script const& script_code, uint8_t sighash_type) {
     input::list ins;
     auto const& inputs = tx.inputs();
     auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
@@ -448,7 +448,7 @@ script strip_code_seperators(script const& script_code) {
 }
 
 // private/static
-hash_digest script::generate_unversioned_signature_hash(transaction const& tx,
+std::pair<hash_digest, size_t> script::generate_unversioned_signature_hash(transaction const& tx,
                                                         uint32_t input_index,
                                                         script const& script_code,
                                                         uint8_t sighash_type) {
@@ -458,7 +458,7 @@ hash_digest script::generate_unversioned_signature_hash(transaction const& tx,
         //*********************************************************************
         // CONSENSUS: wacky satoshi behavior.
         //*********************************************************************
-        return one_hash;
+        return {one_hash, 0}; // zero hashed bytes
     }
 
     //*************************************************************************
@@ -553,7 +553,7 @@ size_t preimage_size(size_t script_size) {
 }
 
 // private/static
-hash_digest script::generate_version_0_signature_hash(transaction const& tx,
+std::pair<hash_digest, size_t> script::generate_version_0_signature_hash(transaction const& tx,
                                                       uint32_t input_index,
                                                       script const& script_code,
                                                       uint64_t value,
@@ -621,14 +621,14 @@ hash_digest script::generate_version_0_signature_hash(transaction const& tx,
 
     ostream.flush();
     KTH_ASSERT(data.size() == size);
-    return bitcoin_hash(data);
+    return {bitcoin_hash(data), data.size()};
 }
 
 // Signing (common).
 //-----------------------------------------------------------------------------
 
 // static
-hash_digest script::generate_signature_hash(transaction const& tx,
+std::pair<hash_digest, size_t> script::generate_signature_hash(transaction const& tx,
                                             uint32_t input_index,
                                             script const& script_code,
                                             uint8_t sighash_type,
@@ -648,7 +648,7 @@ hash_digest script::generate_signature_hash(transaction const& tx,
 }
 
 // static
-bool script::check_signature(ec_signature const& signature,
+std::pair<bool, size_t> script::check_signature(ec_signature const& signature,
                              uint8_t sighash_type,
                              data_chunk const& public_key,
                              script const& script_code,
@@ -657,15 +657,19 @@ bool script::check_signature(ec_signature const& signature,
                              script_version version,
                              uint64_t value) {
     if (public_key.empty()) {
-        return false;
+        return {false, 0};
     }
 
     // This always produces a valid signature hash, including one_hash.
-    auto const sighash = chain::script::generate_signature_hash(tx,
-                                                                input_index, script_code, sighash_type, version, value);
+    auto const [sighash, size] = chain::script::generate_signature_hash(tx,
+                                                                input_index,
+                                                                script_code,
+                                                                sighash_type,
+                                                                version,
+                                                                value);
 
     // Validate the EC signature.
-    return verify_signature(public_key, sighash, signature);
+    return {verify_signature(public_key, sighash, signature), size};
 }
 
 // static
@@ -673,7 +677,7 @@ bool script::create_endorsement(endorsement& out, ec_secret const& secret, scrip
     out.reserve(max_endorsement_size);
 
     // This always produces a valid signature hash, including one_hash.
-    auto const sighash = chain::script::generate_signature_hash(tx, input_index, prevout_script, sighash_type, version, value);
+    auto const [sighash, size] = chain::script::generate_signature_hash(tx, input_index, prevout_script, sighash_type, version, value);
 
     // Create the EC signature and encode as DER.
     ec_signature signature;
@@ -1098,104 +1102,61 @@ bool script::is_unspendable() const {
 // Validation.
 //-----------------------------------------------------------------------------
 
-// #if ! defined(KTH_SEGWIT_ENABLED)
-// code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
-// #else
-// code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, witness const& input_witness, script const& prevout_script, uint64_t value) {
-// #endif
-//     code ec;
+code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks, script const& input_script, script const& prevout_script, uint64_t /*value*/) {
+    code ec;
 
-//     // Evaluate input script.
-//     program input(input_script, tx, input_index, forks);
-//     if ((ec = input.evaluate())) {
-//         return ec;
-//     }
+    // Evaluate input script.
+    program input(input_script, tx, input_index, forks);
+    if ((ec = input.evaluate())) {
+        return ec;
+    }
 
-//     // Evaluate output script using stack result from input script.
-//     program prevout(prevout_script, input);
-//     if ((ec = prevout.evaluate())) {
-//         return ec;
-//     }
+    // Evaluate output script using stack result from input script.
+    program prevout(prevout_script, input);
+    if ((ec = prevout.evaluate())) {
+        return ec;
+    }
 
-//     // This precludes bare witness programs of -0 (undocumented).
-//     if ( ! prevout.stack_result(false)) {
-//         return error::stack_false;
-//     }
+    // This precludes bare witness programs of -0 (undocumented).
+    if ( ! prevout.stack_result(false)) {
+        return error::stack_false;
+    }
 
-// #if defined(KTH_SEGWIT_ENABLED)
-//     bool witnessed;
-//     // Triggered by output script push of version and witness program (bip141).
-//     if ((witnessed = prevout_script.is_pay_to_witness(forks))) {
-//         // The input script must be empty (bip141).
-//         if ( ! input_script.empty()) {
-//             return error::dirty_witness;
-//         }
+    if (prevout_script.is_pay_to_script_hash(forks)) {
+        if ( ! is_relaxed_push(input_script.operations())) {
+            return error::invalid_script_embed;
+        }
 
-//         // This is a valid witness script so validate it.
-//         if ((ec = input_witness.verify(tx, input_index, forks, prevout_script, value))) {
-//             return ec;
-//         }
-//     } else
-// #endif
-//     // p2sh and p2w are mutually exclusive.
-//     /*else*/
-//     if (prevout_script.is_pay_to_script_hash(forks)) {
-//         if ( ! is_relaxed_push(input_script.operations())) {
-//             return error::invalid_script_embed;
-//         }
+        // Embedded script must be at the top of the stack (bip16).
+        script embedded_script(input.pop(), false);
 
-//         // Embedded script must be at the top of the stack (bip16).
-//         script embedded_script(input.pop(), false);
+        program embedded(embedded_script, std::move(input), true);
+        if ((ec = embedded.evaluate())) {
+            return ec;
+        }
 
-//         program embedded(embedded_script, std::move(input), true);
-//         if ((ec = embedded.evaluate())) {
-//             return ec;
-//         }
+        // This precludes embedded witness programs of -0 (undocumented).
+        if ( ! embedded.stack_result(false)) {
+            return error::stack_false;
+        }
+    }
 
-//         // This precludes embedded witness programs of -0 (undocumented).
-//         if ( ! embedded.stack_result(false)) {
-//             return error::stack_false;
-//         }
+    return error::success;
+}
 
-// #if defined(KTH_SEGWIT_ENABLED)
-//         // Triggered by embedded push of version and witness program (bip141).
-//         if ((witnessed = embedded_script.is_pay_to_witness(forks))) {
-//             // The input script must be a push of the embedded_script (bip141).
-//             if (input_script.size() != 1) {
-//                 return error::dirty_witness;
-//             }
+code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
+    if (input >= tx.inputs().size()) {
+        return error::operation_failed;
+    }
 
-//             // This is a valid embedded witness script so validate it.
-//             if ((ec = input_witness.verify(tx, input_index, forks, embedded_script, value))) {
-//                 return ec;
-//             }
-//         }
-// #endif
-//     }
+    auto const& in = tx.inputs()[input];
+    auto const& prevout = in.previous_output().validation.cache;
 
-// #if defined(KTH_SEGWIT_ENABLED)
-//     // Witness must be empty if no bip141 or valid witness program (bip141).
-//     if ( ! witnessed && !input_witness.empty()) {
-//         return error::unexpected_witness;
-//     }
-// #endif
-
-//     return error::success;
-// }
-
-// code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
-//     if (input >= tx.inputs().size()) {
-//         return error::operation_failed;
-//     }
-
-//     auto const& in = tx.inputs()[input];
-//     auto const& prevout = in.previous_output().validation.cache;
-
-// #if ! defined(KTH_SEGWIT_ENABLED)
-//     return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
-// #else
-//     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
-// #endif
-// }
+#if ! defined(KTH_SEGWIT_ENABLED)
+    return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
+#else
+    return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
+#endif
+}
 
 } // namespace kth::domain::chain

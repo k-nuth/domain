@@ -178,7 +178,7 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("00000000e4627a1a0bf9aaae007af5cea32720fb54cf2ccf0aa20b02a18392ab", 16869);  //mediantime: 1605444236. New rules activated in this block.
 
     } else if (network == domain::config::network::chipnet) {
-        checkpoints.reserve(12);
+        checkpoints.reserve(17);
 
         checkpoints.emplace_back("000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b", 0);
 
@@ -208,6 +208,11 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
 
         // A block significantly after Upgrade 10 activated (which activated on Nov. 15, 2023)
         checkpoints.emplace_back("000000003c37cc0372a5b9ccacca921786bbfc699722fc41e9fdbb1de4146ef1", 178140);
+        checkpoints.emplace_back("00000000146a073b9d4e172adbee5252014a8b4d75c56cce36858311565ae251", 206364);
+
+        // A block after Upgrade 11 activated (Nov. 15, 2024), first block after upgrade: 227229
+        checkpoints.emplace_back("00000000144b00db5736b33bd572b3a3a52aa9b4c26ba59fc212aeb68a9b7a20", 228000);
+        checkpoints.emplace_back("0000000017d92f88ed2c81885c57f999184860a042250510be06b3edd12e0dc5", 232000);
 
     } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(60);

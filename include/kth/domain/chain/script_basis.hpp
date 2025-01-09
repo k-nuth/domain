@@ -284,7 +284,7 @@ private:
     // hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
 
     static
-    hash_digest generate_version_0_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint64_t value, uint8_t sighash_type);
+    std::pair<hash_digest, size_t> generate_version_0_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint64_t value, uint8_t sighash_type);
 
     void find_and_delete_(data_chunk const& endorsement);
 

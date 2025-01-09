@@ -30,7 +30,8 @@ namespace kth::domain::machine {
 
 //TODO(fernando): static?
 constexpr
-auto invalid_code = opcode::disabled_xor;
+// auto invalid_code = opcode::disabled_xor;
+auto invalid_code = opcode::invalidopcode;
 
 class KD_API operation {
 public:
@@ -179,7 +180,7 @@ public:
     bool is_reserved(opcode code);
 
     static
-    bool is_disabled(opcode code);
+    bool is_disabled(opcode code, uint32_t active_forks);
 
     static
     bool is_conditional(opcode code);
@@ -201,7 +202,7 @@ public:
     bool is_positive() const;
 
     [[nodiscard]]
-    bool is_disabled() const;
+    bool is_disabled(uint32_t active_forks) const;
 
     [[nodiscard]]
     bool is_conditional() const;
@@ -210,7 +211,7 @@ public:
     bool is_relaxed_push() const;
 
     [[nodiscard]]
-    bool is_oversized() const;
+    bool is_oversized(size_t max_size) const;
 
     [[nodiscard]]
     bool is_minimal_push() const;

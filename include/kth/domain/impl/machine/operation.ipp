@@ -21,7 +21,7 @@ inline
 operation::operation(data_chunk&& uncoded, bool minimal)
     : code_(opcode_from_data(uncoded, minimal))
     , data_(std::move(uncoded))
-    , valid_( ! is_oversized())
+    , valid_( ! is_oversized(max_push_data_size_legacy))   //TODO: max_push_data_size_legacy change on 2025 May
 {
     if ( ! valid_) {
         reset();
@@ -38,7 +38,7 @@ inline
 operation::operation(data_chunk const& uncoded, bool minimal)
     : code_(opcode_from_data(uncoded, minimal))
     , data_(uncoded)
-    , valid_( ! is_oversized())
+    , valid_( ! is_oversized(max_push_data_size_legacy))   //TODO: max_push_data_size_legacy change on 2025 May
 {
     if ( ! valid_) {
         reset();
@@ -276,7 +276,7 @@ bool operation::is_positive(opcode code) {
 // opcode: [80, 98, 137, 138, 186..255]
 inline
 bool operation::is_reserved(opcode code) {
-    constexpr auto op_186 = static_cast<uint8_t>(opcode::reserved_186);
+    constexpr auto op_212 = static_cast<uint8_t>(opcode::reserved_212);
     constexpr auto op_255 = static_cast<uint8_t>(opcode::reserved_255);
 
     switch (code) {
@@ -286,8 +286,8 @@ bool operation::is_reserved(opcode code) {
         case opcode::reserved_138:
             return true;
         default:
-            auto const value = static_cast<uint8_t>(code);
-            return value >= op_186 && value <= op_255;
+            auto const value = uint8_t(code);
+            return value >= op_212 && value <= op_255;
     }
 }
 
@@ -301,30 +301,42 @@ bool operation::is_reserved(opcode code) {
 // this was an unintended consequence of range testing enums.
 //*****************************************************************************
 inline
-bool operation::is_disabled(opcode code) {
+bool operation::is_disabled(opcode code, uint32_t active_forks) {
+    // SCRIPT_64_BIT_INTEGERS = (1U << 24),
+    constexpr auto script_64_bit_integers = 1U << 24;   // the flag is repeated, it is in Consensus lib.
     switch (code) {
-        case opcode::disabled_cat:
-        case opcode::disabled_substr:
-        case opcode::disabled_left:
-        case opcode::disabled_right:
         case opcode::disabled_invert:
-        case opcode::disabled_and:
-        case opcode::disabled_or:
-        case opcode::disabled_xor:
         case opcode::disabled_mul2:
         case opcode::disabled_div2:
-        case opcode::disabled_mul:
-        case opcode::disabled_div:
-        case opcode::disabled_mod:
         case opcode::disabled_lshift:
         case opcode::disabled_rshift:
         case opcode::disabled_verif:
         case opcode::disabled_vernotif:
             return true;
+        case opcode::mul:
+            return ! is_enabled(active_forks, rule_fork::bch_gauss);
         default:
             return false;
     }
 }
+
+// 2025 - Still disabled opcodes
+// static bool IsOpcodeDisabled(opcodetype opcode, uint32_t flags) {
+//     switch (opcode) {
+//         case OP_INVERT:
+//         case OP_2MUL:
+//         case OP_2DIV:
+//         case OP_LSHIFT:
+//         case OP_RSHIFT:
+//             // Disabled opcodes.
+//             return true;
+//         case OP_MUL:
+//             return (flags & SCRIPT_64_BIT_INTEGERS) == 0;
+//         default:
+//             break;
+//     }
+//     return false;
+// }
 
 //*****************************************************************************
 // CONSENSUS: in order to properly treat VERIF and VERNOTIF as disabled (see
@@ -377,8 +389,8 @@ bool operation::is_positive() const {
 }
 
 inline
-bool operation::is_disabled() const {
-    return is_disabled(code_);
+bool operation::is_disabled(uint32_t active_forks) const {
+    return is_disabled(code_, active_forks);
 }
 
 inline
@@ -392,9 +404,9 @@ bool operation::is_relaxed_push() const {
 }
 
 inline
-bool operation::is_oversized() const {
+bool operation::is_oversized(size_t max_size) const {
     // bit.ly/2eSDkOJ
-    return data_.size() > max_push_data_size;
+    return data_.size() > max_size;
 }
 
 inline

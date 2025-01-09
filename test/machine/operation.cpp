@@ -17,7 +17,8 @@ TEST_CASE("operation  constructor 1  always  returns default initialized", "[ope
 
     REQUIRE( ! instance.is_valid());
     REQUIRE(instance.data().empty());
-    REQUIRE(instance.code() == opcode::disabled_xor);
+    // REQUIRE(instance.code() == opcode::disabled_xor);
+    REQUIRE(instance.code() == opcode::invalidopcode);
 }
 
 TEST_CASE("operation  constructor 2  valid input  returns input initialized", "[operation]") {

@@ -11,6 +11,7 @@
 #include <kth/domain/chain/transaction.hpp>
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
+#include <kth/domain/machine/metrics.hpp>
 #include <kth/domain/machine/opcode.hpp>
 #include <kth/domain/machine/operation.hpp>
 #include <kth/infrastructure/machine/number.hpp>
@@ -28,12 +29,6 @@ public:
     using value_type = data_stack::value_type;
     using op_iterator = operation::iterator;
 
-    //TODO(fernando): check this comment
-    // Older libstdc++ does not allow erase with const iterator.
-    // This is a bug that requires we up the minimum compiler version.
-    // So presently stack_iterator is a non-const iterator.
-    ////using stack_iterator = data_stack::const_iterator;
-    // using stack_iterator = data_stack::iterator;
     using stack_iterator = data_stack::const_iterator;
     using stack_mutable_iterator = data_stack::iterator;
 
@@ -59,12 +54,24 @@ public:
     /// Create using copied tx, input, forks, value and moved stack (p2sh run).
     program(chain::script const& script, program&& x, bool move);
 
+    metrics& get_metrics();
+    metrics const& get_metrics() const;
+
     /// Constant registers.
     [[nodiscard]]
     bool is_valid() const;
 
     [[nodiscard]]
     uint32_t forks() const;
+
+    [[nodiscard]]
+    size_t max_script_element_size() const;
+
+    [[nodiscard]]
+    size_t max_integer_size_legacy() const;
+
+    [[nodiscard]]
+    bool is_chip_vm_limits_enabled() const;
 
     [[nodiscard]]
     uint32_t input_index() const;
@@ -109,7 +116,8 @@ public:
     /// Primary pop.
     data_chunk pop();
     bool pop(int32_t& out_value);
-    bool pop(number& out_number, size_t maxiumum_size = max_number_size);
+    bool pop(int64_t& out_value);
+    bool pop(number& out_number, size_t maximum_size);
     bool pop_binary(number& first, number& second);
     bool pop_ternary(number& first, number& second, number& third);
     bool pop_position(stack_iterator& out_position);
@@ -145,7 +153,9 @@ public:
 
     value_type& item(size_t index);
 
-    bool top(number& out_number, size_t maxiumum_size = max_number_size) const;
+    data_chunk const& top() const;
+    data_chunk& top();
+    bool top(number& out_number, size_t maximum_size) const;
 
     [[nodiscard]]
     stack_iterator position(size_t index) const;
@@ -153,10 +163,16 @@ public:
     stack_mutable_iterator position(size_t index);
 
     [[nodiscard]]
+    size_t index(stack_iterator const& position) const;
+
+    [[nodiscard]]
     operation::list subscript() const;
 
     [[nodiscard]]
     size_t size() const;
+
+    [[nodiscard]]
+    size_t conditional_stack_size() const;
 
     // Alternate stack.
     //-------------------------------------------------------------------------
@@ -202,6 +218,8 @@ private:
     data_stack primary_;
     data_stack alternate_;
     bool_stack condition_;
+
+    metrics metrics_;
 };
 
 } // namespace kth::domain::machine

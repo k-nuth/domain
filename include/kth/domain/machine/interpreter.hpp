@@ -120,7 +120,31 @@ public:
     result op_tuck(program& program);
 
     static
+    result op_cat(program& program);
+
+    static
+    result op_split(program& program);
+
+    static
+    result op_reverse_bytes(program& program);
+
+    static
+    result op_num2bin(program& program);
+
+    static
+    result op_bin2num(program& program);
+
+    static
     result op_size(program& program);
+
+    static
+    result op_and(program& program);
+
+    static
+    result op_or(program& program);
+
+    static
+    result op_xor(program& program);
 
     static
     result op_equal(program& program);
@@ -151,6 +175,15 @@ public:
 
     static
     result op_sub(program& program);
+
+    static
+    result op_mul(program& program);
+
+    static
+    result op_div(program& program);
+
+    static
+    result op_mod(program& program);
 
     static
     result op_bool_and(program& program);
@@ -207,10 +240,16 @@ public:
     result op_codeseparator(program& program, operation const& op);
 
     static
+    result op_check_sig(program& program);
+
+    static
     result op_check_sig_verify(program& program);
 
     static
-    result op_check_sig(program& program);
+    result op_check_data_sig(program& program);
+
+    static
+    result op_check_data_sig_verify(program& program);
 
     static
     result op_check_multisig_verify(program& program);
@@ -223,6 +262,66 @@ public:
 
     static
     result op_check_sequence_verify(program& program);
+
+    static
+    result op_input_index(program& program);
+
+    static
+    result op_active_bytecode(program& program);
+
+    static
+    result op_tx_version(program& program);
+
+    static
+    result op_tx_input_count(program& program);
+
+    static
+    result op_tx_output_count(program& program);
+
+    static
+    result op_tx_locktime(program& program);
+
+    static
+    result op_utxo_value(program& program);
+
+    static
+    result op_utxo_bytecode(program& program);
+
+    static
+    result op_outpoint_tx_hash(program& program);
+
+    static
+    result op_outpoint_index(program& program);
+
+    static
+    result op_input_bytecode(program& program);
+
+    static
+    result op_input_sequence_number(program& program);
+
+    static
+    result op_output_value(program& program);
+
+    static
+    result op_output_bytecode(program& program);
+
+    static
+    result op_utxo_token_category(program& program);
+
+    static
+    result op_utxo_token_commitment(program& program);
+
+    static
+    result op_utxo_token_amount(program& program);
+
+    static
+    result op_output_token_category(program& program);
+
+    static
+    result op_output_token_commitment(program& program);
+
+    static
+    result op_output_token_amount(program& program);
 
     /// Run program script.
     static
