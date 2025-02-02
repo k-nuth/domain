@@ -137,6 +137,13 @@ if(ENABLE_TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
 endif()
 
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -matomics -mbulk-memory")
+  _add_cxx_compile_flag(-matomics _has_matomics_flag)
+  _add_cxx_compile_flag(-mbulk-memory _has_mbulk_memory_flag)
+endif()
+
 _add_cxx_compile_flag(-Wno-missing-braces _has_no_missing_braces_warning_flag)
 _add_cxx_compile_flag(-Wno-mismatched-tags _has_no_mismatched_tags_warning_flag)
 _add_c_compile_flag(-Wno-deprecated-declarations _has_no_deprecated_declarations_warning_flag)
@@ -174,6 +181,7 @@ set(kth_sources_just_legacy
         src/chain/script.cpp
         src/chain/transaction_basis.cpp
         src/chain/transaction.cpp
+        src/chain/utxo.cpp
 
         src/machine/interpreter.cpp
 
@@ -364,6 +372,7 @@ set(kth_headers
     include/kth/domain/chain/point.hpp
     include/kth/domain/chain/output_basis.hpp
     include/kth/domain/chain/point_value.hpp
+    include/kth/domain/chain/utxo.hpp
     include/kth/domain/define.hpp
     include/kth/domain/multi_crypto_support.hpp
     include/kth/domain/constants.hpp

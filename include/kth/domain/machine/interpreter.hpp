@@ -332,6 +332,21 @@ public:
     static
     code run(operation const& op, program& program);
 
+
+// Debug step by step
+// ----------------------------------------------------------------------------
+    static
+    std::pair<code, size_t> debug_start(program const& program);
+
+    static
+    bool debug_steps_available(program const& program, size_t step);
+
+    static
+    std::tuple<code, size_t, program> debug_step(program program, size_t step);
+
+    static
+    code debug_end(program const& program);
+
 private:
     static
     result run_op(operation const& op, program& program);

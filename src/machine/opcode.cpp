@@ -421,9 +421,9 @@ std::string opcode_to_string(opcode value, uint32_t active_forks) {
 
 // This converts only names, not any data for push codes.
 bool opcode_from_string(opcode& out_code, std::string const& value) {       //NOLINT
+
     // Normalize to ASCII lower case.
     auto const norm = boost::algorithm::to_lower_copy(value);
-
     RETURN_IF_OPCODE("zero", push_size_0);
     RETURN_IF_OPCODE("push_0", push_size_0);
     RETURN_IF_OPCODE("push_1", push_size_1);

@@ -4,10 +4,10 @@
 
 #include <kth/domain/machine/operation.hpp>
 
+#include <charconv>
 #include <string>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
 
 // #include <kth/domain/constants.hpp>
 #include <kth/domain/machine/opcode.hpp>
@@ -74,14 +74,14 @@ bool opcode_from_data_prefix(opcode& out_code,
 }
 
 static
-bool data_from_number_token(data_chunk& out_data,
-                                   std::string const& token) {
-    try {
-        out_data = number(boost::lexical_cast<int64_t>(token)).data();
-        return true;
-    } catch (const boost::bad_lexical_cast&) {
+bool data_from_number_token(data_chunk& out_data, std::string const& token) {
+    int64_t value;
+    auto [ptr, ec] = std::from_chars(token.data(), token.data() + token.size(), value);
+    if (ec != std::errc()) {
         return false;
     }
+    out_data = number(value).data();
+    return true;
 }
 
 // The removal of spaces in v3 data is a compatability break with our v2.

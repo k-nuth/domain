@@ -75,6 +75,10 @@ public:
     explicit
     payment_address(chain::script const& script, uint8_t version = mainnet_p2sh);
 
+    /// Factories
+    static
+    payment_address from_pay_key_hash_script(chain::script const& script, uint8_t version);
+
     /// Operators.
     bool operator==(payment_address const& x) const;
     bool operator!=(payment_address const& x) const;
