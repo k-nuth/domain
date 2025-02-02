@@ -196,6 +196,12 @@ public:
     [[nodiscard]]
     bool succeeded() const;
 
+
+// TODO: temp:
+    [[nodiscard]]
+    chain::script const& get_script() const;
+
+
 private:
     // A space-efficient dynamic bitset (specialized).
     using bool_stack = std::vector<bool>;

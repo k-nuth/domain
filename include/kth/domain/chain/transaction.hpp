@@ -18,6 +18,8 @@
 #include <kth/domain/chain/output.hpp>
 #include <kth/domain/chain/point.hpp>
 #include <kth/domain/chain/transaction_basis.hpp>
+#include <kth/domain/chain/utxo.hpp>
+
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/multi_crypto_settings.hpp>
@@ -31,13 +33,19 @@
 #include <kth/infrastructure/utility/container_sink.hpp>
 #include <kth/infrastructure/utility/container_source.hpp>
 #include <kth/infrastructure/utility/reader.hpp>
-#include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
 
+#include <nonstd/expected.hpp>
+
+#include <kth/domain/wallet/payment_address.hpp>
+#include <kth/domain/chain/coin_selection.hpp>
+
 namespace kth::domain::chain {
+
+using template_result = std::tuple<transaction, std::vector<uint32_t>, std::vector<wallet::payment_address>, std::vector<uint64_t>>;
 
 class KD_API transaction : public transaction_basis {
 public:
@@ -236,6 +244,25 @@ public:
     mutable validation validation{};
 
     bool is_standard() const;
+
+    static
+    nonstd::expected<template_result, std::error_code> create_template(
+        std::vector<utxo> available_utxos,
+        uint64_t amount_to_send_hint,
+        wallet::payment_address const& destination_address,
+        std::vector<wallet::payment_address> const& change_addresses,
+        coin_selection_algorithm selection_algo
+    );
+
+    static
+    nonstd::expected<template_result, std::error_code> create_template(
+        std::vector<utxo> available_utxos,
+        uint64_t amount_to_send_hint,
+        wallet::payment_address const& destination_address,
+        std::vector<wallet::payment_address> const& change_addresses,
+        std::vector<double> const& change_ratios,
+        coin_selection_algorithm selection_algo
+    );
 
 // protected:
     void reset();

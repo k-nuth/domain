@@ -421,7 +421,10 @@ bool script_basis::is_pay_key_hash_pattern(operation::list const& ops) {
 // CONSENSUS: this pattern is used to activate bip16 validation rules.
 //*****************************************************************************
 bool script_basis::is_pay_script_hash_pattern(operation::list const& ops) {
-    return ops.size() == 3 && ops[0].code() == opcode::hash160 && ops[1].code() == opcode::push_size_20 && ops[2].code() == opcode::equal;
+    return ops.size() == 3 &&
+        ops[0].code() == opcode::hash160 &&
+        ops[1].code() == opcode::push_size_20 &&
+        ops[2].code() == opcode::equal;
 }
 
 //*****************************************************************************

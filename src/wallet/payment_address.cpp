@@ -67,6 +67,20 @@ payment_address::payment_address(hash_digest const& hash, uint8_t version)
     , hash_size_(hash.size())
 {}
 
+// Factories
+// ----------------------------------------------------------------------------
+
+payment_address payment_address::from_pay_key_hash_script(chain::script const& script, uint8_t version) {
+    auto const ops = script.operations();
+    if ( ! chain::script::is_pay_key_hash_pattern(ops)) {
+        return {};
+    }
+    short_hash hash;
+    std::copy(ops[2].data().begin(), ops[2].data().begin() + short_hash_size, hash.begin());
+
+    return payment_address{hash, version};
+}
+
 // Validators.
 // ----------------------------------------------------------------------------
 

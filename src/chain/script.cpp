@@ -814,14 +814,22 @@ bool script::is_pay_public_key_pattern(operation::list const& ops) {
 }
 
 bool script::is_pay_key_hash_pattern(operation::list const& ops) {
-    return ops.size() == 5 && ops[0].code() == opcode::dup && ops[1].code() == opcode::hash160 && ops[2].data().size() == short_hash_size && ops[3].code() == opcode::equalverify && ops[4].code() == opcode::checksig;
+    return ops.size() == 5 &&
+        ops[0].code() == opcode::dup &&
+        ops[1].code() == opcode::hash160 &&
+        ops[2].data().size() == short_hash_size &&
+        ops[3].code() == opcode::equalverify &&
+        ops[4].code() == opcode::checksig;
 }
 
 //*****************************************************************************
 // CONSENSUS: this pattern is used to activate bip16 validation rules.
 //*****************************************************************************
 bool script::is_pay_script_hash_pattern(operation::list const& ops) {
-    return ops.size() == 3 && ops[0].code() == opcode::hash160 && ops[1].code() == opcode::push_size_20 && ops[2].code() == opcode::equal;
+    return ops.size() == 3 &&
+        ops[0].code() == opcode::hash160 &&
+        ops[1].code() == opcode::push_size_20 &&
+        ops[2].code() == opcode::equal;
 }
 
 //*****************************************************************************
@@ -869,8 +877,10 @@ operation::list script::to_pay_public_key_pattern(data_slice point) {
         return {};
     }
 
-    return operation::list{{to_chunk(point)},
-                           {opcode::checksig}};
+    return operation::list{
+        {to_chunk(point)},
+        {opcode::checksig}
+    };
 }
 
 operation::list script::to_pay_key_hash_pattern(short_hash const& hash) {
@@ -879,14 +889,16 @@ operation::list script::to_pay_key_hash_pattern(short_hash const& hash) {
         {opcode::hash160},
         {to_chunk(hash)},
         {opcode::equalverify},
-        {opcode::checksig}};
+        {opcode::checksig}
+    };
 }
 
 operation::list script::to_pay_script_hash_pattern(short_hash const& hash) {
     return operation::list{
         {opcode::hash160},
         {to_chunk(hash)},
-        {opcode::equal}};
+        {opcode::equal}
+    };
 }
 
 operation::list script::to_pay_multisig_pattern(uint8_t signatures,
@@ -1153,7 +1165,8 @@ code script::verify(transaction const& tx, uint32_t input, uint32_t forks) {
     auto const& prevout = in.previous_output().validation.cache;
 
 #if ! defined(KTH_SEGWIT_ENABLED)
-    return verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
+    auto res = verify(tx, input, forks, in.script(), prevout.script(), prevout.value());
+    return res;
 #else
     return verify(tx, input, forks, in.script(), in.witness(), prevout.script(), prevout.value());
 #endif

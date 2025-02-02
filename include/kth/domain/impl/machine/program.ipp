@@ -204,8 +204,7 @@ bool program::pop(int32_t& out_value) {
     number value;
     if ( ! pop(value, max_integer_size_legacy())) {
         return false;
-}
-
+    }
     out_value = value.int32();
     return true;
 }
@@ -216,7 +215,6 @@ bool program::pop(int64_t& out_value) {
     if ( ! pop(value, max_integer_size_legacy())) {
         return false;
     }
-
     out_value = value.int64();
     return true;
 }
@@ -267,11 +265,11 @@ inline
 bool program::pop(data_stack& section, size_t count) {
     if (size() < count) {
         return false;
-}
+    }
 
     for (size_t i = 0; i < count; ++i) {
         section.push_back(pop());
-}
+    }
 
     return true;
 }
@@ -305,8 +303,7 @@ void program::erase(const stack_iterator& position) {
 
 // pop1/pop2/.../pop[i]/pop[first]/.../pop[last]/push[i]/.../push2/push1
 inline
-void program::erase(const stack_iterator& first,
-                           const stack_iterator& last) {
+void program::erase(const stack_iterator& first, const stack_iterator& last) {
     primary_.erase(first, last);
 }
 
@@ -503,6 +500,12 @@ bool program::succeeded() const {
     // Optimized above to avoid succeeded loop.
     ////auto const is_true = [](bool value) { return value; };
     ////return std::all_of(condition_.begin(), condition_.end(), true);
+}
+
+//TODO: temp:
+inline
+chain::script const& program::get_script() const {
+    return script_;
 }
 
 } // namespace kth::domain::machine
