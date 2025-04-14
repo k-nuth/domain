@@ -96,6 +96,12 @@ if (${CURRENCY} STREQUAL "LTC")
   find_package(OpenSSL 1.0.1 REQUIRED)
 endif()
 
+if (WITH_ICU)
+  find_package(ICU REQUIRED)
+endif()
+
+find_package(tiny-aes-c REQUIRED)
+
 include(CheckCXXCompilerFlag)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
@@ -266,6 +272,7 @@ set(kth_sources_just_legacy
         src/wallet/stealth_address.cpp
         src/wallet/stealth_receiver.cpp
         src/wallet/stealth_sender.cpp
+        src/wallet/wallet_manager.cpp
 )
 
 set(kth_sources_just_legacy
@@ -274,7 +281,7 @@ set(kth_sources_just_legacy
 )
 
 set(kth_sources_just_kth
-    src/wallet/transaction_functions.cpp
+    # src/wallet/transaction_functions.cpp
 )
 
 if (NOT ${CURRENCY} STREQUAL "BCH")
@@ -356,6 +363,7 @@ set(kth_headers
     include/kth/domain/chain/output.hpp
     include/kth/domain/chain/daa/aserti3_2d.hpp
     include/kth/domain/chain/token_data.hpp
+    include/kth/domain/chain/token_data_serialization.hpp
     include/kth/domain/chain/output_point.hpp
     include/kth/domain/chain/hash_memoizer.hpp
     include/kth/domain/chain/script_basis.hpp
@@ -376,8 +384,9 @@ set(kth_headers
     include/kth/domain/define.hpp
     include/kth/domain/multi_crypto_support.hpp
     include/kth/domain/constants.hpp
+
     include/kth/domain/wallet/stealth_address.hpp
-    include/kth/domain/wallet/transaction_functions.hpp
+    # include/kth/domain/wallet/transaction_functions.hpp
     include/kth/domain/wallet/bitcoin_uri.hpp
     include/kth/domain/wallet/ec_private.hpp
     include/kth/domain/wallet/stealth_receiver.hpp
@@ -391,6 +400,8 @@ set(kth_headers
     include/kth/domain/wallet/select_outputs.hpp
     include/kth/domain/wallet/uri_reader.hpp
     include/kth/domain/wallet/encrypted_keys.hpp
+    include/kth/domain/wallet/wallet_manager.hpp
+
     include/kth/domain/utils.hpp
     include/kth/domain/common.hpp
     include/kth/domain/machine/opcode.hpp
@@ -441,6 +452,10 @@ endif()
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 
+if (WITH_ICU)
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${ICU_INCLUDE_DIR})
+endif()
+
 if (${CURRENCY} STREQUAL "LTC")
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
 endif()
@@ -456,7 +471,12 @@ if (${CURRENCY} STREQUAL "LTC")
   target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENSSL_CRYPTO_LIBRARY})
 endif()
 
+if (WITH_ICU)
+  target_link_libraries(${PROJECT_NAME} PUBLIC ICU::icuuc)
+endif()
+
 target_link_libraries(${PROJECT_NAME} PUBLIC infrastructure::infrastructure)
+target_link_libraries(${PROJECT_NAME} PUBLIC tiny-aes-c::tiny-aes-c)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   target_link_libraries(${PROJECT_NAME} PUBLIC Boost::thread)
@@ -593,6 +613,7 @@ if (WITH_TESTS)
         test/wallet/stealth_receiver.cpp
         test/wallet/stealth_sender.cpp
         test/wallet/uri_reader.cpp
+        test/wallet/wallet_manager.cpp
 
         #TODO(fernando): to include
         # test/wallet/transaction_functions.cpp

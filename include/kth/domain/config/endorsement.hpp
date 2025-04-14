@@ -39,7 +39,7 @@ public:
      * @param[in]  value  The value to initialize with.
      */
     template <size_t Size>
-    endorsement(const byte_array<Size>& value)
+    endorsement(byte_array<Size> const& value)
         : value_(value.begin(), value.end()) {
     }
 
@@ -47,7 +47,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    endorsement(const endorsement& x);
+    endorsement(endorsement const& x);
 
     /**
      * Overload cast to internal type.

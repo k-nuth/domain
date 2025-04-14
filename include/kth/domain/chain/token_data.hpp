@@ -105,7 +105,6 @@ enum class capability_t : uint8_t {
 struct fungible {
     amount_t amount;
 
-
     friend constexpr
     bool operator==(fungible const&, fungible const&) = default;
 
@@ -381,6 +380,21 @@ bool from_data(R& source, token_data_opt& x) {
 }
 
 } // namespace encoding
+
+//TODO: create a C++ concept to model types that has serialized_size(x) and to_data(W&, x)
+//      to finish the following code we need to get rid of the W template parameter in to_data
+
+// template <typename T>
+// concept has_serialized_size = requires(T x) {
+//     { serialized_size(x) } -> std::convertible_to<size_t>;
+// };
+
+// template <typename T, typename W>
+// concept has_to_data = requires(T x, W& sink) {
+//     { to_data(sink, x) } -> std::same_as<void>;
+// };
+
+// concept serializable = has_serialized_size<T> && has_to_data<T, W>;
 
 } // namespace kth::domain::chain
 

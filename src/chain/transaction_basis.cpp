@@ -601,6 +601,10 @@ hash_digest sequences_hash(transaction_basis const& tx) {
     return to_sequences(tx);
 }
 
+hash_digest utxos_hash(transaction_basis const& tx) {
+    return to_utxos(tx);
+}
+
 hash_digest to_outputs(transaction_basis const& tx) {
     auto const sum = [&](size_t total, output const& output) {
         return total + output.serialized_size();
@@ -667,6 +671,34 @@ hash_digest to_sequences(transaction_basis const& tx) {
     return bitcoin_hash(data);
 }
 
+hash_digest to_utxos(transaction_basis const& tx) {
+    auto const sum = [&](size_t total, input const& input) {
+        auto const& prevout = input.previous_output().validation.cache;
+        auto const missing = !prevout.is_valid();
+        total += missing ? 0 : prevout.serialized_size();
+        return total;
+    };
+
+    auto const& ins = tx.inputs();
+    auto const size = std::accumulate(ins.begin(), ins.end(), size_t(0), sum);
+
+    data_chunk data;
+    data.reserve(size);
+    data_sink ostream(data);
+    ostream_writer sink_w(ostream);
+
+    auto const write = [&](input const& input) {
+        auto const& prevout = input.previous_output().validation.cache;
+        auto const missing = !prevout.is_valid();
+        if (missing) return;
+        prevout.to_data(sink_w);
+    };
+
+    std::for_each(ins.begin(), ins.end(), write);
+    ostream.flush();
+    KTH_ASSERT(data.size() == size);
+    return bitcoin_hash(data);
+}
 
 // Returns max_uint64 in case of overflow.
 uint64_t total_input_value(transaction_basis const& tx) {

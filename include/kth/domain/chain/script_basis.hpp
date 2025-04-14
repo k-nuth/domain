@@ -18,6 +18,7 @@
 
 #include <kth/domain/machine/operation.hpp>
 #include <kth/domain/machine/rule_fork.hpp>
+#include <kth/domain/wallet/ec_public.hpp>
 
 #include <kth/infrastructure/error.hpp>
 #include <kth/infrastructure/machine/script_pattern.hpp>
@@ -29,7 +30,6 @@
 #include <kth/infrastructure/utility/reader.hpp>
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
-
 
 #include <kth/domain/utils.hpp>
 #include <kth/domain/concepts.hpp>
@@ -47,7 +47,9 @@ public:
     using operation = machine::operation;
     using rule_fork = machine::rule_fork;
     using script_pattern = infrastructure::machine::script_pattern;
+#if ! defined(KTH_CURRENCY_BCH)
     using script_version = infrastructure::machine::script_version;
+#endif // ! KTH_CURRENCY_BCH
 
     // Constructors.
     //-------------------------------------------------------------------------
@@ -188,10 +190,13 @@ public:
     bool is_pay_public_key_pattern(operation::list const& ops);
 
     static
-    bool is_pay_key_hash_pattern(operation::list const& ops);
+    bool is_pay_public_key_hash_pattern(operation::list const& ops);
 
     static
     bool is_pay_script_hash_pattern(operation::list const& ops);
+
+    static
+    bool is_pay_script_hash_32_pattern(operation::list const& ops);
 
 #if defined(KTH_SEGWIT_ENABLED)
     static
@@ -206,7 +211,7 @@ public:
     bool is_sign_public_key_pattern(operation::list const& ops);
 
     static
-    bool is_sign_key_hash_pattern(operation::list const& ops);
+    bool is_sign_public_key_hash_pattern(operation::list const& ops);
 
     static
     bool is_sign_script_hash_pattern(operation::list const& ops);
@@ -219,10 +224,19 @@ public:
     operation::list to_pay_public_key_pattern(data_slice point);
 
     static
-    operation::list to_pay_key_hash_pattern(short_hash const& hash);
+    operation::list to_pay_public_key_hash_pattern(short_hash const& hash);
+
+    static
+    operation::list to_pay_public_key_hash_pattern_unlocking(endorsement const& end, wallet::ec_public const& public_key);
+
+    static
+    operation::list to_pay_public_key_hash_pattern_unlocking_placeholder(size_t endorsement_size, size_t pubkey_size);
 
     static
     operation::list to_pay_script_hash_pattern(short_hash const& hash);
+
+    static
+    operation::list to_pay_script_hash_32_pattern(hash_digest const& hash);
 
     static
     operation::list to_pay_multisig_pattern(uint8_t signatures, point_list const& points);
@@ -240,8 +254,10 @@ public:
     data_chunk witness_program() const;
 #endif
 
+#if ! defined(KTH_CURRENCY_BCH)
     [[nodiscard]]
     script_version version() const;
+#endif // ! KTH_CURRENCY_BCH
 
     [[nodiscard]]
     script_pattern pattern() const;
@@ -256,7 +272,9 @@ public:
     [[nodiscard]]
     size_t sigops(bool accurate) const;
 
+#if ! defined(KTH_CURRENCY_BCH)
     void find_and_delete(data_stack const& endorsements);
+#endif // ! KTH_CURRENCY_BCH
 
     [[nodiscard]]
     bool is_unspendable() const;
@@ -273,10 +291,13 @@ public:
     [[nodiscard]]
     bool is_pay_to_script_hash(uint32_t forks) const;
 
+    [[nodiscard]]
+    bool is_pay_to_script_hash_32(uint32_t forks) const;
+
 // private:
     static
     size_t serialized_size(operation::list const& ops);
-private:
+protected:
     static
     data_chunk operations_to_data(operation::list const& ops);
 
@@ -284,9 +305,18 @@ private:
     // hash_digest generate_unversioned_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint8_t sighash_type);
 
     static
-    std::pair<hash_digest, size_t> generate_version_0_signature_hash(transaction const& tx, uint32_t input_index, script_basis const& script_code, uint64_t value, uint8_t sighash_type);
+    std::pair<hash_digest, size_t> generate_version_0_signature_hash(
+        transaction const& tx,
+        uint32_t input_index,
+        script_basis const& script_code,
+        uint64_t value,
+        uint8_t sighash_type,
+        uint32_t active_forks
+    );
 
+#if ! defined(KTH_CURRENCY_BCH)
     void find_and_delete_(data_chunk const& endorsement);
+#endif // ! KTH_CURRENCY_BCH
 
     data_chunk bytes_;
     bool valid_{false};

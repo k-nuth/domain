@@ -140,6 +140,8 @@ struct KD_API output_basis {
     void set_script(chain::script const& value);
     void set_script(chain::script&& value);
 
+    // [[deprecated]] // unsafe
+    token_data_opt& token_data();
 
     [[nodiscard]]
     token_data_opt const& token_data() const;

@@ -509,6 +509,40 @@ hash_digest transaction::sequences_hash() const {
 #endif
 }
 
+hash_digest transaction::utxos_hash() const {
+#if ! defined(__EMSCRIPTEN__)
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section
+    hash_mutex_.lock_upgrade();
+
+    if ( ! utxos_hash_) {
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        hash_mutex_.unlock_upgrade_and_lock();
+        utxos_hash_ = std::make_shared<hash_digest>(to_utxos(*this));
+        hash_mutex_.unlock_and_lock_upgrade();
+        //-----------------------------------------------------------------
+    }
+
+    auto const hash = *utxos_hash_;
+    hash_mutex_.unlock_upgrade();
+    ///////////////////////////////////////////////////////////////////////////
+
+    return hash;
+#else
+    {
+        std::shared_lock lock(hash_mutex_);
+        if (utxos_hash_) {
+            return *utxos_hash_;
+        }
+    }
+    std::unique_lock lock(hash_mutex_);
+    if ( ! utxos_hash_) {
+        utxos_hash_ = std::make_shared<hash_digest>(to_utxos(*this));
+    }
+    return *utxos_hash_;
+#endif
+}
+
 // Utilities.
 //-----------------------------------------------------------------------------
 
@@ -776,7 +810,7 @@ code verify(transaction const& tx, uint32_t input_index, uint32_t forks, script 
 #endif
     // p2sh and p2w are mutually exclusive.
     /*else*/
-    if (prevout_script.is_pay_to_script_hash(forks)) {
+    if (prevout_script.is_pay_to_script_hash(forks) || prevout_script.is_pay_to_script_hash_32(forks)) {
         if ( ! script::is_relaxed_push(input_script.operations())) {
             return error::invalid_script_embed;
         }
@@ -841,11 +875,22 @@ constexpr uint64_t approx_input_size = 148;
 constexpr uint64_t approx_output_size = 34;
 constexpr uint64_t base_tx_size = 10;
 
-using utxo_selection_t = std::tuple<uint64_t, size_t, uint64_t, uint64_t>;
+struct utxo_selection {
+    uint64_t total_selected_bch; // Total selected in BCH
+    size_t utxo_count;           // Total number of selected UTXOs
+    uint64_t estimated_size;     // Estimated size of the transaction
+    uint64_t amount_to_send;     // Amount to send (original hint)
+
+    // Fungibles: category => total accumulated amount
+    boost::unordered_flat_map<hash_digest, uint64_t> fungible_tokens;
+
+    // Non-fungible and Both tokens
+    std::vector<token_data_t> non_fungible_and_both_tokens;
+};
 
 template <typename Comp>
     requires std::strict_weak_order<Comp, utxo, utxo>
-nonstd::expected<utxo_selection_t, std::error_code> select_utxos_simple(
+nonstd::expected<utxo_selection, std::error_code> select_utxos_simple(
     std::vector<utxo>& available_utxos,
     uint64_t amount_to_send,
     size_t output_count,
@@ -853,29 +898,37 @@ nonstd::expected<utxo_selection_t, std::error_code> select_utxos_simple(
 ) {
     std::sort(available_utxos.begin(), available_utxos.end(), cmp);
 
-    uint64_t total_selected = 0;
-    size_t utxo_count = 0;
+    utxo_selection result{};
+    result.amount_to_send = amount_to_send;
 
     for (auto const& u : available_utxos) {
-        total_selected += u.amount();
-        ++utxo_count;
+        result.total_selected_bch += u.amount();
+        ++result.utxo_count;
 
-        uint64_t const estimated_size = base_tx_size + (utxo_count * approx_input_size) + (output_count * approx_output_size);
+        if (u.token_data().has_value()) {
+            auto const& token = u.token_data().value();
+
+            if (std::holds_alternative<fungible>(token.data)) {
+                result.fungible_tokens[token.id] += uint64_t(std::get<fungible>(token.data).amount);
+            } else {
+                result.non_fungible_and_both_tokens.emplace_back(token);
+            }
+        }
+
+        uint64_t const estimated_size = base_tx_size + (result.utxo_count * approx_input_size) + (output_count * approx_output_size);
         uint64_t const estimated_fee = estimated_size * sats_per_byte;
         uint64_t const total_needed = amount_to_send + estimated_fee;
-        if (total_selected >= total_needed) {
-            return utxo_selection_t {
-                total_selected,
-                utxo_count,
-                estimated_size,
-                amount_to_send
-            };
+        if (result.total_selected_bch >= total_needed) {
+            result.estimated_size = estimated_size;
+            return result;
         }
     }
     return nonstd::make_unexpected(error::insufficient_amount);
 }
+    return nonstd::make_unexpected(error::insufficient_amount);
+}
 
-nonstd::expected<utxo_selection_t, std::error_code> select_utxos_all(
+nonstd::expected<utxo_selection, std::error_code> select_utxos_all(
     std::vector<utxo> const& available_utxos,
     uint64_t amount_to_send,
     size_t output_count
@@ -895,7 +948,7 @@ nonstd::expected<utxo_selection_t, std::error_code> select_utxos_all(
 
     amount_to_send = total_input - estimated_fee;
 
-    return utxo_selection_t {
+    return utxo_selection {
         total_input,
         utxo_count,
         estimated_size,
@@ -968,19 +1021,18 @@ nonstd::expected<template_result, std::error_code> transaction::create_template(
         total_input,
         utxo_count,
         estimated_size,
-        amount_to_send] = *res;
+        amount_to_send,
+        fungible_tokens,
+        non_fungible_and_both_tokens
+    ] = *res;
+
 
     std::vector<uint32_t> selected_utxo_indices;
     transaction::ins inputs;
+
     for (size_t i = 0; i < utxo_count; ++i) {
+        auto const ops = script::to_pay_public_key_hash_pattern_unlocking_placeholder(71, 33);
         script placeholder_script;
-        data_chunk const placeholder_signature(71, 0);
-        data_chunk const placeholder_pubkey(33, 0);
-        operation::list const ops {
-            operation(machine::opcode::push_size_0),
-            operation(placeholder_signature),
-            operation(placeholder_pubkey)
-        };
         placeholder_script.from_operations(ops);
 
         inputs.emplace_back(available_utxos[i].point(), std::move(placeholder_script), max_input_sequence);
@@ -994,7 +1046,7 @@ nonstd::expected<template_result, std::error_code> transaction::create_template(
     std::vector<uint64_t> output_amounts;
 
     transaction::outs outputs;
-    auto dest_ops = script::to_pay_key_hash_pattern(destination_address.hash20());
+    auto dest_ops = script::to_pay_public_key_hash_pattern(destination_address.hash20());
     chain::script dest_script;
     dest_script.from_operations(dest_ops);
     outputs.emplace_back(amount_to_send, std::move(dest_script), std::nullopt);
@@ -1003,8 +1055,6 @@ nonstd::expected<template_result, std::error_code> transaction::create_template(
     output_amounts.push_back(amount_to_send);
 
     uint64_t const estimated_fee = estimated_size * sats_per_byte;
-    std::cout << "estimated_size: " << estimated_size << std::endl;
-    std::cout << "estimated_fee:  " << estimated_fee << std::endl;
 
     if ( ! send_all) {
         uint64_t const total_change_amount = total_input - (amount_to_send + estimated_fee);
@@ -1012,7 +1062,7 @@ nonstd::expected<template_result, std::error_code> transaction::create_template(
 
         if (total_change_amount > 0) {
             for (size_t i = 0; i < change_addresses.size(); ++i) {
-                auto change_ops = script::to_pay_key_hash_pattern(change_addresses[i].hash20());
+                auto change_ops = script::to_pay_public_key_hash_pattern(change_addresses[i].hash20());
                 chain::script change_script;
                 change_script.from_operations(change_ops);
                 uint64_t const change_amount = total_change_amount * change_ratios[i];
@@ -1036,6 +1086,31 @@ nonstd::expected<template_result, std::error_code> transaction::create_template(
         if (total_input != total_output) {
             return nonstd::make_unexpected(error::unknown);
         }
+    }
+
+    auto const& change_address = change_addresses[0];
+    for (auto const& token_pair : fungible_tokens) {
+
+        token_data_t token {
+            .id = token_pair.first,
+            .data = fungible {
+                .amount = amount_t{int64_t(token_pair.second)}
+            }
+        };
+
+        auto change_ops = script::to_pay_public_key_hash_pattern(change_address.hash20());
+        chain::script change_script;
+        change_script.from_operations(change_ops);
+        uint64_t const dust_bch_amount = 0;
+        outputs.emplace_back(dust_bch_amount, std::move(change_script), token);
+    }
+
+    for (auto const& token : non_fungible_and_both_tokens) {
+        auto change_ops = script::to_pay_public_key_hash_pattern(change_address.hash20());
+        chain::script change_script;
+        change_script.from_operations(change_ops);
+        uint64_t const dust_bch_amount = 0;
+        outputs.emplace_back(dust_bch_amount, std::move(change_script), token);
     }
 
     return std::make_tuple(

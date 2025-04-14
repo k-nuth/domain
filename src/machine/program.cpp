@@ -67,13 +67,25 @@ program::program(script const& script, chain::transaction const& transaction, ui
 }
 
 // Condition, alternate, jump and operation_count are not copied.
-program::program(script const& script, chain::transaction const& transaction, uint32_t input_index, uint32_t forks, data_stack&& stack, uint64_t value, script_version version)
+program::program(
+  script const& script
+  , chain::transaction const& transaction
+  , uint32_t input_index
+  , uint32_t forks
+  , data_stack&& stack
+  , uint64_t value
+#if ! defined(KTH_CURRENCY_BCH)
+  , script_version version
+#endif // ! KTH_CURRENCY_BCH
+)
     : script_(script),
       transaction_(transaction),
       input_index_(input_index),
       forks_(forks),
       value_(value),
+#if ! defined(KTH_CURRENCY_BCH)
       version_(version),
+#endif // ! KTH_CURRENCY_BCH
       jump_(script_.begin()),
       primary_(std::move(stack)) {
     reserve_stacks();

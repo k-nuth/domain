@@ -1182,10 +1182,12 @@ std::pair<interpreter::result, size_t> op_check_sig_common(program& program, int
     // Create a subscript with endorsements stripped (sort of).
     chain::script script_code(program.subscript());
 
+#if ! defined(KTH_CURRENCY_BCH)
     // BIP143: find and delete of the signature is not applied for v0.
     if ( ! (bip143 && program.version() == script_version::zero)) {
         script_code.find_and_delete({endorsement});
     }
+#endif // ! KTH_CURRENCY_BCH
 
     // BIP62: An empty endorsement is not considered lax encoding.
     if ( ! parse_endorsement(sighash, distinguished, std::move(endorsement))) {
@@ -1197,12 +1199,26 @@ std::pair<interpreter::result, size_t> op_check_sig_common(program& program, int
         return {bip66 ? error::invalid_signature_lax_encoding : error::invalid_signature_encoding, 0};
     }
 
+#if ! defined(KTH_CURRENCY_BCH)
     // Version condition preserves independence of bip141 and bip143.
     auto version = bip143 ? program.version() : script_version::unversioned;
+#endif // ! KTH_CURRENCY_BCH
 
-    auto const [res, size] = chain::script::check_signature(signature, sighash, public_key,
-                                          script_code, program.transaction(), program.input_index(),
-                                          version, program.value());
+
+    auto const [res, size] = chain::script::check_signature(
+        signature,
+        sighash,
+        public_key,
+        script_code,
+        program.transaction(),
+        program.input_index(),
+        program.forks(),
+#if ! defined(KTH_CURRENCY_BCH)
+        version,
+#endif // ! KTH_CURRENCY_BCH
+        program.value()
+    );
+
     return {res ? error::success : error::incorrect_signature, size};
 }
 
@@ -1310,10 +1326,12 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
     // Before looping create subscript with endorsements stripped (sort of).
     chain::script script_code(program.subscript());
 
+#if ! defined(KTH_CURRENCY_BCH)
     // BIP143: find and delete of the signature is not applied for v0.
     if ( ! (bip143 && program.version() == script_version::zero)) {
         script_code.find_and_delete(endorsements);
     }
+#endif // ! KTH_CURRENCY_BCH
 
     // The exact number of signatures are required and must be in order.
     // One key can validate more than one script. So we always advance
@@ -1329,14 +1347,27 @@ interpreter::result interpreter::op_check_multisig_verify(program& program) {
             return bip66 ? error::invalid_signature_lax_encoding : error::invalid_signature_encoding;
         }
 
+#if ! defined(KTH_CURRENCY_BCH)
         // Version condition preserves independence of bip141 and bip143.
         auto version = bip143 ? program.version() : script_version::unversioned;
+#endif // ! KTH_CURRENCY_BCH
 
         while (true) {
             // Version condition preserves independence of bip141 and bip143.
-            auto const [res, size] = chain::script::check_signature(signature, sighash, *public_key,
-                                               script_code, program.transaction(), program.input_index(),
-                                               version, program.value());
+            auto const [res, size] = chain::script::check_signature(
+                signature,
+                sighash,
+                *public_key,
+                script_code,
+                program.transaction(),
+                program.input_index(),
+                program.forks(),
+#if ! defined(KTH_CURRENCY_BCH)
+                version,
+#endif // ! KTH_CURRENCY_BCH
+                program.value()
+            );
+
             if (res) {
                 break;
             }

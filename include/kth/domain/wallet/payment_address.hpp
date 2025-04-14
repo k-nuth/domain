@@ -77,7 +77,7 @@ public:
 
     /// Factories
     static
-    payment_address from_pay_key_hash_script(chain::script const& script, uint8_t version);
+    payment_address from_pay_public_key_hash_script(chain::script const& script, uint8_t version);
 
     /// Operators.
     bool operator==(payment_address const& x) const;

@@ -230,8 +230,8 @@ bool witness::is_reserved_pattern(data_stack const& stack) {
 }
 
 // private
-// This is an internal optimization over using script::to_pay_key_hash_pattern.
-operation::list witness::to_pay_key_hash(data_chunk&& program) {
+// This is an internal optimization over using script::to_pay_public_key_hash_pattern.
+operation::list witness::to_pay_public_key_hash(data_chunk&& program) {
     KTH_ASSERT(program.size() == short_hash_size);
 
     return operation::list{
@@ -293,7 +293,7 @@ bool witness::extract_embedded_script(script& out_script, data_stack& out_stack,
                 }
 
                 // The hash160 of public key must match the program (bip141).
-                out_script.from_operations(to_pay_key_hash(std::move(program)));
+                out_script.from_operations(to_pay_public_key_hash(std::move(program)));
                 return true;
             }
 
