@@ -111,10 +111,12 @@ hash_digest hash(transaction_basis const& tx, bool witness);
 hash_digest outputs_hash(transaction_basis const& tx);
 hash_digest inpoints_hash(transaction_basis const& tx);
 hash_digest sequences_hash(transaction_basis const& tx);
+hash_digest utxos_hash(transaction_basis const& tx);
 
 hash_digest to_outputs(transaction_basis const& tx);
 hash_digest to_inpoints(transaction_basis const& tx);
 hash_digest to_sequences(transaction_basis const& tx);
+hash_digest to_utxos(transaction_basis const& tx);
 
 uint64_t total_input_value(transaction_basis const& tx);
 uint64_t total_output_value(transaction_basis const& tx);

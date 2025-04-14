@@ -21,7 +21,11 @@
 namespace kth::domain::machine {
 
 using operation = ::kth::domain::machine::operation;        //TODO(fernando): why this?
+
+#if ! defined(KTH_CURRENCY_BCH)
 using script_version = ::kth::infrastructure::machine::script_version;
+#endif // ! KTH_CURRENCY_BCH
+
 using number = ::kth::infrastructure::machine::number;
 
 class KD_API program {
@@ -46,7 +50,17 @@ public:
     program(chain::script const& script, chain::transaction const& transaction, uint32_t input_index, uint32_t forks);
 
     /// Create an instance with initialized stack (witness run, v0 by default).
-    program(chain::script const& script, chain::transaction const& transaction, uint32_t input_index, uint32_t forks, data_stack&& stack, uint64_t value, script_version version = script_version::zero);
+    program(
+        chain::script const& script
+        , chain::transaction const& transaction
+        , uint32_t input_index
+        , uint32_t forks
+        , data_stack&& stack
+        , uint64_t value
+#if ! defined(KTH_CURRENCY_BCH)
+        , script_version version = script_version::zero
+#endif // ! KTH_CURRENCY_BCH
+    );
 
     /// Create using copied tx, input, forks, value, stack (prevout run).
     program(chain::script const& script, const program& x);
@@ -79,8 +93,10 @@ public:
     [[nodiscard]]
     uint64_t value() const;
 
+#if ! defined(KTH_CURRENCY_BCH)
     [[nodiscard]]
     script_version version() const;
+#endif // ! KTH_CURRENCY_BCH
 
     [[nodiscard]]
     chain::transaction const& transaction() const;
@@ -217,7 +233,10 @@ private:
     uint32_t const forks_{0};
     uint64_t const value_{0};
 
+#if ! defined(KTH_CURRENCY_BCH)
     script_version version_{script_version::unversioned};
+#endif // ! KTH_CURRENCY_BCH
+
     size_t negative_count_{0};
     size_t operation_count_{0};
     op_iterator jump_;

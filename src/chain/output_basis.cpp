@@ -102,6 +102,10 @@ void output_basis::set_script(chain::script&& x) {
     script_ = std::move(x);
 }
 
+chain::token_data_opt& output_basis::token_data() {
+    return token_data_;
+}
+
 chain::token_data_opt const& output_basis::token_data() const {
     return token_data_;
 }

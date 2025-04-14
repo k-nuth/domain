@@ -34,7 +34,7 @@ bool push_scripts(chain::output::list& outputs, config::output const& output, ui
 
     // This presumes stealth versions are the same as non-stealth.
     if (output.version() != script_version) {
-        payment_ops = chain::script::to_pay_key_hash_pattern(hash);
+        payment_ops = chain::script::to_pay_public_key_hash_pattern(hash);
     } else if (output.version() == script_version) {
         payment_ops = chain::script::to_pay_script_hash_pattern(hash);
     } else {

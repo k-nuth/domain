@@ -269,8 +269,9 @@ bool input_basis::extract_embedded_script(chain::script& out) const {
     auto const& ops = script_.operations();
     auto const& prevout_script = previous_output_.validation.cache.script();
 
-    // There are no embedded sigops when the prevout script is not p2sh.
-    if ( ! prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule)) {
+    // There are no embedded sigops when the prevout script is not p2sh or p2sh32.
+    if ( ! prevout_script.is_pay_to_script_hash(rule_fork::bip16_rule) &&
+         ! prevout_script.is_pay_to_script_hash_32(rule_fork::bch_gauss)) {
         return false;
     }
 

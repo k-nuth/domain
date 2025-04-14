@@ -20,7 +20,9 @@
 
 namespace kth::domain::machine {
 
+#if ! defined(KTH_CURRENCY_BCH)
 using script_version = ::kth::infrastructure::machine::script_version;
+#endif // ! KTH_CURRENCY_BCH
 
 // Metrics
 //-----------------------------------------------------------------------------
@@ -75,10 +77,12 @@ uint64_t program::value() const {
     return value_;
 }
 
+#if ! defined(KTH_CURRENCY_BCH)
 inline
 script_version program::version() const {
     return version_;
 }
+#endif // ! KTH_CURRENCY_BCH
 
 inline
 chain::transaction const& program::transaction() const {

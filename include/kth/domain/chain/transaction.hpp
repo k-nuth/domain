@@ -139,25 +139,15 @@ public:
     // Serialization.
     //-----------------------------------------------------------------------------
 
-    data_chunk to_data(bool wire = true, bool witness = false
-#ifdef KTH_CACHED_RPC_DATA
-                        , bool unconfirmed = false
-#endif
-                    ) const;
+    data_chunk to_data(bool wire = true, bool witness = false) const;
 
-    void to_data(data_sink& stream, bool wire = true, bool witness = false
-#ifdef KTH_CACHED_RPC_DATA
-                    , bool unconfirmed = false
-#endif
-                ) const;
+    void to_data(data_sink& stream, bool wire = true, bool witness = false) const;
 
     // Witness is not used by outputs, just for template normalization.
     template <typename W>
-    void to_data(W& sink, bool wire = true, bool witness = false
-#ifdef KTH_CACHED_RPC_DATA
-                , bool unconfirmed = false
-#endif
-                ) const {
+    // requires  W is not bool
+    requires (!std::is_same_v<W, bool>)
+    void to_data(W& sink, bool wire = true, bool witness = false) const {
 
 #if defined(KTH_SEGWIT_ENABLED)
         // Witness handling must be disabled for non-segregated txs.
@@ -199,6 +189,8 @@ public:
     hash_digest outputs_hash() const;
     hash_digest inpoints_hash() const;
     hash_digest sequences_hash() const;
+    hash_digest utxos_hash() const;
+
     hash_digest hash(bool witness = false) const;
 
     // Utilities.
@@ -291,6 +283,7 @@ private:
     mutable hash_ptr outputs_hash_;
     mutable hash_ptr inpoints_hash_;
     mutable hash_ptr sequences_hash_;
+    mutable hash_ptr utxos_hash_;
 
 #if ! defined(__EMSCRIPTEN__)
     mutable upgrade_mutex hash_mutex_;

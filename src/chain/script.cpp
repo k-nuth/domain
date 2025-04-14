@@ -447,6 +447,7 @@ script strip_code_seperators(script const& script_code) {
     return script(std::move(ops));
 }
 
+#if ! defined(KTH_CURRENCY_BCH)
 // private/static
 std::pair<hash_digest, size_t> script::generate_unversioned_signature_hash(transaction const& tx,
                                                         uint32_t input_index,
@@ -477,6 +478,7 @@ std::pair<hash_digest, size_t> script::generate_unversioned_signature_hash(trans
             return sign_all(tx, input_index, stripped, sighash_type);
     }
 }
+#endif // ! KTH_CURRENCY_BCH
 
 // Signing (version 0).
 //-----------------------------------------------------------------------------
@@ -552,110 +554,53 @@ size_t preimage_size(size_t script_size) {
     return sizeof(uint32_t) + hash_size + hash_size + point::satoshi_fixed_size() + script_size + sizeof(uint64_t) + sizeof(uint32_t) + hash_size + sizeof(uint32_t) + sizeof(uint32_t);
 }
 
-// private/static
-std::pair<hash_digest, size_t> script::generate_version_0_signature_hash(transaction const& tx,
-                                                      uint32_t input_index,
-                                                      script const& script_code,
-                                                      uint64_t value,
-                                                      uint8_t sighash_type
-                                                      ) {
-    // Unlike unversioned algorithm this does not allow an invalid input index.
-    KTH_ASSERT(input_index < tx.inputs().size());
-    auto const& input = tx.inputs()[input_index];
-    auto const size = preimage_size(script_code.serialized_size(true));
-
-    data_chunk data;
-    data.reserve(size);
-    data_sink ostream(data);
-    ostream_writer sink_w(ostream);
-
-    // Flags derived from the signature hash byte.
-    auto const sighash = to_sighash_enum(sighash_type);
-    auto const any = (sighash_type & sighash_algorithm::anyone_can_pay) != 0;
-
-#if defined(KTH_CURRENCY_BCH)
-    auto const single = (sighash == sighash_algorithm::single || sighash == sighash_algorithm::cash_forkid_all);
-
-    //Note(kth: Not used for the moment:
-    // auto const none = (sighash == sighash_algorithm::none || sighash == sighash_algorithm::cash_forkid_all);
-
-    auto const all = (sighash == sighash_algorithm::all || sighash == sighash_algorithm::cash_forkid_all);
-#else
-    auto const single = (sighash == sighash_algorithm::single);
-
-    //Note(kth: Not used for the moment:
-    // auto const none = (sighash == sighash_algorithm::none);
-
-    auto const all = (sighash == sighash_algorithm::all);
-#endif
-
-    // 1. transaction version (4-byte little endian).
-    sink_w.write_little_endian(tx.version());
-
-    // 2. inpoints hash (32-byte hash).
-    sink_w.write_hash( ! any ? tx.inpoints_hash() : null_hash);
-
-    // 3. sequences hash (32-byte hash).
-    sink_w.write_hash( ! any && all ? tx.sequences_hash() : null_hash);
-
-    // 4. outpoint (32-byte hash + 4-byte little endian).
-    input.previous_output().to_data(sink_w);
-
-    // 5. script of the input (with prefix).
-    script_code.to_data(sink_w, true);
-
-    // 6. value of the output spent by this input (8-byte little endian).
-    sink_w.write_little_endian(value);
-
-    // 7. sequence of the input (4-byte little endian).
-    sink_w.write_little_endian(input.sequence());
-
-    // 8. outputs hash (32-byte hash).
-    sink_w.write_hash(all ? tx.outputs_hash() : (single && input_index < tx.outputs().size() ? bitcoin_hash(tx.outputs()[input_index].to_data()) : null_hash));
-
-    // 9. transaction locktime (4-byte little endian).
-    sink_w.write_little_endian(tx.locktime());
-
-    // 10. sighash type of the signature (4-byte [not 1] little endian).
-    sink_w.write_4_bytes_little_endian(sighash_type);
-
-    ostream.flush();
-    KTH_ASSERT(data.size() == size);
-    return {bitcoin_hash(data), data.size()};
-}
-
 // Signing (common).
 //-----------------------------------------------------------------------------
 
 // static
-std::pair<hash_digest, size_t> script::generate_signature_hash(transaction const& tx,
-                                            uint32_t input_index,
-                                            script const& script_code,
-                                            uint8_t sighash_type,
-                                            script_version version,
-                                            uint64_t value) {
+std::pair<hash_digest, size_t> script::generate_signature_hash(
+    transaction const& tx
+    , uint32_t input_index
+    , script const& script_code
+    , uint8_t sighash_type
+    , uint32_t active_forks
+#if ! defined(KTH_CURRENCY_BCH)
+    , script_version version
+#endif // ! KTH_CURRENCY_BCH
+    , uint64_t value
+) {
+
+#if defined(KTH_CURRENCY_BCH)
+    return generate_version_0_signature_hash(tx, input_index, script_code, value, sighash_type, active_forks);
+#else
     // The way of serialization is changed (bip143).
     switch (version) {
         case script_version::unversioned:
             return generate_unversioned_signature_hash(tx, input_index, script_code, sighash_type);
         case script_version::zero:
-            return generate_version_0_signature_hash(tx, input_index, script_code, value, sighash_type);
+            return generate_version_0_signature_hash(tx, input_index, script_code, value, sighash_type, active_forks);
         case script_version::reserved:
         default:
             KTH_ASSERT_MSG(false, "invalid script version");
             return {};
     }
+#endif // KTH_CURRENCY_BCH
 }
 
 // static
-std::pair<bool, size_t> script::check_signature(ec_signature const& signature,
-                             uint8_t sighash_type,
-                             data_chunk const& public_key,
-                             script const& script_code,
-                             transaction const& tx,
-                             uint32_t input_index,
-                             script_version version,
-                             uint64_t value) {
+std::pair<bool, size_t> script::check_signature(
+    ec_signature const& signature
+    , uint8_t sighash_type
+    , data_chunk const& public_key
+    , script const& script_code
+    , transaction const& tx
+    , uint32_t input_index
+    , uint32_t active_forks
+#if ! defined(KTH_CURRENCY_BCH)
+    , script_version version
+#endif // ! KTH_CURRENCY_BCH
+    , uint64_t value) {
+
     if (public_key.empty()) {
         return {false, 0};
     }
@@ -665,30 +610,72 @@ std::pair<bool, size_t> script::check_signature(ec_signature const& signature,
                                                                 input_index,
                                                                 script_code,
                                                                 sighash_type,
+                                                                active_forks,
+#if ! defined(KTH_CURRENCY_BCH)
                                                                 version,
+#endif // ! KTH_CURRENCY_BCH
                                                                 value);
 
+    std::cout << "script::check_signature() - sighash: ";
+    for (auto const& byte : sighash) {
+        printf("%02x", int(byte));
+    }
+    printf("\n");
+
     // Validate the EC signature.
-    return {verify_signature(public_key, sighash, signature), size};
+    return { verify_signature(public_key, sighash, signature), size };
 }
 
 // static
-bool script::create_endorsement(endorsement& out, ec_secret const& secret, script const& prevout_script, transaction const& tx, uint32_t input_index, uint8_t sighash_type, script_version version, uint64_t value) {
-    out.reserve(max_endorsement_size);
+nonstd::expected<endorsement, std::error_code> script::create_endorsement(
+    ec_secret const& secret,
+    script const& prevout_script,
+    transaction const& tx,
+    uint32_t input_index,
+    uint8_t sighash_type,
+    uint32_t active_forks,
+#if ! defined(KTH_CURRENCY_BCH)
+    script_version version /* = script_version::unversioned */,
+#endif // ! KTH_CURRENCY_BCH
+    uint64_t value /* = max_uint64 */,
+    endorsement_type type /* = endorsement_type::ecdsa */) {
 
     // This always produces a valid signature hash, including one_hash.
-    auto const [sighash, size] = chain::script::generate_signature_hash(tx, input_index, prevout_script, sighash_type, version, value);
+    auto const [sighash, size] = chain::script::generate_signature_hash(
+        tx,
+        input_index,
+        prevout_script,
+        sighash_type,
+        active_forks,
+#if ! defined(KTH_CURRENCY_BCH)
+        version,
+#endif // ! KTH_CURRENCY_BCH
+        value
+    );
 
-    // Create the EC signature and encode as DER.
+    endorsement result;
+
     ec_signature signature;
-    if ( ! sign(signature, secret, sighash) || !encode_signature(out, signature)) {
-        return false;
-    }
+    if (type == endorsement_type::ecdsa) {
+        // Create the EC signature and encode as DER.
+        result.reserve(max_endorsement_size);
+        if ( ! sign_ecdsa(signature, secret, sighash) || ! encode_signature(result, signature)) {
+            return nonstd::make_unexpected(error::invalid_signature_encoding);
+        }
 
-    // Add the sighash type to the end of the DER signature -> endorsement.
-    out.push_back(sighash_type);
-    out.shrink_to_fit();
-    return true;
+        // Add the sighash type to the end of the DER signature -> endorsement.
+        result.push_back(sighash_type);
+        result.shrink_to_fit();
+    } else {
+        // Create the Schnorr signature.
+        if ( ! sign_schnorr(signature, secret, sighash)) {
+            return nonstd::make_unexpected(error::invalid_signature_encoding);
+        }
+        result.resize(schnorr_signature_size + 1);
+        std::copy_n(signature.data(), schnorr_signature_size, result.begin());
+        result.back() = sighash_type;
+    }
+    return result;
 }
 
 // Utilities (static).
@@ -813,7 +800,7 @@ bool script::is_pay_public_key_pattern(operation::list const& ops) {
     return ops.size() == 2 && is_public_key(ops[0].data()) && ops[1].code() == opcode::checksig;
 }
 
-bool script::is_pay_key_hash_pattern(operation::list const& ops) {
+bool script::is_pay_public_key_hash_pattern(operation::list const& ops) {
     return ops.size() == 5 &&
         ops[0].code() == opcode::dup &&
         ops[1].code() == opcode::hash160 &&
@@ -829,6 +816,13 @@ bool script::is_pay_script_hash_pattern(operation::list const& ops) {
     return ops.size() == 3 &&
         ops[0].code() == opcode::hash160 &&
         ops[1].code() == opcode::push_size_20 &&
+        ops[2].code() == opcode::equal;
+}
+
+bool script::is_pay_script_hash_32_pattern(operation::list const& ops) {
+    return ops.size() == 3 &&
+        ops[0].code() == opcode::hash256 &&
+        ops[1].code() == opcode::push_size_32 &&
         ops[2].code() == opcode::equal;
 }
 
@@ -853,11 +847,11 @@ bool script::is_sign_public_key_pattern(operation::list const& ops) {
 //*****************************************************************************
 // CONSENSUS: this pattern is used to activate bip141 validation rules.
 //*****************************************************************************
-bool script::is_sign_key_hash_pattern(operation::list const& ops) {
+bool script::is_sign_public_key_hash_pattern(operation::list const& ops) {
     return ops.size() == 2 && is_endorsement(ops[0].data()) && is_public_key(ops[1].data());
 }
 
-// Ambiguous with is_sign_key_hash when second/last op is a public key.
+// Ambiguous with is_sign_public_key_hash when second/last op is a public key.
 // Ambiguous with is_sign_public_key_pattern when only op is an endorsement.
 bool script::is_sign_script_hash_pattern(operation::list const& ops) {
     return !ops.empty() && is_push_only(ops) && !ops.back().data().empty();
@@ -883,7 +877,7 @@ operation::list script::to_pay_public_key_pattern(data_slice point) {
     };
 }
 
-operation::list script::to_pay_key_hash_pattern(short_hash const& hash) {
+operation::list script::to_pay_public_key_hash_pattern(short_hash const& hash) {
     return operation::list{
         {opcode::dup},
         {opcode::hash160},
@@ -891,6 +885,14 @@ operation::list script::to_pay_key_hash_pattern(short_hash const& hash) {
         {opcode::equalverify},
         {opcode::checksig}
     };
+}
+
+operation::list script::to_pay_public_key_hash_pattern_unlocking(endorsement const& end, wallet::ec_public const& pubkey) {
+    return script_basis::to_pay_public_key_hash_pattern_unlocking(end, pubkey);
+}
+
+operation::list script::to_pay_public_key_hash_pattern_unlocking_placeholder(size_t endorsement_size, size_t pubkey_size) {
+    return script_basis::to_pay_public_key_hash_pattern_unlocking_placeholder(endorsement_size, pubkey_size);
 }
 
 operation::list script::to_pay_script_hash_pattern(short_hash const& hash) {
@@ -901,8 +903,15 @@ operation::list script::to_pay_script_hash_pattern(short_hash const& hash) {
     };
 }
 
-operation::list script::to_pay_multisig_pattern(uint8_t signatures,
-                                                point_list const& points) {
+operation::list script::to_pay_script_hash_32_pattern(hash_digest const& hash) {
+    return operation::list{
+        {opcode::hash256},
+        {to_chunk(hash)},
+        {opcode::equal}
+    };
+}
+
+operation::list script::to_pay_multisig_pattern(uint8_t signatures, point_list const& points) {
     data_stack chunks;
     chunks.reserve(points.size());
     auto const conversion = [&chunks](ec_compressed const& point) {
@@ -962,6 +971,7 @@ data_chunk script::witness_program() const {
 }
 #endif
 
+#if ! defined(KTH_CURRENCY_BCH)
 script_version script::version() const {
     // The first operations access must be method-based to guarantee the cache.
     auto const& ops = operations();
@@ -975,8 +985,9 @@ script_version script::version() const {
     // Version 0 is specified, others are reserved (bip141).
     return (ops[0].code() == opcode::push_size_0) ? script_version::zero : script_version::reserved;
 }
+#endif // ! KTH_CURRENCY_BCH
 
-// Caller should test for is_sign_script_hash_pattern when sign_key_hash result
+// Caller should test for is_sign_script_hash_pattern when sign_public_key_hash result
 // as it is possible for an input script to match both patterns.
 script_pattern script::pattern() const {
     auto const input = output_pattern();
@@ -987,12 +998,16 @@ script_pattern script::pattern() const {
 // The bip141 coinbase pattern is not tested here, must test independently.
 script_pattern script::output_pattern() const {
     // The first operations access must be method-based to guarantee the cache.
-    if (is_pay_key_hash_pattern(operations())) {
-        return script_pattern::pay_key_hash;
+    if (is_pay_public_key_hash_pattern(operations())) {
+        return script_pattern::pay_public_key_hash;
     }
 
     if (is_pay_script_hash_pattern(operations_)) {
         return script_pattern::pay_script_hash;
+    }
+
+    if (is_pay_script_hash_32_pattern(operations_)) {
+        return script_pattern::pay_script_hash_32;
     }
 
     if (is_null_data_pattern(operations_)) {
@@ -1010,27 +1025,36 @@ script_pattern script::output_pattern() const {
     return script_pattern::non_standard;
 }
 
-// A sign_key_hash result always implies sign_script_hash as well.
+// A sign_public_key_hash result always implies sign_script_hash as well.
 // The bip34 coinbase pattern is not tested here, must test independently.
 script_pattern script::input_pattern() const {
+    // std::cout << "input_pattern() - 1" << std::endl;
     // The first operations access must be method-based to guarantee the cache.
-    if (is_sign_key_hash_pattern(operations())) {
-        return script_pattern::sign_key_hash;
+    if (is_sign_public_key_hash_pattern(operations())) {
+        // std::cout << "input_pattern() - 2" << std::endl;
+        return script_pattern::sign_public_key_hash;
     }
 
-    // This must follow is_sign_key_hash_pattern for ambiguity comment to hold.
+    // std::cout << "input_pattern() - 3" << std::endl;
+    // This must follow is_sign_public_key_hash_pattern for ambiguity comment to hold.
     if (is_sign_script_hash_pattern(operations_)) {
+        // std::cout << "input_pattern() - 4" << std::endl;
         return script_pattern::sign_script_hash;
     }
 
+    // std::cout << "input_pattern() - 5" << std::endl;
     if (is_sign_public_key_pattern(operations_)) {
+        // std::cout << "input_pattern() - 6" << std::endl;
         return script_pattern::sign_public_key;
     }
 
+    // std::cout << "input_pattern() - 7" << std::endl;
     if (is_sign_multisig_pattern(operations_)) {
+        // std::cout << "input_pattern() - 8" << std::endl;
         return script_pattern::sign_multisig;
     }
 
+    // std::cout << "input_pattern() - 9" << std::endl;
     return script_pattern::non_standard;
 }
 
@@ -1053,6 +1077,13 @@ bool script::is_pay_to_script_hash(uint32_t forks) const {
     // The first operations access must be method-based to guarantee the cache.
     return is_enabled(forks, rule_fork::bip16_rule) &&
            is_pay_script_hash_pattern(operations());
+}
+
+bool script::is_pay_to_script_hash_32(uint32_t forks) const {
+    // This is used internally as an optimization over using script::pattern.
+    // The first operations access must be method-based to guarantee the cache.
+    return is_enabled(forks, rule_fork::bch_gauss) &&
+           is_pay_script_hash_32_pattern(operations());
 }
 
 // Count 1..16 multisig accurately for embedded (bip16) and witness (bip141).
@@ -1080,6 +1111,7 @@ size_t script::sigops(bool accurate) const {
     return total;
 }
 
+#if ! defined(KTH_CURRENCY_BCH)
 // Concurrent read/write is not supported, so no critical section.
 void script::find_and_delete(data_stack const& endorsements) {
     script_basis::find_and_delete(endorsements);
@@ -1088,6 +1120,7 @@ void script::find_and_delete(data_stack const& endorsements) {
     operations_.clear();
     cached_ = false;
 }
+#endif // ! KTH_CURRENCY_BCH
 
 ////// This is slightly more efficient because the script does not get parsed,
 ////// but the static template implementation is more self-explanatory.
@@ -1134,7 +1167,7 @@ code script::verify(transaction const& tx, uint32_t input_index, uint32_t forks,
         return error::stack_false;
     }
 
-    if (prevout_script.is_pay_to_script_hash(forks)) {
+    if (prevout_script.is_pay_to_script_hash(forks) || prevout_script.is_pay_to_script_hash_32(forks)) {
         if ( ! is_relaxed_push(input_script.operations())) {
             return error::invalid_script_embed;
         }
