@@ -925,8 +925,6 @@ nonstd::expected<utxo_selection, std::error_code> select_utxos_simple(
     }
     return nonstd::make_unexpected(error::insufficient_amount);
 }
-    return nonstd::make_unexpected(error::insufficient_amount);
-}
 
 nonstd::expected<utxo_selection, std::error_code> select_utxos_all(
     std::vector<utxo> const& available_utxos,
