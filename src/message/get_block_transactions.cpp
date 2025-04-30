@@ -54,6 +54,37 @@ void get_block_transactions::reset() {
     indexes_.shrink_to_fit();
 }
 
+// Deserialization.
+//-----------------------------------------------------------------------------
+
+// static
+expect<get_block_transactions> get_block_transactions::from_data(byte_reader& reader, uint32_t /*version*/) {
+    auto const block_hash = read_hash(reader);
+    if ( ! block_hash) {
+        return make_unexpected(block_hash.error());
+    }
+    auto const count = reader.read_size_little_endian();
+    if ( ! count) {
+        return make_unexpected(count.error());
+    }
+    if (*count > static_absolute_max_block_size()) {
+        return make_unexpected(error::invalid_size);
+    }
+    std::vector<uint64_t> indexes;
+    indexes.reserve(*count);
+    for (size_t i = 0; i < *count; ++i) {
+        auto const index = reader.read_size_little_endian();
+        if ( ! index) {
+            return make_unexpected(index.error());
+        }
+        indexes.push_back(*index);
+    }
+    return get_block_transactions(*block_hash, std::move(indexes));
+}
+
+// Serialization.
+//-----------------------------------------------------------------------------
+
 data_chunk get_block_transactions::to_data(uint32_t version) const {
     data_chunk data;
     auto const size = serialized_size(version);

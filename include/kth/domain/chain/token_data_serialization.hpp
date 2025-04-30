@@ -7,7 +7,7 @@
 #include <kth/domain/chain/token_data.hpp>
 #include <kth/infrastructure/utility/ostream_writer.hpp>
 
-namespace kth::domain::chain::encoding {
+namespace kth::domain::chain::token::encoding {
 
 inline
 data_chunk to_data(fungible const& x) {

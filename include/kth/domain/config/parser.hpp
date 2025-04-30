@@ -331,7 +331,9 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("0000000000000000017012058e7b67032926f1f20f96d1a2cd66abff9aaf8244", 845'891);
         checkpoints.emplace_back("0000000000000000016e3353d5da435ef5d374abe90d9bb430c0408e423632d5", 845'892);
 
-        // //2025-May Upgrade - galois - (1747310400)
+        checkpoints.emplace_back("00000000000000000071fe9c24aa2fe98d64120407b757a093bbb4a597781753", 860'000);
+
+        // 2025-May Upgrade - galois - (1747310400)
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);

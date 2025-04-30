@@ -22,11 +22,9 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/utils.hpp>
+
 #include <kth/domain/concepts.hpp>
-
 namespace kth::domain::chain {
-
 class KD_API output : public output_basis {
 public:
     using list = std::vector<output>;
@@ -50,8 +48,12 @@ public:
     //-------------------------------------------------------------------------
 
     output() = default;
-    // output(uint64_t value, chain::script const& script);
-    // output(uint64_t value, chain::script&& script);
+
+    explicit
+    output(output_basis const& x);
+
+    explicit
+    output(output_basis&& x) noexcept;
 
     using output_basis::output_basis;   //inherit constructors from output_basis
 
@@ -63,15 +65,9 @@ public:
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, bool wire = true, bool witness = false) {
-        if ( ! wire) {
-            validation.spender_height = source.read_4_bytes_little_endian();
-        }
 
-        output_basis::from_data(source, wire, witness);
-        return source;
-    }
+    static
+    expect<output> from_data(byte_reader& reader, bool wire = true);
 
     // Serialization.
     //-------------------------------------------------------------------------
@@ -80,12 +76,12 @@ public:
     void to_data(data_sink& stream, bool wire = true) const;
 
     template <typename W>
-    void to_data(W& sink, bool wire = true, bool witness = false) const {
+    void to_data(W& sink, bool wire = true) const {
         if ( ! wire) {
             auto const height32 = *safe_unsigned<uint32_t>(validation.spender_height);
             sink.write_4_bytes_little_endian(height32);
         }
-        output_basis::to_data(sink, wire, witness);
+        output_basis::to_data(sink, wire);
     }
 
     // Properties (size, accessors, cache).

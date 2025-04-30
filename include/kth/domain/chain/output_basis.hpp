@@ -15,7 +15,6 @@
 
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/define.hpp>
-#include <kth/domain/multi_crypto_settings.hpp>
 #include <kth/domain/chain/token_data.hpp>
 
 #include <kth/infrastructure/utility/container_sink.hpp>
@@ -24,7 +23,7 @@
 #include <kth/infrastructure/utility/thread.hpp>
 #include <kth/infrastructure/utility/writer.hpp>
 
-#include <kth/domain/utils.hpp>
+
 #include <kth/domain/concepts.hpp>
 
 namespace kth::domain::chain {
@@ -49,6 +48,9 @@ struct KD_API output_basis {
 
     // Operators.
     //-------------------------------------------------------------------------
+    // friend
+    // auto operator<=>(output_basis const&, output_basis const&) = default;
+
     friend
     bool operator==(output_basis const&, output_basis const&) = default;
 
@@ -58,39 +60,9 @@ struct KD_API output_basis {
     // Deserialization.
     //-------------------------------------------------------------------------
 
-    template <typename R, KTH_IS_READER(R)>
-    bool from_data(R& source, bool /*wire*/ = true, bool /*witness*/ = false) {
-        reset();
+    static
+    expect<output_basis> from_data(byte_reader& reader, bool /*wire*/ = true);
 
-        value_ = source.read_8_bytes_little_endian();
-
-        auto script_size = source.read_size_little_endian();
-        if ( ! source) {
-            reset();
-            return source;
-        }
-
-        auto const has_token_data = source.peek_byte() == chain::encoding::PREFIX_BYTE;
-        if ( ! source) {
-            reset();
-            return source;
-        }
-
-        if (has_token_data) {
-            source.skip(1); // skip prefix byte
-            chain::encoding::from_data(source, token_data_);
-            script_size -= chain::encoding::serialized_size(token_data_);
-            script_size -= 1; // prefix byte
-        }
-
-        script_.from_data_with_size(source, script_size);
-
-        if ( ! source) {
-            reset();
-        }
-
-        return source;
-    }
 
     [[nodiscard]]
     bool is_valid() const;
@@ -112,11 +84,11 @@ struct KD_API output_basis {
             return;
         }
 
-        auto const size = chain::encoding::serialized_size(token_data_) + script_.serialized_size(false) + 1;
+        auto const size = token::encoding::serialized_size(token_data_) + script_.serialized_size(false) + 1;
         sink.write_variable_little_endian(size);
 
         sink.write_byte(chain::encoding::PREFIX_BYTE);
-        chain::encoding::to_data(sink, token_data_.value());
+        token::encoding::to_data(sink, token_data_.value());
         script_.to_data(sink, false);
     }
 
@@ -157,10 +129,6 @@ struct KD_API output_basis {
 
     [[nodiscard]]
     bool is_dust(uint64_t minimum_output_value) const;
-
-#if defined(KTH_SEGWIT_ENABLED)
-    bool extract_committed_hash(hash_digest& out) const;
-#endif
 
 // protected:
     void reset();

@@ -8,7 +8,6 @@
 #include <kth/domain/constants.hpp>
 #include <kth/domain/define.hpp>
 #include <kth/domain/version.hpp>
-#include <kth/domain/multi_crypto_settings.hpp>
 
 #include <kth/domain/chain/abla.hpp>
 #include <kth/domain/chain/block.hpp>
@@ -28,10 +27,6 @@
 #include <kth/domain/chain/script.hpp>
 #include <kth/domain/chain/stealth.hpp>
 #include <kth/domain/chain/transaction.hpp>
-
-#if defined(KTH_SEGWIT_ENABLED)
-#include <kth/domain/chain/witness.hpp>
-#endif
 
 #include <kth/domain/config/network.hpp>
 #include <kth/domain/config/parser.hpp>

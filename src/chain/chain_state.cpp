@@ -354,14 +354,14 @@ bool chain_state::is_lobachevski_enabled() const {
 // 2025-May
 bool chain_state::is_galois_enabled() const {
    //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(galois_activation_time()));
+    return is_mtp_activated(median_time_past(), std::to_underlying(galois_activation_time()));
     // return is_galois_enabled(height(), network());
 }
 
 // 2026-May
 bool chain_state::is_leibniz_enabled() const {
    //TODO(fernando): this was activated, change to the other method
-    return is_mtp_activated(median_time_past(), to_underlying(leibniz_activation_time()));
+    return is_mtp_activated(median_time_past(), std::to_underlying(leibniz_activation_time()));
     // return is_leibniz_enabled(height(), network());
 }
 
@@ -568,12 +568,12 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
     }
 
     auto const mtp = median_time_past(values);
-    if (is_mtp_activated(mtp, to_underlying(galois_activation_time))) {
+    if (is_mtp_activated(mtp, std::to_underlying(galois_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
         result.forks |= (rule_fork::bch_galois & forks);
     }
 
-    if (is_mtp_activated(mtp, to_underlying(leibniz_activation_time))) {
+    if (is_mtp_activated(mtp, std::to_underlying(leibniz_activation_time))) {
         //Note(Fernando): Move this to the next fork rules
         result.forks |= (rule_fork::bch_leibniz & forks);
     }
@@ -581,7 +581,7 @@ chain_state::activations chain_state::activation(data const& values, uint32_t fo
 
     // Old rules with Replay Protection
     // auto const mtp = median_time_past(values);
-    // if (is_mtp_activated(mtp, to_underlying(gauss_activation_time))) {
+    // if (is_mtp_activated(mtp, std::to_underlying(gauss_activation_time))) {
     //     //Note(Fernando): Move this to the next fork rules
     // //     flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
     //     result.forks |= (rule_fork::bch_gauss & forks);
@@ -1035,7 +1035,7 @@ uint32_t chain_state::work_required(data const& values, config::network network,
 
     // MTP activation way: The comment is left in case in the future it is necessary to do it again.
     // auto const last_time_span = median_time_past(values);
-    // bool const daa_asert_active = is_mtp_activated(last_time_span, to_underlying(euler_activation_time));
+    // bool const daa_asert_active = is_mtp_activated(last_time_span, std::to_underlying(euler_activation_time));
 #else
     bool const daa_cw144_active = false;
 #endif  //KTH_CURRENCY_BCH

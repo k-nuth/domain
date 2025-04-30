@@ -9,7 +9,6 @@
 #include <cstdint>
 
 // #include <kth/domain/define.hpp>
-// #include <kth/domain/multi_crypto_settings.hpp>
 // #include <kth/domain/version.hpp>
 
 // #include <kth/infrastructure/compat.hpp>
