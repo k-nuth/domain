@@ -60,7 +60,7 @@ class KnuthDomainConan(KnuthConanFileV2):
             self.test_requires("catch2/3.7.1")
 
     def requirements(self):
-        self.requires("infrastructure/0.41.0", transitive_headers=True, transitive_libs=True)
+        self.requires("infrastructure/0.42.0", transitive_headers=True, transitive_libs=True)
         self.requires("tiny-aes-c/1.0.0", transitive_headers=True, transitive_libs=True)
 
         if self.options.currency == "LTC":
