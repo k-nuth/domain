@@ -244,6 +244,7 @@ protected:
 };
 
 machine::operation::list operations(script_basis const& script);
+machine::operation first_operation(script_basis const& script);
 
 } // namespace kth::domain::chain
 

@@ -697,4 +697,13 @@ operation::list operations(script_basis const& script) {
     return res;
 }
 
+operation first_operation(script_basis const& script) {
+    byte_reader reader(script.bytes());
+    auto op = operation::from_data(reader);
+    if ( ! op) {
+        return operation{};
+    }
+    return *op;
+}
+
 } // namespace kth::domain::chain
