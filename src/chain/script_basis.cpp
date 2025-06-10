@@ -703,7 +703,7 @@ operation first_operation(script_basis const& script) {
     if ( ! op) {
         return operation{};
     }
-    return std::move(*op);
+    return *op;
 }
 
 } // namespace kth::domain::chain
