@@ -123,6 +123,7 @@ public:
     // size_t serialized_size(bool prefix) const;
     using script_basis::serialized_size;
     operation::list const& operations() const;
+    operation first_operation() const;
 
     // Signing.
     //-------------------------------------------------------------------------

@@ -322,6 +322,10 @@ operation::list const& script::operations() const {
     return operations_;
 }
 
+operation script::first_operation() const {
+    return chain::first_operation(*this);
+}
+
 // Signing (unversioned).
 //-----------------------------------------------------------------------------
 

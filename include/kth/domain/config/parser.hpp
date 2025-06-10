@@ -216,115 +216,115 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
 
     } else if (network == domain::config::network::mainnet) {
         checkpoints.reserve(60);
-        checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 0);
-        checkpoints.emplace_back("0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d", 11111);
-        checkpoints.emplace_back("000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6", 33333);
-        checkpoints.emplace_back("00000000001e1b4903550a0b96e9a9405c8a95f387162e4944e8d9fbe501cd6a", 68555);
-        checkpoints.emplace_back("00000000006a49b14bcf27462068f1264c961f11fa2e0eddd2be0791e1d4124a", 70567);
-        checkpoints.emplace_back("0000000000573993a3c9e41ce34471c079dcf5f52a0e824a81e7f953b8661a20", 74000);
-        checkpoints.emplace_back("00000000000291ce28027faea320c8d2b054b2e0fe44a773f3eefb151d6bdc97", 105000);
-        checkpoints.emplace_back("000000000000774a7f8a7a12dc906ddb9e17e75d684f15e00f8767f9e8f36553", 118000);
-        checkpoints.emplace_back("00000000000005b12ffd4cd315cd34ffd4a594f430ac814c91184a0d42d2b0fe", 134444);
-        checkpoints.emplace_back("000000000000033b512028abb90e1626d8b346fd0ed598ac0a3c371138dce2bd", 140700);
+        checkpoints.emplace_back("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",       0);
+        checkpoints.emplace_back("0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d",  11'111);
+        checkpoints.emplace_back("000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6",  33'333);
+        checkpoints.emplace_back("00000000001e1b4903550a0b96e9a9405c8a95f387162e4944e8d9fbe501cd6a",  68'555);
+        checkpoints.emplace_back("00000000006a49b14bcf27462068f1264c961f11fa2e0eddd2be0791e1d4124a",  70'567);
+        checkpoints.emplace_back("0000000000573993a3c9e41ce34471c079dcf5f52a0e824a81e7f953b8661a20",  74'000);
+        checkpoints.emplace_back("00000000000291ce28027faea320c8d2b054b2e0fe44a773f3eefb151d6bdc97", 105'000);
+        checkpoints.emplace_back("000000000000774a7f8a7a12dc906ddb9e17e75d684f15e00f8767f9e8f36553", 118'000);
+        checkpoints.emplace_back("00000000000005b12ffd4cd315cd34ffd4a594f430ac814c91184a0d42d2b0fe", 134'444);
+        checkpoints.emplace_back("000000000000033b512028abb90e1626d8b346fd0ed598ac0a3c371138dce2bd", 140'700);
 
-        checkpoints.emplace_back("000000000000099e61ea72015e79632f216fe6cb33d7899acb35b75c8303b763", 168000);
-        checkpoints.emplace_back("000000000000059f452a5f7340de6682a977387c17010ff6e6c3bd83ca8b1317", 193000);
-        checkpoints.emplace_back("000000000000048b95347e83192f69cf0366076336c639f9b7228e9ba171342e", 210000);
-        checkpoints.emplace_back("00000000000001b4f4b433e81ee46494af945cf96014816a4e2370f11b23df4e", 216116);
-        checkpoints.emplace_back("00000000000001c108384350f74090433e7fcf79a606b8e797f065b130575932", 225430);
-        checkpoints.emplace_back("000000000000003887df1f29024b06fc2200b55f8af8f35453d7be294df2d214", 250000);
-        checkpoints.emplace_back("0000000000000001ae8c72a0b0c301f67e3afca10e819efa9041e458e9bd7e40", 279000);
-        checkpoints.emplace_back("00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983", 295000);
-        checkpoints.emplace_back("000000000000000082ccf8f1557c5d40b21edabb18d2d691cfbf87118bac7254", 300000);
-        checkpoints.emplace_back("00000000000000000409695bce21828b31a7143fa35fcab64670dd337a71425d", 325000);
+        checkpoints.emplace_back("000000000000099e61ea72015e79632f216fe6cb33d7899acb35b75c8303b763", 168'000);
+        checkpoints.emplace_back("000000000000059f452a5f7340de6682a977387c17010ff6e6c3bd83ca8b1317", 193'000);
+        checkpoints.emplace_back("000000000000048b95347e83192f69cf0366076336c639f9b7228e9ba171342e", 210'000);
+        checkpoints.emplace_back("00000000000001b4f4b433e81ee46494af945cf96014816a4e2370f11b23df4e", 216'116);
+        checkpoints.emplace_back("00000000000001c108384350f74090433e7fcf79a606b8e797f065b130575932", 225'430);
+        checkpoints.emplace_back("000000000000003887df1f29024b06fc2200b55f8af8f35453d7be294df2d214", 250'000);
+        checkpoints.emplace_back("0000000000000001ae8c72a0b0c301f67e3afca10e819efa9041e458e9bd7e40", 279'000);
+        checkpoints.emplace_back("00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983", 295'000);
+        checkpoints.emplace_back("000000000000000082ccf8f1557c5d40b21edabb18d2d691cfbf87118bac7254", 300'000);
+        checkpoints.emplace_back("00000000000000000409695bce21828b31a7143fa35fcab64670dd337a71425d", 325'000);
 
-        checkpoints.emplace_back("0000000000000000053cf64f0400bb38e0c4b3872c38795ddde27acb40a112bb", 350000);
-        checkpoints.emplace_back("000000000000000009733ff8f11fbb9575af7412df3fae97f382376709c965dc", 375000);
-        checkpoints.emplace_back("000000000000000004ec466ce4732fe6f1ed1cddc2ed4b328fff5224276e3f6f", 400000);
-        checkpoints.emplace_back("00000000000000000142adfebcb9a0aa75f0c4980dd5c7dd17062bf7de77c16d", 425000);
-        checkpoints.emplace_back("0000000000000000014083723ed311a461c648068af8cef8a19dcd620c07a20b", 450000);
-        checkpoints.emplace_back("0000000000000000017c42fd88e78ab02c5f5c684f8344e1f5c9e4cebecde71c", 475000);
+        checkpoints.emplace_back("0000000000000000053cf64f0400bb38e0c4b3872c38795ddde27acb40a112bb", 350'000);
+        checkpoints.emplace_back("000000000000000009733ff8f11fbb9575af7412df3fae97f382376709c965dc", 375'000);
+        checkpoints.emplace_back("000000000000000004ec466ce4732fe6f1ed1cddc2ed4b328fff5224276e3f6f", 400'000);
+        checkpoints.emplace_back("00000000000000000142adfebcb9a0aa75f0c4980dd5c7dd17062bf7de77c16d", 425'000);
+        checkpoints.emplace_back("0000000000000000014083723ed311a461c648068af8cef8a19dcd620c07a20b", 450'000);
+        checkpoints.emplace_back("0000000000000000017c42fd88e78ab02c5f5c684f8344e1f5c9e4cebecde71c", 475'000);
 
         //2017-Aug Upgrade - Bitcoin Cash UAHF (1501590000)
-        checkpoints.emplace_back("000000000000000000eb9bc1f9557dc9e2cfe576f57a52f6be94720b338029e4", 478557);  //mediantime: 1501589769
-        checkpoints.emplace_back("0000000000000000011865af4122fe3b144e2cbeea86142e8ff2fb4107352d43", 478558);  //mediantime: 1501591048. New rules activated in the next block.
-        checkpoints.emplace_back("000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec", 478559);  //mediantime: 1501592847. New rules activated in this block.
+        checkpoints.emplace_back("000000000000000000eb9bc1f9557dc9e2cfe576f57a52f6be94720b338029e4", 478'557);  //mediantime: 1501589769
+        checkpoints.emplace_back("0000000000000000011865af4122fe3b144e2cbeea86142e8ff2fb4107352d43", 478'558);  //mediantime: 1501591048. New rules activated in the next block.
+        checkpoints.emplace_back("000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec", 478'559);  //mediantime: 1501592847. New rules activated in this block.
 
-        checkpoints.emplace_back("000000000000000005e14d3f9fdfb70745308706615cfa9edca4f4558332b201", 500000);
+        checkpoints.emplace_back("000000000000000005e14d3f9fdfb70745308706615cfa9edca4f4558332b201", 500'000);
 
         //2017-Nov Upgrade - DAA - (1510600000)
-        checkpoints.emplace_back("0000000000000000008088d63f48da98b7352ad7c4c85f3d90b657cf50ff1ede", 504030);  //mediantime: 1510594229
-        checkpoints.emplace_back("0000000000000000011ebf65b60d0a3de80b8175be709d653b4c1a1beeb6ab9c", 504031);  //mediantime: 1510601033. New rules activated in the next block.
-        checkpoints.emplace_back("00000000000000000343e9875012f2062554c8752929892c82a0c0743ac7dcfd", 504032);  //mediantime: 1510601742. New rules activated in this block.
+        checkpoints.emplace_back("0000000000000000008088d63f48da98b7352ad7c4c85f3d90b657cf50ff1ede", 504'030);  //mediantime: 1510594229
+        checkpoints.emplace_back("0000000000000000011ebf65b60d0a3de80b8175be709d653b4c1a1beeb6ab9c", 504'031);  //mediantime: 1510601033. New rules activated in the next block.
+        checkpoints.emplace_back("00000000000000000343e9875012f2062554c8752929892c82a0c0743ac7dcfd", 504'032);  //mediantime: 1510601742. New rules activated in this block.
 
-        checkpoints.emplace_back("0000000000000000001b09302aa6a8dc65b7542dd195866907dd4e4ccba30d58", 515000);
+        checkpoints.emplace_back("0000000000000000001b09302aa6a8dc65b7542dd195866907dd4e4ccba30d58", 515'000);
 
         //2018-May Upgrade - pythagoras - (1526400000)
-        checkpoints.emplace_back("0000000000000000018d22e0ca9c5f591fefd896abc905550745ed3190f749c3", 530354);  //mediantime: 1526399926
-        checkpoints.emplace_back("000000000000000000434c281fb3ed692efea5af769aedb090b2b9f395b5386e", 530355);  //mediantime: 1526400858. New rules activated in the next block.
-        checkpoints.emplace_back("0000000000000000013d91e08ec61cc99761751ef09c561209593eea6bb543da", 530356);  //mediantime: 1526402161. New rules activated in this block.
-        checkpoints.emplace_back("000000000000000000f59580044b235c4f46381cacd319d29e8bb21c517a771d", 530357);  //mediantime: 1526402650. I put the following checkpoints for a historical inaccuracy in the Bitcoin ABC code: https://github.com/bitcoin-cash-node/bitcoin-cash-node/commit/97c32f461a1a6d6ca71c5958d67047a1c06d83fd#diff-ff53e63501a5e89fd650b378c9708274df8ad5d38fcffa6c64be417c4d438b6d
-        checkpoints.emplace_back("00000000000000000031687b7320832e5035abe8e3f81fb71517fc541765de83", 530358);  //mediantime: 1526405239
-        checkpoints.emplace_back("0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530359);  //mediantime: 1526410186
-        checkpoints.emplace_back("00000000000000000195edc6e094ae1db6a274f1188127390a74a727db9a2717", 530360);  //mediantime: 1526410326
+        checkpoints.emplace_back("0000000000000000018d22e0ca9c5f591fefd896abc905550745ed3190f749c3", 530'354);  //mediantime: 1526399926
+        checkpoints.emplace_back("000000000000000000434c281fb3ed692efea5af769aedb090b2b9f395b5386e", 530'355);  //mediantime: 1526400858. New rules activated in the next block.
+        checkpoints.emplace_back("0000000000000000013d91e08ec61cc99761751ef09c561209593eea6bb543da", 530'356);  //mediantime: 1526402161. New rules activated in this block.
+        checkpoints.emplace_back("000000000000000000f59580044b235c4f46381cacd319d29e8bb21c517a771d", 530'357);  //mediantime: 1526402650. I put the following checkpoints for a historical inaccuracy in the Bitcoin ABC code: https://github.com/bitcoin-cash-node/bitcoin-cash-node/commit/97c32f461a1a6d6ca71c5958d67047a1c06d83fd#diff-ff53e63501a5e89fd650b378c9708274df8ad5d38fcffa6c64be417c4d438b6d
+        checkpoints.emplace_back("00000000000000000031687b7320832e5035abe8e3f81fb71517fc541765de83", 530'358);  //mediantime: 1526405239
+        checkpoints.emplace_back("0000000000000000011ada8bd08f46074f44a8f155396f43e38acf9501c49103", 530'359);  //mediantime: 1526410186
+        checkpoints.emplace_back("00000000000000000195edc6e094ae1db6a274f1188127390a74a727db9a2717", 530'360);  //mediantime: 1526410326
 
-        checkpoints.emplace_back("000000000000000000fc66aae55a178fec2ba2f2bc86eb6c6f632b5bc2b40af1", 545000);
+        checkpoints.emplace_back("000000000000000000fc66aae55a178fec2ba2f2bc86eb6c6f632b5bc2b40af1", 545'000);
 
         //2018-Nov Upgrade - euclid - (1542300000)
-        checkpoints.emplace_back("0000000000000000018b0da51421703b239218d0d99a6bf86a1fcdf266e3a5b1", 556765);  //mediantime: 1542299730
-        checkpoints.emplace_back("00000000000000000102d94fde9bd0807a2cc7582fe85dd6349b73ce4e8d9322", 556766);  //mediantime: 1542300873. New rules activated in the next block.
-        checkpoints.emplace_back("0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c", 556767);  //mediantime: 1542301036. New rules activated in this block.
+        checkpoints.emplace_back("0000000000000000018b0da51421703b239218d0d99a6bf86a1fcdf266e3a5b1", 556'765);  //mediantime: 1542299730
+        checkpoints.emplace_back("00000000000000000102d94fde9bd0807a2cc7582fe85dd6349b73ce4e8d9322", 556'766);  //mediantime: 1542300873. New rules activated in the next block.
+        checkpoints.emplace_back("0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c", 556'767);  //mediantime: 1542301036. New rules activated in this block.
 
-        checkpoints.emplace_back("0000000000000000039f4e03a756eaa5deb89ef9fa0d565a25473d5deb5e7b0d", 560000);
-        checkpoints.emplace_back("000000000000000003428b04e49a9a303afbedefe2ac9094d44dd127d7366a97", 575000);
+        checkpoints.emplace_back("0000000000000000039f4e03a756eaa5deb89ef9fa0d565a25473d5deb5e7b0d", 560'000);
+        checkpoints.emplace_back("000000000000000003428b04e49a9a303afbedefe2ac9094d44dd127d7366a97", 575'000);
 
         //2019-May Upgrade - pisano - (1557921600)
-        checkpoints.emplace_back("000000000000000002d39295b2433668b97720822a77d278bc2c66eb13891d62", 582678);  //mediantime: 1557921209
-        checkpoints.emplace_back("0000000000000000018596bdfd350a9fbc7297a62a3f510b74565d992d63d2ef", 582679);  //mediantime: 1557921789. New rules activated in the next block.
-        checkpoints.emplace_back("000000000000000001b4b8e36aec7d4f9671a47872cb9a74dc16ca398c7dcc18", 582680);  //mediantime: 1557921810. New rules activated in this block.
+        checkpoints.emplace_back("000000000000000002d39295b2433668b97720822a77d278bc2c66eb13891d62", 582'678);  //mediantime: 1557921209
+        checkpoints.emplace_back("0000000000000000018596bdfd350a9fbc7297a62a3f510b74565d992d63d2ef", 582'679);  //mediantime: 1557921789. New rules activated in the next block.
+        checkpoints.emplace_back("000000000000000001b4b8e36aec7d4f9671a47872cb9a74dc16ca398c7dcc18", 582'680);  //mediantime: 1557921810. New rules activated in this block.
 
-        checkpoints.emplace_back("000000000000000001eb9b2786e6200beb37a20a4959a86c2b52adca2b23597b", 590000);
-        checkpoints.emplace_back("00000000000000000041048ecef77d6b9ccb4012c0c1012e72b6737220d3f910", 605000);
+        checkpoints.emplace_back("000000000000000001eb9b2786e6200beb37a20a4959a86c2b52adca2b23597b", 590'000);
+        checkpoints.emplace_back("00000000000000000041048ecef77d6b9ccb4012c0c1012e72b6737220d3f910", 605'000);
 
         //2019-Nov Upgrade - mersenne - (1573819200)
-        checkpoints.emplace_back("000000000000000000d03bd9b9a7d3b734b3910d8ae59d8ed237174517e8aaf9", 609134);  //mediantime: 1573818748
-        checkpoints.emplace_back("0000000000000000026f7ec9e79be2f5bb839f29ebcf734066d4bb9a13f6ea83", 609135);  //mediantime: 1573819391. New rules activated in the next block.
-        checkpoints.emplace_back("000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609136);  //mediantime: 1573820367. New rules activated in this block.
+        checkpoints.emplace_back("000000000000000000d03bd9b9a7d3b734b3910d8ae59d8ed237174517e8aaf9", 609'134);  //mediantime: 1573818748
+        checkpoints.emplace_back("0000000000000000026f7ec9e79be2f5bb839f29ebcf734066d4bb9a13f6ea83", 609'135);  //mediantime: 1573819391. New rules activated in the next block.
+        checkpoints.emplace_back("000000000000000000b48bb207faac5ac655c313e41ac909322eaa694f5bc5b1", 609'136);  //mediantime: 1573820367. New rules activated in this block.
 
-        checkpoints.emplace_back("00000000000000000177593a9861113e263bd9fb7679d6783ab88829b147662a", 620000);
-        checkpoints.emplace_back("000000000000000001c885feaa06e225ee51c37c98a293ab779e01912a99a620", 635000);
+        checkpoints.emplace_back("00000000000000000177593a9861113e263bd9fb7679d6783ab88829b147662a", 620'000);
+        checkpoints.emplace_back("000000000000000001c885feaa06e225ee51c37c98a293ab779e01912a99a620", 635'000);
 
         //2020-May Upgrade - fermat - (1589544000)
-        checkpoints.emplace_back("000000000000000002075bc3ceffc9277e74e03f71733eba006cc7a5adc27622", 635257);  //mediantime: 1589543995
-        checkpoints.emplace_back("000000000000000003302c47d01e78f1c86aa3b0e96b066761a5059bc8f5781a", 635258);  //mediantime: 1589544126. New rules activated in the next block.
-        checkpoints.emplace_back("00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635259);  //mediantime: 1589544127. New rules activated in this block.
+        checkpoints.emplace_back("000000000000000002075bc3ceffc9277e74e03f71733eba006cc7a5adc27622", 635'257);  //mediantime: 1589543995
+        checkpoints.emplace_back("000000000000000003302c47d01e78f1c86aa3b0e96b066761a5059bc8f5781a", 635'258);  //mediantime: 1589544126. New rules activated in the next block.
+        checkpoints.emplace_back("00000000000000000033dfef1fc2d6a5d5520b078c55193a9bf498c5b27530f7", 635'259);  //mediantime: 1589544127. New rules activated in this block.
 
-        checkpoints.emplace_back("000000000000000001e5a8e11a9a523e15ad985b8123df0f7b364ad8f83d82b0", 650000);
+        checkpoints.emplace_back("000000000000000001e5a8e11a9a523e15ad985b8123df0f7b364ad8f83d82b0", 650'000);
 
         //2020-Nov Upgrade - euler - (1605441600)
-        checkpoints.emplace_back("000000000000000003e4c72c4c4888a81b4f9c66a65cc98dbdbb2e56e0a2f72d", 661646);  //mediantime: 1605439958
-        checkpoints.emplace_back("00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f", 661647);  //mediantime: 1605443067. New rules activated in the next block.
-        checkpoints.emplace_back("0000000000000000029e471c41818d24b8b74c911071c4ef0b4a0509f9b5a8ce", 661648);  //mediantime: 1605443708. New rules activated in this block.
+        checkpoints.emplace_back("000000000000000003e4c72c4c4888a81b4f9c66a65cc98dbdbb2e56e0a2f72d", 661'646);  //mediantime: 1605439958
+        checkpoints.emplace_back("00000000000000000083ed4b7a780d59e3983513215518ad75654bb02deee62f", 661'647);  //mediantime: 1605443067. New rules activated in the next block.
+        checkpoints.emplace_back("0000000000000000029e471c41818d24b8b74c911071c4ef0b4a0509f9b5a8ce", 661'648);  //mediantime: 1605443708. New rules activated in this block.
 
         // There were no consensus changes in the May 2021.
         // There were no consensus changes in the November 2021.
 
-        checkpoints.emplace_back("000000000000000002bf5f3f1f385c767ac78ab2db48abeaffff9d609b1b34ff", 665000);
-        checkpoints.emplace_back("00000000000000000040b37f904a9cbba25a6d37aa313d4ae8c4c46589cf4c6e", 680000);
-        checkpoints.emplace_back("000000000000000002796d49edb3fc3643d82808aa0babf55cb7deed8147446b", 695000);
-        checkpoints.emplace_back("00000000000000000259ad550b5420e5418cdfc14873d6985bcf1dfa261dbc9c", 710000);
-        checkpoints.emplace_back("00000000000000000545f96d55f3664d794c9940ae5b97dd66d9c6829c05bf23", 725000);
-        checkpoints.emplace_back("0000000000000000021c8878d6905b85ef4d4cf8ea0e036874ffeea13654561f", 740000);
+        checkpoints.emplace_back("000000000000000002bf5f3f1f385c767ac78ab2db48abeaffff9d609b1b34ff", 665'000);
+        checkpoints.emplace_back("00000000000000000040b37f904a9cbba25a6d37aa313d4ae8c4c46589cf4c6e", 680'000);
+        checkpoints.emplace_back("000000000000000002796d49edb3fc3643d82808aa0babf55cb7deed8147446b", 695'000);
+        checkpoints.emplace_back("00000000000000000259ad550b5420e5418cdfc14873d6985bcf1dfa261dbc9c", 710'000);
+        checkpoints.emplace_back("00000000000000000545f96d55f3664d794c9940ae5b97dd66d9c6829c05bf23", 725'000);
+        checkpoints.emplace_back("0000000000000000021c8878d6905b85ef4d4cf8ea0e036874ffeea13654561f", 740'000);
 
         //2022-May Upgrade - gauss - (1652616000)
-        checkpoints.emplace_back("000000000000000000b92c50d56fc2c60b0502fffec6dc5410065a9b1e29109f", 740236);
-        checkpoints.emplace_back("0000000000000000018e572c8e2615b86c1c45c61be8a5f380a339abdff15caa", 740237);
-        checkpoints.emplace_back("000000000000000002afc6fbd302f01f8cf4533f4b45207abc61d9f4297bf969", 740238);
+        checkpoints.emplace_back("000000000000000000b92c50d56fc2c60b0502fffec6dc5410065a9b1e29109f", 740'236);
+        checkpoints.emplace_back("0000000000000000018e572c8e2615b86c1c45c61be8a5f380a339abdff15caa", 740'237);
+        checkpoints.emplace_back("000000000000000002afc6fbd302f01f8cf4533f4b45207abc61d9f4297bf969", 740'238);
 
         //2023-May Upgrade - descartes - (1684152000)
-        checkpoints.emplace_back("000000000000000002b678c471841c3e404ec7ae9ca9c32026fe27eb6e3a1ed1", 792772);
-        checkpoints.emplace_back("000000000000000002fc0cdadaef1857bbd2936d37ea94f80ba3db4a5e8353e8", 792773);
-        checkpoints.emplace_back("00000000000000000340a607ca5e9a8b56b620297216edb818eb09e3c6e95609", 792774);
+        checkpoints.emplace_back("000000000000000002b678c471841c3e404ec7ae9ca9c32026fe27eb6e3a1ed1", 792'772);
+        checkpoints.emplace_back("000000000000000002fc0cdadaef1857bbd2936d37ea94f80ba3db4a5e8353e8", 792'773);
+        checkpoints.emplace_back("00000000000000000340a607ca5e9a8b56b620297216edb818eb09e3c6e95609", 792'774);
 
         //2024-May Upgrade - lobachevski - (1715774400)
         checkpoints.emplace_back("000000000000000001806bcdde19c47f088a8026e24905ac6f75afe3ef83594c", 845'890);
@@ -332,13 +332,20 @@ kth::infrastructure::config::checkpoint::list default_checkpoints(config::networ
         checkpoints.emplace_back("0000000000000000016e3353d5da435ef5d374abe90d9bb430c0408e423632d5", 845'892);
 
         checkpoints.emplace_back("00000000000000000071fe9c24aa2fe98d64120407b757a093bbb4a597781753", 860'000);
+        checkpoints.emplace_back("00000000000000000100ada0fb390ef3fa8fe721fa12617313b8b32494ad7a2c", 875'000);
+        checkpoints.emplace_back("000000000000000000bb3b5f03e5b04172a0b5a53f8661eb39d1c91b637ff54a", 890'000);
 
         // 2025-May Upgrade - galois - (1747310400)
+        checkpoints.emplace_back("0000000000000000013cd2abfe36fa63976d293235e42ec08804143787b0a9db", 898'373);
+        checkpoints.emplace_back("00000000000000000157a0a3dcdc80f1acd809648d238c1e893b26247091b3b4", 898'374);
+        checkpoints.emplace_back("0000000000000000007e2e7dd49323c90d16fd76a521804d709f0d5a442fd42a", 898'375);
+
+        // //2026-May Upgrade - leibniz - (1778846400)
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
 
-        // //2026-May Upgrade - leibniz - (1778846400)
+        // //2027-May Upgrade - cantor - (1810382400)
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
         // checkpoints.emplace_back("", 0);
